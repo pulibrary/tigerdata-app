@@ -72,3 +72,9 @@ group :test do
 end
 
 gem "capistrano", "~> 3.17"
+
+gem "capistrano-passenger", "~> 0.2.1"
+
+gem "capistrano-rails", "~> 1.6"
+
+gem "capistrano-rails-console", "~> 2.3"
