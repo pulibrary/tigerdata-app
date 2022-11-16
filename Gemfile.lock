@@ -68,7 +68,14 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    ast (2.4.2)
     bindex (0.8.1)
+    bixby (5.0.2)
+      rubocop (= 1.28.2)
+      rubocop-ast
+      rubocop-performance
+      rubocop-rails
+      rubocop-rspec
     bootsnap (1.13.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -124,6 +131,9 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.9-x86_64-darwin)
       racc (~> 1.4)
+    parallel (1.22.1)
+    parser (3.1.2.1)
+      ast (~> 2.4.1)
     public_suffix (5.0.0)
     puma (5.6.5)
       nio4r (~> 2.0)
@@ -157,6 +167,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0)
       zeitwerk (~> 2.5)
+    rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.6.0)
     reline (0.3.1)
@@ -179,6 +190,27 @@ GEM
       rspec-mocks (~> 3.11)
       rspec-support (~> 3.11)
     rspec-support (3.12.0)
+    rubocop (1.28.2)
+      parallel (~> 1.10)
+      parser (>= 3.1.0.0)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml
+      rubocop-ast (>= 1.17.0, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.23.0)
+      parser (>= 3.1.1.0)
+    rubocop-performance (1.15.1)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
+    rubocop-rails (2.15.2)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.7.0, < 2.0)
+    rubocop-rspec (2.11.1)
+      rubocop (~> 1.19)
+    ruby-progressbar (1.11.0)
     rubyzip (2.3.2)
     selenium-webdriver (4.6.1)
       childprocess (>= 0.5, < 5.0)
@@ -203,6 +235,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
+    unicode-display_width (2.3.0)
     web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -224,6 +257,7 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
+  bixby (~> 5.0)
   bootsnap
   capybara
   debug
