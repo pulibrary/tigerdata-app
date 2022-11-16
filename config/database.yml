@@ -1,0 +1,36 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  min_messages: warning
+  pool: <%= Integer(ENV.fetch("DB_POOL", 40)) %>
+  reaping_frequency: <%= Integer(ENV.fetch("DB_REAPING_FREQUENCY", 10)) %>
+  timeout: 5000
+  host: <%= ENV["lando_database_conn_host"] || "localhost" %>
+  port: <%= ENV["lando_database_conn_port"] || 5432 %>
+  username: <%= ENV["lando_database_creds_user"] %>
+  password: <%= ENV["lando_database_creds_password"] %>
+
+development:
+  <<: *default
+  database: development_db
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: test_db
+  username: <%= ENV["lando_database_creds_user"] || "rails_template_user" %>
+
+staging: &staging
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  timeout: 5000
+  database: <%= ENV.fetch("APP_DB", "staging_db") %>
+  host: <%= ENV.fetch("APP_DB_HOST",'localhost') %>
+  username: <%= ENV.fetch("APP_DB_USERNAME",'postgres') %>
+  password: <%= ENV.fetch("APP_DB_PASSWORD",'postgres') %>
+
+production:
+  <<: *staging
