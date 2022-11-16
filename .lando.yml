@@ -1,4 +1,4 @@
-name: drds-rails-template
+name: tiger-data
 services:
   database:
     type: postgres:10

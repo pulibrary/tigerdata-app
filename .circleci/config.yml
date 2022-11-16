@@ -10,27 +10,27 @@ commands:
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
           keys:
-            - rails_template-{{ checksum "Gemfile.lock.bak" }}
+            - tiger-data-{{ checksum "Gemfile.lock.bak" }}
       - run: bundle install --path ./vendor/bundle
       - save_cache:
-          key: rails_template-{{ checksum "Gemfile.lock.bak" }}
+          key: tiger-data-{{ checksum "Gemfile.lock.bak" }}
           paths:
             - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: rails_template-yarn-{{ checksum "yarn.lock" }}
+          key: tiger-data-yarn-{{ checksum "yarn.lock" }}
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
-          key: rails_template-yarn-{{ checksum "yarn.lock" }}
+          key: tiger-data-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
 
 jobs:
   build:
-    working_directory: ~/rails_template
+    working_directory: ~/tiger-data
     docker:
       - image: cimg/ruby:3.1.0-browsers
         environment:
@@ -44,38 +44,38 @@ jobs:
       - run: sudo apt update && sudo apt install postgresql-client
       - install_dependencies
       - persist_to_workspace:
-          root: '~/rails_template'
+          root: '~/tiger-data'
           paths: '*'
 
   rubocop:
-    working_directory: ~/rails_template
+    working_directory: ~/tiger-data
     docker:
       - image: cimg/ruby:3.1.0-browsers
         environment:
           RAILS_ENV: test
     steps:
       - attach_workspace:
-          at: '~/rails_template'
+          at: '~/tiger-data'
       - install_dependencies
       - run:
           name: Run rubocop
           command: bundle exec rubocop
 
   test:
-    working_directory: ~/rails_template
+    working_directory: ~/tiger-data
     docker:
       - image: cimg/ruby:3.1.0-browsers
         environment:
           RAILS_ENV: test
       - image: postgres:10.6-alpine
         environment:
-          POSTGRES_USER: rails_template_user
+          POSTGRES_USER: tiger-data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - browser-tools/install-browser-tools
       - attach_workspace:
-          at: '~/rails_template'
+          at: '~/tiger-data'
       - install_dependencies
       - run:
           name: Wait for PostgreSQL

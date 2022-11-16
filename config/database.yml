@@ -20,7 +20,7 @@ development:
 test:
   <<: *default
   database: test_db
-  username: <%= ENV["lando_database_creds_user"] || "rails_template_user" %>
+  username: <%= ENV["lando_database_creds_user"] || "tiger-data_user" %>
 
 staging: &staging
   adapter: postgresql

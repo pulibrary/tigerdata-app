@@ -1,5 +1,5 @@
 {
-  "name": "drds-rails-template",
+  "name": "tiger-data",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.0",
