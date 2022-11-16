@@ -32,7 +32,7 @@ jobs:
   build:
     working_directory: ~/rails_template
     docker:
-      - image: cimg/ruby:3.1.0-browsers
+      - image: cimg/ruby:3.1.2-browsers
         environment:
           RAILS_ENV: test
     steps:
@@ -50,7 +50,7 @@ jobs:
   rubocop:
     working_directory: ~/rails_template
     docker:
-      - image: cimg/ruby:3.1.0-browsers
+      - image: cimg/ruby:3.1.2-browsers
         environment:
           RAILS_ENV: test
     steps:
@@ -64,7 +64,7 @@ jobs:
   test:
     working_directory: ~/rails_template
     docker:
-      - image: cimg/ruby:3.1.0-browsers
+      - image: cimg/ruby:3.1.2-browsers
         environment:
           RAILS_ENV: test
       - image: postgres:10.6-alpine
