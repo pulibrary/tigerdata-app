@@ -4,6 +4,10 @@ TigerData is a comprehensive set of data storage and management tools and servic
 [![CircleCI](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main.svg?style=svg)](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main)
 [![Coverage Status](https://coveralls.io/repos/github/pulibrary/tiger-data-app/badge.svg?branch=main)](https://coveralls.io/github/pulibrary/tiger-data-app?branch=main)
 
+## Documentation
+
+We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
+
 ## Local development
 
 ### Setup
@@ -39,5 +43,3 @@ To stop database services:
 ### Starting the development server
 1. `bundle exec rails s -p 3000`
 2. Access application at [http://localhost:3000/](http://localhost:3000/)
-
-
