@@ -1,7 +1,7 @@
 module Mediaflux
 
   def fake_login(username, password)
-    true
+    nil
   end
 
   def login(config)

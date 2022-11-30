@@ -1,5 +1,5 @@
-<% provide(:title, "Log in") %>
-<h1>Log in</h1>
+<% provide(:title, "Login") %>
+<h1>Login</h1>
 
 <%= form_for(:session, url: login_path) do |f| %>
 
@@ -9,5 +9,5 @@
   <%= f.label :password %>
   <%= f.password_field :password %>
 
-  <%= f.submit "Log in" %>
+  <%= f.submit "Login" %>
 <% end %>
