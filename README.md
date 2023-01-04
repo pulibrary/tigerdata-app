@@ -8,6 +8,31 @@ TigerData is a comprehensive set of data storage and management tools and servic
 
 We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
 
+## Structure
+
+These are our initial plans: In the eventual implementation different systems (Mediaflux, Postgres, LDAP) may have responsibility for different bits of data.
+
+```mermaid
+erDiagram
+  Project ||--o{ File : ""
+  Project }o--|| User : data_sponsor
+  Project }o--|{ User : data_manager
+  Project }o--o{ User : data_user
+  Project }o--o{ Funder : ""
+
+  Project {
+    string title
+    string memo
+    date start_date
+    date end_date
+  }
+
+  User {
+    bool is_qualified_to_sponsor
+    bool has_completed_training
+  }
+```
+
 ## Local development
 
 ### Setup
