@@ -11,13 +11,14 @@ We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is us
 ## Structure
 
 These are our initial plans: In the eventual implementation different systems (Mediaflux, Postgres, LDAP) may have responsibility for different bits of data.
+Cardinality constraints (projects must have sponsors, etc.) will be enforced in software.
 
 ```mermaid
 erDiagram
   Project ||--o{ File : ""
-  Project }o--|| User : data_sponsor
-  Project }o--|{ User : data_manager
-  Project }o--o{ User : data_user
+  Project ||--o{ ProjectUserRole : ""
+  ProjectUserRole }o--|| User : ""
+  ProjectUserRole }o--|| Role : ""
   Project }o--o{ Funder : ""
 
   Project {
@@ -27,22 +28,16 @@ erDiagram
     date end_date
   }
 
+  Role {
+    string name
+    string description_md
+    bool requires_training
+    bool requires_sponsor_qualification
+  }
+
   User {
     bool is_qualified_to_sponsor
     bool has_completed_training
-  }
-```
-
-This logical structure should not be taken as dictating the implementation.
-In particular, the relationships between `Projects` and `Users` might be better implemented as a single
-many-to-many relationship, with the cardinality constraints implemented in ruby rather than in the database itself.
-
-```mermaid
-erDiagram
-  Project ||--o{ ProjectUser : ""
-  User ||--o{ ProjectUser : ""
-  ProjectUser {
-    sponsor_manager_user role
   }
 ```
 
