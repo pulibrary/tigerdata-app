@@ -33,6 +33,19 @@ erDiagram
   }
 ```
 
+This logical structure should not be taken as dictating the implementation.
+In particular, the relationships between `Projects` and `Users` might be better implemented as a single
+many-to-many relationship, with the cardinality constraints implemented in ruby rather than in the database itself.
+
+```mermaid
+erDiagram
+  Project ||--o{ ProjectUser : ""
+  User ||--o{ ProjectUser : ""
+  ProjectUser {
+    sponsor_manager_user role
+  }
+```
+
 ## Local development
 
 ### Setup
