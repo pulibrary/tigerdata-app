@@ -20,6 +20,8 @@ erDiagram
   ProjectUserRole }o--|| User : ""
   ProjectUserRole }o--|| Role : ""
   Project }o--o{ Funder : ""
+  User ||--o{ AllowedRole : ""
+  Role ||--o{ AllowedRole :  ""
 
   Project {
     string title
@@ -31,13 +33,6 @@ erDiagram
   Role {
     string name
     string description_md
-    bool requires_training
-    bool requires_sponsor_qualification
-  }
-
-  User {
-    bool is_qualified_to_sponsor
-    bool has_completed_training
   }
 ```
 
