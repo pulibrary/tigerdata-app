@@ -1,4 +1,7 @@
 {
   "name": "tiger-data-app",
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "devDependencies": {
+    "eslint": "^8.33.0"
+  }
 }
