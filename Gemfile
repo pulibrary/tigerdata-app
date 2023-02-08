@@ -56,6 +56,7 @@ group :development, :test do
 
   gem "pry-byebug"
   gem "pry-rails"
+  gem "bixby"
 end
 
 group :development do
