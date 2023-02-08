@@ -5,7 +5,7 @@ commands:
       - run: gem install bundler -v '2.3.11'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
-          key: &gem_key rails_template-cimg-{{ checksum "Gemfile.lock.bak" }}
+          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
       - run: bundle install --path ./vendor/bundle
       - save_cache:
           key: *gem_key
@@ -13,7 +13,7 @@ commands:
             - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: &yarn_key rails_template-yarn-cimg-{{ checksum "yarn.lock" }}
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --frozen-lockfile
@@ -26,7 +26,7 @@ orbs:
   browser-tools: circleci/browser-tools@1.4.1
 jobs:
   build:
-    working_directory: ~/rails_template
+    working_directory: ~/tiger_data
     docker:
       - &ruby_docker
         image: cimg/ruby:3.0.3-browsers
@@ -37,7 +37,7 @@ jobs:
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
       - install_dependencies
       - persist_to_workspace:
-          root: &root '~/rails_template'
+          root: &root '~/tiger_data'
           paths: '*'
 
   rubocop:
@@ -53,14 +53,14 @@ jobs:
 
   eslint:
     # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
-    working_directory: ~/rails_template
+    working_directory: ~/tiger_data
     docker:
       - image: cimg/ruby:3.0.3-browsers
         environment:
           RAILS_ENV: test
     steps:
       - attach_workspace:
-          at: '~/rails_template'
+          at: '~/tiger_data'
       - install_dependencies
       - run:
           name: Run eslint
@@ -72,7 +72,7 @@ jobs:
       - *ruby_docker
       - image: postgres:13.5-alpine
         environment:
-          POSTGRES_USER: rails_template_user
+          POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
@@ -91,7 +91,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - store_artifacts:
-          path: /home/circleci/rails_template/tmp/screenshots
+          path: /home/circleci/tiger_data/tmp/screenshots
 
 workflows:
   version: 2
