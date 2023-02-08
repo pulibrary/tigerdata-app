@@ -1,5 +1,0 @@
-name: tiger-data
-services:
-  database:
-    type: postgres:10
-    portforward: true
