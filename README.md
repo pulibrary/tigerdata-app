@@ -1,4 +1,5 @@
 # tiger-data-app
+
 TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data. 
 
 [![CircleCI](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main.svg?style=svg)](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main)
@@ -10,7 +11,8 @@ We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is us
 
 ## Structure
 
-These are our initial plans: In the eventual implementation different systems (Mediaflux, Postgres, LDAP) may have responsibility for different bits of data.
+These are our initial plans: In the eventual implementation different systems
+(Mediaflux, Postgres, LDAP) may have responsibility for different bits of data.
 Cardinality constraints (projects must have sponsors, etc.) will be enforced in software.
 
 ```mermaid
@@ -39,6 +41,7 @@ erDiagram
 ## Local development
 
 ### Setup
+
 1. Check out code and `cd`
 1. Install tool dependencies
     1. [Lando](https://docs.lando.dev/getting-started/installation.html)
@@ -54,6 +57,9 @@ erDiagram
     1. `yarn install`
 
 ### Starting / stopping services
+
+**TODO: This is not yet working**
+
 We use lando to run services required for both test and development environments.
 
 Start and initialize database services with:
@@ -65,9 +71,11 @@ To stop database services:
 `bundle exec rake servers:stop` or `lando stop`
 
 ### Running tests
-1. Fast: `bundle exec rspec spec`
-2. Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
+
+- Fast: `bundle exec rspec spec`
+- Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
 
 ### Starting the development server
+
 1. `bundle exec rails s -p 3000`
 2. Access application at [http://localhost:3000/](http://localhost:3000/)
