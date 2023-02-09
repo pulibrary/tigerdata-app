@@ -34,8 +34,15 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Ignore test coverage report
+# Ignore test coverage report.
 coverage
 
-# Ignore yarn cache
-.yarn/cache/
+# Ignore yarn files.
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
