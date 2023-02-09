@@ -77,6 +77,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "axe-core-rspec"
   gem "capybara"
+  gem "rails-controller-testing"
   gem "selenium-webdriver"
   gem "simplecov", require: false
   gem "webdrivers"
