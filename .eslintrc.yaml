@@ -17,5 +17,6 @@ rules:
     - { allow: ["warn", "error"] }
 
   # There are errors out of the box with the generated JS. Follow-up later.
+  # https://github.com/pulibrary/tiger-data-app/issues/33
   import/no-unresolved: off         # TODO
   import/prefer-default-export: off # TODO
