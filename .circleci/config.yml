@@ -1,82 +1,84 @@
 version: 2.1
-orbs:
-  browser-tools: circleci/browser-tools@1.2.5
-  node: circleci/node@5.0.2
-
 commands:
   install_dependencies:
     steps:
-      - run: gem install bundler -v '2.2.14'
+      - run: gem install bundler -v '2.3.11'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
-          keys:
-            - tiger-data-{{ checksum "Gemfile.lock.bak" }}
+          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
       - run: bundle install --path ./vendor/bundle
       - save_cache:
-          key: tiger-data-{{ checksum "Gemfile.lock.bak" }}
+          key: *gem_key
           paths:
             - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: tiger-data-yarn-{{ checksum "yarn.lock" }}
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
-          key: tiger-data-yarn-{{ checksum "yarn.lock" }}
+          key: *yarn_key
           paths:
             - ~/.cache/yarn
-
+orbs:
+  browser-tools: circleci/browser-tools@1.4.1
 jobs:
   build:
-    working_directory: ~/tiger-data
+    working_directory: ~/tiger_data
     docker:
-      - image: cimg/ruby:3.1.0-browsers
+      - &ruby_docker
+        image: cimg/ruby:3.1.3-browsers
         environment:
           RAILS_ENV: test
     steps:
-      - browser-tools/install-browser-tools
       - checkout
-      - node/install:
-          install-yarn: true
-          node-version: '16.15'
-      - run: sudo apt update && sudo apt install postgresql-client
+      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
       - install_dependencies
       - persist_to_workspace:
-          root: '~/tiger-data'
+          root: &root '~/tiger_data'
           paths: '*'
 
   rubocop:
-    working_directory: ~/tiger-data
+    working_directory: *root
     docker:
-      - image: cimg/ruby:3.1.0-browsers
-        environment:
-          RAILS_ENV: test
+      - *ruby_docker
     steps:
       - attach_workspace:
-          at: '~/tiger-data'
-      - install_dependencies
+          at: *root
       - run:
           name: Run rubocop
           command: bundle exec rubocop
 
-  test:
-    working_directory: ~/tiger-data
+  eslint:
+    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
+    working_directory: ~/tiger_data
     docker:
-      - image: cimg/ruby:3.1.0-browsers
+      - image: cimg/ruby:3.1.3-browsers
         environment:
           RAILS_ENV: test
-      - image: postgres:10.6-alpine
+    steps:
+      - attach_workspace:
+          at: '~/tiger_data'
+      - install_dependencies
+      - run:
+          name: Run eslint
+          command: yarn run eslint app/assets app/javascript --ext .js,.jsx,es6   
+
+  test:
+    working_directory: *root
+    docker:
+      - *ruby_docker
+      - image: postgres:13.5-alpine
         environment:
-          POSTGRES_USER: tiger-data_user
+          POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - browser-tools/install-browser-tools
       - attach_workspace:
-          at: '~/tiger-data'
-      - install_dependencies
+          at: *root
+      - browser-tools/install-browser-tools
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
@@ -85,9 +87,11 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec
+          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec
       - store_artifacts:
           path: coverage
+      - store_artifacts:
+          path: /home/circleci/tiger_data/tmp/screenshots
 
 workflows:
   version: 2
@@ -98,5 +102,8 @@ workflows:
           requires:
             - build
       - rubocop:
+          requires:
+            - build
+      - eslint:
           requires:
             - build

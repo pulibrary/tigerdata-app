@@ -2,7 +2,7 @@ inherit_gem:
   bixby: bixby_default.yml
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
   DisabledByDefault: true
   DisplayCopNames: true
   Exclude:
@@ -12,15 +12,35 @@ AllCops:
     - "vendor/**/*"
     - "node_modules/**/*"
     - "bin/*"
+    - "storage/**/*"
 
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
+  
+Layout/LineLength:
+  Exclude:
+    - "spec/system/data_migration/*"
 
 Metrics/BlockLength:
   Exclude:
     - "config/environments/**/*"
     - "lib/tasks/**/*"
     - "spec/**/*"
+  Max: 40 # default: 25
+
+Metrics/ClassLength:
+  Exclude: []
+  Max: 150 # default: 100
+
+Metrics/MethodLength:
+  Exclude: []
+  Max: 15 # default: 10
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Exclude: []
 
 Style/GuardClause:
   Enabled: false
@@ -31,10 +51,16 @@ Style/IfUnlessModifier:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
+Rails/UnknownEnv:
+  Enabled: false
+
 RSpec/DescribeClass:
   Exclude:
     - "spec/views/**/*"
     - "spec/system/**/*"
 
 RSpec/ExampleLength:
+  Enabled: false
+
+Style/NumericPredicate:
   Enabled: false

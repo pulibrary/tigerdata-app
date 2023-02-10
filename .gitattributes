@@ -6,5 +6,9 @@ db/schema.rb linguist-generated
 # Mark the yarn lockfile as having been generated.
 yarn.lock linguist-generated
 
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.yarn/releases/** binary
+.yarn/plugins/** binary
+
 # Mark any vendored files as having been vendored.
 vendor/* linguist-vendored
