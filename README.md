@@ -43,9 +43,10 @@ erDiagram
 ### Setup
 
 1. Check out code and `cd`
-1. Install tool dependencies
+1. Install tool dependencies; If you've worked on other PUL projects they will already be installed.
     1. [Lando](https://docs.lando.dev/getting-started/installation.html)
     1. [asdf](https://asdf-vm.com/guide/getting-started.html#_2-download-asdf)
+    1. postgres (`brew install postgresql`: Postgres runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local Postgres library to install successfully.)
 1. Install asdf dependencies
     1. `asdf plugin add ruby`
     1. `asdf plugin add node`
@@ -55,6 +56,13 @@ erDiagram
 1. Install language-specific dependencies
     1. `bundle install`
     1. `yarn install`
+
+On a Mac with an M1 chip, `bundle install` may fail. [This suggestion](https://stackoverflow.com/questions/74196882/cannot-install-jekyll-eventmachine-on-m1-mac) helped:
+```
+gem install eventmachine -v '1.2.7' -- --with-openssl-dir=$(brew --prefix libressl)
+brew install pkg-config
+bundle install
+```
 
 ### Starting / stopping services
 
