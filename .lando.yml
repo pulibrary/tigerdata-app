@@ -1,0 +1,5 @@
+name: drds-rails-template
+services:
+  database:
+    type: postgres:10
+    portforward: true
