@@ -1,0 +1,5 @@
+name: tiger-data-app
+services:
+  database:
+    type: postgres:13
+    portforward: true
