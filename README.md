@@ -66,8 +66,6 @@ bundle install
 
 ### Starting / stopping services
 
-**TODO: This is not yet working**
-
 We use lando to run services required for both test and development environments.
 
 Start and initialize database services with:
@@ -77,6 +75,10 @@ Start and initialize database services with:
 To stop database services:
 
 `bundle exec rake servers:stop` or `lando stop`
+
+You will also want to run the vite development server:
+
+`bin/vite dev`
 
 ### Running tests
 
