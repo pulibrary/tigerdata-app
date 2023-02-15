@@ -579,7 +579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4":
+"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
   dependencies:
@@ -2270,6 +2270,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup-plugin-gzip@npm:^3.0":
+  version: 3.1.0
+  resolution: "rollup-plugin-gzip@npm:3.1.0"
+  peerDependencies:
+    rollup: ">=2.0.0"
+  checksum: b6e9671639f50bd4fda586603d784597abe19925ceda81fd4d3aa44f538b3be45f4d4b29ea1e251c20b2f2c3c16f498e762fac266114751f827b324acfca8b4f
+  languageName: node
+  linkType: hard
+
 "rollup@npm:^3.10.0":
   version: 3.15.0
   resolution: "rollup@npm:3.15.0"
@@ -2423,6 +2432,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stimulus-vite-helpers@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "stimulus-vite-helpers@npm:3.0.1"
+  checksum: ecc3158565a606d481d54977e49b4926262aa5d8c731f3f8865b8998b19ba04635e7f45f7d15617b8bb24165902b211dfe99b481fc17056bfa5ddb2e0a1f45c4
+  languageName: node
+  linkType: hard
+
 "string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -2533,6 +2549,7 @@ __metadata:
     eslint-config-airbnb-base: ^15.0.0
     eslint-plugin-import: ^2.27.5
     vite: ^4.0.0
+    vite-plugin-rails: ^0.1.0
     vite-plugin-ruby: ^3.1.2
   languageName: unknown
   linkType: soft
@@ -2631,7 +2648,51 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-ruby@npm:^3.1.2":
+"vite-plugin-environment@npm:^1.1":
+  version: 1.1.3
+  resolution: "vite-plugin-environment@npm:1.1.3"
+  peerDependencies:
+    vite: ">= 2.7"
+  checksum: 1f3a7ed516dfed7c44804f1bf0ced1d55c2dbc4e2dc6e61f79cd30f9f2e19b7b02937d063130d5b8c9707c730f98ea587cc1586ee487954d7a25ff3af4f8875a
+  languageName: node
+  linkType: hard
+
+"vite-plugin-full-reload@npm:^1.0":
+  version: 1.0.5
+  resolution: "vite-plugin-full-reload@npm:1.0.5"
+  dependencies:
+    picocolors: ^1.0.0
+    picomatch: ^2.3.1
+  peerDependencies:
+    vite: ^2 || ^3 || ^4
+  checksum: 250d50a2ce4b4de0f6855aaf191d3c37838da6795a113b1de28b390be71a0bb23351072fa8f4ab8ad4a07026ecb56b3d0358a1341288de9a736f99ae5a47d7ce
+  languageName: node
+  linkType: hard
+
+"vite-plugin-manifest-sri@npm:^0.1":
+  version: 0.1.0
+  resolution: "vite-plugin-manifest-sri@npm:0.1.0"
+  checksum: fbbba255dae0f07c58290e7eadca7ec636b3c850e3130aa82a1573d14194c59e1434e7c89214f7bb78987372e9584a33eaeec6b439f65fb9107dd45a9b9fc0f0
+  languageName: node
+  linkType: hard
+
+"vite-plugin-rails@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "vite-plugin-rails@npm:0.1.0"
+  dependencies:
+    rollup-plugin-gzip: ^3.0
+    vite-plugin-environment: ^1.1
+    vite-plugin-full-reload: ^1.0
+    vite-plugin-manifest-sri: ^0.1
+    vite-plugin-ruby: ^3.1
+    vite-plugin-stimulus-hmr: ^3.0
+  peerDependencies:
+    vite: ">=2.5.0"
+  checksum: 6247b228311db848738d92ac5dd170859575dc58c378c760e1617dff93eb1cba2236b2c5370f3531b0cdeb7e3f093ab76c10209b182a567197f3a3ada177227b
+  languageName: node
+  linkType: hard
+
+"vite-plugin-ruby@npm:^3.1, vite-plugin-ruby@npm:^3.1.2":
   version: 3.1.3
   resolution: "vite-plugin-ruby@npm:3.1.3"
   dependencies:
@@ -2640,6 +2701,16 @@ __metadata:
   peerDependencies:
     vite: ">=2.5.0"
   checksum: e1c3f80857b5c4f3cacb78c7bd2132bb10478cb21d7c5e9b370540cb8645187157e8f56a82b693836c7ccdbd2ef8dbc4f49a841514b3a8a565fdd21bf03d4a2c
+  languageName: node
+  linkType: hard
+
+"vite-plugin-stimulus-hmr@npm:^3.0":
+  version: 3.0.0
+  resolution: "vite-plugin-stimulus-hmr@npm:3.0.0"
+  dependencies:
+    debug: ^4.3
+    stimulus-vite-helpers: ^3.0.0
+  checksum: d1740b22e06650c07ca91121744acd4ca141c7a3203c3d16aad37e687c92d47b506b167e408d8a41f78a7bc6ef0bc6ed63004042723d04e863f29c91f01dd440
   languageName: node
   linkType: hard
 
