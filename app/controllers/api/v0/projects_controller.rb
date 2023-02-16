@@ -3,7 +3,7 @@ module Api
     module V0
         class ProjectsController < ApplicationController
             def index
-                render json: ApiClient.new().projects.to_json
+                render json: ApiMiddleware.new().projects.to_json
             end
         end
     end
