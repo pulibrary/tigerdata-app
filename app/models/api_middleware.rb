@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApiMiddleware
   # The database and Mediaflux should only be accessed through this class.
   # Since our backend is in flux, and we're not sure what will be handled
