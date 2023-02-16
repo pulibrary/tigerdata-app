@@ -17,4 +17,4 @@ task :write_version do
     end
   end
 end
-after 'deploy:log_revision', 'write_version'
+after "deploy:log_revision", "write_version"
