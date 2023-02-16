@@ -3,7 +3,7 @@ module Api
     module V0
         class ProjectsController < ApplicationController
             def index
-                render json: "{}"
+                render json: [{name: "fake project"}].to_json
             end
         end
     end
