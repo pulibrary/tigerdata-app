@@ -1,3 +1,9 @@
-Welcome to TigerData
+<h1>Welcome to TigerData</h1>
 
 <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "300x200") %>
+
+<ul>
+    <% @projects.each do |project| %>
+        <%= project[:name] %>
+    <% end %>
+</ul>

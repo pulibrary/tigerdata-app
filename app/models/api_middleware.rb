@@ -5,9 +5,8 @@ class ApiMiddleware
   # by the database and what by mediaflux, we do not want references to
   # either scattered across the codebase.
   #
-  # In turn, this class should only be referenced by api routes.
-  # All the UI pages will depend on the API. Limiting ourselves to the
-  # API will ensure that the API can do everything the UI can do.
+  # As the middleware grows to support the needs of the frontend,
+  # we need to be sure to add corresponding API routes.
   def projects
     [{ name: "fake project" }]
   end

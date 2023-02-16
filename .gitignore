@@ -46,3 +46,6 @@ coverage
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Byebug
+.byebug_history
