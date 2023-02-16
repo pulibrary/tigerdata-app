@@ -6,9 +6,8 @@ Rails.application.routes.draw do
   root to: "welcome#index"
 
   namespace :api do
-    namespace :v0 do  
+    namespace :v0 do
       resources :projects, only: [:index]
     end
   end
-  
 end

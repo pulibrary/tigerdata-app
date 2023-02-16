@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Api::V0::ProjectsController do
-    render_views
+  render_views
 
   it "renders the index page" do
     get :index, params: { format: :json }
