@@ -2,7 +2,9 @@
 module Api
     module V0
         class ProjectsController < ApplicationController
-            def index; end
+            def index
+                render json: "{}"
+            end
         end
     end
 end
