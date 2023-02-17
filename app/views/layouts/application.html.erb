@@ -24,10 +24,17 @@
   <body>
     <%= render partial: 'shared/header' %>
     <div class="container">
+      <% if flash[:alert] %>
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-warning" role="alert" ><%= flash[:alert] %></div>
+          </div>
+        </div>
+      <% end %>
       <% if flash[:notice] %>
         <div class="row">
           <div class="col">
-            <div class="alert alert-warning" role="alert" ><%= flash[:notice] %></div>
+            <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
           </div>
         </div>
       <% end %>
