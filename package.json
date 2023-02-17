@@ -12,7 +12,9 @@
     "vite": "^4.0.0"
   },
   "dependencies": {
+    "@rollup/plugin-inject": "^5.0.3",
     "browserslist": "^4.21.5",
+    "jquery": "^3.6.3",
     "vite-plugin-rails": "^0.1.0"
   }
 }
