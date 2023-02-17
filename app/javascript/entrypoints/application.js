@@ -14,14 +14,11 @@ import * as bootstrap from 'bootstrap';
 
 window.bootstrap = bootstrap;
 
-// initialize the page
-window.addEventListener('load', (event) => {
-  initPage();
-});
-window.addEventListener('turbo:render', (event) => {
-  initPage();
-});
+function initPage() {
+  $('#test-jquery').click((event) => {
+    $(event.target).html('jQuery works!');
+  });
+}
 
-window.test_jquery = function () {
-  $('#test-jquery').html('jQuery works!');
-};
+window.addEventListener('load', () => initPage());
+window.addEventListener('turbo:render', () => initPage());

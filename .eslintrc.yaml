@@ -6,8 +6,9 @@ overrides: []
 parserOptions:
   ecmaVersion: latest
   sourceType: module
-ignorePatterns:
-  'app/javascript/entrypoints/vendor/**'
+globals:
+  $: readonly
+
 rules:
   no-alert: off # OK: A lot easier than coding up new UI.
   no-console:   # OK: console.log is fine for debugging, but we don't want to keep it around indefinitely.
