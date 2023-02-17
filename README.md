@@ -42,25 +42,25 @@ Controllers may rely either on ActiveRecord models, or the `MediafluxWrapper` cl
 
 ```mermaid
 flowchart TD
-  guiv[ERB Templates] --> guic[UI Controllers] --> ActiveRecord & MediafluxWrapper
-  apic[API Controllers] --> ActiveRecord & MediafluxWrapper
+  guiv --> guic --> ar & mf
+  apic --> ar & mf
 
   subgraph View
-  guiv
+  guiv[ERB Templates]
   end
 
   subgraph Controller
-  guic
-  apic
+  guic[UI Controllers]
+  apic[API Controllers]
   end
 
   subgraph Model
-  ActiveRecord
-  MediafluxWrapper
+  ar[ActiveRecord Classes]
+  mf[MediafluxWrapper]
   end
 
-  ActiveRecord --> Postgres
-  MediafluxWrapper --> Mediaflux
+  ar --> Postgres
+  mf --> Mediaflux
 ```
 
 ## Local development
