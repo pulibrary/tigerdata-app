@@ -20,13 +20,6 @@ window.addEventListener('load', (event) => {
 window.addEventListener('turbo:render', (event) => {
     initPage();
 });
-function initPage() {
-      // initialize popovers
-      $('[data-toggle="popover"]').each((el) => {
-        console.log('here!')
-        new bootstrap.Popover(el)
-      })
-}
 
 window.test_jquery = function() {
     $('#test-jquery').html('jQuery works!')
