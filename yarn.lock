@@ -262,6 +262,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@popperjs/core@npm:^2.11.6":
+  version: 2.11.6
+  resolution: "@popperjs/core@npm:2.11.6"
+  checksum: 47fb328cec1924559d759b48235c78574f2d71a8a6c4c03edb6de5d7074078371633b91e39bbf3f901b32aa8af9b9d8f82834856d2f5737a23475036b16817f0
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-inject@npm:^5.0.3":
   version: 5.0.3
   resolution: "@rollup/plugin-inject@npm:5.0.3"
@@ -470,6 +477,15 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"bootstrap@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "bootstrap@npm:5.2.3"
+  peerDependencies:
+    "@popperjs/core": ^2.11.6
+  checksum: 0211805dec6a190c0911d142966df30fdb4b4139a04cc6c23dd83c6045ea3cb0a966b360ab2e701e7b3ad96ff01e05fdc0914be97b41bd876b11e457a8bdc6a3
   languageName: node
   linkType: hard
 
@@ -2670,7 +2686,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tiger-data-app@workspace:."
   dependencies:
+    "@popperjs/core": ^2.11.6
     "@rollup/plugin-inject": ^5.0.3
+    bootstrap: ^5.2.3
     browserslist: ^4.21.5
     eslint: ^8.33.0
     eslint-config-airbnb-base: ^15.0.0
