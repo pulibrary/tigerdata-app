@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class WelcomeController < ApplicationController
   def index
-    @projects = ApiMiddleware.new.projects
+    @projects = MediafluxWrapper.new.projects
   end
 end

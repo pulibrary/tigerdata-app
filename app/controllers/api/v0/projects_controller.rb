@@ -3,7 +3,7 @@ module Api
   module V0
     class ProjectsController < ApplicationController
       def index
-        projects = ApiMiddleware.new.projects
+        projects = MediafluxWrapper.new.projects
         render json: projects.to_json
       end
     end
