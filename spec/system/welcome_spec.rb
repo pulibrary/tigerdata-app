@@ -7,5 +7,7 @@ RSpec.describe "WelcomeController" do
     visit "/"
 
     expect(page).to have_content "Welcome"
+    click_on "Test jQuery"
+    expect(page).to have_content "jQuery works!"
   end
 end
