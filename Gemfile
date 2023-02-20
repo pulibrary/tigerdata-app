@@ -52,6 +52,7 @@ gem "bootsnap", require: false
 gem "vite_rails"
 
 gem "devise"
+gem "omniauth-cas"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

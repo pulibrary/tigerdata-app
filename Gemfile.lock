@@ -137,6 +137,7 @@ GEM
     erubi (1.12.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -182,6 +183,13 @@ GEM
       racc (~> 1.4)
     nokogiri (1.14.1-x86_64-linux)
       racc (~> 1.4)
+    omniauth (1.9.2)
+      hashie (>= 3.4.6)
+      rack (>= 1.6.2, < 3)
+    omniauth-cas (2.0.0)
+      addressable (~> 2.3)
+      nokogiri (~> 1.5)
+      omniauth (~> 1.2)
     orm_adapter (0.5.0)
     parallel (1.22.1)
     parser (3.2.0.0)
@@ -360,6 +368,7 @@ DEPENDENCIES
   devise
   importmap-rails
   jbuilder
+  omniauth-cas
   pg
   pry-byebug
   pry-rails
