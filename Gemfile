@@ -51,6 +51,7 @@ gem "bootsnap", require: false
 
 gem "vite_rails"
 
+# Reference: https://github.com/pulibrary/pul-the-hard-way/blob/main/services/cas.md
 gem "devise"
 gem "omniauth-cas"
 
