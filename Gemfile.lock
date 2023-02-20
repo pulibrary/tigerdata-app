@@ -82,6 +82,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    bcrypt (3.1.18)
     bindex (0.8.1)
     bixby (5.0.2)
       rubocop (= 1.28.2)
@@ -123,6 +124,12 @@ GEM
       reline (>= 0.3.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    devise (4.9.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.5.0)
     docile (1.4.0)
     dry-cli (1.0.0)
@@ -130,6 +137,7 @@ GEM
     erubi (1.12.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -175,6 +183,14 @@ GEM
       racc (~> 1.4)
     nokogiri (1.14.1-x86_64-linux)
       racc (~> 1.4)
+    omniauth (1.9.2)
+      hashie (>= 3.4.6)
+      rack (>= 1.6.2, < 3)
+    omniauth-cas (2.0.0)
+      addressable (~> 2.3)
+      nokogiri (~> 1.5)
+      omniauth (~> 1.2)
+    orm_adapter (0.5.0)
     parallel (1.22.1)
     parser (3.2.0.0)
       ast (~> 2.4.1)
@@ -231,6 +247,9 @@ GEM
     regexp_parser (2.6.2)
     reline (0.3.2)
       io-console (~> 0.5)
+    responders (3.1.0)
+      actionpack (>= 5.2)
+      railties (>= 5.2)
     rexml (3.2.5)
     rspec-core (3.12.1)
       rspec-support (~> 3.12.0)
@@ -314,6 +333,8 @@ GEM
       dry-cli (>= 0.7, < 2)
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -344,8 +365,10 @@ DEPENDENCIES
   capistrano-rails (~> 1.6)
   capybara
   debug
+  devise
   importmap-rails
   jbuilder
+  omniauth-cas
   pg
   pry-byebug
   pry-rails
