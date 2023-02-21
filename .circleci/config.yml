@@ -91,7 +91,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - store_artifacts:
-          path: /home/circleci/tiger_data/tmp/screenshots
+          path: /home/circleci/tiger_data/tmp/capybara
 
 workflows:
   version: 2
