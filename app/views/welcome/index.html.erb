@@ -1,3 +1,11 @@
-Welcome to TigerData
+<h1>Welcome to TigerData</h1>
 
 <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "300x200") %>
+
+<button id="test-jquery" class="btn btn-primary">Test jQuery</button>
+
+<ul>
+    <% @projects.each do |project| %>
+        <%= project[:name] %>
+    <% end %>
+</ul>

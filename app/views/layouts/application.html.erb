@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TigerDataApp</title>
+    <title>TigerData</title>
+    <%= favicon_link_tag asset_path('tiger-head.png') %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -22,6 +23,28 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render partial: 'shared/header' %>
+    <div class="container">
+      <% if flash[:alert] %>
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-warning" role="alert" ><%= flash[:alert] %></div>
+          </div>
+        </div>
+      <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
+          </div>
+        </div>
+      <% end %>
+      <div class="row">
+        <div class="col">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+    <%= render partial: 'shared/footer' %>
   </body>
 </html>
