@@ -63,15 +63,16 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  # Out of the box we get deprecation warnings from Selenium because
+  # a dependency is using :capabilities instead of :options;
+  # We configure it by hand to silence the warning,
+  # and to make sure the upgrade path is clear.
+  # Based on https://stackoverflow.com/a/70314141
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument("--headless") unless ENV["RUN_IN_BROWSER"]
 
-    Capybara::Selenium::Driver.new(
-      app,
-      browser: :chrome,
-      options: options
-    )
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   end
 
   config.before(:each, type: :system) do
