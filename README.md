@@ -1,3 +1,5 @@
+![TigerData logo](app/assets/images/logo-300-200.png)
+
 # tiger-data-app
 
 TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data. 
@@ -36,6 +38,31 @@ erDiagram
     string name
     string description_md
   }
+```
+
+Controllers may rely either on ActiveRecord models, or the `MediafluxWrapper` class.
+
+```mermaid
+flowchart TD
+  guiv --> guic --> ar & mf
+  apic --> ar & mf
+
+  subgraph View
+  guiv[ERB Templates]
+  end
+
+  subgraph Controller
+  guic[UI Controllers]
+  apic[API Controllers]
+  end
+
+  subgraph Model
+  ar[ActiveRecord Classes]
+  mf[MediafluxWrapper]
+  end
+
+  ar --> Postgres
+  mf --> Mediaflux
 ```
 
 ## Local development
