@@ -65,8 +65,8 @@ RSpec.configure do |config|
 
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--headless') unless ENV["RUN_IN_BROWSER"]
-  
+    options.add_argument("--headless") unless ENV["RUN_IN_BROWSER"]
+
     Capybara::Selenium::Driver.new(
       app,
       browser: :chrome,
