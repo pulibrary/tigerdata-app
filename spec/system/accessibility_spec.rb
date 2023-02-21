@@ -2,7 +2,6 @@
 require "rails_helper"
 
 describe "application accessibility", type: :system, js: true do
-
   context "when browsing the homepage" do
     it "complies with WCAG 2.0 AA and Section 508" do
       visit "/"
@@ -11,5 +10,4 @@ describe "application accessibility", type: :system, js: true do
         .skipping(:'color-contrast') # false positives
     end
   end
-
 end
