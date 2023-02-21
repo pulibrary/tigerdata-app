@@ -49,6 +49,10 @@ coverage
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Byebug
+.byebug_history
+
 node_modules
 
 # Vite uses dotenv and suggests to ignore local-only env files. See
