@@ -73,8 +73,6 @@ RSpec.configure do |config|
       options: options
     )
   end
-  
-  Capybara.default_driver = :chrome
 
   config.before(:each, type: :system) do
     driven_by(:chrome)
