@@ -66,7 +66,7 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
 
-  gem 'factory_bot_rails', require: false
+  gem "factory_bot_rails", require: false
 end
 
 group :development do

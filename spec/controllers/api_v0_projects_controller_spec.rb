@@ -4,8 +4,8 @@ require "rails_helper"
 RSpec.describe Api::V0::ProjectsController do
   render_views
 
-  it "renders the index page" do
+  it "does not work without login" do
     get :index, params: { format: :json }
-    expect(response.body).to include("[{")
+    expect(response.status).to eq(401)
   end
 end
