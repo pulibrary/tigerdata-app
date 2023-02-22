@@ -107,3 +107,6 @@ workflows:
       - eslint:
           requires:
             - build
+      - jest:
+          requires:
+            - build
