@@ -11,10 +11,10 @@ services:
       - type: bind
         source: ./docker/files
         target: /docker-host
-    tty: true
-    stdin_open: true
-    init: true
     privileged: true
+    init: true
+    stdin_open: true
+    tty: true
 
     ## These were attempts to parse the $MFLUX_HOME env. variable before launching the JVM server
     ##
@@ -23,7 +23,17 @@ services:
     # entrypoint: bash -c "export $(grep -v '^#' /setup/scripts/convenience/mediaflux.conf | xargs) && MFLUX_HOME=/usr/local/mediaflux /usr/bin/env java -jar $MFLUX_HOME/bin/aserver.jar application.home=$MFLUX_HOME nogui"
 
     # This raises an error
-    entrypoint: bash -c "/usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui"
+    entrypoint: bash -c "bash -c 'nohup /setup/scripts/convenience/arcserver start &' && tail -f /usr/local/mediaflux/volatile/logs/mediaflux-server.log"
+
+    logging: {}
+
+    healthcheck:
+      test: ["CMD", "bash -c", "'curl http://localhost:8888'"]
+      interval: 10s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
 
 networks:
   mediaflux: {}
+
