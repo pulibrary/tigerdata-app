@@ -1,0 +1,29 @@
+---
+services:
+  mediaflux:
+    image: regdev.rc.princeton.edu/developer-image:latest
+    ports:
+      - "22:22"
+      - "8888:8888"
+    networks:
+      - mediaflux
+    volumes:
+      - type: bind
+        source: ./docker/files
+        target: /docker-host
+    tty: true
+    stdin_open: true
+    init: true
+    privileged: true
+
+    ## These were attempts to parse the $MFLUX_HOME env. variable before launching the JVM server
+    ##
+    # entrypoint: bash -c 'export $(grep -v '^#' /setup/scripts/convenience/mediaflux.conf | xargs) && /usr/bin/env java -jar $MFLUX_HOME/bin/aserver.jar application.home=$MFLUX_HOME nogui'
+    # entrypoint: bash -c "export INSTALL_DIR=/usr/local/mediaflux && export $(grep -v '^#' /setup/scripts/convenience/mediaflux.conf | xargs) && /usr/bin/env java -jar $MFLUX_HOME/bin/aserver.jar application.home=$MFLUX_HOME nogui"
+    # entrypoint: bash -c "export $(grep -v '^#' /setup/scripts/convenience/mediaflux.conf | xargs) && MFLUX_HOME=/usr/local/mediaflux /usr/bin/env java -jar $MFLUX_HOME/bin/aserver.jar application.home=$MFLUX_HOME nogui"
+
+    # This raises an error
+    entrypoint: bash -c "/usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui"
+
+networks:
+  mediaflux: {}
