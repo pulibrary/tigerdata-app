@@ -31,6 +31,9 @@
 
 /public/assets
 
+# Vite Ruby
+/public/vite*
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
@@ -47,10 +50,14 @@ coverage
 !.yarn/sdks
 !.yarn/versions
 
-# Vite Ruby
-/public/vite*
+# Byebug
+.byebug_history
+
 node_modules
+
 # Vite uses dotenv and suggests to ignore local-only env files. See
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 
+# Ignore MacOS files
+**/.DS_Store

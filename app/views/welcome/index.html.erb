@@ -1,5 +1,13 @@
-Welcome to TigerData
+<h1>Welcome to TigerData</h1>
 
 <%= button_to "Login", user_cas_omniauth_authorize_path %>
 
 <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "300x200") %>
+
+<button id="test-jquery" class="btn btn-primary">Test jQuery</button>
+
+<ul>
+    <% @projects.each do |project| %>
+       <li><%= project[:name] %></li>
+    <% end %>
+</ul>

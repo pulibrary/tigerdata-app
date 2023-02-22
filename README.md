@@ -1,3 +1,5 @@
+![TigerData logo](app/assets/images/logo-300-200.png)
+
 # tiger-data-app
 
 TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data. 
@@ -7,7 +9,10 @@ TigerData is a comprehensive set of data storage and management tools and servic
 
 ## Documentation
 
-We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
+- Design documents and meeting notes are in [Google Drive](https://drive.google.com/drive/u/1/folders/0AJ7rJ2akICY2Uk9PVA)
+- RDSS internal notes are in a [separate directory](https://drive.google.com/drive/u/1/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
+- A set of requirements derived from early sketches is [here](https://docs.google.com/document/d/1U06FBX0qR9iMNiWes5YhP0schcPiLTmFwjHurduSb3A/edit).
+- We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
 
 ## Structure
 
@@ -36,6 +41,31 @@ erDiagram
     string name
     string description_md
   }
+```
+
+Controllers may rely either on ActiveRecord models, or the `MediafluxWrapper` class.
+
+```mermaid
+flowchart TD
+  guiv --> guic --> ar & mf
+  apic --> ar & mf
+
+  subgraph View
+  guiv[ERB Templates]
+  end
+
+  subgraph Controller
+  guic[UI Controllers]
+  apic[API Controllers]
+  end
+
+  subgraph Model
+  ar[ActiveRecord Classes]
+  mf[MediafluxWrapper]
+  end
+
+  ar --> Postgres
+  mf --> Mediaflux
 ```
 
 ## Local development
