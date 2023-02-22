@@ -66,6 +66,7 @@ RSpec.configure do |config|
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :system
 
   # Out of the box we get deprecation warnings from Selenium because
   # a dependency is using :capabilities instead of :options;
