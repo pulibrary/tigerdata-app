@@ -76,7 +76,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - store_artifacts:
-          path: /home/circleci/tiger_data/tmp/screenshots
+          path: /home/circleci/tiger_data/tmp/capybara
 
   # We don't actually need any of the ruby environment to lint and test JS... but use what we have for now.
   js-lint:
