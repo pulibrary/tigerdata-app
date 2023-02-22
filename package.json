@@ -5,7 +5,9 @@
     "defaults"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint 'app/javascript/**'",
+    "lint:fix": "eslint 'app/javascript/**' --fix"
   },
   "devDependencies": {
     "eslint": "^8.33.0",

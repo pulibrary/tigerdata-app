@@ -40,7 +40,7 @@ jobs:
           root: &root '~/tiger_data'
           paths: '*'
 
-  rubocop:
+  ruby-lint:
     working_directory: *root
     docker:
       - *ruby_docker
@@ -51,22 +51,7 @@ jobs:
           name: Run rubocop
           command: bundle exec rubocop
 
-  eslint:
-    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
-    working_directory: ~/tiger_data
-    docker:
-      - image: cimg/ruby:3.1.3-browsers
-        environment:
-          RAILS_ENV: test
-    steps:
-      - attach_workspace:
-          at: '~/tiger_data'
-      - install_dependencies
-      - run:
-          name: Run eslint
-          command: yarn run eslint 'app/javascript/**'
-
-  test:
+  ruby-test:
     working_directory: *root
     docker:
       - *ruby_docker
@@ -92,6 +77,35 @@ jobs:
           path: coverage
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/screenshots
+
+  # We don't actually need any of the ruby environment to lint and test JS... but use what we have for now.
+  js-lint:
+    working_directory: ~/tiger_data
+    docker:
+      - image: cimg/ruby:3.1.3-browsers
+        environment:
+          RAILS_ENV: test
+    steps:
+      - attach_workspace:
+          at: '~/tiger_data'
+      - install_dependencies
+      - run:
+          name: Run eslint
+          command: yarn lint
+
+  js-test:
+    working_directory: ~/tiger_data
+    docker:
+      - image: cimg/ruby:3.1.3-browsers
+        environment:
+          RAILS_ENV: test
+    steps:
+      - attach_workspace:
+          at: '~/tiger_data'
+      - install_dependencies
+      - run:
+          name: Run jest
+          command: yarn test
 
 workflows:
   version: 2
