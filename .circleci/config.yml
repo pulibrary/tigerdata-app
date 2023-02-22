@@ -88,7 +88,6 @@ jobs:
     steps:
       - attach_workspace:
           at: '~/tiger_data'
-      - install_dependencies
       - run:
           name: Run eslint
           command: yarn lint
@@ -102,7 +101,6 @@ jobs:
     steps:
       - attach_workspace:
           at: '~/tiger_data'
-      - install_dependencies
       - run:
           name: Run jest
           command: yarn test
@@ -112,15 +110,15 @@ workflows:
   build_accept_deploy:
     jobs:
       - build
-      - test:
+      - ruby-test:
           requires:
             - build
-      - rubocop:
+      - ruby-lint:
           requires:
             - build
-      - eslint:
+      - js-test:
           requires:
             - build
-      - jest:
+      - js-lint:
           requires:
             - build
