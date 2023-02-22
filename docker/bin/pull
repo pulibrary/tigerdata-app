@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+echo "Retrieving the Docker Image for the MediaFlux server..."
+
+/usr/bin/env docker login -u docker https://regdev.rc.princeton.edu/
+/usr/bin/env docker pull regdev.rc.princeton.edu/developer-image:latest

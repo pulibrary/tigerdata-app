@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+/usr/bin/env docker exec \
+  --privileged \
+  --interactive \
+  --tty \
+  --user root \
+  mediaflux \
+  /bin/bash
+
