@@ -9,7 +9,10 @@ TigerData is a comprehensive set of data storage and management tools and servic
 
 ## Documentation
 
-We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
+- Design documents and meeting notes are in [Google Drive](https://drive.google.com/drive/u/1/folders/0AJ7rJ2akICY2Uk9PVA)
+- RDSS internal notes are in a [separate directory](https://drive.google.com/drive/u/1/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
+- A set of requirements derived from early sketches is [here](https://docs.google.com/document/d/1U06FBX0qR9iMNiWes5YhP0schcPiLTmFwjHurduSb3A/edit).
+- We're writing a ["Missing Manual"](docs/) for the subset of Mediaflux that is used by TigerData.
 
 ## Structure
 
