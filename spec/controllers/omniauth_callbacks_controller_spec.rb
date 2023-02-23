@@ -18,7 +18,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       allow(User).to receive(:from_cas) { FactoryBot.create(:user) }
       get :cas
       expect(response).to redirect_to(root_path)
-      expect(flash.alert).to eq("You are not a recognized TigerData user")
+      expect(flash.notice).to eq("TigerData is coming soon; Access is currently limited.")
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       allow(User).to receive(:from_cas) { nil }
       get :cas
       expect(response).to redirect_to(root_path)
-      expect(flash.alert).to eq("You are not a recognized CAS user")
+      expect(flash.alert).to eq("You are not a recognized CAS user.")
     end
   end
 end
