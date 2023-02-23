@@ -61,7 +61,6 @@ jobs:
     steps:
       - attach_workspace:
           at: '~/tiger_data'
-      - install_dependencies
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
