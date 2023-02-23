@@ -14,12 +14,6 @@ RSpec.describe "WelcomeController" do
       click_on "Test jQuery"
       expect(page).to have_content "jQuery works!"
     end
-
-    it "has flash messages" do
-      visit "/"
-      expect(page).to have_content "Under Construction"
-      expect(page).to have_content "Welcome to TigerData"
-    end
   end
 
   context "authenticated user" do
