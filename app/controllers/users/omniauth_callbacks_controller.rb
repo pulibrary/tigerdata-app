@@ -5,13 +5,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.nil?
       redirect_to root_path
-      flash[:notice] = "You are not authorized to view this material"
-    else
+      flash[:notice] = "You are not a recognized CAS user"
+    elsif !YAML.load_file("users.yaml").include?(@user.uid)
+      redirect_to root_path
+      flash[:notice] = "You are not a recognized TigerData user"
+    else  
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
-      if is_navigational_format?
-        set_flash_message(:notice, :success, kind: "from Princeton Central Authentication "\
-                                                  "Service")
-      end
     end
   end
 end
