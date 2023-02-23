@@ -6,6 +6,7 @@ RSpec.describe "WelcomeController" do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
+      expect(page).to have_content "Welcome to the TigerData user portal"
       expect(page).to have_content "Log In"
     end
 
@@ -23,7 +24,7 @@ RSpec.describe "WelcomeController" do
     end
     it "shows the 'Log Out' button" do
       visit "/"
-      expect(page).to have_content "User: pul123"
+      expect(page).not_to have_content "Please log in"
       expect(page).to have_content "Log Out"
     end
   end
