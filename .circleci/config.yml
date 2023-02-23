@@ -90,8 +90,6 @@ jobs:
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
-      - run: ls /tmp/rspec
-      - run: cat /tmp/rspec/rspec.xml
       - store_artifacts:
           path: coverage
       - store_artifacts:
