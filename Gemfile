@@ -89,8 +89,8 @@ group :test do
   gem "axe-core-rspec"
   gem "capybara"
   gem "rails-controller-testing"
+  gem "rspec_junit_formatter"
   gem "selenium-webdriver"
   gem "simplecov", require: false
   gem "webdrivers"
-  gem "rspec_junit_formatter"
 end
