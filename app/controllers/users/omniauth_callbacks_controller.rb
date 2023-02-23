@@ -5,12 +5,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.nil?
       redirect_to root_path
-      flash[:notice] = "You are not a recognized CAS user"
+      flash.alert = "You are not a recognized CAS user"
     elsif !YAML.load_file("users.yaml").include?(@user.uid)
       redirect_to root_path
-      flash[:notice] = "You are not a recognized TigerData user"
+      flash.alert = "You are not a recognized TigerData user"
     else  
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
+      flash.notice = "Welcome, #{@user.uid}"
     end
   end
 end
