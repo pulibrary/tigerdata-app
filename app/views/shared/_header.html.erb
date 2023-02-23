@@ -1,5 +1,10 @@
 <header>
-  <div class="p-2 text-left bg-light">
-    <%= link_to "TigerData", root_path %>
-  </div>
+  <nav class="navbar p-2 bg-light">
+    <%= link_to "TigerData", root_path, class: "navbar-brand" %>
+    <% if current_user %>
+      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-primary btn-sm" %>
+    <% else %>
+      <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </nav>
 </header>
