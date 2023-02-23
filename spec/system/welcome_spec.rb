@@ -17,7 +17,7 @@ RSpec.describe "WelcomeController" do
   end
 
   context "authenticated user" do
-    let(:user) { User.new(uid: "pul123") }
+    let(:user) { FactoryBot.create(:user, uid: "pul123") }
     before do
       sign_in user
     end
