@@ -67,6 +67,7 @@ group :development, :test do
   gem "pry-rails"
 
   gem "factory_bot_rails", require: false
+  gem "ffaker"
 end
 
 group :development do
