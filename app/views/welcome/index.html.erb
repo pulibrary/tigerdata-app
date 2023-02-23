@@ -1,11 +1,11 @@
-<h1>Welcome to TigerData</h1>
+<h1>TigerData</h1>
 
-<% if current_user %>
-    User: <%= current_user.uid %>
-    <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-primary" %>
-<% else %>
-    <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-primary" %>
-<% end %>
+<p>
+    Welcome to the TigerData user portal.
+    <% unless current_user %>
+        Please log in.
+    <% end %>
+</p>
 
 <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "300x200") %>
 
