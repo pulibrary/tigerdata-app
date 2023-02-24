@@ -5,8 +5,8 @@ echo "Starting the mediaflux server..."
 /usr/bin/env docker run \
   --name mediaflux \
   --privileged \
-  --publish 0.0.0.0:22:22 \
-  --publish 0.0.0.0:8888:8888 \
+  --publish localhost:22:22 \
+  --publish localhost:8888:8888 \
   --init \
   --rm \
   regdev.rc.princeton.edu/developer-image:latest \

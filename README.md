@@ -148,6 +148,28 @@ In order to stop the MediaFlux server, one may invoke the following:
 $ docker/bin/stop
 ```
 
+##### Authentication
+
+By default, there exists for the MediaFlux deployment a user account with the following credentials:
+
+- domain: `system`
+- user: `manager`
+- password: `change_me`
+
+Alternatively, one may please use `./docker/bin/shell` to create a terminal session within the container and find individual accounts within the file `/setup/config/users.json`.
+
+##### aterm Client
+
+The MediaFlux `aterm` may be accessed using (http://localhost:8888/aterm/)
+
+##### Desktop Client
+
+The MediaFlux desktop client may be accessed using (http://localhost:8888/desktop/)
+
+##### Service Documentation
+
+The MediaFlux service documentation may be accessed using (http://localhost:8888/mflux/service-docs/)
+
 ### Running tests
 
 - Fast: `bundle exec rspec spec`
