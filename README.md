@@ -177,6 +177,15 @@ $ docker cp mediaflux:/usr/local/mediaflux/bin/aterm.jar ~/aterm.jar
 $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 ```
 
+###### Configuration Commands
+
+```bash
+> server.identity.set :name carolyn
+> display font-size 18
+> display prompt   "carolyn > "
+> display save
+```
+
 ##### Service Documentation
 
 The MediaFlux service documentation may be accessed using (http://localhost:8888/mflux/service-docs/)
