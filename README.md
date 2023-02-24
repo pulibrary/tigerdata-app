@@ -134,7 +134,7 @@ Wed Feb 22 22:09:33 UTC 2023 : service start -Dapplication.home=/usr/local/media
 Wed Feb 22 22:09:34 UTC 2023 : Mediaflux (3) launcher starting server using command: '/usr/local/openjdk-8/jre/bin/java -server -Xmx2048m -XX:ErrorFile=/usr/local/mediaflux/volatile/logs/jvm/jvm_crash_20230222_2209_pid%p.log -cp /usr/local/mediaflux/bin/aserver.jar:/usr/local/mediaflux/bin/lib/servlet-api-2.5.jar:/usr/local/mediaflux/bin/lib/jai_imageio.jar:/usr/local/mediaflux/bin/lib/activation.jar:/usr/local/mediaflux/bin/lib/PYCC.pf:/usr/local/mediaflux/bin/lib/jai_core.jar:/usr/local/mediaflux/bin/lib/bsh.jar:/usr/local/mediaflux/bin/lib/tcl.jar:/usr/local/mediaflux/bin/lib/native:/usr/local/mediaflux/bin/lib/jai_codec.jar:/usr/local/mediaflux/ext/packages:/usr/local/mediaflux/plugin/bin -Dapplication.home=/usr/local/mediaflux -Djava.library.path=/usr/local/mediaflux/bin/lib/native:/usr/local/mediaflux/plugin/lib/native -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Djava.awt.headless=true arc.mf.server.ServerGUI nogui'
 ```
 
-One may then confirm that this is successfully running by accessing either [http://0.0.0.0:8888/aterm] or [http://0.0.0.0:8888/desktop] within a web browser. One may also create a terminal session within the container with the following:
+One may then confirm that this is successfully running by accessing either http://localhost:8888/aterm or http://localhost:8888/desktop within a web browser. One may also create a terminal session within the container with the following:
 
 ```bash
 $ docker/bin/shell
@@ -160,11 +160,11 @@ Alternatively, one may please use `docker/bin/shell` to create a terminal sessio
 
 ##### aterm Client
 
-The MediaFlux `aterm` may be accessed using (http://localhost:8888/aterm/)
+The MediaFlux `aterm` may be accessed using http://localhost:8888/aterm/
 
 ##### Desktop Client
 
-The MediaFlux desktop client may be accessed using (http://localhost:8888/desktop/)
+The MediaFlux desktop client may be accessed using http://localhost:8888/desktop/
 
 ##### Thick Client
 
@@ -188,7 +188,7 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 
 ##### Service Documentation
 
-The MediaFlux service documentation may be accessed using (http://localhost:8888/mflux/service-docs/)
+The MediaFlux service documentation may be accessed using http://localhost:8888/mflux/service-docs/
 
 
 ### Running tests
