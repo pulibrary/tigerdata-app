@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o errexit
 
 echo "Updating the Docker Image for the MediaFlux server..."
 

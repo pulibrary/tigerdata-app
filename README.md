@@ -114,16 +114,16 @@ You will also want to run the vite development server:
 
 Docker is currently used to manage and run deployments of the MediaFlux server used for development environments.
 
-In order to retrieve or update the Docker Image, please invoke the following. Note that one will need to retrieve the credentials for the Docker Registry from [LastPass](https://lastpass.com):
+In order to retrieve or update the Docker Image, please invoke the following. You will be prompted to provide credentials for the registry which we've saved in [LastPass](https://lastpass.com):
 
 ```bash
-$ bin/docker/bin/pull
+$ docker/bin/pull
 ```
 
 Then, in order to start a deployment of the MediaFlux server, please then invoke:
 
 ```bash
-$ bin/docker/bin/start
+$ docker/bin/start
 ```
 
 If this is successful, one should then be able to view the logs for the server within the terminal session:
@@ -156,7 +156,7 @@ By default, there exists for the MediaFlux deployment a user account with the fo
 - user: `manager`
 - password: `change_me`
 
-Alternatively, one may please use `./docker/bin/shell` to create a terminal session within the container and find individual accounts within the file `/setup/config/users.json`.
+Alternatively, one may please use `docker/bin/shell` to create a terminal session within the container and find individual accounts within the file `/setup/config/users.json`.
 
 ##### aterm Client
 
