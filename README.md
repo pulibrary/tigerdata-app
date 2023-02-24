@@ -166,9 +166,21 @@ The MediaFlux `aterm` may be accessed using (http://localhost:8888/aterm/)
 
 The MediaFlux desktop client may be accessed using (http://localhost:8888/desktop/)
 
+##### Thick Client
+
+One may start and access the Thick Client using the Java Virtual Machine with the following steps:
+
+```bash
+$ docker/bin/start
+# Within another terminal session, please invoke:
+$ docker cp mediaflux:/usr/local/mediaflux/bin/aterm.jar ~/aterm.jar
+$ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
+```
+
 ##### Service Documentation
 
 The MediaFlux service documentation may be accessed using (http://localhost:8888/mflux/service-docs/)
+
 
 ### Running tests
 
