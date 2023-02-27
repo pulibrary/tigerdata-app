@@ -24,4 +24,15 @@ RSpec.describe "WelcomeController" do
       expect(page).to have_content "These dashboards are available"
     end
   end
+
+  context "non existant dashboard 403 rather than 404" do
+    let(:user) { FactoryBot.create(:user, uid: "knight") }
+    before do
+      sign_in user
+    end
+    it "denies access" do
+      visit "/dashboards/xyz"
+      expect(page).to have_content "Access Denied"
+    end
+  end
 end
