@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 class DashboardsController < ApplicationController
   def show
-    uid = current_user.uid
-    @allowed_roles = YAML.load_file("users.yaml")[uid]["roles"]
+    user_config = YAML.load_file("users.yaml")[current_user.uid]
+    unless user_config
+      render "/access_denied", status: :forbidden
+      return
+    end
+  
+    @allowed_roles = user_config["roles"]
     @role = params[:role]
     unless @allowed_roles.include?(@role)
       render "/access_denied", status: :forbidden
