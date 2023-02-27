@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -o errexit
+
+/usr/bin/env docker exec \
+  --privileged \
+  --interactive \
+  --tty \
+  --user root \
+  mediaflux \
+  /bin/bash
+

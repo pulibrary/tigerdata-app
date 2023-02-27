@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -o errexit
+
+echo "Stopping the mediaflux server..."
+/usr/bin/env docker stop mediaflux > /dev/null
+
+echo "The mediaflux server has been successfully stopped."

@@ -110,6 +110,87 @@ You will also want to run the vite development server:
 
 `bin/vite dev`
 
+#### MediaFlux Server
+
+Docker is currently used to manage and run deployments of the MediaFlux server used for development environments.
+
+In order to retrieve or update the Docker Image, please invoke the following. You will be prompted to provide credentials for the registry which we've saved in [LastPass](https://lastpass.com):
+
+```bash
+$ docker/bin/pull
+```
+
+Then, in order to start a deployment of the MediaFlux server, please then invoke:
+
+```bash
+$ docker/bin/start
+```
+
+If this is successful, one should then be able to view the logs for the server within the terminal session:
+
+```bash
+Starting the mediaflux server...
+Wed Feb 22 22:09:33 UTC 2023 : service start -Dapplication.home=/usr/local/mediaflux
+Wed Feb 22 22:09:34 UTC 2023 : Mediaflux (3) launcher starting server using command: '/usr/local/openjdk-8/jre/bin/java -server -Xmx2048m -XX:ErrorFile=/usr/local/mediaflux/volatile/logs/jvm/jvm_crash_20230222_2209_pid%p.log -cp /usr/local/mediaflux/bin/aserver.jar:/usr/local/mediaflux/bin/lib/servlet-api-2.5.jar:/usr/local/mediaflux/bin/lib/jai_imageio.jar:/usr/local/mediaflux/bin/lib/activation.jar:/usr/local/mediaflux/bin/lib/PYCC.pf:/usr/local/mediaflux/bin/lib/jai_core.jar:/usr/local/mediaflux/bin/lib/bsh.jar:/usr/local/mediaflux/bin/lib/tcl.jar:/usr/local/mediaflux/bin/lib/native:/usr/local/mediaflux/bin/lib/jai_codec.jar:/usr/local/mediaflux/ext/packages:/usr/local/mediaflux/plugin/bin -Dapplication.home=/usr/local/mediaflux -Djava.library.path=/usr/local/mediaflux/bin/lib/native:/usr/local/mediaflux/plugin/lib/native -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Djava.awt.headless=true arc.mf.server.ServerGUI nogui'
+```
+
+One may then confirm that this is successfully running by accessing either http://localhost:8888/aterm or http://localhost:8888/desktop within a web browser. One may also create a terminal session within the container with the following:
+
+```bash
+$ docker/bin/shell
+```
+
+##### Stopping the MediaFlux Server
+
+In order to stop the MediaFlux server, one may invoke the following:
+
+```bash
+$ docker/bin/stop
+```
+
+##### Authentication
+
+By default, there exists for the MediaFlux deployment a user account with the following credentials:
+
+- domain: `system`
+- user: `manager`
+- password: `change_me`
+
+Alternatively, one may please use `docker/bin/shell` to create a terminal session within the container and find individual accounts within the file `/setup/config/users.json`.
+
+##### aterm Client
+
+The MediaFlux `aterm` may be accessed using http://localhost:8888/aterm/
+
+##### Desktop Client
+
+The MediaFlux desktop client may be accessed using http://localhost:8888/desktop/
+
+##### Thick Client
+
+One may start and access the Thick Client using the Java Virtual Machine with the following steps:
+
+```bash
+$ docker/bin/start
+# Within another terminal session, please invoke:
+$ docker cp mediaflux:/usr/local/mediaflux/bin/aterm.jar ~/aterm.jar
+$ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
+```
+
+###### Configuration Commands
+
+```bash
+> server.identity.set :name carolyn
+> display font-size 18
+> display prompt   "carolyn > "
+> display save
+```
+
+##### Service Documentation
+
+The MediaFlux service documentation may be accessed using http://localhost:8888/mflux/service-docs/
+
+
 ### Running tests
 
 - Fast: `bundle exec rspec spec`

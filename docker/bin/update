@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -o errexit
+
+echo "Updating the Docker Image for the MediaFlux server..."
+
+/usr/bin/env docker login -u docker https://regdev.rc.princeton.edu/
+/usr/bin/env docker rmi regdev.rc.princeton.edu/developer-image:latest
+/usr/bin/env docker pull regdev.rc.princeton.edu/developer-image:latest
+
+echo "The Docker Image for the MediaFlux server has been successfully updated."
