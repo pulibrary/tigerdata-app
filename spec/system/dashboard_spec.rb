@@ -25,7 +25,7 @@ RSpec.describe "WelcomeController" do
     end
   end
 
-  context "non existant dashboard 403 rather than 404" do
+  context "non existant dashboard access denied" do
     let(:user) { FactoryBot.create(:user, uid: "knight") }
     before do
       sign_in user
