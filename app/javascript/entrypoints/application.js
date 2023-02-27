@@ -14,7 +14,7 @@ import * as bootstrap from 'bootstrap';
 
 window.bootstrap = bootstrap;
 
-function initPage() {
+export function initPage() {
   $('#test-jquery').click((event) => {
     $(event.target).html('jQuery works!');
   });
