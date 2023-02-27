@@ -12,11 +12,13 @@ import 'bootstrap/js/src/scrollspy';
 
 import * as bootstrap from 'bootstrap';
 
+import { setTargetHtml } from './helper';
+
 window.bootstrap = bootstrap;
 
-export function initPage() {
+function initPage() {
   $('#test-jquery').click((event) => {
-    $(event.target).html('jQuery works!');
+    setTargetHtml(event, 'jQuery works!');
   });
 }
 
