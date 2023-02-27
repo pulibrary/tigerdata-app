@@ -109,12 +109,15 @@ workflows:
   build_accept_deploy:
     jobs:
       - build
-      - test:
+      - ruby-lint:
           requires:
             - build
-      - rubocop:
+      - ruby-test:
           requires:
             - build
-      - eslint:
+      - js-lint:
+          requires:
+            - build
+      - js-test:
           requires:
             - build
