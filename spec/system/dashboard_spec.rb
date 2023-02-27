@@ -19,7 +19,7 @@ RSpec.describe "WelcomeController" do
     before do
       sign_in user
     end
-    it "denies access" do
+    it "allows access" do
       visit "/dashboards/a"
       expect(page).to have_content "These dashboards are available"
     end
