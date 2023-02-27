@@ -8,6 +8,6 @@ import {
 
 describe('helper', () => {
   it('has a window', () => {
-    expect(typeof window).not.toBe('undefined');
+    expect(typeof window).toBe('object');
   });
 });
