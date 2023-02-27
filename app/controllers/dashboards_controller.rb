@@ -6,13 +6,13 @@ class DashboardsController < ApplicationController
       render "/access_denied", status: :forbidden
       return
     end
-  
+
     @allowed_roles = user_config["roles"]
     @role = params[:role]
-    unless @allowed_roles.include?(@role)
-      render "/access_denied", status: :forbidden
-    else
+    if @allowed_roles.include?(@role)
       render "/dashboards/#{@role}"
+    else
+      render "/access_denied", status: :forbidden
     end
   end
 end
