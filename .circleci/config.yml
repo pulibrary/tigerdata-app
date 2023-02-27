@@ -53,15 +53,12 @@ jobs:
 
   eslint:
     # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
-    working_directory: ~/tiger_data
+    working_directory: *root
     docker:
-      - image: cimg/ruby:3.1.3-browsers
-        environment:
-          RAILS_ENV: test
+      - *ruby_docker
     steps:
       - attach_workspace:
-          at: '~/tiger_data'
-      - install_dependencies
+          at: *root
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
