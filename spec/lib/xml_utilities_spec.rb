@@ -12,6 +12,16 @@ describe "xml_utilities" do
   end
 
   it "translates asset type definition to hash" do
-    expect(xml_doc_to_html(Nokogiri('<definition><element name="my_string" type="string" /></definition>'))).to eq("<pre>:name: definition\n:subelements:\n- :name: element\n  :attr:\n  - :name: name (attribute)\n    :text: my_string\n  - :name: type (attribute)\n    :text: string\n</pre>")
+    expect(xml_doc_to_html(Nokogiri('<definition><element name="my_string" type="string" /></definition>'))).to eq(
+"""<pre>:name: definition
+:subelements:
+- :name: element
+  :attr:
+  - :name: name (attribute)
+    :text: my_string
+  - :name: type (attribute)
+    :text: string
+</pre>"""
+)
   end
 end
