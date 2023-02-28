@@ -6,20 +6,21 @@ TYPENAMES = { 1 => "element", 2 => "attribute", 3 => "text", 4 => "cdata", 8 => 
 
 def xml_node_to_hash(node)
   # Based on https://stackoverflow.com/a/10144623
-  {}.tap do |h|
-    h[:name] = node.name
-    node_type_name = TYPENAMES[node.node_type]
-    if node_type_name != "element"
-      h[:name] += " (#{node_type_name})"
-    end
-    if node.namespace
-      h[:nshref] = node.namespace.href
-      h[:nsprefix] = node.namespace.prefix
-    end
-    h[:text] = node.text unless node.text.empty?
-    h[:attr] = node.attribute_nodes.map { |attr_node| xml_node_to_hash(attr_node) } if node.element? && !node.attribute_nodes.empty?
-    h.merge! subelements: node.children.map { |child_node| xml_node_to_hash(child_node) } if node.element? && !node.children.empty?
+  h = {}
+  h[:name] = node.name
+  # For our needs, I think the type name clear from context.
+  # node_type_name = TYPENAMES[node.node_type]
+  # if node_type_name != "element"
+  #   h[:name] += " (#{node_type_name})"
+  # end
+  if node.namespace
+    h[:nshref] = node.namespace.href
+    h[:nsprefix] = node.namespace.prefix
   end
+  h[:text] = node.text unless node.text.empty?
+  h[:attributes] = node.attribute_nodes.map { |attr_node| xml_node_to_hash(attr_node) } if node.element? && !node.attribute_nodes.empty?
+  h[:subelements] = node.children.map { |child_node| xml_node_to_hash(child_node) } if node.element? && !node.children.empty?
+  h
 end
 
 def xml_doc_to_hash(document)
