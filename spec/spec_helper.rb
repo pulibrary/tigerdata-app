@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "simplecov"
-SimpleCov.minimum_coverage 100
+SimpleCov.enable_coverage :branch
+SimpleCov.minimum_coverage line: 100, branch: 100
 SimpleCov.start
 
 require "factory_bot"
