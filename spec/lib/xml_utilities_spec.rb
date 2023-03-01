@@ -8,15 +8,22 @@ describe "xml_utilities" do
   end
 
   it "translates complex xml to hash" do
-    expect(xml_doc_to_hash(Nokogiri('<el attr="Value"><!--Comment-->Text<![CDATA[Cdata]]></el>'))).to eq({
-      :attributes => [{:name=>"attr", :text=>"Value"}],
-      :name => "el",
-      :subelements => [
-        {:name=>"comment", :text=>"Comment"},
-        {:name=>"text", :text=>"Text"},
-        {:name=>"#cdata-section", :text=>"Cdata"}],
-      :text => "TextCdata",
-    })
+    expect(xml_doc_to_hash(Nokogiri(
+      '<example:el attr="Value" xmlns:example="http://example.com"><!--Comment-->Text<![CDATA[Cdata]]></example:el>'
+    ))).to eq(
+      {
+        attributes: [{ name: "attr", text: "Value" }],
+        name: "el",
+        nshref: "http://example.com",
+        nsprefix: "example",
+        subelements: [
+          { name: "comment", text: "Comment" },
+          { name: "text", text: "Text" },
+          { name: "#cdata-section", text: "Cdata" }
+        ],
+        text: "TextCdata"
+      }
+    )
   end
 
   it "translates basic xml to html" do

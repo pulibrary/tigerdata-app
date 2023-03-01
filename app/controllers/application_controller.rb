@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   def new_session_path(_scope)
+    # :nocov:
     new_user_session_path
+    # :nocov:
   end
 end

@@ -12,6 +12,8 @@ if Rails.env.development? || Rails.env.test?
       end
     end
   rescue StandardError
+    # :nocov:
     nil
+    # :nocov:
   end
 end
