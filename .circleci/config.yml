@@ -81,7 +81,7 @@ jobs:
           path: /home/circleci/tiger_data/tmp/capybara
 
   js-lint:
-    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
+    # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
     docker:
       - *ruby_docker
@@ -93,7 +93,7 @@ jobs:
           command: yarn run eslint 'app/javascript/**'
 
   js-test:
-    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
+    # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
     docker:
       - *ruby_docker
@@ -101,7 +101,7 @@ jobs:
       - attach_workspace:
           at: *root
       - run:
-          name: Run eslint
+          name: Run vitest
           command: yarn run vitest run --coverage
 
 workflows:
