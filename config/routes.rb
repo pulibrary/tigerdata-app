@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "welcome#index"
 
+  get "dashboards/:role", to: "dashboards#show"
+
   namespace :api do
     namespace :v0 do
       resources :projects, only: [:index]

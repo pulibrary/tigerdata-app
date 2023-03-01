@@ -1,15 +1,25 @@
 # TODO: When TigerData status is available in AD, this should go away.
 
 # RDSS
-- bs3097 # Bess Sadler
-- cac9 # Carolyn Cole
-- kl37 # Kate Lynch
-- cm7575 # Chuck McCallum
-- jrg5 # James Griffin
-- hc8719 # Hector Correa
+bs3097: # Bess Sadler
+  roles: ["a"]
+cac9: # Carolyn Cole
+  roles: ["a"]
+kl37: # Kate Lynch
+  roles: ["a"]
+cm7575: # Chuck McCallum
+  roles: ["a"]
+jrg5: # James Griffin
+  roles: ["a"]
+hc8719: # Hector Correa
+  roles: ["a"]
 
 # Outside
-- rkj # Rishi Joshi
-- huston # Steve Huston
-- mjc12 # Matt Chandler
-- knight # Robert Knight
+rkj: # Rishi Joshi
+  roles: ["a"]
+huston: # Steve Huston
+  roles: ["a"]
+mjc12: # Matt Chandler
+  roles: ["a"]
+knight: # Robert Knight
+  roles: ["a"]

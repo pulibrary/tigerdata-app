@@ -1,0 +1,6 @@
+These dashboards are available to you:
+<ul>
+    <% @allowed_roles.each do |role| %>
+        <li><%= role %></li>
+    <% end %>
+</ul>
