@@ -1,0 +1,12 @@
+- name: Data Sponsor
+  description_md: |
+    - The person bearing primary responsibility for a project
+    - Must be eligible to be a Principal Investigator
+- name: Data Manager
+  description_md: |
+    - The person who manages day-to-day project activities
+    - Must be trained by the Research Data Service
+- name: Data User
+  description_md: |
+    - A person who accesses data/metadata in a project
+    - Must be an affiliate of Princeton University
