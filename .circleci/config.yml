@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:setup
+      - run: bundle exec rake db:setup RAILS_ENV=test
       - run:
           name: Run Rspec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format documentation --format RspecJunitFormatter -o /tmp/rspec/rspec.xml

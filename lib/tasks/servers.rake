@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 namespace :servers do
   task initialize: :environment do
-    Rake::Task["db:create"].invoke
-    Rake::Task["db:migrate"].invoke
+    Rake::Task["db:setup"].invoke
   end
 
   desc "Starts development dependencies"
