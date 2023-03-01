@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+# Lando is not used in CI, so there is no real coverage here.
+# :nocov:
 if Rails.env.development? || Rails.env.test?
   begin
     lando_services = JSON.parse(`lando info --format json`, symbolize_names: true)
@@ -12,8 +14,7 @@ if Rails.env.development? || Rails.env.test?
       end
     end
   rescue StandardError
-    # :nocov:
     nil
-    # :nocov:
   end
 end
+# :nocov:
