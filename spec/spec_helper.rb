@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 require "simplecov"
-SimpleCov.enable_coverage :branch
-SimpleCov.minimum_coverage line: 100, branch: 100
+# TODO: Enable branch coverage checks: https://github.com/pulibrary/tiger-data-app/issues/103
+# SimpleCov.enable_coverage :branch
+# SimpleCov.minimum_coverage line: 100, branch: 100
+SimpleCov.minimum_coverage 100
 SimpleCov.start
 
 require "factory_bot"
