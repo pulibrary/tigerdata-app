@@ -85,6 +85,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.18)
+    bcrypt_pbkdf (1.1.0)
     bindex (0.8.1)
     bixby (5.0.2)
       rubocop (= 1.28.2)
@@ -110,6 +111,8 @@ GEM
     capistrano-rails (1.6.2)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
+    capistrano-yarn (2.0.2)
+      capistrano (~> 3.0)
     capybara (3.38.0)
       addressable
       matrix
@@ -140,6 +143,7 @@ GEM
     docile (1.4.0)
     dry-cli (1.0.0)
     dumb_delegator (1.0.0)
+    ed25519 (1.3.0)
     erubi (1.12.0)
     execjs (2.8.1)
     factory_bot (6.2.1)
@@ -385,14 +389,17 @@ PLATFORMS
 
 DEPENDENCIES
   axe-core-rspec
+  bcrypt_pbkdf
   bixby
   bootsnap
   bootstrap (~> 5.2.0)
   capistrano (~> 3.17)
   capistrano-rails (~> 1.6)
+  capistrano-yarn
   capybara
   debug
   devise
+  ed25519
   factory_bot_rails
   ffaker
   importmap-rails
