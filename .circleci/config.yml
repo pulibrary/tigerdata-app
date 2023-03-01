@@ -40,7 +40,7 @@ jobs:
           root: &root '~/tiger_data'
           paths: '*'
 
-  rubocop:
+  ruby-lint:
     working_directory: *root
     docker:
       - *ruby_docker
@@ -51,19 +51,7 @@ jobs:
           name: Run rubocop
           command: bundle exec rubocop
 
-  eslint:
-    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
-    working_directory: *root
-    docker:
-      - *ruby_docker
-    steps:
-      - attach_workspace:
-          at: *root
-      - run:
-          name: Run eslint
-          command: yarn run eslint 'app/javascript/**'
-
-  test:
+  ruby-test:
     working_directory: *root
     docker:
       - *ruby_docker
@@ -92,17 +80,44 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
 
+  js-lint:
+    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
+    working_directory: *root
+    docker:
+      - *ruby_docker
+    steps:
+      - attach_workspace:
+          at: *root
+      - run:
+          name: Run eslint
+          command: yarn run eslint 'app/javascript/**'
+
+  js-test:
+    # We don't actually need any of the ruby environment to lint JS... but use what we have for now.
+    working_directory: *root
+    docker:
+      - *ruby_docker
+    steps:
+      - attach_workspace:
+          at: *root
+      - run:
+          name: Run eslint
+          command: yarn run vitest run --coverage
+
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - build
-      - test:
+      - ruby-lint:
           requires:
             - build
-      - rubocop:
+      - ruby-test:
           requires:
             - build
-      - eslint:
+      - js-lint:
+          requires:
+            - build
+      - js-test:
           requires:
             - build
