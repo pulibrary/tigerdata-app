@@ -66,6 +66,9 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
 
+  gem "bcrypt_pbkdf"
+  gem "capistrano-yarn"
+  gem "ed25519"
   gem "factory_bot_rails", require: false
   gem "ffaker"
 end

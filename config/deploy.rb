@@ -9,6 +9,8 @@ set :deploy_to, "/opt/tigerdata"
 
 set :branch, ENV["BRANCH"] || "main"
 
+set :yarn_flags, "--silent"
+
 desc "Write the current version to public/version.txt"
 task :write_version do
   on roles(:app), in: :sequence do

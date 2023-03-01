@@ -9,6 +9,9 @@ require "capistrano/deploy"
 require "capistrano/bundler"
 require "capistrano/rails"
 
+# include yarn
+require "capistrano/yarn"
+
 # Load the SCM plugin appropriate to your project:
 #
 # require "capistrano/scm/hg"
