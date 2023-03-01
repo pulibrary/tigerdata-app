@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get "dashboards/:role", to: "dashboards#show"
 
+  get "roles", to: "roles#index"
+
   namespace :api do
     namespace :v0 do
       resources :projects, only: [:index]
