@@ -200,3 +200,10 @@ The MediaFlux service documentation may be accessed using http://localhost:8888/
 
 1. `bundle exec rails s -p 3000`
 2. Access application at [http://localhost:3000/](http://localhost:3000/)
+
+## Production and Staging Deployment
+Deploy with Capistrano (we are intending to have a deployment mechanism with Ansible Tower, but that is not yet implemented)
+```bundle exec cap production deploy```
+or
+```bundle exec cap staging deploy```
+
