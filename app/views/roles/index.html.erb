@@ -3,5 +3,7 @@
 <dl>
   <% @roles.each do |role| %>
     <dt><%= role.name %></dt>
+    <!-- TODO: Render markdown -->
+    <dd><pre><%= role.description_md %></pre></dd>
   <% end %>
 </dl>
