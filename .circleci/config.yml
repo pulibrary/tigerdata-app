@@ -72,7 +72,7 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format documentation --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
