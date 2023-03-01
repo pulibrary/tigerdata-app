@@ -7,7 +7,7 @@ class DashboardsController < ApplicationController
       return
     end
 
-    @allowed_roles = user_config["roles"]
+    @allowed_roles = user_config["allowed_roles"]
     @role = params[:role]
     if @allowed_roles.include?(@role)
       render "/dashboards/#{@role}"

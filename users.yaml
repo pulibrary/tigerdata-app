@@ -2,24 +2,24 @@
 
 # RDSS
 bs3097: # Bess Sadler
-  roles: ["a"]
+  allowed_roles: ["a"]
 cac9: # Carolyn Cole
-  roles: ["a"]
+  allowed_roles: ["a"]
 kl37: # Kate Lynch
-  roles: ["a"]
+  allowed_roles: ["a"]
 cm7575: # Chuck McCallum
-  roles: ["a"]
+  allowed_roles: ["a"]
 jrg5: # James Griffin
-  roles: ["a"]
+  allowed_roles: ["a"]
 hc8719: # Hector Correa
-  roles: ["a"]
+  allowed_roles: ["a"]
 
 # Outside
 rkj: # Rishi Joshi
-  roles: ["a"]
+  allowed_roles: ["a"]
 huston: # Steve Huston
-  roles: ["a"]
+  allowed_roles: ["a"]
 mjc12: # Matt Chandler
-  roles: ["a"]
+  allowed_roles: ["a"]
 knight: # Robert Knight
-  roles: ["a"]
+  allowed_roles: ["a"]
