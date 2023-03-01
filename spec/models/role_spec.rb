@@ -2,5 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Role, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "has seed data" do
+    expect(Role.all.size).to eq(3)
+  end
 end
