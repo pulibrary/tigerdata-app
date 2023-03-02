@@ -2,24 +2,24 @@
 
 # RDSS
 - uid: bs3097 # Bess Sadler
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: cac9 # Carolyn Cole
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: kl37 # Kate Lynch
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: cm7575 # Chuck McCallum
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: jrg5 # James Griffin
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: hc8719 # Hector Correa
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 
 # Outside
 - uid: rkj # Rishi Joshi
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: huston # Steve Huston
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: mjc12 # Matt Chandler
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]
 - uid: knight # Robert Knight
-  allowed_roles: ["Data User"]
+  allowed_roles: ["Data User", "Data Manager", "Data Owner"]

@@ -9,7 +9,7 @@ Projects where you are <%= @role.name %>:
 <% else %>
     <ul>
         <% @projects.each do |project| %>
-            <li><%= project %></li>
+            <li><%= project.name %></li>
         <% end %>
     </ul>
 <% end %>
