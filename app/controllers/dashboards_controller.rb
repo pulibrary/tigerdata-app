@@ -6,11 +6,12 @@ class DashboardsController < ApplicationController
     matching_roles = allowed_roles.filter { |role| clean_for_url(role.name) == params[:role] }
     if matching_roles.empty?
       render "/access_denied", status: :forbidden
-    else
-      @role = matching_roles[0]
-      role_url_name = clean_for_url(@role.name)
-      render "/dashboards/#{role_url_name}"
+      return
     end
+    @role = matching_roles[0]
+    @projects = current_user.project_user_roles.filter { |pur| pur.role.id == @role.id }.map { |pur| pur.project }
+    clean_name = clean_for_url(@role.name)
+    render "/dashboards/#{clean_name}"
   end
 end
 

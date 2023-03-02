@@ -2,3 +2,14 @@
 
 <!-- TODO: Render markdown -->
 <pre><%= @role.description_md %></pre>
+
+Projects where you are <%= @role.name %>:
+<% if @projects.empty? %>
+    None
+<% else %>
+    <ul>
+        <% @projects.each do |project| %>
+            <li><%= project %></li>
+        <% end %>
+    </ul>
+<% end %>
