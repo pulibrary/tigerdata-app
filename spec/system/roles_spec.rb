@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "RolesController" do
+RSpec.describe RolesController do
   context "authenticated user" do
     let(:user) { FactoryBot.create(:user, uid: "pul123") }
     before do

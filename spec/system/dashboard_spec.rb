@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "DashboardController" do
+RSpec.describe DashboardsController do
   context "authenticated user, but unauthorized" do
     let(:user) { FactoryBot.create(:user, uid: "pul123") }
     before do

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController" do
+RSpec.describe WelcomeController do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
