@@ -9,7 +9,7 @@ class DashboardsController < ApplicationController
       return
     end
     @role = matching_roles[0]
-    @projects = current_user.project_user_roles.filter { |pur| pur.role.id == @role.id }.map { |pur| pur.project }
+    @projects = current_user.project_user_roles.filter { |pur| pur.role.id == @role.id }.map(&:project)
     clean_name = clean_for_url(@role.name)
     render "/dashboards/#{clean_name}"
   end
