@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
   get "roles", to: "roles#index"
 
+  get "projects/:id", to: "projects#show", as: :projects
+
   namespace :api do
     namespace :v0 do
       resources :projects, only: [:index]

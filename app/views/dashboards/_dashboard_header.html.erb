@@ -9,7 +9,7 @@ Projects where you are <%= @role.name %>:
 <% else %>
     <ul>
         <% @projects.each do |project| %>
-            <li><%= project.name %></li>
+            <li><%= link_to project.name, projects_path(id: project.id) %></li>
         <% end %>
     </ul>
 <% end %>
