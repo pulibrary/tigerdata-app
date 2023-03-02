@@ -9,7 +9,7 @@ RSpec.describe "DashboardController" do
       sign_in user
     end
     it "denies access" do
-      visit "/dashboards/a"
+      visit "/dashboards/data-user"
       expect(page).to have_content "Access Denied"
     end
   end
@@ -20,8 +20,9 @@ RSpec.describe "DashboardController" do
       sign_in user
     end
     it "allows access" do
-      visit "/dashboards/a"
-      expect(page).to have_content "These dashboards are available"
+      visit "/"
+      click_on "Data User"
+      expect(page).to have_content "Dashboard: Data User"
     end
   end
 
