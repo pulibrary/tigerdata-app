@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class DashboardsController < ApplicationController
   def show
+    byebug
     user_config = YAML.load_file("seeds/users.yaml")[current_user.uid]
     unless user_config
       render "/access_denied", status: :forbidden

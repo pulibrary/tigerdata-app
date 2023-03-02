@@ -1,25 +1,25 @@
 # TODO: When TigerData status is available in AD, this should go away.
 
 # RDSS
-bs3097: # Bess Sadler
-  allowed_roles: ["a"]
-cac9: # Carolyn Cole
-  allowed_roles: ["a"]
-kl37: # Kate Lynch
-  allowed_roles: ["a"]
-cm7575: # Chuck McCallum
-  allowed_roles: ["a"]
-jrg5: # James Griffin
-  allowed_roles: ["a"]
-hc8719: # Hector Correa
-  allowed_roles: ["a"]
+- uid: bs3097 # Bess Sadler
+  allowed_roles: ["Data User"]
+- uid: cac9 # Carolyn Cole
+  allowed_roles: ["Data User"]
+- uid: kl37 # Kate Lynch
+  allowed_roles: ["Data User"]
+- uid: cm7575 # Chuck McCallum
+  allowed_roles: ["Data User"]
+- uid: jrg5 # James Griffin
+  allowed_roles: ["Data User"]
+- uid: hc8719 # Hector Correa
+  allowed_roles: ["Data User"]
 
 # Outside
-rkj: # Rishi Joshi
-  allowed_roles: ["a"]
-huston: # Steve Huston
-  allowed_roles: ["a"]
-mjc12: # Matt Chandler
-  allowed_roles: ["a"]
-knight: # Robert Knight
-  allowed_roles: ["a"]
+- uid: rkj # Rishi Joshi
+  allowed_roles: ["Data User"]
+- uid: huston # Steve Huston
+  allowed_roles: ["Data User"]
+- uid: mjc12 # Matt Chandler
+  allowed_roles: ["Data User"]
+- uid: knight # Robert Knight
+  allowed_roles: ["Data User"]

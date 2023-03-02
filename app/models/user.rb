@@ -4,6 +4,9 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :rememberable, :omniauthable
 
+  has_many :allowed_roles
+  has_many :project_user_roles
+
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid) || User.new
 
