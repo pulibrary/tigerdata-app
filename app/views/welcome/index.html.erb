@@ -16,3 +16,13 @@
        <li><%= project[:name] %></li>
     <% end %>
 </ul>
+
+<% if current_user %>
+    Dashboards:
+    <ul>
+        <%# TODO: Add a helper method on user for this? #%>
+        <% current_user.allowed_roles.map(&:role).map(&:name).each do |role| %>
+            <li><%= link_to role, dashboards_path(role: role.downcase.gsub(/\W/, "-")) %></li>
+        <% end %>
+    </ul>
+<% end %>

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "welcome#index"
 
-  get "dashboards/:role", to: "dashboards#show"
+  get "dashboards/:role", to: "dashboards#show", as: :dashboards
 
   get "roles", to: "roles#index"
 

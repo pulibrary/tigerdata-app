@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 class DashboardsController < ApplicationController
   def show
-    byebug
-    user_config = YAML.load_file("seeds/users.yaml")[current_user.uid]
-    unless user_config
-      render "/access_denied", status: :forbidden
-      return
-    end
-
-    @allowed_roles = user_config["allowed_roles"]
-    @role = params[:role]
-    if @allowed_roles.include?(@role)
-      render "/dashboards/#{@role}"
+    # TODO: Is there a better way to do this efficiently in a single SQL statement?
+    allowed_roles = current_user.allowed_roles.map(&:role).map(&:name)
+    allowed_role_codes = allowed_roles.map { |role| role.downcase.gsub(/\W/, "-") }
+    
+    role_code = params[:role]
+    if allowed_role_codes.include?(role_code)
+      # TODO: Tighten this and make sure there's no way to load arbitrary files.
+      render "/dashboards/#{role_code}"
     else
       render "/access_denied", status: :forbidden
     end

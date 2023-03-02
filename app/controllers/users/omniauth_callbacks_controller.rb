@@ -6,7 +6,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.nil?
       redirect_to root_path
       flash.alert = "You are not a recognized CAS user."
-    elsif !YAML.load_file("seeds/users.yaml").keys.include?(@user.uid)
+    elsif @user.allowed_roles.empty?
       redirect_to root_path
       flash.notice = "TigerData is coming soon; Access is currently limited."
     else

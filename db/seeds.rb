@@ -16,6 +16,6 @@ YAML.load_file("seeds/users.yaml").each do |user|
     )
     user["allowed_roles"].each do |allowed_role|
         r = Role.find_by(name: allowed_role)
-        u.allowed_roles.build(role: r)
+        u.allowed_roles.create(role: r)
     end
 end
