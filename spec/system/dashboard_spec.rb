@@ -15,7 +15,7 @@ RSpec.describe "DashboardController" do
   end
 
   context "authenticated and authorized user" do
-    let(:user) { FactoryBot.create(:user, uid: "knight") }
+    let(:user) { User.find_by(uid: "knight") }
     before do
       sign_in user
     end
@@ -27,7 +27,7 @@ RSpec.describe "DashboardController" do
   end
 
   context "non existant dashboard access denied" do
-    let(:user) { FactoryBot.create(:user, uid: "knight") }
+    let(:user) { User.find_by(uid: "knight") }
     before do
       sign_in user
     end

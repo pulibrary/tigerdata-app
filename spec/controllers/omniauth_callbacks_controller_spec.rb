@@ -6,7 +6,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   context "TigerData user" do
     it "redirects to home page with notice" do
-      allow(User).to receive(:from_cas) { FactoryBot.create(:user, uid: "knight") }
+      allow(User).to receive(:from_cas) { User.find_by(uid: "knight") }
       get :cas
       expect(response).to redirect_to(root_path)
       expect(flash.notice).to eq("Welcome, knight")
