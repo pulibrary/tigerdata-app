@@ -1,0 +1,25 @@
+---
+production:
+  api_port: <%= ENV["MEDIAFLUX_PORT"] %>
+  api_host: <%= ENV["MEDIAFLUX_HOST"] %>
+  api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
+  api_user: <%= ENV["MEDIAFLUX_USER"] %>
+  api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+staging:
+  api_port: <%= ENV["MEDIAFLUX_PORT"] %>
+  api_host: <%= ENV["MEDIAFLUX_HOST"] %>
+  api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
+  api_user: <%= ENV["MEDIAFLUX_USER"] %>
+  api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+development:
+  api_port: '8888'
+  api_host: '0.0.0.0'
+  api_domain: 'system'
+  api_user: 'manager'
+  api_password: 'change_me'
+test:
+  api_port: '8888'
+  api_host: '0.0.0.0'
+  api_domain: 'system'
+  api_user: 'manager'
+  api_password: 'change_me'
