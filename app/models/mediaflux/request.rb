@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Mediaflux
   class Request
-
     def self.service
       raise(NotImplementedError, "#{self} is an abstract class, please override #{self}.service")
     end
@@ -57,8 +56,12 @@ module Mediaflux
       @http_response ||= resolve
     end
 
+    def resolved?
+      @http_response.present?
+    end
+
     def response_document
-      return unless http_response
+      resolve unless resolved?
 
       Rails.logger.debug(http_response.body)
       @response_document ||= Nokogiri::XML.parse(http_response.body)

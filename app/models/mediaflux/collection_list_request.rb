@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Mediaflux
   class CollectionListRequest < Request
-
     def self.default_namespace
       "tigerdata"
     end

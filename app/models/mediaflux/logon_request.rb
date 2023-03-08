@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Mediaflux
   class LogonRequest < Request
-
     def self.service
       "system.logon"
     end
