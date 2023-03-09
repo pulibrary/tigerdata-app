@@ -9,6 +9,7 @@ require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "axe-rspec"
 require "devise"
+require "webmock/rspec"
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
