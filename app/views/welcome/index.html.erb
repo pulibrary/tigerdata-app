@@ -86,20 +86,21 @@
     <% end %>
   </table>
 
-  <p>Displaying assets <%= @result[:result][:cursor][:from] %> to <%= @result[:result][:cursor][:to] %></p>
+    <p>Displaying assets <%= @result[:result][:cursor][:from] %> to <%= @result[:result][:cursor][:to] %></p>
 
-  <!-- prev/next -->
-  <p>
-    <% if @result[:result][:cursor][:prev] > 0 %>
-      <%= link_to("Previous page", root_path + "?start=#{@result[:result][:cursor][:prev]}&namespace=#{@demo_namespace}" )%>
-    <% else %>
-      [Previous page]
-    <% end %>
-    |
-    <% if @result[:result][:cursor][:next] > 0 %>
-      <%= link_to("Next page", root_path + "?start=#{@result[:result][:cursor][:next]}&namespace=#{@demo_namespace}" )%>
-    <% else %>
-      [Next page]
-    <% end %>
-  </p>
+    <!-- prev/next -->
+    <p>
+      <% if @result[:result][:cursor][:prev] > 0 %>
+        <%= link_to("Previous page", root_path + "?start=#{@result[:result][:cursor][:prev]}&namespace=#{@demo_namespace}" )%>
+      <% else %>
+        [Previous page]
+      <% end %>
+      |
+      <% if @result[:result][:cursor][:next] > 0 %>
+        <%= link_to("Next page", root_path + "?start=#{@result[:result][:cursor][:next]}&namespace=#{@demo_namespace}" )%>
+      <% else %>
+        [Next page]
+      <% end %>
+    </p>
+  <% end %>
 <% end %>

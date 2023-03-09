@@ -29,12 +29,14 @@ Metrics/BlockLength:
   Max: 40 # default: 25
 
 Metrics/ClassLength:
-  Exclude: []
   Max: 150 # default: 100
+  Exclude:
+    - app/models/media_flux_client.rb
 
 Metrics/MethodLength:
-  Exclude: []
   Max: 15 # default: 10
+  Exclude:
+    - app/models/media_flux_client.rb
 
 Metrics/ParameterLists:
   Enabled: false
