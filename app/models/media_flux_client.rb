@@ -43,21 +43,38 @@ class MediaFluxClient
   end
 
   # Queries for assets on the given namespace
-  def query(aql_where)
+  def query(aql_where, idx: 1)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.query" session="#{@session_id}">
           <args>
             <where>#{aql_where}</where>
+            <idx>#{idx}</idx>
+            <size>#{10}</size>
           </args>
         </service>
       </request>
     XML_BODY
     response_body = http_post(xml_request)
-
     xml = Nokogiri::XML(response_body)
-    ids = xml.xpath("/response/reply/result").children.map(&:text)
-    ids
+    ids = xml.xpath("/response/reply/result/id").children.map(&:text)
+    cursor = xml.xpath("/response/reply/result/cursor")
+    # total is only the actual total when the "complete" attribute is true,
+    # otherwise it reflects the total fetched so far
+    result = {
+      ids: ids,
+      size: xml.xpath("/response/reply/result/size").text.to_i,
+      cursor: {
+        count: cursor.xpath("./count").text.to_i,
+        from: cursor.xpath("./from").text.to_i,
+        to: cursor.xpath("./to").text.to_i,
+        prev: cursor.xpath("./prev").text.to_i,
+        next: cursor.xpath("./next").text.to_i,
+        total: cursor.xpath("./total").text.to_i,
+        remaining: cursor.xpath("./remaining").text.to_i
+      }
+    }
+    result
   end
 
   # Fetches metadata for the given asset it
@@ -75,9 +92,11 @@ class MediaFluxClient
     xml = Nokogiri::XML(response_body)
     asset = xml.xpath("/response/reply/result/asset")
     metadata = {
-      collection: asset.xpath("@collection").text,
+      creator: asset.xpath("./creator/user").text,
       path: asset.xpath("./path").text,
-      type: asset.xpath("./type").text
+      type: asset.xpath("./type").text,
+      size: asset.xpath("./content/size").text,
+      size_human: asset.xpath("./content/size/@h").text
     }
     metadata
   end

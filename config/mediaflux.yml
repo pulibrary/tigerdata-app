@@ -12,11 +12,11 @@ staging:
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
 development:
-  api_port: <%= ENV["MEDIAFLUX_PORT"] %>
-  api_host: <%= ENV["MEDIAFLUX_HOST"] %>
-  api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
-  api_user: <%= ENV["MEDIAFLUX_USER"] %>
-  api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+  api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
+  api_host: <%= ENV["MEDIAFLUX_HOST"] || '0.0.0.0' %>
+  api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'system' %>
+  api_user: <%= ENV["MEDIAFLUX_USER"] || 'manager' %>
+  api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
 test:
   api_port: '8888'
   api_host: '0.0.0.0'
