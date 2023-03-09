@@ -92,12 +92,21 @@ class MediaFluxClient
     xml = Nokogiri::XML(response_body)
     asset = xml.xpath("/response/reply/result/asset")
     metadata = {
+      id: asset.xpath("./@id").text,
       creator: asset.xpath("./creator/user").text,
+      description: asset.xpath("./description").text,
+      collection: asset.xpath("./@collection")&.text == "true",
       path: asset.xpath("./path").text,
       type: asset.xpath("./type").text,
       size: asset.xpath("./content/size").text,
       size_human: asset.xpath("./content/size/@h").text
     }
+
+    image = asset.xpath("./meta/mf-image")
+    if image.count > 0
+      metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
+    end
+
     metadata
   end
 
