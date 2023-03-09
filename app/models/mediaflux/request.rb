@@ -10,7 +10,7 @@ module Mediaflux
     end
 
     def self.request_path
-      "__mflux_svc__"
+      "/__mflux_svc__"
     end
 
     def self.build_post_request
@@ -38,14 +38,16 @@ module Mediaflux
     # Constructor
     # @param use_ssl [Boolean] determines whether or not connections to the Mediaflux server API are over the TLS/SSL
     # @param session_token [String] the API token for the authenticated session
-    def initialize(use_ssl: false, session_token: nil)
-      @http_client = self.class.build_http_client
+    def initialize(use_ssl: false, file: nil, session_token: nil, http_client: nil)
+      @http_client = http_client || self.class.build_http_client
       @http_client.use_ssl = use_ssl
+
+      @file = file
       @session_token = session_token
     end
 
     def http_request
-      @http_request ||= build_http_request(name: self.class.service, request_args: self.class.service_args)
+      @http_request ||= build_http_request(name: self.class.service, form_file: @file, request_args: self.class.service_args)
     end
 
     def resolve

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "WelcomeController" do
-  context "authenticated user, but unauthorized" do
+  context "authenticated user, but unauthorized", stub_mediaflux: true do
     let(:user) { FactoryBot.create(:user, uid: "pul123") }
     before do
       sign_in user
@@ -14,7 +14,7 @@ RSpec.describe "WelcomeController" do
     end
   end
 
-  context "authenticated and authorized user" do
+  context "authenticated and authorized user", stub_mediaflux: true do
     let(:user) { FactoryBot.create(:user, uid: "knight") }
     before do
       sign_in user
@@ -25,7 +25,7 @@ RSpec.describe "WelcomeController" do
     end
   end
 
-  context "non existant dashboard access denied" do
+  context "non existant dashboard access denied", stub_mediaflux: true do
     let(:user) { FactoryBot.create(:user, uid: "knight") }
     before do
       sign_in user
