@@ -7,14 +7,19 @@
   table > tbody > tr > td {
     border-width: 1px;
     border-style: dotted;
+    vertical-align: top;
   }
 
   .asset-description {
     background-color:#f0f4f9;
+    display:inline-block;
+    max-width: 400px;
   }
 
   .asset-note {
     background-color:#f9f8f0;
+    display:inline-block;
+    max-width: 400px;
   }
 </style>
 
@@ -31,7 +36,15 @@
 
 <% if current_user %>
   <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Rails.configuration.mediaflux["api_host"] %></b>
-  <p>Assets under <b><%= @demo_namespace %></b></p>
+  <% if @demo_collection %>
+    <p>Assets under collection: <b><%= @demo_collection %></b>
+    <%= link_to "[Add asset]", create_asset_path(collection: @demo_collection) %>
+    </p>
+  <% else %>
+    <p>Assets under namespace: <b><%= @demo_namespace %></b>
+    <%= link_to "[Add collection asset]", create_collection_asset_path(namespace: @demo_namespace) %>
+    </p>
+  <% end %>
   <table>
       <tr>
         <th>ID</th>
@@ -47,17 +60,17 @@
         <td><%= asset[:id] %></td>
         <td>
           <% if asset[:collection] %>
-            <%= link_to(asset[:path], root_path + "?namespace=#{asset[:path]}") %>
+            <%= link_to(asset[:path], root_path + "?collection=#{asset[:id]}") %>
           <% else %>
             <%= asset[:path] %>
-            <% if asset[:description] %>
-              <br/>
-              <span class="asset-description"><i><%= asset[:description] %></i></span>
-            <% end %>
-            <% if asset[:mf_note] %>
-              <br/>
-              <span class="asset-note"><i><%= asset[:mf_note] %></i></span>
-            <% end %>
+          <% end %>
+          <% if asset[:description].present? %>
+            <br/>
+            <span class="asset-description">Description: <i><%= asset[:description] %></i></span>
+          <% end %>
+          <% if asset[:mf_note] %>
+            <br/>
+            <span class="asset-note">Note: <i><%= asset[:mf_note] %></i></span>
           <% end %>
         </td>
         <td><%= asset[:type] %></td>

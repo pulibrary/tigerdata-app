@@ -80,6 +80,40 @@ class MediaFluxClient
     result
   end
 
+  def query_collection(collection_id, idx: 1, size: 10)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.query" session="#{@session_id}">
+          <args>
+            <collection>#{collection_id}</collection>
+            <idx>#{idx}</idx>
+            <size>#{size}</size>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    ids = xml.xpath("/response/reply/result/id").children.map(&:text)
+    cursor = xml.xpath("/response/reply/result/cursor")
+    # total is only the actual total when the "complete" attribute is true,
+    # otherwise it reflects the total fetched so far
+    result = {
+      ids: ids,
+      size: xml.xpath("/response/reply/result/size").text.to_i,
+      cursor: {
+        count: cursor.xpath("./count").text.to_i,
+        from: cursor.xpath("./from").text.to_i,
+        to: cursor.xpath("./to").text.to_i,
+        prev: cursor.xpath("./prev").text.to_i,
+        next: cursor.xpath("./next").text.to_i,
+        total: cursor.xpath("./total").text.to_i,
+        remaining: cursor.xpath("./remaining").text.to_i
+      }
+    }
+    result
+  end
+
   # Fetches metadata for the given asset it
   def get_metadata(id)
     xml_request = <<-XML_BODY
@@ -159,6 +193,39 @@ class MediaFluxClient
           <args>
             <name>#{filename}</name>
             <namespace>#{namespace}</namespace>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    response_body
+  end
+
+  # Creates a collection asset inside a namespace
+  def create_collection_asset(namespace, name)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <name>#{name}</name>
+            <namespace>#{namespace}</namespace>
+            <collection>true</collection>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    response_body
+  end
+
+  # Creates an empty file (no content) with the name provided in the collection indicated
+  def create_in_collection(collection, filename)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <pid>#{collection}</pid>
+            <name>#{filename}</name>
           </args>
         </service>
       </request>
