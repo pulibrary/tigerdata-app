@@ -3,6 +3,8 @@ require "net/http"
 require "nokogiri"
 
 # A very simple client to interface with a MediaFlux server.
+# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/MethodLength
 class MediaFluxClient
   def initialize(host, domain, user, password, transport)
     @host = host
@@ -43,14 +45,14 @@ class MediaFluxClient
   end
 
   # Queries for assets on the given namespace
-  def query(aql_where, idx: 1)
+  def query(aql_where, idx: 1, size: 10)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.query" session="#{@session_id}">
           <args>
             <where>#{aql_where}</where>
             <idx>#{idx}</idx>
-            <size>#{10}</size>
+            <size>#{size}</size>
           </args>
         </service>
       </request>
@@ -92,12 +94,21 @@ class MediaFluxClient
     xml = Nokogiri::XML(response_body)
     asset = xml.xpath("/response/reply/result/asset")
     metadata = {
+      id: asset.xpath("./@id").text,
       creator: asset.xpath("./creator/user").text,
+      description: asset.xpath("./description").text,
+      collection: asset.xpath("./@collection")&.text == "true",
       path: asset.xpath("./path").text,
       type: asset.xpath("./type").text,
       size: asset.xpath("./content/size").text,
       size_human: asset.xpath("./content/size/@h").text
     }
+
+    image = asset.xpath("./meta/mf-image")
+    if image.count > 0
+      metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
+    end
+
     metadata
   end
 
@@ -276,3 +287,5 @@ class MediaFluxClient
       @session_id = xml.xpath("//response/reply/result/session").first.text
     end
 end
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/ClassLength

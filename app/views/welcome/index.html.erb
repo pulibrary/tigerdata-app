@@ -8,6 +8,10 @@
     border-width: 1px;
     border-style: dotted;
   }
+
+  .asset-description {
+    background-color:#f0f4f9;
+  }
 </style>
 
 <h1>TigerData</h1>
@@ -26,16 +30,34 @@
   <p>Assets under <b><%= @demo_namespace %></b></p>
   <table>
       <tr>
+        <th>ID</th>
         <th>Path</th>
         <th>Type</th>
         <th>Size</th>
+        <th>Dimension</th>
         <th>Created by</th>
       </tr>
     <% @result[:assets].each do |asset| %>
       <tr>
-        <td><%= asset[:path] %></td>
+        <td><%= asset[:id] %></td>
+        <td>
+          <% if asset[:collection] %>
+            <%= link_to(asset[:path], root_path + "?namespace=#{asset[:path]}") %>
+          <% else %>
+            <%= asset[:path] %>
+            <% if asset[:description] %>
+              <br/>
+              <span class="asset-description"><i><%= asset[:description] %></i></span>
+            <% end %>
+          <% end %>
+        </td>
         <td><%= asset[:type] %></td>
         <td><%= asset[:size_human] %></td>
+        <td>
+          <% if asset[:image_size] %>
+            <%= asset[:image_size] %>
+          <% end %>
+        </td>
         <td><%= asset[:creator] %></td>
       </tr>
     <% end %>
