@@ -3,6 +3,8 @@ require "net/http"
 require "nokogiri"
 
 # A very simple client to interface with a MediaFlux server.
+# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/MethodLength
 class MediaFluxClient
   def initialize(host, domain, user, password, transport)
     @host = host
@@ -43,14 +45,14 @@ class MediaFluxClient
   end
 
   # Queries for assets on the given namespace
-  def query(aql_where, idx: 1)
+  def query(aql_where, idx: 1, size: 10)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.query" session="#{@session_id}">
           <args>
             <where>#{aql_where}</where>
             <idx>#{idx}</idx>
-            <size>#{10}</size>
+            <size>#{size}</size>
           </args>
         </service>
       </request>
@@ -285,3 +287,5 @@ class MediaFluxClient
       @session_id = xml.xpath("//response/reply/result/session").first.text
     end
 end
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/ClassLength
