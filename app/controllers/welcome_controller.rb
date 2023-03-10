@@ -9,6 +9,14 @@ class WelcomeController < ApplicationController
     @result = query_assets(@demo_namespace, start)
   end
 
+  def set_note
+    id = params[:id]
+    note = media_flux.get_metadata(id)[:mf_note] || ""
+    note += "Added a note at #{Time.now.getlocal} #{Time.now.zone}\r\n"
+    media_flux.set_note(id, note)
+    redirect_to root_url
+  end
+
   def media_flux
     @media_flux ||= begin
       Rails.logger.info "Connecting to MF"

@@ -5,6 +5,7 @@ require "nokogiri"
 # A very simple client to interface with a MediaFlux server.
 # rubocop:disable Metrics/ClassLength
 # rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize
 class MediaFluxClient
   def initialize(host, domain, user, password, transport)
     @host = host
@@ -107,6 +108,11 @@ class MediaFluxClient
     image = asset.xpath("./meta/mf-image")
     if image.count > 0
       metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
+    end
+
+    note = asset.xpath("./meta/mf-note")
+    if note.count > 0
+      metadata[:mf_note] = note.text
     end
 
     metadata
@@ -287,5 +293,6 @@ class MediaFluxClient
       @session_id = xml.xpath("//response/reply/result/session").first.text
     end
 end
+# rubocop:enable Metrics/AbcSize
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/ClassLength
