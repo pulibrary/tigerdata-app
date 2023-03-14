@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::CollectionListRequest, type: :model do
+RSpec.describe Mediaflux::Http::CollectionListRequest, type: :model do
   subject(:request) { described_class.new(session_token: session_token) }
 
   let(:response_body) do
