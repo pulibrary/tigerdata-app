@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Request, type: :model do
+RSpec.describe Mediaflux::Http::Request, type: :model do
   subject(:request) { described_class.new }
 
   describe "#resolve" do
     it "raises an error" do
-      expect { request.resolve }.to raise_error(NotImplementedError, "Mediaflux::Request is an abstract class, please override Mediaflux::Request.service")
+      expect { request.resolve }.to raise_error(NotImplementedError, "Mediaflux::Http::Request is an abstract class, please override Mediaflux::Http::Request.service")
     end
 
     context "with a Class derived from Request" do
