@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "welcome#index"
 
+  get "set-note/:id", to: "welcome#set_note", as: :set_note
+  get "create-asset", to: "welcome#create_asset", as: :create_asset
+  get "create-collection-asset", to: "welcome#create_collection_asset", as: :create_collection_asset
+
   get "dashboards/:role", to: "dashboards#show"
 
   namespace :api do
