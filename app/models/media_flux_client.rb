@@ -323,7 +323,7 @@ class MediaFluxClient
       hex_bytes = []
       # Force the string to be 16 characters long so we can guarantee 8 pairs.
       number_hex = number.to_s(16).rjust(16, "0")
-      (0..7).each do |i|
+      8.times do |i|
         n = i * 2
         hex = number_hex[n..n + 1]
         hex_bytes << hex.to_i(16).chr

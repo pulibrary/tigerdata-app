@@ -7,6 +7,7 @@ require "capistrano/deploy"
 
 # Include rails deployment tasks
 require "capistrano/bundler"
+require "capistrano/passenger"
 require "capistrano/rails"
 
 # include yarn
