@@ -19,7 +19,7 @@ development:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
 test:
   api_port: '8888'
-  api_host: '0.0.0.0'
+  api_host: 'test.mediaflux.com'
   api_domain: 'system'
   api_user: 'manager'
   api_password: 'change_me'

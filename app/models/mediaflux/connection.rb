@@ -40,7 +40,7 @@ module Mediaflux
       end
 
       def send_request(builder, form_file)
-        request = Net::HTTP::Post.new("__mflux_svc__")
+        request = Net::HTTP::Post.new("/__mflux_svc__")
         if form_file.nil?
           request["Content-Type"] = "text/xml; charset=utf-8"
           request.body = builder.to_xml
