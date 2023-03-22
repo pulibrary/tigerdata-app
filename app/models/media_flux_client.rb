@@ -359,9 +359,7 @@ class MediaFluxClient
       xml = Nokogiri::XML(response_body)
 
       session_element = xml.xpath("//response/reply/result/session").first
-      if session_element
-        @session_id = session_element.text
-      end
+      @session_id = session_element&.text
     end
 end
 # rubocop:enable Metrics/AbcSize
