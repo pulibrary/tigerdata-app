@@ -3,6 +3,7 @@ class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!
   def index
     return if current_user.nil?
+
     start = params[:start].nil? ? 1 : params[:start].to_i
     @mf_version = media_flux.version
     @demo_namespace = params[:namespace].nil? ? "/tigerdata/td-demo-001" : params[:namespace]

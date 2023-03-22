@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController" do
+RSpec.describe "WelcomeController", stub_mediaflux: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
