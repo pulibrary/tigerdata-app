@@ -57,7 +57,7 @@ class WelcomeController < ApplicationController
       domain = Rails.configuration.mediaflux["api_domain"]
       user = Rails.configuration.mediaflux["api_user"]
       password = Rails.configuration.mediaflux["api_password"]
-      transport = "http"
+      transport = "https"
       MediaFluxClient.new(host, domain, user, password, transport)
     end
   end
