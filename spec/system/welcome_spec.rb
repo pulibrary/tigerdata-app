@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController", stub_mediaflux: true do
-  context "unauthenticated user" do
+RSpec.describe "WelcomeController" do
+  context "unauthenticated user", stub_mediaflux: true do
     it "shows the 'Log In' button" do
       visit "/"
       expect(page).to have_content "Welcome to the TigerData user portal"
