@@ -7,12 +7,26 @@ require "nokogiri"
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
 class MediaFluxClient
-  def initialize(host, domain, user, password, transport)
+
+  def self.default_instance
+    Rails.logger.info "Connecting to MF"
+    transport = Rails.configuration.mediaflux["api_transport"]
+    host = Rails.configuration.mediaflux["api_host"]
+    port = Rails.configuration.mediaflux["api_port"]
+    domain = Rails.configuration.mediaflux["api_domain"]
+    user = Rails.configuration.mediaflux["api_user"]
+    password = Rails.configuration.mediaflux["api_password"]
+    MediaFluxClient.new(transport, host, port, domain, user, password)
+  end
+
+  def initialize(transport, host, port, domain, user, password)
+    @transport = transport
     @host = host
+    @port = port
     @domain = domain
     @user = user
     @password = password
-    @base_url = transport == "https" ? "https://#{host}:443/__mflux_svc__/" : "http://#{host}:80/__mflux_svc__/"
+    @base_url = "#{transport}://#{host}:#{port}/__mflux_svc__/"
     @xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
     connect
   end
@@ -199,6 +213,56 @@ class MediaFluxClient
     XML_BODY
     response_body = http_post(xml_request)
     response_body
+  end
+
+  def namespace_exists?(namespace)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.namespace.exists" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <namespace>#{namespace}</namespace>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    xml.xpath("//response/reply/result").text == "true"
+  end
+
+  def namespace_create(namespace)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.namespace.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <namespace>#{namespace}</namespace>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    response_body
+  end
+
+  def namespace_list(parent_namespace)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.namespace.list" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <namespace>#{parent_namespace}</namespace>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    namespaces = []
+    xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
+      id = ns.xpath("@id").text
+      name = ns.text
+      namespaces << { id: id, name: ns.text }
+    end
+    namespaces
   end
 
   # Creates a collection asset inside a namespace

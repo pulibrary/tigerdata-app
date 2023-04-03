@@ -3,19 +3,9 @@ class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!
   def index
     return if current_user.nil?
-
     start = params[:start].nil? ? 1 : params[:start].to_i
     @mf_version = media_flux.version
-    @demo_namespace = params[:namespace].nil? ? "/tigerdata/td-demo-001" : params[:namespace]
-    @demo_collection = nil
-    @result = nil
-    if params[:collection]
-      @demo_collection = params[:collection]
-      @demo_namespace = "Collection #{@demo_collection}"
-      @result = query_collection(@demo_collection, start)
-    else
-      @result = query_assets(@demo_namespace, start)
-    end
+    @organizations = Organization.list
   end
 
   def create_collection_asset
