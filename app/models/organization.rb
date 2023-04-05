@@ -8,15 +8,20 @@ class Organization
     @path = path
   end
 
-  def get_by_id(id)
+  def projects
+    # TODO: memoize this value
+    Project.by_organization(path)
+  end
+
+  def self.get(id)
     media_flux = MediaFluxClient.default_instance
-    data = media_flux.namespace_describe(id)
+    namespace = media_flux.namespace_describe(id)
     media_flux.logout
-    org = Organization.new(data[:name], data[:id], data[:path])
+    org = Organization.new(namespace[:id], namespace[:name], namespace[:path])
     org
   end
 
-  def self.create(name)
+  def self.create!(name)
     media_flux = MediaFluxClient.default_instance
     id = nil
 
@@ -64,8 +69,7 @@ class Organization
     create_root_ns
     organizations = ["rc", "pppl", "pul"]
     organizations.each do |code|
-      org = Organization.new(nil, code, nil)
-      org.save
+      Organization.create!(code)
     end
   end
 end

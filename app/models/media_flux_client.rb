@@ -265,6 +265,53 @@ class MediaFluxClient
     namespaces
   end
 
+  def namespace_describe(id)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.namespace.describe" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <id>#{id}</id>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    node = xml.xpath("/response/reply/result/namespace")
+    namespace = {
+      id: id,
+      path: node.xpath("./path").text,
+      name: node.xpath("./name").text
+    }
+    namespace
+  end
+
+  def namespace_collection_assets(namespace)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.query" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <where>namespace=#{namespace}</where>
+            <where>asset is collection</where>
+            <action>get-meta</action>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    collection_assets = []
+    xml.xpath("/response/reply/result/asset").each do |node|
+      collection_asset = {
+        id: node.xpath("./namespace/@id").text,
+        path: node.xpath("./path").text,
+        name: node.xpath("./name").text
+      }
+      collection_assets << collection_asset
+    end
+    collection_assets
+  end
+
   # Creates a collection asset inside a namespace
   def create_collection_asset(namespace, name)
     xml_request = <<-XML_BODY

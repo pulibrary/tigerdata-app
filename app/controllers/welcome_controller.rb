@@ -43,12 +43,13 @@ class WelcomeController < ApplicationController
   def media_flux
     @media_flux ||= begin
       Rails.logger.info "Connecting to MF"
+      transport = Rails.configuration.mediaflux["api_transport"]
       host = Rails.configuration.mediaflux["api_host"]
+      port = Rails.configuration.mediaflux["api_port"]
       domain = Rails.configuration.mediaflux["api_domain"]
       user = Rails.configuration.mediaflux["api_user"]
       password = Rails.configuration.mediaflux["api_password"]
-      transport = "https"
-      MediaFluxClient.new(host, domain, user, password, transport)
+      MediaFluxClient.new(transport, host, port, domain, user, password)
     end
   end
 

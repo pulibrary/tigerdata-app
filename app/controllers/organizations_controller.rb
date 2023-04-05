@@ -6,4 +6,8 @@ class OrganizationsController < ApplicationController
     return if current_user.nil?
     @organizations = Organization.list
   end
+
+  def show
+    @organization = Organization.get(params[:id])
+  end
 end
