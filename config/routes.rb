@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   root to: "welcome#index"
 
   resources :organizations
+  resources :projects
+  post "projects/:id", to: "projects#save", as: :projects_save
 
   # get "set-note/:id", to: "welcome#set_note", as: :set_note
   # get "create-asset", to: "welcome#create_asset", as: :create_asset

@@ -10,7 +10,7 @@ class Organization
 
   def projects
     # TODO: memoize this value
-    Project.by_organization(path)
+    Project.by_organization(self)
   end
 
   def self.get(id)

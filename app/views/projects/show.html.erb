@@ -1,0 +1,17 @@
+<h1><%= @project.organization.name %> - <%= @project.name %></h1>
+<div>
+Id: <%= @project.id %><br/>
+Name: <%= @project.name %><br/>
+Path: <%= @project.path %><br/>
+Organization: <%= link_to @project.organization.name, organization_path(@project.organization.id ) %><br/>
+</div>
+
+<div>
+  <b>Files</b><br/>
+  <% @project.files[:ids].each do |id| %>
+    <li>File id: <%= id %></br>
+  <% end %>
+  <% if @project.files[:cursor][:complete] == false %>
+      <p>TODO: click here to load more files</p>
+  <% end %>
+</div>

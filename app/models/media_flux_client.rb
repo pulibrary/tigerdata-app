@@ -122,9 +122,15 @@ class MediaFluxClient
         prev: cursor.xpath("./prev").text.to_i,
         next: cursor.xpath("./next").text.to_i,
         total: cursor.xpath("./total").text.to_i,
-        remaining: cursor.xpath("./remaining").text.to_i
+        complete: cursor.xpath("./total/@complete").text == "true",
+        remaining: nil
       }
     }
+
+    if cursor.xpath("./total/@remaining").text != ""
+      result[:cursor][:remaining] = cursor.xpath("./total/@remaining").text.to_i
+    end
+
     result
   end
 
@@ -147,10 +153,13 @@ class MediaFluxClient
       creator: asset.xpath("./creator/user").text,
       description: asset.xpath("./description").text,
       collection: asset.xpath("./@collection")&.text == "true",
+      name: asset.xpath("./name").text,
       path: asset.xpath("./path").text,
       type: asset.xpath("./type").text,
       size: asset.xpath("./content/size").text,
-      size_human: asset.xpath("./content/size/@h").text
+      size_human: asset.xpath("./content/size/@h").text,
+      namespace: asset.xpath("./namespace").text,
+      namespace_id: (asset.xpath("./namespace/@id").text || "").to_i
     }
 
     image = asset.xpath("./meta/mf-image")
@@ -213,6 +222,25 @@ class MediaFluxClient
     XML_BODY
     response_body = http_post(xml_request)
     response_body
+  end
+
+  # Creates a collection asset inside a namespace
+  def create_collection_asset(namespace, name)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <name>#{name}</name>
+            <namespace>#{namespace}</namespace>
+            <collection contained-asset-index="true" unique-name-index="true">true</collection>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    id = xml.xpath("//response/reply/result").text.to_i
+    id
   end
 
   def namespace_exists?(namespace)
@@ -303,30 +331,13 @@ class MediaFluxClient
     collection_assets = []
     xml.xpath("/response/reply/result/asset").each do |node|
       collection_asset = {
-        id: node.xpath("./namespace/@id").text,
+        id: node.xpath("./@id").text,
         path: node.xpath("./path").text,
         name: node.xpath("./name").text
       }
       collection_assets << collection_asset
     end
     collection_assets
-  end
-
-  # Creates a collection asset inside a namespace
-  def create_collection_asset(namespace, name)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <name>#{name}</name>
-            <namespace>#{namespace}</namespace>
-            <collection>true</collection>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
   end
 
   # Creates an empty file (no content) with the name provided in the collection indicated

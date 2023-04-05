@@ -8,6 +8,14 @@ Path: <%= @organization.path %><br/>
 <div>
   <b>Projects</b><br/>
   <% @organization.projects.each do |project| %>
-    <li><%= project.id %> | <%= project.name %></br>
+    <li><%= link_to project.name, project_path(project.id) %></br>
   <% end %>
+</div>
+
+<div>
+  <%= link_to "New Project", new_project_path(organization_id: @organization.id), class: "btn btn-primary btn-sm" %>
+</div>
+
+<div>
+  <%= link_to "All Organizations", organizations_path %>
 </div>
