@@ -94,12 +94,14 @@ class MediaFluxClient
     result
   end
 
-  def query_collection(collection_id, idx: 1, size: 10)
+  def collection_query(collection_id, idx: 1, size: 10)
+    # Notice that querying via <collection>#{collection_id}</collection>
+    # does NOT give the expected results when using pagination.
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.query" session="#{@session_id}">
           <args>
-            <collection>#{collection_id}</collection>
+            <where>asset in collection #{collection_id}</where>
             <idx>#{idx}</idx>
             <size>#{size}</size>
             <action>get-name</action>
@@ -140,6 +142,60 @@ class MediaFluxClient
     if cursor.xpath("./total/@remaining").text != ""
       result[:cursor][:remaining] = cursor.xpath("./total/@remaining").text.to_i
     end
+
+    result
+  end
+
+  def collection_iterate(collection_id)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.query" session="#{@session_id}">
+          <args>
+            <collection>#{collection_id}</collection>
+            <as>iterator</as>
+            <action>get-name</action>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    iterator = xml.xpath("/response/reply/result/iterator").text.to_i
+    iterator
+  end
+
+  # Two things to notice on iterators:
+  #   1. They are valid only for the duration of the session
+  #      (i.e. if you logout and login again the iterator won't be valid)
+  #   2. You cannot fetch a previous page of results. They are forward only.
+  def collection_iterate_next(iterator_id)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.query.iterate" session="#{@session_id}">
+          <args>
+            <id>#{iterator_id}</id>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+
+    files = []
+    complete = false
+    xml.xpath("/response/reply/result").children.each do |node|
+      if node.name == "name"
+        files << {id: node.xpath("./@id").text, name: node.text }
+      elsif node.name == "iterated"
+        complete = node.xpath("./@complete").text == "true"
+      end
+    end
+
+    result = {
+      files: files,
+      iterator_id: iterator_id,
+      complete: complete
+    }
 
     result
   end

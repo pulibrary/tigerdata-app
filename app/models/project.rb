@@ -8,17 +8,36 @@ class Project
     @path = path
     @title = title
     @organization = organization
-    @file_count = 0
+    @file_count = 0 # set on get()
   end
 
   def files
     @files ||= begin
       media_flux = MediaFluxClient.default_instance
-      page_results = media_flux.query_collection(id, idx: 1, size: 100)
+      page_results = media_flux.collection_query(id, idx: 1, size: 100)
       media_flux.logout
       page_results
     end
   end
+
+  def files_paged(page_num)
+    page_size = 100
+    idx = ((page_num-1) * page_size) + 1
+    media_flux = MediaFluxClient.default_instance
+    page_results = media_flux.collection_query(id, idx: idx, size: page_size)
+    media_flux.logout
+    page_results
+  end
+
+  # def files_paged(iterator)
+  #   media_flux = MediaFluxClient.default_instance
+  #   if iterator == 0
+  #     iterator = media_flux.collection_iterate(id)
+  #   end
+  #   page_results = media_flux.collection_iterate_next(iterator)
+  #   media_flux.logout
+  #   page_results
+  # end
 
   def add_new_files(count)
     pattern = "#{name}-#{Date.today}-#{Time.now.seconds_since_midnight.to_i}-"

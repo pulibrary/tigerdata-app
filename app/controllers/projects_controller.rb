@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
   def show
+    @page = (params[:page] || "1").to_i
     @project = Project.get(params[:id])
+    @project_files = @project.files_paged(@page)
   end
 
   def new
@@ -10,13 +12,6 @@ class ProjectsController < ApplicationController
     @project = Project.new(-1, "", "", "", organization)
     render "edit"
   end
-
-  # def edit
-  #   byebug
-  #   organization = Organization.get(params[:organization_id].to_i)
-  #   project = Project.new(0, "", "", organization)
-  #   puts "edit"
-  # end
 
   def add_new_files
     id = params[:id].to_i
