@@ -7,7 +7,7 @@ Organization: <%= link_to @project.organization.name, organization_path(@project
 </div>
 
 <div>
-  <b>Files</b><br/>
+  <b>Files <%= @project.file_count %></b><br/>
   <% @project.files[:files].each do |file| %>
     <li><%= file[:name] %>(<%= file[:id] %>)</br>
   <% end %>

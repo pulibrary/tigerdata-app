@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 class Project
-  attr_accessor :id, :name, :path, :organization
+  attr_accessor :id, :name, :path, :organization, :file_count
 
   def initialize(id, name, path, organization)
     @id = id
     @name = name
     @path = path
     @organization = organization
+    @file_count = 0
   end
 
   def files
     @files ||= begin
       media_flux = MediaFluxClient.default_instance
-      page_results = media_flux.query_collection(id, idx: 1, size: 50)
+      page_results = media_flux.query_collection(id, idx: 1, size: 100)
       media_flux.logout
       page_results
     end
   end
 
   def add_new_files(count)
-    pattern = "#{name}-#{Date.today}-"
+    pattern = "#{name}-#{Date.today}-#{Time.now.seconds_since_midnight.to_i}-"
     media_flux = MediaFluxClient.default_instance
     media_flux.add_new_files_to_collection(id, count, pattern)
     media_flux.logout
@@ -39,7 +40,9 @@ class Project
     collection_asset = media_flux.get_metadata(id)
     media_flux.logout
     organization = Organization.get(collection_asset[:namespace_id])
-    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], organization)
+    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], organization)
+    project.file_count = collection_asset[:total_file_count]
+    project
   end
 
   def self.by_organization(org)

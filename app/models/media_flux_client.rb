@@ -182,6 +182,10 @@ class MediaFluxClient
       metadata[:mf_note] = note.text
     end
 
+    if metadata[:collection]
+      metadata[:total_file_count] = asset.xpath("./members/static").text.to_i
+    end
+
     metadata
   end
 
@@ -254,7 +258,6 @@ class MediaFluxClient
   end
 
   def add_new_files_to_collection(collection_id, count, pattern)
-    # asset.test.create :base-name "$project-file-" :nb 5 :pid $pid
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.test.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
