@@ -2,12 +2,12 @@
 
 <%= form_with url: project_save_path(id: @project.id), method: :post do |form| %>
   Organization: <%= @project.organization.name %> <br/>
-  Name: <input type="text" id="name" name="name" value="<%= @project.name %>" /><br/>
+  Name: <input type="text" id="name" name="name" required autofocus value="<%= @project.name %>" /><br/>
 
   --<br/>
   Internal values (don't touch them)<br/>
-  Internal: <input type="text" id="organization_id" name="organization_id" value="<%= @project.organization.id %>" /><br/>
-  Internal: <input type="text" id="id" name="id" value="<%= @project.id %>" /><br/>
+  Internal: <input type="text" id="organization_id" name="organization_id" readonly value="<%= @project.organization.id %>" /><br/>
+  Internal: <input type="text" id="id" name="id" readonly value="<%= @project.id %>" /><br/>
   --<br/>
 
   <div class="actions">

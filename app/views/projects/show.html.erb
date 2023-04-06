@@ -26,12 +26,16 @@ Organization: <%= link_to @project.organization.name, organization_path(@project
       </tr>
     <% end %>
   </table>
-  <p>
-    <% if @project_files[:cursor][:to] < @project.file_count %>
-      <%= link_to "Load next page of files", project_path(id: @project.id, page: @page+1) %> |
-    <% end %>
-    <%= link_to "Load first batch of files", project_path(id: @project.id) %>
-  </p>
+
+
+  <% if @project.file_count > 0 %>
+    <p>
+      <% if @project_files[:cursor][:to] < @project.file_count %>
+        <%= link_to "Load next page of files", project_path(id: @project.id, page: @page+1) %> |
+      <% end %>
+      <%= link_to "Load first batch of files", project_path(id: @project.id) %>
+    </p>
+  <% end %>
 </div>
 
 <div>
