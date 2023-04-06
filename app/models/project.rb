@@ -9,6 +9,22 @@ class Project
     @organization = organization
   end
 
+  def files
+    @files ||= begin
+      media_flux = MediaFluxClient.default_instance
+      page_results = media_flux.query_collection(id, idx: 1, size: 50)
+      media_flux.logout
+      page_results
+    end
+  end
+
+  def add_new_files(count)
+    pattern = "#{name}-#{Date.today}-"
+    media_flux = MediaFluxClient.default_instance
+    media_flux.add_new_files_to_collection(id, count, pattern)
+    media_flux.logout
+  end
+
   # The project is always a child of the organization
   def self.create!(name, organization)
     media_flux = MediaFluxClient.default_instance
@@ -36,15 +52,6 @@ class Project
       projects << Project.new(namespace[:id], namespace[:name], namespace[:path], org)
     end
     projects
-  end
-
-  def files
-    @files ||= begin
-      media_flux = MediaFluxClient.default_instance
-      page_results = media_flux.query_collection(id, idx: 1, size: 100)
-      media_flux.logout
-      page_results
-    end
   end
 
   def self.safe_name(name)

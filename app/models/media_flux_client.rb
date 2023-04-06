@@ -102,6 +102,7 @@ class MediaFluxClient
             <collection>#{collection_id}</collection>
             <idx>#{idx}</idx>
             <size>#{size}</size>
+            <action>get-name</action>
           </args>
         </service>
       </request>
@@ -110,10 +111,19 @@ class MediaFluxClient
     xml = Nokogiri::XML(response_body)
     ids = xml.xpath("/response/reply/result/id").children.map(&:text)
     cursor = xml.xpath("/response/reply/result/cursor")
+    files = []
+    xml.xpath("/response/reply/result").children.each do |node|
+      if node.name == "name"
+        files << {id: node.xpath("./@id").text, name: node.text }
+      else
+        # it's the cursor node, ignore it
+      end
+    end
     # total is only the actual total when the "complete" attribute is true,
     # otherwise it reflects the total fetched so far
     result = {
       ids: ids,
+      files: files,
       size: xml.xpath("/response/reply/result/size").text.to_i,
       cursor: {
         count: cursor.xpath("./count").text.to_i,
@@ -241,6 +251,24 @@ class MediaFluxClient
     xml = Nokogiri::XML(response_body)
     id = xml.xpath("//response/reply/result").text.to_i
     id
+  end
+
+  def add_new_files_to_collection(collection_id, count, pattern)
+    # asset.test.create :base-name "$project-file-" :nb 5 :pid $pid
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.test.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <pid>#{collection_id}</pid>
+            <nb>#{count}</nb>
+            <base-name>#{pattern}</base-name>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    true
   end
 
   def namespace_exists?(namespace)

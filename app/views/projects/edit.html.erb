@@ -1,10 +1,11 @@
 <h1>Editing Project</h1>
 
-<%= form_with url: "/projects/#{@project.id}", method: :post do |form| %>
+<%= form_with url: project_save_path(id: @project.id), method: :post do |form| %>
   Organization: <%= @project.organization.name %> <br/>
   Name: <input type="text" id="name" name="name" value="<%= @project.name %>" /><br/>
 
   --<br/>
+  Internal values (don't touch them)<br/>
   Internal: <input type="text" id="organization_id" name="organization_id" value="<%= @project.organization.id %>" /><br/>
   Internal: <input type="text" id="id" name="id" value="<%= @project.id %>" /><br/>
   --<br/>

@@ -18,6 +18,13 @@ class ProjectsController < ApplicationController
   #   puts "edit"
   # end
 
+  def add_new_files
+    id = params[:id].to_i
+    project = Project.get(id)
+    project.add_new_files(100)
+    redirect_to project_path(id: project.id)
+  end
+
   def save
     name = params[:name]
     organization = Organization.get(params[:organization_id].to_i)
