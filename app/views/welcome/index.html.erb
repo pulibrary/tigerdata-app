@@ -35,6 +35,7 @@
 <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "300x200") %>
 
 <% if current_user %>
+  <p>User: <b><%= current_user.uid %></b></p>
   <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Rails.configuration.mediaflux["api_host"] %></b>
   <p><%= link_to "Organizations", organizations_path %></p>
 <% end %>

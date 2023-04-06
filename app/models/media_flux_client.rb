@@ -239,13 +239,14 @@ class MediaFluxClient
   end
 
   # Creates a collection asset inside a namespace
-  def create_collection_asset(namespace, name)
+  def create_collection_asset(namespace, name, description)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
           <args>
             <name>#{name}</name>
             <namespace>#{namespace}</namespace>
+            <description>#{description}</description>
             <collection contained-asset-index="true" unique-name-index="true">true</collection>
           </args>
         </service>
@@ -289,12 +290,13 @@ class MediaFluxClient
     xml.xpath("//response/reply/result").text == "true"
   end
 
-  def namespace_create(namespace)
+  def namespace_create(namespace, description)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.namespace.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
           <args>
             <namespace>#{namespace}</namespace>
+            <description>#{description}</description>
           </args>
         </service>
       </request>
@@ -319,7 +321,7 @@ class MediaFluxClient
     xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
       id = ns.xpath("@id").text
       name = ns.text
-      namespaces << { id: id, name: ns.text }
+      namespaces << { id: id, name: ns.text}
     end
     namespaces
   end
@@ -340,7 +342,8 @@ class MediaFluxClient
     namespace = {
       id: id,
       path: node.xpath("./path").text,
-      name: node.xpath("./name").text
+      name: node.xpath("./name").text,
+      description: node.xpath("./description").text
     }
     namespace
   end
@@ -364,7 +367,8 @@ class MediaFluxClient
       collection_asset = {
         id: node.xpath("./@id").text,
         path: node.xpath("./path").text,
-        name: node.xpath("./name").text
+        name: node.xpath("./name").text,
+        description: node.xpath("./description").text
       }
       collection_assets << collection_asset
     end

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 class Project
-  attr_accessor :id, :name, :path, :organization, :file_count
+  attr_accessor :id, :name, :path, :title, :organization, :file_count
 
-  def initialize(id, name, path, organization)
+  def initialize(id, name, path, title, organization)
     @id = id
     @name = name
     @path = path
+    @title = title
     @organization = organization
     @file_count = 0
   end
@@ -29,10 +30,10 @@ class Project
   # The project is always a child of the organization
   def self.create!(name, organization)
     media_flux = MediaFluxClient.default_instance
-    id = media_flux.create_collection_asset(organization.path, safe_name(name))
+    id = media_flux.create_collection_asset(organization.path, safe_name(name), name)
     collection_asset = media_flux.get_metadata(id)
     media_flux.logout
-    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], organization)
+    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
   end
 
   def self.get(id)
@@ -40,7 +41,7 @@ class Project
     collection_asset = media_flux.get_metadata(id)
     media_flux.logout
     organization = Organization.get(collection_asset[:namespace_id])
-    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], organization)
+    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
     project.file_count = collection_asset[:total_file_count]
     project
   end
@@ -52,7 +53,7 @@ class Project
     projects = []
     namespaces.each do |namespace|
       name =
-      projects << Project.new(namespace[:id], namespace[:name], namespace[:path], org)
+      projects << Project.new(namespace[:id], namespace[:name], namespace[:path], namespace[:description], org)
     end
     projects
   end

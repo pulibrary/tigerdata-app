@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   def new
     name = ""
     organization = Organization.get(params[:organization_id].to_i)
-    @project = Project.new(-1, "", "", organization)
+    @project = Project.new(-1, "", "", "", organization)
     render "edit"
   end
 

@@ -39,12 +39,12 @@
   <table>
     <tr>
       <th>Code</th>
-      <th>Name</th>
+      <th>Description</th>
     </tr>
     <% @organizations.each do |organization| %>
     <tr>
-      <td><%= link_to organization[:name], organization_path(organization[:id]) %></td>
-      <td>...</td>
+      <td><%= organization.name %></td>
+      <td><%= link_to organization.title, organization_path(organization.id) %></td>
     </tr>
     <% end %>
   </table>
