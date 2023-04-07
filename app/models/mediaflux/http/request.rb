@@ -84,6 +84,9 @@ module Mediaflux
         Rails.logger.debug(http_response.body)
         @response_xml ||= Nokogiri::XML.parse(http_response.body)
         Rails.logger.debug(@response_xml)
+        if @response_xml.xpath("//message").text == "session is not valid"
+          raise Mediaflux::Http::SessionExpired, session_token
+        end
 
         @response_xml
       end
@@ -116,7 +119,7 @@ module Mediaflux
         def build_http_request(name:, form_file: nil, request_args: {})
           request = self.class.build_post_request
           body = build_http_request_body(name: name, request_args: request_args)
-
+          Rails.logger.debug(body.to_xml)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
             request.body = body.to_xml

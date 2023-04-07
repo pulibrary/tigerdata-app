@@ -20,12 +20,12 @@ RSpec.configure do |config|
       WebMock.enable!
 
       # Stubbing the asset.collection.list request
-      stub_request(:post, "http://0.0.0.0:8888/__mflux_svc__").with(
+      stub_request(:post, "http://test.mediaflux.com:443/__mflux_svc__").with(
         body: /<service namespace="tigerdata" name="asset.collection.list" session="test-session-token"\/>/
       ).to_return(status: 200, body: collection_list_response_body)
 
       # Stubbing the system.logon request
-      stub_request(:post, "http://0.0.0.0:8888/__mflux_svc__").with(
+      stub_request(:post, "http://test.mediaflux.com:443/__mflux_svc__").with(
         body: /<service name="system.logon">/
       ).to_return(status: 200, body: logon_response_body)
     end

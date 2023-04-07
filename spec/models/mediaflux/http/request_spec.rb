@@ -3,6 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Http::Request, type: :model do
   subject(:request) { described_class.new }
+  let(:mediflux_url) { "http://test.mediaflux.com:443/__mflux_svc__" }
 
   describe "#resolve" do
     it "raises an error" do
@@ -19,7 +20,7 @@ RSpec.describe Mediaflux::Http::Request, type: :model do
           end
         end
 
-        stub_request(:post, "http://0.0.0.0:8888/__mflux_svc__").to_return(
+        stub_request(:post, mediflux_url).to_return(
           status: 200
         )
       end
@@ -43,7 +44,7 @@ RSpec.describe Mediaflux::Http::Request, type: :model do
           end
 
           it "transmits the POST request as a file upload request" do
-            expect(a_request(:post, "http://0.0.0.0:8888/__mflux_svc__").with { |req| req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
+            expect(a_request(:post, mediflux_url).with { |req| req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
           end
         end
       end

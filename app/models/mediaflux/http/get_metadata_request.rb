@@ -34,15 +34,9 @@ module Mediaflux
           size_human: asset.xpath("./content/size/@h").text
         }
 
-        image = asset.xpath("./meta/mf-image")
-        if image.count > 0
-          metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
-        end
+        parse_image(asset.xpath("./meta/mf-image"), metadata)
 
-        note = asset.xpath("./meta/mf-note")
-        if note.count > 0
-          metadata[:mf_note] = note.text
-        end
+        parse_note(asset.xpath("./meta/mf-note"), metadata)
 
         metadata
       end
@@ -54,6 +48,18 @@ module Mediaflux
             xml.args do
               xml.id id
             end
+          end
+        end
+
+        def parse_note(note, metadata)
+          if note.count > 0
+            metadata[:mf_note] = note.text
+          end
+        end
+
+        def parse_image(image, metadata)
+          if image.count > 0
+            metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
           end
         end
     end

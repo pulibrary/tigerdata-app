@@ -26,21 +26,13 @@ module Mediaflux
       def result
         xml = response_xml
         ids = xml.xpath("/response/reply/result/id").children.map(&:text)
-        cursor = xml.xpath("/response/reply/result/cursor")
+
         # total is only the actual total when the "complete" attribute is true,
         # otherwise it reflects the total fetched so far
-        result = {
+        {
           ids: ids,
           size: xml.xpath("/response/reply/result/size").text.to_i,
-          cursor: {
-            count: cursor.xpath("./count").text.to_i,
-            from: cursor.xpath("./from").text.to_i,
-            to: cursor.xpath("./to").text.to_i,
-            prev: cursor.xpath("./prev").text.to_i,
-            next: cursor.xpath("./next").text.to_i,
-            total: cursor.xpath("./total").text.to_i,
-            remaining: cursor.xpath("./remaining").text.to_i
-          }
+          cursor: parse_cursor(xml.xpath("/response/reply/result/cursor"))
         }
       end
 
@@ -55,6 +47,18 @@ module Mediaflux
               xml.size size
             end
           end
+        end
+
+        def parse_cursor(cursor)
+          {
+            count: cursor.xpath("./count").text.to_i,
+            from: cursor.xpath("./from").text.to_i,
+            to: cursor.xpath("./to").text.to_i,
+            prev: cursor.xpath("./prev").text.to_i,
+            next: cursor.xpath("./next").text.to_i,
+            total: cursor.xpath("./total").text.to_i,
+            remaining: cursor.xpath("./remaining").text.to_i
+          }
         end
     end
   end

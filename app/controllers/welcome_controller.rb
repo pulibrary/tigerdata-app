@@ -4,18 +4,11 @@ class WelcomeController < ApplicationController
   def index
     return if current_user.nil?
 
-    start = params[:start].nil? ? 1 : params[:start].to_i
-    @mf_version = media_flux.version
-    @demo_namespace = params[:namespace].nil? ? "/tigerdata/td-demo-001" : params[:namespace]
-    @demo_collection = nil
-    @result = nil
-    if params[:collection]
-      @demo_collection = params[:collection]
-      @demo_namespace = "Collection #{@demo_collection}"
-      @result = query_collection(@demo_collection, start)
-    else
-      @result = query_assets(@demo_namespace, start)
-    end
+    load_index_page
+  rescue Mediaflux::Http::SessionExpired
+    cookies.encrypted[:mediaflux_session_id] = nil
+    @media_flux = nil
+    retry
   end
 
   def create_collection_asset
@@ -52,13 +45,11 @@ class WelcomeController < ApplicationController
 
   def media_flux
     @media_flux ||= begin
+      session_id = cookies.encrypted[:mediaflux_session_id]
       Rails.logger.info "Connecting to MF"
-      host = Rails.configuration.mediaflux["api_host"]
-      domain = Rails.configuration.mediaflux["api_domain"]
-      user = Rails.configuration.mediaflux["api_user"]
-      password = Rails.configuration.mediaflux["api_password"]
-      transport = "https"
-      MediaFluxClient.new(host, domain, user, password, transport)
+      client = MediaFluxClient.new(session_id)
+      cookies.encrypted[:mediaflux_session_id] = client.session_id
+      client
     end
   end
 
@@ -89,4 +80,21 @@ class WelcomeController < ApplicationController
   def filename_now
     "#{Time.now.in_time_zone.yday}-#{Time.now.seconds_since_midnight.to_i}"
   end
+
+  private
+
+    def load_index_page
+      start = params[:start].nil? ? 1 : params[:start].to_i
+      @mf_version = media_flux.version
+      @demo_namespace = params[:namespace].nil? ? "/tigerdata/td-demo-001" : params[:namespace]
+      @demo_collection = nil
+      @result = nil
+      if params[:collection]
+        @demo_collection = params[:collection]
+        @demo_namespace = "Collection #{@demo_collection}"
+        @result = query_collection(@demo_collection, start)
+      else
+        @result = query_assets(@demo_namespace, start)
+      end
+    end
 end

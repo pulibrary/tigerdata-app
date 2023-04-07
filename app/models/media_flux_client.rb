@@ -7,14 +7,11 @@ require "nokogiri"
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
 class MediaFluxClient
-  def initialize(host, domain, user, password, transport)
-    @host = host
-    @domain = domain
-    @user = user
-    @password = password
-    @base_url = transport == "https" ? "https://#{host}:443/__mflux_svc__/" : "http://#{host}:80/__mflux_svc__/"
-    @xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
-    connect
+  attr_reader :session_id
+
+  def initialize(session_id = nil)
+    @session_id = session_id
+    @session_id ||= connect
   end
 
   # Fetches MediaFlux's server version information (in XML)
@@ -25,7 +22,7 @@ class MediaFluxClient
 
   # Terminates the current session
   def logout
-    logout_request = Mediaflux::Http.logoutRequest.new(session_token: @session_id)
+    logout_request = Mediaflux::Http::LogoutRequest.new(session_token: @session_id)
     logout_request.response_body
   end
 
@@ -192,8 +189,7 @@ class MediaFluxClient
     end
 
     def connect
-      session = Mediaflux::Session.new(use_ssl: true)
-      @session_id = session.logon
+      Mediaflux::Session.new(use_ssl: true).logon
     end
 end
 # rubocop:enable Metrics/AbcSize

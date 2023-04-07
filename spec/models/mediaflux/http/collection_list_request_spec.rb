@@ -30,10 +30,12 @@ RSpec.describe Mediaflux::Http::CollectionListRequest, type: :model do
     XML
   end
 
+  let(:mediflux_url) { "http://test.mediaflux.com:443/__mflux_svc__" }
+
   before do
     WebMock.enable!
 
-    stub_request(:post, "http://0.0.0.0:8888/__mflux_svc__").to_return(status: 200, body: response_body)
+    stub_request(:post, mediflux_url).to_return(status: 200, body: response_body)
   end
 
   after do
