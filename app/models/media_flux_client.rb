@@ -346,13 +346,14 @@ class MediaFluxClient
     xml.xpath("//response/reply/result").text == "true"
   end
 
-  def namespace_create(namespace, description)
+  def namespace_create(namespace, description, store_name)
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.namespace.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
           <args>
             <namespace>#{namespace}</namespace>
             <description>#{description}</description>
+            <store>#{store_name}</store>
           </args>
         </service>
       </request>

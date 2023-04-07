@@ -22,11 +22,12 @@ class ProjectsController < ApplicationController
 
   def save
     name = params[:name]
+    store_name = params[:store_name]
     organization = Organization.get(params[:organization_id].to_i)
     id = params[:id].to_i
     if id == -1
       # create it
-      project = Project.create!(name, organization)
+      project = Project.create!(name, store_name, organization)
     else
       # TODO in the future save other properties of the project
       project = Project.get(id)

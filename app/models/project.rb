@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class Project
-  attr_accessor :id, :name, :path, :title, :organization, :file_count
+  attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name
 
   def initialize(id, name, path, title, organization)
     @id = id
@@ -9,6 +9,7 @@ class Project
     @title = title
     @organization = organization
     @file_count = 0 # set on get()
+    @store_name = "data" # default to data, overwritten in get()
   end
 
   def files
@@ -36,11 +37,11 @@ class Project
     media_flux.logout
   end
 
-  def self.create!(name, organization)
+  def self.create!(name, store_name, organization)
     media_flux = MediaFluxClient.default_instance
     # Create a namespace for the project (within the namespace of the organization)...
     project_namespace = organization.path + "/" + safe_name(name) + "-ns"
-    media_flux.namespace_create(project_namespace, "Namespace for project #{name}")
+    media_flux.namespace_create(project_namespace, "Namespace for project #{name}", store_name)
     # ...create a project as a collection asset inside this new namespace
     id = media_flux.create_collection_asset(project_namespace, safe_name(name), name)
     collection_asset = media_flux.get_metadata(id)
@@ -54,13 +55,17 @@ class Project
     # Fetch the collection asset for the project...
     collection_asset = media_flux.get_metadata(id)
 
+    # ...fetch the namespace for the project (one level up)
+    project_ns = media_flux.namespace_describe_by_name(collection_asset[:namespace])
+
     # ...find the org for this collection (which is the namespace two levels up)
     org_path = File.dirname(collection_asset[:namespace])
-    org_namespace = media_flux.namespace_describe_by_name(org_path)
-    organization = Organization.get(org_namespace[:id])
+    organization_ns = media_flux.namespace_describe_by_name(org_path)
+    organization = Organization.get(organization_ns[:id])
 
     project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
     project.file_count = collection_asset[:total_file_count]
+    project.store_name = project_ns[:store]
 
     media_flux.logout
     project

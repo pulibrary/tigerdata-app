@@ -3,6 +3,8 @@
 <%= form_with url: project_save_path(id: @project.id), method: :post do |form| %>
   Organization: <%= @project.organization.name %> <br/>
   Name: <input type="text" id="name" name="name" required autofocus value="<%= @project.name %>" /><br/>
+  Store: <input type="text" id="store_name" name="store_name" required value="<%= @project.store_name %>" />
+  (<%= Store.all.map(&:name).join(',') %>)<br/>
 
   --<br/>
   Internal values (don't touch them)<br/>

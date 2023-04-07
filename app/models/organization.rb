@@ -34,7 +34,7 @@ class Organization
       id = nil # TODO get the id
     else
       Rails.logger.info "Created namespace #{namespace_fullname}"
-      id = media_flux.namespace_create(namespace_fullname, title)
+      id = media_flux.namespace_create(namespace_fullname, title, "data")
     end
 
     media_flux.logout
@@ -65,7 +65,7 @@ class Organization
       Rails.logger.info "Root namespace #{root_namespace} already exists"
     else
       Rails.logger.info "Created root namespace #{root_namespace}"
-      media_flux.namespace_create(root_namespace, "TigerData root namespace")
+      media_flux.namespace_create(root_namespace, "TigerData root namespace", "data")
     end
     media_flux.logout
   end
