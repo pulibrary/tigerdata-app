@@ -23,4 +23,8 @@ class Store
   def self.get_by_name(name)
     self.all.find {|store| store.name == name }
   end
+
+  def self.default
+    all.first
+  end
 end

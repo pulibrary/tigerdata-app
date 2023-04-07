@@ -9,7 +9,7 @@ class Project
     @title = title
     @organization = organization
     @file_count = 0 # set on get()
-    @store_name = "data" # default to data, overwritten in get()
+    @store_name = Store.default.name # overwritten in get()
   end
 
   def files
