@@ -29,16 +29,6 @@ class Project
     page_results
   end
 
-  # def files_paged(iterator)
-  #   media_flux = MediaFluxClient.default_instance
-  #   if iterator == 0
-  #     iterator = media_flux.collection_iterate(id)
-  #   end
-  #   page_results = media_flux.collection_iterate_next(iterator)
-  #   media_flux.logout
-  #   page_results
-  # end
-
   def add_new_files(count)
     pattern = "#{name}-#{Date.today}-#{Time.now.seconds_since_midnight.to_i}-"
     media_flux = MediaFluxClient.default_instance
@@ -46,10 +36,13 @@ class Project
     media_flux.logout
   end
 
-  # The project is always a child of the organization
   def self.create!(name, organization)
     media_flux = MediaFluxClient.default_instance
-    id = media_flux.create_collection_asset(organization.path, safe_name(name), name)
+    # Create a namespace for the project (within the namespace of the organization)...
+    project_namespace = organization.path + "/" + safe_name(name) + "-ns"
+    media_flux.namespace_create(project_namespace, "Namespace for project #{name}")
+    # ...create a project as a collection asset inside this new namespace
+    id = media_flux.create_collection_asset(project_namespace, safe_name(name), name)
     collection_asset = media_flux.get_metadata(id)
     media_flux.logout
     Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
@@ -57,22 +50,30 @@ class Project
 
   def self.get(id)
     media_flux = MediaFluxClient.default_instance
+
+    # Fetch the collection asset for the project...
     collection_asset = media_flux.get_metadata(id)
-    media_flux.logout
-    organization = Organization.get(collection_asset[:namespace_id])
+
+    # ...find the org for this collection (which is the namespace two levels up)
+    org_path = File.dirname(collection_asset[:namespace])
+    org_namespace = media_flux.namespace_describe_by_name(org_path)
+    organization = Organization.get(org_namespace[:id])
+
     project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
     project.file_count = collection_asset[:total_file_count]
+
+    media_flux.logout
     project
   end
 
   def self.by_organization(org)
     media_flux = MediaFluxClient.default_instance
-    namespaces = media_flux.namespace_collection_assets(org.path)
-    media_flux.logout
     projects = []
-    namespaces.each do |namespace|
-      name =
-      projects << Project.new(namespace[:id], namespace[:name], namespace[:path], namespace[:description], org)
+    org_namespaces = media_flux.namespace_list(org.path)
+    org_namespaces.each do |ns|
+      path = org.path + "/" + ns[:name]
+      collection = media_flux.namespace_collection_assets(path).first
+      projects << Project.new(collection[:id], collection[:name], collection[:path], collection[:description], org)
     end
     projects
   end

@@ -399,7 +399,32 @@ class MediaFluxClient
       id: id,
       path: node.xpath("./path").text,
       name: node.xpath("./name").text,
-      description: node.xpath("./description").text
+      description: node.xpath("./description").text,
+      store: node.xpath("./store").text
+    }
+    namespace
+  end
+
+  # TODO: Fold this into namespace_describe by using `path=`
+  def namespace_describe_by_name(name)
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.namespace.describe" session="#{@session_id}" data-out-min="0" data-out-max="0">
+          <args>
+            <namespace>#{name}</namespace>
+          </args>
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    node = xml.xpath("/response/reply/result/namespace")
+    namespace = {
+      id: node.xpath("@id").text,
+      path: node.xpath("./path").text,
+      name: node.xpath("./name").text,
+      description: node.xpath("./description").text,
+      store: node.xpath("./store").text
     }
     namespace
   end
@@ -429,6 +454,26 @@ class MediaFluxClient
       collection_assets << collection_asset
     end
     collection_assets
+  end
+
+  def store_list()
+    xml_request = <<-XML_BODY
+      <request>
+        <service name="asset.store.list" session="#{@session_id}" data-out-min="0" data-out-max="0">
+        </service>
+      </request>
+    XML_BODY
+    response_body = http_post(xml_request)
+    xml = Nokogiri::XML(response_body)
+    stores = xml.xpath("/response/reply/result/store").map do |node|
+      {
+        id: node.xpath("@id").text,
+        type: node.xpath("./type").text,
+        name: node.xpath("./name").text,
+        tag: node.xpath("./tag").text
+      }
+    end
+    stores
   end
 
   # Creates an empty file (no content) with the name provided in the collection indicated

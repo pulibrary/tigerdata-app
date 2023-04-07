@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 class Organization
-  attr_accessor :id, :name, :path, :title
+  attr_accessor :id, :name, :path, :title, :store
 
   def initialize(id, name, path, title)
     @id = id
     @name = name
     @path = path
     @title = title
+    @store = nil # set on get
   end
 
   def projects
@@ -19,6 +20,7 @@ class Organization
     namespace = media_flux.namespace_describe(id)
     media_flux.logout
     org = Organization.new(namespace[:id], namespace[:name], namespace[:path], namespace[:description])
+    org.store = Store.get_by_name(namespace[:store])
     org
   end
 
@@ -42,19 +44,15 @@ class Organization
   def self.list
     media_flux = MediaFluxClient.default_instance
     root_namespace = Rails.configuration.mediaflux["api_root_ns"]
-    ns_list = media_flux.namespace_list(root_namespace)
+    namespace_list = media_flux.namespace_list(root_namespace)
 
     # Horrible hack until we create a rake task to seed the server
-    if ns_list.count == 0
+    if namespace_list.count == 0
       self.create_defaults
-      ns_list = media_flux.namespace_list(root_namespace)
+      namespace_list = media_flux.namespace_list(root_namespace)
     end
 
-    organizations = []
-    ns_list.each do |ns|
-      ns_info = media_flux.namespace_describe(ns[:id])
-      organizations << Organization.new(ns_info[:id], ns_info[:name], ns_info[:path], ns_info[:description])
-    end
+    organizations = namespace_list.map { |ns| Organization.get(ns[:id]) }
 
     media_flux.logout
     organizations

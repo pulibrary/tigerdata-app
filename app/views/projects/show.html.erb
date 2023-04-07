@@ -1,10 +1,10 @@
-<h1><%= @project.organization.name %> - <%= @project.name %></h1>
+<h1><%= @project.organization.name %> - <%= @project.title %></h1>
 <div>
 Id: <%= @project.id %><br/>
 Name: <%= @project.name %><br/>
 Title: <%= @project.title %><br/>
 Path: <%= @project.path %><br/>
-Organization: <%= link_to @project.organization.name, organization_path(@project.organization.id ) %><br/>
+Organization: <%= link_to @project.organization.title, organization_path(@project.organization.id ) %><br/>
 </div>
 
 <div>

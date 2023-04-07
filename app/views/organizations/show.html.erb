@@ -1,8 +1,10 @@
-<h1><%= @organization.name %></h1>
+<h1><%= @organization.title %> (<%= @organization.name %>)</h1>
 <div>
 Id: <%= @organization.id %><br/>
+Description: <%= @organization.title %><br/>
 Name: <%= @organization.name %><br/>
 Path: <%= @organization.path %><br/>
+Store: <%= @organization.store.name %> (<%= @organization.store.type %>)</br>
 </div>
 
 <div>
