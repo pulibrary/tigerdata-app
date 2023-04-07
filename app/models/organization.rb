@@ -65,7 +65,7 @@ class Organization
       Rails.logger.info "Root namespace #{root_namespace} already exists"
     else
       Rails.logger.info "Created root namespace #{root_namespace}"
-      media_flux.namespace_create(root_namespace, "TigerData root namespace", Store.all.first.name)
+      media_flux.namespace_create(root_namespace, "TigerData client app root namespace", Store.all.first.name)
     end
     media_flux.logout
   end

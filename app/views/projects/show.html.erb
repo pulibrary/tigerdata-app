@@ -22,7 +22,14 @@ Organization: <%= link_to @project.organization.title, organization_path(@projec
     <% @project_files[:files].each_with_index do |file, ix| %>
       <tr>
         <td><%= @project_files[:cursor][:from] + ix %></td>
-        <td><%= file[:name] %></td>
+        <td>
+          <% if file[:collection] %>
+            <!-- TODO: render folders as links to drill down -->
+            <%= file[:name] %> (folder)
+          <% else %>
+            <%= file[:name] %>
+          <% end %>
+        </td>
         <td><%= file[:id] %></td>
       </tr>
     <% end %>

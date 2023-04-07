@@ -121,7 +121,12 @@ class MediaFluxClient
     files = []
     xml.xpath("/response/reply/result").children.each do |node|
       if node.name == "name"
-        files << {id: node.xpath("./@id").text, name: node.text }
+        file = {
+          id: node.xpath("./@id").text,
+          name: node.text,
+          collection: node.xpath("./@collection").text == "true"
+        }
+        files << file
       else
         # it's the cursor node, ignore it
       end
