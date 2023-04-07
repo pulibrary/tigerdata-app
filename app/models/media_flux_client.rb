@@ -9,7 +9,6 @@ require "nokogiri"
 class MediaFluxClient
 
   def self.default_instance
-    Rails.logger.info "Connecting to MF"
     transport = Rails.configuration.mediaflux["api_transport"]
     host = Rails.configuration.mediaflux["api_host"]
     port = Rails.configuration.mediaflux["api_port"]
@@ -525,6 +524,8 @@ class MediaFluxClient
     def http_post(payload, mflux = false, file_content = nil)
       url = @base_url
       uri = URI.parse(url)
+      Rails.logger.info "Connecting URI #{uri}"
+
       http = Net::HTTP.new(uri.host, uri.port)
       if url.start_with?("https://")
         http.use_ssl = true
@@ -608,6 +609,7 @@ class MediaFluxClient
     end
 
     def connect
+      Rails.logger.info "Connecting to MF #{@host}, #{@domain}, #{@user}"
       xml_request = <<-XML_BODY
         <request>
           <service name="system.logon">
@@ -621,6 +623,8 @@ class MediaFluxClient
         </request>
       XML_BODY
       response_body = http_post(xml_request)
+      Rails.logger.info "connection: #{response_body}"
+
       xml = Nokogiri::XML(response_body)
 
       session_element = xml.xpath("//response/reply/result/session").first
