@@ -15,7 +15,7 @@ class MediaFluxClient
 
     # Hack until we correct the ENV MEDIAFLUX_PORT value
     if transport == "https"
-      port = 433
+      port = 443
     end
 
     domain = Rails.configuration.mediaflux["api_domain"]
