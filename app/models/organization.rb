@@ -34,7 +34,7 @@ class Organization
       id = nil # TODO get the id
     else
       Rails.logger.info "Created namespace #{namespace_fullname}"
-      id = media_flux.namespace_create(namespace_fullname, title, "data")
+      id = media_flux.namespace_create(namespace_fullname, title, Store.all.first.name)
     end
 
     media_flux.logout
