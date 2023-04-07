@@ -13,6 +13,12 @@ class MediaFluxClient
     transport = Rails.configuration.mediaflux["api_transport"]
     host = Rails.configuration.mediaflux["api_host"]
     port = Rails.configuration.mediaflux["api_port"]
+
+    # Hack until we correct the ENV MEDIAFLUX_PORT value
+    if transport == "https"
+      port = 433
+    end
+
     domain = Rails.configuration.mediaflux["api_domain"]
     user = Rails.configuration.mediaflux["api_user"]
     password = Rails.configuration.mediaflux["api_password"]
