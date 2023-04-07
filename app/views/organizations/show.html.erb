@@ -9,9 +9,20 @@ Store: <%= @organization.store.name %> (<%= @organization.store.type %>)</br>
 
 <div>
   <b>Projects</b><br/>
-  <% @organization.projects.each do |project| %>
-    <li><%= link_to project.name, project_path(project.id) %></br>
-  <% end %>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>File Count</th>
+      <th>Store</th>
+    </tr>
+    <% @organization.projects.each do |project| %>
+      <tr>
+        <td><%= link_to(project.name, project_path(project.id)) %></td>
+        <td><%= project.file_count %></td>
+        <td><%= project.store_name %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 
 <div>

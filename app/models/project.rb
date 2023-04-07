@@ -78,7 +78,7 @@ class Project
     org_namespaces.each do |ns|
       path = org.path + "/" + ns[:name]
       collection = media_flux.namespace_collection_assets(path).first
-      projects << Project.new(collection[:id], collection[:name], collection[:path], collection[:description], org)
+      projects << Project.get(collection[:id])
     end
     projects
   end
