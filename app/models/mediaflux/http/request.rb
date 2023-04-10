@@ -7,12 +7,6 @@ module Mediaflux
         raise(NotImplementedError, "#{self} is an abstract class, please override #{self}.service")
       end
 
-      # As this is an abstract class, this should be overridden to specify the arguments for the Mediaflux API service
-      # @return [Hash]
-      def self.service_args
-        {}
-      end
-
       # The default request URL path for the Mediaflux API
       # @return [String]
       def self.request_path
@@ -81,11 +75,19 @@ module Mediaflux
       def response_xml
         resolve unless resolved?
 
-        Rails.logger.debug(http_response.body)
-        @response_xml ||= Nokogiri::XML.parse(http_response.body)
+        Rails.logger.debug(response_body)
+        @response_xml ||= Nokogiri::XML.parse(response_body)
         Rails.logger.debug(@response_xml)
+        if @response_xml.xpath("//message").text == "session is not valid"
+          raise Mediaflux::Http::SessionExpired, session_token
+        end
 
         @response_xml
+      end
+
+      # The response body of the mediaflux call
+      def response_body
+        @response_body ||= http_response.body
       end
 
       delegate :to_s, to: :response_xml
@@ -93,15 +95,15 @@ module Mediaflux
       private
 
         def http_request
-          @http_request ||= build_http_request(name: self.class.service, form_file: @file, request_args: self.class.service_args)
+          @http_request ||= build_http_request(name: self.class.service, form_file: @file)
         end
 
         def http_response
           @http_response ||= resolve
         end
 
-        def build_http_request_body(name:, request_args: {})
-          args = request_args.merge({ name: name })
+        def build_http_request_body(name:)
+          args = { name: name }
           args[:session] = session_token unless session_token.nil?
 
           Nokogiri::XML::Builder.new do |xml|
@@ -113,10 +115,10 @@ module Mediaflux
           end
         end
 
-        def build_http_request(name:, form_file: nil, request_args: {})
+        def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
-          body = build_http_request_body(name: name, request_args: request_args)
-
+          body = build_http_request_body(name: name)
+          Rails.logger.debug(body.to_xml)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
             request.body = body.to_xml

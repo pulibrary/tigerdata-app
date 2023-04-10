@@ -47,8 +47,8 @@ module Mediaflux
           value.strip
         end
 
-        def build_http_request_body(name:, request_args: {})
-          super(name: name, request_args: request_args) do |xml|
+        def build_http_request_body(name:)
+          super do |xml|
             xml.args do
               xml.domain self.class.mediaflux_domain
               xml.user self.class.mediaflux_user
