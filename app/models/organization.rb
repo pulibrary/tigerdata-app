@@ -31,7 +31,7 @@ class Organization
     namespace_fullname = Rails.configuration.mediaflux["api_root_ns"] + "/" + name
     if media_flux.namespace_exists?(namespace_fullname)
       Rails.logger.info "Namespace #{namespace_fullname} already exists"
-      id = nil # TODO get the id
+      id = nil # TODO: get the id
     else
       Rails.logger.info "Created namespace #{namespace_fullname}"
       id = media_flux.namespace_create(namespace_fullname, title, Store.all.first.name)
@@ -48,7 +48,7 @@ class Organization
 
     # Horrible hack until we create a rake task to seed the server
     if namespace_list.count == 0
-      self.create_defaults
+      create_defaults
       namespace_list = media_flux.namespace_list(root_namespace)
     end
 
@@ -73,9 +73,9 @@ class Organization
   def self.create_defaults
     create_root_ns
     organizations = []
-    organizations << {name: "rc", title: "Research Computing"}
-    organizations << {name: "pppl", title: "Princeton Physics Plasma Lab"}
-    organizations << {name: "pul", title: "Princeton University Library"}
+    organizations << { name: "rc", title: "Research Computing" }
+    organizations << { name: "pppl", title: "Princeton Physics Plasma Lab" }
+    organizations << { name: "pul", title: "Princeton University Library" }
     organizations.each do |org|
       Organization.create!(org[:name], org[:title])
     end

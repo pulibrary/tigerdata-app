@@ -23,7 +23,7 @@ class Project
 
   def files_paged(page_num)
     page_size = 100
-    idx = ((page_num-1) * page_size) + 1
+    idx = ((page_num - 1) * page_size) + 1
     media_flux = MediaFluxClient.default_instance
     page_results = media_flux.collection_query(id, idx: idx, size: page_size)
     media_flux.logout
@@ -31,7 +31,7 @@ class Project
   end
 
   def add_new_files(count)
-    pattern = "#{name}-#{Date.today}-#{Time.now.seconds_since_midnight.to_i}-"
+    pattern = "#{name}-#{Time.zone.today}-#{Time.now.seconds_since_midnight.to_i}-"
     media_flux = MediaFluxClient.default_instance
     media_flux.add_new_files_to_collection(id, count, pattern)
     media_flux.logout

@@ -7,7 +7,6 @@ require "nokogiri"
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
 class MediaFluxClient
-
   def self.default_instance
     transport = Rails.configuration.mediaflux["api_transport"]
     host = Rails.configuration.mediaflux["api_host"]
@@ -129,6 +128,7 @@ class MediaFluxClient
         files << file
       else
         # it's the cursor node, ignore it
+        next
       end
     end
     # total is only the actual total when the "complete" attribute is true,
@@ -195,7 +195,7 @@ class MediaFluxClient
     complete = false
     xml.xpath("/response/reply/result").children.each do |node|
       if node.name == "name"
-        files << {id: node.xpath("./@id").text, name: node.text }
+        files << { id: node.xpath("./@id").text, name: node.text }
       elsif node.name == "iterated"
         complete = node.xpath("./@complete").text == "true"
       end
@@ -389,8 +389,7 @@ class MediaFluxClient
     namespaces = []
     xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
       id = ns.xpath("@id").text
-      name = ns.text
-      namespaces << { id: id, name: ns.text}
+      namespaces << { id: id, name: ns.text }
     end
     namespaces
   end
@@ -469,7 +468,7 @@ class MediaFluxClient
     collection_assets
   end
 
-  def store_list()
+  def store_list
     xml_request = <<-XML_BODY
       <request>
         <service name="asset.store.list" session="#{@session_id}" data-out-min="0" data-out-max="0">
@@ -583,7 +582,7 @@ class MediaFluxClient
         message: xml.xpath("/response/reply/message").text
       }
       Rails.logger.error "MediaFlux error: #{error[:title]}, #{error[:message]}"
-      return error
+      error
     end
 
     def xml_separator(xml)

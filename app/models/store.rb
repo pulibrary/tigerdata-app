@@ -21,7 +21,7 @@ class Store
   end
 
   def self.get_by_name(name)
-    self.all.find {|store| store.name == name }
+    all.find { |store| store.name == name }
   end
 
   def self.default
