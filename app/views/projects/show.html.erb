@@ -1,0 +1,52 @@
+<h1><%= @project.organization.name %> - <%= @project.title %></h1>
+<div>
+Id: <%= @project.id %><br/>
+Name: <%= @project.name %><br/>
+Title: <%= @project.title %><br/>
+Path: <%= @project.path %><br/>
+Store: <%= @project.store_name %></br>
+Organization: <%= link_to @project.organization.title, organization_path(@project.organization.id ) %><br/>
+</div>
+
+<div>
+  <p>
+    <b>Total files: <%= @project.file_count %></b>,
+    showing <%= @project_files[:cursor][:from] %> to <%= @project_files[:cursor][:to] %>.
+  </p>
+  <table>
+    <tr>
+      <th>#</th>
+      <th>File Name</th>
+      <th>Asset ID</th>
+    </tr>
+    <% @project_files[:files].each_with_index do |file, ix| %>
+      <tr>
+        <td><%= @project_files[:cursor][:from] + ix %></td>
+        <td>
+          <% if file[:collection] %>
+            <!-- TODO: render folders as links to drill down -->
+            <%= file[:name] %> (folder)
+          <% else %>
+            <%= file[:name] %>
+          <% end %>
+        </td>
+        <td><%= file[:id] %></td>
+      </tr>
+    <% end %>
+  </table>
+
+
+  <% if @project.file_count > 0 %>
+    <p>
+      <% if @project_files[:cursor][:to] < @project.file_count %>
+        <%= link_to "Load next page of files", project_path(id: @project.id, page: @page+1) %> |
+      <% end %>
+      <%= link_to "Load first batch of files", project_path(id: @project.id) %>
+    </p>
+  <% end %>
+</div>
+
+<div>
+  <br/>
+  <%= link_to "Add 100 new files", project_add_new_files_path(@project.id) %>
+</div>

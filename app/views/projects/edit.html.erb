@@ -1,0 +1,18 @@
+<h1>Editing Project</h1>
+
+<%= form_with url: project_save_path(id: @project.id), method: :post do |form| %>
+  Organization: <%= @project.organization.name %> <br/>
+  Name: <input type="text" id="name" name="name" required autofocus value="<%= @project.name %>" /><br/>
+  Store: <input type="text" id="store_name" name="store_name" required value="<%= @project.store_name %>" />
+  (<%= Store.all.map(&:name).join(',') %>)<br/>
+
+  --<br/>
+  Internal values (don't touch them)<br/>
+  Internal: <input type="text" id="organization_id" name="organization_id" readonly value="<%= @project.organization.id %>" /><br/>
+  Internal: <input type="text" id="id" name="id" readonly value="<%= @project.id %>" /><br/>
+  --<br/>
+
+  <div class="actions">
+    <input type="submit" class="btn btn-primary" value="Save" />
+  </div>
+<% end %>

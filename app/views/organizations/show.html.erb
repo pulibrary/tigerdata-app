@@ -1,0 +1,34 @@
+<h1><%= @organization.title %> (<%= @organization.name %>)</h1>
+<div>
+Id: <%= @organization.id %><br/>
+Description: <%= @organization.title %><br/>
+Name: <%= @organization.name %><br/>
+Path: <%= @organization.path %><br/>
+Store: <%= @organization.store.name %> (<%= @organization.store.type %>)</br>
+</div>
+
+<div>
+  <b>Projects</b><br/>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>File Count</th>
+      <th>Store</th>
+    </tr>
+    <% @organization.projects.each do |project| %>
+      <tr>
+        <td><%= link_to(project.name, project_path(project.id)) %></td>
+        <td><%= project.file_count %></td>
+        <td><%= project.store_name %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<div>
+  <%= link_to "New Project", new_project_path(organization_id: @organization.id), class: "btn btn-primary btn-sm" %>
+</div>
+
+<div>
+  <%= link_to "All Organizations", organizations_path %>
+</div>
