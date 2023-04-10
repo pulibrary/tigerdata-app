@@ -338,6 +338,8 @@ class MediaFluxClient
     XML_BODY
     response_body = http_post(xml_request)
     xml = Nokogiri::XML(response_body)
+    error = response_error(xml)
+    return false if error
     true
   end
 
@@ -529,7 +531,6 @@ class MediaFluxClient
     def http_post(payload, mflux = false, file_content = nil)
       url = @base_url
       uri = URI.parse(url)
-      Rails.logger.info "Connecting URI #{uri}"
 
       http = Net::HTTP.new(uri.host, uri.port)
       if url.start_with?("https://")
@@ -574,6 +575,16 @@ class MediaFluxClient
       end
     end
     # rubocop:enable Metrics/AbcSize
+
+    def response_error(xml)
+      return nil if xml.xpath("/response/reply/error").count == 0
+      error = {
+        title: xml.xpath("/response/reply/error").text,
+        message: xml.xpath("/response/reply/message").text
+      }
+      Rails.logger.error "MediaFlux error: #{error[:title]}, #{error[:message]}"
+      return error
+    end
 
     def xml_separator(xml)
       # 01 00 xx xx xx xx xx xx xx xx 00 00 00 01 yy yy
@@ -628,7 +639,6 @@ class MediaFluxClient
         </request>
       XML_BODY
       response_body = http_post(xml_request)
-      Rails.logger.info "connection: #{response_body}"
 
       xml = Nokogiri::XML(response_body)
 
