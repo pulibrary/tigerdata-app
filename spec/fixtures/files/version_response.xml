@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <reply type="result">
+    <result>
+      <ant-version>Apache Ant 1.10.7</ant-version>
+      <binary>aserver</binary>
+      <build-time>01-Aug-2022 23:39:42 AEST</build-time>
+      <built-by>Arcitecta. Pty. Ltd.</built-by>
+      <created-by>1.8.0_292-b10 (Azul Systems, Inc.)</created-by>
+      <manifest-version>1.0</manifest-version>
+      <target-jvm>1.8</target-jvm>
+      <vendor>Arcitecta Pty. Ltd.</vendor>
+      <version>4.14.014</version>
+    </result>
+  </reply>
+</response>

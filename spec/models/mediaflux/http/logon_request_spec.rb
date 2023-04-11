@@ -25,14 +25,10 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
     XML
   end
 
+  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+
   before do
-    WebMock.enable!
-
-    stub_request(:post, "http://0.0.0.0:8888/__mflux_svc__").to_return(status: 200, body: response_body)
-  end
-
-  after do
-    WebMock.disable!
+    stub_request(:post, mediflux_url).to_return(status: 200, body: response_body)
   end
 
   describe "#resolve" do

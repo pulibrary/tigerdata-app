@@ -14,13 +14,15 @@ module Mediaflux
         "asset.collection.list"
       end
 
-      # Provides the arguments for the Mediaflux service used to list collections
-      # @return [Hash]
-      def self.service_args
-        {
-          namespace: default_namespace
-        }
-      end
+      private
+
+        def build_http_request_body(name:)
+          super(name: name) do |xml|
+            xml.args do
+              xml.namespace self.class.default_namespace
+            end
+          end
+        end
     end
   end
 end
