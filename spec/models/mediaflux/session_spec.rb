@@ -4,14 +4,6 @@ require "rails_helper"
 RSpec.describe Mediaflux::Session, type: :model do
   subject(:session) { described_class.new }
 
-  before do
-    WebMock.enable!
-  end
-
-  after do
-    WebMock.disable!
-  end
-
   describe "#logon", stub_mediaflux: true do
     it "authenticates and stores and the session token" do
       session.logon

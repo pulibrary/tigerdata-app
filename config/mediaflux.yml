@@ -26,7 +26,7 @@ development:
 test:
   api_root_ns: '/td-test-001'
   api_transport: 'http'
-  api_host: '0.0.0.0'
+  api_host: 'mediaflux.example.com'
   api_port: '8888'
   api_domain: 'system'
   api_user: 'manager'
