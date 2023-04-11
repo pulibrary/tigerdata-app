@@ -52,3 +52,10 @@ This README describes the recommended approach to get up and running with MediaF
    ```
 1. At the login screen, change "server" to `0.0.0.0` and "port" to `8888`.  Use the domain, user, and password information in LastPass to log in.
 
+## Internal documentation
+
+All notes below are internal and cannot be accessed outside of the PUL IT group.
+
+* [Training notes](https://drive.google.com/drive/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
+* [Hector's training notes](https://drive.google.com/drive/folders/1HGPp43OcGikdZmr3Wd4tgdpY6m1y_PCx)
+* [Recordings](https://drive.google.com/drive/folders/19EGm7s7UxOMCCdRRXSscUIkya_gF9Zgs)
