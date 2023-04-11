@@ -24,6 +24,11 @@ module Mediaflux
         "asset.create"
       end
 
+      def id
+        @id ||= response_xml.xpath("/response/reply/result/id").text
+        @id
+      end
+
       private
 
         def build_http_request_body(name:)
