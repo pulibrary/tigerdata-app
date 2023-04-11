@@ -1,0 +1,11 @@
+<response>
+    <reply type="result">
+        <result>
+            <namespace path="/td-demo-001">
+                <namespace id="1116" leaf="true" acl="false">pppl</namespace>
+                <namespace id="1118" leaf="true" acl="false">pul</namespace>
+                <namespace id="1114" leaf="true" acl="false">rc</namespace>
+            </namespace>
+        </result>
+    </reply>
+</response>
