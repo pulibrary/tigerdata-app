@@ -22,16 +22,11 @@ module Mediaflux
       def metadata
         xml = response_xml
         asset = xml.xpath("/response/reply/result/asset")
-        metadata = {
-          id: asset.xpath("./@id").text,
-          creator: asset.xpath("./creator/user").text,
-          description: asset.xpath("./description").text,
-          collection: asset.xpath("./@collection")&.text == "true",
-          path: asset.xpath("./path").text,
-          type: asset.xpath("./type").text,
-          size: asset.xpath("./content/size").text,
-          size_human: asset.xpath("./content/size/@h").text
-        }
+        metadata = parse(asset)
+
+        if metadata[:collection]
+          metadata[:total_file_count] = asset.xpath("./members/static").text.to_i
+        end
 
         parse_image(asset.xpath("./meta/mf-image"), metadata)
 
@@ -60,6 +55,20 @@ module Mediaflux
           if image.count > 0
             metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
           end
+        end
+
+        def parse(asset)
+          {
+            id: asset.xpath("./@id").text,
+            creator: asset.xpath("./creator/user").text,
+            description: asset.xpath("./description").text,
+            collection: asset.xpath("./@collection")&.text == "true",
+            path: asset.xpath("./path").text,
+            type: asset.xpath("./type").text,
+            size: asset.xpath("./content/size").text,
+            size_human: asset.xpath("./content/size/@h").text,
+            namespace: asset.xpath("./path").text
+          }
         end
     end
   end

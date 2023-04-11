@@ -15,7 +15,7 @@ RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
         .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"secretsecret/2/31\">\n    <args>\n      <id>1065</id>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: metdata_response, headers: {})
     end
-    it "parses a metdata response" do
+    it "parses a metadata response" do
       metadata_request = described_class.new(session_token: "secretsecret/2/31", id: 1065)
       metadata = metadata_request.metadata
       expect(metadata[:id]).to eq("1065")
@@ -35,7 +35,7 @@ RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
         File.new(filename).read
       end
 
-      it "parses a metdata response" do
+      it "parses a metadata response" do
         metadata_request = described_class.new(session_token: "secretsecret/2/31", id: 1065)
         metadata = metadata_request.metadata
         expect(metadata[:id]).to eq("1065")

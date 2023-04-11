@@ -7,454 +7,102 @@ require "nokogiri"
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
 class MediaFluxClient
+  attr_reader :session_id
+
   def self.default_instance
-    transport = Rails.configuration.mediaflux["api_transport"]
-    host = Rails.configuration.mediaflux["api_host"]
-    port = Rails.configuration.mediaflux["api_port"]
-
-    # Hack until we correct the ENV MEDIAFLUX_PORT value
-    if transport == "https"
-      port = 443
-    end
-
-    domain = Rails.configuration.mediaflux["api_domain"]
-    user = Rails.configuration.mediaflux["api_user"]
-    password = Rails.configuration.mediaflux["api_password"]
-    MediaFluxClient.new(transport, host, port, domain, user, password)
+    new
   end
 
-  def initialize(transport, host, port, domain, user, password)
-    @transport = transport
-    @host = host
-    @port = port
-    @domain = domain
-    @user = user
-    @password = password
-    @base_url = "#{transport}://#{host}:#{port}/__mflux_svc__/"
-    @xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
-    connect
+  def initialize(session_id = nil)
+    @session_id = session_id
+    @session_id ||= connect
   end
 
   # Fetches MediaFlux's server version information (in XML)
   def version
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="server.version" session="#{@session_id}"/>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-
-    xml = Nokogiri::XML(response_body)
-    version_info = {
-      vendor: xml.xpath("/response/reply/result/vendor").text,
-      version: xml.xpath("/response/reply/result/version").text
-    }
-    version_info
+    version_request = Mediaflux::Http::VersionRequest.new(session_token: @session_id)
+    version_request.version
   end
 
   # Terminates the current session
   def logout
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="system.logoff" session="#{@session_id}"/>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
+    logout_request = Mediaflux::Http::LogoutRequest.new(session_token: @session_id)
+    logout_request.response_body
   end
 
   # Queries for assets on the given namespace
   def query(aql_where, idx: 1, size: 10)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.query" session="#{@session_id}">
-          <args>
-            <where>#{aql_where}</where>
-            <idx>#{idx}</idx>
-            <size>#{size}</size>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    ids = xml.xpath("/response/reply/result/id").children.map(&:text)
-    cursor = xml.xpath("/response/reply/result/cursor")
-    # total is only the actual total when the "complete" attribute is true,
-    # otherwise it reflects the total fetched so far
-    result = {
-      ids: ids,
-      size: xml.xpath("/response/reply/result/size").text.to_i,
-      cursor: {
-        count: cursor.xpath("./count").text.to_i,
-        from: cursor.xpath("./from").text.to_i,
-        to: cursor.xpath("./to").text.to_i,
-        prev: cursor.xpath("./prev").text.to_i,
-        next: cursor.xpath("./next").text.to_i,
-        total: cursor.xpath("./total").text.to_i,
-        remaining: cursor.xpath("./remaining").text.to_i
-      }
-    }
-    result
+    query_request = Mediaflux::Http::QueryRequest.new(session_token: @session_id, aql_query: aql_where, size: size, idx: idx)
+    query_request.result
   end
 
   def collection_query(collection_id, idx: 1, size: 10)
-    # Notice that querying via <collection>#{collection_id}</collection>
-    # does NOT give the expected results when using pagination.
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.query" session="#{@session_id}">
-          <args>
-            <where>asset in collection #{collection_id}</where>
-            <idx>#{idx}</idx>
-            <size>#{size}</size>
-            <action>get-name</action>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    ids = xml.xpath("/response/reply/result/id").children.map(&:text)
-    cursor = xml.xpath("/response/reply/result/cursor")
-    files = []
-    xml.xpath("/response/reply/result").children.each do |node|
-      if node.name == "name"
-        file = {
-          id: node.xpath("./@id").text,
-          name: node.text,
-          collection: node.xpath("./@collection").text == "true"
-        }
-        files << file
-      else
-        # it's the cursor node, ignore it
-        next
-      end
-    end
-    # total is only the actual total when the "complete" attribute is true,
-    # otherwise it reflects the total fetched so far
-    result = {
-      ids: ids,
-      files: files,
-      size: xml.xpath("/response/reply/result/size").text.to_i,
-      cursor: {
-        count: cursor.xpath("./count").text.to_i,
-        from: cursor.xpath("./from").text.to_i,
-        to: cursor.xpath("./to").text.to_i,
-        prev: cursor.xpath("./prev").text.to_i,
-        next: cursor.xpath("./next").text.to_i,
-        total: cursor.xpath("./total").text.to_i,
-        complete: cursor.xpath("./total/@complete").text == "true",
-        remaining: nil
-      }
-    }
-
-    if cursor.xpath("./total/@remaining").text != ""
-      result[:cursor][:remaining] = cursor.xpath("./total/@remaining").text.to_i
-    end
-
-    result
-  end
-
-  def collection_iterate(collection_id)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.query" session="#{@session_id}">
-          <args>
-            <collection>#{collection_id}</collection>
-            <as>iterator</as>
-            <action>get-name</action>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    iterator = xml.xpath("/response/reply/result/iterator").text.to_i
-    iterator
-  end
-
-  # Two things to notice on iterators:
-  #   1. They are valid only for the duration of the session
-  #      (i.e. if you logout and login again the iterator won't be valid)
-  #   2. You cannot fetch a previous page of results. They are forward only.
-  def collection_iterate_next(iterator_id)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.query.iterate" session="#{@session_id}">
-          <args>
-            <id>#{iterator_id}</id>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-
-    files = []
-    complete = false
-    xml.xpath("/response/reply/result").children.each do |node|
-      if node.name == "name"
-        files << { id: node.xpath("./@id").text, name: node.text }
-      elsif node.name == "iterated"
-        complete = node.xpath("./@complete").text == "true"
-      end
-    end
-
-    result = {
-      files: files,
-      iterator_id: iterator_id,
-      complete: complete
-    }
-
-    result
+    query_request = Mediaflux::Http::QueryRequest.new(session_token: @session_id, collection: collection_id, size: size, idx: idx, action: "get-name")
+    query_request.result
   end
 
   # Fetches metadata for the given asset it
   def get_metadata(id)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.get" session="#{@session_id}">
-          <args>
-            <id>#{id}</id>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    asset = xml.xpath("/response/reply/result/asset")
-    metadata = {
-      id: asset.xpath("./@id").text,
-      creator: asset.xpath("./creator/user").text,
-      description: asset.xpath("./description").text,
-      collection: asset.xpath("./@collection")&.text == "true",
-      name: asset.xpath("./name").text,
-      path: asset.xpath("./path").text,
-      type: asset.xpath("./type").text,
-      size: asset.xpath("./content/size").text,
-      size_human: asset.xpath("./content/size/@h").text,
-      namespace: asset.xpath("./namespace").text,
-      namespace_id: (asset.xpath("./namespace/@id").text || "").to_i
-    }
-
-    image = asset.xpath("./meta/mf-image")
-    if image.count > 0
-      metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
-    end
-
-    note = asset.xpath("./meta/mf-note")
-    if note.count > 0
-      metadata[:mf_note] = note.text
-    end
-
-    if metadata[:collection]
-      metadata[:total_file_count] = asset.xpath("./members/static").text.to_i
-    end
-
-    metadata
-  end
-
-  def get_content(id)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.get" session="#{@session_id}" data-out-min="1" data-out-max="1">
-          <args>
-            <id>#{id}</id>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request, true)
-    response_body
+    get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: @session_id, id: id)
+    get_request.metadata
   end
 
   def set_note(id, mf_note)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.set" session="#{@session_id}">
-          <args>
-            <id>#{id}</id>
-            <meta>
-              <mf-note>
-                <note>#{mf_note}</note>
-              </mf-note>
-            </meta>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
+    set_request = Mediaflux::Http::SetNoteRequest.new(session_token: @session_id, id: id, note: mf_note)
+    set_request.response_body
   end
 
   # Creates an empty file (no content) with the name provided
-  def create(namespace, filename)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <name>#{filename}</name>
-            <namespace>#{namespace}</namespace>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
+  def create(namespace, _filename)
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: @session_id, namespace: namespace, name: nam, collection: false)
+    create_request.response_body
   end
 
   # Creates a collection asset inside a namespace
-  def create_collection_asset(namespace, name, description)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <name>#{name}</name>
-            <namespace>#{namespace}</namespace>
-            <description>#{description}</description>
-            <collection contained-asset-index="true" unique-name-index="true">true</collection>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
+  def create_collection_asset(namespace, name, _description)
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: @session_id, namespace: namespace, name: name)
+    xml = create_request.response_xml
     id = xml.xpath("//response/reply/result").text.to_i
     id
   end
 
   def add_new_files_to_collection(collection_id, count, pattern)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.test.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <pid>#{collection_id}</pid>
-            <nb>#{count}</nb>
-            <base-name>#{pattern}</base-name>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
+    test_create_request = Mediaflux::Http::TestAssetCreateRequest.new(session_token: @session_id, parent_id: collection_id, count: count, pattern: pattern)
+    xml = test_create_request.response_xml
     error = response_error(xml)
     return false if error
     true
   end
 
   def namespace_exists?(namespace)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.namespace.exists" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <namespace>#{namespace}</namespace>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    xml.xpath("//response/reply/result").text == "true"
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: namespace, session_token: @session_id)
+    namespace_request.exist?
   end
 
   def namespace_create(namespace, description, store_name)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.namespace.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <namespace>#{namespace}</namespace>
-            <description>#{description}</description>
-            <store>#{store_name}</store>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
+    namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(namespace: namespace, description: description, store: store_name, session_token: @session_id)
+    namespace_request.response_body
   end
 
   def namespace_list(parent_namespace)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.namespace.list" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <namespace>#{parent_namespace}</namespace>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    namespaces = []
-    xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
-      id = ns.xpath("@id").text
-      namespaces << { id: id, name: ns.text }
-    end
-    namespaces
+    namespace_request = Mediaflux::Http::NamespaceListRequest.new(session_token: @session_id, parent_namespace: parent_namespace)
+    namespace_request.namespaces
   end
 
   def namespace_describe(id)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.namespace.describe" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <id>#{id}</id>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    node = xml.xpath("/response/reply/result/namespace")
-    namespace = {
-      id: id,
-      path: node.xpath("./path").text,
-      name: node.xpath("./name").text,
-      description: node.xpath("./description").text,
-      store: node.xpath("./store").text
-    }
-    namespace
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(id: id, session_token: @session_id)
+    namespace_request.metadata
   end
 
-  # TODO: Fold this into namespace_describe by using `path=`
   def namespace_describe_by_name(name)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.namespace.describe" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <namespace>#{name}</namespace>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    node = xml.xpath("/response/reply/result/namespace")
-    namespace = {
-      id: node.xpath("@id").text,
-      path: node.xpath("./path").text,
-      name: node.xpath("./name").text,
-      description: node.xpath("./description").text,
-      store: node.xpath("./store").text
-    }
-    namespace
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: name, session_token: @session_id)
+    namespace_request.metadata
   end
 
   def namespace_collection_assets(namespace)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.query" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <where>namespace=#{namespace}</where>
-            <where>asset is collection</where>
-            <action>get-meta</action>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
+    query_request = Mediaflux::Http::QueryRequest.new(session_token: @session_id, namespace: namespace,
+                                                      aql_query: "asset is collection", action: "get-meta")
+    xml = query_request.response_xml
     collection_assets = []
     xml.xpath("/response/reply/result/asset").each do |node|
       collection_asset = {
@@ -469,111 +117,17 @@ class MediaFluxClient
   end
 
   def store_list
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.store.list" session="#{@session_id}" data-out-min="0" data-out-max="0">
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    xml = Nokogiri::XML(response_body)
-    stores = xml.xpath("/response/reply/result/store").map do |node|
-      {
-        id: node.xpath("@id").text,
-        type: node.xpath("./type").text,
-        name: node.xpath("./name").text,
-        tag: node.xpath("./tag").text
-      }
-    end
-    stores
+    stores_request = Mediaflux::Http::StoreListRequest.new(session_token: @session_id)
+    stores_request.stores
   end
 
   # Creates an empty file (no content) with the name provided in the collection indicated
   def create_in_collection(collection, filename)
-    xml_request = <<-XML_BODY
-      <request>
-        <service name="asset.create" session="#{@session_id}" data-out-min="0" data-out-max="0">
-          <args>
-            <pid>#{collection}</pid>
-            <name>#{filename}</name>
-          </args>
-        </service>
-      </request>
-    XML_BODY
-    response_body = http_post(xml_request)
-    response_body
-  end
-
-  # Uploads a file to the given namespace
-  def upload(namespace, filename_fullpath)
-    filename = File.basename(filename_fullpath)
-    xml_request = <<-XML_BODY
-    <request>
-      <service name="asset.create" session="#{@session_id}">
-        <args>
-          <namespace create="True">#{namespace}</namespace>
-          <name>#{filename}</name>
-          <meta><mf-name><name>#{filename}</name></mf-name></meta>
-        </args>
-        <attachment></attachment>
-      </service>
-    </request>
-    XML_BODY
-    file_content = File.read(filename_fullpath)
-    response_body = http_post(xml_request, true, file_content)
-    response_body
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: @session_id, parent_id: collection, name: filename, collection: false)
+    create_request.response_body
   end
 
   private
-
-    # rubocop:disable Metrics/AbcSize
-    def http_post(payload, mflux = false, file_content = nil)
-      url = @base_url
-      uri = URI.parse(url)
-
-      http = Net::HTTP.new(uri.host, uri.port)
-      if url.start_with?("https://")
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-      request = Net::HTTP::Post.new(url)
-
-      xml = @xml_declaration + payload
-      if mflux == false
-        request["Content-Type"] = "text/xml"
-        request.body = xml
-      else
-        # Here be dragons
-        # Requests are built different for this content-type
-        request["Content-Type"] = "application/mflux"
-        mflux_request = if file_content.nil?
-                          xml_separator(xml) + xml
-                        else
-                          xml_separator(xml) + xml + content_separator(file_content) + file_content
-                        end
-        request.body = mflux_request
-      end
-
-      response = http.request(request)
-      if response.content_type == "application/mflux"
-        metadata_only_header = "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000y\u0000\u0000\u0000\u0000\u0000\btext/xml"
-        if response.body[0..23] == metadata_only_header
-          # Response includes only metadata
-          response.body[24..]
-        else
-          # Here be more dragons.
-          # Response include metadata + content.
-          # Horrible hack to extract the content
-          header = response.body[0..23]
-          metadata_size = length_from_header(header)
-          start_at = metadata_size + 24 + 24 + 2 # metadata_size + header + header + 2
-          response.body[start_at..]
-        end
-      else
-        response.body
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
 
     def response_error(xml)
       return nil if xml.xpath("/response/reply/error").count == 0
@@ -585,64 +139,8 @@ class MediaFluxClient
       error
     end
 
-    def xml_separator(xml)
-      # 01 00 xx xx xx xx xx xx xx xx 00 00 00 01 yy yy
-      file_format = "text/xml"
-      part1 = 1.chr + 0.chr + hex_bytes(xml.length)
-      part2 = 0.chr + 0.chr + 0.chr + 1.chr + 0.chr + file_format.length.chr
-      part1 + part2 + file_format
-    end
-
-    def content_separator(content)
-      # 01 00 xx xx xx xx xx xx xx xx 00 00 00 01 00 00
-      part1 = 1.chr + 0.chr + hex_bytes(content.length)
-      part2 = 0.chr + 0.chr + 0.chr + 1.chr + 0.chr + 0.chr
-      part1 + part2
-    end
-
-    def hex_bytes(number)
-      hex_bytes = []
-      # Force the string to be 16 characters long so we can guarantee 8 pairs.
-      number_hex = number.to_s(16).rjust(16, "0")
-      8.times do |i|
-        n = i * 2
-        hex = number_hex[n..n + 1]
-        hex_bytes << hex.to_i(16).chr
-      end
-      hex_bytes.join
-    end
-
-    # header: "\x01\x00\x00\x00\x00\x00\x00\x00\a\xF7\x00\x00\x00\x01\x00\btext/xml"
-    # length: 7F7 hex => 2039 dec
-    def length_from_header(header)
-      hex_str = ""
-      data = header[2..9]
-      data.each_char do |c|
-        hex_str += c.ord.to_s(16).rjust(2, "0")
-      end
-      hex_str.to_i(16)
-    end
-
     def connect
-      Rails.logger.info "Connecting to MF #{@host}, #{@domain}, #{@user}"
-      xml_request = <<-XML_BODY
-        <request>
-          <service name="system.logon">
-            <args>
-              <host>#{@host}</host>
-              <domain>#{@domain}</domain>
-              <user>#{@user}</user>
-              <password>#{@password}</password>
-            </args>
-          </service>
-        </request>
-      XML_BODY
-      response_body = http_post(xml_request)
-
-      xml = Nokogiri::XML(response_body)
-
-      session_element = xml.xpath("//response/reply/result/session").first
-      @session_id = session_element&.text
+      Mediaflux::Session.new(use_ssl: true).logon
     end
 end
 # rubocop:enable Metrics/AbcSize
