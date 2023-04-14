@@ -23,7 +23,7 @@ RSpec.shared_context "Mediaflux server API" do
     File.new(filename).read.gsub("sessiontoken", session_token)
   end
   let(:system_logoff_response_body) do
-    filename = Rails.root.join("spec", "fixtures", "files", "system_logoff_response.xml")
+    filename = Rails.root.join("spec", "fixtures", "files", "generic_response.xml")
     File.new(filename).read.gsub("sessiontoken", session_token)
   end
   let(:asset_store_list_response_body) do
@@ -47,32 +47,27 @@ RSpec.configure do |config|
         body: /<service name="system.logon">/
       ).to_return(status: 200, body: logon_response_body)
 
-      # Stubbing login when url has a slash at the end (I believe this is coming from the mediaflux_client direct connects)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/").with(
-        body: /<service name="system.logon">/
-      ).to_return(status: 200, body: logon_response_body)
-
       # Stubbing the system.version request
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/")
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
            body: /<service name=\"server.version\" session=\"test-session-token\"\/>/
          ).to_return(status: 200, body: version_response_body)
 
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/")
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
-          body: /<service name=\"asset.namespace.list\" session=\"test-session-token\" data-out-min=\"0\" data-out-max=\"0\">/
+          body: /<service name="asset.namespace.list" session="test-session-token">/
         ).to_return(status: 200, body: namespace_list_response_body)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/")
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
-          body: /<service name=\"asset.namespace.describe\" session=\"test-session-token\" data-out-min=\"0\" data-out-max=\"0\">/
+          body: /<service name="asset.namespace.describe" session="test-session-token">/
         ).to_return(status: 200, body: namespace_describe_response_body)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/")
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
-          body: /<service name="system.logoff" session="test-session-token"\/>/
+          body: /<service name="server.logoff" session="test-session-token"\/>/
         ).to_return(status: 200, body: system_logoff_response_body)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__/")
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
-          body: /<service name="asset.store.list" session="test-session-token" data-out-min="0" data-out-max="0">/
+          body: /<service name="asset.store.list" session="test-session-token"\/>/
         ).to_return(status: 200, body: asset_store_list_response_body)
     end
   end

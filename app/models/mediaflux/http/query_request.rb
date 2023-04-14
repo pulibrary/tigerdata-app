@@ -2,7 +2,7 @@
 module Mediaflux
   module Http
     class QueryRequest < Request
-      attr_reader :aql_query, :idx, :size, :collection
+      attr_reader :aql_query, :idx, :size, :collection, :namespace, :action
 
       # Constructor
       # @param session_token [String] the API token for the authenticated session
@@ -10,10 +10,12 @@ module Mediaflux
       # @param collection [Integer] Optional collection id
       # @param idx [Integer] Optional starting index or return set.  Defaults to 1
       # @param size [Integer] Optional page size.  Defaults to 10
-      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 10)
+      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 10, namespace: nil, action: nil)
         super(session_token: session_token)
         @aql_query = aql_query
         @collection = collection
+        @namespace = namespace
+        @action = action
         @idx = idx
         @size = size
       end
@@ -35,7 +37,8 @@ module Mediaflux
         {
           ids: ids,
           size: xml.xpath("/response/reply/result/size").text.to_i,
-          cursor: parse_cursor(xml.xpath("/response/reply/result/cursor"))
+          cursor: parse_cursor(xml.xpath("/response/reply/result/cursor")),
+          files: parse_files(xml)
         }
       end
 
@@ -44,8 +47,13 @@ module Mediaflux
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
+              xml.where "namespace=#{namespace}" if namespace.present?
+              # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
+              #      For the moment we will utilize the where clasue that does allow pagination
+              # xml.collection collection if collection.present?
+              xml.where "asset in collection #{collection}" if collection.present?
               xml.where aql_query if aql_query.present?
-              xml.collection collection if collection.present?
+              xml.action action if action.present?
               xml.idx idx
               xml.size size
             end
@@ -62,6 +70,24 @@ module Mediaflux
             total: cursor.xpath("./total").text.to_i,
             remaining: cursor.xpath("./remaining").text.to_i
           }
+        end
+
+        def parse_files(xml)
+          files = []
+          xml.xpath("/response/reply/result").children.each do |node|
+            if node.name == "name"
+              file = {
+                id: node.xpath("./@id").text,
+                name: node.text,
+                collection: node.xpath("./@collection").text == "true"
+              }
+              files << file
+            else
+              # it's the cursor node, ignore it
+              next
+            end
+          end
+          files
         end
     end
   end

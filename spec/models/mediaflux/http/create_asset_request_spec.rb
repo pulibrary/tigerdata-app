@@ -17,7 +17,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
         .to_return(status: 200, body: create_response, headers: {})
     end
 
-    it "parses a metdata response" do
+    it "parses a metadata response" do
       create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false)
       expect(create_request.id).to eq("1068")
       expect(WebMock).to have_requested(:post, mediflux_url)
@@ -32,7 +32,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
           .to_return(status: 200, body: create_response, headers: {})
       end
 
-      it "parses a metdata response" do
+      it "parses a metadata response" do
         create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: true)
         expect(create_request.id).to eq("1068")
         expect(WebMock).to have_requested(:post, mediflux_url)
