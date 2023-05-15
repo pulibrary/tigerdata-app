@@ -34,7 +34,8 @@ module Mediaflux
       # The host port for the Mediaflux server
       # @return [String]
       def self.mediaflux_port
-        Rails.configuration.mediaflux["api_port"]
+        return 443 if Rails.env.production? || Rails.env.staging? # Work around until we fix the ENV value for production/staging
+        Rails.configuration.mediaflux["api_port"].to_i
       end
 
       # Constructs a new HTTP client for usage with the Mediaflux API
@@ -50,9 +51,9 @@ module Mediaflux
       # @param file [File] any upload file required for the POST request
       # @param session_token [String] the API token for the authenticated session
       # @param http_client [Net::HTTP] HTTP client for transmitting requests to the Mediaflux server API
-      def initialize(use_ssl: false, file: nil, session_token: nil, http_client: nil)
+      def initialize(_use_ssl: false, file: nil, session_token: nil, http_client: nil)
         @http_client = http_client || self.class.build_http_client
-        @http_client.use_ssl = use_ssl
+        @http_client.use_ssl = (self.class.mediaflux_port == 443)
 
         @file = file
         @session_token = session_token
