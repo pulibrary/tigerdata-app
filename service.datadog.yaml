@@ -1,0 +1,8 @@
+---
+schema-version: v2
+dd-service: tigerdata
+team: rdss
+links:
+  - name: TigerData Dashboard
+    type: dashboard
+    url: https://app.datadoghq.com/dashboard/bpm-nfh-tbk/tigerdata-dashboard
