@@ -16,58 +16,61 @@ class Organization
   end
 
   def self.get(id)
-    media_flux = MediaFluxClient.default_instance
-    namespace = media_flux.namespace_describe(id)
-    media_flux.logout
+    namespace = Mediaflux::Http::NamespaceDescribeRequest.new(id: id, session_token: session_id).metadata
+    end_session
     org = Organization.new(namespace[:id], namespace[:name], namespace[:path], namespace[:description])
     org.store = Store.get_by_name(namespace[:store])
     org
   end
 
   def self.create!(name, title)
-    media_flux = MediaFluxClient.default_instance
     id = nil
 
     namespace_fullname = Rails.configuration.mediaflux["api_root_ns"] + "/" + name
-    if media_flux.namespace_exists?(namespace_fullname)
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: namespace_fullname, session_token: session_id)
+    if namespace_request.exists?
       Rails.logger.info "Namespace #{namespace_fullname} already exists"
       id = nil # TODO: get the id
     else
       Rails.logger.info "Created namespace #{namespace_fullname}"
-      id = media_flux.namespace_create(namespace_fullname, title, Store.all.first.name)
+      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(namespace: namespace_fullname, description: title, store: Store.all.first.name, session_token: session_id)
+      id = namespace_request.response_body
     end
 
-    media_flux.logout
+    end_session
     id
   end
 
   def self.list
-    media_flux = MediaFluxClient.default_instance
     root_namespace = Rails.configuration.mediaflux["api_root_ns"]
-    namespace_list = media_flux.namespace_list(root_namespace)
+    list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: root_namespace)
+    namespace_list = list.namespaces
 
     # Horrible hack until we create a rake task to seed the server
     if namespace_list.count == 0
       create_defaults
-      namespace_list = media_flux.namespace_list(root_namespace)
+      list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: root_namespace)
+      namespace_list = list.namespaces
     end
 
     organizations = namespace_list.map { |ns| Organization.get(ns[:id]) }
 
-    media_flux.logout
+    end_session
     organizations
   end
 
   def self.create_root_ns
-    media_flux = MediaFluxClient.default_instance
     root_namespace = Rails.configuration.mediaflux["api_root_ns"]
-    if media_flux.namespace_exists?(root_namespace)
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
+    if namespace_request.exists?
       Rails.logger.info "Root namespace #{root_namespace} already exists"
     else
       Rails.logger.info "Created root namespace #{root_namespace}"
-      media_flux.namespace_create(root_namespace, "TigerData client app root namespace", Store.all.first.name)
+      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(namespace: root_namespace, description: "TigerData client app root namespace", store: Store.all.first.name,
+                                                                      session_token: session_id)
+      namespace_request.response_body
     end
-    media_flux.logout
+    end_session
   end
 
   def self.create_defaults
@@ -79,5 +82,18 @@ class Organization
     organizations.each do |org|
       Organization.create!(org[:name], org[:title])
     end
+  end
+
+  def self.session_id
+    @session_id ||= begin
+                      logon_request = Mediaflux::Http::LogonRequest.new
+                      logon_request.resolve
+                      logon_request.session_token
+                    end
+  end
+
+  def self.end_session
+    Mediaflux::Http::LogoutRequest.new(session_token: session_id).response_body
+    @session_id = nil
   end
 end
