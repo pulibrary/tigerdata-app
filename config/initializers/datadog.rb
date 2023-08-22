@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-require "datadog/statsd"
 require "ddtrace"
+require "datadog/statsd"
+require "datadog/profiling/preload"
 
 Datadog.configure do |c|
   c.env = Rails.env
-  c.service = "pdc-describe"
+  c.service = "tigerdata"
+  c.version = "1.0.0"
+  c.profiling.enabled = true
+
   c.tracing.report_hostname = true
   c.tracing.analytics.enabled = true
   c.tracing.enabled = Rails.env.staging? || Rails.env.production?

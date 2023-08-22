@@ -1,8 +1,13 @@
 ---
-schema-version: v2
+schema-version: v2.1
 dd-service: tigerdata
 team: rdss
+application: "tigerdata"
 links:
-  - name: TigerData Dashboard
-    type: dashboard
-    url: https://app.datadoghq.com/dashboard/bpm-nfh-tbk/tigerdata-dashboard
+  - name: https://github.com/pulibrary/tiger-data-app
+    type: repo
+    provider: github
+    url: https://github.com/pulibrary/tiger-data-app
+  - type: slack
+    name: "#tiger-data"
+    contact: https://pulibrary.slack.com/archives/C04A769PD42

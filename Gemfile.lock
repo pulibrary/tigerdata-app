@@ -166,6 +166,9 @@ GEM
     ffi (1.15.5)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    google-protobuf (3.24.1-arm64-darwin)
+    google-protobuf (3.24.1-x86_64-darwin)
+    google-protobuf (3.24.1-x86_64-linux)
     hashdiff (1.0.1)
     hashie (5.0.0)
     i18n (1.14.1)
@@ -429,6 +432,7 @@ DEPENDENCIES
   ed25519
   factory_bot_rails
   ffaker
+  google-protobuf (~> 3.0)
   importmap-rails
   jbuilder
   omniauth-cas
