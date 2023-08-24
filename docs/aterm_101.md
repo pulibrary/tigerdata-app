@@ -192,19 +192,27 @@ TODO: Add examples once we have access to `dictionary.create`, `dictionary.add`,
 
 
 ## Namespaces and Collection Assets
+MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize and the entire list of assets stored on a server. Each of this concepts provides different features and you need both to properly organize your data.
 
-Namespace
-* Assets belong to one (and only one) namespace
-* Asset name must be unique within namespace (but keep in mind that name is not required!)
-* Namespaces are unfortunately called "collections" in the MediaFlux Desktop, but keep in "collection assets" are a completelly different concept.
-* Access Control List (ACL) can be set at the namespace level.
-* It is recommended that we have a shallow namespace tree (TODO: need to confirm)
+**Namespaces** allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
 
+Below is an example on how to perform a search and limit to only the assets within the `demo01` namespace:
 
-Collection Assets
-* A file can belong to one or more collection assets.
-*
+```
+> asset.query :namespace /demo01
+```
 
+Warning: Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are completelly different concept.
+
+**Collection Assets** are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
+
+Whereas an asset must belong to one and only one namespace, an asset can belong to more than one collection asset.
+
+It is possible to reduce the scope of searches by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assrts within a given root collection asset with id `2541`:
+
+```
+> asset.query :collection 2541 :where "xpath(tigerdata:tigerdoc/title)='the title'"
+```
 
 ## Stores
 
