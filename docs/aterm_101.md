@@ -1,5 +1,5 @@
 # Aterm
-Aterm is the MediaFlux' command line. This is a Java application that you run from your terminal and it allows you to execute commands against a MediaFlux server. You can query for information about assets, create new assets, and update their metadata and content.
+Aterm is the MediaFlux's command line. This is a Java application that you run from your terminal and it allows you to execute commands against a MediaFlux server. You can query for information about assets, create new assets, and update their metadata and content.
 
 In a standard MediaFlux installation you can download Aterm directly as follows:
 
@@ -98,7 +98,7 @@ The default prompt in Aterm is the `>` character, you can change it via the `dis
 ```
 
 
-### Bash like commands
+### Bash-like commands
 Aterm supports a few Bash-like commands that you can use as shortcuts, for example:
 
 ```
@@ -109,9 +109,9 @@ Aterm supports a few Bash-like commands that you can use as shortcuts, for examp
 
 
 ## Assets
-MediaFlux stores files as assets. An asset contains metadata and _optionally_ content. The metadta and the content are versioned independently.
+MediaFlux stores files as assets. An asset contains metadata and _optionally_ content. The metadata and the content are versioned independently.
 
-Internally, assets are records in the XODB database that MediaFlux uses store metadata and run queries against.
+Internally, assets are records in the database that MediaFlux uses store metadata and run queries against.
 
 To create an asset we can use a command as follows:
 
@@ -149,6 +149,112 @@ We can run queries against assets via the `asset.query` command:
     :id -version "1" "1083"
 ```
 
-## Namespaces and Collections
+We can _update the metadata_ of the files with the `asset.set` command, for example the following command will rename a file and give it a description:
 
+```
+>  asset.set :id 1083 :name "small.txt" :description "this is a small file"
+    :version -id "1083" -stime "1415" -changed-or-created "true" "3"
+
+> asset.get :id 1083
+    :asset -id "1083" -version "4" -vid "1416"
+        :type "content/unknown"
+        :namespace -id "1067" "/hector01"
+        :path "/hector01/small.txt"
+        :name -ext "txt" "small.txt"
+        :description "this is a small file"
+        ...
+```
+
+
+### Asset content
+It is possible to _set the content_ of an asset via Aterm and this can be useful for testing purposes.
+
+For example to upload the content of a local file on our machine to an existing asset (with id `1082`) we could use the following command:
+
+```
+> asset.set :id 1082 :in file:/full/path/to/file.txt
+    :version -id "1082" -stime "1414" -changed-or-created "true" "2"
+
+```
+
+In practice the content of files is better updated via the `asset.import` command which allows to import files by reference and set configure what actions should performed on the uploaded files, for example whether we want to analyze the file (i.e. extract metadata from it) or generate checksums.
+
+```
+> asset.import :pid 1005 :url -by reference file:/etc
+> asset.import :parent 1005 :url -by reference file:/etc :analyze false :gen-csum false :pgen false
+```
+
+
+### Labels and tags
+Tags and Labels are a kind of metadata that we can easily added to assets in MediaFlux. Tags apply to all versions of a given asset whereas labels apply to a specific version. See the help for `asset.tag.add` and `asset.label.type.create` for more information.
+
+TODO: Add examples once we have access to `dictionary.create`, `dictionary.add`, and `asset.tag.add`
+
+
+## Namespaces and Collection Assets
+MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize and the entire list of assets stored on a server. Each of this concepts provides different features and you need both to properly organize your data.
+
+**Namespaces** allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
+
+Below is an example on how to perform a search and limit to only the assets within the `demo01` namespace:
+
+```
+> asset.query :namespace /demo01
+```
+
+Warning: Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are completelly different concept.
+
+**Collection Assets** are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
+
+Whereas an asset must belong to one and only one namespace, an asset can belong to more than one collection asset.
+
+It is possible to reduce the scope of searches by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assrts within a given root collection asset with id `2541`:
+
+```
+> asset.query :collection 2541 :where "xpath(tigerdata:tigerdoc/title)='the title'"
+```
+
+## Stores
+
+MediaFlux uses the concept of _stores_ to determine where asset content is stored. You can view the configured stores in your system via the `asset.store.list` command:
+
+```
+> asset.store.list
+    :store -id "1"
+        :type "database"
+        :name "db"
+    :store -id "2"
+        :type "file-system"
+        :name "data"
+    :store -id "3"
+        :type "s3"
+        :name "ibm-cos-1"
+```
+
+You can also use the `asset.store.type.list` to figure out what _type of stores_ are available:
+
+```
+> asset.store.type.list
+    :type "database"
+    :type "dmf-file-system"
+    :type "file-system"
+    :type "nfs"
+    :type "remote"
+    :type "s3"
+```
+
+There is a default stored configured on each server, in the example below we can see that the default store is "data" and from the output of `asset.store.list` previously we know that this store is of type "file-system":
+
+```
+> asset.store.default.get
+    :name "data"
+```
+
+Once stores are defined it is possible to reference them in Aterm commands. For example the following command will create a copy of the content in store `s3` for all the files in the `/something` namespace.
+
+```
+> asset.query :where namespace=/something \
+	:action pipe :pipe-nb-threads 5 \
+	:service-name asset.content.copy.create < :store s3 >
+```
 
