@@ -18,8 +18,20 @@ RSpec.shared_context "Mediaflux server API" do
     filename = Rails.root.join("spec", "fixtures", "files", "namespace_list_response.xml")
     File.new(filename).read.gsub("sessiontoken", session_token)
   end
+  let(:namespace_list_root_error_response_body) do
+    filename = Rails.root.join("spec", "fixtures", "files", "root_namespace_error_response.xml")
+    File.new(filename).read.gsub("sessiontoken", session_token)
+  end
   let(:namespace_describe_response_body) do
     filename = Rails.root.join("spec", "fixtures", "files", "namespace_describe_response.xml")
+    File.new(filename).read.gsub("sessiontoken", session_token)
+  end
+  let(:namespace_desrcibe_root_error_response_body) do
+    filename = Rails.root.join("spec", "fixtures", "files", "root_namespace_describe_error_response.xml")
+    File.new(filename).read.gsub("sessiontoken", session_token)
+  end
+  let(:namespace_create_root_response_body) do
+    filename = Rails.root.join("spec", "fixtures", "files", "root_namespace_create_response.xml")
     File.new(filename).read.gsub("sessiontoken", session_token)
   end
   let(:system_logoff_response_body) do

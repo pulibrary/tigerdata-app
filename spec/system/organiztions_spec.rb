@@ -6,6 +6,23 @@ RSpec.describe "Organizations", stub_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "pul123") }
   before do
     sign_in user
+
+    # Stubbing data here to force the code to go through create_defaults, so it is tested
+    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+      .with(
+      body: /<service name="asset.namespace.list" session="test-session-token">/
+    ).to_return({ status: 200, body: namespace_list_root_error_response_body }, # first time in list nothing exists
+                { status: 200, body: namespace_list_response_body }) # after that the root namespace exists
+
+    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+      .with(
+      body: /<service name="asset.namespace.describe" session="test-session-token">/
+    ).to_return({ status: 200, body: namespace_desrcibe_root_error_response_body }, # first time in describe the root namespace does not exists
+                { status: 200, body: namespace_describe_response_body }) # after that the root namespace exists
+
+    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with do |request|
+      request.body.include?("asset.namespace.create") && request.body.include?("td-test-001")
+    end.to_return(status: 200, body: namespace_create_root_response_body)
   end
   it "shows the organizations" do
     visit "/"

@@ -76,7 +76,7 @@ class MediaFluxClient
 
   def namespace_exists?(namespace)
     namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: namespace, session_token: @session_id)
-    namespace_request.exist?
+    namespace_request.exists?
   end
 
   def namespace_create(namespace, description, store_name)
