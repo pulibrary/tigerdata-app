@@ -14,7 +14,7 @@ RSpec.describe Mediaflux::Http::LogoutRequest, type: :model do
 
   before do
     stub_request(:post, mediflux_url)
-      .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"server.logoff\" session=\"test-session-token\"/>\n</request>\n")
+      .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"system.logoff\" session=\"test-session-token\"/>\n</request>\n")
       .to_return(status: 200, body: metdata_response, headers: {})
   end
 

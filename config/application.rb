@@ -20,5 +20,10 @@ module TigerDataApp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # terminate the mediaflux session if the user logs out
+    Warden::Manager.before_logout do |user, _auth, _opts|
+      user.terminate_mediaflux_session
+    end
   end
 end

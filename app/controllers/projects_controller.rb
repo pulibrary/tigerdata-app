@@ -7,8 +7,8 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    organization = Organization.get(params[:organization_id].to_i)
-    @project = Project.new(-1, "", "", "", organization)
+    organization = Organization.get(params[:organization_id].to_i, session_id: current_user.mediaflux_session)
+    @project = Project.new(-1, "", "", "", organization, session_id: current_user.mediaflux_session)
     render "edit"
   end
 
@@ -22,7 +22,7 @@ class ProjectsController < ApplicationController
   def save
     name = params[:name]
     store_name = params[:store_name]
-    organization = Organization.get(params[:organization_id].to_i)
+    organization = Organization.get(params[:organization_id].to_i, session_id: current_user.mediaflux_session)
     id = params[:id].to_i
     project = if id == -1
                 # create it

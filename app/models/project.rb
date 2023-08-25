@@ -2,14 +2,14 @@
 class Project
   attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name
 
-  def initialize(id, name, path, title, organization)
+  def initialize(id, name, path, title, organization, session_id:)
     @id = id
     @name = name
     @path = path
     @title = title
     @organization = organization
     @file_count = 0 # set on get()
-    @store_name = Store.default.name # overwritten in get()
+    @store_name = Store.default(session_id: session_id).name # overwritten in get()
   end
 
   def files
@@ -45,8 +45,9 @@ class Project
     # ...create a project as a collection asset inside this new namespace
     id = media_flux.create_collection_asset(project_namespace, safe_name(name), name)
     collection_asset = media_flux.get_metadata(id)
+    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: media_flux.session_id)
     media_flux.logout
-    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
+    project
   end
 
   def self.get(id)
@@ -61,9 +62,9 @@ class Project
     # ...find the org for this collection (which is the namespace two levels up)
     org_path = File.dirname(collection_asset[:namespace])
     organization_ns = media_flux.namespace_describe_by_name(org_path)
-    organization = Organization.get(organization_ns[:id])
+    organization = Organization.get(organization_ns[:id], session_id: media_flux.session_id)
 
-    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization)
+    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: media_flux.session_id)
     project.file_count = collection_asset[:total_file_count]
     project.store_name = project_ns[:store]
 
