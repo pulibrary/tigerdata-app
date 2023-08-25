@@ -9,22 +9,22 @@ class Store
     @tag = tag
   end
 
-  def self.all
-    # TODO: we should memoize this value
-    media_flux = MediaFluxClient.default_instance
-    data = media_flux.store_list
-    stores = data.map do |mf_store|
-      Store.new(mf_store[:id], mf_store[:type], mf_store[:name], mf_store[:tag])
+  def self.all(session_id:)
+    @all ||= begin
+      stores_request = Mediaflux::Http::StoreListRequest.new(session_token: session_id)
+      data = stores_request.stores
+      stores = data.map do |mf_store|
+        Store.new(mf_store[:id], mf_store[:type], mf_store[:name], mf_store[:tag])
+      end
+      stores
     end
-    media_flux.logout
-    stores
   end
 
-  def self.get_by_name(name)
-    all.find { |store| store.name == name }
+  def self.get_by_name(name, session_id:)
+    all(session_id: session_id).find { |store| store.name == name }
   end
 
-  def self.default
-    all.first
+  def self.default(session_id:)
+    all(session_id: session_id).first
   end
 end

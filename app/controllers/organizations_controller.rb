@@ -4,10 +4,10 @@ class OrganizationsController < ApplicationController
   def index
     @organizations = []
     return if current_user.nil?
-    @organizations = Organization.list
+    @organizations = Organization.list(session_id: current_user.mediaflux_session)
   end
 
   def show
-    @organization = Organization.get(params[:id])
+    @organization = Organization.get(params[:id], session_id: current_user.mediaflux_session)
   end
 end

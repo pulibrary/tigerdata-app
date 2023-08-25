@@ -75,7 +75,7 @@ RSpec.configure do |config|
         ).to_return(status: 200, body: namespace_describe_response_body)
       stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(
-          body: /<service name="server.logoff" session="test-session-token"\/>/
+          body: /<service name="system.logoff" session="test-session-token"\/>/
         ).to_return(status: 200, body: system_logoff_response_body)
       stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(

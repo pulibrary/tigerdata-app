@@ -24,4 +24,19 @@ class User < ApplicationRecord
     end
     user
   end
+
+  def mediaflux_session
+    @mediaflux_session ||= begin
+                            logon_request = Mediaflux::Http::LogonRequest.new
+                            logon_request.resolve
+                            logon_request.session_token
+                          end
+  end
+
+  def terminate_mediaflux_session
+    return if @mediaflux_session.nil? # nothing to terminate
+
+    Mediaflux::Http::LogoutRequest.new(session_token: @mediaflux_session).response_body
+    @mediaflux_session = nil
+  end
 end

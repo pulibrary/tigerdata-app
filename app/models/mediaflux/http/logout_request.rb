@@ -14,7 +14,7 @@ module Mediaflux
       # Specifies the Mediaflux service to use when logging off
       # @return [String]
       def self.service
-        "server.logoff"
+        "system.logoff"
       end
     end
   end
