@@ -194,24 +194,75 @@ TODO: Add examples once we have access to `dictionary.create`, `dictionary.add`,
 ## Namespaces and Collection Assets
 MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize and the entire list of assets stored on a server. Each of this concepts provides different features and you need both to properly organize your data.
 
-**Namespaces** allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
+### Namespaces
+Namespaces allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
 
-Below is an example on how to perform a search and limit to only the assets within the `demo01` namespace:
+To create a namespace you can use a command as follows:
 
 ```
-> asset.query :namespace /demo01
+> asset.namespace.create :namespace test01
 ```
 
-Warning: Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are completelly different concept.
+you can use the `asset.namespace.list` to get list of existing namespaces:
 
-**Collection Assets** are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
+```
+> asset.namespace.list
+    :namespace -path "/"
+        :namespace -id "1067" -leaf "true" -acl "false" "hector01"
+        :namespace -id "1075" -leaf "false" -acl "false" "td-demo-001"
+
+> asset.namespace.list :namespace /td-demo-001
+    :namespace -path "/td-demo-001"
+        :namespace -id "1079" -leaf "true" -acl "false" "pppl"
+        :namespace -id "1081" -leaf "false" -acl "false" "pul"
+        :namespace -id "1077" -leaf "false" -acl "false" "rc"
+```
+
+and `asset.namespace.describe` to get detailed information about the namespace, like the store associated with it and it ACL.
+
+Below is an example on how to perform a search and limit to only the assets within the `/td-demo-001` namespace:
+
+```
+> asset.query :namespace /td-demo-001
+```
+
+**Warning:** Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are completelly different concept.
+
+### Collection Assets
+Collection Assets are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
 
 Whereas an asset must belong to one and only one namespace, an asset can belong to more than one collection asset.
 
-It is possible to reduce the scope of searches by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assrts within a given root collection asset with id `2541`:
+To create a collection asset we use the same command to create an asset but we give it a few extra arguments. The following command creates a collection asset "test01_collection" inside the "/test01" namespace.
 
 ```
-> asset.query :collection 2541 :where "xpath(tigerdata:tigerdoc/title)='the title'"
+> asset.create :namespace /test01 :name test01_collection :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+    :id "1093"
+```
+
+Notice the `:collection true` argument along with the parameters `-unique-name-index`, `-contained-asset-index`, and `-cascade-contained-asset-index` in the previous command.
+
+Once we have a collection asset we can _add assets_ to it by setting the `pid` parameter when we create the asset. It is possible to pass the actual `id` of the collection asset (i.e. `1093` in the previous example) as shown below:
+
+```
+> asset.create :pid 1093 :name file2.txt :description "this is the description"
+```
+
+or you can pass the `path` of the collection asset as the `pid` as shown here:
+
+```
+> asset.create :pid path=/test01/test01_collection :name file3.txt :description "this is the description"
+    :id "1096"
+```
+
+**Warning:** by default the MediaFlux Desktop does not show assets inside a collection asset as nested objects in the tree, instead it shows them at the same level. You can validate that the assets are indeed inside the collection by clicking on the asset and looking at its properties.
+
+Like with namespaces, it is possible to use collection assets to reduce the scope of searches. We do this by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assets within a given root collection asset with id `1093`:
+
+```
+> asset.query :collection 1093
+    :id -version "1" "1095"
+    :id -version "1" "1096"
 ```
 
 ## Stores
