@@ -11,9 +11,7 @@ class Organization
   end
 
   def projects(session_id:)
-    Rails.logger.debug session_id # TODO: we will pass this to the project bu not now as the PR will get too big
-    # TODO: memoize this value
-    Project.by_organization(self)
+    @projects ||= Project.by_organization(self, session_id: session_id)
   end
 
   def self.get(id, session_id:)

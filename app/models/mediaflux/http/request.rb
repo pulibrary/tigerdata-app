@@ -91,6 +91,21 @@ module Mediaflux
         @response_body ||= http_response.body
       end
 
+      def error?
+        response_error.present?
+      end
+
+      def response_error
+        xml = response_xml
+        return nil if xml.xpath("/response/reply/error").count == 0
+        error = {
+          title: xml.xpath("/response/reply/error").text,
+          message: xml.xpath("/response/reply/message").text
+        }
+        Rails.logger.error "MediaFlux error: #{error[:title]}, #{error[:message]}"
+        error
+      end
+
       delegate :to_s, to: :response_xml
 
       private

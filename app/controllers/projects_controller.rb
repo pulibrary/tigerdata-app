@@ -2,8 +2,8 @@
 class ProjectsController < ApplicationController
   def show
     @page = (params[:page] || "1").to_i
-    @project = Project.get(params[:id])
-    @project_files = @project.files_paged(@page)
+    @project = Project.get(params[:id], session_id: current_user.mediaflux_session)
+    @project_files = @project.files_paged(@page, session_id: current_user.mediaflux_session)
   end
 
   def new
@@ -14,8 +14,8 @@ class ProjectsController < ApplicationController
 
   def add_new_files
     id = params[:id].to_i
-    project = Project.get(id)
-    project.add_new_files(100)
+    project = Project.get(id, session_id: current_user.mediaflux_session)
+    project.add_new_files(100, session_id: current_user.mediaflux_session)
     redirect_to project_path(id: project.id)
   end
 
@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
     id = params[:id].to_i
     project = if id == -1
                 # create it
-                Project.create!(name, store_name, organization)
+                Project.create!(name, store_name, organization, session_id: current_user.mediaflux_session)
               else
                 # TODO: in the future save other properties of the project
                 Project.get(id)
