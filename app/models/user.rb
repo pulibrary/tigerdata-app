@@ -25,6 +25,19 @@ class User < ApplicationRecord
     user
   end
 
+  def clear_mediaflux_session(session)
+    @mediaflux_session = nil
+    session[:mediaflux_session] = nil
+  end
+
+  def mediaflux_from_session(session)
+    if session[:mediaflux_session].blank?
+      session[:mediaflux_session] = mediaflux_session
+    else
+      @mediaflux_session = session[:mediaflux_session]
+    end
+  end
+
   def mediaflux_session
     @mediaflux_session ||= begin
                             logon_request = Mediaflux::Http::LogonRequest.new
