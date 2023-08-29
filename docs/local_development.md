@@ -37,42 +37,55 @@ princeton_dev        23.08.25               311dab7822dd   3 days ago      1.35G
 ...other images...
 ```
 
-5. In a terminal, run the following Docker command and wait for Nginx to start on the container (notice that we use the repository `princeton_dev` and the tag `23.08.25` from the loaded image):
+1. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
 
 ```
-$ docker run --rm --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
-
-Mediaflux is not running.
-Starting Mediaflux. Check log files for status.
-Checking status of Mediaflux.
-Connecting to local http port=8888
-Mediaflux (3) server is running.
-Starting OpenBSD Secure Shell server: sshd.
-Starting nginx: nginx.
+$ docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
 ```
 
-You can also launch the Docker container with the following command:
+6. From now on when you need _start this container_ you can use:
 
 ```
-$ docker run --interactive --rm --tty --privileged --init --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25 /bin/bash
-$ root@e227b3d6a9b2:/setup#
+$ docker start mediaflux
 ```
 
-and then _manually_ launch MediaFlux from inside the container:
-
-```
-$ root@e227b3d6a9b2:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
-```
-
-This approach is useful if you want to look at the files inside the container, for example, the logs.
-
-6. Once the container is running you can access it at the default endpoints:
+7. Once the container is running you can access it at the default endpoints:
 
   * The Desktop client - http://0.0.0.0:8888/desktop/
   * The Aterm client in the browser - http://0.0.0.0:8888/aterm/
   * Service documentation - http://0.0.0.0:8888/mflux/service-docs
   * The thick client for aterm (see instructions below)
 
+
+8. You can stop the container in the Docker dashboard or via
+
+```
+$ docker stop mediaflux
+```
+
+and restart it via and it will preserve your changes (e.g. the assets that you added)
+
+```
+$ docker start mediaflux
+```
+
+
+## SSHing into the container
+
+Once the container is running we can SSH into it, this is useful to look at the logs of the running MediaFlux server:
+
+```
+$ docker exec -it mediaflux /bin/bash
+root@12345:/setup#
+```
+
+The logs are found under the `/usr/local/mediaflux/volatile/logs` folder.
+
+If for some reason you need to _manually_ launch MediaFlux server you can use a command as follows:
+
+```
+$ root@12345:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
+```
 
 ## Accessing the thick client (Aterm)
 
