@@ -3,7 +3,8 @@ class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!
   def index
     return if current_user.nil?
-    @mf_version = MediaFluxClient.default_instance.version
+    version_request = Mediaflux::Http::VersionRequest.new(session_token: current_user.mediaflux_session)
+    @mf_version = version_request.version
   end
 
   # def set_note

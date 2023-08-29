@@ -28,5 +28,8 @@ RSpec.describe "Organizations", stub_mediaflux: true do
     visit "/"
     click_on "Organizations"
     expect(page).to have_content("Princeton Physics Plasma Lab")
+    # Only login once when loading multiple pages
+    assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                     body: /<service name="system.logon">/)
   end
 end
