@@ -67,7 +67,7 @@ module Mediaflux
             type: asset.xpath("./type").text,
             size: asset.xpath("./content/size").text,
             size_human: asset.xpath("./content/size/@h").text,
-            namespace: asset.xpath("./path").text
+            namespace: asset.xpath("./namespace").text
           }
         end
     end

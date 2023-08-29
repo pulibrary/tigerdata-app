@@ -2,84 +2,73 @@
 class Project
   attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name
 
-  def initialize(id, name, path, title, organization, session_id:)
+  def initialize(id, name, path, title, organization, store = nil, session_id:)
     @id = id
     @name = name
     @path = path
     @title = title
     @organization = organization
     @file_count = 0 # set on get()
-    @store_name = Store.default(session_id: session_id).name # overwritten in get()
+    @store_name = store || Store.default(session_id: session_id).name # overwritten in get()
   end
 
-  def files
-    @files ||= begin
-      media_flux = MediaFluxClient.default_instance
-      page_results = media_flux.collection_query(id, idx: 1, size: 100)
-      media_flux.logout
-      page_results
-    end
-  end
-
-  def files_paged(page_num)
+  def files_paged(page_num, session_id:)
     page_size = 100
     idx = ((page_num - 1) * page_size) + 1
-    media_flux = MediaFluxClient.default_instance
-    page_results = media_flux.collection_query(id, idx: idx, size: page_size)
-    media_flux.logout
-    page_results
+    query_request = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: id, size: page_size, idx: idx, action: "get-name")
+    query_request.result
   end
 
-  def add_new_files(count)
+  def add_new_files(count, session_id:)
     pattern = "#{name}-#{Time.zone.today}-#{Time.now.seconds_since_midnight.to_i}-"
-    media_flux = MediaFluxClient.default_instance
-    media_flux.add_new_files_to_collection(id, count, pattern)
-    media_flux.logout
+    test_create_request = Mediaflux::Http::TestAssetCreateRequest.new(session_token: session_id, parent_id: id, count: count, pattern: pattern)
+    test_create_request.error?
   end
 
-  def self.create!(name, store_name, organization)
-    media_flux = MediaFluxClient.default_instance
+  def self.create!(name, store_name, organization, session_id:)
     # Create a namespace for the project (within the namespace of the organization)...
     project_namespace = organization.path + "/" + safe_name(name) + "-ns"
-    media_flux.namespace_create(project_namespace, "Namespace for project #{name}", store_name)
+    Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{name}", store: store_name, session_token: session_id).resolve
+
     # ...create a project as a collection asset inside this new namespace
-    id = media_flux.create_collection_asset(project_namespace, safe_name(name), name)
-    collection_asset = media_flux.get_metadata(id)
-    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: media_flux.session_id)
-    media_flux.logout
-    project
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: safe_name(name))
+    get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: create_request.id)
+    collection_asset = get_request.metadata
+    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)
   end
 
-  def self.get(id)
-    media_flux = MediaFluxClient.default_instance
-
+  def self.get(id, session_id:)
     # Fetch the collection asset for the project...
-    collection_asset = media_flux.get_metadata(id)
+    get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: id)
+    collection_asset = get_request.metadata
 
     # ...fetch the namespace for the project (one level up)
-    project_ns = media_flux.namespace_describe_by_name(collection_asset[:namespace])
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: collection_asset[:namespace], session_token: session_id)
+    project_ns = namespace_request.metadata
 
     # ...find the org for this collection (which is the namespace two levels up)
     org_path = File.dirname(collection_asset[:namespace])
-    organization_ns = media_flux.namespace_describe_by_name(org_path)
-    organization = Organization.get(organization_ns[:id], session_id: media_flux.session_id)
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: org_path, session_token: session_id)
+    organization_ns = namespace_request.metadata
+    organization = Organization.get(organization_ns[:id], session_id: session_id)
 
-    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: media_flux.session_id)
+    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: session_id)
     project.file_count = collection_asset[:total_file_count]
     project.store_name = project_ns[:store]
 
-    media_flux.logout
     project
   end
 
-  def self.by_organization(org)
-    media_flux = MediaFluxClient.default_instance
+  def self.by_organization(org, session_id:)
     projects = []
-    org_namespaces = media_flux.namespace_list(org.path)
+
+    namespace_request = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: org.path)
+    org_namespaces = namespace_request.namespaces
     org_namespaces.each do |ns|
       path = org.path + "/" + ns[:name]
-      collection = media_flux.namespace_collection_assets(path).first
-      projects << Project.get(collection[:id])
+      collection_request = Mediaflux::Http::CollectionQueryRequest.new(session_token: session_id, namespace: path)
+      collection = collection_request.collections.first
+      projects << Project.get(collection[:id], session_id: session_id)
     end
     projects
   end
