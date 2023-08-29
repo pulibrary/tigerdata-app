@@ -184,7 +184,6 @@ In practice the content of files is better updated via the `asset.import` comman
 > asset.import :parent 1005 :url -by reference file:/etc :analyze false :gen-csum false :pgen false
 ```
 
-
 ### Labels and tags
 Tags and Labels are a kind of metadata that we can easily added to assets in MediaFlux. Tags apply to all versions of a given asset whereas labels apply to a specific version. See the help for `asset.tag.add` and `asset.label.type.create` for more information.
 
@@ -255,7 +254,7 @@ or you can pass the `path` of the collection asset as the `pid` as shown here:
     :id "1096"
 ```
 
-**Warning:** by default the MediaFlux Desktop does not show assets inside a collection asset as nested objects in the tree, instead it shows them at the same level. You can validate that the assets are indeed inside the collection by clicking on the asset and looking at its properties.
+**Warning:** by default the MediaFlux Desktop does not show assets inside a collection asset as nested objects in the tree, instead it shows them at the same level. You can validate that the assets are indeed inside the collection by clicking on the asset and looking at its properties. If you have admin rights to the MediaFlux server (e.g. if you are running on a local Docker container) you can grant access to your user to the feature that fixes this via `actor.grant :type user :name system:manager :role -type role desktop-experimental`. You'll need to close the Asset Finder in the desktop and re-opened for the change to take effect.
 
 Like with namespaces, it is possible to use collection assets to reduce the scope of searches. We do this by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assets within a given root collection asset with id `1093`:
 
@@ -264,6 +263,39 @@ Like with namespaces, it is possible to use collection assets to reduce the scop
     :id -version "1" "1095"
     :id -version "1" "1096"
 ```
+
+## Asset Metadata
+
+
+Creates a unique namespace for document (metadata) definitions.
+
+```
+asset.doc.namespace.create :namespace sandbox :description "blah blah blah"
+```
+
+
+Add a document type for the new metadata definition
+
+```
+asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta :definition <  >
+```
+
+
+asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta3 \
+    :definition < :element -name name -type string > \
+    :definition < :element -name sponsor -type string >
+    :definition < :element -name created_on -type date >
+
+
+
+asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta3 \
+:definition < \
+:element -name name -type string \
+:element -name sponsor -type string \
+:element -name count -type integer \
+:element -name created_on -type date >
+
+
 
 ## Stores
 
