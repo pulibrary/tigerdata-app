@@ -1,56 +1,95 @@
 # Local Development with MediaFlux
 
-This README describes the recommended approach to get up and running with MediaFlux for local development on your own machine, using Docker.
+Instructions to download MediaFlux as a Docker container and run it locally.
 
 ## Prerequisites
 
-* Docker 
+* Docker
 
 ## Getting started
 
 1. Make sure Docker is installed and running locally.
-1. Pull the latest TigerData Docker image from either the vendor or the private Princeton Docker registry.  Information for how to connect and pull this image are located in LastPass.
-1. In a terminal, run the following Docker command:
-    ```bash 
-      docker run --interactive --rm --tty --privileged --init --name mediaflux --publish 0.0.0.0:8888:8888 $DOCKER_IMAGE_REGISTRY/$NAMESPACE/developer-image:latest /bin/bash
-    ```
-    Where `$DOCKER_IMAGE_REGISTRY` and `$NAMESPACE` are replaced with values found in LastPass in the previous step.
-1. Upon running the Docker command, you should see output like the following:
-   ```bash 
-     WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
-     root@123abc:/setup#
-   ```
-   You are now inside of the Docker container running MediaFlux.
-1. Inside the container, run the following command:
-   ```bash 
-     /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
-   ```
-   This will start the MediaFlux service.  Leave the service running in this tab.
 
-1. In a new tab, bash into the container to work on the filesystem as follows:
-   ```bash
-     docker exec -it $CONTAINER_ID /bin/bash
-   ```
+2. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to pass your `netid` in the following command and enter your password when prompted:
 
-1. You can now access MediaFlux in the browser and terminal.  Default local sign-in credentials are available in LastPass.
+```
+$ scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev.23.08.25.tar.bz2 .
+```
 
-   Some endpoints where you can work with now include:
-     * The Desktop client - http://0.0.0.0:8888/desktop/
-     * The aterm client in the browser - http://0.0.0.0:8888/aterm/ 
-     * Service documentation - http://0.0.0.0:8888/mflux/service-docs 
-     * The thick client for aterm (see instructions below)
+3. Unzip the downloaded file, this process takes a few minutes:
 
-## Accessing the thick client
+```
+$ bunzip2 princeton_dev.23.08.25.tar.bz2
+```
 
-1. Get a copy of `aterm.jar` to run locally.  You can do this by going to [http://0.0.0.0:8888/mflux/aterm.jar](http://0.0.0.0:8888/mflux/aterm.jar) while the container is running, or by copying the aterm.jar file from the running Docker container as follows:
-   ```bash 
-     docker cp $CONTAINER_ID:/usr/local/mediaflux/bin/aterm.jar ~/aterm.jar
-   ```
-1. Go to the directory containing `aterm.jar` and start the client:
-   ```bash 
-     java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar &
-   ```
-1. At the login screen, change "server" to `0.0.0.0` and "port" to `8888`.  Use the domain, user, and password information in LastPass to log in.
+4. Load the tar file as a Docker image:
+
+```
+$ docker load -i princeton_dev.23.08.25.tar
+```
+
+You can view the loaded image via `docker images`:
+
+```
+$ docker images
+REPOSITORY           TAG                    IMAGE ID       CREATED         SIZE
+princeton_dev        23.08.25               311dab7822dd   3 days ago      1.35GB
+...other images...
+```
+
+5. In a terminal, run the following Docker command and wait for Nginx to start on the container:
+
+```
+$ docker run --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
+
+Mediaflux is not running.
+Starting Mediaflux. Check log files for status.
+Checking status of Mediaflux.
+Connecting to local http port=8888
+Mediaflux (3) server is running.
+Starting OpenBSD Secure Shell server: sshd.
+Starting nginx: nginx.
+```
+
+You can also launch the Docker container with the following command:
+
+```
+$ docker run --interactive --rm --tty --privileged --init --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25 /bin/bash
+$ root@e227b3d6a9b2:/setup#
+```
+
+and then _manually_ launch MediaFlux from inside the container:
+
+```
+$ root@e227b3d6a9b2:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
+```
+
+This approach is useful if you want to look at the files inside the container, for example, the logs.
+
+6. Once the container is running you can access it at the default endpoints:
+
+  * The Desktop client - http://0.0.0.0:8888/desktop/
+  * The Aterm client in the browser - http://0.0.0.0:8888/aterm/
+  * Service documentation - http://0.0.0.0:8888/mflux/service-docs
+  * The thick client for aterm (see instructions below)
+
+
+## Accessing the thick client (Aterm)
+
+1. Get a copy of `aterm.jar` to run locally.  While the container is running run the following cURL command to download it:
+
+```
+$ curl -OL http://0.0.0.0:8888/mflux/aterm.jar
+```
+
+2. Run it
+
+```
+$ java -jar aterm.jar
+```
+
+3. At the login screen, change "server" to `0.0.0.0` and "port" to `8888`.  Use the default domain, user, and password information.
+
 
 ## Internal documentation
 
