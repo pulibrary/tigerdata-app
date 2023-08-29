@@ -37,10 +37,10 @@ princeton_dev        23.08.25               311dab7822dd   3 days ago      1.35G
 ...other images...
 ```
 
-5. In a terminal, run the following Docker command and wait for Nginx to start on the container:
+5. In a terminal, run the following Docker command and wait for Nginx to start on the container (notice that we use the repository `princeton_dev` and the tag `23.08.25` from the loaded image):
 
 ```
-$ docker run --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
+$ docker run --rm --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
 
 Mediaflux is not running.
 Starting Mediaflux. Check log files for status.
