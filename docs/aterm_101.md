@@ -265,36 +265,57 @@ Like with namespaces, it is possible to use collection assets to reduce the scop
 ```
 
 ## Asset Metadata
+MediaFlux allows you to declare custom metadata fields for your assets. The definition for this kind of metadata is stored in what MediaFlux class "namespace for documents" and they are managed via the `asset.doc.namespace` commands (notice that these namespaces are _not_ the same as the asset namespaces that we saw before with the `asset.namespace` commands).
 
+Namespaces for documents (`asset.doc`) contain "document types" and these document types in turn contain "elements" (aka field definitions).
 
-Creates a unique namespace for document (metadata) definitions.
-
-```
-asset.doc.namespace.create :namespace sandbox :description "blah blah blah"
-```
-
-
-Add a document type for the new metadata definition
+To create a new namespace for document you use the following command:
 
 ```
-asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta :definition <  >
+> asset.doc.namespace.create :namespace sandbox_meta :description "the metadata definition for our sandbox"
 ```
 
+The syntax to create an empty document type is as follows:
 
-asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta3 \
-    :definition < :element -name name -type string > \
-    :definition < :element -name sponsor -type string >
-    :definition < :element -name created_on -type date >
+```
+> asset.doc.type.update :create true :description "empty doc type" :type sandbox_meta:empty_doc :definition <  >
+```
+
+To create a document type with specific elements you need to pass the definition for each of the elements in the command. The following command will create a new document type called `sandbox_meta:project` with three fields inside of it:
+
+* name (string)
+* sponsor (string)
+* max_gb (integer):
+
+```
+> asset.doc.type.update :create true :description "sandbox metadata" :type sandbox_meta:project :definition < :element -name name -type string :element -name sponsor -type string :element -name max_gb -type integer >
+```
+
+Once we have defined our document type and its elements (fields) we can set the values for these fields on our assets. For example, to set the values in our `/sandbox_ns/rdss_collection` we could use the following command:
+
+```
+> asset.set :id path=/sandbox_ns/rdss_collection :meta < :sandbox_meta:project < :name "RDSS test project" :sponsor "Library" :max_gb 100 > >
+```
+
+and we can review this information via the `asset.get` command:
 
 
+```
+> asset.get :id path=/sandbox_ns/rdss_collection
 
-asset.doc.type.update :create true :description "sandbox metadata" :type sandbox:project_meta3 \
-:definition < \
-:element -name name -type string \
-:element -name sponsor -type string \
-:element -name count -type integer \
-:element -name created_on -type date >
 
+:asset -id "1101" -version "3" -collection "true" -vid "1534"
+        :type "content/unknown"
+        :namespace -id "1093" "/sandbox_ns"
+        :path "/sandbox_ns/rdss_collection"
+        :name "rdss_collection"
+        ...
+         :meta -stime "1534"
+            :sandbox_meta:project -xmlns:sandbox_meta "sandbox_meta" -id "2"
+                :name "RDSS test project"
+                :sponsor "Library"
+                :max_gb "100"
+```
 
 
 ## Stores
