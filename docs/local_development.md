@@ -103,6 +103,7 @@ $ java -jar aterm.jar
 
 3. At the login screen, change "server" to `0.0.0.0` and "port" to `8888`.  Use the default domain, user, and password information.
 
+See [Aterm for beginners](aterm_101.md) for more information on Aterm.
 
 ## Internal documentation
 
