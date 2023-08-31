@@ -285,24 +285,23 @@ To create a document type with specific elements you need to pass the definition
 
 * name (string)
 * sponsor (string)
-* max_gb (integer):
+* max_gb (integer)
+* created_on (date)
 
 ```
-> asset.doc.type.update :create true :description "sandbox metadata" :type sandbox_meta:project :definition < :element -name name -type string :element -name sponsor -type string :element -name max_gb -type integer >
+> asset.doc.type.update :create true :description "sandbox metadata" :type sandbox_meta:project :definition < :element -name name -type string :element -name sponsor -type string :element -name max_gb -type integer :element -name created_on -type date >
 ```
 
 Once we have defined our document type and its elements (fields) we can set the values for these fields on our assets. For example, to set the values in our `/sandbox_ns/rdss_collection` we could use the following command:
 
 ```
-> asset.set :id path=/sandbox_ns/rdss_collection :meta < :sandbox_meta:project < :name "RDSS test project" :sponsor "Library" :max_gb 100 > >
+> asset.set :id path=/sandbox_ns/rdss_collection :meta < :sandbox_meta:project < :name "RDSS test project" :sponsor "Library" :max_gb 100 :created_on "31-AUG-2023" > >
 ```
 
 and we can review this information via the `asset.get` command:
 
-
 ```
 > asset.get :id path=/sandbox_ns/rdss_collection
-
 
 :asset -id "1101" -version "3" -collection "true" -vid "1534"
         :type "content/unknown"
@@ -315,6 +314,7 @@ and we can review this information via the `asset.get` command:
                 :name "RDSS test project"
                 :sponsor "Library"
                 :max_gb "100"
+                :created_on "31-Aug-2023 00:00:00"
 ```
 
 
