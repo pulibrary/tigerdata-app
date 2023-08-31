@@ -37,7 +37,7 @@ class Project
     Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)
   end
 
-  def self.get(id, session_id:)
+  def self.get(id, session_id:, organization: nil)
     # Fetch the collection asset for the project...
     get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: id)
     collection_asset = get_request.metadata
@@ -47,10 +47,11 @@ class Project
     project_ns = namespace_request.metadata
 
     # ...find the org for this collection (which is the namespace two levels up)
-    org_path = File.dirname(collection_asset[:namespace])
-    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: org_path, session_token: session_id)
-    organization_ns = namespace_request.metadata
-    organization = Organization.get(organization_ns[:id], session_id: session_id)
+    #  No need to reload the orgnaization if it is known
+    if organization.nil?
+      org_path = File.dirname(collection_asset[:namespace])
+      organization = Organization.get(nil, session_id: session_id, path: org_path)
+    end
 
     project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: session_id)
     project.file_count = collection_asset[:total_file_count]
@@ -68,7 +69,7 @@ class Project
       path = org.path + "/" + ns[:name]
       collection_request = Mediaflux::Http::CollectionQueryRequest.new(session_token: session_id, namespace: path)
       collection = collection_request.collections.first
-      projects << Project.get(collection[:id], session_id: session_id)
+      projects << Project.get(collection[:id], session_id: session_id, organization: org)
     end
     projects
   end

@@ -69,7 +69,7 @@ RSpec.describe Project, type: :model do
       expect(project.store_name).to eq("mystore")
       expect(Mediaflux::Http::GetMetadataRequest).to have_received(:new).with({ id: "id", session_token: "123abc" })
       expect(metadata_request).to have_received("metadata")
-      expect(Organization).to have_received(:get).with("1234", session_id: "123abc")
+      expect(Organization).to have_received(:get).with(nil, session_id: "123abc", path: "td-demo-001/rc")
       expect(project.id).to eq("abc")
       expect(project.name).to eq("test")
       expect(project.path).to eq("td-demo-001/rc/test-ns/test")
