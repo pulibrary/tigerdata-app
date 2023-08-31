@@ -14,8 +14,8 @@ class Organization
     @projects ||= Project.by_organization(self, session_id: session_id)
   end
 
-  def self.get(id, session_id:)
-    namespace = Mediaflux::Http::NamespaceDescribeRequest.new(id: id, session_token: session_id).metadata
+  def self.get(id, session_id:, path: nil)
+    namespace = Mediaflux::Http::NamespaceDescribeRequest.new(id: id, path: path, session_token: session_id).metadata
     org = Organization.new(namespace[:id], namespace[:name], namespace[:path], namespace[:description])
     org.store = Store.get_by_name(namespace[:store], session_id: session_id)
     org
