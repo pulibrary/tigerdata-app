@@ -7,6 +7,9 @@
 # You can run it from within Local Aterm (not a Web Aterm) with a command as follows:
 #
 # script.execute :in file://full/path/to/tiger-data-app/docs/sandbox_data.md
+# 
+# In the same aterm, to see the resultant collection with metadata run:
+# asset.collection.list :namespace /tigerdata_ns02 :assets true
 
 # ------------------------------------------------------
 # YOU CAN SET THESE VALUES TO YOUR LIKING
