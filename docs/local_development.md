@@ -37,7 +37,7 @@ princeton_dev        23.08.25               311dab7822dd   3 days ago      1.35G
 ...other images...
 ```
 
-1. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
+5. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
 
 ```
 $ docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
