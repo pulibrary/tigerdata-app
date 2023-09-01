@@ -4,7 +4,7 @@
 # - a collection asset within the namespace
 # - set the collection asset with some values for the fields defined in the metadata schema
 #
-# You can run it from within Aterm with a command as follows:
+# You can run it from within Local Aterm (not a Web Aterm) with a command as follows:
 #
 # script.execute :in file://full/path/to/tiger-data-app/docs/sandbox_data.md
 
