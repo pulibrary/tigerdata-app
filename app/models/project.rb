@@ -98,7 +98,6 @@ class Project
 
   def self.create_schema(session_id:)
     # Create the TigerData schema namespace
-    # TODO: Add validation so that it only creates it if it does not exist
     # TODO: This should probably exist outside of the Projects class
     #       since it will hold information for other "document types"
     schema_name = "tigerdata"
