@@ -29,7 +29,7 @@ module Mediaflux
               xml.type "#{@schema_name}:#{@document}"
               xml.definition do
                 @fields.each do |field|
-                  xml.element(name: field[:name], type: field[:type], index: field[:index] == true)
+                  xml.element(field)
                 end
               end
             end
