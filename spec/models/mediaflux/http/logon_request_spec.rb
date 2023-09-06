@@ -36,6 +36,57 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
       request.resolve
 
       expect(request.session_token).to eq(session_token)
+      assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                       body: /<domain>system<\/domain>.*<user>manager<\/user>.*<password>change_me<\/password>/m)
+      assert_not_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                       body: /<token>/)
+    end
+
+    context "with a different domain" do
+      subject(:request) { described_class.new domain: "princeton" }
+      it "authenticates and stores the session token" do
+        request.resolve
+
+        expect(request.session_token).to eq(session_token)
+        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                         body: /<domain>princeton<\/domain>/)
+      end
+    end
+
+    context "with a different username" do
+      subject(:request) { described_class.new user: "atest" }
+      it "authenticates and stores the session token" do
+        request.resolve
+
+        expect(request.session_token).to eq(session_token)
+        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                         body: /<user>atest<\/user>/)
+      end
+    end
+
+    context "with a different password" do
+      subject(:request) { described_class.new password: "password" }
+      it "authenticates and stores the session token" do
+        request.resolve
+
+        expect(request.session_token).to eq(session_token)
+        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                         body: /<password>password<\/password>/)
+      end
+    end
+
+    context "with a token" do
+      subject(:request) { described_class.new identity_token: "tokentoken" }
+
+      it "authenticates and stores the session token" do
+        request.resolve
+
+        expect(request.session_token).to eq(session_token)
+        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                          body: /<token>tokentoken/)
+        assert_not_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+                          body: /<user>/)
+      end
     end
   end
 end
