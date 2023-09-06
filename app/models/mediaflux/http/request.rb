@@ -134,7 +134,6 @@ module Mediaflux
         def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
           body = build_http_request_body(name: name)
-          # byebug
           Rails.logger.debug(body.to_xml)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
