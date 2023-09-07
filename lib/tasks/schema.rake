@@ -6,7 +6,6 @@ namespace :schema do
     # asset.doc.type.update and asset.doc.type.update
     logon_request = Mediaflux::Http::LogonRequest.new
     logon_request.resolve
-    logon_request.session_token
     schema = TigerdataSchema.new(session_id: logon_request.session_token)
     schema.create
   end
