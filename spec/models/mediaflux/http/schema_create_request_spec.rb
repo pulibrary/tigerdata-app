@@ -11,7 +11,18 @@ RSpec.describe Mediaflux::Http::SchemaCreateRequest, type: :model do
 
   describe "#new" do
     before do
-      request_body = "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.doc.namespace.update\" session=\"secretsecret/2/31\">\n    <args>\n      <create>true</create>\n      <namespace>tigerdata</namespace>\n      <description>test schema</description>\n    </args>\n  </service>\n</request>\n"
+      request_body = <<-XML
+<?xml version=\"1.0\"?>
+<request>
+  <service name=\"asset.doc.namespace.update\" session=\"secretsecret/2/31\">
+    <args>
+      <create>true</create>
+      <namespace>tigerdata</namespace>
+      <description>test schema</description>
+    </args>
+  </service>
+</request>
+XML
       stub_request(:post, mediaflux_url)
         .with(body: request_body)
         .to_return(status: 200, body: schema_create_response, headers: {})
