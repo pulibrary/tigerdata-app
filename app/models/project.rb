@@ -34,7 +34,16 @@ class Project
     # ...create a project as a collection asset inside this new namespace
 
     # TODO: Switch to user entered values
-    values = { data_sponsor: "hc8719" }
+    values = {
+      code: "project-123",
+      title: "title of project 123",
+      description: "description of project 123",
+      data_sponsor: "hc123",
+      data_manager: "zz123",
+      departments: ["PUL", "PUL-RDSS"],
+      created_on: "now",
+      created_by: "hc8719"
+    }
 
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: safe_name(name), tigerdata_values: values)
     get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: create_request.id)

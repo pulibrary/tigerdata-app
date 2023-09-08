@@ -51,15 +51,17 @@ module Mediaflux
               xml.pid parent_id if parent_id.present?
               if @tigerdata_values
                 xml.meta do
-                  # TODO: use the @tigerdata_values instead of the hardcoded text
                   xml.send("tigerdata:project", "xmlns:tigerdata" => "tigerdata") do
-                    xml.title "the td title"
-                    xml.description "the td description"
-                    xml.data_sponsor "xx1234"
-                    xml.data_manager "yy6789"
-                    xml.departments "PUL"
-                    xml.created_on "now"
-                    xml.created_by "hc8719"
+                    xml.code @tigerdata_values[:code]
+                    xml.title @tigerdata_values[:title]
+                    xml.description @tigerdata_values[:description]
+                    xml.data_sponsor @tigerdata_values[:data_sponsor]
+                    xml.data_manager @tigerdata_values[:data_manager]
+                    @tigerdata_values[:departments].each do |department|
+                      xml.departments department
+                    end
+                    xml.created_on @tigerdata_values[:created_on]
+                    xml.created_by @tigerdata_values[:created_by]
                   end
                 end
               end
