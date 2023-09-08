@@ -32,15 +32,17 @@ module Mediaflux
 
       private
 
-        # asset.set :id path=/sandbox_ns/rdss_collection
-        #       :meta <
-        #           :sandbox_meta:project <
-        #             :name "RDSS test project"
-        #             :sponsor "Library"
-        #             :max_gb 100
-        #             :created_on "31-AUG-2023"
-        #           >
-        #         >
+        # The generated XXML mimics what we get when we issue an Aterm command as follows:
+        # > asset.set :id path=/sandbox_ns/rdss_collection
+        #     :meta <
+        #       :tigerdata:project <
+        #         :title "RDSS test project"
+        #         :description "The description of the project"
+        #         ...the rest of the fields go here..
+        #       >
+        #     >
+        #
+        # rubocop:disable Metrics/MethodLength
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
@@ -49,6 +51,7 @@ module Mediaflux
               xml.pid parent_id if parent_id.present?
               if @tigerdata_values
                 xml.meta do
+                  # TODO: use the @tigerdata_values instead of the hardcoded text
                   xml.send("tigerdata:project", "xmlns:tigerdata" => "tigerdata") do
                     xml.title "the td title"
                     xml.description "the td description"
@@ -71,6 +74,7 @@ module Mediaflux
             end
           end
         end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

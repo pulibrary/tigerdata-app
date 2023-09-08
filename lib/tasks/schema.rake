@@ -10,8 +10,9 @@ namespace :schema do
     schema.create
   end
 
-
-
+  # TODO: Remove this rake task before merging.
+  # This is what I used to figure out the right Nokogiri syntax to generate the
+  # XML that MediaFlux expects.
   task xml_generation: :environment do
     xml_doc = Nokogiri::XML::Builder.new do |xml|
       xml.request do

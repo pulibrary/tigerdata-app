@@ -9,7 +9,7 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
     File.new(filename).read
   end
 
-  let(:required_indexed_field) { { name: "id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
+  let(:required_indexed_field) { { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:required_not_indexed_field) { { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:optional_field) { { name: "data_users_rw", type: "string", index: false, "min-occurs" => 0, label: "desc" } }
   let(:required_many_field) { { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "desc" } }
@@ -26,7 +26,7 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
       <description>test document schema</description>
       <type>tigerdata:project</type>
       <definition>
-        <element name=\"id\" type=\"string\" index=\"true\" min-occurs=\"1\" max-occurs=\"1\" label=\"desc\"/>
+        <element name=\"code\" type=\"string\" index=\"true\" min-occurs=\"1\" max-occurs=\"1\" label=\"desc\"/>
       </definition>
     </args>
   </service>

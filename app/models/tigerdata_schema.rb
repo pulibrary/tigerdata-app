@@ -35,10 +35,8 @@ class TigerdataSchema
   end
 
   def project_schema_fields
-    # TODO: I think these fields should be their own Ruby class and we can make them
-    # a little bit more friendly (e.g. required, optional, et ceterea) rather than using
-    # the MediaFlux lingo (e.g. min-occurs, max-occurs)
-    id = { name: "id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
+    # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
+    code = { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
     title = { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A plain-language title for the project" }
     description = { name: "description", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A brief description of the project" }
     data_sponsor = { name: "data_sponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
@@ -48,6 +46,6 @@ class TigerdataSchema
     departments = { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
     created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, label: "Timestamp project was created" }
     created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, label: "User that created the project" }
-    [id, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by]
+    [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by]
   end
 end
