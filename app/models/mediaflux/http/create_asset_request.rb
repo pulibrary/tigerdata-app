@@ -49,8 +49,14 @@ module Mediaflux
               xml.pid parent_id if parent_id.present?
               if @tigerdata_values
                 xml.meta do
-                  xml.send("tigerdata:simple", "xmlns:tigerdata" => "tigerdata") do
-                    xml.data_sponsor "hc8719"
+                  xml.send("tigerdata:project", "xmlns:tigerdata" => "tigerdata") do
+                    xml.title "the td title"
+                    xml.description "the td description"
+                    xml.data_sponsor "xx1234"
+                    xml.data_manager "yy6789"
+                    xml.departments "PUL"
+                    xml.created_on "now"
+                    xml.created_by "hc8719"
                   end
                 end
               end
