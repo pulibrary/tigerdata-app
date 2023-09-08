@@ -69,6 +69,7 @@ module Mediaflux
       def resolve
         @http_response = @http_client.request self.class.uri, http_request
         @http_client.shutdown
+        # byebug
         @http_response
       end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Project
-  attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name
+  attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name,
+    :data_sponsor
 
   def initialize(id, name, path, title, organization, store = nil, session_id:)
     @id = id
@@ -31,7 +32,9 @@ class Project
     Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{name}", store: store_name, session_token: session_id).resolve
 
     # ...create a project as a collection asset inside this new namespace
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: safe_name(name))
+    values = { data_sponsor: "hc8719" }
+    byebug
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: safe_name(name), tigerdata_values: values)
     get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: create_request.id)
     collection_asset = get_request.metadata
     Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)

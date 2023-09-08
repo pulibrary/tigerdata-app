@@ -292,6 +292,8 @@ To create a document type with specific elements you need to pass the definition
 > asset.doc.type.update :create true :description "sandbox metadata" :type sandbox_meta:project :definition < :element -name name -type string :element -name sponsor -type string :element -name max_gb -type integer :element -name created_on -type date >
 ```
 
+You can review the definition of a metadata schema with `asset.doc.type.describe`.
+
 Once we have defined our document type and its elements (fields) we can set the values for these fields on our assets. For example, to set the values in our `/sandbox_ns/rdss_collection` we could use the following command:
 
 ```
