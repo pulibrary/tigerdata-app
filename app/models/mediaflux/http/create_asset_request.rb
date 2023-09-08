@@ -43,6 +43,7 @@ module Mediaflux
         #     >
         #
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/AbcSize
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
@@ -76,6 +77,7 @@ module Mediaflux
             end
           end
         end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
     end
   end

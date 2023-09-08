@@ -26,6 +26,7 @@ class Project
     test_create_request.error?
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.create!(name, store_name, organization, session_id:)
     # Create a namespace for the project (within the namespace of the organization)...
     project_namespace = organization.path + "/" + safe_name(name) + "-ns"
@@ -50,6 +51,7 @@ class Project
     collection_asset = get_request.metadata
     Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.get(id, session_id:, organization: nil)
     # Fetch the collection asset for the project...
