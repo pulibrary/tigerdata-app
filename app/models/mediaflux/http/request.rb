@@ -13,6 +13,18 @@ module Mediaflux
         "/__mflux_svc__"
       end
 
+      def self.protocol
+        if mediaflux_port == 443
+          "https"
+        else
+          "http"
+        end
+      end
+
+      def self.uri
+        URI("#{protocol}://#{mediaflux_host}:#{mediaflux_port}/#{request_path}")
+      end
+
       # Constructs a new HTTP POST request for usage with the Mediaflux API
       # @return [Net::HTTP::Post]
       def self.build_post_request
@@ -37,21 +49,14 @@ module Mediaflux
         Rails.configuration.mediaflux["api_port"].to_i
       end
 
-      # Constructs a new HTTP client for usage with the Mediaflux API
-      # @return [Net::HTTP]
-      def self.build_http_client
-        Net::HTTP.new(mediaflux_host, mediaflux_port)
-      end
-
       attr_reader :session_token
 
       # Constructor
       # @param file [File] any upload file required for the POST request
       # @param session_token [String] the API token for the authenticated session
-      # @param http_client [Net::HTTP] HTTP client for transmitting requests to the Mediaflux server API
+      # @param http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
       def initialize(file: nil, session_token: nil, http_client: nil)
-        @http_client = http_client || self.class.build_http_client
-        @http_client.use_ssl = (self.class.mediaflux_port == 443)
+        @http_client = http_client || Net::HTTP::Persistent.new
         # https is not working correctly on td-meta1 we should not need this, but we do...
         @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
@@ -62,7 +67,9 @@ module Mediaflux
       # Resolves the HTTP request against the Mediaflux API
       # @return [Net::HTTP]
       def resolve
-        @http_response = @http_client.request(http_request)
+        @http_response = @http_client.request self.class.uri, http_request
+        @http_client.shutdown
+        @http_response
       end
 
       # Determines whether or not the request has been resolved

@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+require "net/http/persistent"
+
+# frozen_string_literal: true
 namespace :authorization do
   desc "Timing test for logon in via a newly created token"
   task by_new_token: :environment do
@@ -58,6 +61,33 @@ namespace :authorization do
         logon.resolve
         Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
       end
+    end
+  end
+
+  desc "Timing test for logon via just http"
+  task by_http: :environment do
+    uri = URI "http://#{Mediaflux::Http::Request.mediaflux_host}:#{Mediaflux::Http::Request.mediaflux_port}/#{Mediaflux::Http::Request.request_path}"
+    http = Net::HTTP::Persistent.new # 'my_app_name'
+    time_action("1000 Sesssions") do
+      1000.times do
+        request = Net::HTTP::Post.new(Mediaflux::Http::Request.request_path)
+        body = Nokogiri::XML::Builder.new do |xml|
+          xml.request do
+            xml.service(name: "system.logon") do
+              xml.args do
+                xml.domain "system"
+                xml.user "manager"
+                xml.password "change_me"
+              end
+            end
+          end
+        end
+        request["Content-Type"] = "text/xml; charset=utf-8"
+        request.body = body.to_xml
+        resp = http.request uri, request
+        resp.body
+      end
+      http.shutdown
     end
   end
 
