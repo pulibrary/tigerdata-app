@@ -78,42 +78,4 @@ class Project
     # only alphanumeric characters
     name.gsub(/[^A-Za-z\d]/, "-")
   end
-
-  def self.schema_fields
-    # TODO: I think these fields should be their own Ruby class and we can make them
-    # a little bit more friendly (e.g. required, optional, et ceterea) rather than using
-    # the MediaFlux lingo (e.g. min-occurs, max-occurs)
-    id = { name: "id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
-    title = { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A plain-language title for the project" }
-    description = { name: "description", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A brief description of the project" }
-    data_sponsor = { name: "data_sponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
-    data_manager = { name: "data_manager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who manages the day-to-day activities for the project" }
-    data_users_rw = { name: "data_users_rw", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project" }
-    data_users_ro = { name: "data_users_ro", type: "string", index: true, "min-occurs" => 0, label: "A person who has read-only access privileges to the project" }
-    departments = { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
-    created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, label: "Timestamp project was created" }
-    created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, label: "User that created the project" }
-    [id, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by]
-  end
-
-  def self.create_schema(session_id:)
-    # Create the TigerData schema namespace
-    # TODO: This should probably exist outside of the Projects class
-    #       since it will hold information for other "document types"
-    schema_name = "tigerdata"
-    description = "TigerData Metadata"
-    schema_request = Mediaflux::Http::SchemaCreateRequest.new(name: schema_name, description: description,
-                                                              session_token: session_id)
-    schema_request.resolve
-
-    # ...and add the schema for Projects
-    fields_request = Mediaflux::Http::SchemaFieldsCreateRequest.new(
-      schema_name: schema_name,
-      document: "project",
-      description: "Project Metadata",
-      fields: schema_fields,
-      session_token: session_id
-    )
-    fields_request.resolve
-  end
 end
