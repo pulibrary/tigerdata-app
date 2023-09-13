@@ -14,6 +14,15 @@
      * Disadvantages
        * Need to control Identity Tokens via the application
        * Could take up to two calls to mediaflux to create a session for a user depending on how long we keep the token active
+  * Service Execute with Token 
+    You can additionally run commands utilizing a token without creating a session via service execute.  This would eliminate the need for multiple session calls as we would execute any read only commands as tigerdata-app and then run any modification commands as the user utilizing `service.execute :token...`
+      * Advantages
+        * similar advantages to token login
+        * No need to create a separate session for each user for read only operations
+        * depending on mediaflux we could have scripts for common commands stored on the server (aka create project could be a script instead of a series of individual commands run from rails)
+      * Disadvantages
+        * The service execute syntax is more complex than running the command directly
+        * Need to control Identity Tokens via the application
 
 ## Timing experiments on Docker
   First off it should be noted that the docker instance gets in a weird state if we try to run two of the rake tasks in a row (any two).  In Between each rake take I deleted the docker instance `docker rm mediaflux` and then created and started it utilizing the commands in [local development.md](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md)
@@ -22,9 +31,11 @@
 
   Login with an existing token seems to be comparable of slightly faster than login vias user name and password.  Creating a new token every time is much slower, becuase you make twice as many calls.
 
+  Sending service calls with a token does not seem to make the call take a longer time.
+
 ### By Session
  This test mimics option 1 above.  Basically the user signs in and we create a session.
- ```
+```
 > rake authorization:by_session       
 1 Session 84.28621292114258 miliseconds 0.08428621292114258 seconds
 1000 Sessions 8345.745086669922 miliseconds 8.345745086669922 seconds
@@ -32,7 +43,7 @@
 
 ### By New Token
  This test mimics option 2 above, creating a new token for the user with every login.
- ```
+```
 > rake authorization:by_new_token     
 1 New Token 121.18387222290039 mili seconds 0.12118387222290039 seconds
 1000 New Tokens 21111.900806427002 mili seconds 21.111900806427002 seconds
@@ -40,8 +51,28 @@
 
 ### By Existing Token
  This test mimics option 2 above, storing token for the user and just logging in.
- ```
-rake authorization:by_existing_token
+```
+> rake authorization:by_existing_token
 1 Existing Token 20.946979522705078 mili seconds 0.020946979522705078 seconds
 1000 Existing Tokens 7462.0959758758545 mili seconds 7.4620959758758545 seconds
+```
+
+### Service Exec with token
+This test calls the service to list namespaces sending an authorization token
+```
+> rake authorization:service_with_token    
+1 list namespaces with token 116.86396598815918 mili seconds 0.11686396598815918 seconds
+1000 list namespaces with token 7856.040000915527 mili seconds 7.856040000915527 seconds
+```
+
+### Service Exec with out a token
+This test calls the service to list namespaces without sending an authorization token
+```
+> rake authorization:service_with_token    
+1 list namespaces with token 116.86396598815918 mili seconds 0.11686396598815918 seconds
+1000 list namespaces with token 7856.040000915527 mili seconds 7.856040000915527 seconds
+```
+> rake authorization:service_without_token
+1 list namespaces 20.281076431274414 mili seconds 0.020281076431274414 seconds
+1000 list namespaces 7426.532983779907 mili seconds 7.426532983779907 seconds
 ```

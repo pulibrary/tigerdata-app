@@ -91,6 +91,44 @@ namespace :authorization do
     end
   end
 
+  desc "Timing test for executing a service with a token"
+  task service_with_token:  :environment do
+    logon = Mediaflux::Http::LogonRequest.new(domain: "princeton.edu", user: "test", password: "change_me")
+    logon.resolve
+    create = Mediaflux::Http::CreateTokenRequest.new(domain: "princeton.edu", user: "test", session_token: logon.session_token)
+    identity_token = create.identity
+    time_action("1 list namespaces with token") do
+      sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
+      sexec.resolve
+      puts sexec.response_xml
+    end
+
+    time_action("1000 list namespaces with token") do
+      1000.times do
+        sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
+        sexec.resolve
+      end
+    end
+  end
+
+  desc "Timing test for executing a service without a token"
+  task service_without_token: :environment do
+    logon = Mediaflux::Http::LogonRequest.new(domain: "princeton.edu", user: "test", password: "change_me")
+    logon.resolve
+    time_action("1 list namespaces") do
+      sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
+      sexec.resolve
+      puts sexec.response_xml
+    end
+
+    time_action("1000 list namespaces") do
+      1000.times do
+        sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
+        sexec.resolve
+      end
+    end
+  end
+
   def time_action(label)
     start_time = DateTime.now
     yield
