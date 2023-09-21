@@ -38,4 +38,8 @@
   <p>User: <b><%= current_user.uid %></b></p>
   <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Rails.configuration.mediaflux["api_host"] %></b>
   <p><%= link_to "Organizations", organizations_path %></p>
+
+  <div>
+    <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+  </div>
 <% end %>

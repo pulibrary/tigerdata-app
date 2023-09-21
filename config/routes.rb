@@ -13,8 +13,6 @@ Rails.application.routes.draw do
 
   resources :organizations
   resources :projects
-  post "projects/:id", to: "projects#save", as: :project_save
-  get "projects/:id/add_new_files", to: "projects#add_new_files", as: :project_add_new_files
 
   # get "set-note/:id", to: "welcome#set_note", as: :set_note
   # get "create-asset", to: "welcome#create_asset", as: :create_asset

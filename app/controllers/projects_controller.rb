@@ -1,36 +1,48 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  def show
-    @page = (params[:page] || "1").to_i
-    @project = Project.get(params[:id], session_id: current_user.mediaflux_session)
-    @project_files = @project.files_paged(@page, session_id: current_user.mediaflux_session)
-  end
-
   def new
-    organization = Organization.get(params[:organization_id].to_i, session_id: current_user.mediaflux_session)
-    @project = Project.new(-1, "", "", "", organization, session_id: current_user.mediaflux_session)
-    render "edit"
+    @project = Project.new
   end
 
-  def add_new_files
-    id = params[:id].to_i
-    project = Project.get(id, session_id: current_user.mediaflux_session)
-    project.add_new_files(100, session_id: current_user.mediaflux_session)
-    redirect_to project_path(id: project.id)
+  def create
+    @project = Project.new
+    @project.metadata = form_metadata
+    @project.save!
+    redirect_to @project
+  end
+
+  def show
+    @project = Project.find(params[:id])
+  end
+
+  def edit
+    @project = Project.find(params[:id])
+  end
+
+  def update
+    @project = Project.find(params[:id])
+    @project.metadata = form_metadata
+    @project.save!
+    redirect_to @project
   end
 
   def save
-    name = params[:name]
-    store_name = params[:store_name]
-    organization = Organization.get(params[:organization_id].to_i, session_id: current_user.mediaflux_session)
-    id = params[:id].to_i
-    project = if id == -1
-                # create it
-                Project.create!(name, store_name, organization, session_id: current_user.mediaflux_session)
-              else
-                # TODO: in the future save other properties of the project
-                Project.get(id)
-              end
-    redirect_to project_path(id: project.id)
+    @project = Project.find(params[:id])
+    @project.metadata = form_metadata
+    @project.save!
+    redirect_to @project
   end
+
+  private
+
+    def form_metadata
+      {
+        data_sponsor: params[:data_sponsor],
+        data_manager: params[:data_manager],
+        departments: params[:departments],
+        directory: params[:directory],
+        title: params[:title],
+        description: params[:description]
+      }
+    end
 end
