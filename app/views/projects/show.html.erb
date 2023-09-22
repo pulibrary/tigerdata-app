@@ -1,14 +1,14 @@
 <h1><%= @project.metadata[:title] %></h1>
 
 <div>
-  <p><b>Roles</b></p>
+  <h2>Roles</h2>
   <p>Data Sponsor: <%= @project.metadata[:data_sponsor] %></p>
   <p>Data Manager: <%= @project.metadata[:data_manager] %></p>
 </div>
 
 <div>
-  <p><b>Project Description</b></p>
-  <p>Affiliated Departments: <%= @project.metadata[:departments] %></p>
+  <h2>Project Description</h2>
+  <p>Affiliated Departments: <%= @project.departments.join(", ") %></p>
   <p>Project Directory: /tigerdata/<%= @project.metadata[:directory] %></p>
   <p>Title: <%= @project.metadata[:title] %></p>
   <p>Description:<br/>

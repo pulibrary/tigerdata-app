@@ -33,6 +33,10 @@ class ProjectsController < ApplicationController
     redirect_to @project
   end
 
+  def index
+    @projects = Project.all
+  end
+
   private
 
     def form_metadata
