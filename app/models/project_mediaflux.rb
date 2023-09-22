@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Project
+class ProjectMediaflux
   attr_accessor :id, :name, :path, :title, :organization, :file_count, :store_name,
     :data_sponsor
 
@@ -49,7 +49,7 @@ class Project
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: safe_name(name), tigerdata_values: values)
     get_request = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: create_request.id)
     collection_asset = get_request.metadata
-    Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)
+    ProjectMediaflux.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, store_name, session_id: session_id)
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -69,7 +69,7 @@ class Project
       organization = Organization.get(nil, session_id: session_id, path: org_path)
     end
 
-    project = Project.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: session_id)
+    project = ProjectMediaflux.new(collection_asset[:id], collection_asset[:name], collection_asset[:path], collection_asset[:description], organization, session_id: session_id)
     project.file_count = collection_asset[:total_file_count]
     project.store_name = project_ns[:store]
 
@@ -85,7 +85,7 @@ class Project
       path = org.path + "/" + ns[:name]
       collection_request = Mediaflux::Http::CollectionQueryRequest.new(session_token: session_id, namespace: path)
       collection = collection_request.collections.first
-      projects << Project.get(collection[:id], session_id: session_id, organization: org)
+      projects << ProjectMediaflux.get(collection[:id], session_id: session_id, organization: org)
     end
     projects
   end

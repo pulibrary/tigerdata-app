@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Project, type: :model do
+RSpec.describe ProjectMediaflux, type: :model do
   let(:namespace_request) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true) }
   let(:collection_request) { instance_double(Mediaflux::Http::CreateAssetRequest, id: 123) }
   let(:metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: collection_metadata) }
