@@ -1,0 +1,33 @@
+<div>
+  <h2>Project Roles</h2>
+
+  <p>Data Sponsor: <input type="text" id="data_sponsor" name="data_sponsor" required autofocus value="<%= @project.metadata[:data_sponsor] %>" /></p>
+  <p>Data Manager: <input type="text" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
+</div>
+
+<div>
+  <h2>Project Description</h2>
+
+  <div>Affiliated Departments:<br/>
+    <select id="departments" name="departments[]" class="form-select" multiple >
+      <% Affiliation.all.each do |affiliation| %>
+        <% if @project.departments.include?(affiliation[:code]) %>
+          <option selected><%= affiliation[:code] %></option>
+        <% else %>
+          <option><%= affiliation[:code] %></option>
+        <% end %>
+      <% end %>
+    </select>
+  </div>
+
+  <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
+  <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
+  <p>Description:
+    <textarea type="text" id="description" name="description" class="input-text-long"
+      rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
+  </p>
+</div>
+
+<div class="actions">
+  <input type="submit" class="btn btn-primary" value="Save" />
+</div>

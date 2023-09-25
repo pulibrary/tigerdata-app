@@ -5,13 +5,6 @@ class WelcomeController < ApplicationController
     return if current_user.nil?
     version_request = Mediaflux::Http::VersionRequest.new(session_token: current_user.mediaflux_session)
     @mf_version = version_request.version
+    @projects = Project.sponsored_projects(@current_user.uid)
   end
-
-  # def set_note
-  #   id = params[:id]
-  #   note = media_flux.get_metadata(id)[:mf_note] || ""
-  #   note += "Added a note at #{Time.now.getlocal} #{Time.now.zone}\r\n"
-  #   media_flux.set_note(id, note)
-  #   redirect_to root_url
-  # end
 end
