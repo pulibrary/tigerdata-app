@@ -36,7 +36,6 @@
 
 <% if current_user %>
   <p>User: <b><%= current_user.uid %></b></p>
-  <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Rails.configuration.mediaflux["api_host"] %></b>
 
   <% if @projects.count > 0 %>
     <h2>My Sponsored Projects</h1>
