@@ -1,5 +1,6 @@
 <header>
   <nav class="navbar p-2 bg-light">
+  <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "150x100") %>
     <%= link_to "TigerData", root_path, class: "navbar-brand" %>
     <% if current_user %>
       User: <%= current_user.uid %>
