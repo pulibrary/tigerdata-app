@@ -20,6 +20,10 @@ class User < ApplicationRecord
       user.provider = access_token.provider
       user.uid = access_token.uid # this is the netid
       user.email = access_token.extra.mail
+      user.initialize_name_values(access_token.extra)
+      user.save
+    elsif user.given_name.nil? # fix any users that do not have the name information loaded
+      user.initialize_name_values(access_token.extra)
       user.save
     end
     user
@@ -51,5 +55,11 @@ class User < ApplicationRecord
 
     Mediaflux::Http::LogoutRequest.new(session_token: @mediaflux_session).response_body
     @mediaflux_session = nil
+  end
+
+  def initialize_name_values(extra_cas_info)
+    self.given_name = extra_cas_info.givenname
+    self.family_name =  extra_cas_info.sn
+    self.display_name = extra_cas_info.pudisplayname
   end
 end
