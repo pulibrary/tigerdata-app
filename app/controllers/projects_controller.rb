@@ -13,6 +13,19 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    if params[:create_mf] == "true"
+      asset_id = ProjectMediaflux.create!(project: @project, session_id: current_user.mediaflux_session, created_by: current_user.uid)
+      if asset_id > 0
+        @project.mediaflux_id = asset_id
+        @project.save!
+      end
+    end
+  end
+
+  def approve
+    @project = Project.find(params[:id])
+    @project.approve!(session_id: current_user.mediaflux_session, created_by: current_user.uid)
+    redirect_to @project
   end
 
   def edit

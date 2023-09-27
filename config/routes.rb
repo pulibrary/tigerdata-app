@@ -13,10 +13,7 @@ Rails.application.routes.draw do
 
   resources :organizations
   resources :projects
-
-  # get "set-note/:id", to: "welcome#set_note", as: :set_note
-  # get "create-asset", to: "welcome#create_asset", as: :create_asset
-  # get "create-collection-asset", to: "welcome#create_collection_asset", as: :create_collection_asset
+  post "projects/:id/approve", to: "projects#approve", as: :project_approve
 
   get "dashboards/:role", to: "dashboards#show"
 
