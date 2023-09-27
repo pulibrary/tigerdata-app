@@ -26,7 +26,7 @@ module Mediaflux
       end
 
       def id
-        @id ||= response_xml.xpath("/response/reply/result/id").text.to_i
+        @id ||= response_xml.xpath("/response/reply/result/id").text
         @id
       end
 

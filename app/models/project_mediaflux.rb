@@ -4,7 +4,20 @@ class ProjectMediaflux
     store_name = Store.default(session_id: session_id).name
     project_name = safe_name(project.directory)
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}-ns"
-    project_values = {
+    tigerdata_values = project_values(project, created_by)
+
+    # Create a namespace for the project
+    # The namespace is directly under our root namespace
+    Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id).resolve
+
+    # Create a collection asset under the new namespace and set its metadata
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values)
+    create_request.resolve
+    create_request.id
+  end
+
+  def self.project_values(project, created_by)
+    {
       code: project.directory,
       title: project.metadata[:title],
       description: project.metadata[:description],
@@ -14,19 +27,10 @@ class ProjectMediaflux
       created_on: "now",
       created_by: created_by
     }
-
-    # Create a namespace for the project
-    # The namespace is directly under our root namespace
-    Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id).resolve
-
-    # Create a collection asset under the new namespace and set its metadata
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: project_values)
-    create_request.resolve
-    create_request.id
   end
 
   def self.safe_name(name)
     # only alphanumeric characters
-    name.gsub(/[^A-Za-z\d]/, "-")
+    name.strip.gsub(/[^A-Za-z\d]/, "-")
   end
 end
