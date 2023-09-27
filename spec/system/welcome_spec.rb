@@ -6,7 +6,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
-      expect(page).to have_content "Welcome to the TigerData user portal"
+      expect(page).to have_content "Welcome to TigerData"
       expect(page).to have_content "Log In"
     end
   end
