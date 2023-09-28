@@ -11,7 +11,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash.notice = "TigerData is coming soon; Access is currently limited."
     else
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
-      flash.notice = "Welcome, #{@user.uid}"
+      flash.notice = "Welcome, #{@user.given_name}"
     end
   end
 end
