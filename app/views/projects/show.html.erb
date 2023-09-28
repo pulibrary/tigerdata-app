@@ -17,10 +17,10 @@
 </div>
 
 <div>
-  <% if @project.mediaflux_id.present? %>
-    <p>MediaFlux id: <%= @project.mediaflux_id %></p>
+  <% if @project.in_mediaflux? %>
+    <p>Mediaflux id: <%= @project.mediaflux_id %></p>
   <% else %>
-    <p>This project has not been saved to MediaFlux</p>
+    <p>This project has not been saved to Mediaflux</p>
   <% end %>
 </div>
 

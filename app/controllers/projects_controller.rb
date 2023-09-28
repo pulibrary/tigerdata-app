@@ -13,13 +13,6 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    if params[:create_mf] == "true"
-      asset_id = ProjectMediaflux.create!(project: @project, session_id: current_user.mediaflux_session, created_by: current_user.uid)
-      if asset_id > 0
-        @project.mediaflux_id = asset_id
-        @project.save!
-      end
-    end
   end
 
   def approve
@@ -36,13 +29,13 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @project.metadata = form_metadata
     @project.save!
-    redirect_to @project
-  end
 
-  def save
-    @project = Project.find(params[:id])
-    @project.metadata = form_metadata
-    @project.save!
+    if @project.in_mediaflux?
+      # Ideally this should happen inside the model, but since the code requires the Mediaflux session
+      # we'll keep it here for now.
+      @project.update_mediaflux(session_id: current_user.mediaflux_session, updated_by: current_user.uid)
+    end
+
     redirect_to @project
   end
 

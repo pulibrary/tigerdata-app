@@ -20,7 +20,13 @@
     </select>
   </div>
 
-  <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
+  <% if @project.in_mediaflux? %>
+    <p>Project Directory: /tigerdata/<%= @project.metadata[:directory] %> (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
+      This project has already been saved to Mediaflux and the directory cannot be changed</p>
+  <% else %>
+    <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
+  <% end %>
+
   <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
   <p>Description:
     <textarea type="text" id="description" name="description" class="input-text-long"
