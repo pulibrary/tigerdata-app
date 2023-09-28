@@ -21,7 +21,12 @@
   </div>
 
   <% if @project.in_mediaflux? %>
-    <p>Project Directory: /tigerdata/<%= @project.metadata[:directory] %> (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
+    <!--
+      Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
+      send back to the controller (we don't want to lose this value)
+    -->
+    <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" readonly value="<%= @project.metadata[:directory] %>" />
+      (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
       This project has already been saved to Mediaflux and the directory cannot be changed</p>
   <% else %>
     <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
