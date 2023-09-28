@@ -1,37 +1,27 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class CreateAssetRequest < Request
-      attr_reader :namespace, :asset_name, :collection
-
+    class UpdateAssetRequest < Request
       # Constructor
       # @param session_token [String] the API token for the authenticated session
-      # @param name [String] Name of the Asset
-      # @param collection [Boolean] create a collection asset if true
-      # @param namespace [String] Optional Parent namespace for the asset to be created in
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil)
+      # @param id [Int] Mediaflux asset ID of the asset to update
+      # @param tigerdata_values [Hash] Values to update in the asset metadata
+      def initialize(session_token:, id:, tigerdata_values:)
         super(session_token: session_token)
-        @namespace = namespace
-        @asset_name = name
-        @collection = collection
+        @id = id
         @tigerdata_values = tigerdata_values
       end
 
-      # Specifies the Mediaflux service to use when creating assets
+      # Specifies the Mediaflux service to use when updating assets
       # @return [String]
       def self.service
-        "asset.create"
-      end
-
-      def id
-        @id ||= response_xml.xpath("/response/reply/result/id").text
-        @id
+        "asset.set"
       end
 
       private
 
         # The generated XML mimics what we get when we issue an Aterm command as follows:
-        # > asset.set :id path=/sandbox_ns/rdss_collection
+        # > asset.set :id 1234
         #     :meta <
         #       :tigerdata:project <
         #         :title "RDSS test project"
@@ -45,8 +35,7 @@ module Mediaflux
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
-              xml.name asset_name
-              xml.namespace namespace if namespace.present?
+              xml.id @id
               if @tigerdata_values
                 xml.meta do
                   xml.send("tigerdata:project", "xmlns:tigerdata" => "tigerdata") do
@@ -58,18 +47,8 @@ module Mediaflux
                     @tigerdata_values[:departments].each do |department|
                       xml.departments department
                     end
-                    xml.created_on @tigerdata_values[:created_on]
-                    xml.created_by @tigerdata_values[:created_by]
                   end
                 end
-              end
-              if collection
-                xml.collection do
-                  xml.parent.set_attribute("contained-asset-index", true)
-                  xml.parent.set_attribute("unique-name-index", true)
-                  xml.text(collection)
-                end
-                xml.type "application/arc-asset-collection"
               end
             end
           end
