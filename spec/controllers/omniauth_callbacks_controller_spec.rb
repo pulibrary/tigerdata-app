@@ -4,16 +4,17 @@ require "rails_helper"
 RSpec.describe Users::OmniauthCallbacksController do
   before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
-  context "TigerData user" do
+  context "with project sponsor user" do
+    let(:project_sponsor) { FactoryBot.create(:project_sponsor) }
     it "redirects to home page with notice" do
-      allow(User).to receive(:from_cas) { FactoryBot.create(:user, uid: "knight", given_name: "Bob") }
+      allow(User).to receive(:from_cas) { project_sponsor }
       get :cas
       expect(response).to redirect_to(root_path)
-      expect(flash.notice).to eq("Welcome, Bob")
+      expect(flash.notice).to eq("Welcome, #{project_sponsor.given_name}")
     end
   end
 
-  context "non-TigerData user" do
+  context "uknown user" do
     it "redirects to home page with alert" do
       allow(User).to receive(:from_cas) { FactoryBot.create(:user) }
       get :cas

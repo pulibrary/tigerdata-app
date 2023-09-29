@@ -4,6 +4,8 @@
 
 TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data. 
 
+This application provides a front end for users to create and manage projects that live in the TidgerData infrastructure.
+
 [![CircleCI](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main.svg?style=svg)](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main)
 [![Coverage Status](https://coveralls.io/repos/github/pulibrary/tiger-data-app/badge.svg?branch=main)](https://coveralls.io/github/pulibrary/tiger-data-app?branch=main)
 
@@ -22,27 +24,42 @@ Cardinality constraints (projects must have sponsors, etc.) will be enforced in 
 
 ```mermaid
 erDiagram
-  Project ||--o{ File : ""
-  Project ||--o{ ProjectUserRole : ""
-  ProjectUserRole }o--|| User : ""
-  ProjectUserRole }o--|| Role : ""
-  Project }o--o{ Funder : ""
-  User ||--o{ AllowedRole : ""
-  Role ||--o{ AllowedRole :  ""
+  Project }|--|{ User : "via metadata_json"
+  User ||--o{ UsersRoles : ""
+  Role ||--o{ UsersRoles :  ""
 
   Project {
-    string title
-    string memo
-    date start_date
-    date end_date
+    integer created_by_user_id
+    integer mediaflux_id
+    jsonb metadata_json "hash with metadata"
+    datetime created_at
+    datetime updated_at
   }
 
   Role {
     string name
-    string description_md
+    string resource "default nil role applies to all Objects"
+  }
+
+  UsersRoles {
+    int user FK
+    int role FK
+  }
+
+  User {
+    string uid "Princeton netid"
+    string provider "should always be cas"
+    string email
+    string given_name
+    string family_name
+    string display_name
+
   }
 ```
+### Roles
+The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tiger-data-app/blob/main/docs/roles.md) of the system roles
 
+### API Plans
 Controllers may rely either on ActiveRecord models, or the `MediafluxWrapper` class.
 
 ```mermaid
