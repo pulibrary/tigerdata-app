@@ -22,6 +22,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       it "shows the 'Log Out' button" do
         sign_in sponsor_user
         visit "/"
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end

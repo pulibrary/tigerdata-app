@@ -27,19 +27,19 @@
   <h1>Welcome to TigerData</h1>
   Please log in.
 <% else %>
-  <h1>Welcome, <%= current_user.uid %>!</h1>
-  <% if @projects.size > 0 %> 
-    <div class="dashboard-section">
+  <h1>Welcome, <%= current_user.given_name %>!</h1>
+  <div class="dashboard-section">
+    <% if @projects.size > 0 %> 
       <h2>My Sponsored Projects</h1>
       <ul class="project-list">
         <% @projects.each do |project| %>
           <li><%= link_to(project.title, project) %> </li>
         <% end %>
       </ul>
+    <% end %>
+    <div>
+      <br/>
+      <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+    </div>
     </div>
   <% end %>
-  <div>
-    <br/>
-    <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
-  </div>
-<% end %>
