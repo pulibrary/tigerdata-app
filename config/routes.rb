@@ -16,8 +16,6 @@ Rails.application.routes.draw do
   resources :projects
   post "projects/:id/approve", to: "projects#approve", as: :project_approve
 
-  get "dashboards/:role", to: "dashboards#show"
-
   namespace :api do
     namespace :v0 do
       resources :projects, only: [:index]
