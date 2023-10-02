@@ -7,5 +7,13 @@ FactoryBot.define do
     given_name { display_name.split(" ").first }
     family_name { display_name.split(" ").last }
     provider { :cas }
+
+    ##
+    # A user who is allowed to sponsor a project
+    factory :project_sponsor do
+      after :create do |user|
+        user.add_role User::PROJECT_SPONSOR
+      end
+    end
   end
 end

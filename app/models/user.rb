@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 class User < ApplicationRecord
+  rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :rememberable, :omniauthable
+
+  PROJECT_SPONSOR = :project_sponsor
 
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
