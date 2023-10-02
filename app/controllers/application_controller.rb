@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   private
 
     def mediaflux_session
-      # this requires a connection to mediaflux
+      # this requires a connection to mediaflux... for ease of development we do not want to require this
       # current_user&.mediaflux_from_session(session)
       yield
     rescue Mediaflux::Http::SessionExpired
