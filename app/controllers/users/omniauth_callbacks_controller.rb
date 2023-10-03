@@ -10,8 +10,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
       flash.notice = "Welcome, #{@user.given_name}"
     else
-      redirect_to root_path
-      flash.notice = "TigerData is coming soon; Access is currently limited."
+      redirect_to help_path
+      flash.notice = "You can not be signed in at this time."
     end
   end
 end

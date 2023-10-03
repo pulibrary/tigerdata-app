@@ -5,4 +5,6 @@ class WelcomeController < ApplicationController
     return if current_user.nil?
     @projects = Project.sponsored_projects(@current_user.uid)
   end
+
+  def help; end
 end

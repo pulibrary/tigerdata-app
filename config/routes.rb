@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root to: "welcome#index"
+  get "help", to: "welcome#help", as: :help
 
   resources :organizations
   resources :projects
