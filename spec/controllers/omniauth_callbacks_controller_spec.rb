@@ -18,8 +18,8 @@ RSpec.describe Users::OmniauthCallbacksController do
     it "redirects to home page with alert" do
       allow(User).to receive(:from_cas) { FactoryBot.create(:user) }
       get :cas
-      expect(response).to redirect_to(root_path)
-      expect(flash.notice).to eq("TigerData is coming soon; Access is currently limited.")
+      expect(response).to redirect_to(help_path)
+      expect(flash.notice).to eq("You can not be signed in at this time.")
     end
   end
 
