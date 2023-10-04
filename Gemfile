@@ -59,6 +59,7 @@ gem "omniauth-cas"
 gem "ddtrace", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby"
 gem "google-protobuf", "~> 3.0"
+gem "mailcatcher"
 gem "net-http-persistent"
 gem "rolify"
 
