@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
+  belongs_to :created_by_user, class_name: "User"
+
   def metadata
     (metadata_json || {}).with_indifferent_access
   end
