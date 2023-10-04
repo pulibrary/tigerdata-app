@@ -15,7 +15,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
     let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     before do
-      Project.create(metadata: { data_sponsor: "pul123", title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: "pul123", title: "project 111" })
     end
 
     context "for a user with sponsored projects" do

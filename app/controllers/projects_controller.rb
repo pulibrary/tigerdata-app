@@ -2,11 +2,13 @@
 class ProjectsController < ApplicationController
   def new
     @project = Project.new
+    @project.created_by_user = current_user
   end
 
   def create
     @project = Project.new
     @project.metadata = form_metadata
+    @project.created_by_user = current_user
     @project.save!
     redirect_to @project
   end

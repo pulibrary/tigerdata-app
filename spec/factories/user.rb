@@ -7,6 +7,7 @@ FactoryBot.define do
     given_name { display_name.split(" ").first }
     family_name { display_name.split(" ").last }
     provider { :cas }
+    email { "#{uid}.example.com" }
 
     ##
     # A user who is allowed to sponsor a project

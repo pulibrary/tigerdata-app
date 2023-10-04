@@ -12,11 +12,6 @@ FactoryBot.define do
         description: "a random description"
       }
     end
-    initialize_with do
-      project = new
-      project.id = rand(100)
-      project.metadata = metadata
-      project
-    end
+    created_by_user_id { FactoryBot.create(:user).id }
   end
 end
