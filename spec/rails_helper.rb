@@ -73,6 +73,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
 
   config.before(:each, type: :system) do
+    ActiveJob::Base.queue_adapter = :test
     if ENV["RUN_IN_BROWSER"]
       driven_by(:selenium)
     else
