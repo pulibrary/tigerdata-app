@@ -178,6 +178,8 @@ GEM
       tilt
     hashdiff (1.0.1)
     hashie (5.0.0)
+    health-monitor-rails (11.1.0)
+      railties (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -478,6 +480,7 @@ DEPENDENCIES
   factory_bot_rails
   ffaker
   google-protobuf (~> 3.0)
+  health-monitor-rails
   importmap-rails
   jbuilder
   mailcatcher
