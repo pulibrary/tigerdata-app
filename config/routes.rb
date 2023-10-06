@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 Rails.application.routes.draw do
-  mount HealthMonitor::Engine, at: '/'
+  mount HealthMonitor::Engine, at: "/"
 
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }

@@ -67,4 +67,20 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
     end
   end
+
+  context "Create page" do
+    let(:data_manager) { FactoryBot.create :user }
+    it "allows the user to create a project" do
+      sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      fill_in "data_sponsor", with: sponsor_user.uid
+      fill_in "data_manager", with: data_manager.uid
+      fill_in "directory", with: "test_project"
+      fill_in "title", with: "My test project"
+      click_on "Save"
+      expect(page).to have_content("This project has not been saved to Mediaflux")
+      expect(page).to have_content("My test project")
+    end
+  end
 end
