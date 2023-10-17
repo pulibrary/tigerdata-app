@@ -55,7 +55,9 @@ class ProjectsController < ApplicationController
         departments: params[:departments],
         directory: params[:directory],
         title: params[:title],
-        description: params[:description]
+        description: params[:description],
+        data_user_read_only: (params[:data_user_read_only] || "").split(","),
+        data_user_read_write: (params[:data_user_read_write] || "").split(",")
       }
     end
 end

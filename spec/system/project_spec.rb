@@ -84,12 +84,16 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Create page" do
     let(:data_manager) { FactoryBot.create :user }
+    let(:read_only) { FactoryBot.create :user }
+    let(:read_write) { FactoryBot.create :user }
     it "allows the user to create a project" do
       sign_in sponsor_user
       visit "/"
       click_on "New Project"
       fill_in "data_sponsor", with: sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
+      fill_in "data_user_read_only", with: read_only.uid
+      fill_in "data_user_read_write", with: read_write.uid
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect  do
