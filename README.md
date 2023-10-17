@@ -2,7 +2,7 @@
 
 # tiger-data-app
 
-TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data. 
+TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data.
 
 This application provides a front end for users to create and manage projects that live in the TidgerData infrastructure.
 
@@ -100,14 +100,14 @@ flowchart TD
     1. `asdf plugin add yarn`
     1. `asdf install`
     1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
-1. OR - Install Dependicies with brew and chruby
+1. OR - Install dependencies with brew and chruby
    1. `ruby-install 3.1.3 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
-   1. close the termanl window and open a new termal
-   1. `chruby 3.1.3`
-   1. `ruby --version`
+   2. close the terminal window and open a new terminal
+   3. `chruby 3.1.3`
+   4. `ruby --version`
 1. Install language-specific dependencies
     1. `bundle install`
-    1. `yarn install`
+    2. `yarn install`
 
 On a Mac with an M1 chip, `bundle install` may fail. [This suggestion](https://stackoverflow.com/questions/74196882/cannot-install-jekyll-eventmachine-on-m1-mac) helped:
 ```

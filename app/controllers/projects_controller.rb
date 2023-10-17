@@ -10,6 +10,7 @@ class ProjectsController < ApplicationController
     @project.metadata = form_metadata
     @project.created_by_user = current_user
     @project.save!
+    TigerdataMailer.with(project: @project).project_creation.deliver_later
     redirect_to @project
   end
 

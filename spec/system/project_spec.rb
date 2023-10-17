@@ -82,7 +82,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "data_user_read_write", with: read_write.uid
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
-      click_on "Save"
+      expect  do
+        click_on "Save"
+      end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       expect(page).to have_content("This project has not been saved to Mediaflux")
       expect(page).to have_content("My test project")
     end
