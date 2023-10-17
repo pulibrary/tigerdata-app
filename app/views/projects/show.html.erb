@@ -4,6 +4,22 @@
   <h2>Roles</h2>
   <p>Data Sponsor: <%= @project.metadata[:data_sponsor] %></p>
   <p>Data Manager: <%= @project.metadata[:data_manager] %></p>
+  
+  <%if @project.metadata[:data_user_read_only] %>
+  <p>Read Only: 
+    <% @project.metadata[:data_user_read_only].each do |user|%> 
+      <p><%= user%> </p>
+    <%end%>
+    </p>
+  <%end%>
+
+  <%if @project.metadata[:data_user_read_write] %>
+  <p>Read/write: 
+    <% @project.metadata[:data_user_read_write].each do |user|%> 
+      <p><%= user%> </p>
+    <%end%>
+    </p>
+  <%end%>
 </div>
 
 <div>
