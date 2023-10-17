@@ -6,6 +6,7 @@ class User < ApplicationRecord
   devise :rememberable, :omniauthable
 
   PROJECT_SPONSOR = :project_sponsor
+  MEDIAFLUX_ADMIN = :mediaflux_admin
 
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)

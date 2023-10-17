@@ -16,5 +16,13 @@ FactoryBot.define do
         user.add_role User::PROJECT_SPONSOR
       end
     end
+
+    ##
+    # A user who is allowed to administer mediaflux
+    factory :mediaflux_admin do
+      after :create do |user|
+        user.add_role User::MEDIAFLUX_ADMIN
+      end
+    end
   end
 end
