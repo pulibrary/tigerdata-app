@@ -4,8 +4,9 @@
   <p>Data Sponsor: <input type="text" id="data_sponsor" name="data_sponsor" required autofocus value="<%= @project.metadata[:data_sponsor] %>" /></p>
   <p>Data Manager: <input type="text" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
-  <p>Read Only: <input type="text" id="data_user_read_only" name="data_user_read_only"  value="<%= @project.metadata[:data_user_read_only] %>" /></p>
-  <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= @project.metadata[:data_user_read_write] %>" /></p>
+  <p>Read Only: <input type="text" id="data_user_read_only" name="data_user_read_only"  value="<%= (@project.metadata[:data_user_read_only] || []).join(",")%>" /></p>
+  <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= (@project.metadata[:data_user_read_write] || []).join(",") %>" /></p>
+
 
 </div>
 

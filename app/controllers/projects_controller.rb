@@ -47,6 +47,7 @@ class ProjectsController < ApplicationController
 
   private
 
+
     def form_metadata
       {
         data_sponsor: params[:data_sponsor],
@@ -55,8 +56,8 @@ class ProjectsController < ApplicationController
         directory: params[:directory],
         title: params[:title],
         description: params[:description],
-        data_user_read_only: params[:data_user_read_only],
-        data_user_read_write: params[:data_user_read_write]
+        data_user_read_only: (params[:data_user_read_only] || "").split(","),
+        data_user_read_write: (params[:data_user_read_write] || "").split(",")
       }
     end
 end
