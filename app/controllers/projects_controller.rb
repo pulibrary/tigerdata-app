@@ -48,7 +48,6 @@ class ProjectsController < ApplicationController
 
   private
 
-
     def form_metadata
       {
         data_sponsor: params[:data_sponsor],
