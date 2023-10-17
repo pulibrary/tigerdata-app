@@ -1,0 +1,31 @@
+---
+production:
+  - bs3097 # Bess Sadler
+  - cac9 # Carolyn Cole
+  - cl7359 # Claudia Lee
+  - fn8243 # Favour Nwogbo
+  - hc8719 # Hector Correa
+  - jrg5 # James Griffin
+  - knight # Robert Knight
+  - kl37 # Kate Lynch
+  - mjc12 # Matt Chandler
+staging:
+  - bs3097 # Bess Sadler
+  - cac9 # Carolyn Cole
+  - cl7359 # Claudia Lee
+  - fn8243 # Favour Nwogbo
+  - hc8719 # Hector Correa
+  - jrg5 # James Griffin
+  - knight # Robert Knight
+  - kl37 # Kate Lynch
+  - mjc12 # Matt Chandler
+development:
+  - bs3097 # Bess Sadler
+  - cac9 # Carolyn Cole
+  - cl7359 # Claudia Lee
+  - fn8243 # Favour Nwogbo
+  - hc8719 # Hector Correa
+  - jrg5 # James Griffin
+  - kl37 # Kate Lynch
+test:
+  - fake1 # Fake user for testing

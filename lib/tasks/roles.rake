@@ -12,4 +12,17 @@ namespace :roles do
       end
     end
   end
+
+  desc "Create or update the system users for the mediaflux admin role"
+  task default_mediaflux_admins: :environment do
+    Rails.application.config.default_mediaflux_admins.each do |mediaflux_admin|
+      user = User.find_by(uid: mediaflux_admin)
+      if user.nil?
+        user = User.create(uid: mediaflux_admin, provider: "cas", email: "#{mediaflux_admin}@princeton.edu")
+      end
+      unless user.has_role? User::MEDIAFLUX_ADMIN
+        user.add_role User::MEDIAFLUX_ADMIN
+      end
+    end
+  end
 end

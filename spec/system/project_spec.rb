@@ -48,6 +48,19 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects/#{project_not_in_mediaflux.id}"
       expect(page).to have_content "project 123"
       expect(page).to have_content "This project has not been saved to Mediaflux"
+      expect(page).not_to have_button "Approve Project"
+    end
+
+    context "An Mediaflux Administrator" do
+      let(:mediaflux_admin_user) { FactoryBot.create(:mediaflux_admin) }
+
+      it "shows the project data and the Approve Project button" do
+        sign_in mediaflux_admin_user
+        visit "/projects/#{project_not_in_mediaflux.id}"
+        expect(page).to have_content "project 123"
+        expect(page).to have_content "This project has not been saved to Mediaflux"
+        expect(page).to have_button "Approve Project"
+      end
     end
 
     it "shows the Mediaflux id for a project saved in Mediaflux" do
@@ -55,6 +68,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects/#{project_in_mediaflux.id}"
       expect(page).to have_content "project 123"
       expect(page).to have_content "Mediaflux id: 999"
+      expect(page).not_to have_button "Approve Project"
     end
   end
 
