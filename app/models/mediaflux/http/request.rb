@@ -141,13 +141,23 @@ module Mediaflux
         def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
           body = build_http_request_body(name: name)
-          Rails.logger.debug(body.to_xml)
+          xml_payload = body.to_xml
+
+          # TODO: This horrible hack should be removed once we address
+          # GitHub issue: https://github.com/pulibrary/tiger-data-app/issues/227
+          #
+          # See create_asset_request.rb and update_asset_request.rb for more information.
+          if xml_payload.include?("asset.create") || xml_payload.include?("asset.set")
+            xml_payload.gsub!('xmlns="tigerdata:project"', 'xmlns:tigerdata="tigerdata"')
+          end
+
+          Rails.logger.debug(xml_payload)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
-            request.body = body.to_xml
+            request.body = xml_payload
           else
             request["Content-Type"] = "multipart/form-data"
-            request.set_form({ "request" => body.to_xml,
+            request.set_form({ "request" => xml_payload,
                                "nb-data-attachments" => "1",
                                "file_0" => form_file },
                           "multipart/form-data",
