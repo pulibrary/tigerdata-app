@@ -9,6 +9,7 @@ namespace :projects do
 
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)
+    root_ns = Rails.configuration.mediaflux["api_root_ns"]
 
     time_action("Creating projects") do
       puts "Creating #{count} projects with prefix #{project_prefix}..."
@@ -20,7 +21,7 @@ namespace :projects do
       end
     end
 
-    query_test_projects(user)
+    query_test_projects(user, root_ns)
   end
 
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
@@ -73,11 +74,11 @@ namespace :projects do
   # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
-  def query_test_projects(user)
+  def query_test_projects(user, root_ns)
     counts = []
     ["zz001", "zz003", "zz007", nil].each do |data_sponsor|
       time_action("Getting counts by data_sponsor #{data_sponsor}") do
-        count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: "/td-demo-001", data_sponsor: data_sponsor)
+        count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor)
         count_request.resolve
         counts << { data_sponsor: data_sponsor || "total", count: count_request.count }
       end
@@ -86,7 +87,7 @@ namespace :projects do
 
     total73 = 0
     time_action("Getting counts by data_sponsor zz007 department THREE") do
-      count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: "/td-demo-001", data_sponsor: "zz007", department: "THREE")
+      count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: "zz007", department: "THREE")
       count_request.resolve
       total73 = count_request.count
     end
