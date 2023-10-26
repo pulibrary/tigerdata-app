@@ -49,8 +49,7 @@ module Mediaflux
               xml.namespace namespace if namespace.present?
               if @tigerdata_values
                 xml.meta do
-                  # TODO:
-                  # The parameters to xml.send() need to be adjusted as indicated on
+                  # TODO: The parameters to xml.send() need to be adjusted as indicated on
                   # GitHub issue https://github.com/pulibrary/tiger-data-app/issues/227
                   #
                   # The values we are passing right here produce the correct XML

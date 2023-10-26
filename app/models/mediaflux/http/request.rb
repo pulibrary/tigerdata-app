@@ -138,6 +138,7 @@ module Mediaflux
           end
         end
 
+        # rubocop:disable Metrics/MethodLength
         def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
           body = build_http_request_body(name: name)
@@ -166,6 +167,7 @@ module Mediaflux
 
           request
         end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

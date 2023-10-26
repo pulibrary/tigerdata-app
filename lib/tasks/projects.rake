@@ -16,7 +16,7 @@ namespace :projects do
         project = create_test_project(i, user, project_prefix)
         project.save!
         project.approve!(session_id: user.mediaflux_session, created_by: user.uid)
-        puts "#{i}" if (i % 100) == 0
+        puts i if (i % 100) == 0
       end
     end
 
@@ -38,11 +38,12 @@ namespace :projects do
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def create_test_project(number, user, project_prefix)
     sequence = number.to_s.rjust(5, "0")
     sponsor = if (number % 7) == 0
                 "zz007"
-              elsif (number %3) == 0
+              elsif (number % 3) == 0
                 "zz003"
               else
                 "zz001"
@@ -67,14 +68,16 @@ namespace :projects do
     }
     project
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def query_test_projects(user)
     counts = []
     ["zz001", "zz003", "zz007", nil].each do |data_sponsor|
       time_action("Getting counts by data_sponsor #{data_sponsor}") do
         count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: "/td-demo-001", data_sponsor: data_sponsor)
         count_request.resolve
-        counts << {data_sponsor: data_sponsor || 'total', count: count_request.count}
+        counts << { data_sponsor: data_sponsor || "total", count: count_request.count }
       end
     end
     puts counts
@@ -87,14 +90,15 @@ namespace :projects do
     end
     puts "#{total73} records for data_sponsor zz007 department THREE"
   end
+  # rubocop:enable Metrics/MethodLength
 
   def time_action(label)
     start_time = DateTime.now
     yield
     end_time = DateTime.now
     sec = end_time.to_f - start_time.to_f
-    ms_display = '%.2f' % (sec * 100)
-    sec_display = '%.2f' % sec
+    ms_display = format("%.2f", sec * 100)
+    sec_display = format("%.2f", sec)
     puts "#{label} #{ms_display} ms #{sec_display} seconds"
   end
 end

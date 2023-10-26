@@ -2,7 +2,6 @@
 module Mediaflux
   module Http
     class CollectionCountRequest < Request
-
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param namespace [String] Namespace to limit the search
