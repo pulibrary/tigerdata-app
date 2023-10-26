@@ -100,7 +100,7 @@ namespace :projects do
     yield
     end_time = DateTime.now
     sec = end_time.to_f - start_time.to_f
-    ms_display = format("%.2f", sec * 100)
+    ms_display = format("%.2f", sec * 1000)
     sec_display = format("%.2f", sec)
     puts "#{label} #{ms_display} ms #{sec_display} seconds"
   end
