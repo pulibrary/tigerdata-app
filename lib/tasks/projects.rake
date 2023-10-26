@@ -26,12 +26,14 @@ namespace :projects do
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
     data_sponsor = args[:data_sponsor]
     department = args[:department]
+    root_ns = Rails.configuration.mediaflux["api_root_ns"]
+
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)
 
     time_action("Getting counts by data_sponsor #{data_sponsor} department #{department} took") do
       count_request = Mediaflux::Http::CollectionCountRequest.new(
-        session_token: user.mediaflux_session, namespace: "/td-demo-001", data_sponsor: data_sponsor, department: department
+        session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor, department: department
       )
       count_request.resolve
       puts "#{count_request.count} records for #{data_sponsor} department #{department}"
