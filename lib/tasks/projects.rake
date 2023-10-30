@@ -5,7 +5,6 @@ namespace :projects do
     raise "Count must be specified" if count.blank?
     count = args[:count].to_i
     project_prefix = args[:prefix]
-    raise "Count must be specified" if count == 0
     raise "Project prefix must be specified" if project_prefix.nil?
 
     user = User.first
