@@ -2,7 +2,8 @@
 namespace :projects do
   desc "Times the creation of projects and querying by TigerData metadata fields"
   task :create_many, [:count, :prefix] => [:environment] do |_, args|
-    count = (args[:count] || "").to_i
+    raise "Count must be specified" if count.blank?
+    count = args[:count].to_i
     project_prefix = args[:prefix]
     raise "Count must be specified" if count == 0
     raise "Project prefix must be specified" if project_prefix.nil?
