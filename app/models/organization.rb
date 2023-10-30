@@ -71,12 +71,5 @@ class Organization
 
   def self.create_defaults(session_id:)
     create_root_ns(session_id: session_id)
-    organizations = []
-    organizations << { name: "rc", title: "Research Computing" }
-    organizations << { name: "pppl", title: "Princeton Physics Plasma Lab" }
-    organizations << { name: "pul", title: "Princeton University Library" }
-    organizations.each do |org|
-      Organization.create!(org[:name], org[:title], session_id: session_id)
-    end
   end
 end

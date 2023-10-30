@@ -38,7 +38,15 @@ module Mediaflux
               xml.id @id
               if @tigerdata_values
                 xml.meta do
-                  xml.send("tigerdata:project", "xmlns:tigerdata" => "tigerdata") do
+                  # TODO: The parameters to xml.send() need to be adjusted as indicated on
+                  # GitHub issue https://github.com/pulibrary/tiger-data-app/issues/227
+                  #
+                  # The values we are passing right here produce the correct XML
+                  # structure but the wrong xmlns value, which we manually adjust
+                  # in request.rb
+                  #
+                  # See also https://nokogiri.org/rdoc/Nokogiri/XML/Builder.html
+                  xml.send("tigerdata:project", "xmlns" => "tigerdata:project") do
                     xml.code @tigerdata_values[:code]
                     xml.title @tigerdata_values[:title]
                     xml.description @tigerdata_values[:description]

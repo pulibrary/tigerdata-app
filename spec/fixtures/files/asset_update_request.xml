@@ -5,13 +5,13 @@
       <id>1234</id>
       <meta>
         <tigerdata:project xmlns:tigerdata="tigerdata">
-          <tigerdata:code>code</tigerdata:code>
-          <tigerdata:title>title</tigerdata:title>
-          <tigerdata:description>description</tigerdata:description>
-          <tigerdata:data_sponsor>data_sponsor</tigerdata:data_sponsor>
-          <tigerdata:data_manager>data_manager</tigerdata:data_manager>
-          <tigerdata:departments>RDSS</tigerdata:departments>
-          <tigerdata:departments>HPC</tigerdata:departments>
+          <code>code</code>
+          <title>title</title>
+          <description>description</description>
+          <data_sponsor>data_sponsor</data_sponsor>
+          <data_manager>data_manager</data_manager>
+          <departments>RDSS</departments>
+          <departments>HPC</departments>
         </tigerdata:project>
       </meta>
     </args>
