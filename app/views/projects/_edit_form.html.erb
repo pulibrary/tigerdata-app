@@ -31,11 +31,11 @@
       Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
       send back to the controller (we don't want to lose this value)
     -->
-    <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" readonly value="<%= @project.metadata[:directory] %>" />
+    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" readonly value="<%= @project.metadata[:directory] %>" />
       (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
       This project has already been saved to Mediaflux and the directory cannot be changed</p>
   <% else %>
-    <p>Project Directory: /tigerdata/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
+    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
   <% end %>
 
   <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
