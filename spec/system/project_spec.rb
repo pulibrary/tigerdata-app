@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:read_only) { FactoryBot.create :user }
+  let(:read_write) { FactoryBot.create :user }
   let(:metadata) do
     {
       data_sponsor: "pul123",
@@ -11,7 +13,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       directory: "project-123",
       title: "project 123",
       departments: ["RDSS"],
-      description: "hello world"
+      description: "hello world",
+      data_user_read_only: [read_only.uid],
+      data_user_read_write: [read_write.uid]
     }
   end
 
@@ -84,8 +88,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Create page" do
     let(:data_manager) { FactoryBot.create :user }
-    let(:read_only) { FactoryBot.create :user }
-    let(:read_write) { FactoryBot.create :user }
     it "allows the user to create a project" do
       sign_in sponsor_user
       visit "/"
@@ -102,6 +104,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       expect(page).to have_content("This project has not been saved to Mediaflux")
       expect(page).to have_content("My test project")
+      expect(page).to have_content(read_only.uid)
+      expect(page).to have_content(read_write.uid)
     end
   end
 end
