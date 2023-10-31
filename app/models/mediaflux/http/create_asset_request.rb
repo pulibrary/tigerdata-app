@@ -66,6 +66,12 @@ module Mediaflux
                     @tigerdata_values[:departments].each do |department|
                       xml.departments department
                     end
+                    @tigerdata_values[:data_user_read_only].each do |ro_user|
+                      xml.data_users_ro ro_user
+                    end
+                    @tigerdata_values[:data_user_read_write].each do |rw_user|
+                      xml.data_users_rw rw_user
+                    end
                     xml.created_on @tigerdata_values[:created_on]
                     xml.created_by @tigerdata_values[:created_by]
                   end
