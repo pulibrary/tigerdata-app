@@ -4,6 +4,6 @@ Requesting User Name: <%= @project.created_by_user.display_name %>
 Data Sponsor: <%= @project.metadata[:data_sponsor] %>
 Data Manager: <%= @project.metadata[:data_manager] %>
 Affiliated Departments: <%= @project.departments.join(", ") %>
-Project Directory: /tigerdata/<%= @project.metadata[:directory] %>
+Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %>
 Title: <%= @project.metadata[:title] %>
 Description: <%= @project.metadata[:description] %>

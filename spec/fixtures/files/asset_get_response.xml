@@ -4,9 +4,9 @@
     <result>
       <asset id="1065" version="1" vid="1515">
         <type>content/unknown</type>
-        <namespace id="1099">/tigerdata/td-demo-001</namespace>
+        <namespace id="1099">/td-test-001</namespace>
         <parent>1053</parent>
-        <path>/tigerdata/td-demo-001/collection-96-55948/file-96-57045</path>
+        <path>/td-test-001/collection-96-55948/file-96-57045</path>
         <name>file-96-57045</name>
         <creator id="15">
           <domain>system</domain>

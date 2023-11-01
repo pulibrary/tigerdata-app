@@ -22,7 +22,7 @@ RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
       expect(metadata[:creator]).to eq("manager")
       expect(metadata[:description]).to eq("")
       expect(metadata[:collection]).to be_falsey
-      expect(metadata[:path]).to eq("/tigerdata/td-demo-001/collection-96-55948/file-96-57045")
+      expect(metadata[:path]).to eq("/td-test-001/collection-96-55948/file-96-57045")
       expect(metadata[:type]).to eq("content/unknown")
       expect(metadata[:size]).to eq("")
       expect(metadata[:size_human]).to eq("")
@@ -42,7 +42,7 @@ RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path]).to eq("/tigerdata/td-demo-001/collection-96-58278")
+        expect(metadata[:path]).to eq("/td-test-001/collection-96-58278")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("")
         expect(metadata[:size_human]).to eq("")
