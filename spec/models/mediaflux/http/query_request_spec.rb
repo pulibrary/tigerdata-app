@@ -13,12 +13,12 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
     before do
       stub_request(:post, mediflux_url)
         .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    "\
-                    "<args>\n      <where>namespace='/tigerdata/td-demo-001'</where>\n      <idx>1</idx>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n")
+                    "<args>\n      <where>namespace='/td-test-001'</where>\n      <idx>1</idx>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
     it "returns a cursor" do
-      query_request = described_class.new(session_token: "secretsecret/2/31", aql_query: "namespace='/tigerdata/td-demo-001'")
+      query_request = described_class.new(session_token: "secretsecret/2/31", aql_query: "namespace='/td-test-001'")
       result = query_request.result
       expect(result[:ids]).to eq(["1057", "1058", "1059", "1060", "1061", "1062", "1063", "1064", "1065", "1066"])
       expect(result[:size]).to eq(0)

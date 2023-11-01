@@ -4,18 +4,18 @@
   <h2>Roles</h2>
   <p>Data Sponsor: <%= @project.metadata[:data_sponsor] %></p>
   <p>Data Manager: <%= @project.metadata[:data_manager] %></p>
-  
+
   <%if @project.metadata[:data_user_read_only] %>
-  <p>Read Only: 
-    <% @project.metadata[:data_user_read_only].each do |user|%> 
+  <p>Read Only:
+    <% @project.metadata[:data_user_read_only].each do |user|%>
       <p><%= user%> </p>
     <%end%>
     </p>
   <%end%>
 
   <%if @project.metadata[:data_user_read_write] %>
-  <p>Read/write: 
-    <% @project.metadata[:data_user_read_write].each do |user|%> 
+  <p>Read/write:
+    <% @project.metadata[:data_user_read_write].each do |user|%>
       <p><%= user%> </p>
     <%end%>
     </p>
@@ -25,7 +25,7 @@
 <div>
   <h2>Project Description</h2>
   <p>Affiliated Departments: <%= @project.departments.join(", ") %></p>
-  <p>Project Directory: /tigerdata/<%= @project.metadata[:directory] %></p>
+  <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></p>
   <p>Title: <%= @project.metadata[:title] %></p>
   <p>Description:<br/>
     <%= @project.metadata[:description] %>

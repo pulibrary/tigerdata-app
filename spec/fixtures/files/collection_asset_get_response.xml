@@ -4,8 +4,8 @@
     <result>
       <asset id="1065" version="1" collection="true" vid="1516">
         <type>application/arc-asset-collection</type>
-        <namespace id="1099">/tigerdata/td-demo-001</namespace>
-        <path>/tigerdata/td-demo-001/collection-96-58278</path>
+        <namespace id="1099">/td-test-001</namespace>
+        <path>/td-test-001/collection-96-58278</path>
         <name>collection-96-58278</name>
         <creator id="15">
           <domain>system</domain>
