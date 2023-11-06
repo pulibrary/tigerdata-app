@@ -4,10 +4,25 @@
   <p>Data Sponsor: <input type="text" id="data_sponsor" name="data_sponsor" required autofocus value="<%= @project.metadata[:data_sponsor] %>" /></p>
   <p>Data Manager: <input type="text" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
-  <p>Read Only: <input type="text" id="data_user_read_only" name="data_user_read_only"  value="<%= (@project.metadata[:data_user_read_only] || []).join(",")%>" /></p>
-  <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= (@project.metadata[:data_user_read_write] || []).join(",") %>" /></p>
 
 
+  <div>
+    <p>Read Only:</p>
+    <ul id="ro-users-list">
+      <% (@project.metadata[:data_user_read_only] || []).each do |user| %>
+        <li><%= user %></li>
+      <% end %>
+    </ul>
+    <div>
+      <input id="ro-user-uid-to-add" placeholder="netid"></input>
+      <%= link_to "Add User", "#", id: "btn-add-ro-user", class: "btn btn-secondary" %>
+      <span id="add-ro-user-message"></span>
+    </div>
+  </div>
+
+  <div>
+    <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= (@project.metadata[:data_user_read_write] || []).join(",") %>" /></p>
+  </div>
 </div>
 
 
@@ -48,3 +63,22 @@
 <div class="actions">
   <input type="submit" class="btn btn-primary" value="Save" />
 </div>
+
+<script>
+  $(() => {
+    // Adds a read-only user
+    $('#btn-add-ro-user').on('click', () => {
+      var netIdToAdd = $('#ro-user-uid-to-add').val();
+      $('#ro-users-list').append("<li>" + netIdToAdd);
+      $('#ro-user-uid-to-add').val("");
+      $('#ro-user-uid-to-add').focus();
+      return false;
+    });
+
+    // Adds a read-write user
+    $('#btn-add-ro-user').on('click', () => {
+      // Claudia was here
+      return false;
+    });
+  })
+</script>
