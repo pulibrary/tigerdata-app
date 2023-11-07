@@ -21,7 +21,18 @@
   </div>
 
   <div>
-    <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= (@project.metadata[:data_user_read_write] || []).join(",") %>" /></p>
+    <p>Read/Write:</p>
+    <ul id = "rw-users-list">
+      <% (@project.metadata[:data_user_read_write] || []).each do |user|%>
+        <li> <%=user%> </li>
+      <%end%>
+    </ul>
+  </div>
+
+  <div>
+    <input id = "rw-user-uid-to-add" placeholder = "netid"> </input>
+    <%= link_to "Add User", "#", id: "btn-add-rw-user", class: "btn btn-secondary" %>
+    <span id = "add-rw-user-message"></span>
   </div>
 </div>
 
@@ -76,8 +87,11 @@
     });
 
     // Adds a read-write user
-    $('#btn-add-ro-user').on('click', () => {
-      // Claudia was here
+    $('#btn-add-rw-user').on('click', () => {
+      var netIdToAdd = $('#rw-user-uid-to-add').val();
+      $('#rw-users-list').append("<li>" + netIdToAdd);
+      $('#rw-user-uid-to-add').val("");
+      $('#rw-user-uid-to-add').focus();
       return false;
     });
   })
