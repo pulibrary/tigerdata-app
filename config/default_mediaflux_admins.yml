@@ -9,6 +9,7 @@ production:
   - knight # Robert Knight
   - kl37 # Kate Lynch
   - mjc12 # Matt Chandler
+  - rl3667 # Robert-Anthony Lee-Faison
 staging:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
@@ -19,6 +20,7 @@ staging:
   - knight # Robert Knight
   - kl37 # Kate Lynch
   - mjc12 # Matt Chandler
+  - rl3667 # Robert-Anthony Lee-Faison
 development:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
@@ -27,5 +29,6 @@ development:
   - hc8719 # Hector Correa
   - jrg5 # James Griffin
   - kl37 # Kate Lynch
+  - rl3667 # Robert-Anthony Lee-Faison
 test:
   - fake1 # Fake user for testing
