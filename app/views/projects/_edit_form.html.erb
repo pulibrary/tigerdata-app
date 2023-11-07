@@ -107,27 +107,18 @@
       return false;
     });
 
-    // Delete read-write user
-    $('.delete-rw-user').on('click', (el) => {
-      var liToDelete = $(el.target).data('uid');
-      $("#" + liToDelete).remove();
-      return false;
-    });
-
-
-    // Wire up the delete button for all users listed in the group.
+    // Wire up the delete button for all read-write users.
     //
     // Notice the use of $(document).on("click", selector, ...) instead of the
     // typical $(selector).on("click", ...). This syntax is required so that
     // we can detect the click even on HTML elements _added on the fly_ which
     // is the case when a user adds a new submitter or admin to the group.
     // Reference: https://stackoverflow.com/a/17086311/446681
-    $(document).on('click', '.delete-user-from-group', (el) => {
-      const url = pdc.deleteUserFromGroupUrl;
-      const uid = $(el.target).data('uid');
+    $(document).on('click', '.delete-rw-user', (el) => {
+      var uid = $(el.target).data('uid');
       const message = `Revoke access to user ${uid}`;
       if (window.confirm(message)) {
-        deleteUserFromGroup(el, url, uid);
+        $("#" + uid).remove();
       }
       return false;
     });
