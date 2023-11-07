@@ -21,7 +21,9 @@ class VersionFooter
   # Returns a hash with version information.
   def self.info
     reset! if stale?
-    { sha: git_sha, branch: branch, version: version, stale: stale?, tagged_release: tagged_release? }
+    { sha: git_sha, branch:, version:, stale: stale?, tagged_release: tagged_release? }
+  rescue StandardError => ex
+    { error: "Error retrieving version information: #{ex.message}" }
   end
 
   def self.reset!
@@ -44,7 +46,7 @@ class VersionFooter
 
   def self.git_sha
     @@git_sha ||= if File.exist?(revisions_logfile)
-                    `tail -1 #{revisions_logfile}`.chomp.split(" ")[3].gsub(/\)$/, "")
+                    log_line(revisions_logfile).chomp.split(" ")[3].gsub(/\)$/, "")
                   elsif Rails.env.development? || Rails.env.test?
                     `git rev-parse HEAD`.chomp
                   else
@@ -59,7 +61,7 @@ class VersionFooter
 
   def self.branch
     @@branch ||= if File.exist?(revisions_logfile)
-                   `tail -1 #{revisions_logfile}`.chomp.split(" ")[1]
+                   log_line(revisions_logfile).chomp.split(" ")[1]
                  elsif Rails.env.development? || Rails.env.test?
                    `git rev-parse --abbrev-ref HEAD`.chomp
                  else
@@ -69,7 +71,7 @@ class VersionFooter
 
   def self.version
     @@version ||= if File.exist?(revisions_logfile)
-                    deployed = `tail -1 #{revisions_logfile}`.chomp.split(" ")[7]
+                    deployed = log_line(revisions_logfile).chomp.split(" ")[7]
                     Date.parse(deployed).strftime("%d %B %Y")
                   else
                     "Not in deployed environment"
@@ -97,6 +99,15 @@ class VersionFooter
   def self.revisions_logfile=(x)
     @@stale = true
     @@revisions_logfile = x
+  end
+
+  def self.log_line(revisions_logfile)
+    log_line = `tail -1 #{revisions_logfile}`
+    if log_line.include?("rolled back")
+      grep_lines = `grep #{log_line.chomp.split(" ").last} #{revisions_logfile}`.split("\n")
+      log_line = grep_lines.first
+    end
+    log_line
   end
 end
 # rubocop:enable RuboCop::Cop::Style::ClassVars
