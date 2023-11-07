@@ -24,7 +24,13 @@
     <p>Read/Write:</p>
     <ul id = "rw-users-list">
       <% (@project.metadata[:data_user_read_write] || []).each do |user|%>
-        <li> <%=user%> </li>
+        <li id="<%= user %>"> <%=user%>
+          <span>
+            <a class="delete-rw-user" data-uid="<%= user %>" href="#" title="Revoke user ability to write">
+              <i class="bi bi-trash delete_icon" data-uid="<%= user %>"></i>xxx
+            </a>
+          </span>
+        </li>
       <%end%>
     </ul>
   </div>
@@ -89,9 +95,40 @@
     // Adds a read-write user
     $('#btn-add-rw-user').on('click', () => {
       var netIdToAdd = $('#rw-user-uid-to-add').val();
-      $('#rw-users-list').append("<li>" + netIdToAdd);
+      var html = `<li id="${netIdToAdd}">${netIdToAdd}
+        <span>
+          <a class="delete-rw-user" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to write">
+              <i class="bi bi-trash delete_icon" data-uid="${netIdToAdd}"></i>xxx
+          </a>
+        </span>`;
+      $('#rw-users-list').append(html);
       $('#rw-user-uid-to-add').val("");
       $('#rw-user-uid-to-add').focus();
+      return false;
+    });
+
+    // Delete read-write user
+    $('.delete-rw-user').on('click', (el) => {
+      var liToDelete = $(el.target).data('uid');
+      $("#" + liToDelete).remove();
+      return false;
+    });
+
+
+    // Wire up the delete button for all users listed in the group.
+    //
+    // Notice the use of $(document).on("click", selector, ...) instead of the
+    // typical $(selector).on("click", ...). This syntax is required so that
+    // we can detect the click even on HTML elements _added on the fly_ which
+    // is the case when a user adds a new submitter or admin to the group.
+    // Reference: https://stackoverflow.com/a/17086311/446681
+    $(document).on('click', '.delete-user-from-group', (el) => {
+      const url = pdc.deleteUserFromGroupUrl;
+      const uid = $(el.target).data('uid');
+      const message = `Revoke access to user ${uid}`;
+      if (window.confirm(message)) {
+        deleteUserFromGroup(el, url, uid);
+      }
       return false;
     });
   })
