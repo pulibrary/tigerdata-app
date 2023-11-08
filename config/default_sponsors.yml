@@ -8,6 +8,7 @@ production:
   - jrg5 # James Griffin
   - knight # Robert Knight
   - kl37 # Kate Lynch
+  - rl3667 # Robert-Anthony Lee-Faison
   - mjc12 # Matt Chandler
 staging:
   - bs3097 # Bess Sadler
@@ -18,6 +19,7 @@ staging:
   - jrg5 # James Griffin
   - knight # Robert Knight
   - kl37 # Kate Lynch
+  - rl3667 # Robert-Anthony Lee-Faison
   - mjc12 # Matt Chandler
 development:
   - bs3097 # Bess Sadler
@@ -26,6 +28,7 @@ development:
   - fn8243 # Favour Nwogbo
   - hc8719 # Hector Correa
   - jrg5 # James Griffin
+  - rl3667 # Robert-Anthony Lee-Faison
   - kl37 # Kate Lynch
 test:
   - fake1 # Fake user for testing
