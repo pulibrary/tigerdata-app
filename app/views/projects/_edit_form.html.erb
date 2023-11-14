@@ -10,10 +10,19 @@
     <p>Read Only:</p>
     <ul id="ro-users-list">
       <% (@project.metadata[:data_user_read_only] || []).each do |user| %>
-        <li><%= user %></li>
+        <li id ="><%= user %>">
+        <%=user%>
+        <span>
+            <a class="delete-ro-user" data-uid="<%= user %>" href="#" title="Revoke user ability to read">
+              <i class="bi bi-trash delete_icon" data-uid="<%= user %>"></i>xxx
+            </a>
+        </span>
+        </li>
       <% end %>
     </ul>
     <div>
+
+
       <input id="ro-user-uid-to-add" placeholder="netid"></input>
       <%= link_to "Add User", "#", id: "btn-add-ro-user", class: "btn btn-secondary" %>
       <span id="add-ro-user-message"></span>
@@ -86,7 +95,13 @@
     // Adds a read-only user
     $('#btn-add-ro-user').on('click', () => {
       var netIdToAdd = $('#ro-user-uid-to-add').val();
-      $('#ro-users-list').append("<li>" + netIdToAdd);
+      var html = `<li id="${netIdToAdd}">${netIdToAdd}
+        <span>
+          <a class="delete-ro-user" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
+              <i class="bi bi-trash delete_icon" data-uid="${netIdToAdd}"></i>xxx
+          </a>
+        </span>`;
+      $('#ro-users-list').append(html);
       $('#ro-user-uid-to-add').val("");
       $('#ro-user-uid-to-add').focus();
       return false;
@@ -107,8 +122,16 @@
       return false;
     });
 
+    // Delete button for read-only users
+      $(document).on('click', '.delete-ro-user', (el) => {
+      var uid = $(el.target).data('uid');
+      const message = `Revoke access to user ${uid}`;
+      if (window.confirm(message)) {
+        $("#" + uid).remove();
+      }
+      return false;
+    });
     // Wire up the delete button for all read-write users.
-    //
     // Notice the use of $(document).on("click", selector, ...) instead of the
     // typical $(selector).on("click", ...). This syntax is required so that
     // we can detect the click even on HTML elements _added on the fly_ which
