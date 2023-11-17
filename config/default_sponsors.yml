@@ -10,6 +10,7 @@ production:
   - kl37 # Kate Lynch
   - rl3667 # Robert-Anthony Lee-Faison
   - mjc12 # Matt Chandler
+  - jh6441 # Jaymee Hyppolite
 staging:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
@@ -21,6 +22,7 @@ staging:
   - kl37 # Kate Lynch
   - rl3667 # Robert-Anthony Lee-Faison
   - mjc12 # Matt Chandler
+  - jh6441 # Jaymee Hyppolite
 development:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
@@ -30,5 +32,6 @@ development:
   - jrg5 # James Griffin
   - rl3667 # Robert-Anthony Lee-Faison
   - kl37 # Kate Lynch
+  - jh6441 # Jaymee Hyppolite
 test:
   - fake1 # Fake user for testing
