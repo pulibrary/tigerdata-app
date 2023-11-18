@@ -8,6 +8,7 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
         .skipping(:'color-contrast') # false positives
+        .excluding(".tt-hint") # Issue is in typeahead.js library
     end
   end
 end
