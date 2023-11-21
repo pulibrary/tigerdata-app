@@ -53,6 +53,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_content "project 123"
       expect(page).to have_content "This project has not been saved to Mediaflux"
       expect(page).not_to have_button "Approve Project"
+      expect(page).to be_axe_clean
+        .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
     end
 
     context "An Mediaflux Administrator" do
