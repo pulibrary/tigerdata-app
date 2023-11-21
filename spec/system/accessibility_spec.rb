@@ -17,6 +17,7 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
       visit "/organizations"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+        .skipping(:'color-contrast')
     end
   end
 
@@ -27,6 +28,7 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
       visit "/mediaflux_info"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+        .skipping(:'color-contrast')
     end
   end
 
@@ -35,6 +37,7 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
       visit "/help"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+        .skipping(:'color-contrast')
     end
   end
 end

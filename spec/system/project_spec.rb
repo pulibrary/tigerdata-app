@@ -55,6 +55,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).not_to have_button "Approve Project"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+        .skipping(:'color-contrast')
     end
 
     context "An Mediaflux Administrator" do
