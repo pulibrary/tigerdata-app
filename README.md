@@ -184,6 +184,13 @@ The MediaFlux service documentation may be accessed using http://localhost:8888/
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
 
+### Add Yourself as a Project Sponsor
+
+1. Edit config/default_sponsors.yml
+   1. Add your netid in each section
+2. Run the rake task to update the config file
+   1. `bundle exec rake roles:default_sponsors`
+
 ### Starting the development server
 
 1. `bundle exec rails s -p 3000`
