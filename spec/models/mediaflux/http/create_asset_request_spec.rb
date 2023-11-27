@@ -27,7 +27,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       before do
         stub_request(:post, mediflux_url)
           .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.create\" session=\"secretsecret/2/31\">\n    "\
-                      "<args>\n      <name>testasset</name>\n      <collection contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n"\
+                      "<args>\n      <name>testasset</name>\n      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n"\
                       "      <type>application/arc-asset-collection</type>\n    </args>\n  </service>\n</request>\n")
           .to_return(status: 200, body: create_response, headers: {})
       end
