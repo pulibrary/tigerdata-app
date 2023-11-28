@@ -136,6 +136,9 @@ You will also want to run the vite development server:
 
 Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md)
 
+1. Once mediaflux is running locally
+  1. `bundle exec rake schema:create`
+
 ##### Authentication
 
 By default, there exists for the MediaFlux deployment a user account with the following credentials:
@@ -188,8 +191,11 @@ The MediaFlux service documentation may be accessed using http://localhost:8888/
 
 1. Edit config/default_sponsors.yml
    1. Add your netid in each section
-2. Run the rake task to update the config file
+2. Edit config/default_mediaflux_admins.yml
+   1. Add your netid in each section
+3. Run the rake task to update the config file
    1. `bundle exec rake roles:default_sponsors`
+   2. `bundle exec rake roles:default_mediaflux_admins`
 
 ### Starting the development server
 
