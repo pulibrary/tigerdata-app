@@ -6,6 +6,7 @@ class ProjectsController < ApplicationController
   end
 
   def create
+    # TODO: process the read only users
     @project = Project.new
     @project.metadata = form_metadata
     @project.created_by_user = current_user
@@ -29,6 +30,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
+    # TODO: process the read only users
     @project = Project.find(params[:id])
     @project.metadata = form_metadata
     @project.save!

@@ -1,10 +1,15 @@
+<style>
+  .grayed-out {
+    background-color: #e1e1e1
+  }
+</style>
+
 <div>
   <h2>Project Roles</h2>
 
   <p>Data Sponsor: <input type="text" id="data_sponsor" name="data_sponsor" required autofocus value="<%= @project.metadata[:data_sponsor] %>" /></p>
   <p>Data Manager: <input type="text" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
-
 
   <div>
     <p>Read Only:</p>
@@ -86,6 +91,9 @@
   </p>
 </div>
 
+<!-- Keeps track of added read only users -->
+<input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
+
 <div class="actions">
   <input type="submit" class="btn btn-primary" value="Save" />
 </div>
@@ -94,12 +102,23 @@
   $(() => {
     // Adds a read-only user
     $('#btn-add-ro-user').on('click', () => {
+
+      // increase the Read Only user counter
+      var counter = parseInt($('#ro_user_counter').val(), 10);
+      counter += 1;
+      $('#ro_user_counter').val(counter)
+
+      // Define an ID for our new read only user
+      var ro_user_id = `ro_user_${counter}`;
+
+      // Create an HTML input box for the new user
       var netIdToAdd = $('#ro-user-uid-to-add').val();
-      var html = `<li id="${netIdToAdd}">${netIdToAdd}
-        <span>
-          <a class="delete-ro-user" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
-              <i class="bi bi-trash delete_icon" data-uid="${netIdToAdd}"></i>xxx
+      var html = `<input id="${ro_user_id}" name="${ro_user_id}" value="${netIdToAdd}" readonly class="grayed-out" />
+        <span id="${ro_user_id}_delete_icon">
+          <a class="delete-ro-user" data-el-id="${ro_user_id}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
+              <i class="bi bi-trash delete_icon" data-el-id="${ro_user_id}" data-uid="${netIdToAdd}"></i>xxx
           </a>
+          <br/>
         </span>`;
       $('#ro-users-list').append(html);
       $('#ro-user-uid-to-add').val("");
@@ -123,11 +142,14 @@
     });
 
     // Delete button for read-only users
-      $(document).on('click', '.delete-ro-user', (el) => {
+    $(document).on('click', '.delete-ro-user', (el) => {
       var uid = $(el.target).data('uid');
+      var ro_user_id = $(el.target).data('el-id');
+      var ro_user_delete_icon = ro_user_id + "_delete_icon";
       const message = `Revoke access to user ${uid}`;
       if (window.confirm(message)) {
-        $("#" + uid).remove();
+        $("#" + ro_user_id).remove();
+        $("#" + ro_user_delete_icon).remove();
       }
       return false;
     });
