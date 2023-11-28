@@ -79,6 +79,7 @@ module Mediaflux
               end
               if collection
                 xml.collection do
+                  xml.parent.set_attribute("cascade-contained-asset-index", true)
                   xml.parent.set_attribute("contained-asset-index", true)
                   xml.parent.set_attribute("unique-name-index", true)
                   xml.text(collection)
