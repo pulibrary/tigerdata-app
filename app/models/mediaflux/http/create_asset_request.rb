@@ -9,12 +9,14 @@ module Mediaflux
       # @param name [String] Name of the Asset
       # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil)
+      # @param xml_namespace [String]
+      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil)
         super(session_token: session_token)
         @namespace = namespace
         @asset_name = name
         @collection = collection
         @tigerdata_values = tigerdata_values
+        @xml_namespace = xml_namespace
       end
 
       # Specifies the Mediaflux service to use when creating assets
@@ -41,6 +43,7 @@ module Mediaflux
         #     >
         #
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/CyclomaticComplexity
         # rubocop:disable Metrics/AbcSize
         def build_http_request_body(name:)
           super do |xml|
@@ -57,19 +60,23 @@ module Mediaflux
                   # in request.rb
                   #
                   # See also https://nokogiri.org/rdoc/Nokogiri/XML/Builder.html
-                  xml.send("tigerdata:project", "xmlns" => "tigerdata:project") do
+                  element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
+                  xml.send(element_name, "xmlns" => element_name) do
                     xml.code @tigerdata_values[:code]
                     xml.title @tigerdata_values[:title]
                     xml.description @tigerdata_values[:description]
                     xml.data_sponsor @tigerdata_values[:data_sponsor]
                     xml.data_manager @tigerdata_values[:data_manager]
-                    @tigerdata_values[:departments].each do |department|
+                    departments = @tigerdata_values[:departments] || []
+                    departments.each do |department|
                       xml.departments department
                     end
-                    @tigerdata_values[:data_user_read_only].each do |ro_user|
+                    ro_users = @tigerdata_values[:data_user_read_only] || []
+                    ro_users.each do |ro_user|
                       xml.data_users_ro ro_user
                     end
-                    @tigerdata_values[:data_user_read_write].each do |rw_user|
+                    rw_users = @tigerdata_values[:data_user_read_write] || []
+                    rw_users.each do |rw_user|
                       xml.data_users_rw rw_user
                     end
                     xml.created_on @tigerdata_values[:created_on]
@@ -90,6 +97,7 @@ module Mediaflux
           end
         end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
     end
   end

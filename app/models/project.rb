@@ -30,8 +30,8 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
   end
 
-  def approve!(session_id:, created_by: netid)
-    asset_id = ProjectMediaflux.create!(project: self, session_id: session_id, created_by: created_by)
+  def approve!(session_id:, created_by: netid, xml_namespace: nil)
+    asset_id = ProjectMediaflux.create!(project: self, session_id: session_id, created_by: created_by, xml_namespace: xml_namespace)
     if asset_id.present?
       Rails.logger.debug "Project #{id} has been saved to MediaFlux (asset id #{asset_id.to_i})"
       self.mediaflux_id = asset_id.to_i

@@ -20,7 +20,8 @@ class ProjectsController < ApplicationController
 
   def approve
     @project = Project.find(params[:id])
-    @project.approve!(session_id: current_user.mediaflux_session, created_by: current_user.uid)
+    xml_namespace = params[:xml_namespace]
+    @project.approve!(session_id: current_user.mediaflux_session, created_by: current_user.uid, xml_namespace: xml_namespace)
     redirect_to @project
   end
 
