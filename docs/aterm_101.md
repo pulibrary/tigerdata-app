@@ -179,8 +179,10 @@ For example to upload the content of a local file on our machine to an existing 
 
 In practice the content of files is better updated via the `asset.import` command which allows to import files by reference and set configure what actions should performed on the uploaded files, for example whether we want to analyze the file (i.e. extract metadata from it) or generate checksums.
 
+Please note the format below only works if connecting to your local mediaflux.
+
 ```
-> asset.import :pid 1005 :url -by reference file:/etc
+> asset.import :parent 1005 :url -by reference file:/etc
 > asset.import :parent 1005 :url -by reference file:/etc :analyze false :gen-csum false :pgen false
 ```
 
