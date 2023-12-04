@@ -15,7 +15,9 @@ $ java -jar aterm.jar
 
 You'll need to enter your credentials for the server that you want to connect to.
 
-The credentials for the development server are under LastPass. Note that you must be on the VPN to connect to the development server.
+See the [local documents](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md) for starting your local server or connect to the development server.
+
+The credentails for the development server (td-meta1.princeton.edu) are your princeton credentails, utilizing the `princeton` Domain. Choose `HTPS` as you transport. Note that you must be on the VPN to connect to the development server.
 
 
 ## Basic commands
