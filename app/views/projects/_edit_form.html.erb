@@ -1,6 +1,20 @@
 <style>
-  .grayed-out {
-    background-color: #e1e1e1
+  .added_user_textbox {
+    background-color: #f4f2f2;
+    margin-bottom: 2px;
+  }
+
+  .delete_icon {
+    color: #bb6c6c;
+  }
+
+  .add_new_user_textbox {
+    margin-left: 30px;
+  }
+
+  .add_new_user_div {
+    margin-top: -15px;
+    margin-bottom: 10px;
   }
 </style>
 
@@ -18,8 +32,8 @@
         <span class="ro-user-item" data-uid="<%= user %>"></span>
       <% end %>
     </ul>
-    <div>
-      <input id="ro-user-uid-to-add" placeholder="netid"></input>
+    <div class="add_new_user_div">
+      <input id="ro-user-uid-to-add" placeholder="netid" class="add_new_user_textbox"></input>
       <%= link_to "Add User", "#", id: "btn-add-ro-user", class: "btn btn-secondary" %>
       <span id="add-ro-user-message"></span>
     </div>
@@ -34,8 +48,8 @@
     </ul>
   </div>
 
-  <div>
-    <input id = "rw-user-uid-to-add" placeholder = "netid"> </input>
+  <div class="add_new_user_div">
+    <input id = "rw-user-uid-to-add" placeholder = "netid" class="add_new_user_textbox"> </input>
     <%= link_to "Add User", "#", id: "btn-add-rw-user", class: "btn btn-secondary" %>
     <span id = "add-rw-user-message"></span>
   </div>
@@ -94,10 +108,10 @@
     }
 
     var addUserHtml = function(netIdToAdd, elementId, listElementId, textElementId) {
-      var html = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="grayed-out" />
+      var html = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="added_user_textbox" />
         <span id="${elementId}_delete_icon">
           <a class="delete-ro-user" data-el-id="${elementId}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
-              <i class="bi bi-trash delete_icon" data-el-id="${elementId}" data-uid="${netIdToAdd}"></i>xxx
+              <i class="bi bi-trash delete_icon" data-el-id="${elementId}" data-uid="${netIdToAdd}"></i>
           </a>
           <br/>
         </span>`;
@@ -108,18 +122,28 @@
 
     // Adds a read-only user
     $('#btn-add-ro-user').on('click', () => {
+      var netIdToAdd = $('#ro-user-uid-to-add').val();
+      if (netIdToAdd.trim() === "") {
+        // nothing to do
+        return false;
+      }
+
       var counter = counterIncrement('ro_user_counter');
       var roUserId = `ro_user_${counter}`;
-      var netIdToAdd = $('#ro-user-uid-to-add').val();
       addUserHtml(netIdToAdd, roUserId, 'ro-users-list', 'ro-user-uid-to-add');
       return false;
     });
 
     // Adds a read-write user
     $('#btn-add-rw-user').on('click', () => {
+      var netIdToAdd = $('#rw-user-uid-to-add').val();
+      if (netIdToAdd.trim() === "") {
+        // nothing to do
+        return false;
+      }
+
       var counter = counterIncrement('rw_user_counter');
       var rwUserId = `rw_user_${counter}`;
-      var netIdToAdd = $('#rw-user-uid-to-add').val();
       addUserHtml(netIdToAdd, rwUserId, 'rw-users-list', 'rw-user-uid-to-add');
       return false;
     });
@@ -135,7 +159,7 @@
       var uid = $(el.target).data('uid');
       var ro_user_id = $(el.target).data('el-id');
       var ro_user_delete_icon = ro_user_id + "_delete_icon";
-      const message = `Revoke access to user ${uid}`;
+      const message = `Revoke read-only access to user ${uid}`;
       if (window.confirm(message)) {
         $("#" + ro_user_id).remove();
         $("#" + ro_user_delete_icon).remove();
@@ -148,7 +172,7 @@
       var uid = $(el.target).data('uid');
       var rw_user_id = $(el.target).data('el-id');
       var rw_user_delete_icon = rw_user_id + "_delete_icon";
-      const message = `Revoke access to user ${uid}`;
+      const message = `Revoke read-write access to user ${uid}`;
       if (window.confirm(message)) {
         $("#" + rw_user_id).remove();
         $("#" + rw_user_delete_icon).remove();

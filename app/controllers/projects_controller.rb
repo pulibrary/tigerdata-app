@@ -48,26 +48,26 @@ class ProjectsController < ApplicationController
 
   private
 
-    def ro_counter
+    def read_only_counter
       params[:ro_user_counter].to_i
     end
 
-    def rw_counter
+    def read_write_counter
       params[:rw_user_counter].to_i
     end
 
-    def user_list_params(counter, prefix_hash)
+    def user_list_params(counter, key_prefix)
       users = []
       (1..counter).each do |i|
-        key = "#{prefix_hash}#{i}"
+        key = "#{key_prefix}#{i}"
         users << params[key]
       end
       users
     end
 
     def form_metadata
-      ro_users = user_list_params(ro_counter, "ro_user_")
-      rw_users = user_list_params(rw_counter, "rw_user_")
+      ro_users = user_list_params(read_only_counter, "ro_user_")
+      rw_users = user_list_params(read_write_counter, "rw_user_")
       {
         data_sponsor: params[:data_sponsor],
         data_manager: params[:data_manager],
