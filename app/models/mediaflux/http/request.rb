@@ -129,7 +129,7 @@ module Mediaflux
           args = { name: name }
           args[:session] = session_token unless session_token.nil?
 
-          Nokogiri::XML::Builder.new do |xml|
+          Nokogiri::XML::Builder.new(namespace_inheritance: false) do |xml|
             xml.request do
               xml.service(**args) do
                 yield xml if block_given?

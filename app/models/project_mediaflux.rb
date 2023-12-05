@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectMediaflux
-  def self.create!(project:, session_id:, created_by:)
+  def self.create!(project:, session_id:, created_by:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
 
     # Make sure the root namespace exists
@@ -14,7 +14,8 @@ class ProjectMediaflux
 
     # Create a collection asset under the new namespace and set its metadata
     tigerdata_values = project_values(project: project, created_by: created_by)
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values)
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+                                                             xml_namespace: xml_namespace)
     create_request.resolve
     create_request.id
   end
