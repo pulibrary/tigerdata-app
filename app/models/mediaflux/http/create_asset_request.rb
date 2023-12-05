@@ -4,6 +4,13 @@ module Mediaflux
     class CreateAssetRequest < Request
       attr_reader :namespace, :asset_name, :collection
 
+      # The default XML namespace which should be used for building the XML
+      #   Document transmitted in the body of the HTTP request
+      # @return [String]
+      def self.default_xml_namespace
+        "tigerdata"
+      end
+
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param name [String] Name of the Asset
@@ -16,7 +23,7 @@ module Mediaflux
         @asset_name = name
         @collection = collection
         @tigerdata_values = tigerdata_values
-        @xml_namespace = xml_namespace
+        @xml_namespace = xml_namespace || self.class.default_xml_namespace
       end
 
       # Specifies the Mediaflux service to use when creating assets

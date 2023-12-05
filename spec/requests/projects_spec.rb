@@ -110,7 +110,7 @@ RSpec.describe "/projects", type: :request do
       <name>big-data</name>
       <namespace>/td-test-001/big-data-ns</namespace>
       <meta>
-        <project xmlns="project">
+        <tigerdata:project xmlns:tigerdata="tigerdata">
           <code>big-data</code>
           <title>foo</title>
           <description>test2</description>
@@ -119,7 +119,7 @@ RSpec.describe "/projects", type: :request do
           <departments>RDSS</departments>
           <created_on>now</created_on>
           <created_by>pul123</created_by>
-        </project>
+        </tigerdata:project>
       </meta>
       <collection cascade-contained-asset-index="true" contained-asset-index="true" unique-name-index="true">true</collection>
       <type>application/arc-asset-collection</type>
