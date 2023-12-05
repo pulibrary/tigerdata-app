@@ -15,19 +15,10 @@
     <p>Read Only:</p>
     <ul id="ro-users-list">
       <% (@project.metadata[:data_user_read_only] || []).each do |user| %>
-        <li id ="><%= user %>">
-        <%=user%>
-        <span>
-            <a class="delete-ro-user" data-uid="<%= user %>" href="#" title="Revoke user ability to read">
-              <i class="bi bi-trash delete_icon" data-uid="<%= user %>"></i>xxx
-            </a>
-        </span>
-        </li>
+        <span class="ro-user-item" data-uid="<%= user %>"></span>
       <% end %>
     </ul>
     <div>
-
-
       <input id="ro-user-uid-to-add" placeholder="netid"></input>
       <%= link_to "Add User", "#", id: "btn-add-ro-user", class: "btn btn-secondary" %>
       <span id="add-ro-user-message"></span>
@@ -38,13 +29,7 @@
     <p>Read/Write:</p>
     <ul id = "rw-users-list">
       <% (@project.metadata[:data_user_read_write] || []).each do |user|%>
-        <li id="<%= user %>"> <%=user%>
-          <span>
-            <a class="delete-rw-user" data-uid="<%= user %>" href="#" title="Revoke user ability to write">
-              <i class="bi bi-trash delete_icon" data-uid="<%= user %>"></i>xxx
-            </a>
-          </span>
-        </li>
+        <span class="rw-user-item" data-uid="<%= user %>"></span>
       <%end%>
     </ul>
   </div>
@@ -101,58 +86,51 @@
 
 <script>
   $(() => {
-    // Adds a read-only user
-    $('#btn-add-ro-user').on('click', () => {
-
-      // increase the Read Only user counter
-      var counter = parseInt($('#ro_user_counter').val(), 10);
+    var counterIncrement = function(counterId) {
+      var counter = parseInt($(`#${counterId}`).val(), 10);
       counter += 1;
-      $('#ro_user_counter').val(counter);
+      $(`#${counterId}`).val(counter);
+      return counter;
+    }
 
-      // Define an ID for our new read only user
-      var ro_user_id = `ro_user_${counter}`;
-
-      // Create an HTML input box for the new user
-      var netIdToAdd = $('#ro-user-uid-to-add').val();
-      var html = `<input id="${ro_user_id}" name="${ro_user_id}" value="${netIdToAdd}" readonly class="grayed-out" />
-        <span id="${ro_user_id}_delete_icon">
-          <a class="delete-ro-user" data-el-id="${ro_user_id}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
-              <i class="bi bi-trash delete_icon" data-el-id="${ro_user_id}" data-uid="${netIdToAdd}"></i>xxx
+    var addUserHtml = function(netIdToAdd, elementId, listElementId, textElementId) {
+      var html = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="grayed-out" />
+        <span id="${elementId}_delete_icon">
+          <a class="delete-ro-user" data-el-id="${elementId}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
+              <i class="bi bi-trash delete_icon" data-el-id="${elementId}" data-uid="${netIdToAdd}"></i>xxx
           </a>
           <br/>
         </span>`;
-      $('#ro-users-list').append(html);
-      $('#ro-user-uid-to-add').val("");
-      $('#ro-user-uid-to-add').focus();
+      $(`#${listElementId}`).append(html);
+      $(`#${textElementId}`).val("");
+      $(`#${textElementId}`).focus();
+    }
+
+    // Adds a read-only user
+    $('#btn-add-ro-user').on('click', () => {
+      var counter = counterIncrement('ro_user_counter');
+      var roUserId = `ro_user_${counter}`;
+      var netIdToAdd = $('#ro-user-uid-to-add').val();
+      addUserHtml(netIdToAdd, roUserId, 'ro-users-list', 'ro-user-uid-to-add');
       return false;
     });
 
     // Adds a read-write user
     $('#btn-add-rw-user').on('click', () => {
-      // Increase the Read Write user counter
-      var counter = parseInt($('#rw_user_counter').val(), 10);
-      counter += 1;
-      $('#rw_user_counter').val(counter);
-
-      // Define an ID for our new read-write user
-      var rw_user_id = `rw_user_${counter}`;
-
-      // Create an HTML input box for the new user
+      var counter = counterIncrement('rw_user_counter');
+      var rwUserId = `rw_user_${counter}`;
       var netIdToAdd = $('#rw-user-uid-to-add').val();
-      var html = `<input id="${rw_user_id}" name="${rw_user_id}" value="${netIdToAdd}" readonly class="grayed-out" />
-        <span id="${rw_user_id}_delete_icon">
-          <a class="delete-rw-user" data-el-id="${rw_user_id}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
-              <i class="bi bi-trash delete_icon" data-el-id="${rw_user_id}" data-uid="${netIdToAdd}"></i>xxx
-          </a>
-          <br/>
-        </span>`;
-      $('#rw-users-list').append(html);
-      $('#rw-user-uid-to-add').val("");
-      $('#rw-user-uid-to-add').focus();
+      addUserHtml(netIdToAdd, rwUserId, 'rw-users-list', 'rw-user-uid-to-add');
       return false;
     });
 
-    // Delete button for read-only users
+    // Wire up the delete button for all read-only users.
+    //
+    // Notice the use of $(document).on("click", selector, ...) instead of the
+    // typical $(selector).on("click", ...). This syntax is required so that
+    // we can detect the click even on HTML elements _added on the fly_ which
+    // is the case when a user adds a new submitter or admin to the group.
+    // Reference: https://stackoverflow.com/a/17086311/446681
     $(document).on('click', '.delete-ro-user', (el) => {
       var uid = $(el.target).data('uid');
       var ro_user_id = $(el.target).data('el-id');
@@ -164,12 +142,8 @@
       }
       return false;
     });
+
     // Wire up the delete button for all read-write users.
-    // Notice the use of $(document).on("click", selector, ...) instead of the
-    // typical $(selector).on("click", ...). This syntax is required so that
-    // we can detect the click even on HTML elements _added on the fly_ which
-    // is the case when a user adds a new submitter or admin to the group.
-    // Reference: https://stackoverflow.com/a/17086311/446681
     $(document).on('click', '.delete-rw-user', (el) => {
       var uid = $(el.target).data('uid');
       var rw_user_id = $(el.target).data('el-id');
@@ -180,6 +154,22 @@
         $("#" + rw_user_delete_icon).remove();
       }
       return false;
+    });
+
+    // Render the pre-existing read-only users on the record
+    $('.ro-user-item').each((ix, el) => {
+      var counter = counterIncrement('ro_user_counter');
+      var roUserId = `ro_user_${counter}`;
+      var netIdToAdd = $(el).data("uid");
+      addUserHtml(netIdToAdd, roUserId, 'ro-users-list', 'ro-user-uid-to-add');
+    });
+
+    // Render the pre-existing read-write users on the record
+    $('.rw-user-item').each((ix, el) => {
+      var counter = counterIncrement('rw_user_counter');
+      var rwUserId = `rw_user_${counter}`;
+      var netIdToAdd = $(el).data("uid");
+      addUserHtml(netIdToAdd, rwUserId, 'rw-users-list', 'rw-user-uid-to-add');
     });
   })
 </script>
