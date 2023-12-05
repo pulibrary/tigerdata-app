@@ -47,6 +47,7 @@ class ProjectsController < ApplicationController
   end
 
   private
+
     def ro_counter
       params[:ro_user_counter].to_i
     end
