@@ -49,6 +49,17 @@ module Mediaflux
         Rails.configuration.mediaflux["api_port"].to_i
       end
 
+      # The default XML namespace which should be used for building the XML
+      #   Document transmitted in the body of the HTTP request
+      # @return [String]
+      def self.default_xml_namespace
+        "tigerdata"
+      end
+
+      def self.default_xml_namespace_uri
+        "http://tigerdata.princeton.edu"
+      end
+
       attr_reader :session_token
 
       # Constructor
@@ -148,9 +159,6 @@ module Mediaflux
           # GitHub issue: https://github.com/pulibrary/tiger-data-app/issues/227
           #
           # See create_asset_request.rb and update_asset_request.rb for more information.
-          if xml_payload.include?("asset.create") || xml_payload.include?("asset.set")
-            xml_payload.gsub!('xmlns="tigerdata:project"', 'xmlns:tigerdata="tigerdata"')
-          end
 
           Rails.logger.debug(xml_payload)
           if form_file.nil?

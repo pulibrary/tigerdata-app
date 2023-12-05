@@ -104,13 +104,13 @@ RSpec.describe "/projects", type: :request do
       let(:create_project_body) do
         <<-XML
 <?xml version="1.0"?>
-<request>
+<request xmlns:tigerdata="http://tigerdata.princeton.edu">
   <service name="asset.create" session="sessiontoken">
     <args>
       <name>big-data</name>
       <namespace>/td-test-001/big-data-ns</namespace>
       <meta>
-        <tigerdata:project xmlns:tigerdata="tigerdata">
+        <tigerdata:project>
           <code>big-data</code>
           <title>foo</title>
           <description>test2</description>
@@ -164,7 +164,7 @@ XML
           expect(project.in_mediaflux?).to be true
           # this ensures that the request was transmitted as expected
           expect(a_request(:post, mediaflux_url).with(
-            body: /<bar:project xmlns="bar:project"/
+            body: /<bar:project/
           )).to have_been_made.once
 
           expect(a_request(:post, mediaflux_url).with(
