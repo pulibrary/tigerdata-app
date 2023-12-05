@@ -6,7 +6,6 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    # TODO: process the read only users
     @project = Project.new
     @project.metadata = form_metadata
     @project.created_by_user = current_user
@@ -30,7 +29,6 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    # TODO: process the read only users
     @project = Project.find(params[:id])
     @project.metadata = form_metadata
     @project.save!
@@ -49,8 +47,26 @@ class ProjectsController < ApplicationController
   end
 
   private
+    def ro_counter
+      params[:ro_user_counter].to_i
+    end
+
+    def rw_counter
+      params[:rw_user_counter].to_i
+    end
+
+    def user_list_params(counter, prefix_hash)
+      users = []
+      (1..counter).each do |i|
+        key = "#{prefix_hash}#{i}"
+        users << params[key]
+      end
+      users
+    end
 
     def form_metadata
+      ro_users = user_list_params(ro_counter, "ro_user_")
+      rw_users = user_list_params(rw_counter, "rw_user_")
       {
         data_sponsor: params[:data_sponsor],
         data_manager: params[:data_manager],
@@ -58,8 +74,8 @@ class ProjectsController < ApplicationController
         directory: params[:directory],
         title: params[:title],
         description: params[:description],
-        data_user_read_only: (params[:data_user_read_only] || "").split(","),
-        data_user_read_write: (params[:data_user_read_write] || "").split(",")
+        data_user_read_only: ro_users,
+        data_user_read_write: rw_users
       }
     end
 end
