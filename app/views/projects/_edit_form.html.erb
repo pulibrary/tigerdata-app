@@ -28,7 +28,7 @@
   <div>
     <p>Read Only:</p>
     <ul id="ro-users-list">
-      <% (@project.metadata[:data_user_read_only] || []).each do |user| %>
+      <% (@project.metadata[:data_user_read_only] || []).compact.each do |user| %>
         <span class="ro-user-item" data-uid="<%= user %>"></span>
       <% end %>
     </ul>
@@ -42,7 +42,7 @@
   <div>
     <p>Read/Write:</p>
     <ul id = "rw-users-list">
-      <% (@project.metadata[:data_user_read_write] || []).each do |user|%>
+      <% (@project.metadata[:data_user_read_write] || []).compact.each do |user|%>
         <span class="rw-user-item" data-uid="<%= user %>"></span>
       <%end%>
     </ul>
