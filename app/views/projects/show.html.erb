@@ -2,28 +2,32 @@
 
 <div>
   <h2>Roles</h2>
-  <p>Data Sponsor: <%= @project.metadata[:data_sponsor] %></p>
-  <p>Data Manager: <%= @project.metadata[:data_manager] %></p>
+  <dl>
+  <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
+  <dt>Data Manager</dt> <dd> <%= @project.metadata[:data_manager] %></dd>
 
-  <p>Read Only:
+  <dt>Read Only</dt> <dd>
     <%if @project.metadata[:data_user_read_only].present? %>
       <% @project.metadata[:data_user_read_only].each do |user|%>
         <p><%= user%> </p>
       <%end%>
+      </dd>
     <%else%>
       None
     <%end%>
   </p>
 
-  <p>Read/write:
+  <dt>Read/write </dt><dd>
     <%if @project.metadata[:data_user_read_write].present? %>
       <% @project.metadata[:data_user_read_write].each do |user|%>
-        <p><%= user%> </p>
+        <p><%= user%> 
       <%end%>
+      </dd>
     <%else%>
       None
     <%end%>
   </p>
+  </dl>
 </div>
 
 <div>
