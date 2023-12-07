@@ -58,6 +58,33 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         .skipping(:'color-contrast')
     end
 
+    context "when the data user is empty" do
+      let(:metadata) do
+        {
+          data_sponsor: "pul123",
+          data_manager: "pul987",
+          directory: "project-123",
+          title: "project 123",
+          departments: ["RDSS"],
+          description: "hello world",
+          data_user_read_only: [],
+          data_user_read_write: []
+        }
+      end
+
+      it "shows none when the data user is empty" do
+        sign_in sponsor_user
+        visit "/projects/#{project_not_in_mediaflux.id}"
+        expect(page).to have_content "project 123"
+        expect(page).to have_content "This project has not been saved to Mediaflux"
+        expect(page).not_to have_button "Approve Project"
+        expect(page).to have_content "Read Only: None"
+        expect(page).to have_content "Read/write: None"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+      end
+    end
     context "An Mediaflux Administrator" do
       let(:mediaflux_admin_user) { FactoryBot.create(:mediaflux_admin) }
 

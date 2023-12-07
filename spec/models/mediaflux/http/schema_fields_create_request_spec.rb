@@ -14,6 +14,7 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
   let(:optional_field) { { name: "data_users_rw", type: "string", index: false, "min-occurs" => 0, label: "desc" } }
   let(:required_many_field) { { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "desc" } }
   let(:date_field) { { name: "created_on", type: "date", label: "desc" } }
+  let(:optional_field2) { { name: "updated_on", type: "date", label: "desc", index: false, "min-occurs" => 0, "max-occurs" => 1 } }
 
   describe "required indexed field" do
     it "submits the proper request" do
@@ -172,6 +173,39 @@ XML
         document: "project",
         description: "test document schema",
         fields: [date_field],
+        session_token: "secretsecret/2/31"
+      )
+      request.resolve
+
+      expect(request.response_xml.to_s).to eq schema_fields_create_response
+    end
+  end
+
+  describe "updated field" do
+    it "submits the proper request" do
+      request_body = <<-XML
+<?xml version=\"1.0\"?>
+<request>
+  <service name=\"asset.doc.type.update\" session=\"secretsecret/2/31\">
+    <args>
+      <create>true</create>
+      <description>test document schema</description>
+      <type>tigerdata:project</type>
+      <definition>
+        <element name=\"updated_on\" type=\"date\" label=\"desc\" index=\"false\" min-occurs=\"0\" max-occurs=\"1\"/>
+      </definition>
+    </args>
+  </service>
+</request>
+XML
+
+      stub_request(:post, mediaflux_url).with(body: request_body).to_return(status: 200, body: schema_fields_create_response, headers: {})
+
+      request = described_class.new(
+        schema_name: "tigerdata",
+        document: "project",
+        description: "test document schema",
+        fields: [optional_field2],
         session_token: "secretsecret/2/31"
       )
       request.resolve

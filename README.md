@@ -152,11 +152,11 @@ Alternatively, one may please use `docker/bin/shell` to create a terminal sessio
 
 ##### aterm Client
 
-The MediaFlux `aterm` may be accessed using http://localhost:8888/aterm/
+The MediaFlux `aterm` may be accessed using http://0.0.0.0:8888/aterm/
 
 ##### Desktop Client
 
-The MediaFlux desktop client may be accessed using http://localhost:8888/desktop/
+The MediaFlux desktop client may be accessed using http://0.0.0.0:8888/desktop/
 
 ##### Thick Client
 
@@ -180,7 +180,7 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 
 ##### Service Documentation
 
-The MediaFlux service documentation may be accessed using http://localhost:8888/mflux/service-docs/
+The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/mflux/service-docs/
 
 
 ### Running tests
