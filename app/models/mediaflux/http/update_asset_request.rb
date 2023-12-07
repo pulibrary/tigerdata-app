@@ -52,6 +52,8 @@ module Mediaflux
                     xml.description @tigerdata_values[:description]
                     xml.data_sponsor @tigerdata_values[:data_sponsor]
                     xml.data_manager @tigerdata_values[:data_manager]
+                    xml.updated_by @tigerdata_values[:updated_by]
+                    xml.updated_on @tigerdata_values[:updated_on]
                     @tigerdata_values[:departments].each do |department|
                       xml.departments department
                     end

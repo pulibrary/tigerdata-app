@@ -10,6 +10,8 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
       description: "description",
       data_sponsor: "data_sponsor",
       data_manager: "data_manager",
+      updated_by: "abc123",
+      updated_on: "now",
       departments: ["RDSS", "HPC"]
     }
   end

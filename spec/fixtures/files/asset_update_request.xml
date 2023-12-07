@@ -10,6 +10,8 @@
           <description>description</description>
           <data_sponsor>data_sponsor</data_sponsor>
           <data_manager>data_manager</data_manager>
+          <updated_by>abc123</updated_by>
+          <updated_on>now</updated_on>
           <departments>RDSS</departments>
           <departments>HPC</departments>
         </tigerdata:project>
