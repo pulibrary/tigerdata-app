@@ -155,11 +155,6 @@ module Mediaflux
           body = build_http_request_body(name: name)
           xml_payload = body.to_xml
 
-          # TODO: This horrible hack should be removed once we address
-          # GitHub issue: https://github.com/pulibrary/tiger-data-app/issues/227
-          #
-          # See create_asset_request.rb and update_asset_request.rb for more information.
-
           Rails.logger.debug(xml_payload)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
