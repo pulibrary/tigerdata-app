@@ -13,7 +13,7 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
   let(:required_not_indexed_field) { { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:optional_field) { { name: "data_users_rw", type: "string", index: false, "min-occurs" => 0, label: "desc" } }
   let(:required_many_field) { { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "desc" } }
-  let(:date_field) { { name: "created_on", type: "date", label: "desc" } }
+  let(:date_field) { { name: "created_on", type: "date", label: "desc", index: false, "min-occurs" => 1, "max-occurs" => 1 } }
   let(:optional_field2) { { name: "updated_on", type: "date", label: "desc", index: false, "min-occurs" => 0, "max-occurs" => 1 } }
 
   describe "required indexed field" do
@@ -159,7 +159,7 @@ XML
       <description>test document schema</description>
       <type>tigerdata:project</type>
       <definition>
-        <element name=\"created_on\" type=\"date\" label=\"desc\"/>
+        <element name=\"created_on\" type=\"date\" label=\"desc\" index=\"false\" min-occurs=\"1\" max-occurs=\"1\"/>
       </definition>
     </args>
   </service>
