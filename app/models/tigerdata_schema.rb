@@ -46,6 +46,9 @@ class TigerdataSchema
     departments = { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
     created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, label: "Timestamp project was created" }
     created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, label: "User that created the project" }
-    [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by]
+    updated_on = { name: "updated_on", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
+    updated_by = { name: "updated_by", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
+
+    [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by]
   end
 end
