@@ -5,12 +5,14 @@
   <p>Data Sponsor: <%= @project.metadata[:data_sponsor] %></p>
   <p>Data Manager: <%= @project.metadata[:data_manager] %></p>
 
-  <%if @project.metadata[:data_user_read_only] %>
+  <%if !@project.metadata[:data_user_read_only].blank? %>
   <p>Read Only:
     <% @project.metadata[:data_user_read_only].each do |user|%>
       <p><%= user%> </p>
     <%end%>
     </p>
+  <%else%>
+  <p>Read Only: None </p>
   <%end%>
 
   <%if @project.metadata[:data_user_read_write] %>
