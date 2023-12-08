@@ -1,13 +1,58 @@
+<style>
+  .added_user_textbox {
+    background-color: #f4f2f2;
+    margin-bottom: 2px;
+  }
+
+  .delete_icon {
+    color: #bb6c6c;
+  }
+
+  .add_new_user_textbox {
+    margin-left: 30px;
+  }
+
+  .add_new_user_div {
+    margin-top: -15px;
+    margin-bottom: 10px;
+  }
+</style>
+
 <div>
   <h2>Project Roles</h2>
 
   <p>Data Sponsor: <input type="text" id="data_sponsor" name="data_sponsor" required autofocus value="<%= @project.metadata[:data_sponsor] %>" /></p>
   <p>Data Manager: <input type="text" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
-  <p>Read Only: <input type="text" id="data_user_read_only" name="data_user_read_only"  value="<%= (@project.metadata[:data_user_read_only] || []).join(",")%>" /></p>
-  <p>Read/Write: <input type="text" id="data_user_read_write" name="data_user_read_write"  value="<%= (@project.metadata[:data_user_read_write] || []).join(",") %>" /></p>
 
+  <div>
+    <p>Read Only:</p>
+    <ul id="ro-users-list">
+      <% (@project.metadata[:data_user_read_only] || []).compact.each do |user| %>
+        <span class="ro-user-item" data-uid="<%= user %>"></span>
+      <% end %>
+    </ul>
+    <div class="add_new_user_div">
+      <input id="ro-user-uid-to-add" placeholder="netid" class="add_new_user_textbox"></input>
+      <%= link_to "Add User", "#", id: "btn-add-ro-user", class: "btn btn-secondary", title: "Adds a read only user" %>
+      <span id="add-ro-user-message"></span>
+    </div>
+  </div>
 
+  <div>
+    <p>Read/Write:</p>
+    <ul id = "rw-users-list">
+      <% (@project.metadata[:data_user_read_write] || []).compact.each do |user|%>
+        <span class="rw-user-item" data-uid="<%= user %>"></span>
+      <%end%>
+    </ul>
+  </div>
+
+  <div class="add_new_user_div">
+    <input id = "rw-user-uid-to-add" placeholder = "netid" class="add_new_user_textbox"> </input>
+    <%= link_to "Add User", "#", id: "btn-add-rw-user", class: "btn btn-secondary", title: "Adds a read write user" %>
+    <span id = "add-rw-user-message"></span>
+  </div>
 </div>
 
 
@@ -44,6 +89,10 @@
       rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
   </p>
 </div>
+
+<!-- Keeps track of added read-only and read-write users -->
+<input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
+<input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
 
 <div class="actions">
   <input type="submit" class="btn btn-primary" value="Save" />

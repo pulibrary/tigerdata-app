@@ -49,7 +49,26 @@ class ProjectsController < ApplicationController
 
   private
 
+    def read_only_counter
+      params[:ro_user_counter].to_i
+    end
+
+    def read_write_counter
+      params[:rw_user_counter].to_i
+    end
+
+    def user_list_params(counter, key_prefix)
+      users = []
+      (1..counter).each do |i|
+        key = "#{key_prefix}#{i}"
+        users << params[key]
+      end
+      users.compact.uniq
+    end
+
     def form_metadata
+      ro_users = user_list_params(read_only_counter, "ro_user_")
+      rw_users = user_list_params(read_write_counter, "rw_user_")
       {
         data_sponsor: params[:data_sponsor],
         data_manager: params[:data_manager],
@@ -57,8 +76,8 @@ class ProjectsController < ApplicationController
         directory: params[:directory],
         title: params[:title],
         description: params[:description],
-        data_user_read_only: (params[:data_user_read_only] || "").split(","),
-        data_user_read_write: (params[:data_user_read_write] || "").split(",")
+        data_user_read_only: ro_users,
+        data_user_read_write: rw_users
       }
     end
 end

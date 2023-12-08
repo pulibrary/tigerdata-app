@@ -124,8 +124,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "New Project"
       fill_in "data_sponsor", with: sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
-      fill_in "data_user_read_only", with: read_only.uid
-      fill_in "data_user_read_write", with: read_write.uid
+      fill_in "ro-user-uid-to-add", with: read_only.uid
+      click_on "btn-add-ro-user"
+      fill_in "rw-user-uid-to-add", with: read_write.uid
+      click_on "btn-add-rw-user"
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
