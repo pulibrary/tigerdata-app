@@ -62,7 +62,7 @@ class ProjectsController < ApplicationController
         key = "#{key_prefix}#{i}"
         users << params[key]
       end
-      users
+      users.compact.uniq
     end
 
     def form_metadata
