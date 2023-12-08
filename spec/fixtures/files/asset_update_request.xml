@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
-<request>
+<request xmlns:tigerdata="http://tigerdata.princeton.edu">
   <service name="asset.set" session="secretsecret/2/31">
     <args>
       <id>1234</id>
       <meta>
-        <tigerdata:project xmlns:tigerdata="tigerdata">
+        <tigerdata:project>
           <code>code</code>
           <title>title</title>
           <description>description</description>
           <data_sponsor>data_sponsor</data_sponsor>
           <data_manager>data_manager</data_manager>
+          <updated_by>abc123</updated_by>
+          <updated_on>now</updated_on>
           <departments>RDSS</departments>
           <departments>HPC</departments>
         </tigerdata:project>

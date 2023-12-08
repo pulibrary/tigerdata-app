@@ -98,6 +98,7 @@ flowchart TD
     1. `asdf plugin add ruby`
     1. `asdf plugin add node`
     1. `asdf plugin add yarn`
+    1. `asdf plugin add java`
     1. `asdf install`
     1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
 1. OR - Install dependencies with brew and chruby
@@ -136,6 +137,9 @@ You will also want to run the vite development server:
 
 Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md)
 
+1. Once mediaflux is running locally
+  1. `bundle exec rake schema:create`
+
 ##### Authentication
 
 By default, there exists for the MediaFlux deployment a user account with the following credentials:
@@ -148,11 +152,11 @@ Alternatively, one may please use `docker/bin/shell` to create a terminal sessio
 
 ##### aterm Client
 
-The MediaFlux `aterm` may be accessed using http://localhost:8888/aterm/
+The MediaFlux `aterm` may be accessed using http://0.0.0.0:8888/aterm/
 
 ##### Desktop Client
 
-The MediaFlux desktop client may be accessed using http://localhost:8888/desktop/
+The MediaFlux desktop client may be accessed using http://0.0.0.0:8888/desktop/
 
 ##### Thick Client
 
@@ -176,13 +180,23 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 
 ##### Service Documentation
 
-The MediaFlux service documentation may be accessed using http://localhost:8888/mflux/service-docs/
+The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/mflux/service-docs/
 
 
 ### Running tests
 
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
+
+### Add Yourself as a Project Sponsor
+
+1. Edit config/default_sponsors.yml
+   1. Add your netid in each section
+2. Edit config/default_mediaflux_admins.yml
+   1. Add your netid in each section
+3. Run the rake task to update the config file
+   1. `bundle exec rake roles:default_sponsors`
+   2. `bundle exec rake roles:default_mediaflux_admins`
 
 ### Starting the development server
 

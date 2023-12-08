@@ -44,8 +44,11 @@ class TigerdataSchema
     data_users_rw = { name: "data_users_rw", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project" }
     data_users_ro = { name: "data_users_ro", type: "string", index: true, "min-occurs" => 0, label: "A person who has read-only access privileges to the project" }
     departments = { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
-    created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, label: "Timestamp project was created" }
-    created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, label: "User that created the project" }
-    [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by]
+    created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Timestamp project was created" }
+    created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
+    updated_on = { name: "updated_on", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
+    updated_by = { name: "updated_by", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
+
+    [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by]
   end
 end

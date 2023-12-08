@@ -9,12 +9,15 @@ module Mediaflux
       # @param name [String] Name of the Asset
       # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil)
+      # @param xml_namespace [String]
+      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil)
         super(session_token: session_token)
         @namespace = namespace
         @asset_name = name
         @collection = collection
         @tigerdata_values = tigerdata_values
+        @xml_namespace = xml_namespace || self.class.default_xml_namespace
+        @xml_namespace_uri = xml_namespace_uri || self.class.default_xml_namespace_uri
       end
 
       # Specifies the Mediaflux service to use when creating assets
@@ -41,6 +44,7 @@ module Mediaflux
         #     >
         #
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/CyclomaticComplexity
         # rubocop:disable Metrics/AbcSize
         def build_http_request_body(name:)
           super do |xml|
@@ -49,27 +53,28 @@ module Mediaflux
               xml.namespace namespace if namespace.present?
               if @tigerdata_values
                 xml.meta do
-                  # TODO: The parameters to xml.send() need to be adjusted as indicated on
-                  # GitHub issue https://github.com/pulibrary/tiger-data-app/issues/227
-                  #
-                  # The values we are passing right here produce the correct XML
-                  # structure but the wrong xmlns value, which we manually adjust
-                  # in request.rb
-                  #
-                  # See also https://nokogiri.org/rdoc/Nokogiri/XML/Builder.html
-                  xml.send("tigerdata:project", "xmlns" => "tigerdata:project") do
+                  doc = xml.doc
+                  root = doc.root
+                  # Define the namespace only if this is required
+                  root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
+
+                  element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
+                  xml.send(element_name) do
                     xml.code @tigerdata_values[:code]
                     xml.title @tigerdata_values[:title]
                     xml.description @tigerdata_values[:description]
                     xml.data_sponsor @tigerdata_values[:data_sponsor]
                     xml.data_manager @tigerdata_values[:data_manager]
-                    @tigerdata_values[:departments].each do |department|
+                    departments = @tigerdata_values[:departments] || []
+                    departments.each do |department|
                       xml.departments department
                     end
-                    @tigerdata_values[:data_user_read_only].each do |ro_user|
+                    ro_users = @tigerdata_values[:data_user_read_only] || []
+                    ro_users.each do |ro_user|
                       xml.data_users_ro ro_user
                     end
-                    @tigerdata_values[:data_user_read_write].each do |rw_user|
+                    rw_users = @tigerdata_values[:data_user_read_write] || []
+                    rw_users.each do |rw_user|
                       xml.data_users_rw rw_user
                     end
                     xml.created_on @tigerdata_values[:created_on]
@@ -79,6 +84,7 @@ module Mediaflux
               end
               if collection
                 xml.collection do
+                  xml.parent.set_attribute("cascade-contained-asset-index", true)
                   xml.parent.set_attribute("contained-asset-index", true)
                   xml.parent.set_attribute("unique-name-index", true)
                   xml.text(collection)
@@ -89,6 +95,7 @@ module Mediaflux
           end
         end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
     end
   end

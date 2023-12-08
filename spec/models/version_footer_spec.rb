@@ -142,5 +142,34 @@ RSpec.describe VersionFooter do
       end
     end
   end
+
+  context "with rollback information" do
+    before do
+      described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
+      described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_rollback.log").to_s
+      described_class.reset!
+    end
+    it "detects current information" do
+      info = described_class.info
+      expect(info[:stale]).to be false
+      expect(info[:sha]).to eq "7a3b1d7c0f77db526963568ece3e0bb5a6399ce4"
+      expect(info[:branch]).to eq "v0.8.0"
+      expect(info[:version]).to eq "10 December 2021"
+      expect(info[:tagged_release]).to be true
+    end
+  end
+
+  context "with an exception" do
+    before do
+      described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
+      described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_rollback.log").to_s
+      described_class.reset!
+      allow(described_class).to receive(:log_line).and_raise("Error!!!")
+    end
+    it "detects current information" do
+      info = described_class.info
+      expect(info[:error]).to eq("Error retrieving version information: Error!!!")
+    end
+  end
 end
 # rubocop enable RSpec/ExampleLength

@@ -7,6 +7,8 @@ set :deploy_to, "/opt/tigerdata"
 
 set :branch, ENV["BRANCH"] || "main"
 
+set :linked_dirs, %w[log public/system public/assets node_modules]
+
 set :yarn_flags, "--silent"
 
 desc "Write the current version to public/version.txt"
@@ -37,4 +39,6 @@ namespace :mailcatcher do
     end
   end
 end
+
+before "deploy:reverted", "npm:install"
 # rubocop:enable Rails/Output
