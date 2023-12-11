@@ -1,13 +1,14 @@
 # Aterm
 Aterm is the MediaFlux's command line. This is a Java application that you run from your terminal and it allows you to execute commands against a MediaFlux server. You can query for information about assets, create new assets, and update their metadata and content.
 
-In a standard MediaFlux installation you can download Aterm directly as follows:
+If you check out the `tiger-data-app` code, aterm.jar is at the top level of the project. However, if you need to re-download it,
+in a standard MediaFlux installation you can download Aterm directly as follows:
 
 ```
 $ curl -OL http://mediaflux-server-url/mflux/aterm.jar
 ```
 
-Once you have downloaded the `aterm.jar` file to you run it from your terminal as follows:
+Run it from your terminal as follows:
 
 ```
 $ java -jar aterm.jar
