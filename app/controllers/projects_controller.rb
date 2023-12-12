@@ -16,13 +16,12 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    debugger
   end
 
   def approve
     @project = Project.find(params[:id])
     xml_namespace = params[:xml_namespace]
-    @project.approve!(session_id: current_user.mediaflux_session, created_by: current_user.uid, xml_namespace: xml_namespace)
+    @project.approve!(session_id: current_user.mediaflux_session, xml_namespace: xml_namespace)
     redirect_to @project
   end
 
@@ -32,13 +31,13 @@ class ProjectsController < ApplicationController
 
   def update
     @project = Project.find(params[:id])
-    @project.metadata = form_metadata
+    @project.metadata = form_metadata(project: @project)
     @project.save!
 
     if @project.in_mediaflux?
       # Ideally this should happen inside the model, but since the code requires the Mediaflux session
       # we'll keep it here for now.
-      @project.update_mediaflux(session_id: current_user.mediaflux_session, updated_by: current_user.uid)
+      @project.update_mediaflux(session_id: current_user.mediaflux_session)
     end
 
     redirect_to @project
@@ -67,10 +66,10 @@ class ProjectsController < ApplicationController
       users.compact.uniq
     end
 
-    def form_metadata
+    def form_metadata(project: nil)
       ro_users = user_list_params(read_only_counter, "ro_user_")
       rw_users = user_list_params(read_write_counter, "rw_user_")
-      {
+      data = {
         data_sponsor: params[:data_sponsor],
         data_manager: params[:data_manager],
         departments: params[:departments],
@@ -80,5 +79,17 @@ class ProjectsController < ApplicationController
         data_user_read_only: ro_users,
         data_user_read_write: rw_users
       }
+
+      # TODO: Use the correct dates instead of the hard coded ones
+      if project.nil?
+        data[:created_by] = current_user.uid
+        data[:created_on] = "07-Dec-2023 17:22:22"
+      else
+        data[:created_by] = project.metadata[:created_by]
+        data[:created_on] = project.metadata[:created_on]
+        data[:updated_by] = current_user.uid
+        data[:updated_on] = "08-Dec-2023 17:22:22"
+      end
+      data
     end
 end

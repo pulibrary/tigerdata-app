@@ -63,7 +63,9 @@ RSpec.describe "/projects", type: :request do
                           departments: ["RDSS"],
                           description: "test2",
                           data_manager: "test3",
-                          data_sponsor: "test4"
+                          data_sponsor: "test4",
+                          created_by: "pul123",
+                          created_on: "07-Dec-2023 17:22:22"
                         })
     end
     let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
@@ -117,7 +119,7 @@ RSpec.describe "/projects", type: :request do
           <data_sponsor>test4</data_sponsor>
           <data_manager>test3</data_manager>
           <departments>RDSS</departments>
-          <created_on>now</created_on>
+          <created_on>07-Dec-2023 17:22:22</created_on>
           <created_by>pul123</created_by>
         </tigerdata:project>
       </meta>
