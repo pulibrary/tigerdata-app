@@ -71,12 +71,13 @@ class ProjectsController < ApplicationController
       # TODO: Use the correct dates instead of the hard coded ones
       if project.nil?
         timestamps[:created_by] = current_user.uid
-        timestamps[:created_on] = "07-Dec-2023 17:22:22"
+        timestamps[:created_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
+
       else
         timestamps[:created_by] = project.metadata[:created_by]
         timestamps[:created_on] = project.metadata[:created_on]
         timestamps[:updated_by] = current_user.uid
-        timestamps[:updated_on] = "08-Dec-2023 17:22:22"
+        timestamps[:updated_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
       end
       timestamps
     end
