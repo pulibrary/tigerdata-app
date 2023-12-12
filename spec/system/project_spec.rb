@@ -23,7 +23,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   let(:project_in_mediaflux) do
     project = FactoryBot.create(:project, metadata: metadata)
-    project.approve!(session_id: sponsor_user.mediaflux_session, created_by: sponsor_user.uid)
+    project.approve!(session_id: sponsor_user.mediaflux_session)
     project
   end
 
