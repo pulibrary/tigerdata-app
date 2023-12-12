@@ -61,3 +61,6 @@ node_modules
 
 # Ignore MacOS files
 **/.DS_Store
+
+# Do not check aterm.jar into the repo
+aterm.jar
