@@ -44,11 +44,20 @@ Project Details:
 </div>
 
 <div>
+  <h2>Automatic Settings </h2>
   <% if @project.in_mediaflux? %>
     <p>Mediaflux id: <%= @project.mediaflux_id %></p>
   <% else %>
     <p>This project has not been saved to Mediaflux</p>
   <% end %>
+</div>
+
+<div>
+  <h2> Provenance </h2>
+  <p>Created On: <%= @project.metadata[:created_on] %> </p>
+  <p>Created By: <%= @project.metadata[:created_by] %> </p>
+  <p>Updated On: <%= @project.metadata[:updated_on] %> </p>
+  <p>Updated By: <%= @project.metadata[:updated_by] %> </p>
 </div>
 
 <div>
