@@ -66,6 +66,21 @@ class ProjectsController < ApplicationController
       users.compact.uniq
     end
 
+    def project_timestamps(project:)
+      timestamps = {}
+      # TODO: Use the correct dates instead of the hard coded ones
+      if project.nil?
+        timestamps[:created_by] = current_user.uid
+        timestamps[:created_on] = "07-Dec-2023 17:22:22"
+      else
+        timestamps[:created_by] = project.metadata[:created_by]
+        timestamps[:created_on] = project.metadata[:created_on]
+        timestamps[:updated_by] = current_user.uid
+        timestamps[:updated_on] = "08-Dec-2023 17:22:22"
+      end
+      timestamps
+    end
+
     def form_metadata(project: nil)
       ro_users = user_list_params(read_only_counter, "ro_user_")
       rw_users = user_list_params(read_write_counter, "rw_user_")
@@ -79,17 +94,7 @@ class ProjectsController < ApplicationController
         data_user_read_only: ro_users,
         data_user_read_write: rw_users
       }
-
-      # TODO: Use the correct dates instead of the hard coded ones
-      if project.nil?
-        data[:created_by] = current_user.uid
-        data[:created_on] = "07-Dec-2023 17:22:22"
-      else
-        data[:created_by] = project.metadata[:created_by]
-        data[:created_on] = project.metadata[:created_on]
-        data[:updated_by] = current_user.uid
-        data[:updated_on] = "08-Dec-2023 17:22:22"
-      end
-      data
+      timestamps = project_timestamps(project: project)
+      data.merge(timestamps)
     end
 end
