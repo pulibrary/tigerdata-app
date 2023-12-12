@@ -68,7 +68,6 @@ class ProjectsController < ApplicationController
 
     def project_timestamps(project:)
       timestamps = {}
-      # TODO: Use the correct dates instead of the hard coded ones
       if project.nil?
         timestamps[:created_by] = current_user.uid
         timestamps[:created_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
