@@ -11,7 +11,12 @@ class Project < ApplicationRecord
   end
 
   def title
-    metadata[:title]
+    trailer = if in_mediaflux?
+                ""
+              else
+                " (pending)"
+              end
+    metadata[:title] + trailer
   end
 
   def departments
