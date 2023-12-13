@@ -50,16 +50,29 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   context "Show page" do
-    it "shows the project data" do
-      sign_in sponsor_user
-      visit "/projects/#{project_not_in_mediaflux.id}"
-      expect(page).to have_content "project 123 (pending)"
-      expect(page).to have_content "This project has not been saved to Mediaflux"
-      expect(page).to have_content pending_text
-      expect(page).not_to have_button "Approve Project"
-      expect(page).to be_axe_clean
-        .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-        .skipping(:'color-contrast')
+    context "Before it is in MediaFlux" do
+      it "Displays a confirmation page" do
+        sign_in sponsor_user
+        visit "/projects/#{project_not_in_mediaflux.id}"
+        expect(page).to have_content "New Project Request Received"
+        expect(page).to have_button "Return to Dashboard"
+        click_on "Return to Dashboard"
+        expect(page).to have_content "My Sponsored Projects"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+      end
+    end
+    context "After it is in MediaFlux" do
+      it "shows the project data" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}"
+        expect(page).to have_content "project 123"
+        expect(page).not_to have_button "Approve Project"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+      end
     end
 
     context "when the data user is empty" do
