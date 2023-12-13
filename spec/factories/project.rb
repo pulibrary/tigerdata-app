@@ -9,9 +9,9 @@ FactoryBot.define do
         departments: ["RDSS", "PRDS"],
         directory: "big-data",
         title: FFaker::Movie.title,
-        description: "a random description"
+        description: "a random description",
+        created_by: FactoryBot.create(:user).uid
       }
     end
-    created_by_user_id { FactoryBot.create(:user).id }
   end
 end
