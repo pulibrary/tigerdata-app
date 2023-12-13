@@ -8,7 +8,7 @@
 # into Aterm you'll have to make it single line (i.e. remove the \)
 #
 
-asset.doc.namespace.create :namespace tigerdata :description "TigerData metadata schema"
+asset.doc.namespace.update :create true :namespace tigerdata :description "TigerData metadata schema"
 
 asset.doc.type.update :create true :description "Project metadata" :type tigerdata:project :definition < \
     :element -name code          -type string -index true -min-occurs 1 -max-occurs 1 -label "The unique identifier for the project" \
@@ -20,4 +20,7 @@ asset.doc.type.update :create true :description "Project metadata" :type tigerda
     :element -name data_users_ro -type string -index true -min-occurs 0               -label "A person who has read-only access privileges to the project" \
     :element -name departments   -type string -index true -min-occurs 1               -label "The primary Princeton University department(s) affiliated with the project" \
     :element -name created_on    -type date               -min-occurs 1 -max-occurs 1 -label "Timestamp project was created" \
-    :element -name created_by    -type string             -min-occurs 1 -max-occurs 1 -label "User that created the project" >
+    :element -name created_by    -type string             -min-occurs 1 -max-occurs 1 -label "User that created the project" \
+    :element -name updated_on    -type date               -min-occurs 0 -max-occurs 1 -label "Timestamp project was updated" \
+    :element -name updated_by    -type string             -min-occurs 0 -max-occurs 1 -label "User that updated the project" >
+
