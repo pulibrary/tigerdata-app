@@ -1,8 +1,13 @@
 <h1>
 Project Details:
-<%= @project.metadata[:title] %>
+<%= @project.title %>
 </h1>
 
+<% unless @project.in_mediaflux? %>
+  <div class="pending-project">
+    Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
+  </div>
+<% end %>
 <div>
   <h2>Roles</h2>
   <dl>
