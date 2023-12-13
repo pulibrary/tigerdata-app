@@ -189,13 +189,13 @@ Please note the format below only works if connecting to your local mediaflux.
 ```
 
 ### Labels and tags
-Tags and Labels are a kind of metadata that we can easily added to assets in MediaFlux. Tags apply to all versions of a given asset whereas labels apply to a specific version. See the help for `asset.tag.add` and `asset.label.type.create` for more information.
+Tags and Labels are a kind of metadata that we can easily add to assets in MediaFlux. Tags apply to all versions of a given asset whereas labels apply to a specific version. See the help for `asset.tag.add` and `asset.label.type.create` for more information.
 
 TODO: Add examples once we have access to `dictionary.create`, `dictionary.add`, and `asset.tag.add`
 
 
 ## Namespaces and Collection Assets
-MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize and the entire list of assets stored on a server. Each of this concepts provides different features and you need both to properly organize your data.
+MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize the entire list of assets stored on a server. Each of these concepts provides different features and you need both to properly organize your data.
 
 ### Namespaces
 Namespaces allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
@@ -221,7 +221,7 @@ you can use the `asset.namespace.list` to get list of existing namespaces:
         :namespace -id "1077" -leaf "false" -acl "false" "rc"
 ```
 
-and `asset.namespace.describe` to get detailed information about the namespace, like the store associated with it and it ACL.
+and `asset.namespace.describe` to get detailed information about the namespace, like the store associated with it and its ACL.
 
 Below is an example on how to perform a search and limit to only the assets within the `/td-demo-001` namespace:
 
@@ -229,7 +229,7 @@ Below is an example on how to perform a search and limit to only the assets with
 > asset.query :namespace /td-demo-001
 ```
 
-**Warning:** Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are completelly different concept.
+**Warning:** Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are a completelly different concept.
 
 ### Collection Assets
 Collection Assets are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
@@ -258,7 +258,7 @@ or you can pass the `path` of the collection asset as the `pid` as shown here:
     :id "1096"
 ```
 
-**Warning:** by default the MediaFlux Desktop does not show assets inside a collection asset as nested objects in the tree, instead it shows them at the same level. You can validate that the assets are indeed inside the collection by clicking on the asset and looking at its properties. If you have admin rights to the MediaFlux server (e.g. if you are running on a local Docker container) you can grant access to your user to the feature that fixes this via `actor.grant :type user :name system:manager :role -type role desktop-experimental`. You'll need to close the Asset Finder in the desktop and re-opened for the change to take effect.
+**Warning:** by default the MediaFlux Desktop does not show assets inside a collection asset as nested objects in the tree, instead it shows them at the same level. You can validate that the assets are indeed inside the collection by clicking on the asset and looking at its properties. If you have admin rights to the MediaFlux server (e.g. if you are running on a local Docker container) you can grant access to your user to the feature that fixes this via `actor.grant :type user :name system:manager :role -type role desktop-experimental`. You'll need to close the Asset Finder in the desktop and re-open it for the change to take effect.
 
 Like with namespaces, it is possible to use collection assets to reduce the scope of searches. We do this by specifing a "root collection" during a search, this limits the search to only assets within a given collection. Below is an example on how to perform a search and limit to only assets within a given root collection asset with id `1093`:
 
@@ -269,11 +269,11 @@ Like with namespaces, it is possible to use collection assets to reduce the scop
 ```
 
 ## Asset Metadata
-MediaFlux allows you to declare custom metadata fields for your assets. The definition for this kind of metadata is stored in what MediaFlux class "namespace for documents" and they are managed via the `asset.doc.namespace` commands (notice that these namespaces are _not_ the same as the asset namespaces that we saw before with the `asset.namespace` commands).
+MediaFlux allows you to declare custom metadata fields for your assets. The definition for this kind of metadata is stored in what MediaFlux calls "namespace for documents" and they are managed via the `asset.doc.namespace` commands (notice that these namespaces are _not_ the same as the asset namespaces that we saw before with the `asset.namespace` commands).
 
 Namespaces for documents (`asset.doc`) contain "document types" and these document types in turn contain "elements" (aka field definitions).
 
-To create a new namespace for document you use the following command:
+To create a new namespace for a document you use the following command:
 
 ```
 > asset.doc.namespace.create :namespace sandbox_meta :description "the metadata definition for our sandbox"
@@ -353,7 +353,7 @@ You can also use the `asset.store.type.list` to figure out what _type of stores_
     :type "s3"
 ```
 
-There is a default stored configured on each server, in the example below we can see that the default store is "data" and from the output of `asset.store.list` previously we know that this store is of type "file-system":
+There is a default store configured on each server, in the example below we can see that the default store is "data" and from the output of `asset.store.list` previously we know that this store is of type "file-system":
 
 ```
 > asset.store.default.get
