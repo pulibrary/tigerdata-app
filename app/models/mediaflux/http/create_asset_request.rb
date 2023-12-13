@@ -4,26 +4,20 @@ module Mediaflux
     class CreateAssetRequest < Request
       attr_reader :namespace, :asset_name, :collection
 
-      # The default XML namespace which should be used for building the XML
-      #   Document transmitted in the body of the HTTP request
-      # @return [String]
-      def self.default_xml_namespace
-        "tigerdata"
-      end
-
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param name [String] Name of the Asset
       # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
       # @param xml_namespace [String]
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil)
+      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil)
         super(session_token: session_token)
         @namespace = namespace
         @asset_name = name
         @collection = collection
         @tigerdata_values = tigerdata_values
         @xml_namespace = xml_namespace || self.class.default_xml_namespace
+        @xml_namespace_uri = xml_namespace_uri || self.class.default_xml_namespace_uri
       end
 
       # Specifies the Mediaflux service to use when creating assets
@@ -59,16 +53,13 @@ module Mediaflux
               xml.namespace namespace if namespace.present?
               if @tigerdata_values
                 xml.meta do
-                  # TODO: The parameters to xml.send() need to be adjusted as indicated on
-                  # GitHub issue https://github.com/pulibrary/tiger-data-app/issues/227
-                  #
-                  # The values we are passing right here produce the correct XML
-                  # structure but the wrong xmlns value, which we manually adjust
-                  # in request.rb
-                  #
-                  # See also https://nokogiri.org/rdoc/Nokogiri/XML/Builder.html
+                  doc = xml.doc
+                  root = doc.root
+                  # Define the namespace only if this is required
+                  root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
+
                   element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
-                  xml.send(element_name, "xmlns" => element_name) do
+                  xml.send(element_name) do
                     xml.code @tigerdata_values[:code]
                     xml.title @tigerdata_values[:title]
                     xml.description @tigerdata_values[:description]

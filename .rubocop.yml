@@ -16,13 +16,14 @@ AllCops:
 
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
-  
+
 Layout/LineLength:
   Exclude:
     - "spec/system/data_migration/*"
 
 Metrics/BlockLength:
   Exclude:
+    - "app/models/mediaflux/http/create_asset_request.rb"
     - "config/environments/**/*"
     - "lib/tasks/**/*"
     - "spec/**/*"

@@ -6,6 +6,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
+  let(:pending_text) do
+    "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
+  end
   let(:metadata) do
     {
       data_sponsor: "pul123",
@@ -23,7 +26,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   let(:project_in_mediaflux) do
     project = FactoryBot.create(:project, metadata: metadata)
-    project.approve!(session_id: sponsor_user.mediaflux_session, created_by: sponsor_user.uid)
+    project.approve!(session_id: sponsor_user.mediaflux_session)
     project
   end
 
@@ -50,8 +53,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     it "shows the project data" do
       sign_in sponsor_user
       visit "/projects/#{project_not_in_mediaflux.id}"
-      expect(page).to have_content "project 123"
+      expect(page).to have_content "project 123 (pending)"
       expect(page).to have_content "This project has not been saved to Mediaflux"
+      expect(page).to have_content pending_text
       expect(page).not_to have_button "Approve Project"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
@@ -75,11 +79,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "shows none when the data user is empty" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123"
+        expect(page).to have_content "project 123 (pending)"
         expect(page).to have_content "This project has not been saved to Mediaflux"
+        expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
-        expect(page).to have_content "Read Only: None"
-        expect(page).to have_content "Read/write: None"
+        expect(page).to have_content "Read Only\nNone"
+        expect(page).to have_content "Read/write\nNone"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
@@ -91,8 +96,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "shows the project data and the Approve Project button" do
         sign_in mediaflux_admin_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123"
+        expect(page).to have_content "project 123 (pending)"
         expect(page).to have_content "This project has not been saved to Mediaflux"
+        expect(page).to have_content pending_text
         expect(page).to have_button "Approve Project"
       end
     end
@@ -102,6 +108,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects/#{project_in_mediaflux.id}"
       expect(page).to have_content "project 123"
       expect(page).to have_content "Mediaflux id: 999"
+      expect(page).not_to have_content pending_text
       expect(page).not_to have_button "Approve Project"
     end
   end
@@ -124,8 +131,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "New Project"
       fill_in "data_sponsor", with: sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
-      fill_in "data_user_read_only", with: read_only.uid
-      fill_in "data_user_read_write", with: read_write.uid
+      fill_in "ro-user-uid-to-add", with: read_only.uid
+      click_on "btn-add-ro-user"
+      fill_in "rw-user-uid-to-add", with: read_write.uid
+      click_on "btn-add-rw-user"
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
@@ -133,9 +142,25 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         click_on "Save"
       end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       expect(page).to have_content("This project has not been saved to Mediaflux")
-      expect(page).to have_content("My test project")
+      expect(page).to have_content pending_text
+      expect(page).to have_content("My test project (pending)")
       expect(page).to have_content(read_only.uid)
       expect(page).to have_content(read_write.uid)
+    end
+  end
+
+  context "Index page" do
+    before do
+      project_not_in_mediaflux
+      project_in_mediaflux
+    end
+
+    it "shows the existing projects" do
+      sign_in sponsor_user
+      visit "/projects"
+      expect(page).to have_content(project_not_in_mediaflux.title)
+      expect(page).to have_content("(pending)")
+      expect(page).to have_content(project_in_mediaflux.title)
     end
   end
 end

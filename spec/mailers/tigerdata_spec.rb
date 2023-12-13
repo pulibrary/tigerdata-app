@@ -12,7 +12,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq ["test_to@example.com"]
     html_body = mail.body.to_s
-    expect(html_body).to have_content(project.title)
+    expect(html_body).to have_content(project.metadata[:title])
     project.metadata.keys.each do |field|
       value = project.metadata[field]
       value = value.join(", ") if value.is_a? Array

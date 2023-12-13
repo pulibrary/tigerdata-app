@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectMediaflux
-  def self.create!(project:, session_id:, created_by:, xml_namespace: nil)
+  def self.create!(project:, session_id:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
 
     # Make sure the root namespace exists
@@ -13,20 +13,19 @@ class ProjectMediaflux
     Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id).resolve
 
     # Create a collection asset under the new namespace and set its metadata
-    tigerdata_values = project_values(project: project, created_by: created_by)
+    tigerdata_values = project_values(project: project)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace)
     create_request.resolve
     create_request.id
   end
 
-  def self.update(project:, session_id:, updated_by:)
-    tigerdata_values = project_values(project: project, updated_by: updated_by)
+  def self.update(project:, session_id:)
+    tigerdata_values = project_values(project: project)
     Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   end
 
-  # rubocop:disable Metrics/MethodLength
-  def self.project_values(project:, created_by: nil, updated_by: nil)
+  def self.project_values(project:)
     values = {
       code: project.directory,
       title: project.metadata[:title],
@@ -35,22 +34,14 @@ class ProjectMediaflux
       data_manager: project.metadata[:data_manager],
       data_user_read_only: project.metadata[:data_user_read_only],
       data_user_read_write: project.metadata[:data_user_read_write],
-      departments: project.metadata[:departments]
+      departments: project.metadata[:departments],
+      created_on: project.metadata[:created_on],
+      created_by: project.metadata[:created_by],
+      updated_on: project.metadata[:updated_on],
+      updated_by: project.metadata[:updated_by]
     }
-
-    if created_by
-      values[:created_on] = "now"
-      values[:created_by] = created_by
-    end
-
-    if updated_by
-      values[:updated_on] = "now"
-      values[:updated_by] = updated_by
-    end
-
     values
   end
-  # rubocop:enable Metrics/MethodLength
 
   def self.safe_name(name)
     # only alphanumeric characters

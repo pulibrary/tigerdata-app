@@ -63,7 +63,9 @@ RSpec.describe "/projects", type: :request do
                           departments: ["RDSS"],
                           description: "test2",
                           data_manager: "test3",
-                          data_sponsor: "test4"
+                          data_sponsor: "test4",
+                          created_by: "pul123",
+                          created_on: "07-Dec-2023 17:22:22"
                         })
     end
     let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
@@ -104,20 +106,20 @@ RSpec.describe "/projects", type: :request do
       let(:create_project_body) do
         <<-XML
 <?xml version="1.0"?>
-<request>
+<request xmlns:tigerdata="http://tigerdata.princeton.edu">
   <service name="asset.create" session="sessiontoken">
     <args>
       <name>big-data</name>
       <namespace>/td-test-001/big-data-ns</namespace>
       <meta>
-        <tigerdata:project xmlns:tigerdata="tigerdata">
+        <tigerdata:project>
           <code>big-data</code>
           <title>foo</title>
           <description>test2</description>
           <data_sponsor>test4</data_sponsor>
           <data_manager>test3</data_manager>
           <departments>RDSS</departments>
-          <created_on>now</created_on>
+          <created_on>07-Dec-2023 17:22:22</created_on>
           <created_by>pul123</created_by>
         </tigerdata:project>
       </meta>
@@ -164,7 +166,7 @@ XML
           expect(project.in_mediaflux?).to be true
           # this ensures that the request was transmitted as expected
           expect(a_request(:post, mediaflux_url).with(
-            body: /<bar:project xmlns="bar:project"/
+            body: /<bar:project/
           )).to have_been_made.once
 
           expect(a_request(:post, mediaflux_url).with(

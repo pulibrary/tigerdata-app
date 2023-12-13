@@ -19,7 +19,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
     end
 
     it "creates a project namespace and collection and returns the mediaflux id" do
-      mediaflux_id = described_class.create!(project: project, session_id: "test-session-token", created_by: "pul123")
+      mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
       expect(namespace_request).to have_received("resolve")
       expect(create_asset_request).to have_received("resolve")
       expect(mediaflux_id).to be "123"
