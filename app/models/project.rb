@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
-  belongs_to :created_by_user, class_name: "User"
-
   def metadata
     (metadata_json || {}).with_indifferent_access
   end
@@ -44,5 +42,9 @@ class Project < ApplicationRecord
   def update_mediaflux(session_id:)
     ProjectMediaflux.update(project: self, session_id: session_id)
     Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{mediaflux_id}"
+  end
+
+  def created_by_user
+    User.find_by(uid: metadata[:created_by])
   end
 end
