@@ -152,6 +152,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_content(read_only.uid)
       expect(page).to have_content(read_write.uid)
     end
+    it "does not allow the user to create a project without a data sponsor" do
+      sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+      fill_in "data_sponsor", with: ""
+      click_on "Save"
+      expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please fill out this field."
+    end
   end
 
   context "Index page" do
