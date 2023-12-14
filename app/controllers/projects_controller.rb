@@ -7,9 +7,12 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new
     @project.metadata = form_metadata
-    @project.save!
-    TigerdataMailer.with(project: @project).project_creation.deliver_later
-    redirect_to @project
+    if @project.save
+      TigerdataMailer.with(project: @project).project_creation.deliver_later
+      redirect_to @project
+    else
+      render :new
+    end
   end
 
   def show
@@ -30,15 +33,17 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     @project.metadata = form_metadata(project: @project)
-    @project.save!
+    if @project.save
+      if @project.in_mediaflux?
+        # Ideally this should happen inside the model, but since the code requires the Mediaflux session
+        # we'll keep it here for now.
+        @project.update_mediaflux(session_id: current_user.mediaflux_session)
+      end
 
-    if @project.in_mediaflux?
-      # Ideally this should happen inside the model, but since the code requires the Mediaflux session
-      # we'll keep it here for now.
-      @project.update_mediaflux(session_id: current_user.mediaflux_session)
+      redirect_to @project
+    else
+      render :edit
     end
-
-    redirect_to @project
   end
 
   def index
