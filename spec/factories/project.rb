@@ -5,12 +5,16 @@ FactoryBot.define do
     transient do
       data_sponsor { FactoryBot.create(:user).uid }
       data_manager { FactoryBot.create(:user).uid }
+      data_user_read_only { [] }
+      data_user_read_write { [] }
       title { FFaker::Movie.title }
     end
     metadata do
       {
         data_sponsor: data_sponsor,
         data_manager: data_manager,
+        data_user_read_only: data_user_read_only,
+        data_user_read_write: data_user_read_write,
         departments: ["RDSS", "PRDS"],
         directory: "big-data",
         title: title,

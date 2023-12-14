@@ -194,6 +194,28 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("Invalid netid: xxx for role Data Manager")
       end
     end
+
+    context "with an invalid data users" do
+      it "does not allow the user to create a project" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: "xxx"
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: "zzz"
+        click_on "btn-add-rw-user"
+        fill_in "directory", with: "test_project"
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect do
+          click_on "Save"
+        end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
+        expect(page).to have_content("Invalid netid: xxx for role Data User Read Only")
+        expect(page).to have_content("Invalid netid: zzz for role Data User Read Write")
+      end
+    end
   end
 
   context "Index page" do
