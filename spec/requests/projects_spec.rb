@@ -3,8 +3,8 @@ require "rails_helper"
 
 RSpec.describe "/projects", type: :request do
   describe "POST /projects" do
-    let(:data_manager) { nil }
-    let(:data_sponsor) { nil }
+    let(:data_manager) { FactoryBot.create(:user).uid }
+    let(:data_sponsor) { FactoryBot.create(:user).uid }
     let(:data_user_read_only) { nil }
     let(:data_user_read_write) { nil }
     let(:departments) { nil }
@@ -55,6 +55,9 @@ RSpec.describe "/projects", type: :request do
 
   describe "POST /projects/:id/approve" do
     let(:user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:data_manager) { FactoryBot.create(:user, uid: "test3") }
+    let(:data_sponsor) { FactoryBot.create(:user, uid: "test4") }
+
     let(:project) do
       FactoryBot.create(:project,
                         metadata: {
@@ -62,8 +65,8 @@ RSpec.describe "/projects", type: :request do
                           directory: "big-data",
                           departments: ["RDSS"],
                           description: "test2",
-                          data_manager: "test3",
-                          data_sponsor: "test4",
+                          data_manager: data_manager.uid,
+                          data_sponsor: data_sponsor.uid,
                           created_by: "pul123",
                           created_on: "07-Dec-2023 17:22:22"
                         })
@@ -152,8 +155,8 @@ XML
                               directory: "big-data",
                               departments: ["RDSS"],
                               description: "test2",
-                              data_manager: "test3",
-                              data_sponsor: "test4"
+                              data_manager: data_manager.uid,
+                              data_sponsor: data_sponsor.uid
                             })
         end
 

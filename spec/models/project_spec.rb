@@ -3,10 +3,11 @@ require "rails_helper"
 
 RSpec.describe Project, type: :model do
   describe "#sponsored_projects" do
+    let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
     before do
-      FactoryBot.create(:project, metadata: { data_sponsor: "hc1234", title: "project 111" })
-      FactoryBot.create(:project, metadata: { data_sponsor: "hc1234", title: "project 222" })
-      FactoryBot.create(:project, metadata: { data_sponsor: "zz8888", title: "project 333" })
+      FactoryBot.create(:project, title: "project 111", data_sponsor: sponsor.uid)
+      FactoryBot.create(:project, title: "project 222", data_sponsor: sponsor.uid)
+      FactoryBot.create(:project, title: "project 333", data_sponsor: sponsor.uid)
     end
 
     it "returns projects for the sponsor" do
