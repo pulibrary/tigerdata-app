@@ -100,6 +100,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "axe-core-rspec"
   gem "capybara"
+  gem "coveralls_reborn", require: false
   gem "rails-controller-testing"
   gem "rspec_junit_formatter"
   gem "selenium-webdriver"
