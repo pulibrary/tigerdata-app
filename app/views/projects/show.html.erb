@@ -1,5 +1,78 @@
-<% if @project.in_mediaflux? %>
-<%= render "details" %>
-<% else %>
-<%= render "confirmation" %>
+<h1>
+Project Details:
+<%= @project.title %>
+</h1>
+
+<% unless @project.in_mediaflux? %>
+  <div class="pending-project">
+    Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
+  </div>
 <% end %>
+<div>
+  <h2>Roles</h2>
+  <dl>
+  <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
+  <dt>Data Manager</dt> <dd> <%= @project.metadata[:data_manager] %></dd>
+
+  <dt>Read Only</dt> <dd>
+    <%if @project.metadata[:data_user_read_only].present? %>
+      <% @project.metadata[:data_user_read_only].each do |user|%>
+       <%= user%> 
+      <%end%>
+      </dd>
+    <%else%>
+      None
+    <%end%>
+  </dd>
+
+  <dt>Read/write </dt><dd>
+    <%if @project.metadata[:data_user_read_write].present? %>
+      <% @project.metadata[:data_user_read_write].each do |user|%>
+        <%= user%> 
+      <%end%>
+    <%else%>
+      None
+    <%end%>
+  </dd>
+  </dl>
+</div>
+
+<div>
+  <h2>Project Description</h2>
+  <dl>
+  <dt>Affiliated Departments</dt> <dd><%= @project.departments.join(", ") %></dd>
+  <dt>Project Directory</dt> <dd> <%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
+  <dt>Title</dt> <dd><%= @project.metadata[:title] %></dd>
+  <dt>Description:<dt/>
+    <dd><%= @project.metadata[:description] %></dd>
+  </dl>
+</div>
+
+<div>
+  <h2>Automatic Settings </h2>
+  <% if @project.in_mediaflux? %>
+    <p>Mediaflux id: <%= @project.mediaflux_id %></p>
+  <% else %>
+    <p>This project has not been saved to Mediaflux</p>
+  <% end %>
+</div>
+
+<div>
+  <h2> Provenance </h2>
+  <p>Created On: <%= @project.metadata[:created_on] %> </p>
+  <p>Created By: <%= @project.metadata[:created_by] %> </p>
+  <p>Updated On: <%= @project.metadata[:updated_on] %> </p>
+  <p>Updated By: <%= @project.metadata[:updated_by] %> </p>
+</div>
+
+<div>
+  <%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-primary btn-sm" %>
+</div>
+
+<div>
+  <% if @project.mediaflux_id.blank? && current_user.has_role?(User::MEDIAFLUX_ADMIN) %>
+    <%= form_with url: project_approve_path(@project), method: :post do |form| %>
+      <input type="submit" class="btn btn-secondary btn-sm" value="Approve Project" />
+    <% end %>
+  <% end %>
+</div>

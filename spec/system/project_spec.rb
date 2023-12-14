@@ -51,16 +51,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Show page" do
     context "Before it is in MediaFlux" do
-      it "Displays a confirmation page" do
+      it "Shows the not yet approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "New Project Request Received"
-        expect(page).to have_button "Return to Dashboard"
-        click_on "Return to Dashboard"
-        expect(page).to have_content "My Sponsored Projects"
-        expect(page).to be_axe_clean
-          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-          .skipping(:'color-contrast')
+        expect(page).to have_content "(pending)"
+        expect(page).to have_content pending_text
       end
     end
     context "After it is in MediaFlux" do
@@ -159,11 +154,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect do
         click_on "Save"
       end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
-      expect(page).to have_content("This project has not been saved to Mediaflux")
-      expect(page).to have_content pending_text
-      expect(page).to have_content("My test project (pending)")
-      expect(page).to have_content(read_only.uid)
-      expect(page).to have_content(read_write.uid)
+      # This is the confirmation page. It needs a button to return to the dashboard
+      # and it needs to be_axe_clean.
+      expect(page).to have_content "New Project Request Received"
+      expect(page).to have_button "Return to Dashboard"
+      expect(page).to be_axe_clean
+        .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+        .skipping(:'color-contrast')
+      click_on "Return to Dashboard"
+      expect(page).to have_content "My Sponsored Projects"
     end
   end
 
