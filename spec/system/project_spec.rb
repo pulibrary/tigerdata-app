@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:pending_text) do
@@ -11,8 +12,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
   let(:metadata) do
     {
-      data_sponsor: "pul123",
-      data_manager: "pul987",
+      data_sponsor: sponsor_user.uid,
+      data_manager: data_manager.uid,
       directory: "project-123",
       title: "project 123",
       departments: ["RDSS"],
@@ -73,8 +74,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "when the data user is empty" do
       let(:metadata) do
         {
-          data_sponsor: "pul123",
-          data_manager: "pul987",
+          data_sponsor: sponsor_user.uid,
+          data_manager: data_manager.uid,
           directory: "project-123",
           title: "project 123",
           departments: ["RDSS"],
@@ -163,6 +164,35 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         .skipping(:'color-contrast')
       click_on "Return to Dashboard"
       expect(page).to have_content "My Sponsored Projects"
+    end
+    it "does not allow the user to create a project without a data sponsor" do
+      sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+      fill_in "data_sponsor", with: ""
+      click_on "Save"
+      expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please fill out this field."
+    end
+    context "with an invalid data manager" do
+      it "does not allow the user to create a project" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+        fill_in "data_manager", with: "xxx"
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        click_on "btn-add-rw-user"
+        fill_in "directory", with: "test_project"
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect do
+          click_on "Save"
+        end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
+        expect(page).to have_content("Invalid netid: xxx for role Data Manager")
+      end
     end
   end
 

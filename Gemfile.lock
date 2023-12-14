@@ -129,6 +129,11 @@ GEM
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
+    coveralls_reborn (0.28.0)
+      simplecov (~> 0.22.0)
+      term-ansicolor (~> 1.7)
+      thor (~> 1.2)
+      tins (~> 1.32)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -408,7 +413,10 @@ GEM
       net-ssh (>= 2.8.0)
     stimulus-rails (1.2.2)
       railties (>= 6.0.0)
+    sync (0.5.0)
     temple (0.10.3)
+    term-ansicolor (1.7.1)
+      tins (~> 1.0)
     thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -417,6 +425,8 @@ GEM
     thread_safe (0.3.6)
     tilt (2.2.0)
     timeout (0.4.0)
+    tins (1.32.1)
+      sync
     turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -473,6 +483,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.6)
   capistrano-yarn
   capybara
+  coveralls_reborn
   ddtrace
   debug
   devise
