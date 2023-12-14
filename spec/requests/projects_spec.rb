@@ -48,7 +48,7 @@ RSpec.describe "/projects", type: :request do
         expect(response).to be_redirect
         expect(Project.all).not_to be_empty
         new_project = Project.last
-        expect(response).to redirect_to(project_path(new_project))
+        expect(response).to redirect_to(project_confirmation_path(new_project))
       end
     end
   end

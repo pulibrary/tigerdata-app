@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
     @project.metadata = form_metadata
     if @project.save
       TigerdataMailer.with(project: @project).project_creation.deliver_later
-      redirect_to @project
+      redirect_to project_confirmation_path(@project)
     else
       render :new
     end
@@ -49,6 +49,8 @@ class ProjectsController < ApplicationController
   def index
     @projects = Project.all
   end
+
+  def confirmation; end
 
   private
 
