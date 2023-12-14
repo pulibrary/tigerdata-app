@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
+  validates_with ProjectValidator
+
   def metadata
     (metadata_json || {}).with_indifferent_access
   end
