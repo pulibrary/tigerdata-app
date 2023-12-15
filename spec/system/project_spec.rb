@@ -128,7 +128,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects/#{project_in_mediaflux.id}/edit"
     end
     it "preserves the readonly directory field" do
-      click_on "Save"
+      click_on "Submit"
       project_in_mediaflux.reload
       expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
     end
@@ -171,7 +171,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "New Project"
       expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
       fill_in "data_sponsor", with: ""
-      click_on "Save"
+      click_on "Submit"
       expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please fill out this field."
     end
     context "with an invalid data manager" do
@@ -189,7 +189,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect do
-          click_on "Save"
+          click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
         expect(page).to have_content("Invalid netid: xxx for role Data Manager")
       end
