@@ -232,7 +232,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
       end
     end
-
   end
 
   context "Index page" do
