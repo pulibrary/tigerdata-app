@@ -1,0 +1,5 @@
+<datalist id="all-users">
+    <% User.all_users.each do |uid| %>
+        <option value="<%= uid %>">
+    <% end %>
+</datalist>

@@ -138,7 +138,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   context "Create page" do
-    let(:data_manager) { FactoryBot.create :user }
+    before do
+      # make sure the users exist before the page loads
+      data_manager
+      read_only
+      read_write
+    end
+
     it "allows the user to create a project" do
       sign_in sponsor_user
       visit "/"
@@ -172,7 +178,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
       fill_in "data_sponsor", with: ""
       click_on "Submit"
-      expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please fill out this field."
+      expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     end
     context "with an invalid data manager" do
       it "does not allow the user to create a project" do
@@ -182,6 +188,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
         fill_in "data_manager", with: "xxx"
         fill_in "ro-user-uid-to-add", with: read_only.uid
+        expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
         click_on "btn-add-ro-user"
         fill_in "rw-user-uid-to-add", with: read_write.uid
         click_on "btn-add-rw-user"
@@ -191,7 +198,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect do
           click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
-        expect(page).to have_content("Invalid netid: xxx for role Data Manager")
       end
     end
 
@@ -204,16 +210,17 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: "xxx"
         click_on "btn-add-ro-user"
+        expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
+
         fill_in "rw-user-uid-to-add", with: "zzz"
         click_on "btn-add-rw-user"
+        expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
         fill_in "directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect do
-          click_on "Save"
+          click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
-        expect(page).to have_content("Invalid netid: xxx for role Data User Read Only")
-        expect(page).to have_content("Invalid netid: zzz for role Data User Read Write")
       end
     end
   end
