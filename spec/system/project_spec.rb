@@ -153,7 +153,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
       expect do
-        click_on "Save"
+        click_on "Submit"
       end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       # This is the confirmation page. It needs a button to return to the dashboard
       # and it needs to be_axe_clean.
