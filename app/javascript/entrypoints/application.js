@@ -13,6 +13,7 @@ import 'bootstrap/js/src/scrollspy';
 import * as bootstrap from 'bootstrap';
 
 import { setTargetHtml } from './helper';
+import UserDatalist from './user_datalist';
 
 window.bootstrap = bootstrap;
 
@@ -118,7 +119,8 @@ function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
   });
-
+  const datalist = new UserDatalist();
+  datalist.setupDatalistValidity();
   initDataUsers();
 }
 

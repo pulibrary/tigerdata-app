@@ -33,6 +33,10 @@ class User < ApplicationRecord
     user
   end
 
+  def self.all_users
+    User.all.map(&:uid)
+  end
+
   def clear_mediaflux_session(session)
     @mediaflux_session = nil
     session[:mediaflux_session] = nil
