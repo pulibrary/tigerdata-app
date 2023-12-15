@@ -223,6 +223,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       end
     end
+    context "upon cancelation" do
+      it "redirects the user back to the dashboard" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        click_on "Cancel"
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+      end
+    end
   end
 
   context "Index page" do
