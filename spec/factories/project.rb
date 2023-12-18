@@ -8,6 +8,8 @@ FactoryBot.define do
       data_user_read_only { [] }
       data_user_read_write { [] }
       title { FFaker::Movie.title }
+      created_on { DateTime.now }
+      updated_on { DateTime.now }
     end
     metadata do
       {
@@ -19,7 +21,10 @@ FactoryBot.define do
         directory: "big-data",
         title: title,
         description: "a random description",
-        created_by: FactoryBot.create(:user).uid
+        created_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
+        created_by: FactoryBot.create(:user).uid,
+        updated_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
+        updated_by: FactoryBot.create(:user).uid
       }
     end
   end
