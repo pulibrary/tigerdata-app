@@ -41,3 +41,4 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
     end
   end
 end
+
