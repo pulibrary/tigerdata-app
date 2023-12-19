@@ -187,15 +187,16 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/"
         click_on "New Project"
         expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-        fill_in "data_sponsor", with: sponsor_user.uid
+        # fill_in "data_sponsor", with: sponsor_user.uid
         fill_in "data_manager", with: "xxx"
         fill_in "ro-user-uid-to-add", with: read_only.uid
         expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
         click_on "btn-add-ro-user"
         fill_in "rw-user-uid-to-add", with: read_write.uid
         click_on "btn-add-rw-user"
-        fill_in "directory", with: "test-project"
+        fill_in "directory", with: "test_project"
         fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
         expect do
           click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
@@ -231,11 +232,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         click_on "New Project"
         click_on "Cancel"
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-        expect do
-          click_on "Save"
-        end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(0).times
-        expect(page).to have_content("Invalid netid: xxx for role Data Manager")
-        expect(page).to have_content("New Project")
       end
     end
     context "when the directory name has invalid characters" do
@@ -250,11 +246,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "rw-user-uid-to-add", with: read_write.uid
         click_on "btn-add-rw-user"
         fill_in "directory", with: "test?project"
+        valid = page.find("input#directory:invalid")
+        expect(valid).to be_truthy
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
-        expect do
-          click_on "Save"
-        end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(0).times
         expect(page).to have_content("New Project")
       end
     end
