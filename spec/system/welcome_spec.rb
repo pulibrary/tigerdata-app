@@ -8,6 +8,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       visit "/"
       expect(page).to have_content "Welcome to TigerData"
       expect(page).to have_content "Log In"
+      expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
   end
 
