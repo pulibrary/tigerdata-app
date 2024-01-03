@@ -20,7 +20,37 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
     it "parses a metadata response" do
       create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false)
       expect(create_request.id).to eq("1068")
-      expect(WebMock).to have_requested(:post, mediflux_url)
+      expect(a_request(:post, mediflux_url).with do |req| 
+        req.body.include?("<name>testasset</name>")
+      end
+      ).to have_been_made
+    end
+
+    context "an asset with metadata" do
+      before do
+        stub_request(:post, mediflux_url).to_return(status: 200, body: create_response, headers: {})
+      end
+      it "send the metadata to the server" do
+        data_user_ro = FactoryBot.create :user
+        data_user_rw = FactoryBot.create :user
+        created_on = DateTime.now
+        project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on
+        tigerdata_values = ProjectMediaflux.project_values(project:)
+        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false, tigerdata_values: tigerdata_values)
+        expect(create_request.id).to eq("1068")
+        puts "created on #{project.metadata[:created_on]}"
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<name>testasset</name>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<title>#{project.metadata[:title]}</title>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<description>#{project.metadata[:description]}</description>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<data_manager>#{project.metadata[:data_manager]}</data_manager>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].first}</departments>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].last}</departments>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<created_on>#{created_on.strftime("%d-%b-%Y %H:%M:%S")}</created_on>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<created_by>#{project.metadata[:created_by]}</created_by>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<data_users_ro>#{data_user_ro.uid}</data_users_ro>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<data_users_rw>#{data_user_rw.uid}</data_users_rw>") }).to have_been_made
+      end
     end
 
     context "A collection" do
@@ -35,7 +65,11 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       it "parses a metadata response" do
         create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: true)
         expect(create_request.id).to eq("1068")
-        expect(WebMock).to have_requested(:post, mediflux_url)
+        expect(a_request(:post, mediflux_url).with do |req| 
+            req.body.include?("<name>testasset</name>") && 
+            req.body.include?("<type>application/arc-asset-collection</type>")
+          end
+        ).to have_been_made
       end
     end
   end

@@ -58,6 +58,14 @@ module Mediaflux
                     @tigerdata_values[:departments].each do |department|
                       xml.departments department
                     end
+                    ro_users = @tigerdata_values[:data_user_read_only] || []
+                    ro_users.each do |ro_user|
+                      xml.data_users_ro ro_user
+                    end
+                    rw_users = @tigerdata_values[:data_user_read_write] || []
+                    rw_users.each do |rw_user|
+                      xml.data_users_rw rw_user
+                    end
                   end
                 end
               end
