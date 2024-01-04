@@ -14,4 +14,13 @@ RSpec.describe User, type: :model do
       expect(user.display_name).to eq("Guess Who?")
     end
   end
+
+  describe "users have roles" do
+    describe "project sponsor" do
+      let(:project_sponsor) { FactoryBot.create :project_sponsor }
+      it "has a project sponsor role" do
+        expect(project_sponsor.roles.first.name).to eq "project_sponsor"
+      end
+    end
+  end
 end
