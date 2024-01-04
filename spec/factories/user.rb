@@ -18,6 +18,30 @@ FactoryBot.define do
     end
 
     ##
+    # A user who has the data sponsor role
+    factory :data_sponsor do
+      after :create do |user|
+        user.add_role User::DATA_SPONSOR
+      end
+    end
+
+    ##
+    # A user who has the data manager role
+    factory :data_manager do
+      after :create do |user|
+        user.add_role User::DATA_MANAGER
+      end
+    end
+
+    ##
+    # A user who has the data user role
+    factory :data_user do
+      after :create do |user|
+        user.add_role User::DATA_USER
+      end
+    end
+
+    ##
     # A user who is allowed to administer mediaflux
     factory :mediaflux_admin do
       after :create do |user|

@@ -6,6 +6,9 @@ class User < ApplicationRecord
   devise :rememberable, :omniauthable
 
   PROJECT_SPONSOR = :project_sponsor
+  DATA_SPONSOR = :data_sponsor
+  DATA_MANAGER = :data_manager
+  DATA_USER = :data_user
   MEDIAFLUX_ADMIN = :mediaflux_admin
 
   def self.from_cas(access_token)

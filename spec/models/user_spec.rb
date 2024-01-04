@@ -22,5 +22,23 @@ RSpec.describe User, type: :model do
         expect(project_sponsor.roles.first.name).to eq "project_sponsor"
       end
     end
+    describe "data sponsor" do
+      let(:data_sponsor) { FactoryBot.create :data_sponsor }
+      it "has a data sponsor role" do
+        expect(data_sponsor.roles.first.name).to eq "data_sponsor"
+      end
+    end
+    describe "data manager" do
+      let(:data_manager) { FactoryBot.create :data_manager }
+      it "has a data manager role" do
+        expect(data_manager.roles.first.name).to eq "data_manager"
+      end
+    end
+    describe "data user" do
+      let(:data_user) { FactoryBot.create :data_user }
+      it "has a data user role" do
+        expect(data_user.roles.first.name).to eq "data_user"
+      end
+    end
   end
 end
