@@ -7,6 +7,14 @@ production:
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+qa:
+  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001' %>
+  api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
+  api_host: <%= ENV["MEDIAFLUX_HOST"] %>
+  api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
+  api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
+  api_user: <%= ENV["MEDIAFLUX_USER"] %>
+  api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
 staging:
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-staging-001'  %>
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
