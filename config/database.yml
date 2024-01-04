@@ -34,3 +34,6 @@ staging: &staging
 
 production:
   <<: *staging
+
+qa:
+  <<: *staging
