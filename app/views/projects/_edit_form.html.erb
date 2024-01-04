@@ -19,6 +19,14 @@
     margin-top: -15px;
     margin-bottom: 10px;
   }
+
+  input:valid {
+    background-color: palegreen;
+  }
+
+  input:invalid {
+    background-color: lightpink;
+  }
 </style>
 
 <div>
@@ -83,7 +91,8 @@
       (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
       This project has already been saved to Mediaflux and the directory cannot be changed</p>
   <% else %>
-    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" /></p>
+    <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
+    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" pattern="[\w\p{L}\-]{1,64}" /></p>
   <% end %>
 
   <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
