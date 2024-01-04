@@ -171,6 +171,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "Return to Dashboard"
       expect(page).to have_content "My Sponsored Projects"
     end
+
     it "does not allow the user to create a project without a data sponsor" do
       sign_in sponsor_user
       visit "/"
@@ -186,6 +187,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/"
         click_on "New Project"
         expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+        # fill_in "data_sponsor", with: sponsor_user.uid
         fill_in "data_manager", with: "xxx"
         fill_in "ro-user-uid-to-add", with: read_only.uid
         expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
@@ -230,6 +232,25 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         click_on "New Project"
         click_on "Cancel"
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+      end
+    end
+    context "when the directory name has invalid characters" do
+      it "allows the user to create a project" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        fill_in "data_sponsor", with: sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        click_on "btn-add-rw-user"
+        fill_in "directory", with: "test?project"
+        valid = page.find("input#directory:invalid")
+        expect(valid).to be_truthy
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("New Project")
       end
     end
   end
