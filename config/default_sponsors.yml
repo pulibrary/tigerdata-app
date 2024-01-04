@@ -11,6 +11,18 @@ production:
   - rl3667 # Robert-Anthony Lee-Faison
   - mjc12 # Matt Chandler
   - jh6441 # Jaymee Hyppolite
+qa:
+  - bs3097 # Bess Sadler
+  - cac9 # Carolyn Cole
+  - cl7359 # Claudia Lee
+  - fn8243 # Favour Nwogbo
+  - hc8719 # Hector Correa
+  - jrg5 # James Griffin
+  - knight # Robert Knight
+  - kl37 # Kate Lynch
+  - rl3667 # Robert-Anthony Lee-Faison
+  - mjc12 # Matt Chandler
+  - jh6441 # Jaymee Hyppolite
 staging:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole

@@ -2,6 +2,10 @@ production:
   project_creation: 
     to_email: tigerdata@princeton.edu
     cc_email: mchandler@princeton.edu
+qa:
+  project_creation: 
+    to_email: tigerdata@princeton.edu
+    cc_email: mchandler@princeton.edu
 staging:
   project_creation: 
     to_email: tigerdata@princeton.edu
