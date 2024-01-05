@@ -28,6 +28,8 @@ RSpec.describe Project, type: :model do
     it "returns projects for the manager" do
       managed_projects = described_class.managed_projects("hc1234")
       expect(managed_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
+      expect(managed_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
+      expect(managed_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
     end
   end
 
@@ -42,6 +44,8 @@ RSpec.describe Project, type: :model do
     it "returns projects for the data users" do
       data_user_projects = described_class.data_user_projects("hc1234")
       expect(data_user_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
+      expect(data_user_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
+      expect(data_user_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
     end
   end
 end
