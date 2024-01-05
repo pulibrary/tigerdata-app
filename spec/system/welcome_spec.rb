@@ -17,8 +17,9 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
     let(:manager_user) { FactoryBot.create(:user, uid: "jh1234") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     before do
-      FactoryBot.create(:project, metadata: { data_sponsor: sponsor_user.uid, data_manager: sponsor_user.uid, title: "project 111" })
-      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: manager_user.uid, title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: sponsor_user.uid, data_manager: other_user.uid, title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: sponsor_user.uid, title: "project 222" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [sponsor_user.uid], title: "project 333" })
     end
 
     context "for a user with sponsored projects" do
@@ -34,6 +35,12 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         visit "/"
         expect(page).to have_content "Sponsored by Me"
         expect(page).to have_content "project 111"
+
+        expect(page).to have_content "Managed by Me"
+        expect(page).to have_content "project 222"
+
+        expect(page).to have_content "Shared with Me"
+        expect(page).to have_content "project 333"
       end
     end
 
