@@ -14,9 +14,11 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
 
   context "authenticated user" do
     let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:manager_user) { FactoryBot.create(:user, uid: "jh1234") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     before do
       FactoryBot.create(:project, metadata: { data_sponsor: sponsor_user.uid, data_manager: sponsor_user.uid, title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: manager_user.uid, title: "project 111" })
     end
 
     context "for a user with sponsored projects" do
@@ -30,7 +32,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       it "shows the user sponsored projects" do
         sign_in sponsor_user
         visit "/"
-        expect(page).to have_content "My Sponsored Projects"
+        expect(page).to have_content "Sponsored by Me"
         expect(page).to have_content "project 111"
       end
     end

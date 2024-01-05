@@ -29,12 +29,31 @@
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
   <div class="dashboard-section">
-    <% if @projects.size > 0 %> 
-      <h2>My Sponsored Projects</h1>
+    <%if @my_projects_count != 0%>
+      <h1>My Projects</h1>
+    <%end%>
+    <% if @sponsored_projects.size > 0 %> 
+      <h2>Sponsored by Me</h2>
       <ul class="project-list">
-        <% @projects.each do |project| %>
+        <% @sponsored_projects.each do |project| %>
           <li><%= link_to(project.title, project) %> </li>
-        <% end %>
+        <%end%>
+      </ul>
+    <% end %>
+    <% if @managed_projects.size > 0 %> 
+      <h2>Managed by Me</h2>
+      <ul class="project-list">
+        <% @managed_projects.each do |project| %>
+          <li><%= link_to(project.title, project) %> </li>
+        <%end%>
+      </ul>
+    <% end %>
+    <% if @data_user_projects.size > 0 %> 
+      <h2>Shared with Me</h2>
+      <ul class="project-list">
+        <% @data_user_projects.each do |project| %>
+          <li><%= link_to(project.title, project) %> </li>
+        <%end%>
       </ul>
     <% end %>
     <div>
