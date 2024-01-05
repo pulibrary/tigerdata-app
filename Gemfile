@@ -56,6 +56,7 @@ gem "vite_rails"
 gem "devise"
 gem "omniauth-cas"
 
+gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"
 gem "ddtrace", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby"
 gem "google-protobuf", "~> 3.0"

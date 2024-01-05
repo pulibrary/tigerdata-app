@@ -1,0 +1,16 @@
+---
+default: &default
+  prefix: '<%= ENV["DATACITE_PREFIX"]  ||  10.0000 %>'
+  user: <%= ENV["DATACITE_USER"] || "" %>
+  password: <%= ENV["DATACITE_PASSWORD"] || "" %>
+  host: <%= ENV["DATACITE_HOST"] || "api.datacite.org" %>
+  doi_url: "https://handle.stage.datacite.org/"
+production:
+  <<: *default
+  doi_url: "https://doi.org/"
+staging:
+  <<: *default
+development:
+  <<: *default
+test:
+  <<: *default
