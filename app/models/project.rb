@@ -35,6 +35,15 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
   end
 
+  def self.managed_projects(manager)
+    Project.where("metadata_json->>'data_manager' = ?", manager)
+  end
+
+  def self.data_user_projects(user)
+    query = '{"data_user_read_only":["'+user+'"]}' #TODO: Find a better string solution, https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
+    Project.where("metadata_json @> ? :: jsonb", query)
+  end
+
   def approve!(session_id:, xml_namespace: nil)
     asset_id = ProjectMediaflux.create!(project: self, session_id: session_id, xml_namespace: xml_namespace)
     if asset_id.present?
