@@ -40,7 +40,7 @@ class Project < ApplicationRecord
   end
 
   def self.data_user_projects(user)
-    query = '{"data_user_read_only":["'+user+'"]}' #TODO: Find a better string solution, https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
+    query = '{"data_user_read_only":["' + user + '"]}' # TODO: Find a better string solution, https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
     Project.where("metadata_json @> ? :: jsonb", query)
   end
 
