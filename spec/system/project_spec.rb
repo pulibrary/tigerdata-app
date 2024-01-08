@@ -23,9 +23,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     }
   end
 
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_not_approved) { FactoryBot.create(:project, metadata: metadata) }
 
-  let(:project_in_mediaflux) do
+  let(:project_approved) do
     project = FactoryBot.create(:project, metadata: metadata)
     project.approve!(session_id: sponsor_user.mediaflux_session)
     project
@@ -54,7 +54,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "Before it is in MediaFlux" do
       it "Shows the not yet approved project" do
         sign_in sponsor_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_approved.id}"
         expect(page).to have_content "(pending)"
         expect(page).to have_content pending_text
       end
@@ -62,7 +62,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "After it is in MediaFlux" do
       it "shows the project data" do
         sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}"
+        visit "/projects/#{project_approved.id}"
         expect(page).to have_content "project 123"
         expect(page).not_to have_button "Approve Project"
         expect(page).to be_axe_clean
@@ -87,7 +87,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       it "shows none when the data user is empty" do
         sign_in sponsor_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_approved.id}"
         expect(page).to have_content "project 123 (pending)"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
@@ -104,7 +104,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       it "shows the project data and the Approve Project button" do
         sign_in mediaflux_admin_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_approved.id}"
         expect(page).to have_content "project 123 (pending)"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
@@ -112,11 +112,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
 
-    it "shows the Mediaflux id for a project saved in Mediaflux" do
+    it "Shows the project id for an approved project" do
       sign_in sponsor_user
-      visit "/projects/#{project_in_mediaflux.id}"
+      visit "/projects/#{project_approved.id}"
       expect(page).to have_content "project 123"
-      expect(page).to have_content "Mediaflux id: 999"
+      expect(page).to have_content "Project ID: 10.34770/tbd"
       expect(page).not_to have_content pending_text
       expect(page).not_to have_button "Approve Project"
     end
@@ -125,12 +125,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   context "Edit page" do
     before do
       sign_in sponsor_user
-      visit "/projects/#{project_in_mediaflux.id}/edit"
+      visit "/projects/#{project_approved.id}/edit"
     end
     it "preserves the readonly directory field" do
       click_on "Submit"
-      project_in_mediaflux.reload
-      expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
+      project_approved.reload
+      expect(project_approved.metadata[:directory]).to eq "project-123"
     end
     it "loads existing content into the form" do
       expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
@@ -257,16 +257,16 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Index page" do
     before do
-      project_not_in_mediaflux
-      project_in_mediaflux
+      project_not_approved
+      project_approved
     end
 
     it "shows the existing projects" do
       sign_in sponsor_user
       visit "/projects"
-      expect(page).to have_content(project_not_in_mediaflux.title)
+      expect(page).to have_content(project_not_approved.title)
       expect(page).to have_content("(pending)")
-      expect(page).to have_content(project_in_mediaflux.title)
+      expect(page).to have_content(project_approved.title)
     end
   end
 end

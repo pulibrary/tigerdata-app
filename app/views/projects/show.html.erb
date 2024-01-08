@@ -3,7 +3,7 @@ Project Details:
 <%= @project.title %>
 </h1>
 
-<% unless @project.in_mediaflux? %>
+<% unless @project.approved? %>
   <div class="pending-project">
     Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
   </div>
@@ -17,7 +17,7 @@ Project Details:
   <dt>Read Only</dt> <dd>
     <%if @project.metadata[:data_user_read_only].present? %>
       <% @project.metadata[:data_user_read_only].each do |user|%>
-       <%= user%> 
+       <%= user%>
       <%end%>
       </dd>
     <%else%>
@@ -28,7 +28,7 @@ Project Details:
   <dt>Read/write </dt><dd>
     <%if @project.metadata[:data_user_read_write].present? %>
       <% @project.metadata[:data_user_read_write].each do |user|%>
-        <%= user%> 
+        <%= user%>
       <%end%>
     <%else%>
       None
@@ -49,7 +49,10 @@ Project Details:
 </div>
 
 <div>
-  <h2>Automatic Settings </h2>
+  <h2>Automatic Settings</h2>
+  <% if @project.approved? %>
+    <p>Project ID: <%= @project.metadata["project_id"] %></p
+  <% end %>
   <% if @project.in_mediaflux? %>
     <p>Mediaflux id: <%= @project.mediaflux_id %></p>
   <% else %>
@@ -58,7 +61,7 @@ Project Details:
 </div>
 
 <div>
-  <h2> Provenance </h2>
+  <h2>Provenance</h2>
   <p>Created On: <%= @project.metadata[:created_on] %> </p>
   <p>Created By: <%= @project.metadata[:created_by] %> </p>
   <p>Updated On: <%= @project.metadata[:updated_on] %> </p>
@@ -70,7 +73,7 @@ Project Details:
 </div>
 
 <div>
-  <% if @project.mediaflux_id.blank? && current_user.has_role?(User::MEDIAFLUX_ADMIN) %>
+  <% if @project.approved? == false && current_user.has_role?(User::MEDIAFLUX_ADMIN) %>
     <%= form_with url: project_approve_path(@project), method: :post do |form| %>
       <input type="submit" class="btn btn-secondary btn-sm" value="Approve Project" />
     <% end %>

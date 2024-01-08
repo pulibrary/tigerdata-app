@@ -82,6 +82,10 @@
     </select>
   </div>
 
+  <% if @project.approved? %>
+    <p>Project ID: <%= @project.metadata["project_id"] %> </p>
+  <% end %>
+
   <% if @project.in_mediaflux? %>
     <!--
       Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is

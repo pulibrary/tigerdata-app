@@ -134,7 +134,8 @@ RSpec.describe "/projects", type: :request do
 XML
       end
 
-      it "creates the project asset within mediaflux" do
+      # We are not connecting to MediaFlux anymore
+      xit "creates the project asset within mediaflux" do
         post(project_approve_path(project))
 
         expect(response).to redirect_to(project_path(project))
@@ -169,7 +170,8 @@ XML
                             })
         end
 
-        it "creates the mediaflux project asset using the namespace" do
+        # We are not connecting to MediaFlux anymore
+        xit "creates the mediaflux project asset using the namespace" do
           post(project_approve_path(project, params: { xml_namespace: "bar" }))
 
           expect(response).to redirect_to(project_path(project))
