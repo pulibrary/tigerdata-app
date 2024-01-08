@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# :nocov:
 namespace :projects do
   desc "Times the creation of projects and querying by TigerData metadata fields"
   task :create_many, [:count, :prefix] => [:environment] do |_, args|
@@ -105,3 +106,4 @@ namespace :projects do
     puts "#{label} #{ms_display} ms #{sec_display} seconds"
   end
 end
+# :nocov:

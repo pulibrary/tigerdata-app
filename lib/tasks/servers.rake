@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+# :nocov:
+
 namespace :servers do
   task initialize: :environment do
     Rake::Task["db:create"].invoke
@@ -17,3 +19,4 @@ namespace :servers do
     system "lando stop"
   end
 end
+# :nocov:
