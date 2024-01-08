@@ -147,6 +147,15 @@ XML
         )).to have_been_made.once
       end
 
+      it "drafts a DOI" do
+        expect(project.metadata["project_id"]).to be_nil
+        post(project_approve_path(project))
+        expect(response).to redirect_to(project_path(project))
+
+        project.reload
+        expect(project.metadata["project_id"]).to eq("10.34770/tbd")
+      end
+
       context "when a namespace is specified" do
         let(:project) do
           FactoryBot.create(:project,
