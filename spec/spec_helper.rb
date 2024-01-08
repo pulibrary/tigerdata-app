@@ -2,7 +2,10 @@
 require "coveralls"
 Coveralls.wear!("rails")
 require "simplecov"
-SimpleCov.start
+SimpleCov.start do
+  # Exclude rake tasks from coverage report
+  add_filter %r{^/tasks/}
+end
 
 require "factory_bot"
 FactoryBot.find_definitions
