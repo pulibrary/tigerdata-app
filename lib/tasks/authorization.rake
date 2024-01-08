@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+# :nocov:
+
 require "net/http/persistent"
 
-# frozen_string_literal: true
 namespace :authorization do
   desc "Timing test for logon in via a newly created token"
   task by_new_token: :environment do
@@ -139,3 +140,4 @@ namespace :authorization do
     puts "#{label} #{sec * 1000} mili seconds #{sec} seconds"
   end
 end
+# :nocov:
