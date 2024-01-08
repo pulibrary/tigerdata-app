@@ -169,7 +169,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
         .skipping(:'color-contrast')
       click_on "Return to Dashboard"
-      expect(page).to have_content "My Sponsored Projects"
+      expect(page).to have_content "Sponsored by Me"
     end
 
     it "does not allow the user to create a project without a data sponsor" do
