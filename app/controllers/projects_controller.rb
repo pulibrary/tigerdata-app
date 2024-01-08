@@ -22,7 +22,7 @@ class ProjectsController < ApplicationController
 
   def approve
     @project = Project.find(params[:id])
-    @project.approve!(session_id: current_user.mediaflux_session)
+    @project.approve!
     redirect_to @project
   end
 

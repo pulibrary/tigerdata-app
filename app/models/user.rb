@@ -51,12 +51,12 @@ class User < ApplicationRecord
   end
 
   def mediaflux_session
-    return nil
     # @mediaflux_session ||= begin
     #                         logon_request = Mediaflux::Http::LogonRequest.new
     #                         logon_request.resolve
     #                         logon_request.session_token
     #                       end
+    nil
   end
 
   def terminate_mediaflux_session

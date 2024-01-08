@@ -51,7 +51,7 @@ class Project < ApplicationRecord
     metadata["project_id"].present?
   end
 
-  def approve!(session_id:)
+  def approve!
     metadata = ProjectMetadata.new(current_user: nil, project: self)
     metadata.approve
   end

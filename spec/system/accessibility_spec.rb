@@ -21,7 +21,6 @@ describe "application accessibility", type: :system, js: true, stub_mediaflux: t
     end
   end
 
-
   # We are not connecting to MediaFlux anymore
   # context "when browsing media_flux" do
   #   let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }

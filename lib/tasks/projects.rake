@@ -16,7 +16,9 @@ namespace :projects do
       (1..count).each do |i|
         project = create_test_project(i, user, project_prefix)
         project.save!
-        project.approve!(session_id: user.mediaflux_session, created_by: user.uid)
+        # NOTE: The approve! method does not longer connect to Mediaflux
+        # so the code is not longer benchmarking Mediaflux.
+        project.approve!
         puts i if (i % 100) == 0
       end
     end
