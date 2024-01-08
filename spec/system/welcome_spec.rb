@@ -13,39 +13,49 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
   end
 
   context "authenticated user" do
-    let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
+    let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     before do
-      FactoryBot.create(:project, metadata: { data_sponsor: sponsor_user.uid, data_manager: sponsor_user.uid, title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333" })
+      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444" })
     end
 
-    context "for a user with sponsored projects" do
+    context "current user dashboard" do
       it "shows the 'Log Out' button" do
-        sign_in sponsor_user
+        sign_in current_user
         visit "/"
-        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end
-      it "shows the user sponsored projects" do
-        sign_in sponsor_user
+      it "shows the user projects regardless of the user's role" do
+        sign_in current_user
         visit "/"
-        expect(page).to have_content "My Sponsored Projects"
+        expect(page).to have_content "Sponsored by Me"
         expect(page).to have_content "project 111"
+        expect(page).to have_content "Managed by Me"
+        expect(page).to have_content "project 222"
+        expect(page).to have_content "Shared with Me"
+        expect(page).to have_content "project 333"
+        # The current user has no access to this project so we don't expect to see it
+        expect(page).not_to have_content "project 444"
       end
     end
 
-    context "for a user without sponsored projects" do
+    context "for a user without any projects" do
       it "shows the 'Log Out' button" do
-        sign_in other_user
+        sign_in no_projects_user
         visit "/"
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end
       it "does not show any projects" do
-        sign_in other_user
+        sign_in no_projects_user
         visit "/"
-        expect(page).not_to have_content "My Sponsored Projects"
+        expect(page).not_to have_content "Sponsored by Me"
       end
     end
   end

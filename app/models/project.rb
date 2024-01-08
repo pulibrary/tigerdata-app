@@ -35,6 +35,18 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
   end
 
+  def self.managed_projects(manager)
+    Project.where("metadata_json->>'data_manager' = ?", manager)
+  end
+
+  def self.data_user_projects(user)
+    # See https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
+    # for information on the @> operator
+    query_ro = '{"data_user_read_only":["' + user + '"]}'
+    query_rw = '{"data_user_read_write":["' + user + '"]}'
+    Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
+  end
+
   def approve!(session_id:, xml_namespace: nil)
     metadata = ProjectMetadata.new(current_user: nil, project: self)
     metadata.approve
