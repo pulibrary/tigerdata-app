@@ -73,4 +73,34 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       end
     end
   end
+
+  describe "#xml_payload" do
+    it "creates the asset create payload" do
+      project = FactoryBot.create :project
+      tigerdata_values = ProjectMediaflux.project_values(project:)
+      create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
+      expected_xml = "<?xml version=\"1.0\"?>\n" \
+      "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
+      "  <service name=\"asset.create\">\n" \
+      "    <args>\n" \
+      "      <name>testasset</name>\n" \
+      "      <meta>\n" \
+      "        <tigerdata:project>\n" \
+      "          <code>#{project.directory}</code>\n" \
+      "          <title>#{project.metadata[:title]}</title>\n" \
+      "          <description>#{project.metadata[:description]}</description>\n" \
+      "          <data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>\n" \
+      "          <data_manager>#{project.metadata[:data_manager]}</data_manager>\n" \
+      "          <departments>RDSS</departments>\n" \
+      "          <departments>PRDS</departments>\n" \
+      "          <created_on>#{project.metadata[:created_on]}</created_on>\n" \
+      "          <created_by>#{project.metadata[:created_by]}</created_by>\n" \
+      "        </tigerdata:project>\n" \
+      "      </meta>\n" \
+      "    </args>\n" \
+      "  </service>\n" \
+      "</request>\n"
+      expect(create_request.xml_payload).to eq(expected_xml)
+    end
+  end
 end
