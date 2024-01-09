@@ -44,6 +44,16 @@ class ProjectMediaflux
     values
   end
 
+  def self.xml_payload(project:, xml_namespace: nil)
+    project_name = safe_name(project.directory)
+    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}-ns"
+
+    tigerdata_values = project_values(project: project)
+    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+                                                             xml_namespace: xml_namespace)
+    create_request.xml_payload
+  end
+
   def self.safe_name(name)
     # only alphanumeric characters
     name.strip.gsub(/[^A-Za-z\d]/, "-")

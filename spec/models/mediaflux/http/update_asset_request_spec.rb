@@ -65,4 +65,34 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
     end
 
   end
+
+  describe "#xml_payload" do
+  it "creates the asset update payload" do
+    project = FactoryBot.create :project
+    tigerdata_values = ProjectMediaflux.project_values(project:)
+    update_request = described_class.new(session_token: nil, id: '1234', tigerdata_values: tigerdata_values)
+    expected_xml = "<?xml version=\"1.0\"?>\n" \
+    "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
+    "  <service name=\"asset.set\">\n" \
+    "    <args>\n" \
+    "      <id>1234</id>\n" \
+    "      <meta>\n" \
+    "        <tigerdata:project>\n" \
+    "          <code>#{project.directory}</code>\n" \
+    "          <title>#{project.metadata[:title]}</title>\n" \
+    "          <description>#{project.metadata[:description]}</description>\n" \
+    "          <data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>\n" \
+    "          <data_manager>#{project.metadata[:data_manager]}</data_manager>\n" \
+    "          <updated_by>#{project.metadata[:updated_by]}</updated_by>\n" \
+    "          <updated_on>#{project.metadata[:updated_on]}</updated_on>\n" \
+    "          <departments>RDSS</departments>\n" \
+    "          <departments>PRDS</departments>\n" \
+    "        </tigerdata:project>\n" \
+    "      </meta>\n" \
+    "    </args>\n" \
+    "  </service>\n" \
+    "</request>\n"
+    expect(update_request.xml_payload).to eq(expected_xml)
+  end
+end
 end
