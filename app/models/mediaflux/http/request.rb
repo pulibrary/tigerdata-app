@@ -126,6 +126,11 @@ module Mediaflux
 
       delegate :to_s, to: :response_xml
 
+      def xml_payload( name: self.class.service)
+        body = build_http_request_body(name: )
+        xml_payload = body.to_xml
+      end
+
       private
 
         def http_request
@@ -152,13 +157,11 @@ module Mediaflux
         # rubocop:disable Metrics/MethodLength
         def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
-          body = build_http_request_body(name: name)
-          xml_payload = body.to_xml
 
           Rails.logger.debug(xml_payload)
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
-            request.body = xml_payload
+            request.body = xml_payload(name:)
           else
             request["Content-Type"] = "multipart/form-data"
             request.set_form({ "request" => xml_payload,

@@ -18,6 +18,16 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: @project.metadata
+      end
+      format.xml do
+        xml_payload = ProjectMediaflux.xml_payload(project: @project)
+        render xml: xml_payload
+      end
+    end
   end
 
   def approve
