@@ -209,3 +209,24 @@ Deploy with Capistrano (we are intending to have a deployment mechanism with Ans
 or
 ```bundle exec cap staging deploy```
 
+## Mail
+
+### Mail on Development
+Mailcatcher is a gem that can also be installed locally.  See the [mailcatcher documentation](https://mailcatcher.me/) for how to run it on your machine.
+
+### Mail on Staging and QA
+To See mail that has been sent on the Staging and QA servers you can utilize capistrano to open up both mailcatcher consoles in your browser (see below).  Look in your default browser for the consoles
+
+#### staging command
+```
+cap staging  mailcatcher:console
+```
+
+#### qa command
+```
+cap qa  mailcatcher:console
+```
+
+### Mail on Production
+Emails on production are sent via [Pony Express](https://github.com/pulibrary/pul-it-handbook/blob/f54dfdc7ada1ff993a721f6edb4aa1707bb3a3a5/services/smtp-mail-server.md).
+
