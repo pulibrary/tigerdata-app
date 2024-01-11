@@ -2,6 +2,8 @@
 class Project < ApplicationRecord
   validates_with ProjectValidator
 
+  delegate :to_json, to: :metadata_json
+
   def metadata
     (metadata_json || {}).with_indifferent_access
   end
@@ -65,5 +67,9 @@ class Project < ApplicationRecord
 
   def created_by_user
     User.find_by(uid: metadata[:created_by])
+  end
+
+  def to_xml
+    ProjectMediaflux.xml_payload(project: self)
   end
 end

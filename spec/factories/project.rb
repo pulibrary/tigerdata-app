@@ -10,6 +10,7 @@ FactoryBot.define do
       title { FFaker::Movie.title }
       created_on { DateTime.now }
       updated_on { DateTime.now }
+      project_id { nil }
     end
     metadata do
       {
@@ -24,7 +25,8 @@ FactoryBot.define do
         created_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
         created_by: FactoryBot.create(:user).uid,
         updated_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
-        updated_by: FactoryBot.create(:user).uid
+        updated_by: FactoryBot.create(:user).uid,
+        project_id: project_id
       }
     end
   end
