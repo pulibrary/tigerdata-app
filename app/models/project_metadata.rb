@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ProjectMetadata
   attr_reader :project, :current_user, :params
-  def initialize(current_user:, project: nil)
+  def initialize(current_user:, project:)
     @project = project
     @current_user = current_user
   end
@@ -11,14 +11,14 @@ class ProjectMetadata
     form_metadata
   end
 
-  def approve
-    return if project.blank?
-    return project.metadata_json["project_id"] if project.metadata_json["project_id"].present?
-
-    puldatacite = PULDatacite.new
-    project.metadata_json["project_id"] = puldatacite.draft_doi
-    project.save!
-    project.metadata_json["project_id"]
+  def create( params:)
+    project.metadata = update_metadata(params:)
+    if project.valid? && project.metadata["project_id"].blank?
+      puldatacite = PULDatacite.new
+      project.metadata_json["project_id"] = puldatacite.draft_doi
+      project.save!
+    end
+    project.metadata["project_id"]
   end
 
     private
@@ -42,7 +42,7 @@ class ProjectMetadata
 
       def project_timestamps
         timestamps = {}
-        if project.nil?
+        if project.metadata[:created_by].nil?
           timestamps[:created_by] = current_user.uid
           timestamps[:created_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
 
@@ -66,7 +66,8 @@ class ProjectMetadata
           title: params[:title],
           description: params[:description],
           data_user_read_only: ro_users,
-          data_user_read_write: rw_users
+          data_user_read_write: rw_users,
+          project_id: project.metadata[:project_id]
         }
         timestamps = project_timestamps
         data.merge(timestamps)

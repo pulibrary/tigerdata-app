@@ -48,8 +48,6 @@ class Project < ApplicationRecord
   end
 
   def approve!(session_id:, xml_namespace: nil)
-    metadata = ProjectMetadata.new(current_user: nil, project: self)
-    metadata.approve
     asset_id = ProjectMediaflux.create!(project: self, session_id: session_id, xml_namespace: xml_namespace)
     if asset_id.present?
       Rails.logger.debug "Project #{id} has been saved to MediaFlux (asset id #{asset_id.to_i})"

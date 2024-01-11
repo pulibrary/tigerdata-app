@@ -50,6 +50,22 @@ RSpec.describe "/projects", type: :request do
         new_project = Project.last
         expect(response).to redirect_to(project_confirmation_path(new_project))
       end
+
+      it "drafts a DOI when the project is valid" do
+        post(projects_path, params: params)
+        project = Project.last
+
+        expect(project.metadata["project_id"]).to eq("10.34770/tbd")
+      end
+
+      context "when project is invalid" do
+        let(:data_manager) { nil }
+
+        it "does not draft a DOI when the project is invalid" do
+          post(projects_path, params: params)
+          expect(Project.count).to eq(0)
+        end
+      end
     end
   end
 
@@ -145,15 +161,6 @@ XML
         expect(a_request(:post, mediaflux_url).with(
           body: create_project_body
         )).to have_been_made.once
-      end
-
-      it "drafts a DOI" do
-        expect(project.metadata["project_id"]).to be_nil
-        post(project_approve_path(project))
-        expect(response).to redirect_to(project_path(project))
-
-        project.reload
-        expect(project.metadata["project_id"]).to eq("10.34770/tbd")
       end
 
       context "when a namespace is specified" do

@@ -6,8 +6,8 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new
-    project_metadata = ProjectMetadata.new( current_user:)
-    @project.metadata = project_metadata.update_metadata(params:)
+    project_metadata = ProjectMetadata.new( current_user:, project: @project)
+    project_metadata.create(params:)
     if @project.save
       TigerdataMailer.with(project: @project).project_creation.deliver_later
       redirect_to project_confirmation_path(@project)
