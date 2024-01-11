@@ -122,20 +122,20 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     # end
   end
 
-  # context "Edit page" do
-  #   before do
-  #     sign_in sponsor_user
-  #     visit "/projects/#{project_in_mediaflux.id}/edit"
-  #   end
-  #   it "preserves the readonly directory field" do
-  #     click_on "Submit"
-  #     project_in_mediaflux.reload
-  #     expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
-  #   end
-  #   it "loads existing content into the form" do
-  #     expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-  #   end
-  # end
+  context "Edit page" do
+    before do
+      sign_in sponsor_user
+      visit "/projects/#{project_not_in_mediaflux.id}/edit"
+    end
+    it "preserves the readonly directory field" do
+      click_on "Submit"
+      project_not_in_mediaflux.reload
+      expect(project_not_in_mediaflux.metadata[:directory]).to eq "project-123"
+    end
+    it "loads existing content into the form" do
+      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+    end
+  end
 
   context "Create page" do
     before do

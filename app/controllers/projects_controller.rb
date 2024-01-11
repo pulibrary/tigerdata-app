@@ -29,12 +29,12 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def approve
-    @project = Project.find(params[:id])
-    xml_namespace = params[:xml_namespace]
-    @project.approve!(session_id: current_user.mediaflux_session, xml_namespace: xml_namespace)
-    redirect_to @project
-  end
+  # def approve
+  #   @project = Project.find(params[:id])
+  #   xml_namespace = params[:xml_namespace]
+  #   @project.approve!(session_id: current_user.mediaflux_session, xml_namespace: xml_namespace)
+  #   redirect_to @project
+  # end
 
   def edit
     @project = Project.find(params[:id])
