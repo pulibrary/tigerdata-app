@@ -209,6 +209,7 @@ GEM
     hashie (5.0.0)
     health-monitor-rails (11.1.0)
       railties (>= 6.1)
+    honeybadger (5.4.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -519,6 +520,7 @@ DEPENDENCIES
   ffaker
   google-protobuf (~> 3.0)
   health-monitor-rails
+  honeybadger
   importmap-rails
   jbuilder
   mailcatcher
