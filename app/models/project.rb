@@ -49,6 +49,8 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
+  # We will eventually need something like this.
+  #
   # def create_mediaflux(session_id:, xml_namespace: nil)
   #   asset_id = ProjectMediaflux.create!(project: self, session_id: session_id, xml_namespace: xml_namespace)
   #   if asset_id.present?
