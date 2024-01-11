@@ -8,7 +8,8 @@ Project Details:
     Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
   </div>
 <% end %>
-<div>
+
+<div class="container-fluid">
   <h2>Roles</h2>
   <dl>
   <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
@@ -23,8 +24,7 @@ Project Details:
   </dl>
 </div> 
 
-
-<div>
+<div class="py-1">
   <h2>Project Description</h2>
   <dl>
   <dt>Affiliated Departments</dt> <dd><%= @project.departments.join(", ") %></dd>
