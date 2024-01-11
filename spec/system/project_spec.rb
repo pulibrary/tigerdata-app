@@ -25,12 +25,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
 
-  # let(:project_in_mediaflux) do
-  #   project = FactoryBot.create(:project, metadata: metadata)
-  #   project.approve!(session_id: sponsor_user.mediaflux_session)
-  #   project
-  # end
-
   before do
     stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
       .with(
@@ -59,17 +53,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content pending_text
       end
     end
-    # context "After it is in MediaFlux" do
-    #   it "shows the project data" do
-    #     sign_in sponsor_user
-    #     visit "/projects/#{project_in_mediaflux.id}"
-    #     expect(page).to have_content "project 123"
-    #     expect(page).not_to have_button "Approve Project"
-    #     expect(page).to be_axe_clean
-    #       .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-    #       .skipping(:'color-contrast')
-    #   end
-    # end
 
     context "when the data user is empty" do
       let(:metadata) do
@@ -111,15 +94,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_button "Approve Project"
       end
     end
-
-    # it "shows the Mediaflux id for a project saved in Mediaflux" do
-    #   sign_in sponsor_user
-    #   visit "/projects/#{project_in_mediaflux.id}"
-    #   expect(page).to have_content "project 123"
-    #   expect(page).to have_content "Mediaflux id: 999"
-    #   expect(page).not_to have_content pending_text
-    #   expect(page).not_to have_button "Approve Project"
-    # end
   end
 
   context "Edit page" do
@@ -258,7 +232,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   context "Index page" do
     before do
       project_not_in_mediaflux
-      # project_in_mediaflux
     end
 
     it "shows the existing projects" do
@@ -266,7 +239,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects"
       expect(page).to have_content(project_not_in_mediaflux.title)
       expect(page).to have_content("(pending)")
-      # expect(page).to have_content(project_in_mediaflux.title)
     end
   end
 end

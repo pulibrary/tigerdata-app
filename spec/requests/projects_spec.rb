@@ -150,19 +150,6 @@ RSpec.describe "/projects", type: :request do
 XML
       end
 
-      # it "creates the project asset within mediaflux" do
-      #   post(project_approve_path(project))
-
-      #   expect(response).to redirect_to(project_path(project))
-
-      #   project.reload
-      #   expect(project.in_mediaflux?).to be true
-      #   # this ensures that the request was transmitted as expected
-      #   expect(a_request(:post, mediaflux_url).with(
-      #     body: create_project_body
-      #   )).to have_been_made.once
-      # end
-
       context "when a namespace is specified" do
         let(:project) do
           FactoryBot.create(:project,
@@ -175,23 +162,6 @@ XML
                               data_sponsor: data_sponsor.uid
                             })
         end
-
-        # it "creates the mediaflux project asset using the namespace" do
-        #   post(project_approve_path(project, params: { xml_namespace: "bar" }))
-
-        #   expect(response).to redirect_to(project_path(project))
-
-        #   project.reload
-        #   expect(project.in_mediaflux?).to be true
-        #   # this ensures that the request was transmitted as expected
-        #   expect(a_request(:post, mediaflux_url).with(
-        #     body: /<bar:project/
-        #   )).to have_been_made.once
-
-        #   expect(a_request(:post, mediaflux_url).with(
-        #     body: /<\/bar:project>/
-        #   )).to have_been_made.once
-        # end
       end
     end
   end
