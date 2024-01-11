@@ -21,11 +21,10 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        render json: @project.metadata
+        render json: @project.to_json
       end
       format.xml do
-        xml_payload = ProjectMediaflux.xml_payload(project: @project)
-        render xml: xml_payload
+        render xml: @project.to_xml
       end
     end
   end
