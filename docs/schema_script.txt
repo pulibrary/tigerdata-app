@@ -22,5 +22,6 @@ asset.doc.type.update :create true :description "Project metadata" :type tigerda
     :element -name created_on    -type date               -min-occurs 1 -max-occurs 1 -label "Timestamp project was created" \
     :element -name created_by    -type string             -min-occurs 1 -max-occurs 1 -label "User that created the project" \
     :element -name updated_on    -type date               -min-occurs 0 -max-occurs 1 -label "Timestamp project was updated" \
-    :element -name updated_by    -type string             -min-occurs 0 -max-occurs 1 -label "User that updated the project" >
+    :element -name updated_by    -type string             -min-occurs 0 -max-occurs 1 -label "User that updated the project" \
+    :element -name project_id    -type string -index true -min-occurs 0 -max-occurs 1 -label "The pul datacite drafted doi" >
 
