@@ -39,7 +39,8 @@ class ProjectMediaflux
       created_on: project.metadata[:created_on],
       created_by: project.metadata[:created_by],
       updated_on: project.metadata[:updated_on],
-      updated_by: project.metadata[:updated_by]
+      updated_by: project.metadata[:updated_by],
+      project_id: project.metadata[:project_id]
     }
     values
   end
