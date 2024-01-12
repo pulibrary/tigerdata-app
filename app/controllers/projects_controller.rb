@@ -29,13 +29,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def approve
-    @project = Project.find(params[:id])
-    xml_namespace = params[:xml_namespace]
-    @project.approve!(session_id: current_user.mediaflux_session, xml_namespace: xml_namespace)
-    redirect_to @project
-  end
-
   def edit
     @project = Project.find(params[:id])
   end
@@ -45,12 +38,6 @@ class ProjectsController < ApplicationController
     project_metadata = ProjectMetadata.new(project: @project, current_user:)
     @project.metadata = project_metadata.update_metadata(params:)
     if @project.save
-      if @project.in_mediaflux?
-        # Ideally this should happen inside the model, but since the code requires the Mediaflux session
-        # we'll keep it here for now.
-        @project.update_mediaflux(session_id: current_user.mediaflux_session)
-      end
-
       redirect_to @project
     else
       render :edit

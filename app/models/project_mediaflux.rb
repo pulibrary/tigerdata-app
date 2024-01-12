@@ -20,10 +20,11 @@ class ProjectMediaflux
     create_request.id
   end
 
-  def self.update(project:, session_id:)
-    tigerdata_values = project_values(project: project)
-    Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
-  end
+  # We will eventually need something like this
+  # def self.update(project:, session_id:)
+  #   tigerdata_values = project_values(project: project)
+  #   Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
+  # end
 
   # translates database record into mediaflux meta document
   # rubocop:disable Metrics/MethodLength

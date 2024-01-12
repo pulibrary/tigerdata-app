@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# :nocov:
 namespace :schema do
   # Define the TigerData schema
   task create: :environment do
@@ -10,3 +11,4 @@ namespace :schema do
     schema.create
   end
 end
+# :nocov:
