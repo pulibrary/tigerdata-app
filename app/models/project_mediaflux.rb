@@ -26,6 +26,7 @@ class ProjectMediaflux
   end
 
   # translates database record into mediaflux meta document
+  # rubocop:disable Metrics/MethodLength
   def self.project_values(project:)
     values = {
       code: project.directory,
@@ -44,6 +45,7 @@ class ProjectMediaflux
     }
     values
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.xml_payload(project:, xml_namespace: nil)
     project_name = safe_name(project.directory)

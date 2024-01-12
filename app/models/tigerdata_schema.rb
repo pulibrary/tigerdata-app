@@ -48,7 +48,7 @@ class TigerdataSchema
     created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
     updated_on = { name: "updated_on", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
     updated_by = { name: "updated_by", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
-    project_id = { name: "project_id", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
+    project_id = { name: "project_id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
 
     [code, title, description, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by, project_id]
   end
