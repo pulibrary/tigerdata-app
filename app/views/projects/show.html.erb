@@ -14,8 +14,8 @@ Project Details:
   <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
   <dt>Data Manager</dt> <dd> <%= @project.metadata[:data_manager] %></dd>
   <dt>Data Users </dt> <dd> 
-  <%if @data_users.count != 0%>  
-    <%=@data_users%>
+  <%if @users.count != 0%>  
+    <%=@users.join(', ')%>
   <%else%>
       None 
   <%end%>

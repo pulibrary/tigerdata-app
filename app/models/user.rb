@@ -70,4 +70,8 @@ class User < ApplicationRecord
     self.family_name =  extra_cas_info.sn
     self.display_name = extra_cas_info.pudisplayname
   end
+
+  def display_name_safe
+    display_name.presence || uid
+  end
 end

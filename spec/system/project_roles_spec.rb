@@ -80,7 +80,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     click_on("My test project")
     expect(page).to have_content("This project has not been saved to Mediaflux")
     expect(page).to have_content("My test project (pending)")
-    expect(page).to have_content(read_only.uid)
-    expect(page).to have_content(read_write.uid)
+    expect(page).to have_content(read_only.display_name_safe + " (read only)")
+    expect(page).to have_content(read_write.display_name_safe)
   end
 end
