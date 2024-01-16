@@ -18,6 +18,9 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    @data_users = @project.metadata[:data_user_read_only].concat(@project.metadata[:data_user_read_write]).sort
+    @users = retrieving_name(@data_users)
+    
     respond_to do |format|
       format.html
       format.json do
@@ -49,4 +52,17 @@ class ProjectsController < ApplicationController
   end
 
   def confirmation; end
+  private 
+    def retrieving_name(data_users) 
+      users = []
+      data_users.each do |uid|
+        user = User.find_by(uid: uid)
+        if @project.metadata[:data_user_read_only].include?(uid)
+          users << user.display_name_safe + " (read only)"
+        else
+          users << user.display_name_safe
+        end
+      end
+      users.sort_by! {|user| user.downcase}
+    end
 end
