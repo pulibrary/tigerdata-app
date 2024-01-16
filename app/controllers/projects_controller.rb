@@ -29,10 +29,12 @@ class ProjectsController < ApplicationController
     @data_manager = User.find_by(uid: manager_uid)
 
     read_only_uids = @project_metadata.fetch(:data_user_read_only, [])
-    @data_read_only_users = read_only_uids.map { |uid| User.find_by(uid:) }
+    unsorted_read_only = read_only_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
+    @data_read_only_users = unsorted_read_only.sort(&:given_name)
 
     read_write_uids = @project_metadata.fetch(:data_user_read_write, [])
-    @data_read_write_users = read_write_uids.map { |uid| User.find_by(uid:) }
+    unsorted_read_write = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
+    @data_read_write_users = unsorted_read_write.sort(&:given_name)
 
     respond_to do |format|
       format.html

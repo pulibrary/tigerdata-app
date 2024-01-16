@@ -12,17 +12,54 @@ Project Details:
 <div class="container-fluid">
   <h2>Roles</h2>
   <dl>
-  <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
-  <dt>Data Manager</dt> <dd> <%= @project.metadata[:data_manager] %></dd>
-  <dt>Data Users </dt> <dd> 
-  <%if @users.count != 0%>  
-    <%=@users.join(', ')%>
-  <%else%>
-      None 
-  <%end%>
-  </dd>
+    <% if !@data_sponsor.nil? %>
+      <dt>Data Sponsor</dt>
+      <dd>
+        <%= @data_sponsor.given_name %> <%= @data_sponsor.family_name %>
+      </dd>
+    <% end %>
+    <% if !@data_manager.nil? %>
+      <dt>Data Manager</dt>
+      <dd>
+        <%= @data_manager.given_name %> <%= @data_manager.family_name %>
+      </dd>
+    <% end %>
+
+    <dt>Read Only</dt>
+    <% if @data_read_only_users.present? %>
+      <dd>
+        <% @data_read_only_users.each_with_index do |user, idx|%>
+          <% if user.given_name.blank? && user.family_name.blank? %>
+            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
+          <% else %>
+            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
+          <% end %>
+        <% end %>
+      </dd>
+    <% else %>
+      <dd>
+        <strong class="px-0">None</strong>
+      </dd>
+    <% end %>
+
+    <dt>Read/Write</dt>
+    <% if @data_read_write_users.present? %>
+      <dd>
+        <% @data_read_write_users.each_with_index do |user, idx|%>
+          <% if user.given_name.blank? && user.family_name.blank? %>
+            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
+          <% else %>
+            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
+          <% end %>
+        <% end %>
+      </dd>
+    <% else %>
+      <dd>
+        <strong class="px-0">None</strong>
+      </dd>
+    <% end %>
   </dl>
-</div> 
+</div>
 
 <div class="py-1">
   <h2>Project Description</h2>
