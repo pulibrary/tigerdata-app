@@ -2,6 +2,9 @@
 class Project < ApplicationRecord
   validates_with ProjectValidator
 
+  # TODO: What are the valid statuses?
+  PENDING_STATUS = "pending"
+
   delegate :to_json, to: :metadata_json
 
   def metadata
@@ -12,11 +15,12 @@ class Project < ApplicationRecord
     self.metadata_json = metadata
   end
 
+  # TODO: Presumably we should display other statuses as well?
   def title
     trailer = if in_mediaflux?
                 ""
               else
-                " (pending)"
+                " (#{::Project::PENDING_STATUS})"
               end
     metadata[:title] + trailer
   end

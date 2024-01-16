@@ -19,7 +19,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       departments: ["RDSS"],
       description: "hello world",
       data_user_read_only: [read_only.uid],
-      data_user_read_write: [read_write.uid]
+      data_user_read_write: [read_write.uid],
+      status: ::Project::PENDING_STATUS
     }
   end
 
@@ -46,10 +47,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Show page" do
     context "Before it is in MediaFlux" do
-      it "Shows the not yet approved project" do
+      it "Shows the not yet approved (pending) project" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "(pending)"
+        expect(page).to have_content "(#{::Project::PENDING_STATUS})"
         expect(page).to have_content pending_text
       end
     end
@@ -71,7 +72,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "shows none when the data user is empty" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123 (pending)"
+        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
@@ -88,7 +89,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "shows the project data and the Approve Project button" do
         sign_in mediaflux_admin_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123 (pending)"
+        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_button "Approve Project"
@@ -238,7 +239,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       sign_in sponsor_user
       visit "/projects"
       expect(page).to have_content(project_not_in_mediaflux.title)
-      expect(page).to have_content("(pending)")
+      expect(page).to have_content("(#{::Project::PENDING_STATUS})")
     end
   end
 end
