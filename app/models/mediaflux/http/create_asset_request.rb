@@ -64,6 +64,7 @@ module Mediaflux
                     xml.code @tigerdata_values[:code]
                     xml.title @tigerdata_values[:title]
                     xml.description @tigerdata_values[:description]
+                    xml.status @tigerdata_values[:status]
                     xml.data_sponsor @tigerdata_values[:data_sponsor]
                     xml.data_manager @tigerdata_values[:data_manager]
                     departments = @tigerdata_values[:departments] || []

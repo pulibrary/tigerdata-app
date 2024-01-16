@@ -11,6 +11,7 @@ FactoryBot.define do
       created_on { DateTime.now }
       updated_on { DateTime.now }
       project_id { nil }
+      status { "pending" }
     end
     metadata do
       {
@@ -26,7 +27,8 @@ FactoryBot.define do
         created_by: FactoryBot.create(:user).uid,
         updated_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
         updated_by: FactoryBot.create(:user).uid,
-        project_id: project_id
+        project_id: project_id,
+        status: status
       }
     end
   end

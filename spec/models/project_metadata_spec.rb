@@ -9,7 +9,7 @@ RSpec.describe ProjectMetadata, type: :model do
     describe "#update_metadata" do
 
       it "parses the basic metadata" do
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123", status: "pending" }
         project_metadata = described_class.new(current_user: current_user, project: project)
         update = project_metadata.update_metadata(params: params)
         expect(update[:data_sponsor]).to eq("abc")
@@ -18,6 +18,7 @@ RSpec.describe ProjectMetadata, type: :model do
         expect(update[:directory]).to eq("dir")
         expect(update[:title]).to eq("title abc")
         expect(update[:description]).to eq("description 123")
+        expect(update[:status]).to eq("pending")
       end
 
       it "returns metdata with create timestamps" do
