@@ -41,10 +41,19 @@ Project Details:
 <div class="py-1">
   <h2>Project Description</h2>
   <dl>
-  <dt>Affiliated Departments</dt> <dd><%= @project.departments.join(", ") %></dd>
-  <dt>Project Directory</dt> <dd> <%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
-  <dt>Title</dt> <dd><%= @project.metadata[:title] %></dd>
-  <dt>Description:<dt/>
+    <dt>Affiliated Departments</dt>
+    <% if @departments.empty? %>
+      <dd><strong class="px-0">None</strong></dd>
+    <% else %>
+      <dd><%= @departments %></dd>
+    <% end %>
+  </dl>
+  <dl>
+    <dt>Project Directory</dt>
+    <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
+    <dt>Title</dt>
+    <dd><%= @project.metadata[:title] %></dd>
+    <dt>Description:<dt/>
     <dd><%= @project.metadata[:description] %></dd>
   </dl>
 </div>
