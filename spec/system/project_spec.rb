@@ -75,8 +75,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
-        expect(page).to have_content "Read Only\nNone"
-        expect(page).to have_content "Read/write\nNone"
+        expect(page).to have_content "Data Users\nNone"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')

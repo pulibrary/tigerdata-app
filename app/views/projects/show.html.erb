@@ -13,29 +13,16 @@ Project Details:
   <dl>
   <dt>Data Sponsor</dt> <dd><%= @project.metadata[:data_sponsor] %></dd>
   <dt>Data Manager</dt> <dd> <%= @project.metadata[:data_manager] %></dd>
-
-  <dt>Read Only</dt> <dd>
-    <%if @project.metadata[:data_user_read_only].present? %>
-      <% @project.metadata[:data_user_read_only].each do |user|%>
-       <%= user%> 
-      <%end%>
-      </dd>
-    <%else%>
-      None
-    <%end%>
-  </dd>
-
-  <dt>Read/write </dt><dd>
-    <%if @project.metadata[:data_user_read_write].present? %>
-      <% @project.metadata[:data_user_read_write].each do |user|%>
-        <%= user%> 
-      <%end%>
-    <%else%>
-      None
-    <%end%>
+  <dt>Data Users </dt> <dd> 
+  <%if @data_users.count != 0%>  
+    <%=@data_users%>
+  <%else%>
+      None 
+  <%end%>
   </dd>
   </dl>
-</div>
+</div> 
+
 
 <div>
   <h2>Project Description</h2>

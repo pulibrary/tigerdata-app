@@ -18,6 +18,7 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    @data_users = @project.metadata[:data_user_read_only].concat(@project.metadata[:data_user_read_write]).sort
     respond_to do |format|
       format.html
       format.json do
