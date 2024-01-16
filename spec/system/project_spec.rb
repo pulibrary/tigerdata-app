@@ -242,4 +242,17 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_content("(#{::Project::PENDING_STATUS})")
     end
   end
+
+  context "Show page" do
+    it "shows the project correct navigation buttons" do
+      sign_in sponsor_user
+      visit "/projects/#{project_not_in_mediaflux.id}"
+      expect(page).to have_content(project_not_in_mediaflux.title)
+      expect(page).to have_link("Edit")
+      click_on("Return to Dashboard")
+      expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+      click_on(project_not_in_mediaflux.title)
+      expect(page).to have_link("Withdraw Project Request")
+    end
+  end
 end
