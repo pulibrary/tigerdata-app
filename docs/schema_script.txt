@@ -14,6 +14,7 @@ asset.doc.type.update :create true :description "Project metadata" :type tigerda
     :element -name code          -type string -index true -min-occurs 1 -max-occurs 1 -label "The unique identifier for the project" \
     :element -name title         -type string             -min-occurs 1 -max-occurs 1 -label "A plain-language title for the project" \
     :element -name description   -type string             -min-occurs 1 -max-occurs 1 -label "A brief description of the project" \
+    :element -name status        -type string             -min-occurs 1 -max-occurs 1 -label "The current status of the project" \
     :element -name data_sponsor  -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who takes primary responsibility for the project" \
     :element -name data_manager  -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who manages the day-to-day activities for the project" \
     :element -name data_users_rw -type string -index true -min-occurs 0               -label "A person who has read and write access privileges to the project" \

@@ -26,13 +26,15 @@ class ProjectMediaflux
   #   Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   # end
 
-  # translates database record into mediaflux meta document
+  # Translates database record into mediaflux meta document.
+  # This is where the XML payload is generated.
   # rubocop:disable Metrics/MethodLength
   def self.project_values(project:)
     values = {
       code: project.directory,
       title: project.metadata[:title],
       description: project.metadata[:description],
+      status: project.metadata[:status],
       data_sponsor: project.metadata[:data_sponsor],
       data_manager: project.metadata[:data_manager],
       data_user_read_only: project.metadata[:data_user_read_only],

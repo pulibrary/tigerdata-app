@@ -65,6 +65,7 @@ class ProjectMetadata
           directory: params[:directory],
           title: params[:title],
           description: params[:description],
+          status: params[:status],
           data_user_read_only: ro_users,
           data_user_read_write: rw_users,
           project_id: project.metadata[:project_id]

@@ -37,6 +37,7 @@ RSpec.describe ProjectsController do
         "          <code>#{project.directory}</code>\n" \
         "          <title>#{project.metadata[:title]}</title>\n" \
         "          <description>#{project.metadata[:description]}</description>\n" \
+        "          <status>#{project.metadata[:status]}</status>\n" \
         "          <data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>\n" \
         "          <data_manager>#{project.metadata[:data_manager]}</data_manager>\n" \
         "          <departments>RDSS</departments>\n" \
