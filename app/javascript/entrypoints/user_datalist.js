@@ -2,11 +2,15 @@
 // Code idea taken from https://www.jotform.com/blog/html5-datalists-what-you-need-to-know-78024/
 export default class UserDatalist {
   setupDatalistValidity() {
-  // Find all inputs on the DOM which are bound to a datalist via their list attribute.
+    // Find all inputs on the DOM which are bound to a datalist via their list attribute.
     const inputs = document.querySelectorAll('input[list]');
     for (let i = 0; i < inputs.length; i += 1) {
-    // When the value of the input changes...
-      inputs[i].addEventListener('change', this.userRoleChange);
+      // When the value of the input changes...
+      const element = inputs[i];
+      element.addEventListener('change', this.userRoleChange);
+
+      // This is necessary for the initial page load
+      this.userRoleChange.apply(element);
     }
   }
 
@@ -24,19 +28,29 @@ export default class UserDatalist {
     // to provide an user feedback if the value does not exist in the datalist
     if (optionFound) {
       this.setCustomValidity('');
-      this.parentNode.querySelectorAll('a');
-      const buttons = this.parentNode.querySelectorAll('[type=submit]');
-      for (let k = 0; k < buttons.length; k += 1) {
-        buttons[k].disabled = false;
+    } else if (this.required || this.value !== '') {
+      this.setCustomValidity('Please select a valid value.');
+    }
+
+    const buttons = this.parentNode.querySelectorAll('[type=Submit]');
+    if (this.value !== '') {
+      for (let x = 0; x < buttons.length; x += 1) {
+        buttons[x].disabled = !optionFound;
       }
     } else {
-      this.setCustomValidity('Please select a valid value.');
-      const buttons = this.parentNode.querySelectorAll('[type=submit]');
       for (let x = 0; x < buttons.length; x += 1) {
         buttons[x].disabled = true;
       }
     }
-    // tell the user if there are errors
-    this.reportValidity();
+
+    if (this.required) {
+      const formButtons = this.form.querySelectorAll('[value=Submit]');
+      for (let k = 0; k < formButtons.length; k += 1) {
+        formButtons[k].disabled = !optionFound;
+      }
+
+      // tell the user if there are errors
+      this.reportValidity();
+    }
   }
 }

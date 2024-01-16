@@ -22,48 +22,51 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     click_on "New Project"
     expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
     fill_in "data_sponsor", with: ""
-    click_on "Submit"
+    expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: "xxx"
-    click_on "Submit"
+    expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: sponsor_user.uid
+    page.find("body").click
     click_on "Submit"
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq ""
 
     fill_in "data_manager", with: "xxx"
-    click_on "Submit"
+    page.find("body").click
+    expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_manager", with: ""
-    click_on "Submit"
+    expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_manager", with: data_manager.uid
+    page.find("body").click
     click_on "Submit"
     expect(page.find("#data_manager").native.attribute("validationMessage")).to eq ""
 
-    # clicking on Save becuase once the button is disabled it does not get reenabled until after the user clicks out of the text box
+    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
     fill_in "ro-user-uid-to-add", with: "xxx"
-    click_on "Submit"
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
+    page.find("body").click
     expect(page.find("#btn-add-ro-user")).to be_disabled
+    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "ro-user-uid-to-add", with: ""
-    click_on "Submit"
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
+    page.find("body").click
     expect(page.find("#btn-add-ro-user")).to be_disabled
+    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "ro-user-uid-to-add", with: read_only.uid
-    click_on "Submit"
+    page.find("body").click
     click_on "btn-add-ro-user"
     expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq ""
 
-    # clicking on Save becuase once the button is disabled it does not get reenabled until after the user clicks out of the text box
+    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
     fill_in "rw-user-uid-to-add", with: "xxx"
-    click_on "Submit"
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
+    page.find("body").click
     expect(page.find("#btn-add-rw-user")).to be_disabled
+    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "rw-user-uid-to-add", with: ""
-    click_on "Submit"
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
+    page.find("body").click
     expect(page.find("#btn-add-rw-user")).to be_disabled
+    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "rw-user-uid-to-add", with: read_write.uid
     click_on "Submit"
     click_on "btn-add-rw-user"
