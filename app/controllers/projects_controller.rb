@@ -20,7 +20,22 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @data_users = @project.metadata[:data_user_read_only].concat(@project.metadata[:data_user_read_write]).sort
     @users = retrieving_name(@data_users)
-    
+    @project_metadata = @project.metadata
+
+    sponsor_uid = @project_metadata[:data_sponsor]
+    @data_sponsor = User.find_by(uid: sponsor_uid)
+
+    manager_uid = @project_metadata[:data_manager]
+    @data_manager = User.find_by(uid: manager_uid)
+
+    read_only_uids = @project_metadata.fetch(:data_user_read_only, [])
+    unsorted_read_only = read_only_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
+    @data_read_only_users = unsorted_read_only.sort(&:given_name)
+
+    read_write_uids = @project_metadata.fetch(:data_user_read_write, [])
+    unsorted_read_write = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
+    @data_read_write_users = unsorted_read_write.sort(&:given_name)
+
     respond_to do |format|
       format.html
       format.json do
