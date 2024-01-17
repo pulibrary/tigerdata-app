@@ -25,33 +25,10 @@ Project Details:
       </dd>
     <% end %>
 
-    <dt>Read Only</dt>
+    <dt>Data Users</dt>
     <% if @data_read_only_users.present? %>
       <dd>
-        <% @data_read_only_users.each_with_index do |user, idx|%>
-          <% if user.given_name.blank? && user.family_name.blank? %>
-            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% else %>
-            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% end %>
-        <% end %>
-      </dd>
-    <% else %>
-      <dd>
-        <strong class="px-0">None</strong>
-      </dd>
-    <% end %>
-
-    <dt>Read/Write</dt>
-    <% if @data_read_write_users.present? %>
-      <dd>
-        <% @data_read_write_users.each_with_index do |user, idx|%>
-          <% if user.given_name.blank? && user.family_name.blank? %>
-            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% else %>
-            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% end %>
-        <% end %>
+        <%= @data_user_names %>
       </dd>
     <% else %>
       <dd>

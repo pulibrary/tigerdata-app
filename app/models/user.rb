@@ -74,4 +74,10 @@ class User < ApplicationRecord
   def display_name_safe
     display_name.presence || uid
   end
+
+  def data_user_name
+    return uid if display_name.blank?
+
+    "#{given_name} #{family_name}"
+  end
 end
