@@ -22,7 +22,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who")
       expect(user.given_name).to eq("guess")
       expect(user.family_name).to eq("who")
-      expect(user.display_name_safe).to eq("Guess Who?")
+      expect(user.display_name_safe).to eq("Guess Who")
     end
     it "testing a uid" do
       user = described_class.from_cas(access_token2)

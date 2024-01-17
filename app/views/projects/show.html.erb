@@ -15,43 +15,20 @@ Project Details:
     <% if !@data_sponsor.nil? %>
       <dt>Data Sponsor</dt>
       <dd>
-        <%= @data_sponsor.given_name %> <%= @data_sponsor.family_name %>
+        <%= @data_sponsor.display_name_safe %>
       </dd>
     <% end %>
     <% if !@data_manager.nil? %>
       <dt>Data Manager</dt>
       <dd>
-        <%= @data_manager.given_name %> <%= @data_manager.family_name %>
+        <%= @data_manager.display_name_safe %>
       </dd>
     <% end %>
 
-    <dt>Read Only</dt>
-    <% if @data_read_only_users.present? %>
+    <dt>Data Users</dt>
+    <% if @data_users.present? %>
       <dd>
-        <% @data_read_only_users.each_with_index do |user, idx|%>
-          <% if user.given_name.blank? && user.family_name.blank? %>
-            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% else %>
-            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% end %>
-        <% end %>
-      </dd>
-    <% else %>
-      <dd>
-        <strong class="px-0">None</strong>
-      </dd>
-    <% end %>
-
-    <dt>Read/Write</dt>
-    <% if @data_read_write_users.present? %>
-      <dd>
-        <% @data_read_write_users.each_with_index do |user, idx|%>
-          <% if user.given_name.blank? && user.family_name.blank? %>
-            <%= user.uid %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% else %>
-            <%= user.given_name %> <%= user.family_name %><%= idx < (@data_read_only_users.length - 1) ? ', ' : '' %>
-          <% end %>
-        <% end %>
+        <%= @data_user_names %>
       </dd>
     <% else %>
       <dd>

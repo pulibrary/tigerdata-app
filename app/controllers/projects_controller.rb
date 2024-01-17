@@ -18,8 +18,6 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    @data_users = @project.metadata[:data_user_read_only].concat(@project.metadata[:data_user_read_write]).sort
-    @users = retrieving_name(@data_users)
     @project_metadata = @project.metadata
 
     sponsor_uid = @project_metadata[:data_sponsor]
@@ -29,12 +27,18 @@ class ProjectsController < ApplicationController
     @data_manager = User.find_by(uid: manager_uid)
 
     read_only_uids = @project_metadata.fetch(:data_user_read_only, [])
-    unsorted_read_only = read_only_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
-    @data_read_only_users = unsorted_read_only.sort(&:given_name)
+    unsorted_read_only = read_only_uids.map { |uid| ReadOnlyUser.find_by(uid:) }.reject(&:blank?)
+    @data_read_only_users = unsorted_read_only.sort_by { |u| u.given_name || u.uid }
 
     read_write_uids = @project_metadata.fetch(:data_user_read_write, [])
     unsorted_read_write = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
-    @data_read_write_users = unsorted_read_write.sort(&:given_name)
+    @data_read_write_users = unsorted_read_write.sort_by { |u| u.given_name || u.uid }
+
+    unsorted_data_users = @data_read_only_users + @data_read_write_users
+    sorted_data_users = unsorted_data_users.sort_by { |u| u.given_name || u.uid }
+    @data_users = sorted_data_users.uniq { |u| u.uid }
+    user_model_names = @data_users.map(&:display_name_safe)
+    @data_user_names = user_model_names.join(", ")
 
     respond_to do |format|
       format.html
@@ -67,17 +71,4 @@ class ProjectsController < ApplicationController
   end
 
   def confirmation; end
-  private 
-    def retrieving_name(data_users) 
-      users = []
-      data_users.each do |uid|
-        user = User.find_by(uid: uid)
-        if @project.metadata[:data_user_read_only].include?(uid)
-          users << user.display_name_safe + " (read only)"
-        else
-          users << user.display_name_safe
-        end
-      end
-      users.sort_by! {|user| user.downcase}
-    end
 end
