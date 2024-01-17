@@ -76,7 +76,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
 
   describe "#xml_payload" do
     it "creates the asset create payload" do
-      project = FactoryBot.create :project
+      project = FactoryBot.create :project, project_id: "abc-123"
       tigerdata_values = ProjectMediaflux.project_values(project:)
       create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
@@ -96,6 +96,10 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       "          <departments>PRDS</departments>\n" \
       "          <created_on>#{project.metadata[:created_on]}</created_on>\n" \
       "          <created_by>#{project.metadata[:created_by]}</created_by>\n" \
+      "          <project_id>abc-123</project_id>\n" \
+      "          <storage_capacity>100 TB</storage_capacity>\n" \
+      "          <storage_performance>standard</storage_performance>\n" \
+      "          <project_purpose>research</project_purpose>\n" \
       "        </tigerdata:project>\n" \
       "      </meta>\n" \
       "    </args>\n" \
