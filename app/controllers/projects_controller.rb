@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
     unsorted_data_users = @data_read_only_users + @data_read_write_users
     sorted_data_users = unsorted_data_users.sort_by { |u| u.given_name || u.uid }
     @data_users = sorted_data_users.uniq { |u| u.uid }
-    user_model_names = @data_users.map(&:data_user_name)
+    user_model_names = @data_users.map(&:display_name_safe)
     @data_user_names = user_model_names.join(", ")
 
     respond_to do |format|
@@ -71,17 +71,4 @@ class ProjectsController < ApplicationController
   end
 
   def confirmation; end
-  private 
-    def retrieving_name(data_users) 
-      users = []
-      data_users.each do |uid|
-        user = User.find_by(uid: uid)
-        if @project.metadata[:data_user_read_only].include?(uid)
-          users << user.display_name_safe + " (read only)"
-        else
-          users << user.display_name_safe
-        end
-      end
-      users.sort_by! {|user| user.downcase}
-    end
 end

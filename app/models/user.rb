@@ -72,12 +72,8 @@ class User < ApplicationRecord
   end
 
   def display_name_safe
-    display_name.presence || uid
-  end
-
-  def data_user_name
     return uid if display_name.blank?
 
-    "#{given_name} #{family_name}"
+    "#{given_name.capitalize} #{family_name.capitalize}"
   end
 end
