@@ -35,7 +35,8 @@ class ProjectsController < ApplicationController
     @data_read_write_users = unsorted_read_write.sort_by { |u| u.given_name || u.uid }
 
     unsorted_data_users = @data_read_only_users + @data_read_write_users
-    @data_users = unsorted_data_users.sort_by { |u| u.given_name || u.uid }
+    sorted_data_users = unsorted_data_users.sort_by { |u| u.given_name || u.uid }
+    @data_users = sorted_data_users.uniq { |u| u.uid }
     user_model_names = @data_users.map(&:data_user_name)
     @data_user_names = user_model_names.join(", ")
 
