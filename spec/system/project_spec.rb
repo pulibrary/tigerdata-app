@@ -126,8 +126,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
       fill_in "ro-user-uid-to-add", with: read_only.uid
+      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+      page.find("body").click
       click_on "btn-add-ro-user"
       fill_in "rw-user-uid-to-add", with: read_write.uid
+      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+      page.find("body").click
       click_on "btn-add-rw-user"
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
@@ -152,7 +156,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "New Project"
       expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
       fill_in "data_sponsor", with: ""
-      click_on "Submit"
+      expect(page.find("input[value=Submit]")).to be_disabled
       expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     end
     context "with an invalid data manager" do
@@ -161,19 +165,20 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/"
         click_on "New Project"
         expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-        # fill_in "data_sponsor", with: sponsor_user.uid
         fill_in "data_manager", with: "xxx"
-        fill_in "ro-user-uid-to-add", with: read_only.uid
         expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
         click_on "btn-add-ro-user"
         fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
         click_on "btn-add-rw-user"
         fill_in "directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
-        expect do
-          click_on "Submit"
-        end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
+        expect(page.find("input[value=Submit]")).to be_disabled
       end
     end
 
@@ -185,11 +190,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: "xxx"
-        click_on "btn-add-ro-user"
+        page.find("body").click
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
 
         fill_in "rw-user-uid-to-add", with: "zzz"
-        click_on "btn-add-rw-user"
+        page.find("body").click
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
         fill_in "directory", with: "test_project"
         fill_in "title", with: "My test project"
@@ -216,8 +221,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "data_sponsor", with: sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid
+        page.find("body").click
         click_on "btn-add-ro-user"
         fill_in "rw-user-uid-to-add", with: read_write.uid
+        page.find("body").click
         click_on "btn-add-rw-user"
         fill_in "directory", with: "test?project"
         valid = page.find("input#directory:invalid")
