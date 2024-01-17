@@ -12,6 +12,9 @@ FactoryBot.define do
       updated_on { DateTime.now }
       project_id { nil }
       status { "pending" }
+      storage_capacity { "100 TB" }
+      storage_performance { "standard" }
+      project_purpose { "research" }
     end
     metadata do
       {
@@ -28,7 +31,10 @@ FactoryBot.define do
         updated_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
         updated_by: FactoryBot.create(:user).uid,
         project_id: project_id,
-        status: status
+        status: status,
+        storage_capacity: storage_capacity,
+        storage_performance: storage_performance,
+        project_purpose: project_purpose
       }
     end
   end

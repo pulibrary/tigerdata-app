@@ -29,6 +29,7 @@ class ProjectMediaflux
   # Translates database record into mediaflux meta document.
   # This is where the XML payload is generated.
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def self.project_values(project:)
     values = {
       code: project.directory,
@@ -44,10 +45,14 @@ class ProjectMediaflux
       created_by: project.metadata[:created_by],
       updated_on: project.metadata[:updated_on],
       updated_by: project.metadata[:updated_by],
-      project_id: project.metadata[:project_id]
+      project_id: project.metadata[:project_id],
+      storage_capacity: project.metadata[:storage_capacity],
+      storage_performance: project.metadata[:storage_performance],
+      project_purpose: project.metadata[:project_purpose]
     }
     values
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   def self.xml_payload(project:, xml_namespace: nil)

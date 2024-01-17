@@ -34,6 +34,35 @@ class TigerdataSchema
     fields_request.resolve
   end
 
+  def create_aterm_schema_command(line_terminator = nil, _continuation_char = nil)
+    namespace_command = "asset.doc.namespace.update :create true :namespace tigerdata :description \"TigerData metadata schema\"\n\n"
+    field_command = "asset.doc.type.update :create true :description \"Project metadata\" :type tigerdata:project :definition <#{line_terminator}"
+    project_schema_fields.each do |field|
+      field_command += " :element -name #{field[:name]} -type #{field[:type]}"
+      field_command += " -index #{field[:index]}" if field[:index]
+      field_command += " -min-occurs #{field['min-occurs']}"
+      field_command += " -max-occurs #{field['max-occurs']}" if field["max-occurs"].present?
+      field_command += " -label \"#{field[:label]}\"#{line_terminator}"
+    end
+    field_command += ">"
+    namespace_command + field_command
+  end
+
+  def create_aterm_doc_script(filename: Rails.root.join("docs", "schema_script.txt"))
+    File.open(filename, "w") do |script|
+      script.write("# This file was automatically generated on #{DateTime.now}\n")
+      script.write("# Create the \"tigerdata\" namespace schema and the \"project\" definition inside of it.\n#\n")
+      script.write("# To run this script, issue the following command from Aterm\n#\n")
+      script.write("# script.execute :in file://full/path/to/tiger-data-app/docs/schema_script.txt\n#\n")
+      script.write("# Notice that if you copy and paste the (multi-line) asset.doc.type.update command\n")
+      script.write("# into Aterm you'll have to make it single line (i.e. remove the \\)\n")
+
+      script.write(create_aterm_schema_command(" \\\n"))
+      script.write("\n")
+    end
+  end
+
+  # rubocop:disable Metrics/MethodLength
   def project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
     code = { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
@@ -50,7 +79,12 @@ class TigerdataSchema
     updated_on = { name: "updated_on", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
     updated_by = { name: "updated_by", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
     project_id = { name: "project_id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
+    storage_capacity = { name: "storage_capacity", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage capacity (default 100 TB)" }
+    storage_performance = { name: "storage_performance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage performance (default Standard)" }
+    project_purpose = { name: "project_purpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The project purpose (default Research)" }
 
-    [code, title, description, status, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by, project_id]
+    [code, title, description, status, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by, project_id, storage_capacity,
+     storage_performance, project_purpose]
   end
+  # rubocop:enable Metrics/MethodLength
 end

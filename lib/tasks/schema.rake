@@ -10,5 +10,11 @@ namespace :schema do
     schema = TigerdataSchema.new(session_id: logon_request.session_token)
     schema.create
   end
+
+  desc "create the script to define the tigerdata schema in mediaflux"
+  task create_script: :environment do
+    tigerdata_schema = TigerdataSchema.new(session_id: nil)
+    tigerdata_schema.create_aterm_doc_script
+  end
 end
 # :nocov:

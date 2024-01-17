@@ -81,6 +81,10 @@ module Mediaflux
                     end
                     xml.created_on @tigerdata_values[:created_on]
                     xml.created_by @tigerdata_values[:created_by]
+                    xml.project_id @tigerdata_values[:project_id]
+                    xml.storage_capacity @tigerdata_values[:storage_capacity]
+                    xml.storage_performance @tigerdata_values[:storage_performance]
+                    xml.project_purpose @tigerdata_values[:project_purpose]
                   end
                 end
               end

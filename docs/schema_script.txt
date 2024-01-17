@@ -1,3 +1,4 @@
+# This file was automatically generated on 2024-01-17T13:26:30-05:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm
@@ -6,23 +7,24 @@
 #
 # Notice that if you copy and paste the (multi-line) asset.doc.type.update command
 # into Aterm you'll have to make it single line (i.e. remove the \)
-#
-
 asset.doc.namespace.update :create true :namespace tigerdata :description "TigerData metadata schema"
 
 asset.doc.type.update :create true :description "Project metadata" :type tigerdata:project :definition < \
-    :element -name code          -type string -index true -min-occurs 1 -max-occurs 1 -label "The unique identifier for the project" \
-    :element -name title         -type string             -min-occurs 1 -max-occurs 1 -label "A plain-language title for the project" \
-    :element -name description   -type string             -min-occurs 1 -max-occurs 1 -label "A brief description of the project" \
-    :element -name status        -type string             -min-occurs 1 -max-occurs 1 -label "The current status of the project" \
-    :element -name data_sponsor  -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who takes primary responsibility for the project" \
-    :element -name data_manager  -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who manages the day-to-day activities for the project" \
-    :element -name data_users_rw -type string -index true -min-occurs 0               -label "A person who has read and write access privileges to the project" \
-    :element -name data_users_ro -type string -index true -min-occurs 0               -label "A person who has read-only access privileges to the project" \
-    :element -name departments   -type string -index true -min-occurs 1               -label "The primary Princeton University department(s) affiliated with the project" \
-    :element -name created_on    -type date               -min-occurs 1 -max-occurs 1 -label "Timestamp project was created" \
-    :element -name created_by    -type string             -min-occurs 1 -max-occurs 1 -label "User that created the project" \
-    :element -name updated_on    -type date               -min-occurs 0 -max-occurs 1 -label "Timestamp project was updated" \
-    :element -name updated_by    -type string             -min-occurs 0 -max-occurs 1 -label "User that updated the project" \
-    :element -name project_id    -type string -index true -min-occurs 0 -max-occurs 1 -label "The pul datacite drafted doi" >
-
+ :element -name code -type string -index true -min-occurs 1 -max-occurs 1 -label "The unique identifier for the project" \
+ :element -name title -type string -min-occurs 1 -max-occurs 1 -label "A plain-language title for the project" \
+ :element -name description -type string -min-occurs 1 -max-occurs 1 -label "A brief description of the project" \
+ :element -name status -type string -index true -min-occurs 1 -max-occurs 1 -label "The current status of the project" \
+ :element -name data_sponsor -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who takes primary responsibility for the project" \
+ :element -name data_manager -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who manages the day-to-day activities for the project" \
+ :element -name data_users_rw -type string -index true -min-occurs 0 -label "A person who has read and write access privileges to the project" \
+ :element -name data_users_ro -type string -index true -min-occurs 0 -label "A person who has read-only access privileges to the project" \
+ :element -name departments -type string -index true -min-occurs 1 -label "The primary Princeton University department(s) affiliated with the project" \
+ :element -name created_on -type date -min-occurs 1 -max-occurs 1 -label "Timestamp project was created" \
+ :element -name created_by -type string -min-occurs 1 -max-occurs 1 -label "User that created the project" \
+ :element -name updated_on -type date -min-occurs 0 -max-occurs 1 -label "Timestamp project was updated" \
+ :element -name updated_by -type string -min-occurs 0 -max-occurs 1 -label "User that updated the project" \
+ :element -name project_id -type string -index true -min-occurs 1 -max-occurs 1 -label "The pul datacite drafted doi" \
+ :element -name storage_capacity -type string -index true -min-occurs 1 -max-occurs 1 -label "The requested storage capacity (default 100 TB)" \
+ :element -name storage_performance -type string -index true -min-occurs 1 -max-occurs 1 -label "The requested storage performance (default Standard)" \
+ :element -name project_purpose -type string -index true -min-occurs 1 -max-occurs 1 -label "The project purpose (default Research)" \
+>
