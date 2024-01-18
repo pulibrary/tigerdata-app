@@ -83,6 +83,7 @@ class User < ApplicationRecord
   def self.load_registration_list
     csv_data = CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
     csv_data.each do |line|
+      next if User.find_by(uid: line["NetID"])
       user = User.new 
       user.uid = line["NetID"]
       user.family_name = line["LastName"]

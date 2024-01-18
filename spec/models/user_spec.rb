@@ -43,5 +43,11 @@ RSpec.describe User, type: :model do
       User.load_registration_list
       expect(User.count).to eq 24
     end
+    it "does not create a user if they exist already" do
+      User.create(uid: "mjc12", family_name: "Chandler", display_name: "Matt Chandler", email: "mjc12@princeton.edu")
+      expect(User.count).to eq 1
+      User.load_registration_list
+      expect(User.count).to eq 24
+    end
   end
 end
