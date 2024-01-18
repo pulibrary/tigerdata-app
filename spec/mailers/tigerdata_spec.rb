@@ -11,6 +11,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.subject).to eq "Project Creation Request"
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq ["test_to@example.com"]
+    expect(mail.from).to eq ["no-reply@princeton.edu"]
     html_body = mail.html_part.body.to_s
     expect(html_body).to have_content(project.metadata[:title])
     project.metadata.keys.each do |field|
