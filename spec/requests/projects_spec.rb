@@ -75,6 +75,55 @@ RSpec.describe "/projects", type: :request do
           expect(Project.count).to eq(0)
         end
       end
+
+      context "multiple data users are specified" do
+        let(:data_user1) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Qux") }
+        let(:data_user2) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Foo") }
+        let(:data_user3) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Zed") }
+        let(:ro_user_models) do
+          [
+            data_user1,
+            data_user2
+          ]
+        end
+        let(:data_user_read_only) { ro_user_models.map(&:uid) }
+        let(:rw_user_models) do
+          [
+            data_user3,
+            data_user1
+          ]
+        end
+        let(:data_user_read_write) { rw_user_models.map(&:uid) }
+        let(:directory) { "/test-project" }
+        let(:title) { "test project" }
+        let(:params) do
+          {
+            data_manager: data_manager,
+            data_sponsor: data_sponsor,
+            ro_user_counter: data_user_read_only.length,
+            ro_user_1: data_user_read_only.first,
+            ro_user_2: data_user_read_only.last,
+            rw_user_counter: data_user_read_write.length,
+            rw_user_1: data_user_read_write.first,
+            rw_user_2: data_user_read_write.last,
+            departments: departments,
+            description: description,
+            directory: directory,
+            title: title
+          }
+        end
+
+        it "renders the data user names ordered by family name" do
+          post(projects_path, params: params)
+
+          expect(response).to be_redirect
+          expect(Project.all).not_to be_empty
+          new_project = Project.last
+          get(project_path(new_project))
+
+          expect(response.body).to include("Anonymous Foo (read only), Anonymous Qux (read only), Anonymous Zed")
+        end
+      end
     end
   end
 
