@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+require 'csv'
 class User < ApplicationRecord
   rolify
   # Include default devise modules. Others available are:
@@ -7,6 +9,7 @@ class User < ApplicationRecord
 
   PROJECT_SPONSOR = :project_sponsor
   MEDIAFLUX_ADMIN = :mediaflux_admin
+  USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list.csv")
 
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
@@ -75,5 +78,17 @@ class User < ApplicationRecord
     return uid if display_name.blank?
 
     "#{given_name.capitalize} #{family_name.capitalize}"
+  end
+
+  def self.load_registration_list
+    csv_data = CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
+    csv_data.each do |line|
+      user = User.new 
+      user.uid = line["NetID"]
+      user.family_name = line["LastName"]
+      user.display_name = line["DisplayName"]
+      user.email = user.uid + "@princeton.edu"
+      user.save
+    end
   end
 end

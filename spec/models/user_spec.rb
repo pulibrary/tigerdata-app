@@ -37,4 +37,11 @@ RSpec.describe User, type: :model do
       expect(user.display_name_safe).to eq("who3")
     end
   end
+  context "loading Registration List" do
+    it "creates a new user for every line in the file" do
+      expect(User.count).to eq 0 
+      User.load_registration_list
+      expect(User.count).to eq 24
+    end
+  end
 end
