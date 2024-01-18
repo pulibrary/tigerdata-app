@@ -47,8 +47,6 @@ Project Details:
     <% else %>
       <dd><%= @departments %></dd>
     <% end %>
-  </dl>
-  <dl>
     <dt>Project Directory</dt>
     <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
     <dt>Title</dt>
@@ -60,6 +58,12 @@ Project Details:
 
 <div>
   <h2>Automatic Settings </h2>
+  <dl>
+    <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
+    <dt>Storage Capacity (Requested)</dt> <dd><%= @project.metadata[:storage_capacity_requested] %></dd>
+    <dt>Storage Performance Expectations (Requested)</dt> <dd><%= @project.metadata[:storage_performance_expectations_requested] %></dd>
+    <dt>Project Purpose</dt> <dd><%= @project.metadata[:project_purpose] %></dd>
+  </dl>
   <% if @project.in_mediaflux? %>
     <p>Mediaflux id: <%= @project.mediaflux_id %></p>
   <% else %>
