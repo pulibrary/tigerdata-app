@@ -34,6 +34,10 @@ class Project < ApplicationRecord
     metadata[:directory]
   end
 
+  def status
+    metadata[:status]
+  end
+
   def in_mediaflux?
     mediaflux_id.present?
   end
