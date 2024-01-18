@@ -97,7 +97,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       "          <created_on>#{project.metadata[:created_on]}</created_on>\n" \
       "          <created_by>#{project.metadata[:created_by]}</created_by>\n" \
       "          <project_id>abc-123</project_id>\n" \
-      "          <storage_capacity>100 TB</storage_capacity>\n" \
+      "          <storage_capacity>500 GB</storage_capacity>\n" \
       "          <storage_performance>standard</storage_performance>\n" \
       "          <project_purpose>research</project_purpose>\n" \
       "        </tigerdata:project>\n" \

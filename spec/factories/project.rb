@@ -12,7 +12,7 @@ FactoryBot.define do
       updated_on { DateTime.now }
       project_id { nil }
       status { "pending" }
-      storage_capacity { "100 TB" }
+      storage_capacity { "500 GB" }
       storage_performance { "standard" }
       project_purpose { "research" }
     end
@@ -32,8 +32,8 @@ FactoryBot.define do
         updated_by: FactoryBot.create(:user).uid,
         project_id: project_id,
         status: status,
-        storage_capacity: storage_capacity,
-        storage_performance: storage_performance,
+        storage_capacity_requested: storage_capacity,
+        storage_performance_expectations_requested: storage_performance,
         project_purpose: project_purpose
       }
     end

@@ -46,8 +46,8 @@ class ProjectMediaflux
       updated_on: project.metadata[:updated_on],
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
-      storage_capacity: project.metadata[:storage_capacity],
-      storage_performance: project.metadata[:storage_performance],
+      storage_capacity: project.metadata[:storage_capacity_requested],
+      storage_performance: project.metadata[:storage_performance_expectations_requested],
       project_purpose: project.metadata[:project_purpose]
     }
     values
