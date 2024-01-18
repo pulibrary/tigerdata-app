@@ -26,7 +26,8 @@ class Project < ApplicationRecord
   end
 
   def departments
-    metadata[:departments] || []
+    unsorted = metadata[:departments] || []
+    unsorted.sort
   end
 
   def directory

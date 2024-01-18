@@ -16,7 +16,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     project.metadata.keys.each do |field|
       next if ["updated_on", "created_on", "created_by", "updated_by"].include?(field)
       value = project.metadata[field]
-      value = value.join(", ") if value.is_a? Array
+      value = value.sort.join(", ") if value.is_a? Array
       expect(html_body).to have_content(value)
     end
     expect(mail.attachments.count).to be_positive
