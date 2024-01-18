@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 class User < ApplicationRecord
   rolify
   # Include default devise modules. Others available are:
@@ -84,7 +84,7 @@ class User < ApplicationRecord
     csv_data = CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
     csv_data.each do |line|
       next if User.find_by(uid: line["NetID"])
-      user = User.new 
+      user = User.new
       user.uid = line["NetID"]
       user.family_name = line["LastName"]
       user.display_name = line["DisplayName"]
