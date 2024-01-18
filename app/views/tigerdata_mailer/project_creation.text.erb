@@ -9,6 +9,6 @@ Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @proj
 Title: <%= @project.metadata[:title] %>
 Description: <%= @project.metadata[:description] %>
 Status: <%= @project.metadata[:status] %> 
-Storage Capacity: <%= @project.metadata[:storage_capacity] %>
-Storage Performance: <%= @project.metadata[:storage_performance] %>
+Storage Capacity: <%= @project.metadata[:storage_capacity_requested] %>
+Storage Performance: <%= @project.metadata[:storage_performance_expectations_requested] %>
 Project Purpose: <%= @project.metadata[:project_purpose] %>

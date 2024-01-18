@@ -1,0 +1,12 @@
+production: &default
+  storage_capacity_requested: "500 GB"
+  storage_performance_expectations_requested: "Standard"
+  project_purpose: "Research"
+qa:
+  <<: *default
+staging:
+  <<: *default
+development:
+  <<: *default
+test:
+  <<: *default

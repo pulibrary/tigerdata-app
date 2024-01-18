@@ -65,7 +65,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           departments: ["RDSS"],
           description: "hello world",
           data_user_read_only: [],
-          data_user_read_write: []
+          data_user_read_write: [],
+          project_id: "abc-123",
+          storage_capacity_requested: "100 TB",
+          storage_performance_expectations_requested: "Standard",
+          project_purpose: "Research"
         }
       end
 
@@ -77,6 +81,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
         expect(page).to have_content "Data Users\nNone"
+        expect(page).to have_content "Project ID\nabc-123"
+        expect(page).to have_content "Storage Capacity (Requested)\n100 TB"
+        expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
+        expect(page).to have_content "Project Purpose\nResearch"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
@@ -148,6 +156,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         .skipping(:'color-contrast')
       click_on "Return to Dashboard"
       expect(page).to have_content "Sponsored by Me"
+      click_on("My test project")
+      # defaults have been applied
+      expect(page).to have_content "Storage Capacity (Requested)\n500 GB"
+      expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
+      expect(page).to have_content "Project Purpose\nResearch"
+      # project id has been set
+      expect(page).to have_content "Project ID\n10.34770/tbd"
     end
 
     it "does not allow the user to create a project without a data sponsor" do

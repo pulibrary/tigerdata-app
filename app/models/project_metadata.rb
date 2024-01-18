@@ -69,9 +69,9 @@ class ProjectMetadata
           data_user_read_only: ro_users,
           data_user_read_write: rw_users,
           project_id: project.metadata[:project_id],
-          storage_capacity: project.metadata[:storage_capacity],
-          storage_performance: project.metadata[:storage_performance],
-          project_purpose: project.metadata[:project_purpose]    
+          storage_capacity_requested: project.metadata[:storage_capacity_requested] || Rails.configuration.project_defaults[:storage_capacity_requested],
+          storage_performance_expectations_requested: project.metadata[:storage_performance_expectations_requested] || Rails.configuration.project_defaults[:storage_performance_expectations_requested],
+          project_purpose: project.metadata[:project_purpose] || Rails.configuration.project_defaults[:project_purpose]
         }
         timestamps = project_timestamps
         data.merge(timestamps)
