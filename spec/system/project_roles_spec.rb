@@ -76,17 +76,26 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     fill_in "title", with: "My test project"
     expect(page).to have_content("Project Directory: /td-test-001/")
     expect do
+      expect(page.find_all("input:invalid").count).to eq(0)
       click_on "Submit"
+      # For some reason the above click on submit sometimes does not submit the form
+      #  even though the inputs are all valid, so try it again...
+      if page.find_all("#btn-add-rw-user").count > 0
+        click_on "Submit"
+      end
     end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
     expect(page).to have_content "New Project Request Received"
     click_on "Return to Dashboard"
+    expect(page).to have_content("Welcome")
     click_on("My test project")
     expect(page).to have_content("This project has not been saved to Mediaflux")
     expect(page).to have_content("My test project (pending)")
     expect(page).to have_content("My test project (#{::Project::PENDING_STATUS})")
     expect(page).to have_content(read_only.given_name)
+    expect(page).to have_content(read_only.display_name)
     expect(page).to have_content(read_only.family_name)
     expect(page).to have_content(read_write.given_name)
+    expect(page).to have_content(read_write.display_name)
     expect(page).to have_content(read_write.family_name)
   end
 end

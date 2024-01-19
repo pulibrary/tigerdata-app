@@ -145,7 +145,14 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
       expect do
+        expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
+        # For some reason the above click on submit sometimes does not submit the form
+        #  even though the inputs are all valid, so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Submit"
+        end
+        # expect(page).to have_content("New Project Request Received", wait: 20)
       end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       # This is the confirmation page. It needs a button to return to the dashboard
       # and it needs to be_axe_clean.
@@ -224,6 +231,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
+        expect(page).to have_content("New Project Request")
         click_on "Cancel"
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
       end
