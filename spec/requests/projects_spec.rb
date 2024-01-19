@@ -58,6 +58,15 @@ RSpec.describe "/projects", type: :request do
         expect(project.metadata["project_id"]).to eq("10.34770/tbd")
       end
 
+      it "ensures that project status is set to 'pending'" do
+        post(projects_path, params: params)
+
+        expect(response).to be_redirect
+        expect(Project.all).not_to be_empty
+        new_project = Project.last
+        expect(new_project.status).to eq(Project::PENDING_STATUS)
+      end
+
       context "when project is invalid" do
         let(:data_manager) { nil }
 

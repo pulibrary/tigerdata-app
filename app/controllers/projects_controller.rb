@@ -4,13 +4,22 @@ class ProjectsController < ApplicationController
     new_project
   end
 
+  def project_params
+    values = params.dup
+  end
+
   def create
     new_project
     project_metadata = ProjectMetadata.new( current_user:, project: new_project)
     project_metadata.create(params:)
+    new_project_params = params.dup
+    metadata_params = new_project_params.merge({
+      status: Project::PENDING_STATUS
+    })
+    project_metadata.create(params: metadata_params)
     if new_project.save
-      TigerdataMailer.with(project: project).project_creation.deliver_later
-      redirect_to project_confirmation_path(project)
+      TigerdataMailer.with(project: @project).project_creation.deliver_later
+      redirect_to project_confirmation_path(@project)
     else
       render :new
     end
