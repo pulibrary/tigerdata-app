@@ -40,5 +40,18 @@ namespace :mailcatcher do
   end
 end
 
+namespace :load_users do
+  desc "Load in users from the registration list"
+  task :from_registration_list do
+    on roles(:app) do
+      within release_path do
+        execute("cd #{release_path} && bundle exec rake load_users:from_registration_list")
+      end
+    end
+  end
+end
+
+after "deploy:published", "load_users:from_registration_list"
+
 before "deploy:reverted", "npm:install"
 # rubocop:enable Rails/Output
