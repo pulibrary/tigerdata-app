@@ -19,6 +19,7 @@ class ProjectMetadata
       project.save!
     end
     project.metadata["project_id"]
+    ProvenanceEvent.create(project:)
   end
 
     private
