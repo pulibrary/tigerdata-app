@@ -1,7 +1,7 @@
 class ProvenanceEvent
-    def self.provenance_event_values(project: , event_type:)
+    def self.provenance_event_values(project:)
         values = {
-          event_type: ["Submssion" , "Status Update"], # submission or status update
+          event_type: nil, # submission or status update
           event_details: project.metadata[:data_sponsor], # requested by datasponsor + timestamp
           event_person: current_user.uid, #netid of the event creator
           event_timestamp: DateTime.nowstrftime("yyyy-MM-dd'T'HH:mm"), #timestamp on event creation  
