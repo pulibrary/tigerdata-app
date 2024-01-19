@@ -48,4 +48,11 @@ RSpec.describe Project, type: :model do
       expect(data_user_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
     end
   end
+  describe "#provenance_events" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
+    it "has many provenance events" do
+      expect(project.provenance_events).to eq [submission_event]
+    end
+  end
 end

@@ -73,10 +73,9 @@ Project Details:
 
 <div>
   <h2> Provenance </h2>
-  <p>Created On: <%= @project.metadata[:created_on] %> </p>
-  <p>Created By: <%= @project.metadata[:created_by] %> </p>
-  <p>Updated On: <%= @project.metadata[:updated_on] %> </p>
-  <p>Updated By: <%= @project.metadata[:updated_by] %> </p>
+  <% @submission_events.each do |event| %>
+   <p> <%= event.event_details %> </p>
+    <% end %>
 </div>
 
 <div>
