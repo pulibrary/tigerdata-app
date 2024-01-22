@@ -2,11 +2,20 @@
 require "rails_helper"
 
 RSpec.describe ProvenanceEvent, type: :model do
-  it "has the expected fields" do
+  it "A submission event has the expected values" do
     pe = described_class.new
-    pe.event_type = "Submission"
+    pe.event_type = ProvenanceEvent::SUBMISSION_EVENT_TYPE
     pe.event_details = "Requested by Joe Shmoe, 2023-01-19T12:00:00"
     pe.event_person = "abc123"
     pe.save
+    byebug
+  end
+  it "A status update event has the expected values" do
+    pe = described_class.new
+    pe.event_type = ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE
+    pe.event_details = "Requested by Joe Shmoe, 2023-01-19T12:00:00"
+    pe.event_person = "abc123"
+    pe.save
+    byebug
   end
 end
