@@ -292,6 +292,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/projects/#{project.id}"
         expect(page).to have_content(submission_event.event_details)
       end
+      it "shows the project status under the provenance section" do
+        submission_event
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
+      end
     end
   end
 end

@@ -49,6 +49,7 @@ class ProjectsController < ApplicationController
     @data_user_names = user_model_names.join(", ")
 
     @submission_events = project.provenance_events.where(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE)
+    @project_status = project.metadata[:status]
 
 
     respond_to do |format|

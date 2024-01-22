@@ -8,7 +8,6 @@ RSpec.describe ProvenanceEvent, type: :model do
     pe.event_details = "Requested by Joe Shmoe, 2023-01-19T12:00:00"
     pe.event_person = "abc123"
     pe.save
-    byebug
   end
   it "A status update event has the expected values" do
     pe = described_class.new
@@ -16,6 +15,5 @@ RSpec.describe ProvenanceEvent, type: :model do
     pe.event_details = "Requested by Joe Shmoe, 2023-01-19T12:00:00"
     pe.event_person = "abc123"
     pe.save
-    byebug
   end
 end
