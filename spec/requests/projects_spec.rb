@@ -77,9 +77,9 @@ RSpec.describe "/projects", type: :request do
       end
 
       context "multiple data users are specified" do
-        let(:data_user1) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Qux") }
-        let(:data_user2) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Foo") }
-        let(:data_user3) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Zed") }
+        let(:data_user1) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Qux", display_name: "Anonymous Qux") }
+        let(:data_user2) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Foo", display_name: "Anonymous Foo") }
+        let(:data_user3) { FactoryBot.create(:user, given_name: "Anonymous", family_name: "Zed", display_name: "Anonymous Zed") }
         let(:ro_user_models) do
           [
             data_user1,
@@ -121,7 +121,7 @@ RSpec.describe "/projects", type: :request do
           new_project = Project.last
           get(project_path(new_project))
 
-          expect(response.body).to include("Anonymous Foo (read only), Anonymous Qux (read only), Anonymous Zed")
+          expect(response.body).to include("Anonymous Foo (read only), Anonymous Qux (read only), Anonymous Zed")
         end
       end
     end

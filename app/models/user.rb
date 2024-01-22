@@ -77,7 +77,7 @@ class User < ApplicationRecord
   def display_name_safe
     return uid if display_name.blank?
 
-    "#{given_name.capitalize} #{family_name.capitalize}"
+    display_name
   end
 
   def self.load_registration_list
