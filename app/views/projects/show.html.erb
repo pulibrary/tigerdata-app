@@ -76,7 +76,7 @@ Project Details:
   <dl>
   <dt> Submission</dt>
       <% @submission_events.each do |event| %>
-        <dd> <%= event.event_details %>, <%=event.created_at%> </dd>
+        <dd> <%= event.event_details %>, <%=event.created_at.to_time.iso8601%> </dd>
       <% end %>
       <dd></dd>
       <dt>Status</dt> <dd><%=@project_status%></dd>
