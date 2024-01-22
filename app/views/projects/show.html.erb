@@ -73,9 +73,13 @@ Project Details:
 
 <div>
   <h2> Provenance </h2>
-  <% @submission_events.each do |event| %>
-   <p> <%= event.event_details %> </p>
-    <% end %>
+  <dl>
+  <dt> Submission</dt>
+      <% @submission_events.each do |event| %>
+        <dd> <%= event.event_details %>, <%=event.created_at%> </dd>
+      <% end %>
+      <dd></dd>
+  </dl>
 </div>
 
 <div>

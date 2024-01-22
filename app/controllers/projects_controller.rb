@@ -48,7 +48,7 @@ class ProjectsController < ApplicationController
     user_model_names = @data_users.map(&:display_name_safe)
     @data_user_names = user_model_names.join(", ")
 
-    @submission_events = project.provenance_events.where(event_type: "Submission")
+    @submission_events = project.provenance_events.where(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE)
 
 
     respond_to do |format|

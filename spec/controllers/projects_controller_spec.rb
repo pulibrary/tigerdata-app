@@ -60,4 +60,22 @@ RSpec.describe ProjectsController do
       end
     end
   end
+  describe "#create" do
+    context "a signed in user" do
+      let(:user) { FactoryBot.create :user }
+      before do
+        sign_in user
+      end
+      it "creates one provenance event only" do
+        post :create, params: {
+          "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
+          "directory" => "testparams", "title" => "Params",
+          "description" => "testing controller params", "ro_user_counter" => "0",
+          "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
+        }
+        project = Project.last
+        expect(project.provenance_events.count).to eq 1
+      end
+    end
+  end
 end
