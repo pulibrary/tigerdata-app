@@ -19,6 +19,7 @@ class ProjectMetadata
       project.save!
       data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
       project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
+      project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
     end
     project.metadata["project_id"]
   end

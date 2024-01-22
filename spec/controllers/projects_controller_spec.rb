@@ -74,7 +74,7 @@ RSpec.describe ProjectsController do
           "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
         }
         project = Project.last
-        expect(project.provenance_events.count).to eq 1
+        expect(project.provenance_events.count).to eq 2
       end
     end
   end
