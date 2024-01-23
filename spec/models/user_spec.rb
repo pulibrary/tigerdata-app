@@ -79,7 +79,13 @@ RSpec.describe User, type: :model do
       expect(User.count).to eq 24
       blank_name_user = User.find_by(uid: "munan")
       expect(blank_name_user.family_name).to be_nil
-      expect(blank_name_user.given_name).to be_nil
+      expect(blank_name_user.display_name).to be_nil
+      allow(User).to receive(:csv_data).and_return(updated_csv_data)
+      User.load_registration_list
+      expect(User.count).to eq 24
+      updated_name_user = User.find_by(uid: "munan")
+      expect(updated_name_user.family_name).to eq "Nøme"
+      expect(updated_name_user.display_name).to eq "Fáké Nøme"
     end
   end
 end
