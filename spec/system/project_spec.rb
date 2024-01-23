@@ -297,7 +297,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_content(submission_event.event_details)
+        expect(page).to have_content "#{submission_event.event_details}, #{submission_event.created_at.to_time.in_time_zone('America/New_York').iso8601}"
       end
       it "shows the project status under the provenance section" do
         submission_event
