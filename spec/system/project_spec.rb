@@ -233,6 +233,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         click_on "New Project"
         expect(page).to have_content("New Project Request")
         click_on "Cancel"
+
+        # For some reason the above click on cancel sometimes does not cancel the form
+        #  so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Cancel"
+        end
+
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
       end
     end
