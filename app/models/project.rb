@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
   validates_with ProjectValidator
+  has_many :provenance_events, dependent: :destroy
 
   # TODO: What are the valid statuses?
   PENDING_STATUS = "pending"

@@ -48,4 +48,16 @@ RSpec.describe Project, type: :model do
       expect(data_user_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
     end
   end
+  describe "#provenance_events" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
+    it "has many provenance events" do
+      expect(project.provenance_events).to eq [submission_event]
+    end
+    it "only creates one provenance event" do
+      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata["created_by"],
+                                       event_details: "Requested by #{project.metadata_json['data_sponsor']}")
+      expect(project.provenance_events.count).to eq 1
+    end
+  end
 end

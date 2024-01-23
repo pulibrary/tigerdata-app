@@ -290,5 +290,21 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on(project_not_in_mediaflux.title)
       expect(page).to have_link("Withdraw Project Request")
     end
+    context "Provenance Events" do
+      let(:project) { FactoryBot.create(:project) }
+      let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
+      it "shows provenance events" do
+        submission_event
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_content(submission_event.event_details)
+      end
+      it "shows the project status under the provenance section" do
+        submission_event
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
+      end
+    end
   end
 end
