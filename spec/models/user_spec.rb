@@ -59,6 +59,10 @@ RSpec.describe User, type: :model do
     end
   end
   context "loading Registration List" do
+    let(:updated_csv_file) { Rails.root.join("spec", "fixtures", "files", "updated_user_registration_list.csv") }
+    let(:updated_csv_data) do
+      CSV.parse(File.read(updated_csv_file), headers: true)
+    end
     it "creates a new user for every line in the file" do
       expect(User.count).to eq 0
       User.load_registration_list
@@ -69,6 +73,13 @@ RSpec.describe User, type: :model do
       expect(User.count).to eq 1
       User.load_registration_list
       expect(User.count).to eq 24
+    end
+    it "updates a name if the name is updated in the spreadsheet" do
+      User.load_registration_list
+      expect(User.count).to eq 24
+      blank_name_user = User.find_by(uid: "munan")
+      expect(blank_name_user.family_name).to be_nil
+      expect(blank_name_user.given_name).to be_nil
     end
   end
 end
