@@ -9,7 +9,7 @@ FactoryBot.define do
     end
     factory :status_update_event do
       event_type { ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE }
-      event_details { "The Status was updated from [original] to [new]" }
+      event_details { "The Status was updated from pending to approved" }
     end
   end
 end
