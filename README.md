@@ -209,9 +209,9 @@ Emails on production are sent via [Pony Express](https://github.com/pulibrary/pu
 ### Updating User Registration List
 To save updates and make changes to appointed users for early testing of the TigerData site:
 
-1. Make the requested changes to the Google spreadsheet
+1. Make the requested changes to the [Google spreadsheet](https://docs.google.com/spreadsheets/d/169lfRTOSe6H66Iu2DK5g-QzqiVsfz5lHFHMaGmwNT7Y/edit#gid=0)
 2. Save those updated changes
 3. Download the file as a .CSV file
-4. Transfer the downloaded .CSV file to `data` > `user_registration_list.csv`
-5. Once the rake task `load_users.rake` is ran then the users should update or populate, depending on what changes are made. 
-
+4. Copy the downloaded .CSV file to `data` > `user_registration_list.csv`
+5. Open a PR to check the updated file into version control 
+6. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.
