@@ -8,6 +8,8 @@ default: &default
 production:
   <<: *default
   doi_url: "https://doi.org/"
+qa:
+  <<: *default
 staging:
   <<: *default
 development:
