@@ -11,7 +11,6 @@ class ProjectsController < ApplicationController
   def create
     new_project
     project_metadata = ProjectMetadata.new( current_user:, project: new_project)
-    project_metadata.create(params:)
     new_project_params = params.dup
     metadata_params = new_project_params.merge({
       status: Project::PENDING_STATUS
