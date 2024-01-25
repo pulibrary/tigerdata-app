@@ -86,10 +86,10 @@ class User < ApplicationRecord
 
   def self.load_registration_list
     User.csv_data.each do |line|
-      user = User.find_by(uid: line["NetID"]) || User.new
-      user.uid = line["NetID"]
-      user.family_name = line["LastName"]
-      user.display_name = line["DisplayName"]
+      user = User.find_by(uid: line["uid"]) || User.new
+      user.uid = line["uid"]
+      user.family_name = line["family_name"]
+      user.display_name = line["display_name"]
       user.email = user.uid + "@princeton.edu"
       user.save
     end
