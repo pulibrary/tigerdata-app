@@ -84,6 +84,7 @@ Project Details:
 </div>
 
 <div>
+  <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
   <%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-primary btn-sm" %>
   <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
   <%= link_to "Withdraw Project Request", "", class: "btn btn-light btn-sm" %>
