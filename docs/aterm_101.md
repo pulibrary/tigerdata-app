@@ -110,6 +110,16 @@ Aterm supports a few Bash-like commands that you can use as shortcuts, for examp
 ```
 
 
+### Fixing the display of collection in the Desktop
+By default Collection Assets are *not() displayed as "folders" in the Mediaflux desktop, but you can fix this by turning on the `desktop-experimental` role via aTerm:
+
+```
+actor.grant :type domain :name system :role -type role desktop-experimental
+```
+
+You'll need to close the "Asset Finder" in the Desktop and reopen it for the change to kick in.
+
+
 ## Assets
 MediaFlux stores files as assets. An asset contains metadata and _optionally_ content. The metadata and the content are versioned independently.
 
