@@ -83,6 +83,8 @@ class ProjectsController < ApplicationController
 
   def confirmation; end
 
+  def contents; end 
+
   private
 
     def new_project

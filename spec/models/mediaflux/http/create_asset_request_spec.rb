@@ -72,6 +72,28 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
         ).to have_been_made
       end
     end
+
+    context "A collection within a collection" do
+      before do
+        stub_request(:post, mediflux_url)
+          .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.create\" session=\"secretsecret/2/31\">\n    "\
+                      "<args>\n      <name>testasset</name>\n      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n"\
+                      "      <type>application/arc-asset-collection</type>\n      <pid>5678</pid>\n" \
+                      "    </args>\n  </service>\n</request>\n")
+          .to_return(status: 200, body: create_response, headers: {})
+      end
+
+      it "parses a metadata response" do
+        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: true, pid: "5678")
+        expect(create_request.id).to eq("1068")
+        expect(a_request(:post, mediflux_url).with do |req| 
+            req.body.include?("<name>testasset</name>") && 
+            req.body.include?("<type>application/arc-asset-collection</type>")
+          end
+        ).to have_been_made
+      end
+    end
+
   end
 
   describe "#xml_payload" do

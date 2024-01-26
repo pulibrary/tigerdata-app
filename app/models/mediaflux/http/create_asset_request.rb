@@ -9,9 +9,10 @@ module Mediaflux
       # @param name [String] Name of the Asset
       # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
+      # @param pid [String] Parent collection id
       # @param tigerdata_values [Hash] Optional parameter for the tigerdata metdata to be applied to the new asset in the meta field
       # @param xml_namespace [String]
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil)
+      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
         super(session_token: session_token)
         @namespace = namespace
         @asset_name = name
@@ -19,6 +20,7 @@ module Mediaflux
         @tigerdata_values = tigerdata_values
         @xml_namespace = xml_namespace || self.class.default_xml_namespace
         @xml_namespace_uri = xml_namespace_uri || self.class.default_xml_namespace_uri
+        @pid = pid
       end
 
       # Specifies the Mediaflux service to use when creating assets
@@ -44,64 +46,71 @@ module Mediaflux
         #       >
         #     >
         #
-        # rubocop:disable Metrics/MethodLength
-        # rubocop:disable Metrics/CyclomaticComplexity
-        # rubocop:disable Metrics/AbcSize
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
               xml.name asset_name
               xml.namespace namespace if namespace.present?
-              if @tigerdata_values
-                xml.meta do
-                  doc = xml.doc
-                  root = doc.root
-                  # Define the namespace only if this is required
-                  root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
-
-                  element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
-                  xml.send(element_name) do
-                    xml.code @tigerdata_values[:code]
-                    xml.title @tigerdata_values[:title]
-                    xml.description @tigerdata_values[:description]
-                    xml.status @tigerdata_values[:status]
-                    xml.data_sponsor @tigerdata_values[:data_sponsor]
-                    xml.data_manager @tigerdata_values[:data_manager]
-                    departments = @tigerdata_values[:departments] || []
-                    departments.each do |department|
-                      xml.departments department
-                    end
-                    ro_users = @tigerdata_values[:data_user_read_only] || []
-                    ro_users.each do |ro_user|
-                      xml.data_users_ro ro_user
-                    end
-                    rw_users = @tigerdata_values[:data_user_read_write] || []
-                    rw_users.each do |rw_user|
-                      xml.data_users_rw rw_user
-                    end
-                    xml.created_on @tigerdata_values[:created_on]
-                    xml.created_by @tigerdata_values[:created_by]
-                    xml.project_id @tigerdata_values[:project_id]
-                    xml.storage_capacity @tigerdata_values[:storage_capacity]
-                    xml.storage_performance @tigerdata_values[:storage_performance]
-                    xml.project_purpose @tigerdata_values[:project_purpose]
-                  end
-                end
-              end
-              if collection
-                xml.collection do
-                  xml.parent.set_attribute("cascade-contained-asset-index", true)
-                  xml.parent.set_attribute("contained-asset-index", true)
-                  xml.parent.set_attribute("unique-name-index", true)
-                  xml.text(collection)
-                end
-                xml.type "application/arc-asset-collection"
+              tigerdata_values_xml(xml)
+              collection_xml(xml)
+              if @pid.present?
+                xml.pid @pid
               end
             end
           end
         end
+
+        def collection_xml(xml)
+          return unless collection
+          xml.collection do
+            xml.parent.set_attribute("cascade-contained-asset-index", true)
+            xml.parent.set_attribute("contained-asset-index", true)
+            xml.parent.set_attribute("unique-name-index", true)
+            xml.text(collection)
+          end
+          xml.type "application/arc-asset-collection"
+        end
+
+        # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/AbcSize
+        def tigerdata_values_xml(xml)
+          return unless @tigerdata_values
+          xml.meta do
+            doc = xml.doc
+            root = doc.root
+            # Define the namespace only if this is required
+            root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
+
+            element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
+            xml.send(element_name) do
+              xml.code @tigerdata_values[:code]
+              xml.title @tigerdata_values[:title]
+              xml.description @tigerdata_values[:description]
+              xml.status @tigerdata_values[:status]
+              xml.data_sponsor @tigerdata_values[:data_sponsor]
+              xml.data_manager @tigerdata_values[:data_manager]
+              departments = @tigerdata_values[:departments] || []
+              departments.each do |department|
+                xml.departments department
+              end
+              ro_users = @tigerdata_values[:data_user_read_only] || []
+              ro_users.each do |ro_user|
+                xml.data_users_ro ro_user
+              end
+              rw_users = @tigerdata_values[:data_user_read_write] || []
+              rw_users.each do |rw_user|
+                xml.data_users_rw rw_user
+              end
+              xml.created_on @tigerdata_values[:created_on]
+              xml.created_by @tigerdata_values[:created_by]
+              xml.project_id @tigerdata_values[:project_id]
+              xml.storage_capacity @tigerdata_values[:storage_capacity]
+              xml.storage_performance @tigerdata_values[:storage_performance]
+              xml.project_purpose @tigerdata_values[:project_purpose]
+            end
+          end
+        end
       # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
     end
   end
