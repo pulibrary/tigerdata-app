@@ -21,6 +21,7 @@ class TestAssetGenerator
         collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{level}", pid: parent_id)
         generate_level(collection.id, level-1)
       end
+      byebug
       generate_directory(parent_id)
     end
 
