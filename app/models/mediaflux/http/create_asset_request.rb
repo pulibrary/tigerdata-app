@@ -9,7 +9,7 @@ module Mediaflux
       # @param name [String] Name of the Asset
       # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
-      # @param pid [String] Parent collection id
+      # @param pid [String] Optional Parent collection id (use this or a namespace not noth)
       # @param tigerdata_values [Hash] Optional parameter for the tigerdata metdata to be applied to the new asset in the meta field
       # @param xml_namespace [String]
       def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
