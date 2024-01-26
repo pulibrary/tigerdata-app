@@ -18,15 +18,16 @@ class TestAssetGenerator
   private
     def generate_level(parent_id, level)
       if level > 1
+        byebug
         collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{level}", pid: parent_id)
         generate_level(collection.id, level-1)
       end
-      byebug
       generate_directory(parent_id)
     end
 
     def generate_directory(parent_id)
-      collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{parent_id}", pid: parent_id)
-      Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: collection.id, count: file_count_per_directory).resolve
+      byebug
+      dir_collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{parent_id}", pid: parent_id)
+      Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection.id, count: file_count_per_directory).resolve
     end
 end
