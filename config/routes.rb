@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :projects
   post "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
+  get "projects/:id/contents", to: "projects#contents", as: :project_contents
 
   namespace :api do
     namespace :v0 do

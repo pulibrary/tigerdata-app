@@ -51,6 +51,14 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/projects/#{project.id}"
         expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
       end
+      it "can take the user to the project contents page" do
+        submission_event
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_selector(:link_or_button, "Review Contents")
+        click_on("Review Contents")
+        expect(page).to have_content("Project Contents")
+      end
     end
   end
 end
