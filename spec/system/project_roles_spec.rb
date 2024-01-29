@@ -7,6 +7,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
+  let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
   before do
     sign_in sponsor_user
 
@@ -97,5 +98,27 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.given_name)
     expect(page).to have_content(read_write.display_name)
     expect(page).to have_content(read_write.family_name)
+  end
+
+  context "assigns roles and permissions for users" do
+    it "allows only users eligible to be a Data Sponsor to become a Data Sponsor" do
+      if User.csv_data["eligible_sponsor"] == "TRUE"
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+      else
+        sign_in no_projects_user
+        visit "/"
+      end
+      # the Data Sponsor can request a project
+      # the Data Sponsor can add a Data Manager
+      # the Data Sponsor can remove a Data Manager
+      # the Data Sponsor can change a Data Manager
+    end
+    it "allows only users eligible to be a Data Manager to become a Data Manager" do
+    end
+    it "allows for only Data Sponsors and Data Manager roles to add or edit a Data User" do
+    end
   end
 end
