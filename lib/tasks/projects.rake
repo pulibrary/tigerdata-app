@@ -42,6 +42,17 @@ namespace :projects do
     end
   end
 
+  task :save_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
+    netid = args[:netid]
+    user = User.where(uid: netid).first
+    raise "User #{netid} not found" if user.nil?
+
+    project_id = args[:project_id]
+    project = Project.find(project_id)
+    asset_id = project.save_in_mediaflux(session_id: user.mediaflux_session)
+    puts "Mediaflux asset #{asset_id} updated"
+  end
+
   # rubocop:disable Metrics/MethodLength
   def create_test_project(number, user, project_prefix)
     sequence = number.to_s.rjust(5, "0")
