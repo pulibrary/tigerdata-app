@@ -63,5 +63,24 @@ RSpec.describe TestAssetGenerator do
         expect(test_collection_create_level2).to have_received(:id)
       end
     end
+
+    context "Multiple directories" do 
+      let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
+      let(:test_directory_create_2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "9222") }
+      let(:test_asset_create_2) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true) }
+
+      it "creates collections and files" do
+        allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
+        allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(test_directory_create, test_directory_create_2)
+        allow(Mediaflux::Http::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 1).and_return(test_asset_create)
+        allow(Mediaflux::Http::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "9222", count: 1).and_return(test_asset_create_2)
+        subject.generate
+        expect(test_collection_create).to have_received(:id)
+        expect(test_directory_create).to have_received(:id)
+        expect(test_directory_create_2).to have_received(:id)
+        expect(test_asset_create).to have_received(:resolve)
+        expect(test_asset_create_2).to have_received(:resolve)
+      end
+    end
   end
 end
