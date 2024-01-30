@@ -16,6 +16,7 @@ FactoryBot.define do
       storage_performance { "standard" }
       project_purpose { "research" }
     end
+    mediaflux_id { nil }
     metadata do
       {
         data_sponsor: data_sponsor,
