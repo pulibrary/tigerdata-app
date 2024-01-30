@@ -37,7 +37,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_link("Withdraw Project Request")
     end
     context "Provenance Events" do
-      let(:project) { FactoryBot.create(:project) }
+      let(:project) { FactoryBot.create(:project, metadata: metadata) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       it "shows provenance events" do
         submission_event
@@ -58,6 +58,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
+        # Be able to return to the dashboard
+        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
+        click_on("Return to Dashboard")
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        click_on(project.title)
+        expect(page).to have_content("Project Details: #{project.title}")
       end
     end
   end
