@@ -22,7 +22,7 @@ class TestProjectGenerator
     def create_project
       metadata = {
         directory: project_prefix,
-        created_on: DateTime.now,
+        created_on: DateTime.now.strftime("%d-%b-%Y %H:%M:%S"),
         created_by: user.uid,
         data_sponsor: sponsor.uid,
         data_manager: sponsor.uid,
@@ -32,6 +32,10 @@ class TestProjectGenerator
         description: "Description of project #{project_prefix} #{sequence}",
         data_user_read_only: [],
         data_user_read_write: [],
+        project_id: "doi-not-generated",
+        storage_capacity_requested: Rails.configuration.project_defaults[:storage_capacity_requested],
+        project_purpose: Rails.configuration.project_defaults[:project_purpose],
+        storage_performance_expectations_requested: Rails.configuration.project_defaults[:storage_performance_expectations_requested],
         status: Project::PENDING_STATUS
       }
       project = Project.new(metadata: )

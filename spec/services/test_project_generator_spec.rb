@@ -28,8 +28,8 @@ RSpec.describe TestProjectGenerator do
       allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: "test-project-00001", namespace: "/td-test-001/test-project-00001-ns",
           tigerdata_values: {title: "Project  00001", updated_by: nil, updated_on: nil, code: "test-project-00001",
            created_by: user.uid, created_on: anything, data_manager: user2.uid, data_sponsor: user2.uid, data_user_read_only: [], data_user_read_write: [], 
-           departments: ["HPC"], description: "Description of project test-project 00001", project_id: nil, project_purpose: nil, status: "pending", storage_capacity: nil, 
-           storage_performance: nil, title: "Project test-project 00001", updated_by: nil, updated_on: nil}, 
+           departments: ["HPC"], description: "Description of project test-project 00001", project_id: "doi-not-generated", project_purpose: "Research", status: "pending", storage_capacity: "500 GB", 
+           storage_performance: "Standard", title: "Project test-project 00001", updated_by: nil, updated_on: nil}, 
           xml_namespace: "tigerdata").and_return(test_collection_create)
       allow(Mediaflux::Http::NamespaceDescribeRequest).to receive(:new).with(session_token: "mediaflux_sessionid", path: "/td-test-001").and_return(test_namespace_describe)
       allow(Mediaflux::Http::StoreListRequest).to receive(:new).with(session_token: "mediaflux_sessionid").and_return(test_store_list)
