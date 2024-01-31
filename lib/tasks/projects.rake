@@ -24,6 +24,26 @@ namespace :projects do
     query_test_projects(user, root_ns)
   end
 
+  desc "Create a test project and a small number of assets in that project"
+  task :create_small_project, [:uid, :prefix] => [:environment] do |_, args|
+    uid = args[:uid]
+    raise "Count must be specified" if uid.blank?
+    user = User.find_by(uid:)
+    project_prefix = args[:prefix]
+    raise "Project prefix must be specified" if project_prefix.nil?
+    number = rand(10_000)
+    project_generator = TestProjectGenerator.new(user:, number: number, project_prefix:)
+    project = project_generator.generate
+    puts "Project created #{project.id}.  Saved in mediaflux under #{project.mediaflux_id}"
+    levels = rand(10)
+    directory_per_level = rand(10)
+    file_count_per_directory = rand(10)
+    asset_generator = TestAssetGenerator.new(user:, project_id: project.id, levels:, directory_per_level:, file_count_per_directory:)
+    asset_generator.generate
+    puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
+  end
+
+
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
     data_sponsor = args[:data_sponsor]
     department = args[:department]
