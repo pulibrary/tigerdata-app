@@ -1,6 +1,10 @@
 # frozen_string_literal: true
+
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   mount HealthMonitor::Engine, at: "/"
+  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
