@@ -15,9 +15,8 @@ namespace :projects do
     time_action("Creating projects") do
       puts "Creating #{count} projects with prefix #{project_prefix}..."
       (1..count).each do |i|
-        project = create_test_project(i, user, project_prefix)
-        project.save!
-        project.approve!(session_id: user.mediaflux_session, created_by: user.uid)
+        project_generator = TestProjectGenerator.new(user:, number: i, project_prefix:)
+        project_generator.generate
         puts i if (i % 100) == 0
       end
     end
@@ -52,38 +51,6 @@ namespace :projects do
     asset_id = project.save_in_mediaflux(session_id: user.mediaflux_session)
     puts "Mediaflux asset #{asset_id} updated"
   end
-
-  # rubocop:disable Metrics/MethodLength
-  def create_test_project(number, user, project_prefix)
-    sequence = number.to_s.rjust(5, "0")
-    sponsor = if (number % 7) == 0
-                "zz007"
-              elsif (number % 3) == 0
-                "zz003"
-              else
-                "zz001"
-              end
-    departments = []
-    departments << "SEVEN" if (number % 7) == 0
-    departments << "THREE" if (number % 3) == 0
-    departments << "FIVE" if (number % 5) == 0
-    departments << "ONE" if departments.count == 0
-
-    project = Project.new
-    project.created_by_user = user
-    project.metadata = {
-      data_sponsor: sponsor,
-      data_manager: "zz789",
-      departments: departments,
-      directory: "#{project_prefix}-#{sequence}",
-      title: "Project #{project_prefix} #{sequence}",
-      description: "Description of project #{project_prefix} #{sequence}",
-      data_user_read_only: [],
-      data_user_read_write: []
-    }
-    project
-  end
-  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)
