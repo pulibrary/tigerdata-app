@@ -96,7 +96,10 @@ RSpec.describe User, type: :model do
       no_role_user = User.find_by(uid: "hc8719")
       expect(no_role_user.eligible_sponsor).to be_falsey
       expect(no_role_user.eligible_manager).to be_falsey
-      manager_user = User.find_by(uid: "eostrike")
+      supervisor_user = User.find_by(uid: "eostrike")
+      expect(supervisor_user.eligible_sponsor).to be_truthy
+      expect(supervisor_user.eligible_manager).to be_falsey
+      manager_user = User.find_by(uid: "cac9")
       expect(manager_user.eligible_sponsor).to be_falsey
       expect(manager_user.eligible_manager).to be_truthy
     end
