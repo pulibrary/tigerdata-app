@@ -378,3 +378,23 @@ Once stores are defined it is possible to reference them in Aterm commands. For 
 	:service-name asset.content.copy.create < :store s3 >
 ```
 
+## Collection Asset Accumulators
+
+Accumulators allow for mediaflux to generate statistics about Collection Assets as the items in the collection change.  Currently there are two accumulators being added to each collection as they are created in production `collection.asset.count` & `content.all.size`.  The aterm command for creating an example accumulator is below:
+
+```
+asset.collection.accumulator.add \
+   :accumulator < \
+      :name tigerdata-count \
+      :type collection.asset.count \
+      > \
+   :id path=/princeton/tigerdata \
+   :cascade true
+asset.collection.accumulator.add \
+   :accumulator < \
+      :name tigerdata-size \
+      :type content.all.size \
+      > \
+   :id path=/princeton/tigerdata \
+   :cascade true
+```
