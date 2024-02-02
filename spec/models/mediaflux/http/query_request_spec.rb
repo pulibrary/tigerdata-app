@@ -13,7 +13,7 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
     before do
       stub_request(:post, mediflux_url)
         .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    "\
-                    "<args>\n      <where>namespace='/td-test-001'</where>\n      <idx>1</idx>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n")
+                    "<args>\n      <where>namespace='/td-test-001'</where>\n      <idx>1</idx>\n      <size>100</size>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
       before do
         stub_request(:post, mediflux_url)
           .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    "\
-                      "<args>\n      <where>asset in collection 1067</where>\n      <idx>1</idx>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n")
+                      "<args>\n      <where>asset in collection 1067</where>\n      <idx>1</idx>\n      <size>100</size>\n    </args>\n  </service>\n</request>\n")
           .to_return(status: 200, body: query_response, headers: {})
       end
 
@@ -73,7 +73,7 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
         before do
           stub_request(:post, mediflux_url)
             .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    "\
-            "<args>\n      <where>asset in collection 1067</where>\n      <action>get-name</action>\n      <idx>1</idx>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n")
+            "<args>\n      <where>asset in collection 1067</where>\n      <action>get-name</action>\n      <idx>1</idx>\n      <size>100</size>\n    </args>\n  </service>\n</request>\n")
             .to_return(status: 200, body: name_query_response, headers: {})
         end
 
