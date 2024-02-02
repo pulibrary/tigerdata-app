@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 # :nocov:
 namespace :projects do
+
+  task :list => [:environment] do |_, args|
+    user = User.first
+    req = Mediaflux::Http::QueryRequest.new(
+      session_token: user.mediaflux_session,
+      aql_query: nil,
+      collection: 1098,
+      idx: 1,
+      size: 10,
+      namespace: nil,
+      action: "get-name")
+    puts req.result
+  end
+
   desc "Times the creation of projects and querying by TigerData metadata fields"
   task :create_many, [:count, :prefix] => [:environment] do |_, args|
     raise "Count must be specified" if count.blank?

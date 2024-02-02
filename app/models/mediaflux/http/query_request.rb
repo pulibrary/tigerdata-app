@@ -73,6 +73,15 @@ module Mediaflux
         end
 
         def parse_files(xml)
+          if action == "get-name"
+            parse_get_name(xml)
+          else
+            parse_get_meta(xml)
+          end
+        end
+
+        # Extracts file information when the request was made with the "action: get-name" parameter
+        def parse_get_name(xml)
           files = []
           xml.xpath("/response/reply/result").children.each do |node|
             if node.name == "name"
@@ -80,6 +89,28 @@ module Mediaflux
                 id: node.xpath("./@id").text,
                 name: node.text,
                 collection: node.xpath("./@collection").text == "true"
+              }
+              files << file
+            else
+              # it's the cursor node, ignore it
+              next
+            end
+          end
+          files
+        end
+
+        # Extracts file information when the request was made with the "action: get-meta" parameter
+        def parse_get_meta(xml)
+          files = []
+          xml.xpath("/response/reply/result").children.each do |node|
+            if node.name == "asset"
+              file = {
+                id: node.xpath("./@id").text,
+                name: node.xpath("./name").text,
+                collection: node.xpath("./@collection").text == "true",
+                size: node.xpath("./content/@total-size").text.to_i,
+                last_modified: node.xpath("mtime").text,
+                tz: node.xpath("mtime/@tz").text
               }
               files << file
             else

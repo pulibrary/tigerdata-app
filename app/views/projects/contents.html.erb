@@ -1,7 +1,23 @@
-<h1> Project Contents </h1>
-<div> 
-<dl> 
-<dt>File Count</dt> <dd id="file_count"><%=@num_files %> </dd>
-</dl>
-<%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
+<h1>Project Contents</h1>
+
+<div>
+  <h2>Contents Summary</h2>
+  <dl>
+    <dt>File Count</dt> <dd id="file_count"><%=@num_files %> </dd>
+  </dl>
+</div>
+
+<div>
+  <h2>Contents Preview</h2>
+  <% @file_list[:files].each do |file| %>
+    <% if file[:collection] == true %>
+      <li><%= file[:name] %>/
+    <% else %>
+      <li><%= file[:name] %> <%= file[:size] %> <%= file[:last_modified] %> <%= file[:tz] %>
+    <% end %>
+  <% end %>
+</div>
+
+<div>
+  <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
 </div>
