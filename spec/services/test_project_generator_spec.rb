@@ -19,6 +19,8 @@ RSpec.describe TestProjectGenerator do
     let(:test_namespace_describe) { instance_double(Mediaflux::Http::NamespaceDescribeRequest, "exists?": true)}   
     let(:test_store_list) { instance_double(Mediaflux::Http::StoreListRequest, stores: [{ id: "1", name: "db", tag: "", type: "database" }])}  
     let(:test_namespace_create) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true) }
+    let(:test_accum_count_create) { instance_double(Mediaflux::Http::CreateCollectionAccumulatorRequest, resolve: true) }
+    let(:test_accum_size_create) { instance_double(Mediaflux::Http::CreateCollectionAccumulatorRequest, resolve: true) }
 
     before do
       allow(user).to receive(:mediaflux_session).and_return("mediaflux_sessionid")
@@ -34,12 +36,16 @@ RSpec.describe TestProjectGenerator do
       allow(Mediaflux::Http::NamespaceDescribeRequest).to receive(:new).with(session_token: "mediaflux_sessionid", path: "/td-test-001").and_return(test_namespace_describe)
       allow(Mediaflux::Http::StoreListRequest).to receive(:new).with(session_token: "mediaflux_sessionid").and_return(test_store_list)
       allow(Mediaflux::Http::NamespaceCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", namespace: '/td-test-001/test-project-00001-ns',description: "Namespace for project Project test-project 00001 (pending)", store:"db").and_return(test_namespace_create)
+      allow(Mediaflux::Http::CreateCollectionAccumulatorRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: 'accum-count', collection: "5678", type: "collection.asset.count").and_return(test_accum_count_create)
+      allow(Mediaflux::Http::CreateCollectionAccumulatorRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: 'accum-size', collection: "5678", type: "content.all.size").and_return(test_accum_size_create)
 
       subject.generate
       expect(user).to have_received(:mediaflux_session)
       expect(test_collection_create).to have_received(:id)
       expect(test_namespace_describe).to have_received(:exists?)
       expect(test_namespace_create).to have_received(:resolve)
+      expect(test_accum_size_create).to have_received(:resolve)
+      expect(test_accum_count_create).to have_received(:resolve)
     end
   end
 end

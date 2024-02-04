@@ -11,8 +11,13 @@ class TestProjectGenerator
 
   def generate
     project = create_project
-    id = ProjectMediaflux.create!(project:, session_id: user.mediaflux_session, xml_namespace: "tigerdata")
+    session_id = user.mediaflux_session
+    id = ProjectMediaflux.create!(project:, session_id:, xml_namespace: "tigerdata")
     project.mediaflux_id = id
+    accum_count = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, name: "accum-count", collection: id, type: "collection.asset.count")
+    accum_count.resolve
+    accum_size = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, name: "accum-size", collection: id, type: "content.all.size")
+    accum_size.resolve
     project.save!
     project
   end
