@@ -51,7 +51,7 @@ module Mediaflux
               # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
               #      For the moment we will utilize the where clasue that does allow pagination
               # xml.collection collection if collection.present?
-              xml.where "asset in collection #{collection}" if collection.present?
+              xml.where "asset in collection or subcollection of #{collection}" if collection.present?
               xml.where aql_query if aql_query.present?
               xml.action action if action.present?
               xml.idx idx
