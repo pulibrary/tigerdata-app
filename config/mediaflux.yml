@@ -32,9 +32,9 @@ development:
   api_user: <%= ENV["MEDIAFLUX_USER"] || 'manager' %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
 test:
-  api_root_ns: '/td-test-001'
+  api_root_ns: '/td-demo-001'
   api_transport: 'http'
-  api_host: 'mediaflux.example.com'
+  api_host: '0.0.0.0'
   api_port: '8888'
   api_domain: 'system'
   api_user: 'manager'
