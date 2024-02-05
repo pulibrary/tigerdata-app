@@ -85,13 +85,8 @@ class ProjectsController < ApplicationController
 
   def contents
     project
-    total_assets = Mediaflux::Http::QueryRequest.new(session_token: current_user.mediaflux_session, namespace: "td-demo-001/#{project.directory}-ns").result
-    total_collections = Mediaflux::Http::CollectionQueryRequest.new(session_token: current_user.mediaflux_session, namespace: "td-demo-001/#{project.directory}-ns").collections
-    
-    number_assets = total_assets[:ids].count - 1 # subtracting 1 to not include the project itself
-    number_collections = total_collections.size - 1 # same as above
+    @num_files = project.asset_count(session_id: current_user.mediaflux_session)
 
-    @number_of_files = number_assets - number_collections #This is to only get the number of files, and not files + directories
   end 
 
   private

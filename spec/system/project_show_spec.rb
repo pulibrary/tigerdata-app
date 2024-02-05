@@ -58,6 +58,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
+        expect(page).to have_content("File Count")
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
         click_on("Return to Dashboard")
