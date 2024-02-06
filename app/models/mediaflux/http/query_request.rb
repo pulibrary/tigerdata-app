@@ -51,7 +51,7 @@ module Mediaflux
               # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
               #      For the moment we will utilize the where clasue that does allow pagination
               # xml.collection collection if collection.present?
-              xml.where "asset in collection #{collection}" if collection.present?
+              xml.where "asset in static collection or subcollection of #{collection}" if collection.present?
               xml.where aql_query if aql_query.present?
               xml.action action if action.present?
               xml.idx idx
@@ -85,11 +85,11 @@ module Mediaflux
           files = []
           xml.xpath("/response/reply/result").children.each do |node|
             if node.name == "name"
-              file = {
+              file = Mediaflux::Asset.new(
                 id: node.xpath("./@id").text,
                 name: node.text,
-                collection: node.xpath("./@collection").text == "true"
-              }
+                collection: node.xpath("./@collection").text == "true",
+              )
               files << file
             else
               # it's the cursor node, ignore it
@@ -104,14 +104,15 @@ module Mediaflux
           files = []
           xml.xpath("/response/reply/result").children.each do |node|
             if node.name == "asset"
-              file = {
+              file = Mediaflux::Asset.new(
                 id: node.xpath("./@id").text,
                 name: node.xpath("./name").text,
+                path: node.xpath("./path").text,
                 collection: node.xpath("./@collection").text == "true",
                 size: node.xpath("./content/@total-size").text.to_i,
                 last_modified: node.xpath("mtime").text,
                 tz: node.xpath("mtime/@tz").text
-              }
+              )
               files << file
             else
               # it's the cursor node, ignore it

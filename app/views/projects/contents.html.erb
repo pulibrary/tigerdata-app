@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <h1>Project Contents</h1>
 
 <div>
@@ -9,14 +10,49 @@
 
 <div>
   <h2>Contents Preview</h2>
+=======
+<h1>Contents Preview</h1>
+<table>
+  <tr>
+    <th>Path</th>
+    <th>Name</th>
+    <th>Size</th>
+    <th>Last modified</th>
+  </tr>
+  <% current_folder = nil %>
+>>>>>>> Better handling of assets and their display
   <% @file_list[:files].each do |file| %>
-    <% if file[:collection] == true %>
-      <li><%= file[:name] %>/
-    <% else %>
-      <li><%= file[:name] %> <%= file[:size] %> <%= file[:last_modified] %> <%= file[:tz] %>
+
+    <% if current_folder != file.path_only %>
+      <!--
+        Print the folder information row.
+        Notice that depending how the data comes back from Mediaflux we might see the
+        collection record first or a _file_ under the collection first.
+      -->
+      <% current_folder = file.path_only %>
+      <tr>
+        <td><b><%= current_folder %>/</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    <% end %>
+
+    <% unless file.collection %>
+      <!-- Print the file information row -->
+      <tr>
+        <td>&nbsp;</td>
+        <td><%= file.name %> </td>
+        <td><%= file.size %></td>
+        <td><%= file.last_modified %></td>
+      </tr>
     <% end %>
   <% end %>
+<<<<<<< HEAD
 </div>
+=======
+</table>
+>>>>>>> Better handling of assets and their display
 
 <div>
   <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
