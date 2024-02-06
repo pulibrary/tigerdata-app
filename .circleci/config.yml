@@ -60,10 +60,6 @@ jobs:
           POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: eosadler/tigerdata:latest
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
     steps:
       - attach_workspace:
           at: *root
@@ -71,6 +67,11 @@ jobs:
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
+      - run: docker create --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
+      - run: docker start mediaflux
       - run:
           name: Wait for Mediaflux
           command: dockerize -wait tcp://0.0.0.0:8888 -timeout 1m
