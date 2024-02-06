@@ -1,0 +1,19 @@
+#header {
+    padding: 0px;
+    background-color: #000000;
+    .body{
+        // display: inline-block;
+        color: #ffffff;
+        margin: auto;
+        padding: 50px 25px 25px 25px;
+        float: right;
+    }
+    .navbar-brand {
+        color: #ffffff;
+        margin: auto;
+        padding: 10px;
+    }
+    .btn.btn-primary.btn-sm {
+        padding-left: 10px;
+    }
+}
