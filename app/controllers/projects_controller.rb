@@ -86,7 +86,7 @@ class ProjectsController < ApplicationController
   def contents
     project
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
-
+    @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
   end 
 
   private

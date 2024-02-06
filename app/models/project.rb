@@ -84,4 +84,11 @@ class Project < ApplicationRecord
     xml_metadata = accum_req.metadata
     xml_metadata[:total_file_count]
   end
+
+  def storage_usage(session_id:)
+    accum_req = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+    xml_metadata = accum_req.metadata
+    byebug
+    xml_metadata[:total_storage_usage]
+  end
 end

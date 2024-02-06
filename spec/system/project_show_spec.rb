@@ -62,11 +62,14 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         project.save!
         accum_req = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, collection: project.mediaflux_id, name:"file count", type:"collection.asset.count")
         accum_req.resolve
+        accum_req2 = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, collection: project.mediaflux_id, name:"storage usage", type:"content.all.size")
+        accum_req2.resolve
+byebug
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 1).generate
       end
       # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD 
       # TODO: FIGURE OUT HOW TO REALLY TEST THIS
-      xit "Contents page has collection summary data" do
+      it "Contents page has collection summary data" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
@@ -75,7 +78,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content("Project Contents")
         expect(page).to have_content("File Count")
         expect(find(:css, "#file_count").text).to eq "4"
-        
+        expect(page).to have_content("Storage Usage")
+        expect(find(:css, "#storage_usage").text).to eq "TBD"
+
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
         click_on("Return to Dashboard")
