@@ -3,13 +3,13 @@ module Mediaflux
   class Asset
     attr_accessor :id, :name, :path, :collection, :last_modified, :tz, :size
 
-    def initialize(id:, name:, path: nil, collection:, last_modified:, tz:, size: 0)
+    def initialize(id:, name:, path: nil, collection:, last_modified_mf:, tz:, size: 0)
       @id = id
       @name = name
       @path = path
       @collection = collection
       @size = size
-      @last_modified = last_modified
+      @last_modified_mf = last_modified_mf
       @tz = tz
     end
 
@@ -24,6 +24,12 @@ module Mediaflux
       else
         path
       end
+    end
+
+    # Returns the last modified data but using the standard ISO 8601
+    def last_modified
+      # TODO: Convert to ISO 8601
+      @last_modified_mf
     end
 
     # Returns the path for the asset

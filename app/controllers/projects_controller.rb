@@ -86,7 +86,7 @@ class ProjectsController < ApplicationController
   def contents
     project
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
-    @file_list = project.file_list(session_id: current_user.mediaflux_session)
+    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 20)
     @file_list[:files].sort_by!(&:path)
   end
 

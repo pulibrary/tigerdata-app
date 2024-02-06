@@ -110,7 +110,7 @@ module Mediaflux
                 path: node.xpath("./path").text,
                 collection: node.xpath("./@collection").text == "true",
                 size: node.xpath("./content/@total-size").text.to_i,
-                last_modified: node.xpath("mtime").text,
+                last_modified_mf: node.xpath("mtime").text,
                 tz: node.xpath("mtime/@tz").text
               )
               files << file
