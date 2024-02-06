@@ -64,7 +64,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         accum_req.resolve
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 1).generate
       end
-      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD
+      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD 
+      # TODO: FIGURE OUT HOW TO REALLY TEST THIS
       xit "Contents page has collection summary data" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
