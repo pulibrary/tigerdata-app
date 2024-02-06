@@ -3,7 +3,7 @@
   border-top: #cecece solid 15px;
   border-bottom: #cecece solid 3px;
   .content {
-    background-color: #ffffff;
+    background-color: #000000;
     padding: 5px 0px;
     display: flex;
     justify-content: flex-start;
@@ -16,6 +16,7 @@
       margin: auto;
       width: 100%;
       max-width: 200px;
+      background-color: #cecece;
     }
 
     a {
@@ -31,7 +32,7 @@
     }
 
     .pul-accessible a {
-      color: black;
+      color: rgb(255, 255, 255);
       &::after {
         background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE4IDEzdjZhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOGEyIDIgMCAwIDEgMi0yaDYiLz48cG9seWxpbmUgcG9pbnRzPSIxNSAzIDIxIDMgMjEgOSIvPjxsaW5lIHgxPSIxMCIgeDI9IjIxIiB5MT0iMTQiIHkyPSIzIi8+PC9zdmc+");
         background-position: center center;
