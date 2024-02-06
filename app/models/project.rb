@@ -78,4 +78,10 @@ class Project < ApplicationRecord
   def to_xml
     ProjectMediaflux.xml_payload(project: self)
   end
+
+  def asset_count(session_id:)
+    accum_req = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+    xml_metadata = accum_req.metadata
+    xml_metadata[:total_file_count]
+  end
 end
