@@ -36,6 +36,13 @@ jobs:
       - checkout
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
       - install_dependencies
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: docker create -t eosadler/tigerdata:latest -name mediaflux --publish 0.0.0.0:8888:8888
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
@@ -60,10 +67,6 @@ jobs:
           POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: eosadler/tigerdata:latest
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
     steps:
       - attach_workspace:
           at: *root
@@ -71,9 +74,6 @@ jobs:
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run:
-          name: Wait for Mediaflux
-          command: dockerize -wait tcp://0.0.0.0:8888 -timeout 1m
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:migrate RAILS_ENV=test
