@@ -284,13 +284,18 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
 
     context "when authenticated" do
+      let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
+      let(:job) { instance_double(ListProjectContentsJob) }
+
       before do
         stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
           .with(
                  body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"test-session-token\">\n    <args>\n      <id/>\n    </args>\n  </service>\n</request>\n"
                ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
 
-        allow(ListProjectContentsJob).to receive(:perform_later)
+        allow(ListProjectContentsJob).to receive(:perform_later).and_return(job)
+        allow(job).to receive(:job_id).and_return(job_id)
+
         sign_in sponsor_user
       end
 
@@ -302,7 +307,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("Yes")
         click_on "Yes"
         expect(page).to have_content("You have a background job running.")
-        expect(ListProjectContentsJob).to have_received(:perform_later)
+        expect(sponsor_user.user_jobs).not_to be_empty
+        user_job = sponsor_user.user_jobs.first
+        expect(user_job.job_id).to eq(job.job_id)
       end
     end
   end

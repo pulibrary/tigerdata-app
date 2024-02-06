@@ -91,7 +91,10 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
-    ListProjectContentsJob.perform_later
+    job = ListProjectContentsJob.perform_later
+    user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
+    current_user.user_jobs << user_job
+    current_user.save!
 
     json_response = {
       message: "You have a background job running."
