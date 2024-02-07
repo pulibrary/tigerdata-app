@@ -57,3 +57,20 @@ dd {
   padding: 0;
   margin: 0
 }
+#show{
+  h2 {
+    margin-left: 0.2em;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+
+  dt {
+    float: left;
+    max-width: 25%;
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0;
+    clear: both
+  }
+
+}
