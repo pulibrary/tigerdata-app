@@ -11,7 +11,7 @@ require "axe-rspec"
 require "devise"
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true,
-                             allow: "chromedriver.storage.googleapis.com")
+                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0"])
 # WebMock.enable_net_connect!
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
 
