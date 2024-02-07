@@ -28,7 +28,7 @@
   Please log in.
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
-  <div class="dashboard-section">
+  <div id="dashboard-section">
     <%if @my_projects_count != 0%>
       <h1>My Projects</h1>
     <%end%>
@@ -58,7 +58,7 @@
     <% end %>
     <div>
       <br/>
-      <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+      <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
     </div>
     </div>
   <% end %>
