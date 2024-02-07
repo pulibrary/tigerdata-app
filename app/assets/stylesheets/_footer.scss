@@ -1,7 +1,14 @@
 #footer {
   padding: 0px;
-  border-top: #cecece solid 15px;
+  position: absolute;
+  bottom: 0;
+  // border-top: #cecece solid 15px;
   border-bottom: #cecece solid 3px;
+  width: -webkit-fill-available;
+  .deployment-version{
+    position: absolute;
+    bottom: 0;
+  }
   .content {
     background-color: #000000;
     padding: 5px 0px;
