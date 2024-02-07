@@ -86,8 +86,13 @@ class Project < ApplicationRecord
   end
 
   def file_list(session_id:, idx: 1, size: 10)
-    return [] if mediaflux_id == nil
-    request = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, idx:, size:, action: "get-meta")
+    return {files: []} if mediaflux_id == nil
+    request = Mediaflux::Http::QueryRequest.new(
+      session_token: session_id,
+      collection: mediaflux_id,
+      idx:, size:,
+      action: "get-meta",
+      deep_search: true)
     request.result
   end
 end

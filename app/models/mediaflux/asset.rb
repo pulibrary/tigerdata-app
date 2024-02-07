@@ -3,7 +3,7 @@ module Mediaflux
   class Asset
     attr_accessor :id, :name, :path, :collection, :last_modified, :tz, :size
 
-    def initialize(id:, name:, path: nil, collection:, last_modified_mf:, tz:, size: 0)
+    def initialize(id:, name:, path: nil, collection:, last_modified_mf: nil, tz: nil, size: 0)
       @id = id
       @name = name
       @path = path

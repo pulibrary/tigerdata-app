@@ -2,7 +2,7 @@
 module Mediaflux
   module Http
     class QueryRequest < Request
-      attr_reader :aql_query, :idx, :size, :collection, :namespace, :action
+      attr_reader :aql_query, :idx, :size, :collection, :namespace, :action, :deep_search
 
       # Constructor
       # @param session_token [String] the API token for the authenticated session
@@ -10,7 +10,9 @@ module Mediaflux
       # @param collection [Integer] Optional collection id
       # @param idx [Integer] Optional starting index or return set.  Defaults to 1
       # @param size [Integer] Optional page size.  Defaults to 100
-      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 100, namespace: nil, action: nil)
+      # @param action [String] Optional, by default it uses get-name but it could also be get-meta to get more details about the assets.
+      # @param deep_search [Bool] Optiona, false by default. When true queries the collection and it subcollections.
+      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 100, namespace: nil, action: nil, deep_search: false)
         super(session_token: session_token)
         @aql_query = aql_query
         @collection = collection
@@ -18,6 +20,7 @@ module Mediaflux
         @action = action
         @idx = idx
         @size = size
+        @deep_search = deep_search
       end
 
       # Specifies the Mediaflux service to use when running a query
@@ -51,7 +54,13 @@ module Mediaflux
               # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
               #      For the moment we will utilize the where clasue that does allow pagination
               # xml.collection collection if collection.present?
-              xml.where "asset in static collection or subcollection of #{collection}" if collection.present?
+              if collection.present?
+                if deep_search
+                  xml.where "asset in static collection or subcollection of #{collection}"
+                else
+                  xml.where "asset in collection #{collection}"
+                end
+              end
               xml.where aql_query if aql_query.present?
               xml.action action if action.present?
               xml.idx idx
