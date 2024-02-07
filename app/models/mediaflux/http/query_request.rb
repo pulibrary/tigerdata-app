@@ -55,7 +55,7 @@ module Mediaflux
               #      For the moment we will utilize the where clasue that does allow pagination
               # xml.collection collection if collection.present?
               if collection.present?
-                xml.where mf_where
+                xml.where mf_where(collection)
               end
               xml.where aql_query if aql_query.present?
               xml.action action if action.present?
