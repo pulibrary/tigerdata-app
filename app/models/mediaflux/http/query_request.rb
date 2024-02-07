@@ -135,7 +135,7 @@ module Mediaflux
           end
           files
         end
-      # rubocop:enable Lint/DuplicateMethods
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
