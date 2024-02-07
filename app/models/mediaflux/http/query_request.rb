@@ -55,17 +55,21 @@ module Mediaflux
               #      For the moment we will utilize the where clasue that does allow pagination
               # xml.collection collection if collection.present?
               if collection.present?
-                if deep_search
-                  xml.where "asset in static collection or subcollection of #{collection}"
-                else
-                  xml.where "asset in collection #{collection}"
-                end
+                xml.where mf_where
               end
               xml.where aql_query if aql_query.present?
               xml.action action if action.present?
               xml.idx idx
               xml.size size
             end
+          end
+        end
+
+        def mf_where(collection)
+          if deep_search
+            "asset in static collection or subcollection of #{collection}"
+          else
+            "asset in collection #{collection}"
           end
         end
 
@@ -97,7 +101,7 @@ module Mediaflux
               file = Mediaflux::Asset.new(
                 id: node.xpath("./@id").text,
                 name: node.text,
-                collection: node.xpath("./@collection").text == "true",
+                collection: node.xpath("./@collection").text == "true"
               )
               files << file
             else
@@ -109,6 +113,7 @@ module Mediaflux
         end
 
         # Extracts file information when the request was made with the "action: get-meta" parameter
+        # rubocop:disable Metrics/MethodLength
         def parse_get_meta(xml)
           files = []
           xml.xpath("/response/reply/result").children.each do |node|
@@ -130,6 +135,7 @@ module Mediaflux
           end
           files
         end
+      # rubocop:enable Lint/DuplicateMethods
     end
   end
 end

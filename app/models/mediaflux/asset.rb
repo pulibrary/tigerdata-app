@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   class Asset
-    attr_accessor :id, :name, :path, :collection, :last_modified, :tz, :size
+    attr_accessor :id, :name, :path, :collection, :tz, :size
 
     def initialize(id:, name:, path: nil, collection:, last_modified_mf: nil, tz: nil, size: 0)
       @id = id
@@ -19,8 +19,8 @@ module Mediaflux
     #   path        -> "/tigerdata/projectg/folder1/file-abc.txt"
     #   path_short  -> "/projectg/folder1/file-abc.txt"
     def path_short
-      if path.starts_with?(Rails.configuration.mediaflux['api_root_ns'])
-        path[Rails.configuration.mediaflux['api_root_ns'].length..-1]
+      if path.starts_with?(Rails.configuration.mediaflux["api_root_ns"])
+        path[Rails.configuration.mediaflux["api_root_ns"].length..-1]
       else
         path
       end
