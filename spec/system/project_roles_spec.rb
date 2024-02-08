@@ -118,11 +118,15 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     end
     xit "allows for a user to be both a Data Sponsor and a Data Manager" do
     end
+    xit "does not allow a Data Manager to edit a Data Manager role" do
+    end
   end
   context "Data Sponsors and Data Managers can assign Data Users" do
-    xit "allows a Data Sponsor or Data Manager to assign a Data User" do
+    xit "allows a Data Sponsor to assign a Data User" do
     end
-    xit "does not allow a Data Manager to edit a Data Manager role" do
+    xit "allows a Data Manager to assign a Data User" do
+    end
+    xit "does not allow a Data User to assign a Data User" do
     end
   end
 end
