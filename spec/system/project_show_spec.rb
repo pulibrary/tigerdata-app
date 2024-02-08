@@ -52,13 +52,16 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
       end
     end
-    context "Project Contents" do 
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
-      before do 
+
+    context "Project Contents" do
+      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
+      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session)[:files] }
+
+      before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
         Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
         session_id = sponsor_user.mediaflux_session
-        
+
         # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
         project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: )
         project.save!
@@ -71,7 +74,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
 
-      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD 
+      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD
       # TODO: FIGURE OUT HOW TO REALLY TEST THIS
       it "Contents page has collection summary data", :no_ci do
         # sign in and be able to view the file count for the collection
@@ -82,7 +85,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content("Project Contents")
         expect(page).to have_content("File Count")
         expect(find(:css, "#file_count").text).to eq "4"
-        
+
+        # Files are displayed
+        expect(page).to have_content(file_list[0].name)
+        expect(page).to have_content(file_list[1].name)
+
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
         click_on("Return to Dashboard")

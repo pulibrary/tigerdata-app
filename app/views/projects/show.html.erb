@@ -91,7 +91,8 @@ Project Details:
 </div>
 
 <div>
-  <% if @project.mediaflux_id.blank? && current_user.has_role?(User::MEDIAFLUX_ADMIN) %>
+   # TODO: Once the csv file defines the role for who can approve a project use that here
+   <% if @project.mediaflux_id.blank? && current_user.uid == @project.metadata[:data_sponsor] %>
     <%= form_with url: project_approve_path(@project), method: :post do |form| %>
       <input type="submit" class="btn btn-secondary btn-sm" value="Approve Project" />
     <% end %>
