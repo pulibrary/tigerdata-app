@@ -7,7 +7,6 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
-  let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
   before do
     sign_in sponsor_user
 
