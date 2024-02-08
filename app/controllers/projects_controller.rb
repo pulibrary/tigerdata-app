@@ -90,6 +90,15 @@ class ProjectsController < ApplicationController
     @file_list[:files].sort_by!(&:path)
   end
 
+  def list_contents
+    ListProjectContentsJob.perform_later
+
+    json_response = {
+      message: "You have a background job running."
+    }
+    render json: json_response
+  end
+
   private
 
     def new_project
