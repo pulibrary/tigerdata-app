@@ -74,7 +74,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
 
       it "shows none when the data user is empty" do
-        sign_in sponsor_user
+        sign_in data_manager
         visit "/projects/#{project_not_in_mediaflux.id}"
         expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
@@ -91,10 +91,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
     context "An Mediaflux Administrator" do
-      let(:mediaflux_admin_user) { FactoryBot.create(:mediaflux_admin) }
-
       it "shows the project data and the Approve Project button" do
-        sign_in mediaflux_admin_user
+        # TODO: Once the csv file defines the role for who can approve a project use that here
+        sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
         expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"

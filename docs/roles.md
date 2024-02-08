@@ -1,19 +1,10 @@
 # User Roles
-Users will have one or more roles in the system.  Eventually these roles will be defined in the system by administrators or project sponsors.  For the moment the roles are defined by a rake task.
+Users will have one or more roles in the system.  Eventually these roles will be defined in the system by administrators or project sponsors or Grouper.  For the moment the roles are defined the data/user_registration_list.csv.
 
 ## Defined Roles
-   - Project Sponsor - A user than can create new projects
+   - Project Sponsor - A user that can create new projects
+   - Data Manager - A user that can edit a project
+   - Data User - A user that can be chosen to be a data user on a project
 
-## Default Roles Rake Task
-   To create or update users with the default roles run
-   ```
-   bundle exec rake roles:default_sponsors
-   ```
-   To add additional users to the project sponsor role edit `config/default_sponsors.yml` and add additional netids to the correct environments
-
-## Adding a role to a user
-   roles can be added to any user in the rails console.  Assuming you have set the variable netid to the user's netid (`netid="cac9"`) the following code can be utilized to add the project sponsor role to the user.
-   ```
-   user = User.find_by(uid: netid)
-   user.add_role User::PROJECT_SPONSOR
-   ```
+## User Model Flags
+  The user model contains flags to show who is eligible for the Project Sponsor and Data Manager roles.  Any user in the database can be a Data User

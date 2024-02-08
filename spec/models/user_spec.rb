@@ -9,7 +9,22 @@ RSpec.describe User, type: :model do
   let(:access_token5) { OmniAuth::AuthHash.new(provider: "cas", uid: "who5", extra: { mail: "who5@princeton.edu", givenname: "Guess", sn: "Who-You", pudisplayname: "Guess Who-You" }) }
   let(:access_token6) { OmniAuth::AuthHash.new(provider: "cas", uid: "who6", extra: { mail: "who6@princeton.edu", givenname: "Guess", sn: "Y'Who", pudisplayname: "Guess Y'Who" }) }
   describe "#from_cas" do
-    it "returns a user object" do
+    it "returns nil if the user does not exist" do
+      expect(described_class.from_cas(access_token)).to be_nil
+    end
+
+    it "returns a user object if the user exists" do
+      original_user = FactoryBot.create(:user, uid: "who")
+      user = described_class.from_cas(access_token)
+      expect(user).to be_a described_class
+      expect(user.uid).to eq("who")
+      expect(user.given_name).to eq(original_user.given_name)
+      expect(user.family_name).to eq(original_user.family_name)
+      expect(user.display_name).to eq(original_user.display_name)
+    end
+
+    it "returns a user object if the user exists and sets the name information if given name is empty" do
+      FactoryBot.create(:user, uid: "who", given_name: nil)
       user = described_class.from_cas(access_token)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who")
@@ -20,6 +35,7 @@ RSpec.describe User, type: :model do
   end
   describe "#display name safe" do
     it "testing a full name" do
+      FactoryBot.create(:user, uid: "who", given_name: nil)
       user = described_class.from_cas(access_token)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who")
@@ -28,30 +44,35 @@ RSpec.describe User, type: :model do
       expect(user.display_name_safe).to eq("Guess Who?")
     end
     it "testing a uid" do
+      FactoryBot.create(:user, uid: "who2", given_name: nil)
       user = described_class.from_cas(access_token2)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who2")
       expect(user.display_name_safe).to eq("who2")
     end
     it "testing a empty given name" do
+      FactoryBot.create(:user, uid: "who3", given_name: nil)
       user = described_class.from_cas(access_token3)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who3")
       expect(user.display_name_safe).to eq("who3")
     end
     it "testing a last name with distinct capitaliztion" do
+      FactoryBot.create(:user, uid: "who4", given_name: nil)
       user = described_class.from_cas(access_token4)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who4")
       expect(user.display_name_safe).to eq("Guess McWho")
     end
     it "testing a last name with hyphen" do
+      FactoryBot.create(:user, uid: "who5", given_name: nil)
       user = described_class.from_cas(access_token5)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who5")
       expect(user.display_name_safe).to eq("Guess Who-You")
     end
     it "testing a last name with quote" do
+      FactoryBot.create(:user, uid: "who6", given_name: nil)
       user = described_class.from_cas(access_token6)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who6")
