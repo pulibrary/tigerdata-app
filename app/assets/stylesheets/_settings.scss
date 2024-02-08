@@ -88,3 +88,47 @@
     margin-left: 1em;
   }
 }
+
+#edit{
+  .added_user_textbox {
+    background-color: #f4f2f2;
+    margin-bottom: 2px;
+  }
+
+  .delete_icon {
+    color: #bb6c6c;
+  }
+
+  .add_new_user_textbox {
+    margin-left: 30px;
+  }
+
+  .add_new_user_div {
+    margin-top: -15px;
+    margin-bottom: 10px;
+  }
+
+  input:valid {
+    background-color: palegreen;
+  }
+
+  input:invalid {
+    background-color: lightpink;
+  }
+  h2 {// Headings for roles and description
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+  .roles-container{
+    margin-left: 2em;
+  }
+  .description-container{
+    margin-left: 2em;
+  }
+  .data-users{
+    margin-left: 3em;
+  }
+  .actions{
+    margin-top: 1em;
+  }
+}
