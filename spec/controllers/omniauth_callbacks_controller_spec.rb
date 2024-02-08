@@ -15,8 +15,9 @@ RSpec.describe Users::OmniauthCallbacksController do
   end
 
   context "uknown user" do
-    it "redirects to home page with alert" do
-      allow(User).to receive(:from_cas) { FactoryBot.create(:user) }
+    it "redirects to the help page with alert" do
+      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas")
+      allow(User).to receive(:from_cas) { nil }
       get :cas
       expect(response).to redirect_to(help_path)
       expect(flash.notice).to eq("You can not be signed in at this time.")
@@ -24,7 +25,8 @@ RSpec.describe Users::OmniauthCallbacksController do
   end
 
   context "non-CAS user" do
-    it "redirects to home page with alert" do
+    it "redirects to the home page with alert" do
+      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "other")
       allow(User).to receive(:from_cas) { nil }
       get :cas
       expect(response).to redirect_to(root_path)

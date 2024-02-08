@@ -8,21 +8,19 @@ FactoryBot.define do
     family_name { display_name.split(" ").last }
     provider { :cas }
     email { "#{uid}@example.com" }
+    eligible_sponsor { false }
+    eligible_manager { false }
 
     ##
     # A user who is allowed to sponsor a project
     factory :project_sponsor do
-      after :create do |user|
-        user.add_role User::PROJECT_SPONSOR
-      end
+      eligible_sponsor { true }
     end
 
     ##
-    # A user who is allowed to administer mediaflux
-    factory :mediaflux_admin do
-      after :create do |user|
-        user.add_role User::MEDIAFLUX_ADMIN
-      end
+    # A user who is allowed to manage a project
+    factory :project_manager do
+      eligible_manager { true }
     end
   end
 end
