@@ -83,7 +83,11 @@ class ProjectsController < ApplicationController
 
   def confirmation; end
 
-  def contents; end 
+  def contents
+    project
+    @num_files = project.asset_count(session_id: current_user.mediaflux_session)
+
+  end 
 
   private
 

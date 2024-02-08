@@ -105,6 +105,32 @@ $ java -jar aterm.jar
 
 See [Aterm for beginners](aterm_101.md) for more information on Aterm.
 
+## Test Projects and Assets
+
+There are a few ways to generate test projects and test assets.  The simplest is to run the rake task `projects:create_small_project`.  For example `rake projects:create_small_project\[cac9,mytest]` will create a project for the user `cac9` under the prefix mytest and create a random amount of assets underneath.
+
+You can also utilize the TestAssetGenerator in the rails console to add assets to an existing project.  For example the following script grabs the first User in the system and the last Project in the system.  It then saves the project to mediaflux and then generates a hierarchy of assets under the project.
+
+```
+rails c
+  user = User.first
+  project = Project.last
+  id = ProjectMediaflux.create!(project:, session_id: user.mediaflux_session, xml_namespace: "tigerdata")
+  project.mediaflux_id = id
+  project.save!
+  gen = TestAssetGenerator.new(project_id: project.id,user:, levels: 2, directory_per_level: 2,file_count_per_directory: 20)
+  gen.generate
+```
+
+You can also utilize `Mediaflux::Http::TestAssetCreateRequest` to generate some assets in an existing collection under a project
+
+```
+rails c
+  parent_id = 1234 # collection id from mediaflux
+  gen = Mediaflux::Http::TestAssetCreateRequest.new(session_token: User.first.mediaflux_session, parent_id:, count: 5, pattern: "test_asset_" )
+  gen.resolve
+```
+
 ## Internal documentation
 
 All notes below are internal and cannot be accessed outside of the PUL IT group.

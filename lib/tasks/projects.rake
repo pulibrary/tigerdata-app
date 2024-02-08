@@ -15,15 +15,34 @@ namespace :projects do
     time_action("Creating projects") do
       puts "Creating #{count} projects with prefix #{project_prefix}..."
       (1..count).each do |i|
-        project = create_test_project(i, user, project_prefix)
-        project.save!
-        project.approve!(session_id: user.mediaflux_session, created_by: user.uid)
+        project_generator = TestProjectGenerator.new(user:, number: i, project_prefix:)
+        project_generator.generate
         puts i if (i % 100) == 0
       end
     end
 
     query_test_projects(user, root_ns)
   end
+
+  desc "Create a test project and a small number of assets in that project"
+  task :create_small_project, [:uid, :prefix] => [:environment] do |_, args|
+    uid = args[:uid]
+    raise "Count must be specified" if uid.blank?
+    user = User.find_by(uid:)
+    project_prefix = args[:prefix]
+    raise "Project prefix must be specified" if project_prefix.nil?
+    number = rand(10_000)
+    project_generator = TestProjectGenerator.new(user:, number: number, project_prefix:)
+    project = project_generator.generate
+    puts "Project created #{project.id}.  Saved in mediaflux under #{project.mediaflux_id}"
+    levels = rand(10)
+    directory_per_level = rand(10)
+    file_count_per_directory = rand(10)
+    asset_generator = TestAssetGenerator.new(user:, project_id: project.id, levels:, directory_per_level:, file_count_per_directory:)
+    asset_generator.generate
+    puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
+  end
+
 
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
     data_sponsor = args[:data_sponsor]
@@ -52,38 +71,6 @@ namespace :projects do
     asset_id = project.save_in_mediaflux(session_id: user.mediaflux_session)
     puts "Mediaflux asset #{asset_id} updated"
   end
-
-  # rubocop:disable Metrics/MethodLength
-  def create_test_project(number, user, project_prefix)
-    sequence = number.to_s.rjust(5, "0")
-    sponsor = if (number % 7) == 0
-                "zz007"
-              elsif (number % 3) == 0
-                "zz003"
-              else
-                "zz001"
-              end
-    departments = []
-    departments << "SEVEN" if (number % 7) == 0
-    departments << "THREE" if (number % 3) == 0
-    departments << "FIVE" if (number % 5) == 0
-    departments << "ONE" if departments.count == 0
-
-    project = Project.new
-    project.created_by_user = user
-    project.metadata = {
-      data_sponsor: sponsor,
-      data_manager: "zz789",
-      departments: departments,
-      directory: "#{project_prefix}-#{sequence}",
-      title: "Project #{project_prefix} #{sequence}",
-      description: "Description of project #{project_prefix} #{sequence}",
-      data_user_read_only: [],
-      data_user_read_write: []
-    }
-    project
-  end
-  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)

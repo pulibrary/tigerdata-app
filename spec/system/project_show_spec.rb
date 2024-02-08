@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
+RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
   let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
@@ -37,7 +37,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_link("Withdraw Project Request")
     end
     context "Provenance Events" do
-      let(:project) { FactoryBot.create(:project) }
+      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       it "shows provenance events" do
         submission_event
@@ -51,13 +51,44 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         visit "/projects/#{project.id}"
         expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
       end
-      it "can take the user to the project contents page" do
-        submission_event
+    end
+    context "Project Contents" do 
+      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
+      before do 
+        @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+        session_id = sponsor_user.mediaflux_session
+        
+        # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
+        project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: )
+        project.save!
+        accum_req = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, collection: project.mediaflux_id, name:"file count", type:"collection.asset.count")
+        accum_req.resolve
+        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 1).generate
+      end
+
+      after do
+        Rails.configuration.mediaflux["api_host"] = @original_api_host
+      end
+
+      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD 
+      # TODO: FIGURE OUT HOW TO REALLY TEST THIS
+      it "Contents page has collection summary data", :no_ci do
+        # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
+        expect(page).to have_content("File Count")
+        expect(find(:css, "#file_count").text).to eq "4"
+        
+        # Be able to return to the dashboard
+        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
+        click_on("Return to Dashboard")
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        click_on(project.title)
+        expect(page).to have_content("Project Details: #{project.title}")
       end
     end
   end

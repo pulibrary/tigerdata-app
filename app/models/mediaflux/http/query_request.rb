@@ -9,8 +9,8 @@ module Mediaflux
       # @param http_client [String] Optional AQL query string
       # @param collection [Integer] Optional collection id
       # @param idx [Integer] Optional starting index or return set.  Defaults to 1
-      # @param size [Integer] Optional page size.  Defaults to 10
-      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 10, namespace: nil, action: nil)
+      # @param size [Integer] Optional page size.  Defaults to 100
+      def initialize(session_token:, aql_query: nil, collection: nil, idx: 1, size: 100, namespace: nil, action: nil)
         super(session_token: session_token)
         @aql_query = aql_query
         @collection = collection

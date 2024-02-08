@@ -110,6 +110,16 @@ Aterm supports a few Bash-like commands that you can use as shortcuts, for examp
 ```
 
 
+### Fixing the display of collections in the Desktop
+By default Collection Assets are *not* displayed as "folders" in the Mediaflux desktop, but you can fix this by turning on the `desktop-experimental` role via aTerm:
+
+```
+actor.grant :type domain :name system :role -type role desktop-experimental
+```
+
+You'll need to close the "Asset Finder" in the Desktop and reopen it for the change to kick in.
+
+
 ## Assets
 MediaFlux stores files as assets. An asset contains metadata and _optionally_ content. The metadata and the content are versioned independently.
 
@@ -368,3 +378,23 @@ Once stores are defined it is possible to reference them in Aterm commands. For 
 	:service-name asset.content.copy.create < :store s3 >
 ```
 
+## Collection Asset Accumulators
+
+Accumulators allow for mediaflux to generate statistics about Collection Assets as the items in the collection change.  Currently there are two accumulators being added to each collection as they are created in production `collection.asset.count` & `content.all.size`.  The aterm command for creating an example accumulator is below:
+
+```
+asset.collection.accumulator.add \
+   :accumulator < \
+      :name tigerdata-count \
+      :type collection.asset.count \
+      > \
+   :id path=/princeton/tigerdata \
+   :cascade true
+asset.collection.accumulator.add \
+   :accumulator < \
+      :name tigerdata-size \
+      :type content.all.size \
+      > \
+   :id path=/princeton/tigerdata \
+   :cascade true
+```
