@@ -1,7 +1,67 @@
-<h1> Project Contents </h1>
-<div> 
-<dl> 
-<dt>File Count</dt> <dd id="file_count"><%=@num_files %> </dd>
-</dl>
-<%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
+<style>
+  #file-list {
+    width:90%;
+    border: 1px solid gray;
+  }
+
+  #file-list > tbody > tr > th {
+    background-color: #dddcdc;
+  }
+
+  .numeric_column {
+    text-align: right;
+  }
+</style>
+
+<h1>Project Contents</h1>
+
+<div>
+  <h2>Contents Summary</h2>
+  <dl>
+    <dt>File Count</dt> <dd id="file_count"><%=@num_files %> </dd>
+  </dl>
+</div>
+
+<div>
+  <h2>Contents Preview</h2>
+  <table id="file-list">
+    <tr>
+      <th>Path</th>
+      <th>Name</th>
+      <th class="numeric_column">Size</th>
+      <th class="numeric_column">Last modified</th>
+    </tr>
+    <% current_folder = nil %>
+    <% @file_list[:files].each do |file| %>
+
+      <% if current_folder != file.path_only %>
+        <!--
+          Print the folder information row.
+          Notice that depending how the data comes back from Mediaflux we might see the
+          collection record first or a _file_ under the collection first.
+        -->
+        <% current_folder = file.path_only %>
+        <tr>
+          <td><b><%= current_folder %>/</b></td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      <% end %>
+
+      <% unless file.collection %>
+        <!-- Print the file information row -->
+        <tr>
+          <td>&nbsp;</td>
+          <td><%= file.name %> </td>
+          <td class="numeric_column"><%= number_to_human_size(file.size) %></td>
+          <td class="numeric_column"><%= file.last_modified %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+</div>
+
+<div>
+  <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
 </div>
