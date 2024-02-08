@@ -21,6 +21,10 @@ class User < ApplicationRecord
     User.all.map(&:uid)
   end
 
+  def self.sponsor_users
+    User.where(eligible_sponsor: true).map(&:uid)
+  end
+
   def clear_mediaflux_session(session)
     @mediaflux_session = nil
     session[:mediaflux_session] = nil

@@ -32,7 +32,7 @@
 <div>
   <h2>Project Roles</h2>
 
-  <p>Data Sponsor: <input type="text" list="all-users" id="data_sponsor" name="data_sponsor" required autofocus value="<%= pre_populate_data_sponsor %>" /></p>
+  <p>Data Sponsor: <input type="text" list="sponsor-users" id="data_sponsor" name="data_sponsor" required autofocus value="<%= pre_populate_data_sponsor %>" /></p>
   <p>Data Manager: <input type="text" list="all-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
 
