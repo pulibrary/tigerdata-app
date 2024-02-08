@@ -5,7 +5,22 @@
     }
 }
 
-.dashboard-section {
+.dashboard {
+    background-color: lightgray;
+    border-radius: 0.1em;
+    padding: 0.25em;
+
+    h2 {
+      margin-left: 0.2em;
+    }
+
+    .btn-primary {
+      margin-left: 0.5em;
+      margin-bottom: 0.5em;
+    }
+}
+
+.recent-activity {
     background-color: lightgray;
     border-radius: 0.1em;
     padding: 0.25em;

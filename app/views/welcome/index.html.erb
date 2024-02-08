@@ -28,37 +28,54 @@
   Please log in.
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
-  <div class="dashboard-section">
-    <%if @my_projects_count != 0%>
-      <h1>My Projects</h1>
-    <%end%>
-    <% if @sponsored_projects.size > 0 %> 
-      <h2>Sponsored by Me</h2>
-      <ul class="project-list">
-        <% @sponsored_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
-        <%end%>
-      </ul>
-    <% end %>
-    <% if @managed_projects.size > 0 %> 
-      <h2>Managed by Me</h2>
-      <ul class="project-list">
-        <% @managed_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
-        <%end%>
-      </ul>
-    <% end %>
-    <% if @data_user_projects.size > 0 %> 
-      <h2>Shared with Me</h2>
-      <ul class="project-list">
-        <% @data_user_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
-        <%end%>
-      </ul>
-    <% end %>
-    <div>
-      <br/>
-      <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
-    </div>
-    </div>
-  <% end %>
+  <div class="row">
+    <section class="dashboard col mx-1">
+      <%if @my_projects_count != 0%>
+        <h1>My Projects</h1>
+      <%end%>
+      <% if @sponsored_projects.size > 0 %> 
+        <h2>Sponsored by Me</h2>
+        <ul class="project-list">
+          <% @sponsored_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <% if @managed_projects.size > 0 %> 
+        <h2>Managed by Me</h2>
+        <ul class="project-list">
+          <% @managed_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <% if @data_user_projects.size > 0 %> 
+        <h2>Shared with Me</h2>
+        <ul class="project-list">
+          <% @data_user_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <div>
+        <br/>
+        <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+      </div>
+    </section>
+    <section class="recent-activity col mx-1">
+      <h1>Recent Activity</h1>
+      <% if !@my_jobs.empty? %>
+        <ul>
+          <% @my_jobs.each do |job| %>
+            <li>
+              <%= job.title %>
+              <ul>
+                <li><%= job.description %></li>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </section>
+  </div>
+<% end %>

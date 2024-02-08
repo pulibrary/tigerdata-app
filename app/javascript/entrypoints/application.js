@@ -115,6 +115,36 @@ function initDataUsers() {
   });
 }
 
+async function fetchListContents(listContentsPath) {
+  const response = await fetch(listContentsPath);
+
+  return response.json();
+}
+
+function initListContentsModal() {
+  const listContentsModal = document.getElementById('list-contents-modal');
+  if (listContentsModal) {
+    const requestListContents = document.getElementById('request-list-contents');
+    if (requestListContents) {
+      const listContentsPath = requestListContents.attributes['data-list-contents-path'];
+
+      requestListContents.addEventListener('click', () => {
+        const listContentsPromise = fetchListContents(listContentsPath.value);
+        listContentsPromise.then((response) => {
+          const $alert = document.getElementById('project-alert');
+          if ($alert) {
+            $alert.textContent = response.message;
+            $alert.classList.remove('d-none');
+
+            const modal = bootstrap.Modal.getInstance(listContentsModal);
+            modal.hide();
+          }
+        });
+      });
+    }
+  }
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -122,6 +152,7 @@ function initPage() {
   const datalist = new UserDatalist();
   datalist.setupDatalistValidity();
   initDataUsers();
+  initListContentsModal();
 }
 
 window.addEventListener('load', () => initPage());

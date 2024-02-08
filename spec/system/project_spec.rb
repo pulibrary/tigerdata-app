@@ -74,7 +74,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
 
       it "shows none when the data user is empty" do
-        sign_in sponsor_user
+        sign_in data_manager
         visit "/projects/#{project_not_in_mediaflux.id}"
         expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
@@ -91,10 +91,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
     context "An Mediaflux Administrator" do
-      let(:mediaflux_admin_user) { FactoryBot.create(:mediaflux_admin) }
-
       it "shows the project data and the Approve Project button" do
-        sign_in mediaflux_admin_user
+        # TODO: Once the csv file defines the role for who can approve a project use that here
+        sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
         expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
@@ -276,6 +275,42 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit "/projects"
       expect(page).to have_content(project_not_in_mediaflux.title)
       expect(page).to have_content("(#{::Project::PENDING_STATUS})")
+    end
+  end
+
+  context "Requesting all files for a given project" do
+    before do
+      project_not_in_mediaflux
+    end
+
+    context "when authenticated" do
+      let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
+      let(:job) { instance_double(ListProjectContentsJob) }
+
+      before do
+        stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+          .with(
+                 body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"test-session-token\">\n    <args>\n      <id/>\n    </args>\n  </service>\n</request>\n"
+               ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
+
+        allow(ListProjectContentsJob).to receive(:perform_later).and_return(job)
+        allow(job).to receive(:job_id).and_return(job_id)
+
+        sign_in sponsor_user
+      end
+
+      it "enqueues a Sidekiq job for asynchronously requesting project files" do
+        visit project_contents_path(project_not_in_mediaflux)
+        expect(page).to have_content("List All Files")
+        click_on "List All Files"
+        expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
+        expect(page).to have_content("Yes")
+        click_on "Yes"
+        expect(page).to have_content("You have a background job running.")
+        expect(sponsor_user.user_jobs).not_to be_empty
+        user_job = sponsor_user.user_jobs.first
+        expect(user_job.job_id).to eq(job.job_id)
+      end
     end
   end
 end

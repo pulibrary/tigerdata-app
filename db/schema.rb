@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_30_203429) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_08_162546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,14 +31,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_30_203429) do
     t.index ["project_id"], name: "index_project_id"
   end
 
-  create_table "roles", force: :cascade do |t|
-    t.string "name"
-    t.string "resource_type"
-    t.bigint "resource_id"
+  create_table "user_jobs", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "job_id"
+    t.string "project_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
-    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+    t.index ["user_id"], name: "index_user_jobs_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

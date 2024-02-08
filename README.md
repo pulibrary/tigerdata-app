@@ -76,11 +76,12 @@ The system will eventually have many roles.  Please refer to the [docs for a des
     1. `asdf install`
     1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
 1. OR - Install dependencies with brew and chruby
-   1. `ruby-install 3.1.3 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
-   2. close the terminal window and open a new terminal
-   3. `chruby 3.1.3`
-   4. `ruby --version`
-1. Install language-specific dependencies
+   1. `ruby-install 3.2.3 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
+   2. If you get "error: use of undeclared identifier 'RUBY_FUNCTION_NAME_STRING'" while updating, make sure your Xcode toolks are up to date.
+   3. close the terminal window and open a new terminal
+   4. `chruby 3.2.3`
+   5. `ruby --version`
+2. Install language-specific dependencies
     1. `bundle install`
     2. `yarn install`
 
@@ -213,5 +214,5 @@ To save updates and make changes to appointed users for early testing of the Tig
 2. Save those updated changes
 3. Download the file as a .CSV file
 4. Copy the downloaded .CSV file to `data` > `user_registration_list.csv`
-5. Open a PR to check the updated file into version control 
+5. Open a PR to check the updated file into version control
 6. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.

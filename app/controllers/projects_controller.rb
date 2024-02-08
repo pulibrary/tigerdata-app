@@ -86,8 +86,21 @@ class ProjectsController < ApplicationController
   def contents
     project
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
+    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 20)
+    @file_list[:files].sort_by!(&:path)
+  end
 
-  end 
+  def list_contents
+    job = ListProjectContentsJob.perform_later
+    user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
+    current_user.user_jobs << user_job
+    current_user.save!
+
+    json_response = {
+      message: "You have a background job running."
+    }
+    render json: json_response
+  end
 
   private
 
