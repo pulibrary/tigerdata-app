@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Project Edit Page Roles Validation", type: :system do
-  let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
@@ -25,6 +25,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: "xxx"
+    expect(page.find("input[value=Submit]")).to be_disabled
+    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
+    fill_in "data_sponsor", with: data_manager.uid
     expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: sponsor_user.uid
