@@ -15,6 +15,7 @@ FactoryBot.define do
       storage_capacity { "500 GB" }
       storage_performance { "standard" }
       project_purpose { "research" }
+      directory { "big-data" }
     end
     mediaflux_id { nil }
     metadata do
@@ -24,7 +25,7 @@ FactoryBot.define do
         data_user_read_only: data_user_read_only,
         data_user_read_write: data_user_read_write,
         departments: ["RDSS", "PRDS"],
-        directory: "big-data",
+        directory: directory,
         title: title,
         description: "a random description",
         created_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),

@@ -54,7 +54,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     end
 
     context "Project Contents" do
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
+      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session)[:files] }
 
       before do

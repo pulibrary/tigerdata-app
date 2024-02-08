@@ -21,8 +21,24 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
     it "creates a project namespace and collection and returns the mediaflux id" do
       mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
       expect(namespace_request).to have_received("resolve")
-      expect(create_asset_request).to have_received("resolve")
+      expect(create_asset_request).to have_received("id")
       expect(mediaflux_id).to be "123"
+    end
+
+    context "when the name is already taken" do
+      let(:mediaflux_create_fixture_path) { Rails.root.join("spec", "fixtures", "files", "asset_create_error_response.xml") }
+      let(:mediaflux_create_body) { Nokogiri::XML.parse(File.read(mediaflux_create_fixture_path)) }
+
+      before do
+        allow(create_asset_request).to receive(:id).and_return(nil)
+        allow(create_asset_request).to receive(:response_xml).and_return(mediaflux_create_body)
+      end
+
+      it "raises an error" do
+        expect do
+          described_class.create!(project: project, session_id: "test-session-token")
+        end.to raise_error(RuntimeError)
+      end
     end
   end
 
