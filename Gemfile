@@ -64,7 +64,6 @@ gem "health-monitor-rails"
 gem "honeybadger"
 gem "mailcatcher"
 gem "net-http-persistent"
-gem "rolify"
 gem "sidekiq"
 
 group :development, :test do
