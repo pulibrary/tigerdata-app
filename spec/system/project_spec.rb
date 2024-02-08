@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
-  let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
