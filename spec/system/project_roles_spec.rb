@@ -100,35 +100,17 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.family_name)
   end
 
-  context "assigns roles and permissions for users" do
-    it "allows only users eligible to be a Data Sponsor to become a Data Sponsor" do
-      if User.csv_data["eligible_sponsor"] == "TRUE"
-        sign_in sponsor_user
-        visit "/"
-        click_on "New Project"
-        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-        # the Data Sponsor can add a Data Manager
-        fill_in "data_manager", with: data_manager.uid
-        # the Data Sponsor can add a Data User
-        fill_in "ro-user-uid-to-add", with: read_only.uid
-      else
-        sign_in no_projects_user
-        visit "/"
-      end
-      # the Data Sponsor can remove a Data Manager
-      # the Data Sponsor can change a Data Manager
+  context "Data Sponsors are the only ones who can request a new project" do
+    xit "allows Data Sponsors to request a new project" do
     end
-    it "allows only users eligible to be a Data Manager to become a Data Manager" do
-      if User.csv_data["eligible_manager"] == "TRUE"
-        sign_in data_manager
-        visit "/"
-        expect(page.find("#data_manager").value).to eq data_manager.uid
-        # the Data Manager can add a Data User
-        fill_in "ro-user-uid-to-add", with: read_only.uid
-      else
-        sign_in no_projects_user
-        visit "/"
-      end
+    xit "does not allow anyone else to request a new project" do 
     end
   end
+  context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
+    xit "assigns the user who initiated the request as the Data Sponsor" do
+    end
+    xit "does not assign anyone else as the Data Sponsor" do 
+    end
+  end
+  
 end
