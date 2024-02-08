@@ -1,10 +1,13 @@
 #footer {
   padding: 0px;
-  position: absolute;
+  margin-top: auto;
+  position: relative;
   bottom: 0;
   // border-top: #cecece solid 15px;
   border-bottom: #cecece solid 3px;
-  width: -webkit-fill-available;
+  width: 100%; //for non-chromium based browers
+  width: -webkit-fill-available; // for chromium browsers i.e chrome & edge
+  width: -moz-available; // for moz based browsers i.e firefox & opera
   .deployment-version{
     position: absolute;
     bottom: 0;
