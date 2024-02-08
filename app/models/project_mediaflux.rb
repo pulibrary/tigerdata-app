@@ -11,13 +11,15 @@ class ProjectMediaflux
     project_name = safe_name(project.directory)
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}-ns"
     Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id).resolve
-
     # Create a collection asset under the new namespace and set its metadata
     tigerdata_values = project_values(project: project)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace)
-    create_request.resolve
-    create_request.id
+    id = create_request.id
+    if id.blank? && create_request.response_xml.text.include?("failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'")
+      raise "Project name already taken"
+    end
+    id
   end
 
   def self.update(project:, session_id:)
