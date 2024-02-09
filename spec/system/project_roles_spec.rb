@@ -101,4 +101,35 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.display_name)
     expect(page).to have_content(read_write.family_name)
   end
+
+  context "Data Sponsors are the only ones who can request a new project" do
+    xit "allows Data Sponsors to request a new project" do
+    end
+    xit "does not allow anyone else to request a new project" do
+    end
+  end
+  context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
+    xit "assigns the user who initiated the request as the Data Sponsor" do
+    end
+    xit "does not assign anyone else as the Data Sponsor" do
+    end
+  end
+  context "Data Sponsors are the only people who can assign Data Managers" do
+    xit "allows a Data Sponsor to assign a Data Manager" do
+    end
+    xit "does not allow anyone else to assign a Data Manager" do
+    end
+    xit "allows for a user to be both a Data Sponsor and a Data Manager" do
+    end
+    xit "does not allow a Data Manager to edit a Data Manager role" do
+    end
+  end
+  context "Data Sponsors and Data Managers can assign Data Users" do
+    xit "allows a Data Sponsor to assign a Data User" do
+    end
+    xit "allows a Data Manager to assign a Data User" do
+    end
+    xit "does not allow a Data User to assign a Data User" do
+    end
+  end
 end
