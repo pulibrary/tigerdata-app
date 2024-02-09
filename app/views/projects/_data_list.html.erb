@@ -3,3 +3,9 @@
         <option value="<%= uid %>">
     <% end %>
 </datalist>
+
+<datalist id="sponsor-users">
+    <% User.sponsor_users.each do |uid| %>
+        <option value="<%= uid %>">
+    <% end %>
+</datalist>
