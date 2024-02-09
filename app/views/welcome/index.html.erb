@@ -34,7 +34,7 @@
       <% end %>
       <div>
         <br/>
-        <%if current_user.eligible_sponsor?%>
+        <%if current_user.eligible_sponsor? || current_user.superuser? %>
           <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
         <%end%>
       </div>
