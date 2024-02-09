@@ -60,25 +60,18 @@ module Mediaflux
 
         # Adds the declarations to fetch specific fields
         def declare_get_values_fields(xml)
+          declare_get_value_field(xml, "name", "name")
+          declare_get_value_field(xml, "path", "path")
+          declare_get_value_field(xml, "content/@total-size", "total-size")
+          declare_get_value_field(xml, "mtime", "mtime")
+          declare_get_value_field(xml, "@collection", "collection")
+        end
+
+        # Adds a single field declaration
+        def declare_get_value_field(xml, field_xpath, field_name)
           xml.xpath do
-            xml.parent.set_attribute("ename", "name")
-            xml.text("name")
-          end
-          xml.xpath do
-            xml.parent.set_attribute("ename", "path")
-            xml.text("path")
-          end
-          xml.xpath do
-            xml.parent.set_attribute("ename", "total-size")
-            xml.text("content/@total-size")
-          end
-          xml.xpath do
-            xml.parent.set_attribute("ename", "mtime")
-            xml.text("mtime")
-          end
-          xml.xpath do
-            xml.parent.set_attribute("ename", "collection")
-            xml.text("@collection")
+            xml.parent.set_attribute("ename", field_name)
+            xml.text(field_xpath)
           end
         end
     end

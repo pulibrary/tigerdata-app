@@ -64,7 +64,7 @@ class Project < ApplicationRecord
       self.mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
       save!
       Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{mediaflux_id})"
-  else
+    else
       ProjectMediaflux.update(project: self, session_id: session_id)
       Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{mediaflux_id})"
     end
@@ -86,7 +86,7 @@ class Project < ApplicationRecord
   end
 
   def file_list(session_id:, size: 10)
-    return {files: []} if mediaflux_id == nil
+    return { files: [] } if mediaflux_id.nil?
 
     query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: "get-values", deep_search: true)
     iterator_id = query_req.result
@@ -100,17 +100,19 @@ class Project < ApplicationRecord
     results
   end
 
-  def file_list_to_file(session_id:, idx: 1, size: 10)
-    return {files: []} if mediaflux_id == nil
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Rails/Output
+  def file_list_to_file(session_id:)
+    return { files: [] } if mediaflux_id.nil?
 
     action = "get-values"
     query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: action, deep_search: true)
     iterator_id = query_req.result
 
-    File.open('/Users/correah/src/tiger-data-app/filelist.txt', 'w') do |file|
+    File.open("/Users/correah/src/tiger-data-app/filelist.txt", "w") do |file|
       batch = 0
       loop do
-
         batch += 1
         start_time = DateTime.now
 
@@ -118,12 +120,12 @@ class Project < ApplicationRecord
         iterator_resp = iterator_req.result
 
         lines = []
-        iterator_resp[:files].each do |file|
-          if action == "get-name"
-            lines << "#{file.id}, #{file.name}, #{file.collection}"
-          else
-            lines << "#{file.id}, #{file.path_only}, #{file.name}, #{file.collection}, #{file.last_modified}, #{file.size}"
-          end
+        iterator_resp[:files].each do |asset|
+          lines << if action == "get-name"
+                     "#{asset.id}, #{asset.name}, #{asset.collection}"
+                   else
+                     "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
+                   end
         end
         file.write(lines.join("\r\n") + "\r\n")
 
@@ -136,4 +138,7 @@ class Project < ApplicationRecord
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Rails/Output
 end
