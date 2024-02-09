@@ -64,7 +64,7 @@ class Project < ApplicationRecord
       self.mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
       save!
       Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{mediaflux_id})"
-    else
+  else
       ProjectMediaflux.update(project: self, session_id: session_id)
       Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{mediaflux_id})"
     end
@@ -85,14 +85,55 @@ class Project < ApplicationRecord
     xml_metadata[:total_file_count]
   end
 
-  def file_list(session_id:, idx: 1, size: 10)
+  def file_list(session_id:, size: 10)
     return {files: []} if mediaflux_id == nil
-    request = Mediaflux::Http::QueryRequest.new(
-      session_token: session_id,
-      collection: mediaflux_id,
-      idx:, size:,
-      action: "get-meta",
-      deep_search: true)
-    request.result
+
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: "get-values", deep_search: true)
+    iterator_id = query_req.result
+
+    iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, action: "get-values", size: size)
+    results = iterator_req.result
+
+    # Destroy _after_ fetching the results from iterator_req
+    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+
+    results
+  end
+
+  def file_list_to_file(session_id:, idx: 1, size: 10)
+    return {files: []} if mediaflux_id == nil
+
+    action = "get-values"
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: action, deep_search: true)
+    iterator_id = query_req.result
+
+    File.open('/Users/correah/src/tiger-data-app/filelist.txt', 'w') do |file|
+      batch = 0
+      loop do
+
+        batch += 1
+        start_time = DateTime.now
+
+        iterator_req = Mediaflux::Http::IterateRequest.new(session_token: session_id, iterator: iterator_id, action: action, size: 1000)
+        iterator_resp = iterator_req.result
+
+        lines = []
+        iterator_resp[:files].each do |file|
+          if action == "get-name"
+            lines << "#{file.id}, #{file.name}, #{file.collection}"
+          else
+            lines << "#{file.id}, #{file.path_only}, #{file.name}, #{file.collection}, #{file.last_modified}, #{file.size}"
+          end
+        end
+        file.write(lines.join("\r\n") + "\r\n")
+
+        sec = DateTime.now.to_f - start_time.to_f
+        ms_display = format("%.2f", sec * 1000)
+        sec_display = format("%.2f", sec)
+        puts "#{batch}, #{ms_display} ms, #{sec_display} seconds"
+
+        break if iterator_resp[:complete]
+      end
+    end
   end
 end
