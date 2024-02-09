@@ -71,4 +71,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_131952) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "user_jobs", "users"
 end

@@ -6,11 +6,16 @@
   flex-direction: column;
 }
 
-#dashboard-section {
+@mixin dashboard-component {
   background-color: rgb(168, 167, 167);
   border-radius: 0.1em;
   padding: 1em;
   max-width: 70%;
+  max-height: fit-content;
+  border-style: solid;
+  border-color: rgb(0, 0, 0);
+  border-radius: 50px;
+  margin-right: 2em;
   max-height: fit-content;
   border-style: solid;
   border-color: rgb(0, 0, 0);
@@ -21,16 +26,26 @@
     text-decoration: underline;
     text-decoration-thickness: 3px;
   }
+}
+
+#dashboard-projects {
+  @include dashboard-component;
+  min-width: 40em;
+
   .project-list {
     list-style-type: none;
     a {
       color: black;
     }
-}
+  }
   .btn-dark {
     margin-left: 0.5em;
     margin-bottom: 0.5em;
   }
+}
+
+#dashboard-activity{
+  @include dashboard-component;
 }
 
 #show{
