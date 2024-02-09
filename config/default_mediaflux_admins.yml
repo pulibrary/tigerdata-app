@@ -2,6 +2,7 @@
 production:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
+  - cbentler # Chuck Bentler
   - cl7359 # Claudia Lee
   - fn8243 # Favour Nwogbo
   - hc8719 # Hector Correa
@@ -14,6 +15,7 @@ production:
 qa:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
+  - cbentler # Chuck Bentler
   - cl7359 # Claudia Lee
   - fn8243 # Favour Nwogbo
   - hc8719 # Hector Correa
@@ -26,6 +28,7 @@ qa:
 staging:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
+  - cbentler # Chuck Bentler
   - cl7359 # Claudia Lee
   - fn8243 # Favour Nwogbo
   - hc8719 # Hector Correa
@@ -38,6 +41,7 @@ staging:
 development:
   - bs3097 # Bess Sadler
   - cac9 # Carolyn Cole
+  - cbentler # Chuck Bentler
   - cl7359 # Claudia Lee
   - fn8243 # Favour Nwogbo
   - hc8719 # Hector Correa
