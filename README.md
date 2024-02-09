@@ -216,3 +216,12 @@ To save updates and make changes to appointed users for early testing of the Tig
 4. Copy the downloaded .CSV file to `data` > `user_registration_list.csv`
 5. Open a PR to check the updated file into version control
 6. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.
+
+## Sidekiq
+
+Sidekiq is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
+
+### Workers
+
+Workers must be running on each server in order for mail to be sent and background jobs to be run. 
+ The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`. 
