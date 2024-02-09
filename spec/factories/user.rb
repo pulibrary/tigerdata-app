@@ -10,6 +10,8 @@ FactoryBot.define do
     email { "#{uid}@example.com" }
     eligible_sponsor { false }
     eligible_manager { false }
+    sysadmin { false }
+    superuser { false }
 
     ##
     # A user who is allowed to sponsor a project
@@ -21,6 +23,18 @@ FactoryBot.define do
     # A user who is allowed to manage a project
     factory :project_manager do
       eligible_manager { true }
+    end
+
+    ##
+    # A user who is allowed to approve a project
+    factory :sysadmin do
+      sysadmin { true }
+    end
+
+    ##
+    # A user who is allowed see all projects in the system
+    factory :superuser do
+      superuser { true }
     end
   end
 end

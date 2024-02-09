@@ -80,6 +80,8 @@ class User < ApplicationRecord
       user.email = user.uid + "@princeton.edu"
       user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
       user.eligible_manager = line["eligible_manager"] == "TRUE"
+      user.superuser = line["superuser"] == "TRUE"
+      user.sysadmin = line["sysadmin"] == "TRUE"
       user.save
     end
   end
