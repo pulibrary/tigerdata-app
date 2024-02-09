@@ -1,0 +1,21 @@
+#header {
+    padding: 0px;
+    background-color: #000000;
+    .body{
+        color: #ffffff;
+        margin: auto;
+        padding: 50px 25px 25px 25px;
+        float: right;
+        display: -webkit-inline-box;
+    }
+    .navbar-brand {
+        color: #ffffff;
+        margin: auto;
+        padding: 10px;
+    }
+    .btn.btn-warning.btn-sm {
+        --bs-btn-bg: #ffc107;
+        padding-left: 10px;
+        margin-left: 10px;
+    }
+}

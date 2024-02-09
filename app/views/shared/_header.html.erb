@@ -1,12 +1,16 @@
 <header>
-  <nav class="navbar p-2 bg-light">
+<div id="header">
+  <nav>
   <%= image_tag("logo-300-200.png", alt: "TigerData logo", size: "150x100") %>
-    <%= link_to "TigerData", root_path, class: "navbar-brand" %>
+    <div class="body">
+    <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>
-      User: <%= current_user.uid %>
-      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-primary btn-sm" %>
+        User: <%= current_user.uid%> 
+      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
     <% else %>
-      <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-primary btn-sm" %>
+      <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
     <% end %>
+    </div>
   </nav>
+</div>
 </header>
