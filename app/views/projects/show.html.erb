@@ -1,3 +1,4 @@
+<show id="show">
 <h1>
 Project Details:
 <%= @project.title %>
@@ -9,7 +10,7 @@ Project Details:
   </div>
 <% end %>
 
-<div class="container-fluid">
+<div class="details">
   <h2>Roles</h2>
   <dl>
     <% if !@data_sponsor.nil? %>
@@ -38,7 +39,7 @@ Project Details:
   </dl>
 </div>
 
-<div class="py-1">
+<div class="details">
   <h2>Project Description</h2>
   <dl>
     <dt>Affiliated Departments</dt>
@@ -51,12 +52,11 @@ Project Details:
     <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
     <dt>Title</dt>
     <dd><%= @project.metadata[:title] %></dd>
-    <dt>Description:<dt/>
-    <dd><%= @project.metadata[:description] %></dd>
+    <dt>Description:<dt/> <dd><%= @project.metadata[:description] %></dd>
   </dl>
 </div>
 
-<div>
+<div class="details">
   <h2>Automatic Settings </h2>
   <dl>
     <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
@@ -71,7 +71,7 @@ Project Details:
   <% end %>
 </div>
 
-<div>
+<div class="details">
   <h2> Provenance </h2>
   <dl>
   <dt> Submission</dt>
@@ -83,18 +83,18 @@ Project Details:
   </dl>
 </div>
 
-<div>
+<div class="details">
   <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
   <%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-primary btn-sm" %>
   <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
   <%= link_to "Withdraw Project Request", "", class: "btn btn-light btn-sm" %>
 </div>
 
-<div>
-   # TODO: Once the csv file defines the role for who can approve a project use that here
-   <% if @project.mediaflux_id.blank? && current_user.uid == @project.metadata[:data_sponsor] %>
+<div class="details">
+   <% if @project.mediaflux_id.blank? && current_user.sysadmin %>
     <%= form_with url: project_approve_path(@project), method: :post do |form| %>
       <input type="submit" class="btn btn-secondary btn-sm" value="Approve Project" />
     <% end %>
   <% end %>
 </div>
+</show>

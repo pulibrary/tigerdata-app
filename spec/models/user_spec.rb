@@ -87,23 +87,26 @@ RSpec.describe User, type: :model do
     it "creates a new user for every line in the file" do
       expect(User.count).to eq 0
       User.load_registration_list
-      expect(User.count).to eq 24
+      expect(User.count).to eq 36
     end
     it "does not create a user if they exist already" do
       User.create(uid: "mjc12", family_name: "Chandler", display_name: "Matt Chandler", email: "mjc12@princeton.edu")
       expect(User.count).to eq 1
       User.load_registration_list
-      expect(User.count).to eq 24
+      expect(User.count).to eq 36
+      user = User.find_by(uid: "mjc12")
+      # If we don't say that this is a cas user, they won't be able to log in with CAS
+      expect(user.provider).to eq "cas"
     end
     it "updates a name if the name is updated in the spreadsheet" do
       User.load_registration_list
-      expect(User.count).to eq 24
+      expect(User.count).to eq 36
       blank_name_user = User.find_by(uid: "munan")
       expect(blank_name_user.family_name).to be_nil
       expect(blank_name_user.display_name).to be_nil
       allow(User).to receive(:csv_data).and_return(updated_csv_data)
       User.load_registration_list
-      expect(User.count).to eq 24
+      expect(User.count).to eq 36
       updated_name_user = User.find_by(uid: "munan")
       expect(updated_name_user.family_name).to eq "Nøme"
       expect(updated_name_user.display_name).to eq "Fáké Nøme"
@@ -123,6 +126,19 @@ RSpec.describe User, type: :model do
       manager_user = User.find_by(uid: "cac9")
       expect(manager_user.eligible_sponsor).to be_falsey
       expect(manager_user.eligible_manager).to be_truthy
+    end
+
+    it "loads the sysadmin and superuser roles" do
+      User.load_registration_list
+      super_user = User.find_by(uid: "cac9")
+      expect(super_user.superuser).to be_truthy
+      expect(super_user.sysadmin).to be_falsey
+      sysadmin_user = User.find_by(uid: "cbentler")
+      expect(sysadmin_user.superuser).to be_falsey
+      expect(sysadmin_user.sysadmin).to be_truthy
+      other_user = User.find_by(uid: "munan")
+      expect(other_user.superuser).to be_falsey
+      expect(other_user.sysadmin).to be_falsey
     end
   end
 end

@@ -6,6 +6,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :rememberable, :omniauthable
 
+  has_many :user_jobs, dependent: :destroy
+
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list.csv")
 
   def self.from_cas(access_token)
@@ -19,6 +21,10 @@ class User < ApplicationRecord
 
   def self.all_users
     User.all.map(&:uid)
+  end
+
+  def self.sponsor_users
+    User.where(eligible_sponsor: true).map(&:uid)
   end
 
   def clear_mediaflux_session(session)
@@ -72,8 +78,12 @@ class User < ApplicationRecord
       user.family_name = line["family_name"]
       user.display_name = line["display_name"]
       user.email = user.uid + "@princeton.edu"
+      # If we don't say that this is a cas user, they won't be able to log in with CAS
+      user.provider = "cas"
       user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
       user.eligible_manager = line["eligible_manager"] == "TRUE"
+      user.superuser = line["superuser"] == "TRUE"
+      user.sysadmin = line["sysadmin"] == "TRUE"
       user.save
     end
   end

@@ -1,105 +1,76 @@
 <%= render 'form_errors' %>
 <%= render 'data_list' %>
 
-<style>
-  .added_user_textbox {
-    background-color: #f4f2f2;
-    margin-bottom: 2px;
-  }
 
-  .delete_icon {
-    color: #bb6c6c;
-  }
-
-  .add_new_user_textbox {
-    margin-left: 30px;
-  }
-
-  .add_new_user_div {
-    margin-top: -15px;
-    margin-bottom: 10px;
-  }
-
-  input:valid {
-    background-color: palegreen;
-  }
-
-  input:invalid {
-    background-color: lightpink;
-  }
-</style>
-
-<div>
+<div id="edit">
   <h2>Project Roles</h2>
 
-  <p>Data Sponsor: <input type="text" list="all-users" id="data_sponsor" name="data_sponsor" required autofocus value="<%= pre_populate_data_sponsor %>" /></p>
+  <p>Data Sponsor: <input type="text" list="sponsor-users" id="data_sponsor" name="data_sponsor" required autofocus value="<%= pre_populate_data_sponsor %>" /></p>
   <p>Data Manager: <input type="text" list="all-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
   <p>Data User(s): </p>
 
-  <div>
-    <p>Read Only:</p>
-    <ul id="ro-users-list">
-      <% (@project.metadata[:data_user_read_only] || []).compact.each do |user| %>
-        <span class="ro-user-item" data-uid="<%= user %>"></span>
-      <% end %>
-    </ul>
-    <div class="add_new_user_div">
-      <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
-      <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
-      <span id="add-ro-user-message"></span>
+    <div class="data-users">
+      <p>Read Only:</p>
+      <ul id="ro-users-list">
+        <% (@project.metadata[:data_user_read_only] || []).compact.each do |user| %>
+          <span class="ro-user-item" data-uid="<%= user %>"></span>
+        <% end %>
+      </ul>
+      <div class="add_new_user_div">
+        <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
+        <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
+        <span id="add-ro-user-message"></span>
+      </div>
+    </div>
+
+    <div class="data-users">
+      <p>Read/Write:</p>
+      <ul id = "rw-users-list">
+        <% (@project.metadata[:data_user_read_write] || []).compact.each do |user|%>
+          <span class="rw-user-item" data-uid="<%= user %>"></span>
+        <%end%>
+      </ul>
+      <div class="add_new_user_div">
+        <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
+        <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
+        <span id = "add-rw-user-message"></span>
+      </div>
     </div>
   </div>
 
-  <div>
-    <p>Read/Write:</p>
-    <ul id = "rw-users-list">
-      <% (@project.metadata[:data_user_read_write] || []).compact.each do |user|%>
-        <span class="rw-user-item" data-uid="<%= user %>"></span>
-      <%end%>
-    </ul>
-  </div>
-
-  <div class="add_new_user_div">
-    <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
-    <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
-    <span id = "add-rw-user-message"></span>
-  </div>
-</div>
-
-
 <div>
-  <h2>Project Description</h2>
-
-  <div>Affiliated Departments:<br/>
-    <select id="departments" name="departments[]" class="form-select" multiple >
-      <% Affiliation.all.each do |affiliation| %>
-        <% if @project.departments.include?(affiliation[:code]) %>
-          <option selected><%= affiliation[:code] %></option>
-        <% else %>
-          <option><%= affiliation[:code] %></option>
+    <h2>Project Description</h2>
+    <div class="description-container">
+    <div>Affiliated Departments:<br/>
+      <select id="departments" name="departments[]" class="form-select" multiple >
+        <% Affiliation.all.each do |affiliation| %>
+          <% if @project.departments.include?(affiliation[:code]) %>
+            <option selected><%= affiliation[:code] %></option>
+          <% else %>
+            <option><%= affiliation[:code] %></option>
+          <% end %>
         <% end %>
-      <% end %>
-    </select>
-  </div>
+      </select>
+    </div>
 
-  <% if @project.in_mediaflux? %>
-    <!--
-      Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
-      send back to the controller (we don't want to lose this value)
-    -->
-    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" readonly value="<%= @project.metadata[:directory] %>" />
-      (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
-      This project has already been saved to Mediaflux and the directory cannot be changed</p>
-  <% else %>
-    <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
-    <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" pattern="[\w\p{L}\-]{1,64}" /></p>
-  <% end %>
+    <% if @project.in_mediaflux? %>
+      <!--
+        Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
+        send back to the controller (we don't want to lose this value)
+      -->
+      <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" readonly value="<%= @project.metadata[:directory] %>" />
+        (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
+        This project has already been saved to Mediaflux and the directory cannot be changed</p>
+    <% else %>
+      <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
+      <p>Project Directory: <%= Rails.configuration.mediaflux["api_root_ns"] %>/<input type="text" id="directory" name="directory" required value="<%= @project.metadata[:directory] %>" pattern="[\w\p{L}\-]{1,64}" /></p>
+    <% end %>
 
-  <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
-  <p>Description:
+    <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
+    <div>Description:</div>
     <textarea type="text" id="description" name="description" class="input-text-long"
-      rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
-  </p>
+        rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
+    </div>
 </div>
 
 <!-- Keeps track of added read-only and read-write users -->
@@ -109,4 +80,5 @@
 <div class="actions">
   <input type="submit" class="btn btn-primary" value="Submit" />
   <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+</div>
 </div>

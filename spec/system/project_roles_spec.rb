@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Project Edit Page Roles Validation", type: :system do
-  let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
@@ -25,6 +25,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: "xxx"
+    expect(page.find("input[value=Submit]")).to be_disabled
+    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
+    fill_in "data_sponsor", with: data_manager.uid
     expect(page.find("input[value=Submit]")).to be_disabled
     expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_sponsor", with: sponsor_user.uid
@@ -97,5 +100,43 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.given_name)
     expect(page).to have_content(read_write.display_name)
     expect(page).to have_content(read_write.family_name)
+  end
+
+  context "Data Sponsors are the only ones who can request a new project" do
+    it "allows Data Sponsors to request a new project" do
+      sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      expect(page).to have_content "New Project Request"
+    end
+    it "does not allow anyone else to request a new project" do
+      sign_in data_manager
+      visit "/"
+      expect(page).not_to have_content "New Project"
+    end
+  end
+  context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
+    xit "assigns the user who initiated the request as the Data Sponsor" do
+    end
+    xit "does not assign anyone else as the Data Sponsor" do
+    end
+  end
+  context "Data Sponsors are the only people who can assign Data Managers" do
+    xit "allows a Data Sponsor to assign a Data Manager" do
+    end
+    xit "does not allow anyone else to assign a Data Manager" do
+    end
+    xit "allows for a user to be both a Data Sponsor and a Data Manager" do
+    end
+    xit "does not allow a Data Manager to edit a Data Manager role" do
+    end
+  end
+  context "Data Sponsors and Data Managers can assign Data Users" do
+    xit "allows a Data Sponsor to assign a Data User" do
+    end
+    xit "allows a Data Manager to assign a Data User" do
+    end
+    xit "does not allow a Data User to assign a Data User" do
+    end
   end
 end

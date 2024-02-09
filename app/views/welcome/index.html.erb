@@ -1,64 +1,58 @@
-<style>
-  table > tbody > tr > th {
-    border-width: 1px;
-    border-style: dotted;
-  }
-
-  table > tbody > tr > td {
-    border-width: 1px;
-    border-style: dotted;
-    vertical-align: top;
-  }
-
-  .asset-description {
-    background-color:#f0f4f9;
-    display:inline-block;
-    max-width: 400px;
-  }
-
-  .asset-note {
-    background-color:#f9f8f0;
-    display:inline-block;
-    max-width: 400px;
-  }
-</style>
-
 <% unless current_user %>
   <h1>Welcome to TigerData</h1>
   Please log in.
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
-  <div class="dashboard-section">
-    <%if @my_projects_count != 0%>
-      <h1>My Projects</h1>
-    <%end%>
-    <% if @sponsored_projects.size > 0 %> 
-      <h2>Sponsored by Me</h2>
-      <ul class="project-list">
-        <% @sponsored_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
+  <div style="display: inline-flex">
+    <div id="dashboard-projects">
+      <%if @my_projects_count != 0%>
+        <h1>My Projects</h1>
+      <%end%>
+      <% if @sponsored_projects.size > 0 %>
+        <h2>Sponsored by Me</h2>
+        <ul class="project-list">
+          <% @sponsored_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <% if @managed_projects.size > 0 %> 
+        <h2>Managed by Me</h2>
+        <ul class="project-list">
+          <% @managed_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <% if @data_user_projects.size > 0 %> 
+        <h2>Shared with Me</h2>
+        <ul class="project-list">
+          <% @data_user_projects.each do |project| %>
+            <li><%= link_to(project.title, project) %> </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <div>
+        <br/>
+        <%if current_user.eligible_sponsor?%>
+          <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
         <%end%>
-      </ul>
-    <% end %>
-    <% if @managed_projects.size > 0 %> 
-      <h2>Managed by Me</h2>
-      <ul class="project-list">
-        <% @managed_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
-        <%end%>
-      </ul>
-    <% end %>
-    <% if @data_user_projects.size > 0 %> 
-      <h2>Shared with Me</h2>
-      <ul class="project-list">
-        <% @data_user_projects.each do |project| %>
-          <li><%= link_to(project.title, project) %> </li>
-        <%end%>
-      </ul>
-    <% end %>
-    <div>
-      <br/>
-      <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+      </div>
     </div>
+    <div id="dashboard-activity">
+      <h2>Recent Activity</h2>
+      <% if !@my_jobs.empty? %>
+        <ul>
+          <% @my_jobs.each do |job| %>
+            <li>
+              <%= job.title %>
+              <ul>
+                <li><%= job.description %></li>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
+  </div>
   <% end %>
