@@ -95,6 +95,7 @@ RSpec.describe User, type: :model do
       User.load_registration_list
       expect(User.count).to eq 36
       user = User.find_by(uid: "mjc12")
+      # If we don't say that this is a cas user, they won't be able to log in with CAS
       expect(user.provider).to eq "cas"
     end
     it "updates a name if the name is updated in the spreadsheet" do
