@@ -19,7 +19,6 @@ module Mediaflux
       # Returns empty string if iterator was destroyed, error message otherwise.
       def result
         xml = response_xml
-        byebug
         xml.xpath("/response/reply['error']").text
       end
 

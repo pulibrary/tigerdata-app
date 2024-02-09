@@ -94,9 +94,9 @@ module Mediaflux
       def response_xml
         resolve unless resolved?
 
-        # Rails.logger.debug(response_body)
+        Rails.logger.debug(response_body)
         @response_xml ||= Nokogiri::XML.parse(response_body)
-        # Rails.logger.debug(@response_xml)
+        Rails.logger.debug(@response_xml)
         if @response_xml.xpath("//message").text == "session is not valid"
           raise Mediaflux::Http::SessionExpired, session_token
         end
