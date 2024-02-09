@@ -59,7 +59,9 @@
       <% end %>
       <div>
         <br/>
+        <% if current_user.eligible_sponsor %>
         <%= link_to "New Project", new_project_path(), class: "btn btn-primary btn-sm" %>
+        <% end %>
       </div>
     </section>
     <section class="recent-activity col mx-1">
