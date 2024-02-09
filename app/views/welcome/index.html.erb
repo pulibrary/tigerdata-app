@@ -34,7 +34,8 @@
       <% end %>
       <div>
         <br/>
-        <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
+        <% if current_user.eligible_sponsor %>
+      <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
       </div>
     </div>
     <div id="dashboard-activity">
@@ -50,6 +51,7 @@
             </li>
           <% end %>
         </ul>
+      <% end %>
       <% end %>
     </div>
   </div>

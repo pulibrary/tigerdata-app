@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
+  let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
@@ -92,8 +93,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
     context "An Mediaflux Administrator" do
       it "shows the project data and the Approve Project button" do
-        # TODO: Once the csv file defines the role for who can approve a project use that here
-        sign_in sponsor_user
+        sign_in sysadmin_user
         visit "/projects/#{project_not_in_mediaflux.id}"
         expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
