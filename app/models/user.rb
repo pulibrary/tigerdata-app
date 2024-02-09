@@ -78,6 +78,7 @@ class User < ApplicationRecord
       user.family_name = line["family_name"]
       user.display_name = line["display_name"]
       user.email = user.uid + "@princeton.edu"
+      user.provider = "cas"
       user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
       user.eligible_manager = line["eligible_manager"] == "TRUE"
       user.superuser = line["superuser"] == "TRUE"

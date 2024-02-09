@@ -94,6 +94,8 @@ RSpec.describe User, type: :model do
       expect(User.count).to eq 1
       User.load_registration_list
       expect(User.count).to eq 36
+      user = User.find_by(uid: "mjc12")
+      expect(user.provider).to eq "cas"
     end
     it "updates a name if the name is updated in the spreadsheet" do
       User.load_registration_list
