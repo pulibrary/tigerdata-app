@@ -78,6 +78,8 @@ class User < ApplicationRecord
       user.family_name = line["family_name"]
       user.display_name = line["display_name"]
       user.email = user.uid + "@princeton.edu"
+      # If we don't say that this is a cas user, they won't be able to log in with CAS
+      user.provider = "cas"
       user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
       user.eligible_manager = line["eligible_manager"] == "TRUE"
       user.superuser = line["superuser"] == "TRUE"
