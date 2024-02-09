@@ -54,4 +54,14 @@ end
 after "deploy:published", "load_users:from_registration_list"
 
 before "deploy:reverted", "npm:install"
+
+namespace :sidekiq do
+  task :restart do
+    on roles(:app) do
+      execute :sudo, :service, "tiger-data-workers", :restart
+    end
+  end
+end
+
+after "passenger:restart", "sidekiq:restart"
 # rubocop:enable Rails/Output
