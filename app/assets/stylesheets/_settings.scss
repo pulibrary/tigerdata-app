@@ -6,15 +6,17 @@
   flex-direction: column;
 }
 
-#dashboard-section {
+#dashboard-projects {
   background-color: rgb(168, 167, 167);
   border-radius: 0.1em;
   padding: 1em;
+  min-width: 40em;
   max-width: 70%;
   max-height: fit-content;
   border-style: solid;
   border-color: rgb(0, 0, 0);
   border-radius: 50px;
+  margin-right: 2em;
 
   h2 {
     margin-left: 0.2em;
@@ -30,6 +32,21 @@
   .btn-dark {
     margin-left: 0.5em;
     margin-bottom: 0.5em;
+  }
+}
+#dashboard-activity{
+  background-color: rgb(168, 167, 167);
+  border-radius: 0.1em;
+  padding: 1em;
+  max-width: 70%;
+  max-height: fit-content;
+  border-style: solid;
+  border-color: rgb(0, 0, 0);
+  border-radius: 50px;
+  h2 {
+    margin-left: 0.2em;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
   }
 }
 
