@@ -58,7 +58,9 @@
     <% end %>
     <div>
       <br/>
+      <% if current_user.eligible_sponsor %>
       <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
+      <% end %>
     </div>
     </div>
   <% end %>
