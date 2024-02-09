@@ -1,6 +1,7 @@
 <footer>
-<div class="p-2 text-left bg-light">
-  <div class="deployment-version" >
+<div>
+  <div id="footer">
+      <div>
       <text-style variation="strong">
         Version:
         <% @version = VersionFooter.info %>
@@ -16,17 +17,16 @@
           last updated: <%= @version[:version] %>
         </span>
       </text-style>
-    </div>
-    <div id="footer">
+  </div>
       <div class="content">
         <div class= "pul-accessible">
           <%= link_to("Accessibility","https://accessibility.princeton.edu/help", target:"blank") %>
         </div>
         <%= link_to(image_tag("princeton_logo.png", alt: "Princeton University"), "https://www.princeton.edu", target: "blank") %>
       </div>
-    </div>
-    <div id="copyright">
-      &copy; <%= Date.current.year %> The Trustees of Princeton University
-    </div>
+      <div id="copyright">
+        &copy; <%= Date.current.year %> The Trustees of Princeton University
+      </div>
   </div>
+</div>
 </footer>
