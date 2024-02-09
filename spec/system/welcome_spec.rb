@@ -58,5 +58,17 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).not_to have_content "Sponsored by Me"
       end
     end
+
+    context "with the superuser role" do
+      let(:current_user) { FactoryBot.create(:superuser, uid: "pul123") }
+
+      it "shows the 'New Project' button" do
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content("Welcome, #{current_user.given_name}!")
+        expect(page).not_to have_content "Please log in"
+        expect(page).to have_content "New Project"
+      end
+    end
   end
 end
