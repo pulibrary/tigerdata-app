@@ -142,7 +142,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in data_manager
       visit "/projects/#{project.id}/edit"
       expect(page.find(:css, "#non-editable-data-sponsor").text).to eq sponsor_user.uid
-      expect(page.find(:css, "#non-editable-data-manager").text).to eq data_manager.uid 
+      expect(page.find(:css, "#non-editable-data-manager").text).to eq data_manager.uid
     end
     xit "allows for a user to be both a Data Sponsor and a Data Manager" do
     end
