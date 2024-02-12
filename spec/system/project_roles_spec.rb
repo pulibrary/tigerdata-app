@@ -117,7 +117,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     it "only allows the Data Sponsor to load the New Projects page" do
       sign_in data_manager
       visit "/projects/new"
-      expect(page).not_to have_content "New Project Request"
+      expect(current_path).to eq root_path
     end
   end
   context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do

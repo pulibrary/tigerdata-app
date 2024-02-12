@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
   def new
-    if current_user.eligible_manager
+    if current_user.eligible_sponsor
     new_project
     else redirect_to root_path
     end
