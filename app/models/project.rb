@@ -95,7 +95,9 @@ class Project < ApplicationRecord
     iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
 
-    # Destroy _after_ fetching the results from iterator_req
+    # Destroy _after_ fetching the first set of results from iterator_req.
+    # This call is required since it possible that we have read less assets than
+    # what the collection has but we are done with the iterator.
     Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
 
     results
@@ -121,6 +123,8 @@ class Project < ApplicationRecord
     end
 
     # Destroy _after_ fetching the results from iterator_req
+    # This call is technically not necessary since Mediaflux automatically deletes the iterator
+    # once we have ran through it and by now we have. But it does not hurt either.
     Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
