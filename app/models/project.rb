@@ -85,6 +85,7 @@ class Project < ApplicationRecord
     xml_metadata[:total_file_count]
   end
 
+  # Fetches the first n files
   def file_list(session_id:, size: 10)
     return { files: [] } if mediaflux_id.nil?
 
@@ -100,6 +101,7 @@ class Project < ApplicationRecord
     results
   end
 
+  # Fetches the entire file list to a file
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
