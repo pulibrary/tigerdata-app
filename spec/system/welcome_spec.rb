@@ -53,7 +53,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end
-      
+
       context "if the user is not a sponsor" do
         it "does not show any projects" do
           sign_in no_projects_user
@@ -74,7 +74,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         end
       end
     end
-    
+
     context "with the superuser role" do
       let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
 
