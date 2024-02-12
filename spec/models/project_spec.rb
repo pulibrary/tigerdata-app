@@ -60,7 +60,7 @@ RSpec.describe Project, type: :model do
       pending_projects = described_class.pending_projects
       expect(pending_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).to be nil
       expect(pending_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).to be nil
-      expect(pending_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id == nil }).not_to be nil
+      expect(pending_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id.nil? }).not_to be nil
     end
   end
 
@@ -75,7 +75,7 @@ RSpec.describe Project, type: :model do
       approved_projects = described_class.approved_projects
       expect(approved_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
       expect(approved_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
-      expect(approved_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id == nil }).to be nil
+      expect(approved_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id.nil? }).to be nil
     end
   end
 

@@ -184,7 +184,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
+
   describe "#eligible_sysadmin?" do
     it "should be true for a sysadmin" do
       user = FactoryBot.create(:sysadmin)
