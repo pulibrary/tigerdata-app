@@ -100,45 +100,47 @@ class Project < ApplicationRecord
     results
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Rails/Output
-  def file_list_to_file(session_id:)
+  def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
     action = "get-values"
     query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: action, deep_search: true)
     iterator_id = query_req.result
 
-    File.open("/Users/correah/src/tiger-data-app/filelist.txt", "w") do |file|
-      batch = 0
+    File.open(filename, "w") do |file|
+      file.write(file_header(action: action))
       loop do
-        batch += 1
-        start_time = DateTime.now
-
-        iterator_req = Mediaflux::Http::IterateRequest.new(session_token: session_id, iterator: iterator_id, action: action, size: 1000)
+        iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, action: action, size: 1000)
         iterator_resp = iterator_req.result
-
-        lines = []
-        iterator_resp[:files].each do |asset|
-          lines << if action == "get-name"
-                     "#{asset.id}, #{asset.name}, #{asset.collection}"
-                   else
-                     "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
-                   end
-        end
+        lines = process_iterator_response(iterator_resp: iterator_resp, action: action)
         file.write(lines.join("\r\n") + "\r\n")
-
-        sec = DateTime.now.to_f - start_time.to_f
-        ms_display = format("%.2f", sec * 1000)
-        sec_display = format("%.2f", sec)
-        puts "#{batch}, #{ms_display} ms, #{sec_display} seconds"
-
         break if iterator_resp[:complete]
       end
     end
+
+    # Destroy _after_ fetching the results from iterator_req
+    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Rails/Output
+
+  private
+
+    def file_header(action:)
+      if action == "get-name"
+        "ID, NAME, COLLECTION?\r\n"
+      else
+        "ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n"
+      end
+    end
+
+    def process_iterator_response(iterator_resp:, action:)
+      lines = []
+      iterator_resp[:files].each do |asset|
+        lines << if action == "get-name"
+                   "#{asset.id}, #{asset.name}, #{asset.collection}"
+                 else
+                   "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
+                 end
+      end
+      lines
+    end
 end

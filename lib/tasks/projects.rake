@@ -79,9 +79,10 @@ namespace :projects do
 
     project_id = args[:project_id]
     project = Project.find(project_id)
+    filename = "file_list_#{project_id}.txt"
     puts "Downloading file list for project #{project_id}"
     time_action("download file list") do
-      asset_id = project.file_list(session_id: user.mediaflux_session)
+      asset_id = project.file_list_to_file(session_id: user.mediaflux_session, filename: filename)
     end
     puts "File list downloaded for project #{project_id}"
   end
