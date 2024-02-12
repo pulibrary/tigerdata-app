@@ -163,16 +163,6 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
 
-### Add Yourself as a Project Sponsor
-
-1. Edit config/default_sponsors.yml
-   1. Add your netid in each section
-2. Edit config/default_mediaflux_admins.yml
-   1. Add your netid in each section
-3. Run the rake task to update the config file
-   1. `bundle exec rake roles:default_sponsors`
-   2. `bundle exec rake roles:default_mediaflux_admins`
-
 ### Starting the development server
 
 1. `bundle exec rails s -p 3000`
@@ -206,6 +196,7 @@ cap qa  mailcatcher:console
 Emails on production are sent via [Pony Express](https://github.com/pulibrary/pul-it-handbook/blob/f54dfdc7ada1ff993a721f6edb4aa1707bb3a3a5/services/smtp-mail-server.md).
 
 ## User Registration List
+For local development, add yourself as a SuperUser to the TigerData preliminary registration list and follow these instructions:
 
 ### Updating User Registration List
 To save updates and make changes to appointed users for early testing of the TigerData site:
