@@ -12,7 +12,8 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
   describe "#result" do
     before do
       stub_request(:post, mediaflux_url)
-        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      <where>asset in collection 123</where>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      "\
+        "<where>asset in collection 123</where>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
@@ -27,7 +28,8 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
   context "deep search" do
     before do
       stub_request(:post, mediaflux_url)
-        .with(body:"<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      <where>asset in static collection or subcollection of 123</where>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      "\
+        "<where>asset in static collection or subcollection of 123</where>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
@@ -42,7 +44,8 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
   context "action get-name" do
     before do
       stub_request(:post, mediaflux_url)
-        .with(body:"<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      <where>asset in collection 123</where>\n      <action>get-name</action>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      "\
+        "<where>asset in collection 123</where>\n      <action>get-name</action>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
@@ -58,7 +61,10 @@ RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
     before do
       # Notice the :xpath parameters after the get-action in the request
       stub_request(:post, mediaflux_url)
-        .with(body:"<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      <where>asset in collection 123</where>\n      <action>get-values</action>\n      <xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      <xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"secretsecret/2/31\">\n    <args>\n      "\
+        "<where>asset in collection 123</where>\n      <action>get-values</action>\n      "\
+        "<xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      "\
+        "<xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: query_response, headers: {})
     end
 
