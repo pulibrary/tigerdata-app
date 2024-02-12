@@ -82,6 +82,10 @@ class User < ApplicationRecord
     super
   end
 
+  def eligible_sysadmin?
+    return true if superuser || sysadmin
+  end
+
   def self.csv_data
     CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
   end
