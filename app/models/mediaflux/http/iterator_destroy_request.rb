@@ -17,6 +17,9 @@ module Mediaflux
       end
 
       # Returns empty string if iterator was destroyed, error message otherwise.
+      # Notice that once have run through an iterator Mediaflux destroys it automatically
+      # so it is possible to get an error indicating that an iterator does not exist if
+      # Mediaflux deleted it on its own.
       def result
         xml = response_xml
         xml.xpath("/response/reply['error']").text
