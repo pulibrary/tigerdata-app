@@ -24,7 +24,12 @@ class User < ApplicationRecord
   end
 
   def self.sponsor_users
-    User.where(eligible_sponsor: true).map(&:uid)
+    users = if Rails.env.development? || Rails.env.staging?
+              User.where(eligible_sponsor: true).or(User.where(superuser: true))
+            else
+              User.where(eligible_sponsor: true)
+            end
+    users.map(&:uid)
   end
 
   def clear_mediaflux_session(session)
@@ -67,6 +72,16 @@ class User < ApplicationRecord
     display_name
   end
 
+  def eligible_sponsor?
+    return true if superuser
+    super
+  end
+
+  def eligible_manager?
+    return true if superuser
+    super
+  end
+
   def self.csv_data
     CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
   end
@@ -78,8 +93,12 @@ class User < ApplicationRecord
       user.family_name = line["family_name"]
       user.display_name = line["display_name"]
       user.email = user.uid + "@princeton.edu"
+      # If we don't say that this is a cas user, they won't be able to log in with CAS
+      user.provider = "cas"
       user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
       user.eligible_manager = line["eligible_manager"] == "TRUE"
+      user.superuser = line["superuser"] == "TRUE"
+      user.sysadmin = line["sysadmin"] == "TRUE"
       user.save
     end
   end
