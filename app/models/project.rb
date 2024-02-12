@@ -89,10 +89,10 @@ class Project < ApplicationRecord
   def file_list(session_id:, size: 10)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: "get-values", deep_search: true)
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
     iterator_id = query_req.result
 
-    iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, action: "get-values", size: size)
+    iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
 
     # Destroy _after_ fetching the results from iterator_req
@@ -105,16 +105,16 @@ class Project < ApplicationRecord
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
-    action = "get-values"
-    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, action: action, deep_search: true)
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
     iterator_id = query_req.result
 
     File.open(filename, "w") do |file|
-      file.write(file_header(action: action))
+      # file header
+      file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
       loop do
-        iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, action: action, size: 1000)
+        iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
         iterator_resp = iterator_req.result
-        lines = process_iterator_response(iterator_resp: iterator_resp, action: action)
+        lines = files_from_iterator(iterator_resp)
         file.write(lines.join("\r\n") + "\r\n")
         break if iterator_resp[:complete]
       end
@@ -126,22 +126,10 @@ class Project < ApplicationRecord
 
   private
 
-    def file_header(action:)
-      if action == "get-name"
-        "ID, NAME, COLLECTION?\r\n"
-      else
-        "ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n"
-      end
-    end
-
-    def process_iterator_response(iterator_resp:, action:)
+    def files_from_iterator(iterator_resp)
       lines = []
       iterator_resp[:files].each do |asset|
-        lines << if action == "get-name"
-                   "#{asset.id}, #{asset.name}, #{asset.collection}"
-                 else
-                   "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
-                 end
+        lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
       end
       lines
     end

@@ -11,7 +11,7 @@ module Mediaflux
       # @param action [String] Optional, by default it uses get-name but it could also be get-meta to get all
       #                        the fields for the assets or `get-values` to get a limited list of fields.
       # @param deep_search [Bool] Optional, false by default. When true queries the collection and it subcollections.
-      def initialize(session_token:, aql_query: nil, collection: nil, action: nil, deep_search: false)
+      def initialize(session_token:, aql_query: nil, collection: nil, action: "get-values", deep_search: false)
         super(session_token: session_token)
         @aql_query = aql_query
         @collection = collection

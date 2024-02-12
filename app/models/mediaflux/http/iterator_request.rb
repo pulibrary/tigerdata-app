@@ -5,7 +5,7 @@ module Mediaflux
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @iterator [Int] The iterator returned by Mediaflux (via QueryRequest)
-      def initialize(session_token:, iterator:, action:, size: nil)
+      def initialize(session_token:, iterator:, action: "get-values", size: nil)
         super(session_token: session_token)
         @iterator = iterator
         @size = size
@@ -49,7 +49,7 @@ module Mediaflux
           when "get-values"
             parse_get_values(xml)
           else
-            raise "Cannot parse result. Unknow action: #{action}."
+            raise "Cannot parse result. Unknow action: #{@action}."
           end
         end
 
@@ -70,7 +70,7 @@ module Mediaflux
         # Extracts file information when the request was made with the "action: get-meta" parameter
         def parse_get_meta(xml)
           files = []
-          xml.xpath("/response/reply/result/asset").children.each do |node|
+          xml.xpath("/response/reply/result/asset").each do |node|
             file = Mediaflux::Asset.new(
               id: node.xpath("./@id").text,
               name: node.xpath("./name").text,
