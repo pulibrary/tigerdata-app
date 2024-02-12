@@ -55,4 +55,32 @@
       <% end %>
     </div>
   </div>
+  <div style="display: inline-flex">
+    <% if current_user.eligible_sysadmin?%>
+      <div id="dashboard-pending">
+        <h2>Pending Projects</h2>
+        <% if !@pending_projects.empty? %>
+          <ul>
+            <% @pending_projects.each do |project| %>
+              <li>
+                <%= project.title %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div id="dashboard-approved">
+        <h2>Approved Projects</h2>
+        <% if !@approved_projects.empty? %>
+          <ul>
+            <% @approved_projects.each do |project| %>
+              <li>
+                <%= project.title %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <%end%>
+  </div>
   <% end %>

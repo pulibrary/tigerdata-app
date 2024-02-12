@@ -69,6 +69,13 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "New Project"
       end
+
+      it "shows the system administrator dashboard" do
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content("Pending Projects")
+        expect(page).to have_content("Approved Projects")
+      end
     end
   end
 end

@@ -48,6 +48,19 @@
   @include dashboard-component;
 }
 
+#dashboard-pending{
+  @include dashboard-component;
+  margin-top: 1em;
+  min-width: 30em;
+}
+
+#dashboard-approved{
+  @include dashboard-component;
+  margin-top: 1em;
+  min-width: 30em;
+}
+
+
 #show{
   .pending-project {
     margin-left: 5em;

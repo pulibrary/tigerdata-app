@@ -48,6 +48,37 @@ RSpec.describe Project, type: :model do
       expect(data_user_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
     end
   end
+
+  describe "#pending_projects" do
+    before do
+      FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
+      FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
+      FactoryBot.create(:project, title: "project 333")
+    end
+
+    it "returns projects that are not in mediaflux" do
+      pending_projects = described_class.pending_projects
+      expect(pending_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).to be nil
+      expect(pending_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).to be nil
+      expect(pending_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id == nil }).not_to be nil
+    end
+  end
+
+  describe "#approved_projects" do
+    before do
+      FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
+      FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
+      FactoryBot.create(:project, title: "project 333")
+    end
+
+    it "returns projects that are not in mediaflux" do
+      approved_projects = described_class.approved_projects
+      expect(approved_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
+      expect(approved_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
+      expect(approved_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id == nil }).to be nil
+    end
+  end
+
   describe "#provenance_events" do
     let(:project) { FactoryBot.create(:project) }
     let(:submission_event) { FactoryBot.create(:submission_event, project: project) }

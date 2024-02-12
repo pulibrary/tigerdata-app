@@ -7,6 +7,8 @@ class WelcomeController < ApplicationController
     @managed_projects = Project.managed_projects(@current_user.uid)
     @data_user_projects = Project.data_user_projects(@current_user.uid)
     @my_projects_count = @sponsored_projects.count + @managed_projects.count + @data_user_projects.count
+    @pending_projects = Project.pending_projects
+    @approved_projects = Project.approved_projects
 
     @my_jobs = current_user.user_jobs
   end

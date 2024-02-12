@@ -184,4 +184,16 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe "#eligible_sysadmin?" do
+    it "should be true for a sysadmin" do
+      user = FactoryBot.create(:sysadmin)
+      expect(user).to be_eligible_sysadmin
+    end
+
+    it "should be true for a superuser" do
+      user = FactoryBot.create(:superuser)
+      expect(user).to be_eligible_sysadmin
+    end
+  end
 end
