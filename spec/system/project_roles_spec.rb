@@ -127,7 +127,15 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     end
   end
   context "Data Sponsors are the only people who can assign Data Managers" do
-    xit "allows a Data Sponsor to assign a Data Manager" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:sponsor_user) { User.find_by(uid: project.metadata_json["data_sponsor"]) }
+    let!(:new_data_manager) { FactoryBot.create(:project_manager) }
+    it "allows a Data Sponsor to assign a Data Manager" do
+      sign_in sponsor_user
+      visit "/projects/#{project.id}/edit"
+      fill_in "data_manager", with: new_data_manager.uid
+      click_on "Submit"
+      expect(page.find(:css, "#data_manager").text).to eq new_data_manager.display_name
     end
     xit "does not allow anyone else to assign a Data Manager" do
     end

@@ -23,11 +23,22 @@ class User < ApplicationRecord
     User.all.map(&:uid)
   end
 
+  # All users who are eligible to be Data Sponsors
   def self.sponsor_users
     users = if Rails.env.development? || Rails.env.staging?
               User.where(eligible_sponsor: true).or(User.where(superuser: true))
             else
               User.where(eligible_sponsor: true)
+            end
+    users.map(&:uid)
+  end
+
+  # All users who are eligible to be Data Managers
+  def self.manager_users
+    users = if Rails.env.development? || Rails.env.staging?
+              User.where(eligible_manager: true).or(User.where(superuser: true))
+            else
+              User.where(eligible_manager: true)
             end
     users.map(&:uid)
   end
