@@ -46,6 +46,7 @@
 
 #dashboard-activity{
   @include dashboard-component;
+  min-height: 15em;
 }
 
 #dashboard-pending{

@@ -16,6 +16,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
+    let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     before do
       FactoryBot.create(:project, metadata: { data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111" })
       FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222" })
@@ -52,15 +53,30 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end
-      it "does not show any projects" do
-        sign_in no_projects_user
-        visit "/"
-        expect(page).not_to have_content "Sponsored by Me"
+      
+      context "if the user is not a sponsor" do
+        it "does not show any projects" do
+          sign_in no_projects_user
+          visit "/"
+          expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
+          expect(page).not_to have_content("Sponsored by Me")
+          expect(page).to have_content("Recent Activity")
+        end
+      end
+
+      context "if the user is a sponsor" do
+        it "shows the New Project button" do
+          sign_in no_projects_sponsor
+          visit "/"
+          expect(page).not_to have_content("Sponsored by Me")
+          expect(page).to have_content("Recent Activity")
+          expect(page).to have_selector(:link_or_button, "New Project")
+        end
       end
     end
-
+    
     context "with the superuser role" do
-      let(:current_user) { FactoryBot.create(:superuser, uid: "pul123") }
+      let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
 
       it "shows the 'New Project' button" do
         sign_in current_user
