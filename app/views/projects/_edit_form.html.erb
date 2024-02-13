@@ -6,15 +6,12 @@
   <h2>Project Roles</h2>
 
   <p>Data Sponsor: 
-  <% if @project.metadata_json["data_sponsor"] == current_user.uid %>
-  <input type="text" list="sponsor-users" id="data_sponsor" name="data_sponsor" required autofocus value="<%= pre_populate_data_sponsor %>" /></p>
-<% else %>
-  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata[:data_sponsor] %>">
-  <span id="non-editable-data-sponsor"><%= @project.metadata[:data_sponsor] %></span>
-<% end %></p>
+  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata[:data_sponsor] || current_user.uid %>">
+  <span id="non-editable-data-sponsor"><%= @project.metadata[:data_sponsor] || current_user.uid %></span>
+  </p>
 
   <p>Data Manager:
-    <% if @project.metadata_json["data_sponsor"] == current_user.uid %>
+    <% if !@project.persisted? || (@project.metadata_json["data_sponsor"] == current_user.uid) %>
       <input type="text" list="manager-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
     <% else %>
       <input type="hidden" id="data_manager" name="data_manager" value="<%= @project.metadata[:data_manager] %>">

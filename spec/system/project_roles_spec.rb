@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Project Edit Page Roles Validation", type: :system do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
-  let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
+  let!(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   before do
@@ -20,20 +20,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     sign_in sponsor_user
     visit "/"
     click_on "New Project"
-    expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-    fill_in "data_sponsor", with: ""
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: "xxx"
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: data_manager.uid
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: sponsor_user.uid
-    page.find("body").click
-    click_on "Submit"
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq ""
+    expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
 
     fill_in "data_manager", with: "xxx"
     page.find("body").click
@@ -44,6 +31,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_manager", with: data_manager.uid
     page.find("body").click
+    byebug
     click_on "Submit"
     expect(page.find("#data_manager").native.attribute("validationMessage")).to eq ""
 
@@ -102,12 +90,22 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.family_name)
   end
 
-  context "Data Sponsors are the only ones who can request a new project" do
+  context "Data Sponsors and SuperUsers are the only ones who can request a new project" do
+    let(:superuser) { FactoryBot.create(:superuser) }
+    let!(:data_manager) { FactoryBot.create(:project_manager) }
     it "allows Data Sponsors to request a new project" do
       sign_in sponsor_user
       visit "/"
       click_on "New Project"
       expect(page).to have_content "New Project Request"
+    end
+    it "allows SuperUsers to request a new project" do
+      sign_in superuser
+      visit "/"
+      click_on "New Project"
+      expect(page).to have_content "New Project Request"
+      expect(page.find(:css, "#non-editable-data-sponsor").text).to eq superuser.uid
+      fill_in "data_manager", with: data_manager.uid
     end
     it "does not give anyone else the New Project button" do
       sign_in data_manager
