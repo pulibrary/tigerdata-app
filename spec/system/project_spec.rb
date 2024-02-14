@@ -26,6 +26,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_in_mediaflux) { project_not_in_mediaflux }
 
   before do
     stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
@@ -269,14 +270,43 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
   end
 
-  context "Approve page" do
+  context "when visiting the approve page" do
+    let(:session_id) do
+      sponsor_user.mediaflux_session
+    end
+    let(:mediaflux_id) do
+      # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
+      ProjectMediaflux.create!(project:, session_id:)
+    end
+    let(:project) { project_in_mediaflux }
+
+    before do
+      # In order to mock the behavior of the application when a Project can be persisted within Mediaflux, we normally need to run Mediaflux in Docker
+      # However, Docker cannot be run on CircleCI server infrastructure, as this violates service level agreements with the Office of Information Technology
+      # Hence, these extra steps are necessary
+      @original_api_host = Rails.configuration.mediaflux["api_host"]
+      Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+    end
+
+    after do
+      Rails.configuration.mediaflux["api_host"] = @original_api_host
+    end
+
+    it "renders the form for providing the Mediaflux ID" do
+      expect(project_in_mediaflux.mediaflux_id).to be nil
+
+      visit project_approve_path(project_in_mediaflux)
+      expect(page).to have_content("Approve this project by appending a mediaflux id")
+      # This should fail, as the <form> child elements have not been implemented
+      fill_in "mediaflux_id", with: mediaflux_id
+      click_on "Approve"
+
+      project.reload
+      expect(project.mediaflux_id).to eq(mediaflux_id)
+    end
   end
 
   context "Requesting all files for a given project" do
-    before do
-      project_not_in_mediaflux
-    end
-
     context "when authenticated" do
       let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
       let(:job) { instance_double(ListProjectContentsJob) }
