@@ -15,13 +15,13 @@ Project Details:
   <dl>
     <% if !@data_sponsor.nil? %>
       <dt>Data Sponsor</dt>
-      <dd>
+      <dd id="data_sponsor">
         <%= @data_sponsor.display_name_safe %>
       </dd>
     <% end %>
     <% if !@data_manager.nil? %>
       <dt>Data Manager</dt>
-      <dd>
+      <dd id="data_manager">
         <%= @data_manager.display_name_safe %>
       </dd>
     <% end %>
