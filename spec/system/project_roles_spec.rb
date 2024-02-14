@@ -20,20 +20,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     sign_in sponsor_user
     visit "/"
     click_on "New Project"
-    expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-    fill_in "data_sponsor", with: ""
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: "xxx"
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: data_manager.uid
-    expect(page.find("input[value=Submit]")).to be_disabled
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "data_sponsor", with: sponsor_user.uid
-    page.find("body").click
-    click_on "Submit"
-    expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq ""
+    # Data Sponsor is not editable. It can only be the user who is initiating this request.
+    expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
 
     fill_in "data_manager", with: "xxx"
     page.find("body").click
@@ -128,9 +116,11 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     end
   end
   context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
-    xit "assigns the user who initiated the request as the Data Sponsor" do
-    end
-    xit "does not assign anyone else as the Data Sponsor" do
+    let(:data_sponsor) { FactoryBot.create(:project_sponsor) }
+    it "only allows the user who initiated the request as the Data Sponsor" do
+      sign_in data_sponsor
+      visit "/projects/new"
+      expect(page.find("#non-editable-data-sponsor").text).to eq data_sponsor.uid
     end
   end
   context "Data Sponsors are the only people who can assign Data Managers" do
