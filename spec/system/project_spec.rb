@@ -277,11 +277,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     it "renders the form for providing the Mediaflux ID" do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
-      expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS 
+      expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
 
       visit project_approve_path(project)
-      expect(page).to have_content("Project Approval: #{project.metadata_json["title"]}")
-      
+      expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
+
       fill_in "mediaflux_id", with: mediaflux_id
       click_on "Approve"
 
@@ -289,7 +289,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(project.mediaflux_id).to eq(mediaflux_id)
       expect(project.metadata_json["status"]).to eq Project::APPROVE_STATUS
 
-      #redirects the user to the project show page
+      # redirects the user to the project show page
     end
   end
 
