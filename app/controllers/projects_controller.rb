@@ -71,16 +71,17 @@ class ProjectsController < ApplicationController
 
   def update
     project
-    project_metadata = ProjectMetadata.new(project: project, current_user:)
-    #If an admin approves a project
+
     if params.key?("mediaflux_id")
       project.mediaflux_id = params["mediaflux_id"]
+      params.delete("mediaflux_id")
     end
-    params.delete("mediaflux_id")
-    if !params.empty?
-      project.metadata = project_metadata.update_metadata(params:)
-    end
-    byebug
+
+    project_metadata = ProjectMetadata.new(project: project, current_user:)
+    updated_metadata = project_metadata.update_metadata(params:)
+    # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
+    project.metadata = updated_metadata if updated_metadata[:title]
+
     if project.save
       redirect_to project
     else

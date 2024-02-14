@@ -271,33 +271,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   context "when visiting the approve page" do
-    let(:session_id) do
-      sponsor_user.mediaflux_session
-    end
-    let(:mediaflux_id) do
-      # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
-      "test_id"
-    end
+    let(:mediaflux_id) { 1234 }
     let(:project) { project_not_in_mediaflux }
 
-    before do
-      project
-      
-      # In order to mock the behavior of the application when a Project can be persisted within Mediaflux, we normally need to run Mediaflux in Docker
-      # However, Docker cannot be run on CircleCI server infrastructure, as this violates service level agreements with the Office of Information Technology
-      # Hence, these extra steps are necessary
-      @original_api_host = Rails.configuration.mediaflux["api_host"]
-      Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-    end
-
-    after do
-      Rails.configuration.mediaflux["api_host"] = @original_api_host
-    end
-
     it "renders the form for providing the Mediaflux ID" do
-      expect(project_in_mediaflux.mediaflux_id).to be nil
+      expect(project.mediaflux_id).to be nil
 
-      visit project_approve_path(project_in_mediaflux)
+      visit project_approve_path(project)
       expect(page).to have_content("Approve this project by appending a mediaflux id")
       # This should fail, as the <form> child elements have not been implemented
       fill_in "mediaflux_id", with: mediaflux_id
