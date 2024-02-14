@@ -73,6 +73,10 @@ class ProjectsController < ApplicationController
     project
     project_metadata = ProjectMetadata.new(project: project, current_user:)
     project.metadata = project_metadata.update_metadata(params:)
+    #If an admin approves a project
+    if params.key?[:mediaflux_id]
+      project.mediaflux_id = params[:mediaflux_id]
+    end
     if project.save
       redirect_to project
     else
@@ -103,6 +107,10 @@ class ProjectsController < ApplicationController
       message: "You have a background job running."
     }
     render json: json_response
+  end
+
+  def approve
+    project
   end
 
   private

@@ -269,6 +269,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
   end
 
+  context "Approve page" do
+  end
+
   context "Requesting all files for a given project" do
     before do
       project_not_in_mediaflux

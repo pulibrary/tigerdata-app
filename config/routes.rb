@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   resources :organizations
   resources :projects
-  post "projects/:id/approve", to: "projects#approve", as: :project_approve
+  get "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
   get "projects/:id/contents", to: "projects#contents", as: :project_contents
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
