@@ -51,6 +51,14 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_manager' = ?", manager)
   end
 
+  def self.pending_projects
+    Project.where("mediaflux_id IS NULL")
+  end
+
+  def self.approved_projects
+    Project.where("mediaflux_id IS NOT NULL")
+  end
+
   def self.data_user_projects(user)
     # See https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
     # for information on the @> operator

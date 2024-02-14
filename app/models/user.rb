@@ -24,7 +24,12 @@ class User < ApplicationRecord
   end
 
   def self.sponsor_users
-    User.where(eligible_sponsor: true).map(&:uid)
+    users = if Rails.env.development? || Rails.env.staging?
+              User.where(eligible_sponsor: true).or(User.where(superuser: true))
+            else
+              User.where(eligible_sponsor: true)
+            end
+    users.map(&:uid)
   end
 
   def clear_mediaflux_session(session)
@@ -65,6 +70,20 @@ class User < ApplicationRecord
     return uid if display_name.blank?
 
     display_name
+  end
+
+  def eligible_sponsor?
+    return true if superuser
+    super
+  end
+
+  def eligible_manager?
+    return true if superuser
+    super
+  end
+
+  def eligible_sysadmin?
+    return true if superuser || sysadmin
   end
 
   def self.csv_data

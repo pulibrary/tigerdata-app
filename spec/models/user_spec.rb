@@ -141,4 +141,59 @@ RSpec.describe User, type: :model do
       expect(other_user.sysadmin).to be_falsey
     end
   end
+
+  describe "#eligible_sponsor?" do
+    it "should be true for a sponsor" do
+      user = FactoryBot.create(:project_sponsor)
+      expect(user).to be_eligible_sponsor
+    end
+
+    it "should be true for a superuser" do
+      user = FactoryBot.create(:superuser)
+      expect(user).to be_eligible_sponsor
+    end
+  end
+
+  describe "#eligible_manager?" do
+    it "should be true for a manager" do
+      user = FactoryBot.create(:project_manager)
+      expect(user).to be_eligible_manager
+    end
+
+    it "should be true for a superuser" do
+      user = FactoryBot.create(:superuser)
+      expect(user).to be_eligible_manager
+    end
+  end
+
+  describe "#sponsor_users" do
+    it "should only show sponsers" do
+      FactoryBot.create(:superuser)
+      project_sponsor = FactoryBot.create(:project_sponsor)
+      FactoryBot.create(:user)
+      expect(User.sponsor_users).to eq([project_sponsor.uid])
+    end
+
+    context "in development" do
+      it "should only show sponsers and superusers" do
+        superuser = FactoryBot.create(:superuser)
+        project_sponsor = FactoryBot.create(:project_sponsor)
+        FactoryBot.create(:user)
+        allow(Rails.env).to receive(:development?).and_return true
+        expect(User.sponsor_users).to eq([superuser.uid, project_sponsor.uid])
+      end
+    end
+  end
+
+  describe "#eligible_sysadmin?" do
+    it "should be true for a sysadmin" do
+      user = FactoryBot.create(:sysadmin)
+      expect(user).to be_eligible_sysadmin
+    end
+
+    it "should be true for a superuser" do
+      user = FactoryBot.create(:superuser)
+      expect(user).to be_eligible_sysadmin
+    end
+  end
 end

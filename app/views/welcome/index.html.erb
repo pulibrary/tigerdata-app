@@ -5,9 +5,7 @@
   <h1>Welcome, <%= current_user.given_name %>!</h1>
   <div style="display: inline-flex">
     <div id="dashboard-projects">
-      <%if @my_projects_count != 0%>
-        <h1>My Projects</h1>
-      <%end%>
+      <h1>My Projects</h1>
       <% if @sponsored_projects.size > 0 %>
         <h2>Sponsored by Me</h2>
         <ul class="project-list">
@@ -40,8 +38,8 @@
       </div>
     </div>
     <div id="dashboard-activity">
-      <h2>Recent Activity</h2>
-      <% if !@my_jobs.empty? %>
+        <h2>Recent Activity</h2>
+        <% if !@my_jobs.empty? %>
         <ul>
           <% @my_jobs.each do |job| %>
             <li>
@@ -54,5 +52,33 @@
         </ul>
       <% end %>
     </div>
+  </div>
+  <div style="display: inline-flex">
+    <% if current_user.eligible_sysadmin?%>
+      <div id="dashboard-pending">
+        <h2>Pending Projects</h2>
+        <% if !@pending_projects.empty? %>
+          <ul>
+            <% @pending_projects.each do |project| %>
+              <li>
+                <%= project.title %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div id="dashboard-approved">
+        <h2>Approved Projects</h2>
+        <% if !@approved_projects.empty? %>
+          <ul>
+            <% @approved_projects.each do |project| %>
+              <li>
+                <%= project.title %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <%end%>
   </div>
   <% end %>

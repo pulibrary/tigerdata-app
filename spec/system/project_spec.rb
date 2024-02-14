@@ -113,8 +113,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       project_not_in_mediaflux.reload
       expect(project_not_in_mediaflux.metadata[:directory]).to eq "project-123"
     end
-    it "loads existing content into the form" do
-      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+    it "loads existing Data Sponsor" do
+      expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       sign_in sponsor_user
       visit "/"
       click_on "New Project"
-      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+      expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
       fill_in "ro-user-uid-to-add", with: read_only.uid
       # Without removing the focus from the form field, the "change" event is not propagated for the DOM
@@ -171,21 +171,12 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_content "Project ID\n10.34770/tbd"
     end
 
-    it "does not allow the user to create a project without a data sponsor" do
-      sign_in sponsor_user
-      visit "/"
-      click_on "New Project"
-      expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
-      fill_in "data_sponsor", with: ""
-      expect(page.find("input[value=Submit]")).to be_disabled
-      expect(page.find("#data_sponsor").native.attribute("validationMessage")).to eq "Please select a valid value."
-    end
     context "with an invalid data manager" do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
-        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: "xxx"
         expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
         fill_in "ro-user-uid-to-add", with: read_only.uid
@@ -208,7 +199,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
-        expect(page.find("#data_sponsor").value).to eq sponsor_user.uid
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: "xxx"
         page.find("body").click
@@ -247,7 +238,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
-        fill_in "data_sponsor", with: sponsor_user.uid
+        # Data Sponsor is automatically populated.
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid
         page.find("body").click
