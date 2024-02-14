@@ -276,11 +276,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
     let(:mediaflux_id) do
       # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
-      ProjectMediaflux.create!(project:, session_id:)
+      "test_id"
     end
-    let(:project) { project_in_mediaflux }
+    let(:project) { project_not_in_mediaflux }
 
     before do
+      project
+      
       # In order to mock the behavior of the application when a Project can be persisted within Mediaflux, we normally need to run Mediaflux in Docker
       # However, Docker cannot be run on CircleCI server infrastructure, as this violates service level agreements with the Office of Information Technology
       # Hence, these extra steps are necessary
