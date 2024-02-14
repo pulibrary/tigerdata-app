@@ -102,9 +102,16 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     expect(page).to have_content(read_write.family_name)
   end
 
-  context "Data Sponsors are the only ones who can request a new project" do
+  context "Data Sponsors and superusers are the only ones who can request a new project" do
+    let(:superuser) { FactoryBot.create(:superuser) }
     it "allows Data Sponsors to request a new project" do
       sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      expect(page).to have_content "New Project Request"
+    end
+    it "allows superusers to request a new project" do
+      sign_in superuser
       visit "/"
       click_on "New Project"
       expect(page).to have_content "New Project Request"
