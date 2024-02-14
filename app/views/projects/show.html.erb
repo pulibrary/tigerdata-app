@@ -91,10 +91,8 @@ Project Details:
 </div>
 
 <div class="details">
-   <% if @project.mediaflux_id.blank? && current_user.sysadmin %>
-    <%= form_with url: project_approve_path(@project), method: :post do |form| %>
-      <input type="submit" class="btn btn-secondary btn-sm" value="Approve Project" />
-    <% end %>
+   <% if @project.mediaflux_id.blank? && current_user.eligible_sysadmin? %>
+    <%= link_to "Edit Mediaflux ID", project_approve_path(@project), class: "btn btn-danger btn-sm" %>
   <% end %>
 </div>
 </show>

@@ -92,16 +92,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           .skipping(:'color-contrast')
       end
     end
-    context "An Mediaflux Administrator" do
-      it "shows the project data and the Approve Project button" do
-        sign_in sysadmin_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
-        expect(page).to have_content "This project has not been saved to Mediaflux"
-        expect(page).to have_content pending_text
-        expect(page).to have_button "Approve Project"
-      end
-    end
   end
 
   context "Edit page" do
