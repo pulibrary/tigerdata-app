@@ -67,7 +67,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.default_options = {
-    from: "noreply@pdc-describe-staging.princeton.edu"
+    from: "noreply@tigerdata-staging.princeton.edu"
   }
 
   config.action_mailer.delivery_method = :smtp
