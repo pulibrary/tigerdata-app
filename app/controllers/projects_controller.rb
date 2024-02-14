@@ -71,17 +71,17 @@ class ProjectsController < ApplicationController
 
   def update
     project
-
+    #Approve action
     if params.key?("mediaflux_id")
       project.mediaflux_id = params["mediaflux_id"]
+      project.metadata_json["status"] = Project::APPROVE_STATUS
       params.delete("mediaflux_id")
     end
-
+    
+    #Edit action
     project_metadata = ProjectMetadata.new(project: project, current_user:)
     updated_metadata = project_metadata.update_metadata(params:)
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
-    project.metadata = updated_metadata if updated_metadata[:title]
-
     if project.save
       redirect_to project
     else
@@ -115,7 +115,12 @@ class ProjectsController < ApplicationController
   end
 
   def approve
-    project
+    if current_user.eligible_sysadmin?
+      project
+      @project_metadata = project.metadata
+      @title = @project_metadata["title"]
+    else redirect_to root_path
+    end
   end
 
   private
