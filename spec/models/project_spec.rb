@@ -71,71 +71,76 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
     before do
       # create namespace for the project
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
-      with(
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+        .with(
         body: /asset.namespace.create/,
         headers: {
-        'Accept'=>'*/*',
-        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Connection'=>'keep-alive',
-        'Content-Type'=>'text/xml; charset=utf-8',
-        'Keep-Alive'=>'30',
-        'User-Agent'=>'Ruby'
-        }).
-      to_return(status: 200, body: "", headers: {})
+          "Accept" => "*/*",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Connection" => "keep-alive",
+          "Content-Type" => "text/xml; charset=utf-8",
+          "Keep-Alive" => "30",
+          "User-Agent" => "Ruby"
+        }
+      )
+        .to_return(status: 200, body: "", headers: {})
 
       # create collection asset for the project
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
-      with(body: /asset.create/,
-        headers: {
-        'Accept'=>'*/*',
-        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Connection'=>'keep-alive',
-        'Content-Type'=>'text/xml; charset=utf-8',
-        'Keep-Alive'=>'30',
-        'User-Agent'=>'Ruby'
-        }).
-      to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><id>123</id></result></reply></response>", headers: {})
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+        .with(body: /asset.create/,
+              headers: {
+                "Accept" => "*/*",
+                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Connection" => "keep-alive",
+                "Content-Type" => "text/xml; charset=utf-8",
+                "Keep-Alive" => "30",
+                "User-Agent" => "Ruby"
+              })
+        .to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><id>123</id></result></reply></response>", headers: {})
 
       # define query to fetch file list
       # (returns iterator 456)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
-      with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"test-session-token\">\n    <args>\n      <where>asset in static collection or subcollection of 123</where>\n      <action>get-values</action>\n      <xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      <xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n",
-        headers: {
-        'Accept'=>'*/*',
-        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Connection'=>'keep-alive',
-        'Content-Type'=>'text/xml; charset=utf-8',
-        'Keep-Alive'=>'30',
-        'User-Agent'=>'Ruby'
-        }).
-      to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><iterator>456</iterator></result></reply></response>", headers: {})
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"test-session-token\">\n    <args>\n      "\
+        "<where>asset in static collection or subcollection of 123</where>\n      <action>get-values</action>\n      "\
+        "<xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      "\
+        "<xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n",
+              headers: {
+                "Accept" => "*/*",
+                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Connection" => "keep-alive",
+                "Content-Type" => "text/xml; charset=utf-8",
+                "Keep-Alive" => "30",
+                "User-Agent" => "Ruby"
+              })
+        .to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><iterator>456</iterator></result></reply></response>", headers: {})
 
       # fetch file list using iterator 456
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
-      with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query.iterate\" session=\"test-session-token\">\n    <args>\n      <id>456</id>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n",
-        headers: {
-        'Accept'=>'*/*',
-        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Connection'=>'keep-alive',
-        'Content-Type'=>'text/xml; charset=utf-8',
-        'Keep-Alive'=>'30',
-        'User-Agent'=>'Ruby'
-        }).
-      to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"), headers: {})
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query.iterate\" session=\"test-session-token\">\n    "\
+        "<args>\n      <id>456</id>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n",
+              headers: {
+                "Accept" => "*/*",
+                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Connection" => "keep-alive",
+                "Content-Type" => "text/xml; charset=utf-8",
+                "Keep-Alive" => "30",
+                "User-Agent" => "Ruby"
+              })
+        .to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"), headers: {})
 
       # destroy the iterator
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
-      with(body: /asset.query.iterator.destroy/,
-        headers: {
-        'Accept'=>'*/*',
-        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-        'Connection'=>'keep-alive',
-        'Content-Type'=>'text/xml; charset=utf-8',
-        'Keep-Alive'=>'30',
-        'User-Agent'=>'Ruby'
-        }).
-      to_return(status: 200, body: "", headers: {})
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+        .with(body: /asset.query.iterator.destroy/,
+              headers: {
+                "Accept" => "*/*",
+                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Connection" => "keep-alive",
+                "Content-Type" => "text/xml; charset=utf-8",
+                "Keep-Alive" => "30",
+                "User-Agent" => "Ruby"
+              })
+        .to_return(status: 200, body: "", headers: {})
     end
 
     it "fetches the file list" do
