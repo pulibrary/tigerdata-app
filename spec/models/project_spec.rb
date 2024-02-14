@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Project, type: :model do
+RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#sponsored_projects" do
     let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
     before do
@@ -58,6 +58,94 @@ RSpec.describe Project, type: :model do
       project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata["created_by"],
                                        event_details: "Requested by #{project.metadata_json['data_sponsor']}")
       expect(project.provenance_events.count).to eq 1
+    end
+  end
+
+  describe "#file_list" do
+    let(:manager) { FactoryBot.create(:user, uid: "hc1234") }
+    let(:project) do
+      project = FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
+      project.save_in_mediaflux(session_id: "test-session-token")
+      project
+    end
+
+    before do
+      # create namespace for the project
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
+      with(
+        body: /asset.namespace.create/,
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Connection'=>'keep-alive',
+        'Content-Type'=>'text/xml; charset=utf-8',
+        'Keep-Alive'=>'30',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
+      # create collection asset for the project
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
+      with(body: /asset.create/,
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Connection'=>'keep-alive',
+        'Content-Type'=>'text/xml; charset=utf-8',
+        'Keep-Alive'=>'30',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><id>123</id></result></reply></response>", headers: {})
+
+      # define query to fetch file list
+      # (returns iterator 456)
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
+      with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"test-session-token\">\n    <args>\n      <where>asset in static collection or subcollection of 123</where>\n      <action>get-values</action>\n      <xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      <xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n",
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Connection'=>'keep-alive',
+        'Content-Type'=>'text/xml; charset=utf-8',
+        'Keep-Alive'=>'30',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><iterator>456</iterator></result></reply></response>", headers: {})
+
+      # fetch file list using iterator 456
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
+      with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query.iterate\" session=\"test-session-token\">\n    <args>\n      <id>456</id>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n",
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Connection'=>'keep-alive',
+        'Content-Type'=>'text/xml; charset=utf-8',
+        'Keep-Alive'=>'30',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"), headers: {})
+
+      # destroy the iterator
+      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").
+      with(body: /asset.query.iterator.destroy/,
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Connection'=>'keep-alive',
+        'Content-Type'=>'text/xml; charset=utf-8',
+        'Keep-Alive'=>'30',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+    end
+
+    it "fetches the file list" do
+      file_list = project.file_list(session_id: "test-session-token", size: 10)
+      expect(file_list[:files].count).to eq 8
+      expect(file_list[:files][0].name).to eq "file1.txt"
+      expect(file_list[:files][0].path).to eq "/td-demo-001/localbig-ns/localbig/file1.txt"
+      expect(file_list[:files][0].size).to be 141
+      expect(file_list[:files][0].collection).to be false
+      expect(file_list[:files][0].last_modified).to eq "2024-02-12T11:43:25-05:00"
     end
   end
 end
