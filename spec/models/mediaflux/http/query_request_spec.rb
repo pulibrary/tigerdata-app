@@ -3,11 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Http::QueryRequest, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-
-  let(:query_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "query_response.xml")
-    File.new(filename).read
-  end
+  let(:query_response) { fixture_file("files/query_response.xml") }
 
   describe "#result" do
     before do
