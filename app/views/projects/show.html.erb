@@ -91,7 +91,7 @@ Project Details:
 </div>
 
 <div class="details">
-   <% if @project.mediaflux_id.blank? && current_user.eligible_sysadmin? %>
+   <% if !@project.mediaflux_id.blank? && current_user.eligible_sysadmin? %>
     <%= link_to "Edit Mediaflux ID", project_approve_path(@project), class: "btn btn-danger btn-sm" %>
   <% end %>
 </div>

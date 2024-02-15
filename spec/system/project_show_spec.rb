@@ -101,14 +101,23 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     end
 
     context "system administrator" do
-      let(:project) { FactoryBot.create(:project, metadata: metadata) }
-      it "shows the appropriate navigation buttons" do
+      let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVE_STATUS, metadata: metadata) }
+      let(:project_not_in_mediaflux) { FactoryBot.create(:project) }
+      it "shows the 'edit mediaflux id' button for an approved project" do
         sign_in sysadmin_user
-        visit  "/projects/#{project.id}"
-        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
+        visit  "/projects/#{project_in_mediaflux.id}"
+        expect(page).to have_content "project 123"
+        expect(page).not_to have_content "This project has not been saved to Mediaflux"
+        expect(page).not_to have_content pending_text
+        expect(page).to have_selector(:link_or_button, "Edit Mediaflux ID")
+      end
+      it "does not show the 'edit mediaflux id' button for project that is not approved" do
+        sign_in sysadmin_user
+        visit  "/projects/#{project_not_in_mediaflux.id}"
+        expect(page).to have_content "#{project_not_in_mediaflux.metadata[:title]} (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
-        expect(page).to have_selector(:link_or_button, "Edit Mediaflux ID")
+        expect(page).not_to have_selector(:link_or_button, "Edit Mediaflux ID")
       end
     end
   end
