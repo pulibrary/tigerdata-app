@@ -20,9 +20,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     sign_in sponsor_user
     visit "/"
     click_on "New Project"
+
     # Data Sponsor is not editable. It can only be the user who is initiating this request.
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-
     fill_in "data_manager", with: "xxx"
     page.find("body").click
     expect(page.find("input[value=Submit]")).to be_disabled

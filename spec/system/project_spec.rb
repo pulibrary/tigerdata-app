@@ -194,7 +194,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
 
-    context "with an invalid data users" do
+    context "with an invalid Data User" do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
@@ -203,8 +203,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: "xxx"
         page.find("body").click
+        byebug
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-
         fill_in "rw-user-uid-to-add", with: "zzz"
         page.find("body").click
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
