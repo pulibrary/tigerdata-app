@@ -72,6 +72,21 @@ namespace :projects do
     puts "Mediaflux asset #{asset_id} updated"
   end
 
+  task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
+    netid = args[:netid]
+    user = User.where(uid: netid).first
+    raise "User #{netid} not found" if user.nil?
+
+    project_id = args[:project_id]
+    project = Project.find(project_id)
+    filename = "file_list_#{project_id}.csv"
+    puts "Downloading file list for project #{project_id}"
+    time_action("download file list") do
+      asset_id = project.file_list_to_file(session_id: user.mediaflux_session, filename: filename)
+    end
+    puts "File list downloaded for project #{project_id}"
+  end
+
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)
     counts = []

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <reply type="result">
+    <result>
+      <asset id="2177" version="1">
+        <name>file1.txt</name>
+        <path>/td-demo-001/localbig-ns/localbig/file1.txt</path>
+        <total-size>141</total-size>
+        <mtime>12-Feb-2024 16:43:25</mtime>
+        <collection>false</collection>
+      </asset>
+      <asset id="2178" version="1">
+        <name>file2.txt</name>
+        <path>/td-demo-001/localbig-ns/localbig/file2.txt</path>
+        <total-size>36</total-size>
+        <mtime>12-Feb-2024 16:43:25</mtime>
+        <collection>false</collection>
+      </asset>
+      <asset id="2179" version="1">
+        <name>folder123</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder123</path>
+        <total-size>0</total-size>
+        <mtime>12-Feb-2024 16:43:46</mtime>
+        <collection>true</collection>
+      </asset>
+      <asset id="2180" version="1">
+        <name>ch_00.pdf</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder123/ch_00.pdf</path>
+        <total-size>192494</total-size>
+        <mtime>12-Feb-2024 16:43:47</mtime>
+        <collection>false</collection>
+      </asset>
+      <asset id="2181" version="1">
+        <name>critial-studies-ai.pdf</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder123/critial-studies-ai.pdf</path>
+        <total-size>211972</total-size>
+        <mtime>12-Feb-2024 16:43:47</mtime>
+        <collection>false</collection>
+      </asset>
+      <asset id="2182" version="1">
+        <name>folder456</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder456</path>
+        <total-size>0</total-size>
+        <mtime>12-Feb-2024 16:43:56</mtime>
+        <collection>true</collection>
+      </asset>
+      <asset id="2183" version="1">
+        <name>fanta-sea.jpeg</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder456/fanta-sea.jpeg</path>
+        <total-size>57509</total-size>
+        <mtime>12-Feb-2024 16:43:56</mtime>
+        <collection>false</collection>
+      </asset>
+      <asset id="2184" version="1">
+        <name>old-san-juan.jpg</name>
+        <path>/td-demo-001/localbig-ns/localbig/folder456/old-san-juan.jpg</path>
+        <total-size>3103293</total-size>
+        <mtime>12-Feb-2024 16:43:56</mtime>
+        <collection>false</collection>
+      </asset>
+      <iterated complete="true">8</iterated>
+    </result>
+  </reply>
+</response>
