@@ -5,7 +5,7 @@ class Project < ApplicationRecord
 
   # TODO: What are the valid statuses?
   PENDING_STATUS = "pending"
-  APPROVE_STATUS = "approved"
+  APPROVE_STATUS = "active"
   delegate :to_json, to: :metadata_json
 
   def metadata
