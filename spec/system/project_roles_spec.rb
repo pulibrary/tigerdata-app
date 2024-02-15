@@ -127,7 +127,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     let(:project) { FactoryBot.create(:project) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_json["data_sponsor"]) }
     let(:data_manager) { User.find_by(uid: project.metadata_json["data_manager"]) }
-    let!(:new_data_manager) { FactoryBot.create(:project_manager) }
+    let!(:new_data_manager) { FactoryBot.create(:data_manager) }
     it "allows a Data Sponsor to assign a Data Manager" do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
