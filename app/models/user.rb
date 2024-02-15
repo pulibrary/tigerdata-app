@@ -32,6 +32,16 @@ class User < ApplicationRecord
     users.map(&:uid)
   end
 
+# All users who are eligible to be Data Managers
+def self.manager_users
+  users = if Rails.env.development? || Rails.env.staging?
+            User.where(eligible_manager: true).or(User.where(superuser: true))
+          else
+            User.where(eligible_manager: true)
+          end
+  users.map(&:uid)
+end
+
   def clear_mediaflux_session(session)
     @mediaflux_session = nil
     session[:mediaflux_session] = nil

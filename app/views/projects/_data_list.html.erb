@@ -9,3 +9,9 @@
         <option value="<%= uid %>">
     <% end %>
 </datalist>
+
+<datalist id="manager-users">
+    <% User.manager_users.each do |uid| %>
+        <option value="<%= uid %>">
+    <% end %>
+</datalist>
