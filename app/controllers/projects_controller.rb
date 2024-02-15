@@ -79,8 +79,15 @@ class ProjectsController < ApplicationController
     end
     
     #Edit action
-    project_metadata = ProjectMetadata.new(project: project, current_user:)
-    updated_metadata = project_metadata.update_metadata(params:)
+    if params.key?("title")
+      project_metadata = ProjectMetadata.new(project: project, current_user:)
+      project_params = params.dup
+      metadata_params = project_params.merge({
+        status: project.metadata[:status]
+      })
+      project.metadata = project_metadata.update_metadata(params: metadata_params)
+    end
+    
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
     if project.save
       redirect_to project
