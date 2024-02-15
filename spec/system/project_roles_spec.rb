@@ -20,9 +20,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     sign_in sponsor_user
     visit "/"
     click_on "New Project"
+
     # Data Sponsor is not editable. It can only be the user who is initiating this request.
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-
     fill_in "data_manager", with: "xxx"
     page.find("body").click
     expect(page.find("input[value=Submit]")).to be_disabled
@@ -124,15 +124,29 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     end
   end
   context "Data Sponsors are the only people who can assign Data Managers" do
-    xit "allows a Data Sponsor to assign a Data Manager" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:sponsor_user) { User.find_by(uid: project.metadata_json["data_sponsor"]) }
+    let(:data_manager) { User.find_by(uid: project.metadata_json["data_manager"]) }
+    let!(:new_data_manager) { FactoryBot.create(:project_manager) }
+    it "allows a Data Sponsor to assign a Data Manager" do
+      sign_in sponsor_user
+      visit "/projects/#{project.id}/edit"
+      fill_in "data_manager", with: new_data_manager.uid
+      click_on "Submit"
+      expect(page.find(:css, "#data_manager").text).to eq new_data_manager.display_name
     end
-    xit "does not allow anyone else to assign a Data Manager" do
+    it "does not allow anyone else to assign a Data Manager" do
+      sign_in data_manager
+      visit "/projects/#{project.id}/edit"
+      expect(page.find(:css, "#non-editable-data-sponsor").text).to eq sponsor_user.uid
+      expect(page.find(:css, "#non-editable-data-manager").text).to eq data_manager.uid
     end
     xit "allows for a user to be both a Data Sponsor and a Data Manager" do
     end
     xit "does not allow a Data Manager to edit a Data Manager role" do
     end
   end
+
   context "Data Sponsors and Data Managers can assign Data Users" do
     xit "allows a Data Sponsor to assign a Data User" do
     end
