@@ -46,6 +46,9 @@
               <%= job.title %>
               <ul>
                 <li><%= job.description %></li>
+                <% if job.completed_at.present? %>
+                  <li><%= job.completion %></li>
+                <% end %>
               </ul>
             </li>
           <% end %>
