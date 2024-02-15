@@ -10,7 +10,16 @@
   <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata[:data_sponsor] || current_user.uid %>">
   <span id="non-editable-data-sponsor"><%= @project.metadata[:data_sponsor] || current_user.uid %></span></p>
 
-  <p>Data Manager: <input type="text" list="all-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></p>
+  <p>Data Manager: 
+  
+    <% if !@project.persisted? || @project.metadata_json["data_sponsor"] == current_user.uid %> 
+      <input type="text" list="manager-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
+    <% else %>
+      <input type="hidden" id="data_manager" name="data_manager" value="<%= @project.metadata[:data_manager] %>">
+      <span id="non-editable-data-manager"><%= @project.metadata[:data_manager] %></span>
+    <% end %> 
+  </p>
+
   <p>Data User(s): </p>
 
     <div class="data-users">

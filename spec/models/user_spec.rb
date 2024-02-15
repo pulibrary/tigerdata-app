@@ -156,7 +156,7 @@ RSpec.describe User, type: :model do
 
   describe "#eligible_manager?" do
     it "should be true for a manager" do
-      user = FactoryBot.create(:project_manager)
+      user = FactoryBot.create(:data_manager)
       expect(user).to be_eligible_manager
     end
 
