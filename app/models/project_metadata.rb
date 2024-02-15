@@ -6,6 +6,9 @@ class ProjectMetadata
     @current_user = current_user
   end
 
+  # Generates a Hash of updated Project metadata attributes
+  # @param params [Hash] the updated Project metadata attributes
+  # @return [Hash]
   def update_metadata(params:)
     @params = params
     form_metadata
