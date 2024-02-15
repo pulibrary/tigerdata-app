@@ -21,7 +21,7 @@ FactoryBot.define do
 
     ##
     # A user who is allowed to manage a project
-    factory :project_manager do
+    factory :data_manager do
       eligible_manager { true }
     end
 
