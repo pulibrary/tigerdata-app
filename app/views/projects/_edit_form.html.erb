@@ -12,7 +12,7 @@
 
   <p>Data Manager: 
   
-    <% if !@project.persisted? %>
+    <% if !@project.persisted? || @project.metadata_json["data_sponsor"] == current_user.uid %> 
       <input type="text" list="manager-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
     <% else %>
       <input type="hidden" id="data_manager" name="data_manager" value="<%= @project.metadata[:data_manager] %>">

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Project Edit Page Roles Validation", type: :system do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
-  let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
+  let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   before do
@@ -132,6 +132,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
       fill_in "data_manager", with: new_data_manager.uid
+      page.find("body").click
       click_on "Submit"
       expect(page.find(:css, "#data_manager").text).to eq new_data_manager.display_name
     end
