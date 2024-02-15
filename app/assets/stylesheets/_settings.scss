@@ -51,6 +51,12 @@
 
 #dashboard-pending{
   @include dashboard-component;
+  .project-list {
+    list-style-type: none;
+    a {
+      color: black;
+    }
+  }
   margin-top: 1em;
   min-width: 30em;
 }

@@ -71,8 +71,24 @@ class ProjectsController < ApplicationController
 
   def update
     project
-    project_metadata = ProjectMetadata.new(project: project, current_user:)
-    project.metadata = project_metadata.update_metadata(params:)
+    #Approve action
+    if params.key?("mediaflux_id")
+      project.mediaflux_id = params["mediaflux_id"]
+      project.metadata_json["status"] = Project::APPROVE_STATUS
+      params.delete("mediaflux_id")
+    end
+    
+    #Edit action
+    if params.key?("title")
+      project_metadata = ProjectMetadata.new(project: project, current_user:)
+      project_params = params.dup
+      metadata_params = project_params.merge({
+        status: project.metadata[:status]
+      })
+      project.metadata = project_metadata.update_metadata(params: metadata_params)
+    end
+    
+    # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
     if project.save
       redirect_to project
     else
@@ -103,6 +119,15 @@ class ProjectsController < ApplicationController
       message: "You have a background job running."
     }
     render json: json_response
+  end
+
+  def approve
+    if current_user.eligible_sysadmin?
+      project
+      @project_metadata = project.metadata
+      @title = @project_metadata["title"]
+    else redirect_to root_path
+    end
   end
 
   private

@@ -26,6 +26,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_in_mediaflux) { project_not_in_mediaflux }
 
   before do
     stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
@@ -89,16 +90,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
-      end
-    end
-    context "An Mediaflux Administrator" do
-      it "shows the project data and the Approve Project button" do
-        sign_in sysadmin_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
-        expect(page).to have_content "This project has not been saved to Mediaflux"
-        expect(page).to have_content pending_text
-        expect(page).to have_button "Approve Project"
       end
     end
   end
@@ -269,11 +260,30 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
   end
 
-  context "Requesting all files for a given project" do
-    before do
-      project_not_in_mediaflux
-    end
+  context "Approve page" do
+    let(:mediaflux_id) { 1234 }
+    let(:project) { project_not_in_mediaflux }
 
+    it "renders the form for providing the Mediaflux ID" do
+      sign_in sysadmin_user
+      expect(project.mediaflux_id).to be nil
+      expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
+
+      visit project_approve_path(project)
+      expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
+
+      fill_in "mediaflux_id", with: mediaflux_id
+      click_on "Approve"
+
+      project.reload
+      expect(project.mediaflux_id).to eq(mediaflux_id)
+      expect(project.metadata_json["status"]).to eq Project::APPROVE_STATUS
+
+      # redirects the user to the project show page
+    end
+  end
+
+  context "Requesting all files for a given project" do
     context "when authenticated" do
       let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
       let(:job) { instance_double(ListProjectContentsJob) }

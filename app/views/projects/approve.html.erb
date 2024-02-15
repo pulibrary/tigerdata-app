@@ -1,0 +1,6 @@
+<h1>Project Approval: <%=@title%> </h1>
+<h2 >Approve this project by appending a mediaflux id</h2>
+
+<%= form_with url: project_path(@project), method: :put do |form| %>
+  <%= render "approve_form" %>
+<% end %>
