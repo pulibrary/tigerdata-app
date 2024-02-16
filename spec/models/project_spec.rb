@@ -96,39 +96,11 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     let(:manager) { FactoryBot.create(:user, uid: "hc1234") }
     let(:project) do
       project = FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
-      project.save_in_mediaflux(session_id: "test-session-token")
+      project.mediaflux_id = "123"
       project
     end
 
     before do
-      # create namespace for the project
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-        .with(
-        body: /asset.namespace.create/,
-        headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Connection" => "keep-alive",
-          "Content-Type" => "text/xml; charset=utf-8",
-          "Keep-Alive" => "30",
-          "User-Agent" => "Ruby"
-        }
-      )
-        .to_return(status: 200, body: "", headers: {})
-
-      # create collection asset for the project
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-        .with(body: /asset.create/,
-              headers: {
-                "Accept" => "*/*",
-                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-                "Connection" => "keep-alive",
-                "Content-Type" => "text/xml; charset=utf-8",
-                "Keep-Alive" => "30",
-                "User-Agent" => "Ruby"
-              })
-        .to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><id>123</id></result></reply></response>", headers: {})
-
       # define query to fetch file list
       # (returns iterator 456)
       stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
