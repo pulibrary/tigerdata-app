@@ -123,8 +123,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
       it "preserves the readonly directory field" do
         click_on "Submit"
-        project_not_in_mediaflux.reload
-        expect(project_not_in_mediaflux.metadata[:directory]).to eq "project-123"
+        project_in_mediaflux.reload
+        expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
       end
       it "loads existing Data Sponsor" do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
@@ -204,7 +204,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
-        expect(page.find("input[value=Submit]")).to be_disabled
+        expect(page.find("button[value=Submit]")).to be_disabled
       end
     end
 
