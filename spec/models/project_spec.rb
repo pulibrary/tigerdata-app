@@ -146,7 +146,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
         .to_return(status: 200, body: "", headers: {})
     end
 
-    xit "fetches the file list" do
+    it "fetches the file list" do
       file_list = project.file_list(session_id: "test-session-token", size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "file1.txt"
