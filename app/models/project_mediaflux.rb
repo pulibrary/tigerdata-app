@@ -9,12 +9,17 @@ class ProjectMediaflux
     # Create a namespace for the project
     # The namespace is directly under our root namespace
     project_name = safe_name(project.directory)
-    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}-ns"
-    Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id).resolve
-    # Create a collection asset under the new namespace and set its metadata
+    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
+    namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
+    if namespace.error?
+      raise "Can not create the namespace #{namespace.response_error}"
+    end
+    # Create a collection asset under the root namespace and set its metadata
     tigerdata_values = project_values(project: project)
+    project_parent = Rails.configuration.mediaflux["api_root_collection"]
+    prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
-                                                             xml_namespace: xml_namespace)
+                                                             xml_namespace: xml_namespace, pid: project_parent)
     id = create_request.id
     if id.blank? && create_request.response_xml.text.include?("failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'")
       raise "Project name already taken"
@@ -58,11 +63,12 @@ class ProjectMediaflux
 
   def self.xml_payload(project:, xml_namespace: nil)
     project_name = safe_name(project.directory)
-    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}-ns"
+    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
+    project_parent = Rails.configuration.mediaflux["api_root_collection"]
 
     tigerdata_values = project_values(project: project)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
-                                                             xml_namespace: xml_namespace)
+                                                             xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
   end
 
@@ -83,5 +89,20 @@ class ProjectMediaflux
                                                                       session_token: session_id)
       namespace_request.response_body
     end
+  end
+
+  class << self
+
+    private
+      def prepare_parent_collection(project_parent:, session_id:)
+        get_parent = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: project_parent)
+        if get_parent.error?
+          if project_parent.include?("path=")
+            create_parent_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
+                                                                            name: Rails.configuration.mediaflux["api_root_collection_name"])
+            raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
+          end
+        end    
+      end
   end
 end
