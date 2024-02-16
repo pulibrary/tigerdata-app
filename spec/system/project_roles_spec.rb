@@ -130,6 +130,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     let!(:new_data_manager) { FactoryBot.create(:data_manager) }
     it "allows a Data Sponsor to assign a Data Manager" do
       sign_in sponsor_user
+      sponsor_user["eligible_sponsor"] = true
+      sponsor_user.save!
+      project.metadata_json["status"] = Project::APPROVE_STATUS
+      project.save!
       visit "/projects/#{project.id}/edit"
       fill_in "data_manager", with: new_data_manager.uid
       page.find("body").click
@@ -138,6 +142,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     end
     it "does not allow anyone else to assign a Data Manager" do
       sign_in data_manager
+      data_manager["eligible_sponsor"] = true
+      data_manager.save
+      project.metadata_json["status"] = Project::APPROVE_STATUS
+      project.save!
       visit "/projects/#{project.id}/edit"
       expect(page.find(:css, "#non-editable-data-sponsor").text).to eq sponsor_user.uid
       expect(page.find(:css, "#non-editable-data-manager").text).to eq data_manager.uid
