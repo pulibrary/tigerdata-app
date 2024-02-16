@@ -13,7 +13,7 @@ RSpec.describe Mediaflux::Http::NamespaceCreateRequest, type: :model do
     before do
       stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
         .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.namespace.create\" session=\"secretsecret/2/31\">\n    "\
-                               "<args>\n      <namespace>abc</namespace>\n    </args>\n  </service>\n</request>\n")
+                               "<args>\n      <namespace all=\"true\">abc</namespace>\n    </args>\n  </service>\n</request>\n")
         .to_return(status: 200, body: namespace_response, headers: {})
     end
 
