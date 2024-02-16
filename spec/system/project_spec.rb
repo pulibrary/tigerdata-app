@@ -95,17 +95,40 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   end
 
   context "Edit page" do
-    before do
-      sign_in sponsor_user
-      visit "/projects/#{project_not_in_mediaflux.id}/edit"
+    context "a project is still pending" do
+      it "redirects the user to the project details page and flashes a message" do
+        sign_in sponsor_user
+        visit "/projects/#{project_not_in_mediaflux.id}/edit"
+
+        expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
+        expect(page).to have_content("Pending projects can not be edited.")
+      end
     end
-    it "preserves the readonly directory field" do
-      click_on "Submit"
-      project_not_in_mediaflux.reload
-      expect(project_not_in_mediaflux.metadata[:directory]).to eq "project-123"
-    end
-    it "loads existing Data Sponsor" do
-      expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+    context "a project is active" do
+      it "redirects the user to the project details page if the user is not a sponsor or manager" do
+        sign_in read_only
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/edit"
+
+        expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
+        expect(page).to have_content("Only data sponsors and data managers can revise this project.")
+      end
+
+      before do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/edit"
+      end
+      it "preserves the readonly directory field" do
+        click_on "Submit"
+        project_not_in_mediaflux.reload
+        expect(project_not_in_mediaflux.metadata[:directory]).to eq "project-123"
+      end
+      it "loads existing Data Sponsor" do
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+      end
     end
   end
 
