@@ -93,14 +93,56 @@ class Project < ApplicationRecord
     xml_metadata[:total_file_count]
   end
 
-  def file_list(session_id:, idx: 1, size: 10)
-    return {files: []} if mediaflux_id == nil
-    request = Mediaflux::Http::QueryRequest.new(
-      session_token: session_id,
-      collection: mediaflux_id,
-      idx:, size:,
-      action: "get-meta",
-      deep_search: true)
-    request.result
+  # Fetches the first n files
+  def file_list(session_id:, size: 10)
+    return { files: [] } if mediaflux_id.nil?
+
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    iterator_id = query_req.result
+
+    iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
+    results = iterator_req.result
+
+    # Destroy _after_ fetching the first set of results from iterator_req.
+    # This call is required since it possible that we have read less assets than
+    # what the collection has but we are done with the iterator.
+    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+
+    results
   end
+
+  # Fetches the entire file list to a file
+  def file_list_to_file(session_id:, filename:)
+    return { files: [] } if mediaflux_id.nil?
+
+    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    iterator_id = query_req.result
+
+    File.open(filename, "w") do |file|
+      # file header
+      file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
+      loop do
+        iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
+        iterator_resp = iterator_req.result
+        lines = files_from_iterator(iterator_resp)
+        file.write(lines.join("\r\n") + "\r\n")
+        break if iterator_resp[:complete]
+      end
+    end
+
+    # Destroy _after_ fetching the results from iterator_req
+    # This call is technically not necessary since Mediaflux automatically deletes the iterator
+    # once we have ran through it and by now we have. But it does not hurt either.
+    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+  end
+
+  private
+
+    def files_from_iterator(iterator_resp)
+      lines = []
+      iterator_resp[:files].each do |asset|
+        lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
+      end
+      lines
+    end
 end
