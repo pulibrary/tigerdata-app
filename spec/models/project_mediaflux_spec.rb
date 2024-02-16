@@ -2,9 +2,10 @@
 require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
-  let(:namespace_request) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true) }
+  let(:namespace_request) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true, "error?": false) }
   let(:collection_request) { instance_double(Mediaflux::Http::CreateAssetRequest, id: 123) }
   let(:metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: collection_metadata) }
+  let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, "error?": false) }
   let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project }
 
@@ -12,15 +13,23 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
 
   describe "#create!" do
     before do
-      allow(Mediaflux::Http::NamespaceCreateRequest).to receive(:new).and_return(namespace_request)
-      allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).and_return(create_asset_request)
+      allow(Mediaflux::Http::NamespaceCreateRequest).to receive(:new).with(session_token: "test-session-token",
+                                                                           namespace: "/td-test-001/tigerdataNS/big-dataNS",
+                                                                           description: "Namespace for project #{project.title}",
+                                                                           store: "db").and_return(namespace_request)
+      allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "big-data",
+                                                                                      namespace: "/td-test-001/tigerdataNS/big-dataNS",
+                                                                                      pid: "path=/td-test-001/tigerdata")).and_return(create_asset_request)
+      allow(Mediaflux::Http::GetMetadataRequest).to receive(:new).with(hash_including(session_token: "test-session-token",
+                                                                                      id: "path=/td-test-001/tigerdata")).and_return(parent_metadata_request)
       allow(create_asset_request).to receive(:resolve).and_return("<xml>...")
       allow(create_asset_request).to receive(:id).and_return("123")
     end
 
     it "creates a project namespace and collection and returns the mediaflux id" do
       mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
-      expect(namespace_request).to have_received("resolve")
+      expect(namespace_request).to have_received("error?")
+      expect(parent_metadata_request).to have_received("error?")
       expect(create_asset_request).to have_received("id")
       expect(mediaflux_id).to be "123"
     end
@@ -38,6 +47,24 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         expect do
           described_class.create!(project: project, session_id: "test-session-token")
         end.to raise_error(RuntimeError)
+      end
+    end
+
+    context "when the parent colllection does not exist" do
+      let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: {}, "error?": true) }
+      let(:parent_collection_request) { instance_double(Mediaflux::Http::CreateAssetRequest, id: 567, "error?": false) }
+
+      before do
+        allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "tigerdata",
+                                                                                        namespace: "/td-test-001")).and_return(parent_collection_request)
+      end
+
+      it "creates a project namespace and collection and parent collection and returns the mediaflux id" do
+        mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
+        expect(namespace_request).to have_received("error?")
+        expect(parent_collection_request).to have_received("error?")
+        expect(create_asset_request).to have_received("id")
+        expect(mediaflux_id).to be "123"
       end
     end
   end

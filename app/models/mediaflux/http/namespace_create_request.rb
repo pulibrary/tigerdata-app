@@ -27,7 +27,12 @@ module Mediaflux
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
-              xml.namespace namespace if namespace.present?
+              if namespace.present?
+                xml.namespace do
+                  xml.parent.set_attribute("all", true)
+                  xml.text(namespace)
+                end
+              end
               xml.description description if description.present?
               xml.store store if store.present?
             end
