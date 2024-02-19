@@ -67,7 +67,6 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
-  # :nocov:
   def save_in_mediaflux(session_id:)
     if mediaflux_id.nil?
       self.mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
@@ -79,7 +78,6 @@ class Project < ApplicationRecord
     end
     mediaflux_id
   end
-  # :nocov:
 
   def created_by_user
     User.find_by(uid: metadata[:created_by])
@@ -96,7 +94,6 @@ class Project < ApplicationRecord
   end
 
   # Fetches the first n files
-  # :nocov:
   def file_list(session_id:, size: 10)
     return { files: [] } if mediaflux_id.nil?
 
@@ -113,10 +110,8 @@ class Project < ApplicationRecord
 
     results
   end
-  # :nocov:
 
   # Fetches the entire file list to a file
-  # :nocov:
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
@@ -140,7 +135,6 @@ class Project < ApplicationRecord
     # once we have ran through it and by now we have. But it does not hurt either.
     Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
-  # :nocov:
 
   private
 

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# :nocov:
 module Mediaflux
   module Http
     class IteratorDestroyRequest < Request
@@ -38,4 +37,3 @@ module Mediaflux
     end
   end
 end
-# :nocov:
