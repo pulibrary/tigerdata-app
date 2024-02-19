@@ -93,12 +93,12 @@ class ProjectsController < ApplicationController
       metadata_params = project_params.merge({
         status: project.metadata[:status]
       })
-      project.metadata = project_metadata.update_metadata(params: metadata_params)
+      project.metadata = project_metadata.update_metadata(params: metadata_params) 
     end
     
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
     if project.save
-      redirect_to project
+      redirect_to project_revision_confirmation_path(@project)
     else
       render :edit
     end
@@ -109,6 +109,7 @@ class ProjectsController < ApplicationController
   end
 
   def confirmation; end
+  def revision_confirmation; end
 
   def contents
     project
