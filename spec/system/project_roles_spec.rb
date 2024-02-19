@@ -142,18 +142,52 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       expect(page.find(:css, "#non-editable-data-sponsor").text).to eq sponsor_user.uid
       expect(page.find(:css, "#non-editable-data-manager").text).to eq data_manager.uid
     end
-    xit "allows for a user to be both a Data Sponsor and a Data Manager" do
-    end
-    xit "does not allow a Data Manager to edit a Data Manager role" do
+  end
+
+  context "A user can be both a Data Sponsor and a Data Manager" do
+    let(:user) { FactoryBot.create(:project_sponsor_and_data_manager) }
+    let(:project) { FactoryBot.create(:project, data_sponsor: user.uid, data_manager: user.uid) }
+    it "allows for a user to be both a Data Sponsor and a Data Manager" do
+      expect(project.metadata_json["data_sponsor"]).to eq user.uid
+      expect(project.metadata_json["data_manager"]).to eq user.uid
     end
   end
 
   context "Data Sponsors and Data Managers can assign Data Users" do
-    xit "allows a Data Sponsor to assign a Data User" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:sponsor_user) { User.find_by(uid: project.metadata_json["data_sponsor"]) }
+    let(:data_manager) { User.find_by(uid: project.metadata_json["data_manager"]) }
+    let!(:ro_data_user) { FactoryBot.create(:user) }
+    let!(:rw_data_user) { FactoryBot.create(:user) }
+    it "allows a Data Sponsor to assign a Data User" do
+      sign_in sponsor_user
+      visit "/projects/#{project.id}/edit"
+      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
+      page.find("body").click
+      find(:css, "#btn-add-ro-user").click
+      page.find("body").click
+      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
+      page.find("body").click
+      find(:css, "#btn-add-rw-user").click
+      page.find("body").click
+      click_on "Submit"
+      expect(page).to have_content "#{ro_data_user.display_name} (read only)"
+      expect(page).to have_content rw_data_user.display_name
     end
-    xit "allows a Data Manager to assign a Data User" do
-    end
-    xit "does not allow a Data User to assign a Data User" do
+    it "allows a Data Manager to assign a Data User" do
+      sign_in data_manager
+      visit "/projects/#{project.id}/edit"
+      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
+      page.find("body").click
+      find(:css, "#btn-add-ro-user").click
+      page.find("body").click
+      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
+      page.find("body").click
+      find(:css, "#btn-add-rw-user").click
+      page.find("body").click
+      click_on "Submit"
+      expect(page).to have_content ro_data_user.display_name
+      expect(page).to have_content rw_data_user.display_name
     end
   end
 end
