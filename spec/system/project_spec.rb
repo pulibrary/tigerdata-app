@@ -133,7 +133,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       end
 
-      it "redirects the user to the revision request confirmation page upon submission" do 
+      it "redirects the user to the revision request confirmation page upon submission" do
         click_on "Submit"
         project_in_mediaflux.reload
         expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
