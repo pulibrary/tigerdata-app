@@ -53,6 +53,7 @@ class ProjectsController < ApplicationController
     @submission_events = project.provenance_events.where(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE)
     @project_status = project.metadata[:status]
 
+    @approve_status = Project::APPROVE_STATUS
 
     respond_to do |format|
       format.html
@@ -67,6 +68,13 @@ class ProjectsController < ApplicationController
 
   def edit
     project
+    if project.metadata[:status] != Project::APPROVE_STATUS
+      flash[:notice] = "Pending projects can not be edited."
+      redirect_to project
+    elsif project.metadata[:status] == Project::APPROVE_STATUS && !eligible_editor? #check if the current user is a sponsor of manager
+      flash[:notice] = "Only data sponsors and data managers can revise this project."
+      redirect_to project
+    end
   end
 
   def update
@@ -138,5 +146,9 @@ class ProjectsController < ApplicationController
 
     def project
       @project ||= Project.find(params[:id])
+    end
+
+    def eligible_editor?
+      return true if current_user.eligible_sponsor? or current_user.eligible_manager?
     end
 end

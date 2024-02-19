@@ -32,7 +32,7 @@ RSpec.describe ProjectsController do
         "  <service name=\"asset.create\">\n" \
         "    <args>\n" \
         "      <name>#{project.directory}</name>\n" \
-        "      <namespace>/td-test-001/#{project.directory}-ns</namespace>\n" \
+        "      <namespace>/td-test-001/tigerdataNS/#{project.directory}NS</namespace>\n" \
         "      <meta>\n" \
         "        <tigerdata:project>\n" \
         "          <code>#{project.directory}</code>\n" \
@@ -53,6 +53,7 @@ RSpec.describe ProjectsController do
         "      </meta>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
         "      <type>application/arc-asset-collection</type>\n" \
+        "      <pid>path=/td-test-001/tigerdata</pid>\n" \
         "    </args>\n" \
         "  </service>\n" \
         "</request>\n"

@@ -25,18 +25,38 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     }
   end
 
+  let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata: metadata) }
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
   context "Show page" do
-    it "shows the project correct navigation buttons" do
-      sign_in sponsor_user
-      visit "/projects/#{project_not_in_mediaflux.id}"
-      expect(page).to have_content(project_not_in_mediaflux.title)
-      expect(page).to have_link("Edit")
-      click_on("Return to Dashboard")
-      expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-      click_on(project_not_in_mediaflux.title)
-      expect(page).to have_link("Withdraw Project Request")
+    context "Navigation Buttons" do 
+      it "Shows the correct nav buttons for an approved project" do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}"
+        
+        expect(page).to have_content(project_in_mediaflux.title)
+        expect(page).not_to have_content(pending_text)
+        expect(page).to have_link("Edit")
+        click_on("Return to Dashboard")
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        click_on(project_in_mediaflux.title)
+        expect(page).to have_link("Withdraw Project Request")
+      end
+      
+      it "Shows the correct nav buttons for a pending project" do
+        sign_in sponsor_user
+        visit "/projects/#{project_not_in_mediaflux.id}"
+        expect(page).to have_content(project_not_in_mediaflux.title)
+        expect(page).to have_content(pending_text)
+        expect(page).not_to have_link("Edit")
+        click_on("Return to Dashboard")
+        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        click_on(project_not_in_mediaflux.title)
+        expect(page).to have_link("Withdraw Project Request") 
+      end
     end
+    
     context "Provenance Events" do
       let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
