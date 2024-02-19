@@ -11,7 +11,11 @@ Project Details:
 <% end %>
 
 <div class="details">
-  <h2>Roles</h2>
+  <h2>Roles
+    <% if @project.metadata[:status] == @approve_status && @eligible_editor %>
+      <%= link_to "Edit", edit_project_path(@project), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </h2>
   <dl>
     <% if !@data_sponsor.nil? %>
       <dt>Data Sponsor</dt>
@@ -40,7 +44,11 @@ Project Details:
 </div>
 
 <div class="details">
-  <h2>Project Description</h2>
+  <h2>Project Description
+    <% if @project.metadata[:status] == @approve_status && @eligible_editor %>
+      <%= link_to "Edit", edit_project_path(@project), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </h2>
   <dl>
     <dt>Affiliated Departments</dt>
     <% if @departments.empty? %>
