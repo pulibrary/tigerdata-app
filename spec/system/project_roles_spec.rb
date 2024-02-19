@@ -186,7 +186,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       find(:css, "#btn-add-rw-user").click
       page.find("body").click
       click_on "Submit"
-      expect(page).to have_content ro_data_user.display_name
+      expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
     end
   end
