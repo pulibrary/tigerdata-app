@@ -146,14 +146,15 @@ function initListContentsModal() {
 }
 
 function showMoreLessContent() {
-  $("#show-more").on("click", function(el) {
-    if (el.target.textContent == "Show More") {
-      $("#file-list>tbody>tr.bottom-section").removeClass("invisible-row");
-      el.target.textContent = "Show Less";
+  $('#show-more').on('click', (el) => {
+    const element = el;
+    if (el.target.textContent === 'Show More') {
+      $('#file-list>tbody>tr.bottom-section').removeClass('invisible-row');
+      element.target.textContent = 'Show Less';
     } else {
       // Show less
-      $("#file-list>tbody>tr.bottom-section").addClass("invisible-row");
-      el.target.textContent = "Show More";
+      $('#file-list>tbody>tr.bottom-section').addClass('invisible-row');
+      element.target.textContent = 'Show More';
       // Source: https://stackoverflow.com/a/10681265/446681
       $(window).scrollTop(0);
     }
