@@ -138,6 +138,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       fill_in "data_manager", with: new_data_manager.uid
       page.find("body").click
       click_on "Submit"
+      visit "/projects/#{project.id}"
       expect(page.find(:css, "#data_manager").text).to eq new_data_manager.display_name
     end
     it "does not allow anyone else to assign a Data Manager" do
