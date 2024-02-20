@@ -268,6 +268,50 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("New Project")
       end
     end
+
+    context "when the description is empty", :no_ci do
+      before do
+        @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+        @session_id = sponsor_user.mediaflux_session
+      end
+
+      after do
+        Rails.configuration.mediaflux["api_host"] = @original_api_host
+      end
+
+      it "allows the projects to be created" do
+
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-rw-user"
+        select "RDSS", from: 'departments'
+        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page.find_all("input:invalid").count).to eq(0)
+        click_on "Submit"
+        # For some reason the above click on submit sometimes does not submit the form
+        #  even though the inputs are all valid, so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Submit"
+        end
+        expect(page).to have_content "New Project Request Received"
+        project = Project.last
+        project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: @session_id)
+        expect(project.mediaflux_id).not_to be_nil
+      end
+    end
   end
 
   context "Index page" do
