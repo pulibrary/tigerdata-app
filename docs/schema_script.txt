@@ -1,4 +1,4 @@
-# This file was automatically generated on 2024-01-18T08:45:16-05:00
+# This file was automatically generated on 2024-02-16T16:36:12-05:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm
@@ -12,7 +12,7 @@ asset.doc.namespace.update :create true :namespace tigerdata :description "Tiger
 asset.doc.type.update :create true :description "Project metadata" :type tigerdata:project :definition < \
  :element -name code -type string -index true -min-occurs 1 -max-occurs 1 -label "The unique identifier for the project" \
  :element -name title -type string -min-occurs 1 -max-occurs 1 -label "A plain-language title for the project" \
- :element -name description -type string -min-occurs 1 -max-occurs 1 -label "A brief description of the project" \
+ :element -name description -type string -min-occurs 0 -max-occurs 1 -label "A brief description of the project" \
  :element -name status -type string -index true -min-occurs 1 -max-occurs 1 -label "The current status of the project" \
  :element -name data_sponsor -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who takes primary responsibility for the project" \
  :element -name data_manager -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who manages the day-to-day activities for the project" \
