@@ -148,16 +148,12 @@ function initListContentsModal() {
 function showMoreLessContent() {
   $("#show-more").on("click", function(el) {
     if (el.target.textContent == "Show More") {
-      $("#file-list>tbody>tr").removeClass("invisible-row");
+      $("#file-list>tbody>tr.bottom-section").removeClass("invisible-row");
       el.target.textContent = "Show Less";
     } else {
       // Show less
-      // The formula -n+12 show the first 11 rows (header + 10 file names)
-      // See https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
-      $("#file-list>tbody>tr").addClass("invisible-row");
-      $("#file-list>tbody>tr:nth-child(-n+12)").removeClass("invisible-row");
+      $("#file-list>tbody>tr.bottom-section").addClass("invisible-row");
       el.target.textContent = "Show More";
-
       // Source: https://stackoverflow.com/a/10681265/446681
       $(window).scrollTop(0);
     }

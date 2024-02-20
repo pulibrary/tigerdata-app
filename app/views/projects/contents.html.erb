@@ -41,7 +41,7 @@
         <% current_folder = nil %>
         <% @file_list[:files].each_with_index do |file, index| %>
 
-          <% @css_visible = index < 10 ? "visible-row" : "invisible-row" %>
+          <% @row_css = index < 10 ? "visible-row top-section" : "invisible-row bottom-section" %>
 
           <% if current_folder != file.path_only %>
             <!--
@@ -50,7 +50,7 @@
               collection record first or a _file_ under the collection first.
             -->
             <% current_folder = file.path_only %>
-            <tr class="<%= @css_visible %>">
+            <tr class="<%= @row_css %>">
               <td><b><%= current_folder %>/</b></td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
@@ -60,7 +60,7 @@
 
           <% unless file.collection %>
             <!-- Print the file information row -->
-            <tr class="<%= @css_visible %>">
+            <tr class="<%= @row_css %>">
               <td>&nbsp;</td>
               <td><%= file.name %> </td>
               <td class="numeric_column"><%= number_to_human_size(file.size) %></td>
