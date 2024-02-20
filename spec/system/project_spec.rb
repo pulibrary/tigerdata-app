@@ -104,6 +104,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("Pending projects can not be edited.")
       end
     end
+
     context "a project is active" do
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
@@ -130,6 +131,22 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       it "loads existing Data Sponsor" do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+      end
+
+      it "redirects the user to the revision request confirmation page upon submission" do
+        click_on "Submit"
+        project_in_mediaflux.reload
+        expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
+
+        # This is the confirmation page. It needs a button to return to the dashboard
+        # and it needs to be_axe_clean.
+        expect(page).to have_content "Project Revision Request Received"
+        expect(page).to have_button "Return to Dashboard"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+        click_on "Return to Dashboard"
+        expect(page).to have_content "Sponsored by Me"
       end
     end
   end
