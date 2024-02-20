@@ -54,6 +54,8 @@ class ProjectsController < ApplicationController
     @project_status = project.metadata[:status]
 
     @approve_status = Project::APPROVE_STATUS
+    @eligible_editor = eligible_editor?
+    @project_eligible_to_edit = true if @project_status == @approve_status && eligible_editor?
 
     respond_to do |format|
       format.html
