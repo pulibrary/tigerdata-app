@@ -26,6 +26,13 @@ FactoryBot.define do
     end
 
     ##
+    # A user who is both a Data Sponsor and a Data Manager
+    factory :project_sponsor_and_data_manager do
+      eligible_sponsor { true }
+      eligible_manager { true }
+    end
+
+    ##
     # A user who is allowed to approve a project
     factory :sysadmin do
       sysadmin { true }
