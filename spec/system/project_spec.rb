@@ -357,6 +357,47 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(project.mediaflux_id).not_to be_nil
       end
     end
+
+    context "when an error is encountered while trying to enqueue the ActiveJob for the TigerdataMailer" do
+      let(:mailer) { double(ActionMailer::Parameterized::Mailer) }
+      let(:message_delivery) { instance_double(ActionMailer::Parameterized::MessageDelivery) }
+      let(:error_message) { "Connection refused - connect(2) for 127.0.0.1:6379" }
+
+      before do
+        allow(message_delivery).to receive(:deliver_later).and_raise(RedisClient::CannotConnectError, error_message)
+        allow(mailer).to receive(:project_creation).and_return(message_delivery)
+        allow(TigerdataMailer).to receive(:with).and_return(mailer)
+      end
+
+      it "logs the error message, flashes a notification to the end-user, and renders the New Project View" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-rw-user"
+        select "RDSS", from: 'departments'
+        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page.find_all("input:invalid").count).to eq(0)
+        click_on "Submit"
+        # For some reason the above click on submit sometimes does not submit the form
+        #  even though the inputs are all valid, so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Submit"
+        end
+        expect(page).not_to have_content "New Project Request Received"
+        expect(page).to have_content error_message
+      end
+    end
   end
 
   context "Index page" do

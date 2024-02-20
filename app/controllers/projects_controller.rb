@@ -21,12 +21,18 @@ class ProjectsController < ApplicationController
     project_metadata.create(params: metadata_params)
     if new_project.save
       mailer = TigerdataMailer.with(project_id: @project.id)
-      mailer.project_creation.deliver_later
+      message_delivery = mailer.project_creation
+      message_delivery.deliver_later
 
       redirect_to project_confirmation_path(@project)
     else
       render :new
     end
+  rescue RedisClient::CannotConnectError => redis_connect_error
+    error_message = "Failed to connect to Redis: #{redis_connect_error}"
+    Rails.logger.error(error_message)
+    flash[:notice] = error_message
+    render :new
   end
 
   def show
