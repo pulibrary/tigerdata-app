@@ -85,7 +85,7 @@ class ProjectsController < ApplicationController
       project.metadata_json["status"] = Project::APPROVE_STATUS
       params.delete("mediaflux_id")
     end
-    
+
     #Edit action
     if params.key?("title")
       project_metadata = ProjectMetadata.new(project: project, current_user:)
@@ -95,7 +95,7 @@ class ProjectsController < ApplicationController
       })
       project.metadata = project_metadata.update_metadata(params: metadata_params)
     end
-    
+
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
     if project.save
       redirect_to project
@@ -113,7 +113,7 @@ class ProjectsController < ApplicationController
   def contents
     project
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
-    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 20)
+    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 100)
     @file_list[:files].sort_by!(&:path)
   end
 
