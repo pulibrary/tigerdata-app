@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   class Asset
-    attr_accessor :id, :name, :path, :collection, :size
+    attr_accessor :id, :path, :collection, :size
 
     def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil)
       @id = id
@@ -10,6 +10,17 @@ module Mediaflux
       @collection = collection
       @size = size
       @last_modified_mf = last_modified_mf
+    end
+
+    def name
+      # Mediaflux supports the concept of files without a name and in those cases the
+      # "name" property might be empty, but the actual name assigned internally by
+      # Mediaflux (e.g. __asset_id__4665) is still reflected in the path.
+      if @name == ""
+        Pathname.new(path).basename.to_s
+      else
+        @name
+      end
     end
 
     # Returns the path to the asset but without the root namespace as part of it.

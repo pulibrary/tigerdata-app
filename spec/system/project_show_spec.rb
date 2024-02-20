@@ -28,13 +28,13 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
   let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata: metadata) }
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
   context "Show page" do
-    context "Navigation Buttons" do 
+    context "Navigation Buttons" do
       it "Shows the correct nav buttons for an approved project" do
         sign_in sponsor_user
         project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}"
-        
+
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).not_to have_content(pending_text)
         expect(page).to have_link("Edit")
@@ -43,7 +43,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         click_on(project_in_mediaflux.title)
         expect(page).to have_link("Withdraw Project Request")
       end
-      
+
       it "Shows the correct nav buttons for a pending project" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
@@ -53,10 +53,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         click_on(project_not_in_mediaflux.title)
-        expect(page).to have_link("Withdraw Project Request") 
+        expect(page).to have_link("Withdraw Project Request")
       end
     end
-    
+
     context "Provenance Events" do
       let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
@@ -76,7 +76,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
 
     context "Project Contents" do
       let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
-      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session)[:files] }
+      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
+      let(:files_only_list) { file_list.select { |asset| asset.collection == false } }
+      let(:dirs_only_list) { file_list.select { |asset| asset.collection == true } }
 
       before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
@@ -88,7 +90,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         project.save!
         accum_req = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, collection: project.mediaflux_id, name:"file count", type:"collection.asset.count")
         accum_req.resolve
-        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 1).generate
+        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
       end
 
       after do
@@ -105,11 +107,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
         expect(page).to have_content("File Count")
-        expect(find(:css, "#file_count").text).to eq "4"
-
-        # Files are displayed
-        expect(page).to have_content(file_list[0].name)
-        expect(page).to have_content(file_list[1].name)
+        expect(find(:css, "#file_count").text).to eq "16"
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
@@ -117,6 +115,19 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         click_on(project.title)
         expect(page).to have_content("Project Details: #{project.title}")
+      end
+
+      # Notice that this test is marked as `no_ci`
+      it "displays the file list", :no_ci do
+        # sign in and be able to view the file count for the collection
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_selector(:link_or_button, "Review Contents")
+        click_on("Review Contents")
+
+        # Files and directories are displayed
+        expect(page).to have_content(files_only_list[0].name)
+        expect(page).to have_content(files_only_list[1].name)
       end
     end
 
