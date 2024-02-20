@@ -20,7 +20,9 @@ class ProjectsController < ApplicationController
     })
     project_metadata.create(params: metadata_params)
     if new_project.save
-      TigerdataMailer.with(project: @project).project_creation.deliver_later
+      mailer = TigerdataMailer.with(project_id: @project.id)
+      mailer.project_creation.deliver_later
+
       redirect_to project_confirmation_path(@project)
     else
       render :new
