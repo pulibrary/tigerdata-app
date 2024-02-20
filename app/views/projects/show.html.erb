@@ -12,7 +12,7 @@ Project Details:
 
 <div class="details">
   <h2>Roles
-    <% if @project.metadata[:status] == @approve_status && @eligible_editor %>
+    <% if @project_eligible_to_edit %>
       <%= link_to "Edit", edit_project_path(@project), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
     <% end %>
   </h2>
@@ -45,7 +45,7 @@ Project Details:
 
 <div class="details">
   <h2>Project Description
-    <% if @project.metadata[:status] == @approve_status && @eligible_editor %>
+    <% if @project_eligible_to_edit %>
       <%= link_to "Edit", edit_project_path(@project), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
     <% end %>
   </h2>
@@ -93,11 +93,6 @@ Project Details:
 
 <div class="details">
   <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
-  
-  <% if @project.metadata[:status] == @approve_status %>
-    <%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-primary btn-sm" %>
-  <% end %>
-
   <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
   <%= link_to "Withdraw Project Request", "", class: "btn btn-light btn-sm" %>
 </div>

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
-  let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
@@ -31,8 +31,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     context "Navigation Buttons" do 
       it "Shows the correct nav buttons for an approved project" do
         sign_in sponsor_user
-        sponsor_user["eligible_sponsor"] = true
-        sponsor_user.save!
         project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}"
@@ -40,7 +38,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).not_to have_content(pending_text)
         expect(page).to have_link("Edit") #button next to role and description heading
-        expect(page).to have_link("Edit Project")
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         click_on(project_in_mediaflux.title)
