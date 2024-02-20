@@ -179,7 +179,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       find(:css, "#btn-add-rw-user").click
       page.find("body").click
       click_on "Submit"
-      visit "/projects/#{projects.id}"
+      visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
     end
@@ -195,7 +195,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       find(:css, "#btn-add-rw-user").click
       page.find("body").click
       click_on "Submit"
-      visit "/projects/#{projects.id}"
+      visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
     end
