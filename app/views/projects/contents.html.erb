@@ -11,6 +11,14 @@
   .numeric_column {
     text-align: right;
   }
+
+  .visible-row {
+    visibility: unset;
+  }
+
+  .invisible-row {
+    visibility: collapse;
+  }
 </style>
 <content id= "content">
   <h1>Project Contents</h1>
@@ -31,7 +39,9 @@
           <th class="numeric_column">Last modified</th>
         </tr>
         <% current_folder = nil %>
-        <% @file_list[:files].each do |file| %>
+        <% @file_list[:files].each_with_index do |file, index| %>
+
+          <% @row_css = index < 10 ? "visible-row top-section" : "invisible-row bottom-section" %>
 
           <% if current_folder != file.path_only %>
             <!--
@@ -40,7 +50,7 @@
               collection record first or a _file_ under the collection first.
             -->
             <% current_folder = file.path_only %>
-            <tr>
+            <tr class="<%= @row_css %>">
               <td><b><%= current_folder %>/</b></td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
@@ -50,7 +60,7 @@
 
           <% unless file.collection %>
             <!-- Print the file information row -->
-            <tr>
+            <tr class="<%= @row_css %>">
               <td>&nbsp;</td>
               <td><%= file.name %> </td>
               <td class="numeric_column"><%= number_to_human_size(file.size) %></td>
@@ -61,7 +71,7 @@
       </table>
     </div>
     <form name="project-contents-preview">
-      <button type="button" class="btn btn-primary">Show More</button>
+      <button id="show-more" type="button" class="btn btn-primary">Show More</button>
       <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#list-contents-modal">List All Files</button>
       <button type="button" class="btn btn-dark">Custom Query</button>
     </form>
