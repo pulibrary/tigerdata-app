@@ -77,8 +77,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     context "Project Contents" do
       let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
-      let(:files_only_list) { file_list.select { |asset| asset.collection == false } }
-      let(:dirs_only_list) { file_list.select { |asset| asset.collection == true } }
+      let(:first_file) { file_list.select { |asset| asset.collection == false }.first }
+      let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
+      let(:last_file) { file_list.select { |asset| asset.collection == false }.last }
 
       before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
@@ -125,9 +126,14 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
 
-        # Files and directories are displayed
-        expect(page).to have_content(files_only_list[0].name)
-        expect(page).to have_content(files_only_list[1].name)
+        # Files are displayed
+        expect(page).to have_content(first_file.name)
+        expect(page).to have_content(second_file.name)
+        expect(page).not_to have_content(last_file.name)
+
+        # More files are displayed
+        click_on("Show More")
+        expect(page).to have_content(last_file.name)
       end
     end
 
