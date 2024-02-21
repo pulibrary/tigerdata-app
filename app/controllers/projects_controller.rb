@@ -97,7 +97,7 @@ class ProjectsController < ApplicationController
       metadata_params = project_params.merge({
         status: project.metadata[:status]
       })
-      project.metadata = project_metadata.update_metadata(params: metadata_params) 
+      project.metadata = project_metadata.update_metadata(params: metadata_params)
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
@@ -123,13 +123,13 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
-    job = ListProjectContentsJob.perform_later
+    job = ListProjectContentsJob.perform_later(project_id: project.id, user_id: current_user.id)
     user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
     current_user.user_jobs << user_job
     current_user.save!
 
     json_response = {
-      message: "You have a background job running."
+      message: "Generating file list for project \"#{project.title}\" in the background."
     }
     render json: json_response
   end
