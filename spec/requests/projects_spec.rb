@@ -190,14 +190,14 @@ RSpec.describe "/projects", type: :request do
       <namespace>/td-test-001/big-data-ns</namespace>
       <meta>
         <tigerdata:project>
-          <code>big-data</code>
-          <title>foo</title>
-          <description>test2</description>
-          <data_sponsor>test4</data_sponsor>
-          <data_manager>test3</data_manager>
-          <departments>RDSS</departments>
-          <created_on>07-Dec-2023 17:22:22</created_on>
-          <created_by>pul123</created_by>
+          <Code>big-data</code>
+          <Title>foo</Title>
+          <Description>test2</Description>
+          <DataSponsor>test4</DataSponsor>
+          <DataManager>test3</DataManager>
+          <Department>RDSS</Department>
+          <CreatedOn>07-Dec-2023 17:22:22</CreatedOn>
+          <CreatedBy>pul123</CreatedBy>
         </tigerdata:project>
       </meta>
       <collection cascade-contained-asset-index="true" contained-asset-index="true" unique-name-index="true">true</collection>
