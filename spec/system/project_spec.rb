@@ -364,6 +364,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       let(:error_message) { "Connection refused - connect(2) for 127.0.0.1:6379" }
 
       before do
+        allow(Honeybadger).to receive(:notify)
         allow(message_delivery).to receive(:deliver_later).and_raise(RedisClient::CannotConnectError, error_message)
         allow(mailer).to receive(:project_creation).and_return(message_delivery)
         allow(TigerdataMailer).to receive(:with).and_return(mailer)
@@ -396,6 +397,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end
         expect(page).not_to have_content "New Project Request Received"
         expect(page).to have_content error_message
+
+        new_project = Project.last
+        expect(new_project).not_to be nil
+        expect(Honeybadger).to have_received(:notify).with(kind_of(RedisClient::CannotConnectError), context: { project_id: new_project.id })
       end
     end
   end

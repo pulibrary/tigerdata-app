@@ -30,7 +30,10 @@ class ProjectsController < ApplicationController
     end
   rescue RedisClient::CannotConnectError => redis_connect_error
     error_message = "Failed to connect to Redis: #{redis_connect_error}"
+
     Rails.logger.error(error_message)
+    Honeybadger.notify(redis_connect_error, context: { project_id: @project.id })
+
     flash[:notice] = error_message
     render :new
   end
