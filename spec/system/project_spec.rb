@@ -362,6 +362,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       let(:mailer) { double(ActionMailer::Parameterized::Mailer) }
       let(:message_delivery) { instance_double(ActionMailer::Parameterized::MessageDelivery) }
       let(:error_message) { "Connection refused - connect(2) for 127.0.0.1:6379" }
+      let(:flash_message) { "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS." }
 
       before do
         allow(Honeybadger).to receive(:notify)
@@ -396,11 +397,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           click_on "Submit"
         end
         expect(page).not_to have_content "New Project Request Received"
-        expect(page).to have_content error_message
+        expect(page).to have_content flash_message
 
         new_project = Project.last
         expect(new_project).not_to be nil
-        expect(Honeybadger).to have_received(:notify).with(kind_of(RedisClient::CannotConnectError), context: { project_id: new_project.id })
+        expect(Honeybadger).to have_received(:notify).with(kind_of(RedisClient::CannotConnectError), context: { current_user_email: sponsor_user.email, project_id: new_project.id })
       end
     end
   end
