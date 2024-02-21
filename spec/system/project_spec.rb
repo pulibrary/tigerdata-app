@@ -173,6 +173,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       # Without removing the focus from the form field, the "change" event is not propagated for the DOM
       page.find("body").click
       click_on "btn-add-rw-user"
+      #select a department
+      select 'RDSS', :from => 'departments'
       fill_in "directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
@@ -202,6 +204,30 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       expect(page).to have_content "Project Purpose\nResearch"
       # project id has been set
       expect(page).to have_content "Project ID\n10.34770/tbd"
+    end
+
+    context "when a department has not been selected" do
+      it "does not allow the user to create a project" do 
+        sign_in sponsor_user
+      visit "/"
+      click_on "New Project"
+      expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+      fill_in "data_manager", with: data_manager.uid
+      fill_in "ro-user-uid-to-add", with: read_only.uid
+      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+      page.find("body").click
+      click_on "btn-add-ro-user"
+      fill_in "rw-user-uid-to-add", with: read_write.uid
+      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+      page.find("body").click
+      click_on "btn-add-rw-user"
+      fill_in "directory", with: "test_project"
+      fill_in "title", with: "My test project"
+      expect(page).to have_content("Project Directory: /td-test-001/")
+      expect do
+        click_on "Submit"
+      end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
+      end
     end
 
     context "with an invalid data manager" do
