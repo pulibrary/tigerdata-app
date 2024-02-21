@@ -20,7 +20,9 @@ class ProjectsController < ApplicationController
     })
     project_metadata.create(params: metadata_params)
     if new_project.save
-      TigerdataMailer.with(project: @project).project_creation.deliver_later
+      mailer = TigerdataMailer.with(project_id: @project.id)
+      mailer.project_creation.deliver_later
+
       redirect_to project_confirmation_path(@project)
     else
       render :new
@@ -54,6 +56,8 @@ class ProjectsController < ApplicationController
     @project_status = project.metadata[:status]
 
     @approve_status = Project::APPROVE_STATUS
+    @eligible_editor = eligible_editor?
+    @project_eligible_to_edit = true if @project_status == @approve_status && eligible_editor?
 
     respond_to do |format|
       format.html
@@ -93,12 +97,12 @@ class ProjectsController < ApplicationController
       metadata_params = project_params.merge({
         status: project.metadata[:status]
       })
-      project.metadata = project_metadata.update_metadata(params: metadata_params)
+      project.metadata = project_metadata.update_metadata(params: metadata_params) 
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
     if project.save
-      redirect_to project
+      redirect_to project_revision_confirmation_path(@project)
     else
       render :edit
     end
@@ -109,6 +113,7 @@ class ProjectsController < ApplicationController
   end
 
   def confirmation; end
+  def revision_confirmation; end
 
   def contents
     project

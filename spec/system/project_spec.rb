@@ -104,6 +104,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("Pending projects can not be edited.")
       end
     end
+
     context "a project is active" do
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
@@ -121,13 +122,31 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
       end
+
       it "preserves the readonly directory field" do
         click_on "Submit"
         project_in_mediaflux.reload
         expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
       end
+
       it "loads existing Data Sponsor" do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+      end
+
+      it "redirects the user to the revision request confirmation page upon submission" do
+        click_on "Submit"
+        project_in_mediaflux.reload
+        expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
+
+        # This is the confirmation page. It needs a button to return to the dashboard
+        # and it needs to be_axe_clean.
+        expect(page).to have_content "Project Revision Request Received"
+        expect(page).to have_button "Return to Dashboard"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+        click_on "Return to Dashboard"
+        expect(page).to have_content "Sponsored by Me"
       end
     end
   end
@@ -266,6 +285,50 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect(page).to have_content("New Project")
+      end
+    end
+
+    context "when the description is empty", :no_ci do
+      before do
+        @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+        @session_id = sponsor_user.mediaflux_session
+      end
+
+      after do
+        Rails.configuration.mediaflux["api_host"] = @original_api_host
+      end
+
+      it "allows the projects to be created" do
+
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-rw-user"
+        select "RDSS", from: 'departments'
+        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page.find_all("input:invalid").count).to eq(0)
+        click_on "Submit"
+        # For some reason the above click on submit sometimes does not submit the form
+        #  even though the inputs are all valid, so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Submit"
+        end
+        expect(page).to have_content "New Project Request Received"
+        project = Project.last
+        project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: @session_id)
+        expect(project.mediaflux_id).not_to be_nil
       end
     end
   end

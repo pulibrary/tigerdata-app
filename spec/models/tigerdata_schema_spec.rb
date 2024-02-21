@@ -8,7 +8,7 @@ RSpec.describe TigerdataSchema, type: :model do
         "asset.doc.type.update :create true :description \"Project metadata\" :type tigerdata:project :definition < \\\n" \
         " :element -name code -type string -index true -min-occurs 1 -max-occurs 1 -label \"The unique identifier for the project\" \\\n" \
         " :element -name title -type string -min-occurs 1 -max-occurs 1 -label \"A plain-language title for the project\" \\\n" \
-        " :element -name description -type string -min-occurs 1 -max-occurs 1 -label \"A brief description of the project\" \\\n" \
+        " :element -name description -type string -min-occurs 0 -max-occurs 1 -label \"A brief description of the project\" \\\n" \
         " :element -name status -type string -index true -min-occurs 1 -max-occurs 1 -label \"The current status of the project\" \\\n" \
         " :element -name data_sponsor -type string -index true -min-occurs 1 -max-occurs 1 -label \"The person who takes primary responsibility for the project\" \\\n" \
         " :element -name data_manager -type string -index true -min-occurs 1 -max-occurs 1 -label \"The person who manages the day-to-day activities for the project\" \\\n" \
