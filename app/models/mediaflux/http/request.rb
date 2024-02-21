@@ -60,6 +60,21 @@ module Mediaflux
         "http://tigerdata.princeton.edu"
       end
 
+      def self.find_or_create_http_client
+        @http_client ||= begin
+                           @http_client = Net::HTTP::Persistent.new
+                           # https is not working correctly on td-meta1 we should not need this, but we do...
+                           @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
+                           @http_client
+                         end
+      end
+
+      def self.create_finalizer
+        proc {
+          @http_client.shutdown unless @http_client
+        }
+      end
+
       attr_reader :session_token
 
       # Constructor
@@ -67,20 +82,18 @@ module Mediaflux
       # @param session_token [String] the API token for the authenticated session
       # @param http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
       def initialize(file: nil, session_token: nil, http_client: nil)
-        @http_client = http_client || Net::HTTP::Persistent.new
-        # https is not working correctly on td-meta1 we should not need this, but we do...
-        @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
+        @http_client = http_client || self.class.find_or_create_http_client
         @file = file
         @session_token = session_token
+
+        finalizer = self.class.create_finalizer
+        ObjectSpace.define_finalizer(self, finalizer)
       end
 
       # Resolves the HTTP request against the Mediaflux API
       # @return [Net::HTTP]
       def resolve
         @http_response = @http_client.request self.class.uri, http_request
-        @http_client.shutdown
-        @http_response
       end
 
       # Determines whether or not the request has been resolved
