@@ -55,7 +55,7 @@
     <h2>Project Description</h2>
     <div class="description-container">
     <div>Affiliated Departments:<br/>
-      <select id="departments" name="departments[]" class="form-select" multiple >
+      <select id="departments" name="departments[]" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>
           <% if @project.departments.include?(affiliation[:code]) %>
             <option selected><%= affiliation[:code] %></option>
