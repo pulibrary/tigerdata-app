@@ -8,6 +8,7 @@ class ListProjectContentsJob < ApplicationJob
   end
 
   private
+
     def mediaflux_session
       logon_request = Mediaflux::Http::LogonRequest.new
       logon_request.resolve
@@ -15,7 +16,7 @@ class ListProjectContentsJob < ApplicationJob
     end
 
     def export_filename(project, user)
-      timestamp = Time.now.strftime("%Y-%m-%dT%H-%M")
+      timestamp = Time.now.getlocal.strftime("%Y-%m-%dT%H-%M")
       netid = user.uid
       # TODO: where should we store these files
       "/Users/correah/src/tiger-data-app/#{netid}-#{project.directory}-#{timestamp}.csv"
