@@ -20,19 +20,12 @@ class ListProjectContentsJob < ApplicationJob
     # there is no guarantee that the client will be able to fetch the file
     # since requests could go to any of the many servers.
     # See https://github.com/pulibrary/tiger-data-app/issues/523
-    def export_filename(project:, user:)
-      timestamp = Time.now.getlocal.strftime("%Y-%m-%dT%H-%M")
-      netid = user.uid
+    def export_filename(_project:, _user:)
       "#{Dir.pwd}/public/#{job_id}.csv"
     end
 
     def mark_user_job_as_complete(project:, user:)
-      user_job = UserJob.where(job_id:job_id).first
-      if user_job == nil
-        user_job = UserJob.create(job_id: job_id, project_title: project.title)
-        user.user_jobs << user_job
-        user.save!
-      end
+      user_job = UserJob.create_and_link_to_user(job_id: job_id, user: user, job_title: "File list for #{project.title}")
       user_job.complete = true
       user_job.save!
     end

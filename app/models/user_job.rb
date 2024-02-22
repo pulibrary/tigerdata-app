@@ -22,4 +22,14 @@ class UserJob < ApplicationRecord
       "Requested #{created_datestamp}"
     end
   end
+
+  def self.create_and_link_to_user(job_id:, user:, job_title:)
+    user_job = UserJob.where(job_id: job_id).first
+    if user_job.nil?
+      user_job = UserJob.create(job_id: job_id, project_title: job_title)
+      user.user_jobs << user_job
+      user.save!
+    end
+    user_job
+  end
 end

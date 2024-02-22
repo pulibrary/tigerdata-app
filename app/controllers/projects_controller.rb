@@ -124,12 +124,7 @@ class ProjectsController < ApplicationController
 
   def list_contents
     job = ListProjectContentsJob.perform_later(project_id: project.id, user_id: current_user.id)
-    user_job = UserJob.where(job_id:job_id).first
-    if user_job.nil?
-      user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
-      current_user.user_jobs << user_job
-      current_user.save!
-    end
+    UserJob.create_and_link_to_user(job_id: job_id, user: current_ser, job_title: "File list for #{project.title}")
 
     json_response = {
       message: "Generating file list for project \"#{project.title}\" in the background."
