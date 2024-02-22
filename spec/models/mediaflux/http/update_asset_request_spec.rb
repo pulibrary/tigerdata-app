@@ -46,7 +46,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
       it "sends the metadata to the server" do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user
-        updated_on = DateTime.now
+        updated_on = Time.current.in_time_zone("America/New_York").iso8601
         project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], updated_on: updated_on
         tigerdata_values = ProjectMediaflux.project_values(project:)
         update_request = described_class.new(session_token: "secretsecret/2/31", id: "1234", tigerdata_values: tigerdata_values)
@@ -57,7 +57,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_manager>#{project.metadata[:data_manager]}</data_manager>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].first}</departments>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].last}</departments>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<updated_on>#{updated_on.strftime("%d-%b-%Y %H:%M:%S")}</updated_on>") }).to have_been_made
+        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<updated_on>#{updated_on})}</updated_on>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<updated_by>#{project.metadata[:updated_by]}</updated_by>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_users_ro>#{data_user_ro.uid}</data_users_ro>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_users_rw>#{data_user_rw.uid}</data_users_rw>") }).to have_been_made

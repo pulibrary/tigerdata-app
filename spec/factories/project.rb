@@ -8,8 +8,8 @@ FactoryBot.define do
       data_user_read_only { [] }
       data_user_read_write { [] }
       title { FFaker::Movie.title }
-      created_on { DateTime.now }
-      updated_on { DateTime.now }
+      created_on { Time.current.in_time_zone("America/New_York").iso8601 }
+      updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
       project_id { nil }
       status { "pending" }
       storage_capacity { "500 GB" }
@@ -28,9 +28,9 @@ FactoryBot.define do
         directory: directory,
         title: title,
         description: "a random description",
-        created_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
+        created_on: created_on,
         created_by: FactoryBot.create(:user).uid,
-        updated_on: created_on.strftime("%d-%b-%Y %H:%M:%S"),
+        updated_on: created_on,
         updated_by: FactoryBot.create(:user).uid,
         project_id: project_id,
         status: status,

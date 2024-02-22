@@ -5,12 +5,7 @@ class UserJob < ApplicationRecord
     "File Inventory for \"#{project_title}\""
   end
 
-  def created_datestamp
-    localized = created_at.localtime
-    localized.strftime("%Y-%m-%dT%H:%M:%S%:z")
-  end
-
   def description
-    "Requested #{created_datestamp}"
+    "Requested #{created_at}"
   end
 end

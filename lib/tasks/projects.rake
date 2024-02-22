@@ -110,9 +110,9 @@ namespace :projects do
   # rubocop:enable Metrics/MethodLength
 
   def time_action(label)
-    start_time = DateTime.now
+    start_time = Time.current
     yield
-    end_time = DateTime.now
+    end_time = Time.current
     sec = end_time.to_f - start_time.to_f
     ms_display = format("%.2f", sec * 1000)
     sec_display = format("%.2f", sec)

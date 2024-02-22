@@ -20,6 +20,7 @@ class ProjectMediaflux
     prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
+    byebug                                                       
     id = create_request.id
     if id.blank? && create_request.response_xml.text.include?("failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'")
       raise "Project name already taken"
