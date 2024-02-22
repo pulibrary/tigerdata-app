@@ -10,7 +10,16 @@ class UserJob < ApplicationRecord
     localized.strftime("%Y-%m-%dT%H:%M:%S%:z")
   end
 
+  def updated_datestamp
+    localized = updated_at.localtime
+    localized.strftime("%Y-%m-%dT%H:%M:%S%:z")
+  end
+
   def description
-    "Requested #{created_datestamp}"
+    if complete
+      "Completed #{updated_datestamp}"
+    else
+      "Requested #{created_datestamp}"
+    end
   end
 end

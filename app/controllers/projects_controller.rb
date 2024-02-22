@@ -124,14 +124,29 @@ class ProjectsController < ApplicationController
 
   def list_contents
     job = ListProjectContentsJob.perform_later(project_id: project.id, user_id: current_user.id)
-    user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
-    current_user.user_jobs << user_job
-    current_user.save!
+    user_job = UserJob.where(job_id:job_id).first
+    if user_job.nil?
+      user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
+      current_user.user_jobs << user_job
+      current_user.save!
+    end
 
     json_response = {
       message: "Generating file list for project \"#{project.title}\" in the background."
     }
     render json: json_response
+  end
+
+  def file_list_download
+    job_id = params[:job_id]
+    user_job = UserJob.where(job_id:job_id).first
+    if user_job.nil?
+      # TODO: handle error
+      redirect_to "/"
+    else
+      filename = "#{Dir.pwd}/public/#{job_id}.csv"
+      send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
+    end
   end
 
   def approve
