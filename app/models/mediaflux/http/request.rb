@@ -127,8 +127,12 @@ module Mediaflux
       delegate :to_s, to: :response_xml
 
       def xml_payload( name: self.class.service)
-        body = build_http_request_body(name: )
-        xml_payload = body.to_xml
+        @payloads ||= {}
+        @payloads[name] ||= begin
+                        body = build_http_request_body(name: )
+                        body.to_xml
+                       end
+        @payloads[name]              
       end
 
       private

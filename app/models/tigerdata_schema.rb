@@ -32,6 +32,9 @@ class TigerdataSchema
       session_token: @session_id
     )
     fields_request.resolve
+    if fields_request.error?
+      raise "Could not create or update schema #{fields_request.response_error}"
+    end
   end
 
   def create_aterm_schema_command(line_terminator = nil, _continuation_char = nil)
@@ -65,25 +68,25 @@ class TigerdataSchema
   # rubocop:disable Metrics/MethodLength
   def project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
-    code = { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
-    title = { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A plain-language title for the project" }
-    description = { name: "description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "A brief description of the project" }
-    status = { name: "status", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The current status of the project" }
-    data_sponsor = { name: "data_sponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
-    data_manager = { name: "data_manager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who manages the day-to-day activities for the project" }
-    data_users_rw = { name: "data_users_rw", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project" }
-    data_users_ro = { name: "data_users_ro", type: "string", index: true, "min-occurs" => 0, label: "A person who has read-only access privileges to the project" }
-    departments = { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
-    created_on = { name: "created_on", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Timestamp project was created" }
-    created_by = { name: "created_by", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
-    updated_on = { name: "updated_on", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
-    updated_by = { name: "updated_by", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
-    project_id = { name: "project_id", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
-    storage_capacity = { name: "storage_capacity", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage capacity (default 500 GB)" }
-    storage_performance = { name: "storage_performance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage performance (default Standard)" }
-    project_purpose = { name: "project_purpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The project purpose (default Research)" }
+    code = { name: "Code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
+    title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A plain-language title for the project" }
+    description = { name: "Description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "A brief description of the project" }
+    status = { name: "Status", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The current status of the project" }
+    data_sponsor = { name: "DataSponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
+    data_manager = { name: "DataManager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who manages the day-to-day activities for the project" }
+    data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project",
+                   attributes: [{ name: "ReadOnly", type: "boolean", index: false, "min-occurs" => 0, label: "Determines whether a given Data User is limited to read-only access to files" }] }
+    departments = { name: "Department", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
+    created_on = { name: "CreatedOn", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Timestamp project was created" }
+    created_by = { name: "CreatedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
+    updated_on = { name: "UpdatedOn", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
+    updated_by = { name: "UpdatedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
+    project_id = { name: "ProjectID", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
+    storage_capacity = { name: "StorageCapacity", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage capacity (default 500 GB)" }
+    storage_performance = { name: "StoragePerformance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage performance (default Standard)" }
+    project_purpose = { name: "ProjectPurpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The project purpose (default Research)" }
 
-    [code, title, description, status, data_sponsor, data_manager, data_users_rw, data_users_ro, departments, created_on, created_by, updated_on, updated_by, project_id, storage_capacity,
+    [code, title, description, status, data_sponsor, data_manager, data_users, departments, created_on, created_by, updated_on, updated_by, project_id, storage_capacity,
      storage_performance, project_purpose]
   end
   # rubocop:enable Metrics/MethodLength

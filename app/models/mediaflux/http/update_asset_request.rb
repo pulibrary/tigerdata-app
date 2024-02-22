@@ -48,23 +48,26 @@ module Mediaflux
 
                   element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
                   xml.send(element_name) do
-                    xml.code @tigerdata_values[:code]
-                    xml.title @tigerdata_values[:title]
-                    xml.description @tigerdata_values[:description]
-                    xml.data_sponsor @tigerdata_values[:data_sponsor]
-                    xml.data_manager @tigerdata_values[:data_manager]
-                    xml.updated_by @tigerdata_values[:updated_by]
-                    xml.updated_on @tigerdata_values[:updated_on]
+                    xml.Code @tigerdata_values[:code]
+                    xml.Title @tigerdata_values[:title]
+                    xml.Description @tigerdata_values[:description]
+                    xml.DataSponsor @tigerdata_values[:data_sponsor]
+                    xml.DataManager @tigerdata_values[:data_manager]
+                    xml.UpdatedBy @tigerdata_values[:updated_by]
+                    xml.UpdatedOn @tigerdata_values[:updated_on]
                     @tigerdata_values[:departments].each do |department|
-                      xml.departments department
+                      xml.Department department
                     end
                     ro_users = @tigerdata_values[:data_user_read_only] || []
                     ro_users.each do |ro_user|
-                      xml.data_users_ro ro_user
+                      xml.DataUser do
+                        xml.parent.set_attribute("ReadOnly", true)
+                        xml.text(ro_user)
+                      end
                     end
                     rw_users = @tigerdata_values[:data_user_read_write] || []
                     rw_users.each do |rw_user|
-                      xml.data_users_rw rw_user
+                      xml.DataUser rw_user
                     end
                   end
                 end
