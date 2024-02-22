@@ -51,29 +51,16 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
         tigerdata_values = ProjectMediaflux.project_values(project:)
         update_request = described_class.new(session_token: "secretsecret/2/31", id: "1234", tigerdata_values: tigerdata_values)
         update_request.resolve
-<<<<<<< HEAD
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<title>#{project.metadata[:title]}</title>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<description>#{project.metadata[:description]}</description>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_manager>#{project.metadata[:data_manager]}</data_manager>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].first}</departments>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<departments>#{project.metadata[:departments].last}</departments>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<updated_on>#{updated_on})}</updated_on>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<updated_by>#{project.metadata[:updated_by]}</updated_by>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_users_ro>#{data_user_ro.uid}</data_users_ro>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<data_users_rw>#{data_user_rw.uid}</data_users_rw>") }).to have_been_made
-=======
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Title>#{project.metadata[:title]}</Title>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Description>#{project.metadata[:description]}</Description>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{updated_on.strftime("%d-%b-%Y %H:%M:%S")}</UpdatedOn>") }).to have_been_made
+        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{updated_on}</UpdatedOn>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
->>>>>>> main
       end
     end
 

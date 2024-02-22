@@ -53,7 +53,7 @@ class TigerdataSchema
 
   def create_aterm_doc_script(filename: Rails.root.join("docs", "schema_script.txt"))
     File.open(filename, "w") do |script|
-      script.write("# This file was automatically generated on #{Time.current.in_time_zone("America/New_York").iso8601}\n")
+      script.write("# This file was automatically generated on #{Time.current.in_time_zone('America/New_York').iso8601}\n")
       script.write("# Create the \"tigerdata\" namespace schema and the \"project\" definition inside of it.\n#\n")
       script.write("# To run this script, issue the following command from Aterm\n#\n")
       script.write("# script.execute :in file://full/path/to/tiger-data-app/docs/schema_script.txt\n#\n")

@@ -43,7 +43,7 @@ module Mediaflux
       # https://nandovieira.com/working-with-dates-on-ruby-on-rails
       # https://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html
       # Mediaflux dates are in America/New_York and look like this "07-Feb-2024 21:48:01"
-      Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York").iso8601 
+      Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York").iso8601
     end
 
     # Returns the path for the asset
