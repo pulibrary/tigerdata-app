@@ -1,16 +1,39 @@
 # frozen_string_literal: true
 
 class UserJob < ApplicationRecord
-  def title
-    "File Inventory for \"#{project_title}\""
+  class << self
+    def datestamp_format
+      "%Y-%m-%dT%H:%M:%S%:z"
+    end
+
+    def format_datestamp(value)
+      return if value.nil?
+
+      localized = value.localtime
+      formatted = localized.strftime(datestamp_format)
+      formatted
+    end
   end
 
-  def created_datestamp
-    localized = created_at.localtime
-    localized.strftime("%Y-%m-%dT%H:%M:%S%:z")
+  def title
+    "File Inventory for \"#{project_title}\""
   end
 
   def description
     "Requested #{created_datestamp}"
   end
+
+  def completed_at
+    self.class.format_datestamp(super)
+  end
+
+  def completion
+    "Completed #{completed_at}"
+  end
+
+  private
+
+    def created_datestamp
+      self.class.format_datestamp(created_at)
+    end
 end

@@ -445,17 +445,17 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Requesting all files for a given project" do
     context "when authenticated" do
-      let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
-      let(:job) { instance_double(ListProjectContentsJob) }
+      let(:completion_time) { DateTime.now }
+      let(:formatted_time) do
+        localized = completion_time.localtime
+        localized.strftime("%Y-%m-%dT%H")
+      end
 
       before do
         stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
           .with(
                  body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"test-session-token\">\n    <args>\n      <id/>\n    </args>\n  </service>\n</request>\n"
                ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
-
-        allow(ListProjectContentsJob).to receive(:perform_later).and_return(job)
-        allow(job).to receive(:job_id).and_return(job_id)
 
         sign_in sponsor_user
       end
@@ -470,7 +470,23 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("You have a background job running.")
         expect(sponsor_user.user_jobs).not_to be_empty
         user_job = sponsor_user.user_jobs.first
-        expect(user_job.job_id).to eq(job.job_id)
+        expect(user_job.job_id).not_to be nil
+      end
+
+      it "renders the completion time for the Sidekiq job" do
+        visit project_contents_path(project_not_in_mediaflux)
+        expect(page).to have_content("List All Files")
+        click_on "List All Files"
+        wait_for_ajax
+        expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
+        expect(page).to have_content("Yes")
+        sleep 1
+        click_on "Yes"
+        wait_for_ajax
+        expect(page).to have_content("You have a background job running.")
+        click_on "Return to Dashboard"
+
+        expect(page).to have_content("Completed #{formatted_time}")
       end
     end
   end

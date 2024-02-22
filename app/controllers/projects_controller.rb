@@ -131,11 +131,12 @@ class ProjectsController < ApplicationController
     @file_list[:files].sort_by!(&:path)
   end
 
+  def project_job_service
+    @project_job_service ||= ProjectJobService.new(project:)
+  end
+
   def list_contents
-    job = ListProjectContentsJob.perform_later
-    user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
-    current_user.user_jobs << user_job
-    current_user.save!
+    project_job_service.list_contents_job(user: current_user)
 
     json_response = {
       message: "You have a background job running."
