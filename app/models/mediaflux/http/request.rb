@@ -2,6 +2,22 @@
 module Mediaflux
   module Http
     class Request
+      # This ensures that, once the Class is out of scope, the Net::HTTP::Persistent connection is closed
+      class << self
+        def self.create_finalizer
+          proc {
+            @http_client.shutdown unless @http_client.nil?
+          }
+        end
+
+        def initialize(**args)
+          super
+
+          finalizer = self.class.create_finalizer
+          ObjectSpace.define_finalizer(self, finalizer)
+        end
+      end
+
       # As this is an abstract class, this should be overridden to specify the Mediaflux API service
       def self.service
         raise(NotImplementedError, "#{self} is an abstract class, please override #{self}.service")
@@ -60,6 +76,8 @@ module Mediaflux
         "http://tigerdata.princeton.edu"
       end
 
+      # Constructs and memoizes a new instance of the Net::HTTP::Persistent object at the level of the Class
+      # @returns http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
       def self.find_or_create_http_client
         @http_client ||= begin
                            @http_client = Net::HTTP::Persistent.new
@@ -67,12 +85,6 @@ module Mediaflux
                            @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
                            @http_client
                          end
-      end
-
-      def self.create_finalizer
-        proc {
-          @http_client.shutdown unless @http_client
-        }
       end
 
       attr_reader :session_token
@@ -85,9 +97,6 @@ module Mediaflux
         @http_client = http_client || self.class.find_or_create_http_client
         @file = file
         @session_token = session_token
-
-        finalizer = self.class.create_finalizer
-        ObjectSpace.define_finalizer(self, finalizer)
       end
 
       # Resolves the HTTP request against the Mediaflux API
@@ -140,12 +149,8 @@ module Mediaflux
       delegate :to_s, to: :response_xml
 
       def xml_payload( name: self.class.service)
-        @payloads ||= {}
-        @payloads[name] ||= begin
-                        body = build_http_request_body(name: )
-                        body.to_xml
-                       end
-        @payloads[name]              
+        body = build_http_request_body(name: )
+        xml_payload = body.to_xml
       end
 
       private
