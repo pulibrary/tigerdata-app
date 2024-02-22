@@ -26,6 +26,14 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       allow(create_asset_request).to receive(:id).and_return("123")
     end
 
+  context "it formats dates correctly for MediaFlux" do
+    let(:project) { FactoryBot.build(:project, created_on: "2024-02-22T13:57:19-05:00") }
+    it "formats created_on as expected" do
+      project_values = ProjectMediaflux.project_values(project: project)
+      expect(project_values[:updated_on]).to eq "22-FEB-2024 13:57:19"
+    end
+  end
+
     it "creates a project namespace and collection and returns the mediaflux id" do
       mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
       expect(namespace_request).to have_received("error?")
