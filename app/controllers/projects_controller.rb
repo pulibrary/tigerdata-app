@@ -21,12 +21,21 @@ class ProjectsController < ApplicationController
     project_metadata.create(params: metadata_params)
     if new_project.save
       mailer = TigerdataMailer.with(project_id: @project.id)
-      mailer.project_creation.deliver_later
+      message_delivery = mailer.project_creation
+      message_delivery.deliver_later
 
       redirect_to project_confirmation_path(@project)
     else
       render :new
     end
+  rescue RedisClient::CannotConnectError => redis_connect_error
+    error_message = "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS."
+
+    Rails.logger.error(error_message)
+    Honeybadger.notify(redis_connect_error, context: { current_user_email: current_user.email, project_id: @project.id })
+
+    flash[:notice] = error_message
+    render :new
   end
 
   def show
