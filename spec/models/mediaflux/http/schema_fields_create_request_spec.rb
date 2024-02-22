@@ -12,7 +12,10 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
   let(:required_indexed_field) { { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:required_not_indexed_field) { { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:optional_field) do
-    { name: "data_users", type: "string", index: false, "min-occurs" => 0, label: "desc", attributes: [{ name: "read_only", type: "boolean", index: false, "min-occurs" => 0, label: "desc" }] }
+    {
+      name: "data_users", type: "string", index: false, "min-occurs" => 0, label: "label", description: "element description",
+      attributes: [{ name: "read_only", type: "boolean", index: false, "min-occurs" => 0, description: "desc" }]
+    }
   end
   let(:required_many_field) { { name: "departments", type: "string", index: true, "min-occurs" => 1, label: "desc" } }
   let(:date_field) { { name: "created_on", type: "date", label: "desc", index: false, "min-occurs" => 1, "max-occurs" => 1 } }
@@ -95,8 +98,11 @@ XML
       <description>test document schema</description>
       <type>tigerdata:project</type>
       <definition>
-        <element name=\"data_users\" type=\"string\" index=\"false\" min-occurs=\"0\" label=\"desc\">
-          <attribute name=\"read_only\" type=\"boolean\" index=\"false\" min-occurs=\"0\" label=\"desc\"/>
+        <element name="data_users" type="string" index="false" min-occurs="0" label="label">
+          <attribute name=\"read_only\" type=\"boolean\" index=\"false\" min-occurs=\"0\">
+            <description>desc</description>
+          </attribute>
+          <description>element description</description>
         </element>
       </definition>
     </args>
