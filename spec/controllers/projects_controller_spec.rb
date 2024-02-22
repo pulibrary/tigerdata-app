@@ -35,20 +35,20 @@ RSpec.describe ProjectsController do
         "      <namespace>/td-test-001/tigerdataNS/#{project.directory}NS</namespace>\n" \
         "      <meta>\n" \
         "        <tigerdata:project>\n" \
-        "          <code>#{project.directory}</code>\n" \
-        "          <title>#{project.metadata[:title]}</title>\n" \
-        "          <description>#{project.metadata[:description]}</description>\n" \
-        "          <status>#{project.metadata[:status]}</status>\n" \
-        "          <data_sponsor>#{project.metadata[:data_sponsor]}</data_sponsor>\n" \
-        "          <data_manager>#{project.metadata[:data_manager]}</data_manager>\n" \
-        "          <departments>RDSS</departments>\n" \
-        "          <departments>PRDS</departments>\n" \
-        "          <created_on>#{project.metadata[:created_on]}</created_on>\n" \
-        "          <created_by>#{project.metadata[:created_by]}</created_by>\n" \
-        "          <project_id>abc-123</project_id>\n" \
-        "          <storage_capacity>500 GB</storage_capacity>\n" \
-        "          <storage_performance>standard</storage_performance>\n" \
-        "          <project_purpose>research</project_purpose>\n" \
+        "          <Code>#{project.directory}</Code>\n" \
+        "          <Title>#{project.metadata[:title]}</Title>\n" \
+        "          <Description>#{project.metadata[:description]}</Description>\n" \
+        "          <Status>#{project.metadata[:status]}</Status>\n" \
+        "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
+        "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
+        "          <Department>RDSS</Department>\n" \
+        "          <Department>PRDS</Department>\n" \
+        "          <CreatedOn>#{project.metadata[:created_on]}</CreatedOn>\n" \
+        "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
+        "          <ProjectID>abc-123</ProjectID>\n" \
+        "          <StorageCapacity>500 GB</StorageCapacity>\n" \
+        "          <StoragePerformance>standard</StoragePerformance>\n" \
+        "          <ProjectPurpose>research</ProjectPurpose>\n" \
         "        </tigerdata:project>\n" \
         "      </meta>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \

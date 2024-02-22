@@ -83,30 +83,33 @@ module Mediaflux
 
             element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
             xml.send(element_name) do
-              xml.code @tigerdata_values[:code]
-              xml.title @tigerdata_values[:title]
-              xml.description @tigerdata_values[:description] if @tigerdata_values[:description].present?
-              xml.status @tigerdata_values[:status]
-              xml.data_sponsor @tigerdata_values[:data_sponsor]
-              xml.data_manager @tigerdata_values[:data_manager]
+              xml.Code @tigerdata_values[:code]
+              xml.Title @tigerdata_values[:title]
+              xml.Description @tigerdata_values[:description] if @tigerdata_values[:description].present?
+              xml.Status @tigerdata_values[:status]
+              xml.DataSponsor @tigerdata_values[:data_sponsor]
+              xml.DataManager @tigerdata_values[:data_manager]
               departments = @tigerdata_values[:departments] || []
               departments.each do |department|
-                xml.departments department
+                xml.Department department
               end
               ro_users = @tigerdata_values[:data_user_read_only] || []
               ro_users.each do |ro_user|
-                xml.data_users_ro ro_user
+                xml.DataUser do
+                  xml.parent.set_attribute("ReadOnly", true)
+                  xml.text(ro_user)
+                end
               end
               rw_users = @tigerdata_values[:data_user_read_write] || []
               rw_users.each do |rw_user|
-                xml.data_users_rw rw_user
+                xml.DataUser rw_user
               end
-              xml.created_on @tigerdata_values[:created_on]
-              xml.created_by @tigerdata_values[:created_by]
-              xml.project_id @tigerdata_values[:project_id]
-              xml.storage_capacity @tigerdata_values[:storage_capacity]
-              xml.storage_performance @tigerdata_values[:storage_performance]
-              xml.project_purpose @tigerdata_values[:project_purpose]
+              xml.CreatedOn @tigerdata_values[:created_on]
+              xml.CreatedBy @tigerdata_values[:created_by]
+              xml.ProjectID @tigerdata_values[:project_id]
+              xml.StorageCapacity @tigerdata_values[:storage_capacity]
+              xml.StoragePerformance @tigerdata_values[:storage_performance]
+              xml.ProjectPurpose @tigerdata_values[:project_purpose]
             end
           end
         end

@@ -28,8 +28,19 @@ module Mediaflux
               xml.type "#{@schema_name}:#{@document}"
               xml.definition do
                 @fields.each do |field|
-                  xml.element(field)
+                  build_field(xml:, field:)
                 end
+              end
+            end
+          end
+        end
+
+        def build_field(xml:, field:)
+          attributes =  field.delete(:attributes)
+          xml.element(field) do
+            if attributes.present?
+              attributes.each do |attribute|
+                xml.attribute(attribute)
               end
             end
           end

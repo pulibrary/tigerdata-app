@@ -5,15 +5,15 @@
       <id>1234</id>
       <meta>
         <tigerdata:project>
-          <code>code</code>
-          <title>title</title>
-          <description>description</description>
-          <data_sponsor>data_sponsor</data_sponsor>
-          <data_manager>data_manager</data_manager>
-          <updated_by>abc123</updated_by>
-          <updated_on>now</updated_on>
-          <departments>RDSS</departments>
-          <departments>HPC</departments>
+          <Code>code</Code>
+          <Title>title</Title>
+          <Description>description</Description>
+          <DataSponsor>data_sponsor</DataSponsor>
+          <DataManager>data_manager</DataManager>
+          <UpdatedBy>abc123</UpdatedBy>
+          <UpdatedOn>now</UpdatedOn>
+          <Department>RDSS</Department>
+          <Department>HPC</Department>
         </tigerdata:project>
       </meta>
     </args>
