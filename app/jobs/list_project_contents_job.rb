@@ -2,7 +2,9 @@
 class ListProjectContentsJob < ApplicationJob
   def perform(user_id:, project_id:)
     project = Project.find(project_id)
+    raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
     user = User.find(user_id)
+    raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
     filename = filename_for_export
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
