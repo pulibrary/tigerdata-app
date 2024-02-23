@@ -207,7 +207,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
 
     context "when a department has not been selected" do
-      it "does not allow the user to create a project" do 
+      it "does not allow the user to create a project" do
         sign_in sponsor_user
       visit "/"
       click_on "New Project"
@@ -467,26 +467,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
         expect(page).to have_content("Yes")
         click_on "Yes"
-        expect(page).to have_content("You have a background job running.")
+        expect(page).to have_content("File list for \"#{project_not_in_mediaflux.title}\" is being generated in the background.")
         expect(sponsor_user.user_jobs).not_to be_empty
         user_job = sponsor_user.user_jobs.first
         expect(user_job.job_id).not_to be nil
-      end
-
-      it "renders the completion time for the Sidekiq job" do
-        visit project_contents_path(project_not_in_mediaflux)
-        expect(page).to have_content("List All Files")
-        click_on "List All Files"
-        wait_for_ajax
-        expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
-        expect(page).to have_content("Yes")
-        sleep 1
-        click_on "Yes"
-        wait_for_ajax
-        expect(page).to have_content("You have a background job running.")
-        click_on "Return to Dashboard"
-
-        expect(page).to have_content("Completed #{formatted_time}")
       end
     end
   end

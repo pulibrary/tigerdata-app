@@ -6,6 +6,7 @@ class ProjectJobService
   end
 
   def list_contents_job(user:)
-    ListProjectContentsJob.perform_now(user_id: user.id, project_title: @project.title)
+    job = ListProjectContentsJob.perform_later(user_id: user.id, project_id: @project.id)
+    UserJob.create_and_link_to_user(job_id: job.job_id, user: user, job_title: "File list for #{@project.title}")
   end
 end
