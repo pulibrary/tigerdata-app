@@ -108,6 +108,15 @@ You will also want to run the vite development server:
 
 `bin/vite dev`
 
+### Populate the authorized users table
+Authentication and authorization is restricted to a few selected users. Make sure to run the rake task to pre-populate your local database:
+
+```
+bundle exec rake load_users:from_registration_list
+```
+
+If your name is not on the registration list see steps below under "User Registration List" for instructions on how to add yourself.
+
 #### MediaFlux Server
 
 Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md)
@@ -214,5 +223,5 @@ Sidekiq is used to run backgroud jobs on the server.  The jobs are created by Ac
 
 ### Workers
 
-Workers must be running on each server in order for mail to be sent and background jobs to be run. 
- The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`. 
+Workers must be running on each server in order for mail to be sent and background jobs to be run.
+ The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`.
