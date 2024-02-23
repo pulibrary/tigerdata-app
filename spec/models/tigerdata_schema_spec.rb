@@ -13,6 +13,10 @@ RSpec.describe TigerdataSchema, type: :model do
         " :element -name DataSponsor -type string -index true -min-occurs 1 -max-occurs 1 -label \"The person who takes primary responsibility for the project\" \\\n" \
         " :element -name DataManager -type string -index true -min-occurs 1 -max-occurs 1 -label \"The person who manages the day-to-day activities for the project\" \\\n" \
         " :element -name DataUser -type string -index true -min-occurs 0 -label \"A person who has read and write access privileges to the project\" \\\n" \
+        "   < \\\n" \
+        "     :attribute -name ReadOnly -type boolean -min-occurs 0 \\\n" \
+        "       < :description \"Determines whether a given Data User is limited to read-only access to files\" > \\\n" \
+        "   > \\\n" \
         " :element -name Department -type string -index true -min-occurs 1 -label \"The primary Princeton University department(s) affiliated with the project\" \\\n" \
         " :element -name CreatedOn -type date -min-occurs 1 -max-occurs 1 -label \"Timestamp project was created\" \\\n" \
         " :element -name CreatedBy -type string -min-occurs 1 -max-occurs 1 -label \"User that created the project\" \\\n" \
@@ -27,7 +31,7 @@ RSpec.describe TigerdataSchema, type: :model do
 
     describe "#create_aterm_script" do
 
-        let (:aterm_schema_command) { aterm_schema_command_pretty.gsub("\" \\\n","\"").gsub("< \\\n","<") }
+        let (:aterm_schema_command) { aterm_schema_command_pretty.gsub("\" \\\n","\"").gsub("< \\\n","<").gsub("> \\\n",">").gsub("0 \\\n","0") }
 
         it "generates the aterm script" do
             tigerdata_schema = described_class.new(session_id: nil)

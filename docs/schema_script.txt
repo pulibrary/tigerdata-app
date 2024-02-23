@@ -1,4 +1,4 @@
-# This file was automatically generated on 2024-02-21T08:29:41-05:00
+# This file was automatically generated on 2024-02-22T15:46:22-05:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm
@@ -17,6 +17,10 @@ asset.doc.type.update :create true :description "Project metadata" :type tigerda
  :element -name DataSponsor -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who takes primary responsibility for the project" \
  :element -name DataManager -type string -index true -min-occurs 1 -max-occurs 1 -label "The person who manages the day-to-day activities for the project" \
  :element -name DataUser -type string -index true -min-occurs 0 -label "A person who has read and write access privileges to the project" \
+   < \
+     :attribute -name ReadOnly -type boolean -min-occurs 0 \
+       < :description "Determines whether a given Data User is limited to read-only access to files" > \
+   > \
  :element -name Department -type string -index true -min-occurs 1 -label "The primary Princeton University department(s) affiliated with the project" \
  :element -name CreatedOn -type date -min-occurs 1 -max-occurs 1 -label "Timestamp project was created" \
  :element -name CreatedBy -type string -min-occurs 1 -max-occurs 1 -label "User that created the project" \
