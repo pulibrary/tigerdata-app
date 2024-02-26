@@ -4,17 +4,10 @@ module Mediaflux
     class Request
       # This ensures that, once the Class is out of scope, the Net::HTTP::Persistent connection is closed
       class << self
-        def self.create_finalizer
+        def finalizer(http_client)
           proc {
             @http_client.shutdown unless @http_client.nil?
           }
-        end
-
-        def initialize(**args)
-          super
-
-          finalizer = self.class.create_finalizer
-          ObjectSpace.define_finalizer(self, finalizer)
         end
       end
 
@@ -97,6 +90,7 @@ module Mediaflux
         @http_client = http_client || self.class.find_or_create_http_client
         @file = file
         @session_token = session_token
+        ObjectSpace.define_finalizer(self, self.class.finalizer(@http_client))
       end
 
       # Resolves the HTTP request against the Mediaflux API
