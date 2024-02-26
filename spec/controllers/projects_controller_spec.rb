@@ -43,7 +43,7 @@ RSpec.describe ProjectsController do
         "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
         "          <Department>RDSS</Department>\n" \
         "          <Department>PRDS</Department>\n" \
-        "          <CreatedOn>#{project.metadata[:created_on]}</CreatedOn>\n" \
+        "          <CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
         "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
         "          <ProjectID>abc-123</ProjectID>\n" \
         "          <StorageCapacity>500 GB</StorageCapacity>\n" \
