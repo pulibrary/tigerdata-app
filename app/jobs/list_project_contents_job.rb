@@ -5,10 +5,9 @@ class ListProjectContentsJob < ApplicationJob
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
     user = User.find(user_id)
     raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
-    filename = filename_for_export
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
-    project.file_list_to_file(session_id: mediaflux_session, filename: filename)
+    project.file_list_to_file(session_id: mediaflux_session, filename: filename_for_export)
 
     mark_user_job_as_complete(project: project, user: user)
   end
@@ -21,12 +20,10 @@ class ListProjectContentsJob < ApplicationJob
       logon_request.session_token
     end
 
-    # TODO: This only works with one server. In a multi-server environment
-    # there is no guarantee that the client will be able to fetch the file
-    # since requests could go to any of the many servers.
-    # See https://github.com/pulibrary/tiger-data-app/issues/523
     def filename_for_export
-      "#{Dir.pwd}/public/#{job_id}.csv"
+      raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
+      pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
+      pathname.join("#{job_id}.csv").to_s
     end
 
     def mark_user_job_as_complete(project:, user:)
