@@ -7,7 +7,10 @@ class ListProjectContentsJob < ApplicationJob
     raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
-    project.file_list_to_file(session_id: mediaflux_session, filename: filename_for_export)
+    filename = filename_for_export
+    Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
+    project.file_list_to_file(session_id: mediaflux_session, filename: filename)
+    Rails.logger.info "Export file generated #{filename} for project #{project_id}"
 
     mark_user_job_as_complete(project: project, user: user)
   end

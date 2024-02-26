@@ -136,6 +136,8 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
+    Rails.logger.error("entered controller")
+
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {
