@@ -125,6 +125,12 @@
   .btn.btn-primary.btn-sm{
     margin-left: 1em;
   }
+
+  .project-contents {
+    &__summary {
+      display: inline;
+    }
+  }
 }
 
 #edit{

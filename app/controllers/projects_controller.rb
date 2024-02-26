@@ -126,9 +126,15 @@ class ProjectsController < ApplicationController
 
   def contents
     project
+
+    @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
+    @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
+
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
+
     @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 100)
-    @file_list[:files].sort_by!(&:path)
+    @files = @file_list[:files]
+    @files.sort_by!(&:path)
   end
 
   def project_job_service

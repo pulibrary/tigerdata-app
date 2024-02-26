@@ -87,10 +87,49 @@ class Project < ApplicationRecord
     ProjectMediaflux.xml_payload(project: self)
   end
 
-  def asset_count(session_id:)
+  def mediaflux_document
+    ProjectMediaflux.document(project: self)
+  end
+
+  def mediaflux_metadata(session_id:)
     accum_req = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
-    xml_metadata = accum_req.metadata
-    xml_metadata[:total_file_count]
+    accum_req.metadata
+  end
+
+  def asset_count(session_id:)
+    values = mediaflux_metadata(session_id:)
+    values.fetch(:total_file_count, 0)
+  end
+
+  def self.default_storage_usage
+    "0 KB"
+  end
+
+  def storage_usage(session_id:)
+    return unless in_mediaflux?
+
+    values = mediaflux_metadata(session_id:)
+    value = values[:size_human]
+
+    return self.class.default_storage_usage if value.blank?
+    value
+  end
+
+  def self.default_storage_capacity
+    "0 GB"
+  end
+
+  def storage_capacity_xml
+    return unless in_mediaflux?
+
+    mediaflux_document.at_xpath("/request/service/args/meta/tigerdata:project/StorageCapacity/text()", tigerdata: "http://tigerdata.princeton.edu")
+  end
+
+  def storage_capacity(session_id:)
+    value = storage_capacity_xml
+
+    return self.class.default_storage_capacity if value.blank?
+    value
   end
 
   # Fetches the first n files

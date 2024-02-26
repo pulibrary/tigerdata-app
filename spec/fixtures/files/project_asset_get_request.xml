@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<request>
+  <service name="asset.get" session="test-session-token">
+    <args>
+      <id>1097</id>
+    </args>
+  </service>
+</request>
+

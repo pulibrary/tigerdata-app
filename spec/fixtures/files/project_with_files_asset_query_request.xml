@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<request>
+  <service name="asset.query" session="test-session-token">
+    <args>
+      <where>asset in static collection or subcollection of 1097</where>
+      <action>get-values</action>
+      <xpath ename="name">name</xpath>
+      <xpath ename="path">path</xpath>
+      <xpath ename="total-size">content/@total-size</xpath>
+      <xpath ename="mtime">mtime</xpath>
+      <xpath ename="collection">@collection</xpath>
+      <as>iterator</as>
+    </args>
+  </service>
+</request>
+

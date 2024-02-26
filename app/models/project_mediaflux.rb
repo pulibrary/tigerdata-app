@@ -79,6 +79,11 @@ class ProjectMediaflux
     create_request.xml_payload
   end
 
+  def self.document(project:, xml_namespace: nil)
+    xml_body = xml_payload(project:, xml_namespace:)
+    Nokogiri::XML.parse(xml_body)
+  end
+
   def self.safe_name(name)
     # only alphanumeric characters
     name.strip.gsub(/[^A-Za-z\d]/, "-")

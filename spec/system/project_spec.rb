@@ -24,9 +24,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       status: ::Project::PENDING_STATUS
     }
   end
-
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
-  let(:project_in_mediaflux) { project_not_in_mediaflux }
+  let(:mediaflux_id) { 1097 }
+  let(:project_in_mediaflux) do
+    project_not_in_mediaflux
+    project_not_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+    project_not_in_mediaflux.mediaflux_id = mediaflux_id
+    project_not_in_mediaflux.save!
+    project_not_in_mediaflux.reload
+  end
 
   before do
     stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
@@ -108,8 +114,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "a project is active" do
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
-        project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
-        project_in_mediaflux.save!
+        #project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        #project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
 
         expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
@@ -443,30 +449,166 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
   end
 
-  context "Requesting all files for a given project" do
+  context "GET /projects/:id/content" do
     context "when authenticated" do
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
 
+      let(:mediaflux_asset_get_request) do
+        xml_path = Rails.root.join("spec", "fixtures", "files", "project_asset_get_request.xml")
+        xml = File.read(xml_path)
+        Nokogiri::XML.parse(xml)
+      end
+
       before do
-        stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-          .with(
-                 body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"test-session-token\">\n    <args>\n      <id/>\n    </args>\n  </service>\n</request>\n"
-               ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
+        stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+          body: mediaflux_asset_get_request.to_xml
+        ).to_return(status: 200, body: mediaflux_asset_get_response.to_xml)
 
         sign_in sponsor_user
       end
 
-      it "enqueues a Sidekiq job for asynchronously requesting project files" do
-        visit project_contents_path(project_not_in_mediaflux)
-        expect(page).to have_content("List All Files")
-        click_on "List All Files"
-        expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
-        expect(page).to have_content("Yes")
-        click_on "Yes"
-        expect(page).to have_content("File list for \"#{project_not_in_mediaflux.title}\" is being generated in the background.")
-        expect(sponsor_user.user_jobs).not_to be_empty
-        user_job = sponsor_user.user_jobs.first
-        expect(user_job.job_id).not_to be nil
+      context "when the Mediaflux assets have one or multiple files" do
+        let(:mediaflux_asset_get_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_get_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+
+        before do
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_query_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_iterate_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_destroy_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
+        end
+
+        it "enqueues a Sidekiq job for asynchronously requesting project files" do
+          visit project_contents_path(project_in_mediaflux)
+
+          expect(page).to have_content("List All Files")
+          click_on "List All Files"
+          expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
+          expect(page).to have_content("Yes")
+          sleep 1
+          click_on "Yes"
+          expect(page).to have_content("File list for \"#{project_in_mediaflux.title}\" is being generated in the background.")
+          expect(sponsor_user.user_jobs).not_to be_empty
+          user_job = sponsor_user.user_jobs.first
+          expect(user_job.job_id).not_to be nil
+        end
+      end
+
+      context "when the storage capacity is specified" do
+        let(:metadata) do
+          {
+            data_sponsor: sponsor_user.uid,
+            data_manager: data_manager.uid,
+            directory: "project-123",
+            title: "project 123",
+            departments: ["RDSS"],
+            description: "hello world",
+            data_user_read_only: [],
+            data_user_read_write: [],
+            project_id: "abc-123",
+            storage_capacity_requested: "100 TB",
+            storage_performance_expectations_requested: "Standard",
+            project_purpose: "Research"
+          }
+        end
+        let(:mediaflux_asset_get_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_asset_get_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+
+        before do
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_query_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_iterate_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_destroy_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
+        end
+
+        it "renders the storage capacity in the show view" do
+          visit project_contents_path(project_in_mediaflux)
+
+          expect(page).to have_content "0 KB / 100 TB"
+          expect(page).to be_axe_clean
+            .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+            .skipping(:'color-contrast')
+        end
       end
     end
   end
