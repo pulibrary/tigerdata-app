@@ -36,12 +36,20 @@ module Mediaflux
         end
 
         def build_field(xml:, field:)
-          attributes =  field.delete(:attributes)
-          xml.element(field) do
+          dup_field = field.deep_dup
+          attributes =  dup_field.delete(:attributes)
+          description = dup_field.delete(:description)
+          xml.element(dup_field) do
             if attributes.present?
               attributes.each do |attribute|
-                xml.attribute(attribute)
+                attr_description = attribute.delete(:description)
+                xml.attribute(attribute) do
+                  xml.description attr_description
+                end
               end
+            end
+            if description.present?
+              xml.description description
             end
           end
         end

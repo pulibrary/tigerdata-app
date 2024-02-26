@@ -207,7 +207,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
 
     context "when a department has not been selected" do
-      it "does not allow the user to create a project" do 
+      it "does not allow the user to create a project" do
         sign_in sponsor_user
       visit "/"
       click_on "New Project"
@@ -355,6 +355,54 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         project = Project.last
         project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: @session_id)
         expect(project.mediaflux_id).not_to be_nil
+        expect(Mediaflux::Http::DestroyAssetRequest.new(session_token: @session_id, collection: project.mediaflux_id, members: true).error?).to be_falsey
+      end
+    end
+
+    context "when an error is encountered while trying to enqueue the ActiveJob for the TigerdataMailer" do
+      let(:mailer) { double(ActionMailer::Parameterized::Mailer) }
+      let(:message_delivery) { instance_double(ActionMailer::Parameterized::MessageDelivery) }
+      let(:error_message) { "Connection refused - connect(2) for 127.0.0.1:6379" }
+      let(:flash_message) { "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS." }
+
+      before do
+        allow(Honeybadger).to receive(:notify)
+        allow(message_delivery).to receive(:deliver_later).and_raise(RedisClient::CannotConnectError, error_message)
+        allow(mailer).to receive(:project_creation).and_return(message_delivery)
+        allow(TigerdataMailer).to receive(:with).and_return(mailer)
+      end
+
+      it "logs the error message, flashes a notification to the end-user, and renders the New Project View" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-rw-user"
+        select "RDSS", from: 'departments'
+        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page.find_all("input:invalid").count).to eq(0)
+        click_on "Submit"
+        # For some reason the above click on submit sometimes does not submit the form
+        #  even though the inputs are all valid, so try it again...
+        if page.find_all("#btn-add-rw-user").count > 0
+          click_on "Submit"
+        end
+        expect(page).not_to have_content "New Project Request Received"
+        expect(page).to have_content flash_message
+
+        new_project = Project.last
+        expect(new_project).not_to be nil
+        expect(Honeybadger).to have_received(:notify).with(kind_of(RedisClient::CannotConnectError), context: { current_user_email: sponsor_user.email, project_id: new_project.id })
       end
     end
   end
@@ -397,17 +445,17 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
   context "Requesting all files for a given project" do
     context "when authenticated" do
-      let(:job_id) { "d3b8eeb4-9c58-4af1-aaaf-7476f2804a44" }
-      let(:job) { instance_double(ListProjectContentsJob) }
+      let(:completion_time) { DateTime.now }
+      let(:formatted_time) do
+        localized = completion_time.localtime
+        localized.strftime("%Y-%m-%dT%H")
+      end
 
       before do
         stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
           .with(
                  body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.get\" session=\"test-session-token\">\n    <args>\n      <id/>\n    </args>\n  </service>\n</request>\n"
                ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
-
-        allow(ListProjectContentsJob).to receive(:perform_later).and_return(job)
-        allow(job).to receive(:job_id).and_return(job_id)
 
         sign_in sponsor_user
       end
@@ -419,10 +467,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
         expect(page).to have_content("Yes")
         click_on "Yes"
-        expect(page).to have_content("You have a background job running.")
+        expect(page).to have_content("File list for \"#{project_not_in_mediaflux.title}\" is being generated in the background.")
         expect(sponsor_user.user_jobs).not_to be_empty
         user_job = sponsor_user.user_jobs.first
-        expect(user_job.job_id).to eq(job.job_id)
+        expect(user_job.job_id).not_to be nil
       end
     end
   end

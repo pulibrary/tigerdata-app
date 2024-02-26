@@ -95,6 +95,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       end
 
       after do
+        Mediaflux::Http::DestroyAssetRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
         Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
 

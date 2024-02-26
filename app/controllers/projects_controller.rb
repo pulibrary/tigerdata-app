@@ -21,12 +21,21 @@ class ProjectsController < ApplicationController
     project_metadata.create(params: metadata_params)
     if new_project.save
       mailer = TigerdataMailer.with(project_id: @project.id)
-      mailer.project_creation.deliver_later
+      message_delivery = mailer.project_creation
+      message_delivery.deliver_later
 
       redirect_to project_confirmation_path(@project)
     else
       render :new
     end
+  rescue RedisClient::CannotConnectError => redis_connect_error
+    error_message = "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS."
+
+    Rails.logger.error(error_message)
+    Honeybadger.notify(redis_connect_error, context: { current_user_email: current_user.email, project_id: @project.id })
+
+    flash[:notice] = error_message
+    render :new
   end
 
   def show
@@ -97,7 +106,7 @@ class ProjectsController < ApplicationController
       metadata_params = project_params.merge({
         status: project.metadata[:status]
       })
-      project.metadata = project_metadata.update_metadata(params: metadata_params) 
+      project.metadata = project_metadata.update_metadata(params: metadata_params)
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
@@ -122,16 +131,29 @@ class ProjectsController < ApplicationController
     @file_list[:files].sort_by!(&:path)
   end
 
+  def project_job_service
+    @project_job_service ||= ProjectJobService.new(project:)
+  end
+
   def list_contents
-    job = ListProjectContentsJob.perform_later
-    user_job = UserJob.create(job_id: job.job_id, project_title: project.title)
-    current_user.user_jobs << user_job
-    current_user.save!
+    project_job_service.list_contents_job(user: current_user)
 
     json_response = {
-      message: "You have a background job running."
+      message: "File list for \"#{project.title}\" is being generated in the background."
     }
     render json: json_response
+  end
+
+  def file_list_download
+    job_id = params[:job_id]
+    user_job = UserJob.where(job_id:job_id).first
+    if user_job.nil?
+      # TODO: handle error
+      redirect_to "/"
+    else
+      filename = "#{Dir.pwd}/public/#{job_id}.csv"
+      send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
+    end
   end
 
   def approve

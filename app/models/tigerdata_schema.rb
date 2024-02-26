@@ -41,11 +41,7 @@ class TigerdataSchema
     namespace_command = "asset.doc.namespace.update :create true :namespace tigerdata :description \"TigerData metadata schema\"\n\n"
     field_command = "asset.doc.type.update :create true :description \"Project metadata\" :type tigerdata:project :definition <#{line_terminator}"
     project_schema_fields.each do |field|
-      field_command += " :element -name #{field[:name]} -type #{field[:type]}"
-      field_command += " -index #{field[:index]}" if field[:index]
-      field_command += " -min-occurs #{field['min-occurs']}"
-      field_command += " -max-occurs #{field['max-occurs']}" if field["max-occurs"].present?
-      field_command += " -label \"#{field[:label]}\"#{line_terminator}"
+      field_command += aterm_element(field:, line_terminator:)
     end
     field_command += ">"
     namespace_command + field_command
@@ -75,7 +71,7 @@ class TigerdataSchema
     data_sponsor = { name: "DataSponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
     data_manager = { name: "DataManager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who manages the day-to-day activities for the project" }
     data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project",
-                   attributes: [{ name: "ReadOnly", type: "boolean", index: false, "min-occurs" => 0, label: "Determines whether a given Data User is limited to read-only access to files" }] }
+                   attributes: [{ name: "ReadOnly", type: "boolean", index: false, "min-occurs" => 0, description: "Determines whether a given Data User is limited to read-only access to files" }] }
     departments = { name: "Department", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
     created_on = { name: "CreatedOn", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Timestamp project was created" }
     created_by = { name: "CreatedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
@@ -90,4 +86,31 @@ class TigerdataSchema
      storage_performance, project_purpose]
   end
   # rubocop:enable Metrics/MethodLength
+
+  private
+
+    def aterm_element(field:, line_terminator:)
+      field_command = " :element -name #{field[:name]} -type #{field[:type]}"
+      field_command += " -index #{field[:index]}" if field[:index]
+      field_command += " -min-occurs #{field['min-occurs']}"
+      field_command += " -max-occurs #{field['max-occurs']}" if field["max-occurs"].present?
+      field_command += " -label \"#{field[:label]}\"" if field[:label].present?
+      field_command += line_terminator.to_s
+      if field[:description].present? || field[:attributes].present?
+        field_command += "   <#{line_terminator}"
+        if field[:description].present?
+          field_command += "     :description \"#{field[:description]}\"#{line_terminator}"
+        end
+        if field[:attributes].present?
+          field[:attributes].each do |attribute|
+            field_command += "     :attribute -name #{attribute[:name]} -type #{attribute[:type]} -min-occurs #{attribute['min-occurs']}"
+            field_command += "-max-occurs #{attribute['max-occurs']} " if attribute["max-occurs"].present?
+            field_command += "#{line_terminator}       < :description \"#{attribute[:description]}\" >"
+            field_command += line_terminator.to_s
+          end
+        end
+        field_command += "   >#{line_terminator}"
+      end
+      field_command  
+    end 
 end

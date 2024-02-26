@@ -14,7 +14,7 @@
           <%end%>
         </ul>
       <% end %>
-      <% if @managed_projects.size > 0 %> 
+      <% if @managed_projects.size > 0 %>
         <h2>Managed by Me</h2>
         <ul class="project-list">
           <% @managed_projects.each do |project| %>
@@ -22,7 +22,7 @@
           <%end%>
         </ul>
       <% end %>
-      <% if @data_user_projects.size > 0 %> 
+      <% if @data_user_projects.size > 0 %>
         <h2>Shared with Me</h2>
         <ul class="project-list">
           <% @data_user_projects.each do |project| %>
@@ -44,8 +44,14 @@
           <% @my_jobs.each do |job| %>
             <li>
               <%= job.title %>
+              <% if job.complete? %>
+                (<%= link_to("download", project_file_list_download_path(job_id: job.job_id, target: "_blank")) %>)
+              <% end %>
               <ul>
                 <li><%= job.description %></li>
+                <% if job.completed_at.present? %>
+                  <li><%= job.completion %></li>
+                <% end %>
               </ul>
             </li>
           <% end %>

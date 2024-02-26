@@ -2,6 +2,15 @@
 module Mediaflux
   module Http
     class Request
+      # This ensures that, once the Class is out of scope, the Net::HTTP::Persistent connection is closed
+      class << self
+        def finalizer(http_client)
+          proc {
+            @http_client.shutdown unless @http_client.nil?
+          }
+        end
+      end
+
       # As this is an abstract class, this should be overridden to specify the Mediaflux API service
       def self.service
         raise(NotImplementedError, "#{self} is an abstract class, please override #{self}.service")
@@ -60,6 +69,17 @@ module Mediaflux
         "http://tigerdata.princeton.edu"
       end
 
+      # Constructs and memoizes a new instance of the Net::HTTP::Persistent object at the level of the Class
+      # @returns http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
+      def self.find_or_create_http_client
+        @http_client ||= begin
+                           @http_client = Net::HTTP::Persistent.new
+                           # https is not working correctly on td-meta1 we should not need this, but we do...
+                           @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
+                           @http_client
+                         end
+      end
+
       attr_reader :session_token
 
       # Constructor
@@ -67,20 +87,16 @@ module Mediaflux
       # @param session_token [String] the API token for the authenticated session
       # @param http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
       def initialize(file: nil, session_token: nil, http_client: nil)
-        @http_client = http_client || Net::HTTP::Persistent.new
-        # https is not working correctly on td-meta1 we should not need this, but we do...
-        @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
+        @http_client = http_client || self.class.find_or_create_http_client
         @file = file
         @session_token = session_token
+        ObjectSpace.define_finalizer(self, self.class.finalizer(@http_client))
       end
 
       # Resolves the HTTP request against the Mediaflux API
       # @return [Net::HTTP]
       def resolve
         @http_response = @http_client.request self.class.uri, http_request
-        @http_client.shutdown
-        @http_response
       end
 
       # Determines whether or not the request has been resolved
@@ -127,12 +143,8 @@ module Mediaflux
       delegate :to_s, to: :response_xml
 
       def xml_payload( name: self.class.service)
-        @payloads ||= {}
-        @payloads[name] ||= begin
-                        body = build_http_request_body(name: )
-                        body.to_xml
-                       end
-        @payloads[name]              
+        body = build_http_request_body(name: )
+        xml_payload = body.to_xml
       end
 
       private
