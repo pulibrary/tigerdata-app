@@ -30,10 +30,10 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       before do
         stub_request(:post, mediflux_url).to_return(status: 200, body: create_response, headers: {})
       end
-      it "send the metadata to the server" do
+      it "sends the metadata to the server" do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user
-        created_on = DateTime.now
+        created_on = Time.current.in_time_zone("America/New_York").iso8601
         project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on
         tigerdata_values = ProjectMediaflux.project_values(project:)
         create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false, tigerdata_values: tigerdata_values)
@@ -46,7 +46,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedOn>#{created_on.strftime("%d-%b-%Y %H:%M:%S")}</CreatedOn>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(created_on)}</CreatedOn>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedBy>#{project.metadata[:created_by]}</CreatedBy>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
@@ -116,7 +116,7 @@ RSpec.describe Mediaflux::Http::CreateAssetRequest, type: :model do
       "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
       "          <Department>RDSS</Department>\n" \
       "          <Department>PRDS</Department>\n" \
-      "          <CreatedOn>#{project.metadata[:created_on]}</CreatedOn>\n" \
+      "          <CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
       "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
       "          <ProjectID>abc-123</ProjectID>\n" \
       "          <StorageCapacity>500 GB</StorageCapacity>\n" \

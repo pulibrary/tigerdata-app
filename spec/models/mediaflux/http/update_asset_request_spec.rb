@@ -46,7 +46,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
       it "sends the metadata to the server" do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user
-        updated_on = DateTime.now
+        updated_on = Time.current.in_time_zone("America/New_York").iso8601
         project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], updated_on: updated_on
         tigerdata_values = ProjectMediaflux.project_values(project:)
         update_request = described_class.new(session_token: "secretsecret/2/31", id: "1234", tigerdata_values: tigerdata_values)
@@ -57,7 +57,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{updated_on.strftime("%d-%b-%Y %H:%M:%S")}</UpdatedOn>") }).to have_been_made
+        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
@@ -84,7 +84,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
     "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
     "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
-    "          <UpdatedOn>#{project.metadata[:updated_on]}</UpdatedOn>\n" \
+    "          <UpdatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
     "          <Department>RDSS</Department>\n" \
     "          <Department>PRDS</Department>\n" \
     "        </tigerdata:project>\n" \
