@@ -133,9 +133,9 @@ namespace :authorization do
   end
 
   def time_action(label)
-    start_time = DateTime.now
+    start_time = Time.current.in_time_zone("America/New_York").iso8601
     yield
-    end_time = DateTime.now
+    end_time = Time.current.in_time_zone("America/New_York").iso8601
     sec = end_time.to_f - start_time.to_f
     puts "#{label} #{sec * 1000} mili seconds #{sec} seconds"
   end
