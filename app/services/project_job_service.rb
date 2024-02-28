@@ -7,6 +7,7 @@ class ProjectJobService
 
   def list_contents_job(user:)
     job = ListProjectContentsJob.perform_later(user_id: user.id, project_id: @project.id)
+    Rails.logger.error("Job scheduled, job id: #{job.job_id}, (Sidekiq JID: #{job.provider_job_id}")
     UserJob.create_and_link_to_user(job_id: job.job_id, user: user, job_title: "File list for #{@project.title}")
   end
 end
