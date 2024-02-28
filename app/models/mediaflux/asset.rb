@@ -44,7 +44,7 @@ module Mediaflux
       # https://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html
       # https://apidock.com/ruby/DateTime/strftime
       # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
-      Time.zone.parse(@last_modified_mf).in_time_zone("EST").strftime("%Y-%m-%dT%H:%M:%S%:z")
+      Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York").iso8601
     end
 
     # Returns the path for the asset

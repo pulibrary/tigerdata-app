@@ -50,13 +50,13 @@ class ProjectMetadata
         timestamps = {}
         if project.metadata[:created_by].nil?
           timestamps[:created_by] = current_user.uid
-          timestamps[:created_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
+          timestamps[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
 
         else
           timestamps[:created_by] = project.metadata[:created_by]
           timestamps[:created_on] = project.metadata[:created_on]
           timestamps[:updated_by] = current_user.uid
-          timestamps[:updated_on] = DateTime.now.strftime("%d-%b-%Y %H:%M:%S")
+          timestamps[:updated_on] = Time.current.in_time_zone("America/New_York").iso8601
         end
         timestamps
       end

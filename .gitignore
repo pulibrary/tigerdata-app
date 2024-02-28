@@ -64,3 +64,5 @@ node_modules
 
 # Do not check aterm.jar into the repo
 aterm.jar
+
+public 

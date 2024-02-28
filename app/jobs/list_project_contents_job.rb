@@ -31,7 +31,7 @@ class ListProjectContentsJob < ApplicationJob
 
     def mark_user_job_as_complete(project:, user:)
       user_job = UserJob.create_and_link_to_user(job_id: job_id, user: user, job_title: "File list for #{project.title}")
-      user_job.completed_at = DateTime.now
+      user_job.completed_at = Time.current.in_time_zone("America/New_York").iso8601
       user_job.save!
       user_job.reload
     end
