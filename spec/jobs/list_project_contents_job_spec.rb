@@ -39,11 +39,10 @@ RSpec.describe ListProjectContentsJob, stub_mediaflux: true do
       expect(user_job.completed_at).to_not be nil
     end
 
-    # TODO: Update this test once https://github.com/pulibrary/tiger-data-app/issues/523
-    # has been implemented
     it "saves the output to a file" do
       job = described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
-      expect(File.exist?("#{Dir.pwd}/public/#{job.job_id}.csv")).to be true
+      output_file = Pathname.new(Rails.configuration.mediaflux["shared_files_location"]).join("#{job.job_id}.csv").to_s
+      expect(File.exist?(output_file)).to be true
     end
 
     context "when an invalid User ID is specified" do
