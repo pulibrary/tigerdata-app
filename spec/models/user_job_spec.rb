@@ -8,7 +8,7 @@ RSpec.describe UserJob, type: :model do
     let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
 
     before do
-     user_job.completed_at = completion_time
+      user_job.completed_at = completion_time
     end
 
     it "accesses the string-formatted timestamp for the time of job completion" do
