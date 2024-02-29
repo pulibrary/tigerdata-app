@@ -10,6 +10,7 @@ production:
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+  shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 qa:
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
@@ -21,6 +22,7 @@ qa:
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+  shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 staging:
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-staging-001/tigerdataNS'  %>
   api_root_collection_name: 'tigerdata'
@@ -32,6 +34,7 @@ staging:
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
+  shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 development:
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-demo-001/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
@@ -43,6 +46,7 @@ development:
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'system' %>
   api_user: <%= ENV["MEDIAFLUX_USER"] || 'manager' %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
+  shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
 test:
   api_root_ns: '/td-test-001/tigerdataNS'
   api_root_collection_name: 'tigerdata'
@@ -54,3 +58,4 @@ test:
   api_domain: 'system'
   api_user: 'manager'
   api_password: 'change_me'
+  shared_files_location: './public/'

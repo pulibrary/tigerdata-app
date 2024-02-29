@@ -142,6 +142,9 @@ class ProjectsController < ApplicationController
       message: "File list for \"#{project.title}\" is being generated in the background."
     }
     render json: json_response
+  rescue => ex
+    Rails.logger.error("Error producing document list (project id: #{project&.id}): #{ex.message}")
+    render json: { message: "Document list could not be generated." }
   end
 
   def file_list_download
