@@ -143,7 +143,9 @@ class ProjectsController < ApplicationController
     }
     render json: json_response
   rescue => ex
-    Rails.logger.error("Error producing document list (project id: #{project&.id}): #{ex.message}")
+    message = "Error producing document list (project id: #{project&.id}): #{ex.message}"
+    Rails.logger.error(message)
+    Honeybadger.notify(message)
     render json: { message: "Document list could not be generated." }
   end
 
