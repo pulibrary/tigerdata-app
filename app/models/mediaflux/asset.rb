@@ -37,12 +37,10 @@ module Mediaflux
       end
     end
 
-    # Returns the last modified data but using the standard ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601)
+    # Returns the last modified date but using the standard ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601)
     def last_modified
       return nil if @last_modified_mf.nil?
       # https://nandovieira.com/working-with-dates-on-ruby-on-rails
-      # https://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html
-      # https://apidock.com/ruby/DateTime/strftime
       # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
       Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York").iso8601
     end
