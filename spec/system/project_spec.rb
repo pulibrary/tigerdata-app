@@ -446,10 +446,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   context "Requesting all files for a given project" do
     context "when authenticated" do
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
-      let(:formatted_time) do
-        localized = completion_time.localtime
-        localized.strftime("%Y-%m-%dT%H")
-      end
 
       before do
         stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
