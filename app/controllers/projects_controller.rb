@@ -1,38 +1,64 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
   def new
-    if current_user.eligible_sponsor?
-    new_project
-    else redirect_to root_path
-    end
+    return build_new_project if current_user.eligible_sponsor?
+
+    redirect_to root_path
   end
 
   def project_params
-    values = params.dup
+    params.dup
   end
 
   def create
-    new_project
-    project_metadata = ProjectMetadata.new( current_user:, project: new_project)
-    new_project_params = params.dup
+    project_metadata = ProjectMetadata.new( current_user:, project: build_new_project)
+    new_project_params = project_params
     metadata_params = new_project_params.merge({
       status: Project::PENDING_STATUS
     })
     project_metadata.create(params: metadata_params)
-    if new_project.save
-      mailer = TigerdataMailer.with(project_id: @project.id)
-      message_delivery = mailer.project_creation
-      message_delivery.deliver_later
+    if project.save
+      begin
+        mailer = TigerdataMailer.with(project_id: project.id)
+        message_delivery = mailer.project_creation
+        message_delivery.deliver_later
 
-      redirect_to project_confirmation_path(@project)
+        redirect_to project_confirmation_path(project)
+      rescue StandardError => mailer_error
+        raise(TigerData::MailerError, mailer_error)
+      end
     else
       render :new
     end
-  rescue RedisClient::CannotConnectError => redis_connect_error
-    error_message = "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS."
+  rescue TigerData::MailerError => mailer_error
+    logger_message = "Error encountered creating the project #{project.id} as user #{current_user.email}"
+    Rails.logger.error(logger_message)
+    honeybadger_context = {
+      current_user_email: current_user.email,
+      project_id: project.id,
+      project_metadata: project.metadata
+    }
+    Honeybadger.notify(mailer_error, context: honeybadger_context)
 
-    Rails.logger.error(error_message)
-    Honeybadger.notify(redis_connect_error, context: { current_user_email: current_user.email, project_id: @project.id })
+    error_message = "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS."
+    flash[:notice] = error_message
+
+    render :new
+  rescue StandardError => error
+    logger_message = if project.persisted?
+                      "Error encountered creating the project #{project.id} as user #{current_user.email}"
+                     else
+                      "Error encountered creating the project #{metadata_params[:title]} as user #{current_user.email}"
+                     end
+    Rails.logger.error(logger_message)
+    honeybadger_context = {
+      current_user_email: current_user.email,
+      project_id: project.id,
+      project_metadata: project.metadata
+    }
+    Honeybadger.notify(error, context: honeybadger_context)
+
+    error_message = "We are sorry, the project was not successfully created, and an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS promptly."
 
     flash[:notice] = error_message
     render :new
@@ -178,7 +204,7 @@ class ProjectsController < ApplicationController
 
   private
 
-    def new_project
+    def build_new_project
       @project ||= Project.new
     end
 
