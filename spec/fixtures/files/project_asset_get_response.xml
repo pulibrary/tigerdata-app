@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <reply type="result">
+    <result>
+      <asset id="1097" version="1" collection="true" vid="1521">
+        <type>application/arc-asset-collection</type>
+        <namespace id="1092">/td-demo-001/tigerdataNS/fooNS</namespace>
+        <parent>1096</parent>
+        <path>/td-demo-001/tigerdata/foo</path>
+        <name>foo</name>
+        <creator id="15">                                                                                                                                                                        <domain>system</domain>
+          <user>manager</user>
+        </creator>
+        <ctime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1709060630112">27-Feb-2024 19:03:50</ctime>                                                                                 <vmtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1709060630112">27-Feb-2024 19:03:50</vmtime>
+        <mtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1709060630112">27-Feb-2024 19:03:50</mtime>                                                                                 <stime>1521</stime>
+        <created-via secure="false">http</created-via>
+        <versioned count="1">true</versioned>
+        <access>
+          <administer>true</administer>
+          <access>true</access>
+          <rename>false</rename>
+          <modify>true</modify>
+          <destroy>true</destroy>
+          <access-content>true</access-content>
+          <modify-content>true</modify-content>
+          <add-member>true</add-member>
+          <remove-member>true</remove-member>
+          <create-collections>true</create-collections>
+          <modify-collections>true</modify-collections>
+          <destroy-collections>true</destroy-collections>
+          <create-assets>true</create-assets>
+          <access-assets>true</access-assets>
+          <modify-assets>true</modify-assets>
+          <destroy-assets>true</destroy-assets>
+          <access-asset-content>true</access-asset-content>
+          <modify-asset-content>true</modify-asset-content>
+        </access>
+        <meta stime="1521">
+          <mf-revision-history id="1">
+            <user id="15">
+              <domain>system</domain>
+              <name>manager</name>
+            </user>
+            <type>create</type>
+          </mf-revision-history>
+          <tigerdata:project xmlns:tigerdata="tigerdata" id="2">
+            <Code>foo</Code>
+            <Title>foo</Title>
+            <Description>test</Description>
+            <Status>active</Status>
+            <DataSponsor>jrg5</DataSponsor>
+            <DataManager>jrg5</DataManager>
+            <Department>PPPL</Department>
+            <CreatedOn>26-Feb-2024 16:16:48</CreatedOn>
+            <CreatedBy>jrg5</CreatedBy>
+            <ProjectID>10.34770/tbd</ProjectID>
+            <StorageCapacity>500 GB</StorageCapacity>
+            <StoragePerformance>Standard</StoragePerformance>
+            <ProjectPurpose>Research</ProjectPurpose>
+          </tigerdata:project>
+        </meta>
+        <collection>
+          <leaf>true</leaf>
+          <unique-name-index>true</unique-name-index>
+          <store inherited="true">data</store>
+          <contained-asset-index cascade="true">true</contained-asset-index>
+        </collection>
+      </asset>
+    </result>
+  </reply>
+</response>
