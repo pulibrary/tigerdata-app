@@ -6,11 +6,11 @@ class UserJob < ApplicationRecord
   end
 
   def description
-    "Requested #{created_at.in_time_zone("America/New_York").iso8601}"
+    "Requested #{created_at.in_time_zone('America/New_York').iso8601}"
   end
 
   def completion
-    "Completed #{completed_at.in_time_zone("America/New_York").iso8601}"
+    "Completed #{completed_at.in_time_zone('America/New_York').iso8601}"
   end
 
   def complete?
