@@ -64,23 +64,62 @@ class TigerdataSchema
   # rubocop:disable Metrics/MethodLength
   def project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
-    code = { name: "Code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The unique identifier for the project" }
-    title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "A plain-language title for the project" }
-    description = { name: "Description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "A brief description of the project" }
-    status = { name: "Status", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The current status of the project" }
-    data_sponsor = { name: "DataSponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who takes primary responsibility for the project" }
-    data_manager = { name: "DataManager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The person who manages the day-to-day activities for the project" }
-    data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0, label: "A person who has read and write access privileges to the project",
+    code = { name: "Code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Code", description: "The unique identifier for the project" }
+    title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Title", 
+              description: "A plain-language title for the project",
+              instructions: "A plain-language title for the project (at the highest level, if sub-projects exist), which will display in metadata records and search results, and which can be edited later (unlike the Project ID)." }
+    description = { name: "Description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, 
+                    label: "Description", 
+                    description: "A brief description of the project",
+                    instructions: "A brief description of the project (at the highest level, if sub-projects exist), which serves to summarize the project objectives and (anticipated) data and metadata included in the project."}
+    status = { name: "Status", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Status", description: "The current status of the project" }
+    data_sponsor = { name: "DataSponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1,
+                    label: "Data Sponsor", 
+                    description: "The person who takes primary responsibility for the project",
+                    instructions: "The ‘Data Sponsor’ is the person who takes primary responsibility for the project, including oversight of all of the other roles, all of the data contained in the project,"\
+                                 " and all of the metadata associated with the data and the project itself."\
+                                 " This field is required for all projects in TigerData, and all files in a given project inherit the Data Sponsor value from the project metadata."\
+                                 " The person filling the role must be both a registered TigerData user and a current member of the list of eligible Data Sponsors for TigerData." }
+    data_manager = { name: "DataManager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1,
+                      label: "Data Manager", 
+                      description: "The person who manages the day-to-day activities for the project",
+                      instructions: "The ‘Data Manager’ is the person who manages the day-to-day activities for the project, including both data and metadata, but not including role assignments, which is instead determined by the Data Sponsor."\
+                                   " (However, the same person may fill both the Data Sponsor and the Data Manager roles on the same project, provided they are eligible for both.) This field is required for all projects in TigerData, and all files in a given project inherit the Data Manager value from the project metadata."\
+                                   " The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData." }
+    data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0, 
+                   label: "Data User(s)", 
+                   description: "A person who has read and write access privileges to the project",
+                   instructions: "A ‘Data User’ is a person who has access privileges to a given project or file, including data and metadata."\
+                                " This field is optional for both projects and files."\
+                                " Any number of Data Users may be assigned to a given project or file, with or without a read-only restriction."\
+                                " All Data Users must be registered for TigerData prior to assignment.",
                    attributes: [{ name: "ReadOnly", type: "boolean", index: false, "min-occurs" => 0, description: "Determines whether a given Data User is limited to read-only access to files" }] }
-    departments = { name: "Department", type: "string", index: true, "min-occurs" => 1, label: "The primary Princeton University department(s) affiliated with the project" }
-    created_on = { name: "CreatedOn", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Timestamp project was created" }
-    created_by = { name: "CreatedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "User that created the project" }
-    updated_on = { name: "UpdatedOn", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Timestamp project was updated" }
-    updated_by = { name: "UpdatedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "User that updated the project" }
-    project_id = { name: "ProjectID", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The pul datacite drafted doi" }
-    storage_capacity = { name: "StorageCapacity", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage capacity (default 500 GB)" }
-    storage_performance = { name: "StoragePerformance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The requested storage performance (default Standard)" }
-    project_purpose = { name: "ProjectPurpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "The project purpose (default Research)" }
+    departments = { name: "Department", type: "string", index: true, "min-occurs" => 1, 
+                    label: "Affiliated Department(s)",  
+                    description: "The primary Princeton University department(s) affiliated with the project",
+                    instructions: "The primary Princeton University department(s) affiliated with the project."\
+                                  " In cases where the Data Sponsor holds cross-appointments, or where multiple departments are otherwise involved with the project, multiple departments may be recorded." }
+    created_on = { name: "CreatedOn", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Created On", description: "Timestamp project was created" }
+    created_by = { name: "CreatedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Created By", description: "User that created the project" }
+    updated_on = { name: "UpdatedOn", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Updated On", description: "Timestamp project was updated" }
+    updated_by = { name: "UpdatedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Updated By", description: "User that updated the project" }
+    project_id = { name: "ProjectID", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, 
+                   label: "Project ID", 
+                   description: "The pul datacite drafted doi",
+                   instructions: "Records the DOI reserved for the project, from which the automatic code component of the Project ID is determined"}
+    storage_capacity = { name: "StorageCapacity", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, 
+                         label: "Storage Capacity", 
+                         description: "The requested storage capacity (default 500 GB)",
+                         instructions: "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team" }
+    storage_performance = { name: "StoragePerformance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, 
+                            label: "Storage Performance Expectations", 
+                            description: "The requested storage performance (default Standard)",
+                            instructions: "The expected needs for storage performance, i.e. relative read/write and transfer speeds."\
+                                          " The ‘Standard’ default for TigerData is balanced and tuned for moderate usage."\
+                                          " Those who expect more intensive usage should select the ‘Premium’ option, while those who expect to simply store their data for long-term, low-usage should select the ‘Eco’ option" }
+    project_purpose = { name: "ProjectPurpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project Purpose", 
+                        description: "The project purpose (default Research)",
+                        instructions: "The high-level category for the purpose of the project: ‘Research’ (default), ‘Administrative’, or ‘Library Archive’." }
 
     [code, title, description, status, data_sponsor, data_manager, data_users, departments, created_on, created_by, updated_on, updated_by, project_id, storage_capacity,
      storage_performance, project_purpose]
@@ -100,6 +139,9 @@ class TigerdataSchema
         field_command += "   <#{line_terminator}"
         if field[:description].present?
           field_command += "     :description \"#{field[:description]}\"#{line_terminator}"
+        end
+        if field[:instructions].present?
+          field_command += "     :instructions \"#{field[:instructions]}\"#{line_terminator}"
         end
         if field[:attributes].present?
           field[:attributes].each do |attribute|
