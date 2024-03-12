@@ -1,7 +1,7 @@
 services:
   mediaflux:
     mac_address: "02:42:ac:11:00:02"
-    image: "princeton_dev:23.08.25"
+    image: "eosadler/tigerdata:latest"
     ports:
       - "8888:8888"
     networks:
