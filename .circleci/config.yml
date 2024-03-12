@@ -30,10 +30,8 @@ jobs:
   build:
     working_directory: ~/tiger_data
     docker:
-      - &ruby_docker
-        image: cimg/ruby:3.2-browsers
-        environment:
-          RAILS_ENV: test
+      - &base_image
+        image: cimg/base:2024.02
     steps:
       - checkout
       - run:
