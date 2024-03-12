@@ -83,7 +83,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
 
       before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
-        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
         session_id = sponsor_user.mediaflux_session
 
         # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
@@ -99,8 +98,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
 
-      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD
-      # TODO: FIGURE OUT HOW TO REALLY TEST THIS
       it "Contents page has collection summary data", :no_ci do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
