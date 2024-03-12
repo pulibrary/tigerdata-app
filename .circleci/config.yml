@@ -47,3 +47,15 @@ jobs:
       - run:
             name: Start all services declared in docker-compose.yml
             command: docker-compose up -d
+      - run:
+            name: Copy code to the container
+            command: |
+            docker cp tiger_data tiger_data_rails_1:/tiger_data
+      - run:
+            name: Install bundler
+            command: |
+              docker exec -it tiger_data_rails_1 /bin/bash -c "gem install bundler -v '2.5.6'"
+      - run:
+            name: Install Dependencies
+            command: |
+              docker exec -it tiger_data_rails_1 /bin/bash -c "cd /tiger_data && cp Gemfile.lock Gemfile.lock.bak && bundle config set path './vendor/bundle' && bundle install  --jobs=4 --retry=3"
