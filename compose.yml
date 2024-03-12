@@ -16,6 +16,8 @@ services:
       - RAILS_ENV=test
       - CI=true
       - SECRET_KEY_BASE=test
+      - DD_TRACE_ENABLED=false
+      - MEDIAFLUX_HOST=192.168.10.62
     command: tail -f /dev/null # keep the container running
     networks:
       vlan:
