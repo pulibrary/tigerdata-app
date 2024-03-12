@@ -7,7 +7,7 @@ COPY Gemfile Gemfile.lock package.json yarn.lock ./
 RUN sudo chmod -R 777 /opt/tiger-data-app
 RUN bundle install
 RUN yarn install --check-files
-COPY . .
+COPY . ./
 RUN sudo chmod -R 777 /opt/tiger-data-app
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]

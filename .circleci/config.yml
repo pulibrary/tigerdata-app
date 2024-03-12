@@ -21,7 +21,7 @@ jobs:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
       - run:
             name: Start all services declared in docker-compose.yml
-            command: docker-compose up -d
+            command: docker-compose build && docker-compose up -d
       - run:
             name: Database migrations
             command: docker exec -it tiger_data_rails_1 bundle exec rails db:migrate
