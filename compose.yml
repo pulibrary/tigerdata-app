@@ -8,12 +8,10 @@ services:
       vlan:
         ipv4_address: 192.168.0.60
   rails:
-    image: cimg/ruby:3.2-browsers
+    build: . # use the Dockerfile in the current directory
     ports:
       - "3000:3000"
     command: tail -f /dev/null # keep the container running
-    volumes:
-      - /home/circleci/tiger_data
     networks:
       vlan:
         ipv4_address: 192.168.0.61
