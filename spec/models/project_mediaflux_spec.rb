@@ -35,7 +35,11 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
       it "formats updated_on as expected" do
         project_values = ProjectMediaflux.project_values(project: project)
-        expect(project_values[:updated_on]).to eq "26-FEB-2024 13:57:19"
+        expect(project_values[:updated_on]).to eq "26-FEB-2024 18:57:19"
+      end
+      it "changes the timezone back to America/New_York when it gets it back from Mediaflux" do
+        parsed_from_mediaflux = Time.zone.parse("26-FEB-2024 18:57:19").in_time_zone("America/New_York").iso8601
+        expect(parsed_from_mediaflux).to eq "2024-02-26T13:57:19-05:00"
       end
     end
 
