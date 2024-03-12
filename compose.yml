@@ -1,0 +1,31 @@
+services:
+  mediaflux:
+    mac_address: "02:42:ac:11:00:02"
+    image: "princeton_dev:23.08.25"
+    ports:
+      - "8888:8888"
+    networks:
+      vlan:
+        ipv4_address: 192.168.0.60
+  rails:
+    image: cimg/ruby:3.2-browsers
+    ports:
+      - "3000:3000"
+    command: tail -f /dev/null # keep the container running
+    networks:
+      vlan:
+        ipv4_address: 192.168.0.61
+  # redis:
+  #   image: "redis:alpine"
+
+
+networks:
+  vlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "192.168.0.0/24"
+          ip_range: "192.168.0.64/26"
+          gateway: "192.168.0.1"
