@@ -10,5 +10,7 @@ RUN bundle install
 RUN yarn install --check-files
 COPY . ./
 RUN sudo chmod -R 777 /opt/tiger-data-app/tmp/pids
+RUN sudo chmod -R 777 /opt/tiger-data-app/db
+RUN sudo chmod -R 777 /opt/tiger-data-app/logs
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]
