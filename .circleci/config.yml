@@ -49,8 +49,7 @@ jobs:
             command: docker-compose up -d
       - run:
             name: Copy code to the container
-            command: |
-            docker cp tiger_data tiger_data_rails_1:/tiger_data
+            command: docker cp tiger_data tiger_data_rails_1:/tiger_data
       - run:
             name: Install bundler
             command: |
