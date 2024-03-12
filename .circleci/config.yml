@@ -27,4 +27,4 @@ jobs:
             command: docker exec -it tiger_data_rails_1 bundle exec rails db:migrate
       - run:
             name: Run tests
-            command: docker exec -it tiger_data_rails_1 bundle exec rspec spec
+            command: docker exec -it tiger_data_rails_1 bundle exec rspec spec --fail-fast
