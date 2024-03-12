@@ -22,3 +22,9 @@ jobs:
       - run:
             name: Start all services declared in docker-compose.yml
             command: docker-compose up -d
+      - run:
+            name: Database migrations
+            command: docker exec -it rails-1 RAILS_ENV=test bundle exec rails db:migrate
+      - run:
+            name: Run tests
+            command: docker exec -it rails-1 RAILS_ENV=test bundle exec rspec spec
