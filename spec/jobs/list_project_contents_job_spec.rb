@@ -19,15 +19,15 @@ RSpec.describe ListProjectContentsJob, stub_mediaflux: true do
   let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata: metadata) }
 
   before do
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+    stub_request(:post, "http://#{ENV['MEDIAFLUX_HOST']}:8888/__mflux_svc__")
       .with(body: /<service name=\"asset.query\" session=\"test-session-token\">/)
       .to_return(status: 200, body: fixture_file("files/query_response.xml"))
 
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+    stub_request(:post, "http://#{ENV['MEDIAFLUX_HOST']}:8888/__mflux_svc__")
       .with(body: /<service name=\"asset.query.iterate\" session=\"test-session-token\">/)
       .to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"))
 
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+    stub_request(:post, "http://#{ENV['MEDIAFLUX_HOST']}:8888/__mflux_svc__")
       .with(body: /<service name=\"asset.query.iterator.destroy\" session=\"test-session-token\">/)
       .to_return(status: 200, body: "")
   end
