@@ -27,10 +27,11 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
     end
 
     context "it formats dates correctly for MediaFlux" do
+      # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
       let(:project) { FactoryBot.build(:project, created_on: "2024-02-22T13:57:19-05:00", updated_on: "2024-02-26T13:57:19-05:00") }
-      it "formats created_on as expected" do
+      it "formats created_on and changes timezone to UTC as expected" do
         project_values = ProjectMediaflux.project_values(project: project)
-        expect(project_values[:created_on]).to eq "22-FEB-2024 13:57:19"
+        expect(project_values[:created_on]).to eq "22-FEB-2024 18:57:19"
       end
       it "formats updated_on as expected" do
         project_values = ProjectMediaflux.project_values(project: project)
