@@ -13,6 +13,7 @@ services:
       - "3000:3000"
     environment:
       - DOCKER_DB_HOST="192.168.10.61"
+      - RAILS_ENV="test"
     command: tail -f /dev/null # keep the container running
     networks:
       vlan:

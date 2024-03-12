@@ -24,7 +24,7 @@ jobs:
             command: docker-compose up -d
       - run:
             name: Database migrations
-            command: docker exec -it tiger_data_rails_1 RAILS_ENV=test bundle exec rails db:migrate
+            command: docker exec -it tiger_data_rails_1 bundle exec rails db:migrate
       - run:
             name: Run tests
-            command: docker exec -it tiger_data_rails_1 RAILS_ENV=test bundle exec rspec spec
+            command: docker exec -it tiger_data_rails_1 bundle exec rspec spec
