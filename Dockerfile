@@ -13,7 +13,8 @@ RUN sudo chmod -R 777 /opt/tiger-data-app/tmp/pids
 RUN sudo chmod -R 777 /opt/tiger-data-app/db
 RUN sudo mkdir -p /opt/tiger-data-app/log
 RUN sudo chmod -R 777 /opt/tiger-data-app/log
-RUN sudo mkdir -p /opt/tiger-data-app/tmp/cache
-RUN sudo chmod -R 777 /opt/tiger-data-app/tmp/cache
+RUN sudo mkdir -p /opt/tiger-data-app/tmp
+RUN sudo chmod -R 777 /opt/tiger-data-app/tmp
+RUN sudo chmod -R 777 /opt/tiger-data-app/public
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]
