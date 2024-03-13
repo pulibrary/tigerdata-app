@@ -10,7 +10,7 @@ Decided
 
 We want to ensure that all timestamps are recorded and displayed in the same time zone and in iso8601 format: "2024-02-22T13:57:19-05:00". However, Mediaflux requires that timestamps be in a different format: "22-FEB-2024 13:57:19"
 
-When querying a collection through Aterm — you will see the timezone for the automatic date settings in Mediaflux to be Etc/UTC with no gmt offset.
+When executing `system.session.timezone` through Aterm — you will see the timezone for the automatic date settings in the `local Mediaflux environment` to be `Etc/UTC` with no gmt offset, while the timezone in live environment (`td-meta1`) to be `America/New_York`
 
 NOTE: there is no difference between time zones UTC and Etc/UTC
 
