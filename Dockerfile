@@ -1,5 +1,5 @@
 FROM cimg/ruby:3.2-browsers
-RUN sudo apt-get update -qq && sudo apt-get install -y firefox-geckodriver
+RUN sudo apt-get update -qq && sudo apt-get install -y chromium-chromedriver
 RUN gem install bundler -v '2.5.6'
 RUN sudo mkdir -p /opt/tiger-data-app/tmp/pids
 RUN sudo chmod -R 777 /opt/tiger-data-app
