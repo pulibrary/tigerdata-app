@@ -146,8 +146,8 @@ RSpec.describe User, type: :model do
     it "serializes and deserialize users" do
       user = FactoryBot.create(:user, uid: "pul1234", given_name: nil)
       expect(User.serialize_into_session(user)).to eq ["pul1234", ""]
-      expect(User.serialize_from_session("pul1234", '').uid).to eq "pul1234"
-      expect(User.serialize_from_session('nope', '')).to be nil
+      expect(User.serialize_from_session("pul1234", "").uid).to eq "pul1234"
+      expect(User.serialize_from_session('nope', "")).to be nil
     end
   end
 
