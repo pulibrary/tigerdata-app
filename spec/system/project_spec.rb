@@ -396,6 +396,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
+        sleep 1
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
         # For some reason the above click on submit sometimes does not submit the form
@@ -403,12 +404,16 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         if page.find_all("#btn-add-rw-user").count > 0
           click_on "Submit"
         end
+        new_project = Project.last
+        expect(new_project).not_to be nil
         expect(page).not_to have_content "New Project Request Received"
         expect(page).to have_content flash_message
 
-        new_project = Project.last
-        expect(new_project).not_to be nil
-        expect(Honeybadger).to have_received(:notify).with(kind_of(RedisClient::CannotConnectError), context: { current_user_email: sponsor_user.email, project_id: new_project.id })
+        expect(Honeybadger).to have_received(:notify).with(kind_of(TigerData::MailerError), context: {
+          current_user_email: sponsor_user.email,
+          project_id: new_project.id,
+          project_metadata: new_project.metadata
+        })
       end
     end
   end
