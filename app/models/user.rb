@@ -116,4 +116,27 @@ class User < ApplicationRecord
       user.save
     end
   end
+
+  # Methods serialize_into_session() and serialize_from_session() are called by Warden/Devise
+  # to calculate what information will be stored in the session and to serialize an object
+  # back from the session.
+  #
+  # By default Warden/Devise store the database ID of the record (e.g. User.id) but this causes
+  # problems if we repopulate our User table and the IDs change. The implementation provided below
+  # uses the User.uid field (which is unique, does not change, and it's required) as the value to
+  # store in the session to prevent this issue.
+  #
+  # References:
+  #   https://stackoverflow.com/questions/23597718/what-is-the-warden-data-in-a-rails-devise-session-composed-of/23683925#23683925
+  #   https://web.archive.org/web/20211028103224/https://tadas-s.github.io/ruby-on-rails/2020/08/02/devise-serialize-into-session-trick/
+  #   https://github.com/wardencommunity/warden/wiki/Setup
+  def self.serialize_into_session(record)
+    # The return value _must_ have at least two elements since the serialize_from_session() requires
+    # two arguments (see below)
+    [record.uid, ""]
+  end
+
+  def self.serialize_from_session(key, _salt, _opts = {})
+    User.where(uid: key)&.first
+  end
 end
