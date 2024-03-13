@@ -39,6 +39,10 @@ services:
       - /dev/shm:/dev/shm
     depends_on:
       - hub
+    ports:
+      - 4444:4444
+      - 7900:7900
+      - 5900:5900
     environment:
       HUB_HOST: hub
     networks:

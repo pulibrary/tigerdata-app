@@ -27,7 +27,7 @@ if ENV["CI"]
   Capybara.server_host = "0.0.0.0"
   Capybara.server_port = "3010"
 
-  # Add a configuration to connect to Chrome remotely through Selenium Grid
+  # Add a configuration to connect to Firefox remotely through Selenium Grid
 
   # set the capybara driver configs
   Capybara.javascript_driver = :remote_selenium
