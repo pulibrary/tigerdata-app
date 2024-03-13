@@ -32,10 +32,11 @@ class TestAssetGenerator
       return if directory_count == 0
       name_extention = (0...10).map { ("a".."z").to_a[rand(26)] }.join
       dir_collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{parent_id}-#{name_extention}", pid: parent_id)
-      if dir_collection.id.blank? && dir_collection.error?
+      dir_collection_id = dir_collection.id
+      if dir_collection_id.blank? && dir_collection.error?
         raise dir_collection.response_error
       end
-      test_asset = Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection.id, count: file_count_per_directory)
+      test_asset = Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection_id, count: file_count_per_directory)
       test_asset.resolve
       if test_asset.error?
         raise test_asset.response_error

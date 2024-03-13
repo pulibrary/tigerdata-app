@@ -8,9 +8,9 @@ RSpec.describe TestAssetGenerator do
 
   describe "#generate" do
 
-    let(:test_asset_create) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true) }
-    let(:test_collection_create) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "5678") }
-    let(:test_directory_create) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "2222") }
+    let(:test_asset_create) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true, "error?": false ) }
+    let(:test_collection_create) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "5678", "error?": false ) }
+    let(:test_directory_create) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "2222", "error?": false ) }
     
 
     before do
@@ -46,8 +46,8 @@ RSpec.describe TestAssetGenerator do
     context "Multiple levels" do
       let(:subject) { described_class.new(user:, project_id: project.id, levels: 2, directory_per_level: 1, file_count_per_directory: 1) }
       let(:test_collection_create_level2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "91222") }
-      let(:test_asset_create_level2) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true) }
-      let(:test_directory_create_level2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "9222") }
+      let(:test_asset_create_level2) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true, "error?": false) }
+      let(:test_directory_create_level2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "9222", "error?": false) }
 
       it "creates collections and files" do
         allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
@@ -66,8 +66,8 @@ RSpec.describe TestAssetGenerator do
 
     context "Multiple directories" do 
       let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
-      let(:test_directory_create_2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "9222") }
-      let(:test_asset_create_2) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true) }
+      let(:test_directory_create_2) { instance_double(Mediaflux::Http::CreateAssetRequest, id: "9222", "error?": false) }
+      let(:test_asset_create_2) { instance_double(Mediaflux::Http::TestAssetCreateRequest, resolve: true, "error?": false) }
 
       it "creates collections and files" do
         allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
