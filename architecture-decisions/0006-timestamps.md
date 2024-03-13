@@ -12,6 +12,10 @@ We want to ensure that all timestamps are recorded and displayed in the same tim
 
 When executing `system.session.timezone` through Aterm — you will see the timezone for the automatic date settings in the `local Mediaflux environment` to be `Etc/UTC` with no gmt offset, while the timezone in live environment (`td-meta1`) to be `America/New_York`
 
+This should not be confused with the timezone of an asset uploaded to mediaflux. Assets do have timezones attached. And the display will shift based on user session settings
+
+i.e An asset may have a `US/Pacific` time zone, but (local) mediaflux will display it as `UTC`. Therefore, when reading from mediaflux, do not assume that an asset has a UTC timezone
+
 NOTE: there is no difference between time zones UTC and Etc/UTC
 
 Etc/UTC is a timezone in the Olson-timezone-database (tz database), also known as IANA-timezones-database, in which all timezones conform to a uniform naming convention: Area/Location
