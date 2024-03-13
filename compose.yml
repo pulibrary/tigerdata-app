@@ -33,6 +33,24 @@ services:
     networks:
       vlan:
         ipv4_address: 192.168.10.61
+  firefox:
+    image: selenium/node-firefox:3.14.0-gallium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+    networks:
+      vlan:
+        ipv4_address: 192.168.10.60
+  hub:
+    image: selenium/hub:3.14.0-gallium
+    ports:
+      - "4444:4444"
+    networks:
+      vlan:
+        ipv4_address: 192.168.10.64
   # redis:
   #   image: "redis:alpine"
 

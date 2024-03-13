@@ -1,16 +1,5 @@
 FROM cimg/ruby:3.2-browsers
 
-# Install Firefox and geckodriver from a tarball to avoid an issue where 
-# geckodriver hangs when run in a container. 
-# See https://firefox-source-docs.mozilla.org/testing/geckodriver/Usage.html#Running-Firefox-in-an-container-based-package
-RUN wget -O FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
-RUN tar xjf FirefoxSetup.tar.bz2
-RUN sudo mv firefox /opt
-RUN sudo ln -s /opt/firefox/firefox /usr/local/bin/firefox
-RUN wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz
-RUN tar zxvf geckodriver.tar.gz
-RUN sudo mv geckodriver /usr/local/bin/geckodriver
-
 # Set the working directory
 WORKDIR /opt/tiger-data-app
 
