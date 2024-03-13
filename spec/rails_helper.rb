@@ -13,7 +13,7 @@ require "webmock/rspec"
 
 # Only allow connections to chromedriver, localhost, and mediaflux in CI
 WebMock.disable_net_connect!(allow_localhost: true,
-                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "192.168.10.62"])
+                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "192.168.10.62", "192.168.10.60"])
 # WebMock.enable_net_connect!
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
 
