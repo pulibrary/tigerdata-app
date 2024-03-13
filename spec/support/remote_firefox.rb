@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 # Add this to your rails_helper.rb or import it as a support file
 
-profile = Selenium::WebDriver::Firefox::Profile.new
 Capybara.register_driver :remote_selenium do |app|
   # Pass our arguments to run headless
-  options = Selenium::WebDriver::Firefox::Options.new(profile: profile)
-  options.add_argument("-headless")
+  options =
+    Selenium::WebDriver::Firefox::Options.new(
+      args: %w[--window-size=1400,1400 --headless],
+      log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn
+    )
 
-  # and point capybara at our chromium docker container
+  # and point capybara at our firefox docker container
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
