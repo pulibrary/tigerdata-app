@@ -39,6 +39,7 @@ module Mediaflux
           dup_field = field.deep_dup
           attributes =  dup_field.delete(:attributes)
           description = dup_field.delete(:description)
+          instructions = dup_field.delete(:instructions)
           xml.element(dup_field) do
             if attributes.present?
               attributes.each do |attribute|
@@ -50,6 +51,9 @@ module Mediaflux
             end
             if description.present?
               xml.description description
+            end
+            if instructions.present?
+              xml.instructions instructions
             end
           end
         end
