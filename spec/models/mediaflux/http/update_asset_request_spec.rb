@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
-  let(:mediaflux_url) { "http://#{ENV['MEDIAFLUX_HOST']}:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
   let(:metadata) do
     {
       code: "code",
