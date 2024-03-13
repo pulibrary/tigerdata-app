@@ -21,6 +21,9 @@ class TestAssetGenerator
       return if level == 0
       collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{level}", pid: parent_id)
       collection_id = collection.id  # resolves the request and extracts the id
+      if collection_id.blank? && collection.error?
+        raise collection.response_error
+      end
       generate_directory(collection_id, directory_per_level)
       generate_level(collection_id, level - 1)
     end
@@ -29,7 +32,14 @@ class TestAssetGenerator
       return if directory_count == 0
       name_extention = (0...10).map { ("a".."z").to_a[rand(26)] }.join
       dir_collection = Mediaflux::Http::CreateAssetRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{parent_id}-#{name_extention}", pid: parent_id)
-      Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection.id, count: file_count_per_directory).resolve
+      if dir_collection.id.blank? && dir_collection.error?
+        raise dir_collection.response_error
+      end
+      test_asset = Mediaflux::Http::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection.id, count: file_count_per_directory)
+      test_asset.resolve
+      if test_asset.error?
+        raise test_asset.response_error
+      end
       generate_directory(parent_id, directory_count - 1)
     end
 end
