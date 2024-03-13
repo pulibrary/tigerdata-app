@@ -14,6 +14,7 @@ RSpec.describe Mediaflux::Http::SchemaFieldsCreateRequest, type: :model do
   let(:optional_field) do
     {
       name: "data_users", type: "string", index: false, "min-occurs" => 0, label: "label", description: "element description",
+      instructions: "do this, not that",
       attributes: [{ name: "read_only", type: "boolean", index: false, "min-occurs" => 0, description: "desc" }]
     }
   end
@@ -103,6 +104,7 @@ XML
             <description>desc</description>
           </attribute>
           <description>element description</description>
+          <instructions>do this, not that</instructions>
         </element>
       </definition>
     </args>
