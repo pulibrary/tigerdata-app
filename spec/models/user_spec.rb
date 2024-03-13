@@ -142,6 +142,15 @@ RSpec.describe User, type: :model do
     end
   end
 
+  context "Devise Methods" do
+    it "serializes and deserialize users" do
+      user = FactoryBot.create(:user, uid: "pul1234", given_name: nil)
+      expect(User.serialize_into_session(user)).to eq ["pul1234", ""]
+      expect(User.serialize_from_session("pul1234", '').uid).to eq "pul1234"
+      expect(User.serialize_from_session('nope', '')).to be nil
+    end
+  end
+
   describe "#eligible_sponsor?" do
     it "should be true for a sponsor" do
       user = FactoryBot.create(:project_sponsor)
