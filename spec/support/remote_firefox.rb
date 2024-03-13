@@ -13,7 +13,7 @@ Capybara.register_driver :remote_selenium do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
-    url: "http://192.168.10.60:4444/wd/hub",
+    url: "http://192.168.10.64:4444/wd/hub",
     options: options
   )
 end
