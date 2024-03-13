@@ -10,10 +10,16 @@ require "rspec/rails"
 require "axe-rspec"
 require "devise"
 require "webmock/rspec"
+
+# Only allow connections to chromedriver, localhost, and mediaflux in CI
 WebMock.disable_net_connect!(allow_localhost: true,
-                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0"])
+                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "192.168.10.62"])
 # WebMock.enable_net_connect!
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
+
+# Make the logs in test a little quieter
+logger = Selenium::WebDriver.logger
+logger.level = :warn
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

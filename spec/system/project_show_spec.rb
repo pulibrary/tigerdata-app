@@ -83,8 +83,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
 
       before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = ENV['MEDIAFLUX_HOST'] || "0.0.0.0"
         session_id = sponsor_user.mediaflux_session
-
         # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
         project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: )
         project.save!
