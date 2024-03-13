@@ -7,7 +7,7 @@ RUN wget -O FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-
 RUN tar xjf FirefoxSetup.tar.bz2
 RUN sudo mv firefox /opt
 RUN sudo ln -s /opt/firefox/firefox /usr/local/bin/firefox
-RUN wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
+RUN wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz
 RUN tar zxvf geckodriver.tar.gz
 RUN sudo mv geckodriver /usr/local/bin/geckodriver
 
