@@ -30,4 +30,4 @@ jobs:
             command: docker exec -it tiger_data_rails_1 bundle exec rake schema:create RAILS_ENV=development 
       - run:
             name: Run tests
-            command: docker exec -it tiger_data_rails_1 bundle exec rspec spec --fail-fast --seed 61560
+            command: docker exec -it tiger_data_rails_1 bundle exec rspec spec
