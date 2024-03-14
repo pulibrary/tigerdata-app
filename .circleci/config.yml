@@ -61,20 +61,19 @@ jobs:
           POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: eosadler/tigerdata
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
     steps:
       - attach_workspace:
           at: *root
+      - setup_remote_docker
       - browser-tools/install-firefox    
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
+      - run: docker run -d --name mediaflux --publish 8888:8888 --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           name: Wait for MediaFlux
-          command: dockerize -wait tcp://localhost:8888 -timeout 1m
+          command: dockerize -wait tcp://mediaflux:8888 -timeout 1m
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:migrate RAILS_ENV=test
