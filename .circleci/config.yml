@@ -61,6 +61,10 @@ jobs:
           POSTGRES_USER: tiger_data_user
           POSTGRES_DB: test_db
           POSTGRES_HOST_AUTH_METHOD: trust
+      - image: eosadler/tigerdata
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       - attach_workspace:
           at: *root
@@ -68,6 +72,9 @@ jobs:
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Wait for MediaFlux
+          command: dockerize -wait tcp://localhost:8888 -timeout 1m
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:migrate RAILS_ENV=test
