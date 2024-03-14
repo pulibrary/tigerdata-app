@@ -26,13 +26,11 @@ commands:
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
 jobs:
-  build:
+  build: # name of your job
     working_directory: ~/tiger_data
-    docker:
-      - &ruby_docker
-        image: cimg/ruby:3.2-browsers
-        environment:
-          RAILS_ENV: test
+    machine: # executor type
+      image: default
+      docker_layer_caching: true
     steps:
       - checkout  
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
@@ -43,27 +41,20 @@ jobs:
 
   ruby-lint:
     working_directory: *root
-    docker:
-      - *ruby_docker
+    machine: true
     steps:
-      - attach_workspace:
-          at: *root
       - run:
           name: Run rubocop
           command: bundle exec rubocop
 
   ruby-test:
     working_directory: *root
-    docker:
-      - *ruby_docker
-      - image: postgres:13.5-alpine
-        environment:
-          POSTGRES_USER: tiger_data_user
-          POSTGRES_DB: test_db
-          POSTGRES_HOST_AUTH_METHOD: trust
+    machine: true
     steps:
       - attach_workspace:
           at: *root
+      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust POSTGRES_DB=test_db POSTGRES_USER=tiger_data_user postgres:13.5-alpine
+      - run: docker start postgres
       - browser-tools/install-firefox    
       - run:
           name: Wait for PostgreSQL
@@ -71,6 +62,12 @@ jobs:
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
+      - run: docker create --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
+      - run: docker start --privileged mediaflux
+      - run:
+          name: Wait for Mediaflux
+          command: dockerize -wait tcp://0.0.0.0:8888 -timeout 1m
       - run:
           name: Run Rspec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --tag \~no_ci --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
@@ -84,8 +81,7 @@ jobs:
   js-lint:
     # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
-    docker:
-      - *ruby_docker
+    machine: true
     steps:
       - attach_workspace:
           at: *root
@@ -96,8 +92,7 @@ jobs:
   js-test:
     # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
-    docker:
-      - *ruby_docker
+    machine: true
     steps:
       - attach_workspace:
           at: *root
