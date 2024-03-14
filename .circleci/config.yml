@@ -2,7 +2,6 @@ version: 2.1
 commands:
   install_dependencies:
     steps:
-      - run: rbenv install 3.2.3
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -27,13 +26,15 @@ commands:
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
 jobs:
-  build: # name of your job
+  build:
     working_directory: ~/tiger_data
-    machine: # executor type
-      image: default
-      docker_layer_caching: true
+    docker:
+      - &ruby_docker
+        image: cimg/ruby:3.1.3-browsers
+        environment:
+          RAILS_ENV: test
     steps:
-      - checkout  
+      - checkout
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
       - install_dependencies
       - persist_to_workspace:
@@ -42,36 +43,44 @@ jobs:
 
   ruby-lint:
     working_directory: *root
-    machine: true
+    docker:
+      - *ruby_docker
     steps:
+      - attach_workspace:
+          at: *root
       - run:
           name: Run rubocop
           command: bundle exec rubocop
 
   ruby-test:
     working_directory: *root
-    machine: true
+    docker:
+      - *ruby_docker
+      - image: postgres:13.5-alpine
+        environment:
+          POSTGRES_USER: tiger_data_user
+          POSTGRES_DB: test_db
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - attach_workspace:
           at: *root
-      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust POSTGRES_DB=test_db POSTGRES_USER=tiger_data_user postgres:13.5-alpine
-      - run: docker start postgres
-      - browser-tools/install-firefox    
+      - browser-tools/install-browser-tools
       - run:
           name: Wait for PostgreSQL
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:migrate
-      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
-      - run: docker create --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
-      - run: docker start --privileged mediaflux
+      - run: docker run --name mediaflux --publish 8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
       - run:
           name: Wait for Mediaflux
           command: dockerize -wait tcp://0.0.0.0:8888 -timeout 1m
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:migrate
+      - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --tag \~no_ci --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
@@ -82,7 +91,8 @@ jobs:
   js-lint:
     # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
-    machine: true
+    docker:
+      - *ruby_docker
     steps:
       - attach_workspace:
           at: *root
@@ -93,7 +103,8 @@ jobs:
   js-test:
     # We don't actually need any of the ruby environment for JS... but use what we have for now.
     working_directory: *root
-    machine: true
+    docker:
+      - *ruby_docker
     steps:
       - attach_workspace:
           at: *root
