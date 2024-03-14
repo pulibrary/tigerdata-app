@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+options = Selenium::WebDriver::Options.firefox
 Capybara.register_driver :remote_selenium do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
-    url: "http://192.168.10.64:4444/wd/hub",
-    desired_capabilities: :firefox
+    options: options,
+    url: "http://192.168.10.64:4444/wd/hub"
   )
 end
 
