@@ -71,7 +71,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
-      - run: docker run --name mediaflux --publish 8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
+      - run: docker run -d --name mediaflux --publish 8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
       - run:
           name: Wait for Mediaflux
           command: dockerize -wait tcp://0.0.0.0:8888 -timeout 1m
