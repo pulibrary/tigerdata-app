@@ -82,7 +82,16 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     ActiveJob::Base.queue_adapter = :test
     if ENV["CI"]
-      driven_by :remote_selenium
+      # set the capybara driver configs
+      Capybara.javascript_driver = :headless_selenium_chrome_in_container
+      Capybara.default_driver = :headless_selenium_chrome_in_container
+
+      # This will force capybara to inclue the port in requests
+      Capybara.always_include_port = true
+      Capybara.server_host = "0.0.0.0"
+      Capybara.server_port = 4000
+      Capybara.app_host = "http://192.168.10.63:4000"
+      driven_by(:headless_selenium_chrome_in_container)
     elsif ENV["RUN_IN_BROWSER"]
       driven_by(:selenium)
     else

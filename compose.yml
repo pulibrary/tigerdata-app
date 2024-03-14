@@ -11,6 +11,7 @@ services:
     build: . # use the Dockerfile in the current directory
     ports:
       - "3000:3000"
+      - "4000:4000"    
     environment:
       - DOCKER_DB_HOST=192.168.10.61
       - RAILS_ENV=test
@@ -18,7 +19,7 @@ services:
       - SECRET_KEY_BASE=test
       - DD_TRACE_ENABLED=false
       - MEDIAFLUX_HOST=192.168.10.62
-    command: tail -f /dev/null # keep the container running
+    command: bundle exec rails server -b 0.0.0.0
     networks:
       vlan:
         ipv4_address: 192.168.10.63
@@ -33,12 +34,8 @@ services:
     networks:
       vlan:
         ipv4_address: 192.168.10.61
-  firefox:
-    image: selenium/node-firefox:3.14.0-gallium
-    volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - hub
+  chrome:
+    image: selenium/standalone-chrome-debug
     ports:
       - 4444:4444
       - 7900:7900
