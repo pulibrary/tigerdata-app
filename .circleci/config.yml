@@ -4,12 +4,12 @@ commands:
     steps:
       - ruby/install:
           version: '3.2.3'
-      - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
-      - run: bundle config set path './vendor/bundle'
-      - run: bundle install --jobs=4 --retry=3
+      - ruby/install-deps
+      # - run: bundle config set path './vendor/bundle'
+      # - run: bundle install --jobs=4 --retry=3
       - save_cache:
           key: *gem_key
           paths:
