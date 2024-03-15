@@ -7,10 +7,10 @@ commands:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
       # - run: bundle config set path './vendor/bundle'
       - run: bundle install --jobs=4 --retry=3
-      - save_cache:
-          key: *gem_key
-          paths:
-            # - ./vendor/bundle
+      # - save_cache:
+      #     key: *gem_key
+      #     paths:
+      #       - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
