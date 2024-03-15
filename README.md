@@ -76,10 +76,10 @@ The system will eventually have many roles.  Please refer to the [docs for a des
     1. `asdf install`
     1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
 1. OR - Install dependencies with brew and chruby
-   1. `ruby-install 3.2.3 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
+   1. `ruby-install 3.3.0 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
    2. If you get "error: use of undeclared identifier 'RUBY_FUNCTION_NAME_STRING'" while updating, make sure your Xcode toolks are up to date.
    3. close the terminal window and open a new terminal
-   4. `chruby 3.2.3`
+   4. `chruby 3.3.0`
    5. `ruby --version`
 2. Install language-specific dependencies
     1. `bundle install`
