@@ -65,9 +65,9 @@ gem "mailcatcher"
 gem "net-http-persistent"
 gem "sidekiq"
 
-group :production do
-  gem "ddtrace", require: "ddtrace/auto_instrument"
-end
+# group :production do
+#   gem "ddtrace", require: "ddtrace/auto_instrument"
+# end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
