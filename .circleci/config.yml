@@ -62,9 +62,11 @@ jobs:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
       - run: docker start postgres
       - browser-tools/install-firefox    
-      - run:
-          name: Wait for PostgreSQL
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      # - run:
+      #     name: Wait for PostgreSQL
+      #     command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      # wait for postgres and mediaflux
+      - run: sleep 10
       - run: bundle exec rake db:create
       - run: bundle exec rake db:migrate
       - run: bundle exec rake db:migrate RAILS_ENV=test
