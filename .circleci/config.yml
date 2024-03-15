@@ -32,7 +32,7 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout  
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev snapd
+      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
       - install_dependencies
       - persist_to_workspace:
           root: &root '~/tiger_data'

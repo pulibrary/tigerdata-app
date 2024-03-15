@@ -57,7 +57,6 @@ gem "devise"
 gem "omniauth-cas"
 
 gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"
-gem "ddtrace", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby"
 gem "google-protobuf", "~> 3.0"
 gem "health-monitor-rails"
@@ -65,6 +64,10 @@ gem "honeybadger"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "sidekiq"
+
+group :production do
+  gem "ddtrace", require: "ddtrace/auto_instrument"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -77,7 +80,6 @@ group :development, :test do
   gem "pry-rails"
 
   gem "bcrypt_pbkdf"
-  gem "capistrano-yarn"
   gem "ed25519"
   gem "factory_bot_rails", require: false
   gem "ffaker"
@@ -96,6 +98,7 @@ group :development do
   gem "capistrano", "~> 3.17", require: false
   gem "capistrano-passenger"
   gem "capistrano-rails", "~> 1.6", require: false
+  gem "capistrano-yarn"
 end
 
 group :test do
