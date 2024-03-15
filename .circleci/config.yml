@@ -2,7 +2,8 @@ version: 2.1
 commands:
   install_dependencies:
     steps:
-      - run: rbenv install 3.2.3
+      - ruby/install:
+          version: '3.2.3'
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -26,6 +27,7 @@ commands:
             - ~/.cache/yarn
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
+  ruby: circleci/ruby@2.1.1
 jobs:
   build: # name of your job
     working_directory: ~/tiger_data
