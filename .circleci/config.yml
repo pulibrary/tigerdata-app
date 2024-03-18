@@ -8,6 +8,7 @@ commands:
       - restore_cache:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
       - run: bundle config set path './vendor/bundle'
+      - run: bundle config set --local without production
       - run: bundle install --jobs=4 --retry=3
       - save_cache:
           key: *gem_key
