@@ -57,7 +57,6 @@ gem "devise"
 gem "omniauth-cas"
 
 gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"
-gem "ddtrace", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby"
 gem "google-protobuf", "~> 3.0"
 gem "health-monitor-rails"
@@ -65,6 +64,10 @@ gem "honeybadger"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "sidekiq"
+
+group :staging, :production do
+  gem "ddtrace", require: "ddtrace/auto_instrument"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
