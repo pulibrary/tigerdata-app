@@ -320,7 +320,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
 
-    context "when the description is empty", :no_ci do
+    context "when the description is empty" do
       before do
         @original_api_host = Rails.configuration.mediaflux["api_host"]
         Rails.configuration.mediaflux["api_host"] = "0.0.0.0"

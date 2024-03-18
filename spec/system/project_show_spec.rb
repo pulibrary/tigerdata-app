@@ -99,9 +99,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
 
-      # THIS PASSES LOCALLY, IF MEDIAFLUX IS RUNNING -- BUT MEDIAFLUX IS NOT IN OUR CI BUILD
-      # TODO: FIGURE OUT HOW TO REALLY TEST THIS
-      it "Contents page has collection summary data", :no_ci do
+      it "Contents page has collection summary data" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
@@ -119,8 +117,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         expect(page).to have_content("Project Details: #{project.title}")
       end
 
-      # Notice that this test is marked as `no_ci`
-      it "displays the file list", :no_ci do
+      it "displays the file list" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
