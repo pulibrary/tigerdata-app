@@ -8,7 +8,7 @@ Datadog.configure do |c|
   c.env = Rails.env
   c.service = "tigerdata"
   c.version = "1.0.0"
-  c.profiling.enabled = true
+  c.profiling.enabled = Rails.env.staging? || Rails.env.production?
 
   c.tracing.report_hostname = true
   c.tracing.analytics.enabled = true
