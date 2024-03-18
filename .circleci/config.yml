@@ -2,6 +2,7 @@ version: 2.1
 commands:
   install_dependencies:
     steps:
+      - run: rbenv install 3.2.3
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -23,16 +24,27 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+  run_mediaflux:
+    steps:
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/tigerdata
+  run_postgres:
+    steps:
+      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
+      - run: docker start postgres
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
+  ruby: circleci/ruby@2.1.1
 jobs:
-  build:
+  build: # name of your job
     working_directory: ~/tiger_data
-    docker:
-      - &ruby_docker
-        image: cimg/ruby:3.2-browsers
-        environment:
-          RAILS_ENV: test
+    machine: # executor type
+      image: default
+      docker_layer_caching: true
+    environment:
+        POSTGRES_USER: tiger_data_user
+        POSTGRES_DB: test_db
+        POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout  
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev
@@ -40,40 +52,26 @@ jobs:
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
-
-  ruby-lint:
-    working_directory: *root
-    docker:
-      - *ruby_docker
-    steps:
-      - attach_workspace:
-          at: *root
       - run:
           name: Run rubocop
           command: bundle exec rubocop
-
-  ruby-test:
-    working_directory: *root
-    docker:
-      - *ruby_docker
-      - image: postgres:13.5-alpine
-        environment:
-          POSTGRES_USER: tiger_data_user
-          POSTGRES_DB: test_db
-          POSTGRES_HOST_AUTH_METHOD: trust
-    steps:
-      - attach_workspace:
-          at: *root
-      - browser-tools/install-firefox    
+          paths: '*'
       - run:
-          name: Wait for PostgreSQL
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:migrate
+          name: Run eslint
+          command: yarn run eslint 'app/javascript/**'
+      - run:
+          name: Run vitest
+          command: yarn run vitest run --coverage
+      - browser-tools/install-firefox
+      - run_mediaflux
+      - run_postgres
+      # wait for postgres and mediaflux
+      - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: bundle exec rake schema:create
       - run:
           name: Run Rspec
-          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --tag \~no_ci --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
@@ -81,44 +79,8 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
 
-  js-lint:
-    # We don't actually need any of the ruby environment for JS... but use what we have for now.
-    working_directory: *root
-    docker:
-      - *ruby_docker
-    steps:
-      - attach_workspace:
-          at: *root
-      - run:
-          name: Run eslint
-          command: yarn run eslint 'app/javascript/**'
-
-  js-test:
-    # We don't actually need any of the ruby environment for JS... but use what we have for now.
-    working_directory: *root
-    docker:
-      - *ruby_docker
-    steps:
-      - attach_workspace:
-          at: *root
-      - run:
-          name: Run vitest
-          command: yarn run vitest run --coverage
-
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - build
-      - ruby-lint:
-          requires:
-            - build
-      - ruby-test:
-          requires:
-            - build
-      - js-lint:
-          requires:
-            - build
-      - js-test:
-          requires:
-            - build
