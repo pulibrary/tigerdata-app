@@ -72,6 +72,55 @@ namespace :projects do
     puts "Mediaflux asset #{asset_id} updated"
   end
 
+  task :create_script, [:project_id] => [:environment] do |_, args|
+
+    project_id = args[:project_id]
+    project = Project.find(project_id)
+
+    project_directory = project.metadata_json["directory"]
+    project_parent = Rails.configuration.mediaflux['api_root_collection']
+    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_directory}NS"
+    byebug
+
+    # <Department>RDSS</Department>
+    # <CreatedOn>19-MAR-2024 16:20:30</CreatedOn>
+    # <CreatedBy>hc8719</CreatedBy>
+    # <ProjectID>10.34770/tbd</ProjectID>
+    # <StorageCapacity>500 GB</StorageCapacity>
+    # <StoragePerformance>Standard</StoragePerformance>
+    # <ProjectPurpose>Research</ProjectPurpose>
+
+    script = <<-ATERM
+      asset.namespace.create :namespace #{project_namespace}
+
+      asset.create
+        :pid #{project_parent}
+        :namespace #{project_namespace}
+        :name #{project.metadata_json["directory"]}
+        :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+        :type "application/arc-asset-collection"
+        :meta <
+          :tigerdata:project <
+            :Code "#{project_directory}"
+            :Title "#{project.metadata_json["title"]}"
+            :Description "#{project.metadata_json["description"]}"
+            :Status "#{project.metadata_json["status"]}"
+            :DataSponsor "#{project.metadata_json["data_sponsor"]}"
+            :DataManager "#{project.metadata_json["data_manager"]}"
+          >
+        >
+    ATERM
+
+    # < :Title "#{project.metadata_json["title"]}" >
+    # < :Description "#{project.metadata_json["description"]}" >
+    # < :Status "#{project.metadata_json["status"]}" >
+    # < :DataSponsor "#{project.metadata_json["data_sponsor"]}" >
+    # < :DataManager "#{project.metadata_json["data_manager"]}" >
+
+    puts "==========  "
+    puts script
+  end
+
   task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
     netid = args[:netid]
     user = User.where(uid: netid).first
