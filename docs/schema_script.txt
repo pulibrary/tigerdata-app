@@ -1,4 +1,4 @@
-# This file was automatically generated on 2024-03-11T18:50:55-04:00
+# This file was automatically generated on 2024-03-20T14:11:44-04:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm
@@ -37,5 +37,53 @@ asset.doc.type.update :create true :description "Project metadata" :type tigerda
    < \
      :description "The person who manages the day-to-day activities for the project" \
      :instructions "The ‘Data Manager’ is the person who manages the day-to-day activities for the project, including both data and metadata, but not including role assignments, which is instead determined by the Data Sponsor. (However, the same person may fill both the Data Sponsor and the Data Manager roles on the same project, provided they are eligible for both.) This field is required for all projects in TigerData, and all files in a given project inherit the Data Manager value from the project metadata. The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData." \
+   > \
+ :element -name DataUser -type string -index true -min-occurs 0 -label "Data User(s)" \
+   < \
+     :description "A person who has read and write access privileges to the project" \
+     :instructions "A ‘Data User’ is a person who has access privileges to a given project or file, including data and metadata. This field is optional for both projects and files. Any number of Data Users may be assigned to a given project or file, with or without a read-only restriction. All Data Users must be registered for TigerData prior to assignment." \
+     :attribute -name ReadOnly -type boolean -min-occurs 0 \
+       < :description "Determines whether a given Data User is limited to read-only access to files" > \
+   > \
+ :element -name Department -type string -index true -min-occurs 1 -label "Affiliated Department(s)" \
+   < \
+     :description "The primary Princeton University department(s) affiliated with the project" \
+     :instructions "The primary Princeton University department(s) affiliated with the project. In cases where the Data Sponsor holds cross-appointments, or where multiple departments are otherwise involved with the project, multiple departments may be recorded." \
+   > \
+ :element -name CreatedOn -type date -min-occurs 1 -max-occurs 1 -label "Created On" \
+   < \
+     :description "Timestamp project was created" \
+   > \
+ :element -name CreatedBy -type string -min-occurs 1 -max-occurs 1 -label "Created By" \
+   < \
+     :description "User that created the project" \
+   > \
+ :element -name UpdatedOn -type date -min-occurs 0 -max-occurs 1 -label "Updated On" \
+   < \
+     :description "Timestamp project was updated" \
+   > \
+ :element -name UpdatedBy -type string -min-occurs 0 -max-occurs 1 -label "Updated By" \
+   < \
+     :description "User that updated the project" \
+   > \
+ :element -name ProjectID -type string -index true -min-occurs 1 -max-occurs 1 -label "Project ID" \
+   < \
+     :description "The pul datacite drafted doi" \
+     :instructions "Records the DOI reserved for the project, from which the automatic code component of the Project ID is determined" \
+   > \
+ :element -name StorageCapacity -type string -index true -min-occurs 1 -max-occurs 1 -label "Storage Capacity" \
+   < \
+     :description "The requested storage capacity (default 500 GB)" \
+     :instructions "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team" \
+   > \
+ :element -name StoragePerformance -type string -index true -min-occurs 1 -max-occurs 1 -label "Storage Performance Expectations" \
+   < \
+     :description "The requested storage performance (default Standard)" \
+     :instructions "The expected needs for storage performance, i.e. relative read/write and transfer speeds. The ‘Standard’ default for TigerData is balanced and tuned for moderate usage. Those who expect more intensive usage should select the ‘Premium’ option, while those who expect to simply store their data for long-term, low-usage should select the ‘Eco’ option" \
+   > \
+ :element -name ProjectPurpose -type string -index true -min-occurs 1 -max-occurs 1 -label "Project Purpose" \
+   < \
+     :description "The project purpose (default Research)" \
+     :instructions "The high-level category for the purpose of the project: ‘Research’ (default), ‘Administrative’, or ‘Library Archive’." \
    > \
 >
