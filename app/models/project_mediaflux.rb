@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+# Create a project in mediaflux. Follow the process documented by Chuck Bentler in this video:
+# https://drive.google.com/file/d/1fYGNkVM9J94J1jUmZ7p0MZEUX2meLZav/view
 class ProjectMediaflux
   def self.create!(project:, session_id:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
