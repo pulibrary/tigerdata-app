@@ -6,7 +6,6 @@ on:
       - '.github/workflows/pages.yml'
       - '.yardopts'
       - 'lib/**'
-      - '**.gemspec'
       - 'Gemfile'
       - '**.md'
       - '**.txt'
