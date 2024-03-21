@@ -32,3 +32,4 @@ jobs:
         with:
           # Name of the artifact to upload.
           name: "github-pages" 
+          path: "./github-pages"
