@@ -1,3 +1,4 @@
+---
 name: Deploy API docs to GitHub Pages
 on:
   push:
