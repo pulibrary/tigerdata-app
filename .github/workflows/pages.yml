@@ -2,7 +2,7 @@
 name: Deploy API docs to GitHub Pages
 on:
   push:
-    branches: ['main', 'i590-fix-yard-bug']
+    branches: ['main']
     # paths:
     #   - '.github/workflows/pages.yml'
     #   - '.yardopts'
