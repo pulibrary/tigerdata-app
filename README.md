@@ -1,4 +1,4 @@
-![TigerData logo](app/assets/images/logo-300-200.png)
+![TigerData logo](https://raw.githubusercontent.com/pulibrary/tiger-data-app/main/app/assets/images/logo-300-200.png)
 
 # tiger-data-app
 
@@ -11,6 +11,7 @@ This application provides a front end for users to create and manage projects th
 
 ## Documentation
 
+- Auto-built code documentation is avalable at [https://pulibrary.github.io/tiger-data-app/}](https://pulibrary.github.io/tiger-data-app/)
 - Design documents and meeting notes are in [Google Drive](https://drive.google.com/drive/u/1/folders/0AJ7rJ2akICY2Uk9PVA)
 - RDSS internal notes are in a [separate directory](https://drive.google.com/drive/u/1/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
 - A set of requirements derived from early sketches is [here](https://docs.google.com/document/d/1U06FBX0qR9iMNiWes5YhP0schcPiLTmFwjHurduSb3A/edit).
