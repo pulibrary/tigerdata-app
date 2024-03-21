@@ -1,14 +1,13 @@
 name: Deploy API docs to GitHub Pages
 on:
   push:
-    branches: ['main']
-    paths:
-      - '.github/workflows/pages.yml'
-      - '.yardopts'
-      - 'lib/**'
-      - 'Gemfile'
-      - '**.md'
-      - '**.txt'
+    branches: ['main', 'i590-fix-yard-bug']
+    # paths:
+    #   - '.github/workflows/pages.yml'
+    #   - '.yardopts'
+    #   - 'lib/**'
+    #   - 'Gemfile'
+    #   - '**.txt'
     # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -35,6 +34,6 @@ jobs:
         id: deployment
         with:
           # default `doc` as default of `.yardopts`
-          output-dir: 'docs'
+          # output-dir: 'docs'
           # default version is 3.2
           ruby-version: '3.2'
