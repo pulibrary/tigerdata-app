@@ -79,6 +79,7 @@ namespace :projects do
 
     project_directory = project.metadata_json["directory"]
     project_parent = Rails.configuration.mediaflux['api_root_collection']
+    path_id = "#{project_parent}/#{project_directory}"
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_directory}NS"
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
     created_on = Time.parse(project.metadata_json["created_on"]).strftime("%e-%b-%Y %H:%M:%S").upcase
@@ -115,6 +116,30 @@ namespace :projects do
             :ProjectPurpose "#{project.metadata_json["project_purpose"]}" \\
           > \\
         >
+
+    # Define accumulator for file count
+    asset.collection.accumulator.add \\
+      :id path=#{path_id} \\
+      :cascade true \\
+      :accumulator < \\
+        :name #{project_directory}-count \\
+        :type collection.asset.count \\
+      >
+
+    # Define accumulator for total file size
+    asset.collection.accumulator.add \\
+      :id path=#{path_id} \\
+      :cascade true \\
+      :accumulator < \\
+      :name #{project_directory}-size \\
+        :type content.all.size \\
+      >
+
+    # Define storage quota
+    asset.collection.quota.set
+      :id path=#{path_id} \\
+      :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
+
     ATERM
 
     file_name = "project_create_#{project.id}.txt"
