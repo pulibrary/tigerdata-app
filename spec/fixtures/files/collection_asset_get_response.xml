@@ -11,10 +11,10 @@
           <domain>system</domain>
           <user>manager</user>
         </creator>
-        <ctime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1680811888032">06-Apr-2023 20:11:28</ctime>
-        <vmtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1680811888032">06-Apr-2023 20:11:28</vmtime>
-        <mtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1680811888032">06-Apr-2023 20:11:28</mtime>
-        <stime>1517</stime>
+        <ctime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1706555079069">29-Jan-2024 19:04:39</ctime>
+        <vmtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1706555079069">29-Jan-2024 19:04:39</vmtime>
+        <mtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1706555079069">29-Jan-2024 19:04:39</mtime>
+        <stime>31055195</stime>
         <created-via secure="false">http</created-via>
         <versioned count="1">true</versioned>
         <access>
@@ -37,7 +37,7 @@
           <access-asset-content>true</access-asset-content>
           <modify-asset-content>true</modify-asset-content>
         </access>
-        <meta stime="1516">
+        <meta stime="1952">
           <mf-revision-history id="1">
             <user id="15">
               <domain>system</domain>
@@ -45,13 +45,40 @@
             </user>
             <type>create</type>
           </mf-revision-history>
+          <tigerdata:project xmlns:tigerdata="tigerdata" id="2">
+            <code>Oblivion</code>
+            <title>Oblivion</title>
+            <description>Testing</description>
+            <status>pending</status>
+            <data_sponsor>jh6441</data_sponsor>
+            <data_manager>bs3097</data_manager>
+            <departments>RDSS</departments>
+            <created_on>29-Jan-2024 14:04:18</created_on>
+            <created_by>jh6441</created_by>
+            <project_id>10.34770/tbd</project_id>
+            <storage_capacity>500 GB</storage_capacity>
+            <storage_performance>Standard</storage_performance>
+            <project_purpose>Research</project_purpose>
+          </tigerdata:project>
         </meta>
         <collection>
-          <leaf>true</leaf>
           <unique-name-index>true</unique-name-index>
-          <store inherited="true">data</store>
-          <contained-asset-index cascade="false">true</contained-asset-index>
-          <member-change-time tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1680868762565">07-Apr-2023 11:59:22</member-change-time>
+          <store inherited="true">db</store>
+          <contained-asset-index cascade="true">true</contained-asset-index>
+          <member-change-time tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1707076006057">04-Feb-2024 19:46:46</member-change-time>
+          <accumulator type="collection.asset.count" name="number of assets">
+            <stime>31058435</stime>
+            <value>
+              <collections>25</collections>
+              <non-collections>60</non-collections>
+            </value>
+          </accumulator>
+          <accumulator type="content.all.size" name="total storage">
+            <stime>31058435</stime>
+            <value>
+              <total count="60" count-zero="0" h="6 KB">6000</total>
+            </value>
+          </accumulator>
         </collection>
         <members>
           <static>1</static>
