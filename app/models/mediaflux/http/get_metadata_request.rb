@@ -26,6 +26,7 @@ module Mediaflux
 
         if metadata[:collection]
           metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
+          metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
         end
 
         parse_image(asset.xpath("./meta/mf-image"), metadata) # this does not do anything because mf-image is not a part of the meta xpath
@@ -65,8 +66,6 @@ module Mediaflux
             collection: asset.xpath("./@collection")&.text == "true",
             path: asset.xpath("./path").text,
             type: asset.xpath("./type").text,
-            size: asset.xpath("./content/size").text,
-            size_human: asset.xpath("./content/size/@h").text,
             namespace: asset.xpath("./namespace").text,
             accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
           }
