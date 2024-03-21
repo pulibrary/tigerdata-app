@@ -14,8 +14,8 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - uses: ruby/setup-ruby@v1
-          with:
-            bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec yard --output-dir github-pages
       - name: List files in the repository
         run: |
