@@ -20,7 +20,7 @@ This application provides a front end for users to create and manage projects th
 ## Structure
 
 These are our initial plans: In the eventual implementation different systems
-(Mediaflux, Postgres, LDAP) may have responsibility for different bits of data.
+(Mediaflux, PostgreSQL, LDAP) may have responsibility for different bits of data.
 Cardinality constraints (projects must have sponsors, etc.) will be enforced in software.
 
 ```mermaid
@@ -68,7 +68,7 @@ The system will eventually have many roles.  Please refer to the [docs for a des
 1. Install tool dependencies; If you've worked on other PUL projects they will already be installed.
     1. [Lando](https://docs.lando.dev/getting-started/installation.html)
     1. [asdf](https://asdf-vm.com/guide/getting-started.html#_2-download-asdf)
-    1. postgres (`brew install postgresql`: Postgres runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local Postgres library to install successfully.)
+    1. postgresql (`brew install postgresql`: PostgreSQL runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local PostgreSQL library to install successfully.)
 1. Install asdf dependencies with asdf
     1. `asdf plugin add ruby`
     1. `asdf plugin add node`
