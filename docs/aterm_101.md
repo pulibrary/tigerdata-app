@@ -406,7 +406,7 @@ The xtoshell command can be used to convert our API xml to the arguments to a `s
 For example:
   In the rails console run something like:
   
-  **Note** The gsubs at the end are to remove all spaces and <arg></arg> and the session_id attribute
+  **Note** The gsubs at the end are to remove all spaces and `<arg></arg>` and the session_id attribute
   
   **Note 2** Our version of mediaflux in docker does not have this command. The xtoshell command does exist on td-meta1
   ```
