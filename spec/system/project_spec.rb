@@ -528,7 +528,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
           expect(page).to have_content("List All Files")
           click_on "List All Files"
-          expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
+          expect(page).to have_content("This will generate a list of 4 files and their attributes in a downloadable CSV. Do you wish to continue?")
           expect(page).to have_content("Yes")
           sleep 1
           click_on "Yes"
@@ -608,7 +608,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
         it "renders the storage capacity in the show view" do
           visit project_contents_path(project_in_mediaflux)
-
           expect(page).to have_content "0 KB / 100 TB"
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)

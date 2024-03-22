@@ -102,7 +102,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?
+        This will generate a list of <%= @num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
       </div>
       <div class="modal-footer">
         <button type="button" id="request-list-contents" class="btn btn-success" data-list-contents-path="<%= project_list_contents_path %>" >Yes</button>

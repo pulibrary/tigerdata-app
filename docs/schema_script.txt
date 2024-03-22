@@ -1,4 +1,4 @@
-# This file was automatically generated on 2024-03-11T18:50:55-04:00
+# This file was automatically generated on 2024-03-20T14:11:44-04:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm

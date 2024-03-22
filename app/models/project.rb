@@ -109,10 +109,13 @@ class Project < ApplicationRecord
     return unless in_mediaflux?
 
     values = mediaflux_metadata(session_id:)
-    value = values[:size_human]
-
-    return self.class.default_storage_usage if value.blank?
-    value
+    value = values.fetch(:size, 0)
+    
+    if value.blank?
+      return self.class.default_storage_usage
+    else
+      return value
+    end
   end
 
   def self.default_storage_capacity
