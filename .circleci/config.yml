@@ -40,7 +40,7 @@ jobs:
   build: # name of your job
     working_directory: ~/tiger_data
     machine: # executor type
-      image: ubuntu-2004:2023.10.1
+      image: default
       docker_layer_caching: true
     environment:
         POSTGRES_USER: tiger_data_user
@@ -52,10 +52,11 @@ jobs:
       - install_dependencies
       - persist_to_workspace:
           root: &root '~/tiger_data'
-          paths: ['*']
+          paths: '*'
       - run:
           name: Run rubocop
           command: bundle exec rubocop
+          paths: '*'
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
