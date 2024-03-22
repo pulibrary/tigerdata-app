@@ -528,7 +528,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
           expect(page).to have_content("List All Files")
           click_on "List All Files"
-          expect(page).to have_content("This will generate a list of 1,234,567 files and their attributes in a downloadable CSV. Do you wish to continue?")
+          expect(page).to have_content("This will generate a list of 4 files and their attributes in a downloadable CSV. Do you wish to continue?")
           expect(page).to have_content("Yes")
           sleep 1
           click_on "Yes"
