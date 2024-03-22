@@ -44,6 +44,8 @@ RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
         expect(metadata[:path]).to eq("/td-test-001/collection-96-58278")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("6 KB")
+        expect(metadata[:total_file_count]).to eq("60")
+        expect(metadata[:quota_allocation]).to eq("300 GB")
         expect(WebMock).to have_requested(:post, mediflux_url)
       end
     end
