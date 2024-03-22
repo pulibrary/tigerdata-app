@@ -129,10 +129,15 @@ class Project < ApplicationRecord
   end
 
   def storage_capacity(session_id:)
-    value = storage_capacity_xml
+    requested_capacity = storage_capacity_xml
 
-    return self.class.default_storage_capacity if value.blank?
-    value
+    values = mediaflux_metadata(session_id:)
+    quota_value = values.fetch(:quota_allocation, 0)
+
+    backup_value = requested_capacity || self.class.default_storage_capacity
+    
+    return backup_value if quota_value.blank?
+    quota_value #return the requested storage capacity if a quota has not been set for a project, if storage has not been requested return "0 GB"
   end
 
   # Fetches the first n files

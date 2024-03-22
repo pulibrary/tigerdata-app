@@ -539,7 +539,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end
       end
 
-      context "when the storage capacity is specified" do
+      context "when the storage capacity is requested, but no quota is allocated" do
         let(:metadata) do
           {
             data_sponsor: sponsor_user.uid,
@@ -609,6 +609,81 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         it "renders the storage capacity in the show view" do
           visit project_contents_path(project_in_mediaflux)
           expect(page).to have_content "0 KB / 100 TB"
+          expect(page).to be_axe_clean
+            .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+            .skipping(:'color-contrast')
+        end
+      end
+
+      context "when the quota is allocated" do
+        let(:metadata) do
+          {
+            data_sponsor: sponsor_user.uid,
+            data_manager: data_manager.uid,
+            directory: "project-123",
+            title: "project 123",
+            departments: ["RDSS"],
+            description: "hello world",
+            data_user_read_only: [],
+            data_user_read_write: [],
+            project_id: "abc-123",
+            storage_capacity_requested: "500 GB",
+            storage_performance_expectations_requested: "Standard",
+            project_purpose: "Research"
+          }
+        end
+        let(:mediaflux_asset_get_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "collection_asset_get_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_query_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_iterate_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_request) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        let(:mediaflux_asset_collection_destroy_response) do
+          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
+          xml = File.read(xml_path)
+          Nokogiri::XML.parse(xml)
+        end
+        before do
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_query_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_iterate_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
+
+          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
+            body: mediaflux_asset_collection_destroy_request.to_xml,
+          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
+        end
+
+        it "renders the storage capacity in the show view" do
+          visit project_contents_path(project_in_mediaflux)
+          expect(page).to have_content "6 KB / 300 GB" #should be 300 GB which is the quota, instead of 500GB which is the requested capacity
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')

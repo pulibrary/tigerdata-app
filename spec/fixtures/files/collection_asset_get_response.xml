@@ -79,6 +79,14 @@
               <total count="60" count-zero="0" h="6 KB">6000</total>
             </value>
           </accumulator>
+          <quota>
+            <description>300 GB quota for 1083</description>
+            <allocation h="300 GB">300000000000</allocation>
+            <on-overflow>fail</on-overflow>
+            <used h="6 KB">6000</used><in-flux h="0 bytes">0</in-flux>
+            <count>60</count>
+            <mtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1711125296487">22-Mar-2024 16:34:56</mtime>
+          </quota>
         </collection>
         <members>
           <static>1</static>
