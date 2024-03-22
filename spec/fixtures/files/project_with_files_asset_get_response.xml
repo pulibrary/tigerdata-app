@@ -64,7 +64,17 @@
           <unique-name-index>true</unique-name-index>
           <store inherited="true">data</store>
           <contained-asset-index cascade="true">true</contained-asset-index>
+          <accumulator type="collection.asset.count" name="idp-coarse-count">
+            <stime>9773</stime>
+            <value>
+              <collections>0</collections>
+              <non-collections>4</non-collections>
+            </value>
+          </accumulator>
         </collection>
+        <members>
+          <static>4</static>
+        </members>
       </asset>
     </result>
   </reply>
