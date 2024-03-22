@@ -72,6 +72,79 @@ namespace :projects do
     puts "Mediaflux asset #{asset_id} updated"
   end
 
+  desc "Outputs to a file an aterm script to create a project (namespace and collection) in Mediaflux"
+  task :create_script, [:project_id] => [:environment] do |_, args|
+    project_id = args[:project_id]
+    project = Project.find(project_id)
+
+    project_directory = project.metadata_json["directory"]
+    project_parent = Rails.configuration.mediaflux['api_root_collection']
+    path_id = "#{project_parent}/#{project_directory}"
+    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_directory}NS"
+    department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
+    created_on = Time.parse(project.metadata_json["created_on"]).strftime("%e-%b-%Y %H:%M:%S").upcase
+
+    script = <<-ATERM
+      # Run these steps from Aterm to create a project in Mediaflux with its related components
+
+      # Create the namespace for the project
+      asset.namespace.create :namespace #{project_namespace}
+
+      # Create the collection asset for the project
+      asset.create
+        :pid #{project_parent}
+        :namespace #{project_namespace}
+        :name #{project.metadata_json["directory"]}
+        :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+        :type "application/arc-asset-collection"
+        :meta <
+          :tigerdata:project <
+            :Code "#{project_directory}"
+            :Title "#{project.metadata_json["title"]}"
+            :Description "#{project.metadata_json["description"]}"
+            :Status "#{project.metadata_json["status"]}"
+            :DataSponsor "#{project.metadata_json["data_sponsor"]}"
+            :DataManager "#{project.metadata_json["data_manager"]}"
+            #{department_fields.join(" ")}
+            :CreatedOn "#{created_on}"
+            :CreatedBy "#{project.metadata_json["created_by"]}"
+            :ProjectID "#{project.metadata_json["project_id"]}"
+            :StorageCapacity "#{project.metadata_json["storage_capacity_requested"]}"
+            :StoragePerformance "#{project.metadata_json["storage_performance_expectations_requested"]}"
+            :ProjectPurpose "#{project.metadata_json["project_purpose"]}"
+          >
+        >
+
+    # Define accumulator for file count
+    asset.collection.accumulator.add
+      :id path=#{path_id}
+      :cascade true
+      :accumulator <
+        :name #{project_directory}-count
+        :type collection.asset.count
+      >
+
+    # Define accumulator for total file size
+    asset.collection.accumulator.add
+      :id path=#{path_id}
+      :cascade true
+      :accumulator <
+      :name #{project_directory}-size
+        :type content.all.size
+      >
+
+    # Define storage quota
+    asset.collection.quota.set
+      :id path=#{path_id}
+      :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
+
+    ATERM
+
+    file_name = "project_create_#{project.id}.txt"
+    puts "Saving script to #{file_name}"
+    File.write(file_name, script)
+  end
+
   task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
     netid = args[:netid]
     user = User.where(uid: netid).first
