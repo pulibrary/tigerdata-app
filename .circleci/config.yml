@@ -63,7 +63,6 @@ jobs:
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
-      - browser-tools/install-firefox
       - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
