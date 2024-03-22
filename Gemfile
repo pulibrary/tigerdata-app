@@ -108,6 +108,7 @@ group :test do
   gem "coveralls_reborn", require: false
   gem "rails-controller-testing"
   gem "rspec_junit_formatter"
+  gem "rspec-retry"
   gem "selenium-webdriver"
   gem "simplecov", require: false
   gem "webmock"

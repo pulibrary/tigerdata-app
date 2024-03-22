@@ -11,6 +11,10 @@ SimpleCov.start "rails" do
                                                      ])
 end
 
+# Adds the ability to retry flaky tests.
+# See https://github.com/NoRedInk/rspec-retry
+require "rspec/retry"
+
 require "factory_bot"
 FactoryBot.find_definitions
 
@@ -102,6 +106,25 @@ RSpec.configure do |config|
   #   # the seed, which is printed after each run.
   #   #     --seed 1234
   config.order = :random
+
+  ### Re-trying flaky system specs
+  # show retry status in spec process
+  config.verbose_retry = true
+  # show exception that triggers a retry if verbose_retry is set to true
+  config.display_try_failure_messages = true
+
+  # run retry only on tests that use javascript
+  config.around :each, :js do |ex|
+    ex.run_with_retry retry: 3
+  end
+
+  # callback to be run between retries
+  config.retry_callback = proc do |ex|
+    # run some additional clean up task - can be filtered by example metadata
+    if ex.metadata[:js]
+      Capybara.reset!
+    end
+  end
   #
   #   # Seed global randomization in this process using the `--seed` CLI option.
   #   # Setting this allows you to use `--seed` to deterministically reproduce
