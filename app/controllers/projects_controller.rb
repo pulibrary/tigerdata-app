@@ -188,7 +188,7 @@ class ProjectsController < ApplicationController
       # TODO: handle error
       redirect_to "/"
     else
-      filename = "#{Dir.pwd}/public/#{job_id}.csv"
+      filename = shared_file_location("#{job_id}.csv")
       send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
     end
   end
@@ -214,5 +214,11 @@ class ProjectsController < ApplicationController
 
     def eligible_editor?
       return true if current_user.eligible_sponsor? or current_user.eligible_manager?
+    end
+
+    def shared_file_location(filename)
+      raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
+      location = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
+      location.join(filename).to_s
     end
 end
