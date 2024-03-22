@@ -372,6 +372,8 @@ GEM
       rspec-expectations (~> 3.12)
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
     rspec-support (3.12.1)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
@@ -543,6 +545,7 @@ DEPENDENCIES
   rails-controller-testing
   redis (~> 4.0)
   rspec-rails (~> 6.0.0)
+  rspec-retry
   rspec_junit_formatter
   selenium-webdriver
   sidekiq
