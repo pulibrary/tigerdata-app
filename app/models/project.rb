@@ -92,8 +92,11 @@ class Project < ApplicationRecord
   end
 
   def mediaflux_metadata(session_id:)
-    accum_req = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
-    accum_req.metadata
+    @mediaflux_metadata ||= begin 
+      accum_req = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+      accum_req.metadata
+    end
+    @mediaflux_metadata
   end
 
   def asset_count(session_id:)
@@ -123,7 +126,6 @@ class Project < ApplicationRecord
   end
 
   def storage_capacity_xml
-    return unless in_mediaflux?
 
     mediaflux_document.at_xpath("/request/service/args/meta/tigerdata:project/StorageCapacity/text()", tigerdata: "http://tigerdata.princeton.edu")
   end
@@ -132,9 +134,9 @@ class Project < ApplicationRecord
     requested_capacity = storage_capacity_xml
 
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation, 0)
+    quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
 
-    backup_value = requested_capacity || self.class.default_storage_capacity
+    backup_value = requested_capacity || self.class.default_storage_capacity #return the default storage capacity, if the requested capacity is nil
     
     return backup_value if quota_value.blank?
     quota_value #return the requested storage capacity if a quota has not been set for a project, if storage has not been requested return "0 GB"
