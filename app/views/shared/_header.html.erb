@@ -1,7 +1,9 @@
 <header>
 <div id="header">
   <nav>
+  <a href="/">
   <%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100") %>
+  </a>
     <div class="body">
     <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>

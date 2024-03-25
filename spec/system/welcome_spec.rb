@@ -44,6 +44,14 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         # The current user has no access to this project so we don't expect to see it
         expect(page).not_to have_content "project 444"
       end
+      it "allows for navigation back to user dashboard when clicking logo" do
+        sign_in current_user
+        visit "/"
+        visit "/projects"
+        expect(page).to have_content "project 111"
+        byebug
+        expect(page).to have_content("Welcome, #{current_user.given_name}!")
+      end
     end
 
     context "for a user without any projects" do
