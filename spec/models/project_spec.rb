@@ -159,11 +159,11 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
   describe "#mediaflux_metadata" do
     let(:project) { FactoryBot.create(:project) }
-    it "calls out to mediaflux once" do 
-      metadata_request = instance_double Mediaflux::Http::GetMetadataRequest, metadata:{}
+    it "calls out to mediaflux once" do
+      metadata_request = instance_double Mediaflux::Http::GetMetadataRequest, metadata: {}
       allow(Mediaflux::Http::GetMetadataRequest).to receive(:new).and_return(metadata_request)
-      project.mediaflux_metadata(session_id: '')
-      project.mediaflux_metadata(session_id: '') #intentionally calling twice, to see if mediaflux is only called once.
+      project.mediaflux_metadata(session_id: "")
+      project.mediaflux_metadata(session_id: "") # intentionally calling twice, to see if mediaflux is only called once.
       expect(Mediaflux::Http::GetMetadataRequest).to have_received(:new).once
     end
   end
