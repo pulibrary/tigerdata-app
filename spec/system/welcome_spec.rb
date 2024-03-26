@@ -46,10 +46,9 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       end
       it "allows for navigation back to user dashboard when clicking logo" do
         sign_in current_user
-        visit "/"
         visit "/projects"
         expect(page).to have_content "project 111"
-        byebug
+        page.find(:css, "#logo").click
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
       end
     end
