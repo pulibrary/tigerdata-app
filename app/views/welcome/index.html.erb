@@ -76,10 +76,10 @@
       <div id="dashboard-approved">
         <h2>Approved Projects</h2>
         <% if !@approved_projects.empty? %>
-          <ul>
+          <ul class="project-list">
             <% @approved_projects.each do |project| %>
               <li>
-                <%= project.title %>
+                <%= link_to(project.title, project) %> 
               </li>
             <% end %>
           </ul>
