@@ -26,11 +26,6 @@
     text-decoration: underline;
     text-decoration-thickness: 3px;
   }
-}
-
-#dashboard-projects {
-  @include dashboard-component;
-  min-width: 40em;
 
   .project-list {
     list-style-type: none;
@@ -38,6 +33,12 @@
       color: black;
     }
   }
+}
+
+#dashboard-projects {
+  @include dashboard-component;
+  min-width: 40em;
+ 
   .btn-dark {
     margin-left: 0.5em;
     margin-bottom: 0.5em;
@@ -51,12 +52,6 @@
 
 #dashboard-pending{
   @include dashboard-component;
-  .project-list {
-    list-style-type: none;
-    a {
-      color: black;
-    }
-  }
   margin-top: 1em;
   min-width: 30em;
 }
