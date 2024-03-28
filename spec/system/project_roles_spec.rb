@@ -63,17 +63,14 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     click_on "btn-add-rw-user"
     expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq ""
 
+    page.find("#departments").find(:xpath, "option[3]").select_option
+
     fill_in "directory", with: "test_project"
     fill_in "title", with: "My test project"
     expect(page).to have_content("Project Directory: /td-test-001/")
+    expect(page.find_all("input:invalid").count).to eq(0)
     expect do
-      expect(page.find_all("input:invalid").count).to eq(0)
-      click_on "Submit"
-      # For some reason the above click on submit sometimes does not submit the form
-      #  even though the inputs are all valid, so try it again...
-      if page.find_all("#btn-add-rw-user").count > 0
-        click_on "Submit"
-      end
+      click_button("Submit")
     end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
     expect(page).to have_content "New Project Request Received"
     click_on "Return to Dashboard"

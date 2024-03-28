@@ -8,6 +8,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "axe-rspec"
+require "capybara/rspec"
 require "devise"
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true,
@@ -37,6 +38,11 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
+
+# Disable animations in system tests.
+# This should make them faster and more reliable.
+Capybara.disable_animation = true
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
