@@ -115,7 +115,7 @@ RSpec.configure do |config|
 
   # run retry only on tests that use javascript and only in CI environment
   if ENV["CI"]
-    config.around :each, :js do |ex|
+    config.around :each, type: :system do |ex|
       ex.run_with_retry retry: 3
     end
   end
