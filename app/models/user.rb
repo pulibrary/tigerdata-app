@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   has_many :user_jobs, dependent: :destroy
 
-  USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list.csv")
+  USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
@@ -70,36 +70,50 @@ class User < ApplicationRecord
     @mediaflux_session = nil
   end
 
+  # Initialize the name values from the CAS information.
+  # Our name fields do not match their name fields, so we need to translate.
   def initialize_name_values(extra_cas_info)
     self.given_name = extra_cas_info.givenname
     self.family_name =  extra_cas_info.sn
     self.display_name = extra_cas_info.pudisplayname
   end
 
+  # Return the display name if it exists, otherwise return the uid
+  # @return [String]
   def display_name_safe
     return uid if display_name.blank?
 
     display_name
   end
 
+  # Is this user eligible to be a data sponsor in this environment?
+  # @return [Boolean]
   def eligible_sponsor?
     return true if superuser
     super
   end
 
+  # Is this user eligible to be a data manger in this environment?
+  # @return [Boolean]
   def eligible_manager?
     return true if superuser
     super
   end
 
+  # Is this user eligible to be a sysadmin in this environment?
+  # @return [Boolean]
   def eligible_sysadmin?
     return true if superuser || sysadmin
   end
 
+  # Parse the USER_REGISTRATION_LIST csv
+  # @return [CSV::Table]
   def self.csv_data
     CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
   end
 
+  # Load the user registration list from the CSV file.
+  # Select the file that matches the rails environment.
   def self.load_registration_list
     User.csv_data.each do |line|
       user = User.find_by(uid: line["uid"]) || User.new
