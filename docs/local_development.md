@@ -4,52 +4,62 @@ Instructions to download MediaFlux as a Docker container and run it locally.
 
 ## Prerequisites
 
-* Docker
+* Docker: Make sure Docker is installed and running locally.
 
-## Getting started
 
-1. Make sure Docker is installed and running locally.
+## If you have a previous Docker image
 
-2. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to pass your `netid` in the following command and enter your password when prompted:
-
-```
-$ scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev.23.08.25.tar.bz2 .
-```
-
-3. Unzip the downloaded file, this process takes a few minutes:
+Stop the current Docker container and remove both the container and the image used to create it:
 
 ```
-$ bunzip2 princeton_dev.23.08.25.tar.bz2
+docker stop mediaflux
+docker rm mediaflux
+docker rmi princeton_dev:23.08.25
 ```
 
-4. Load the tar file as a Docker image:
+## Load the new Docker image
+
+1. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to pass your `netid` in the following command and enter your password when prompted:
 
 ```
-$ docker load -i princeton_dev.23.08.25.tar
+scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev_image_v3.tar .
+```
+
+1. Load the tar file as a Docker image:
+
+```
+docker load -i princeton_dev_image_v3.tar
 ```
 
 You can view the loaded image via `docker images`:
 
 ```
-$ docker images
-REPOSITORY           TAG                    IMAGE ID       CREATED         SIZE
-princeton_dev        23.08.25               311dab7822dd   3 days ago      1.35GB
-...other images...
+docker images
+
+  # REPOSITORY           TAG                    IMAGE ID       CREATED         SIZE
+  # <none>               <none>                 85b0eb016889   3 days ago      1.4GB
+  # ...other images...
 ```
 
-5. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
+1. Set the `repository` and `tag` values of your local image (notice that the `IMAGE ID` might be different in your local installation)
 
 ```
-$ docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:23.08.25
+docker image tag 85b0eb016889 princeton_dev:latest
 ```
 
-6. From now on when you need _start this container_ you can use:
+1. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
+
+```
+docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:latest
+```
+
+1. From now on when you need _start this container_ you can use:
 
 ```
 $ docker start mediaflux
 ```
 
-7. Once the container is running you can access it at the default endpoints:
+6. Once the container is running you can access it at the default endpoints:
 
   * The Desktop client - http://0.0.0.0:8888/desktop/
   * The Aterm client in the browser - http://0.0.0.0:8888/aterm/
