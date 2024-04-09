@@ -92,14 +92,18 @@ Project Details:
 </div>
 
 <div class="details">
-  <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
-  <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
-  <%= link_to "Withdraw Project Request", "", class: "btn btn-light btn-sm" %>
+  <% if !current_user.eligible_sysadmin? %>
+    <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
+    <%= link_to "Withdraw Project Request", "", class: "btn btn-secondary btn-sm" %>
+    <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
+  <% end %>
 </div>
 
 <div class="details">
-   <% if !@project.mediaflux_id.blank? && current_user.eligible_sysadmin? %>
-    <%= link_to "Edit Mediaflux ID", project_approve_path(@project), class: "btn btn-danger btn-sm" %>
+  <% if current_user.eligible_sysadmin? %>
+    <%= link_to "Approve Contents", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
+    <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
+    <%= link_to "Return to Dashboard", root_path, class: "btn btn-return btn-sm" %>
   <% end %>
 </div>
 </show>
