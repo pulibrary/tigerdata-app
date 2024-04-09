@@ -122,7 +122,6 @@ class ProjectsController < ApplicationController
     if params.key?("mediaflux_id")
       project.mediaflux_id = params["mediaflux_id"]
       project.metadata_json["status"] = Project::APPROVE_STATUS
-      params.delete("mediaflux_id")
     end
 
     #Edit action
@@ -136,7 +135,9 @@ class ProjectsController < ApplicationController
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
-    if project.save
+    if project.save and params.key?("mediaflux_id")
+      redirect_to project_approval_received_path(@project)
+    elsif project.save and params.key?("title")
       redirect_to project_revision_confirmation_path(@project)
     else
       render :edit
