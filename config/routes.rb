@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
+  get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
 
   namespace :api do
     namespace :v0 do
