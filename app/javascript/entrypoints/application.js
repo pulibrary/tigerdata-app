@@ -162,6 +162,24 @@ function showMoreLessContent() {
   });
 }
 
+function showMoreLessSysAdmin() {
+  $('#show-more-sysadmin').on('click', (el) => {
+    // alert("hello")
+    const element = el;
+    if (el.target.textContent === 'Show More') {
+      $('.bottom-section').removeClass('invisible-row');
+      element.target.textContent = 'Show Less';
+    } else {
+      // Show less
+      $('.bottom-section').addClass('invisible-row');
+      element.target.textContent = 'Show More';
+      // Source: https://stackoverflow.com/a/10681265/446681
+      //$(window).scrollTop(0);
+    }
+    el.preventDefault();
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -171,6 +189,7 @@ function initPage() {
   initDataUsers();
   initListContentsModal();
   showMoreLessContent();
+  showMoreLessSysAdmin();
 }
 
 window.addEventListener('load', () => initPage());

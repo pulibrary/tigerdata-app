@@ -1,12 +1,3 @@
-  <style>
-  .visible-row {
-    visibility: unset;
-  }
-
-  .invisible-row {
-    visibility: collapse;
-  }
-  </style>
 <% unless current_user %>
   <h1>Welcome to TigerData</h1>
   Please log in.
@@ -88,7 +79,7 @@
           <% end %>
           <h4>Recently Approved Projects</h4>
           <% if !@approved_projects.empty? %>
-            <table class="project-list">
+            <table class="sysadmin-list">
               <% @approved_projects.each_with_index do |project, index| %>
                 <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
                 <tr class ="<%=@row_css%>">
@@ -96,9 +87,7 @@
                 </tr>
               <% end %>
             </table>
-            <form>
-            <button id="show-more" type="button" class="btn btn-primary">Show More</button>
-            </form>
+            <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
           <% else %>
             <p> (none) </p>
           <% end %>
@@ -106,22 +95,3 @@
     <%end%>
   </div>
   <% end %>
-<script>
-$('#show-more').on('click', (el) => {
-    // alert("hello")
-    debugger
-    const element = el;
-    if (el.target.textContent === 'Show More') {
-      $('.bottom-section').removeClass('invisible-row');
-      element.target.textContent = 'Show Less';
-    } else {
-      // Show less
-      $('.bottom-section').addClass('invisible-row');
-      element.target.textContent = 'Show More';
-      // Source: https://stackoverflow.com/a/10681265/446681
-      //$(window).scrollTop(0);
-    }
-    el.preventDefault();
-    return false;
-  });
-</script>

@@ -39,6 +39,25 @@
       color: black;
     }
   }
+  .sysadmin-list {
+    list-style-type: none;
+    margin-left: 1.5em;
+    a {
+      color: black;
+    }
+  }
+
+  .visible-row {
+    visibility: unset;
+  }
+
+  .invisible-row {
+    visibility: collapse;
+  }
+
+  #show-more-sysadmin{
+    margin-top: 0.5em;
+  }
 }
 
 #dashboard-projects {
