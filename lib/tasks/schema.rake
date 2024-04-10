@@ -2,6 +2,7 @@
 # :nocov:
 namespace :schema do
   # Define the TigerData schema
+  desc "define the tigerdata schema in the current mediaflux instance"
   task create: :environment do
     # TODO: Make sure we login with a user that has access to
     # asset.doc.type.update and asset.doc.type.update

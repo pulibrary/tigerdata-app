@@ -53,6 +53,8 @@ docker image tag 85b0eb016889 princeton_dev:latest
 docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:latest
 ```
 
+You may need to add ` --mac-address 02:42:ac:11:00:02` before princeton_dev if mediaflux does not start
+
 1. From now on when you need _start this container_ you can use:
 
 ```
