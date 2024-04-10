@@ -101,7 +101,7 @@ Project Details:
 
 <div class="details">
   <% if current_user.eligible_sysadmin? %>
-    <%= link_to "Approve Contents", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
+    <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
     <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
     <%= link_to "Return to Dashboard", root_path, class: "btn btn-return btn-sm" %>
   <% end %>
