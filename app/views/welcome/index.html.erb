@@ -4,7 +4,7 @@
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
   <div style="display: inline-flex">
-    <% if !current_user.eligible_sysadmin? %>
+    <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
     <div id="dashboard-projects">
       <h1>My Projects</h1>
       <% if @sponsored_projects.size > 0 %>
