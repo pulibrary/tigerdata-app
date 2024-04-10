@@ -85,12 +85,12 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
     context "with the superuser role" do
       let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
 
-      it "shows the 'New Project' button" do
+      it "does not show the 'New Project' button" do
         sign_in current_user
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "New Project"
+        expect(page).not_to have_content "New Project"
       end
 
       it "shows the system administrator dashboard" do
