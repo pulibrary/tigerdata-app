@@ -164,7 +164,6 @@ function showMoreLessContent() {
 
 function showMoreLessSysAdmin() {
   $('#show-more-sysadmin').on('click', (el) => {
-    // alert("hello")
     const element = el;
     if (el.target.textContent === 'Show More') {
       $('.bottom-section').removeClass('invisible-row');
