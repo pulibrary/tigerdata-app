@@ -173,7 +173,6 @@ function showMoreLessSysAdmin() {
       $('.bottom-section').addClass('invisible-row');
       element.target.textContent = 'Show More';
       // Source: https://stackoverflow.com/a/10681265/446681
-      //$(window).scrollTop(0);
     }
     el.preventDefault();
   });
