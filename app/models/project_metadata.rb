@@ -14,6 +14,11 @@ class ProjectMetadata
     form_metadata
   end
 
+  def approve_project(params:)
+    project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}")
+    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
+  end
+  
   def create( params:)
     project.metadata = update_metadata(params:)
     if project.valid? && project.metadata["project_id"].blank?

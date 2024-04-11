@@ -143,5 +143,20 @@ RSpec.describe ProjectMetadata, type: :model do
         expect(doi).to eq("aaabbb123")
       end
     end
+
+    describe "#approve_project" do
+    it "Creates a Provenance Event: Approval" do
+      project_metadata = described_class.new(current_user: current_user, project:)
+      params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+      project_metadata.approve_project(params: {}) # doesn't call the doi service twice
+      
+      project.reload
+      expect(project.provenance_events.count).to eq 2
+      approval_event = project.provenance_events.first #testing the approval Event
+      expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
+      expect(approval_event.event_person).to eq current_user.uid
+      expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
+    end
+    end
   end
 end
