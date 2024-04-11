@@ -70,7 +70,7 @@
             <ul class="project-list">
               <% @pending_projects.each do |project| %>
                 <li>
-                  <%= link_to(project.title, project_approve_path(project)) %>
+                  <%= link_to(project.title, project) %>
                 </li>
               <% end %>
             </ul>
