@@ -83,9 +83,11 @@ Project Details:
   <h2> Provenance </h2>
   <dl>
   <dt> Submission</dt>
-      <% @provenance_events.each do |event| %>
-        <dd> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%> </dd>
-      <% end %>
+      <ul>
+        <% @provenance_events.each do |event| %>
+          <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%> </li>
+        <% end %>
+      </ul>
       <dd></dd>
       <dt>Status</dt> <dd><%=@project_status%></dd>
   </dl>
