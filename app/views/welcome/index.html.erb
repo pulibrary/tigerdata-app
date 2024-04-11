@@ -4,6 +4,7 @@
 <% else %>
   <h1>Welcome, <%= current_user.given_name %>!</h1>
   <div style="display: inline-flex">
+    <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
     <div id="dashboard-projects">
       <h1>My Projects</h1>
       <% if @sponsored_projects.size > 0 %>
@@ -58,32 +59,38 @@
         </ul>
       <% end %>
     </div>
+    <% end %>
   </div>
   <div style="display: inline-flex">
     <% if current_user.eligible_sysadmin?%>
       <div id="dashboard-pending">
-        <h2>Pending Projects</h2>
-        <% if !@pending_projects.empty? %>
-          <ul class="project-list">
-            <% @pending_projects.each do |project| %>
-              <li>
-                <%= link_to(project.title, project_approve_path(project)) %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
-      <div id="dashboard-approved">
-        <h2>Approved Projects</h2>
-        <% if !@approved_projects.empty? %>
-          <ul class="project-list">
-            <% @approved_projects.each do |project| %>
-              <li>
-                <%= link_to(project.title, project) %> 
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
+        <h1>Project Administration</h1>
+          <h4>Pending Projects</h4>
+          <% if !@pending_projects.empty? %>
+            <ul class="project-list">
+              <% @pending_projects.each do |project| %>
+                <li>
+                  <%= link_to(project.title, project_approve_path(project)) %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p> (none) </p>
+          <% end %>
+          <h4>Recently Approved Projects</h4>
+          <% if !@approved_projects.empty? %>
+            <table class="sysadmin-list">
+              <% @approved_projects.each_with_index do |project, index| %>
+                <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
+                <tr class ="<%=@row_css%>">
+                  <td><%= link_to(project.title, project) %> </td>
+                </tr>
+              <% end %>
+            </table>
+            <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
+          <% else %>
+            <p> (none) </p>
+          <% end %>
       </div>
     <%end%>
   </div>
