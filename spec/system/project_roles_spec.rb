@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe "Project Edit Page Roles Validation", type: :system do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
+  let(:system_admin) { FactoryBot.create(:sysadmin, uid: "pul777") }
+  let(:superuser) { FactoryBot.create(:superuser, uid: "pul999") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   before do
@@ -14,6 +16,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
     data_manager
     read_only
     read_write
+    system_admin
   end
 
   it "allows the user fill in only valid users for roles" do
@@ -101,13 +104,23 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       click_on "New Project"
       expect(page).to have_content "New Project Request"
     end
-    it "does not give anyone else the New Project button" do
+    it "does not give the data manager the New Project button" do
       sign_in data_manager
       visit "/"
       expect(page).not_to have_content "New Project"
     end
     it "only allows the Data Sponsor to load the New Projects page" do
       sign_in data_manager
+      visit "/projects/new"
+      expect(current_path).to eq root_path
+    end
+    it "does not give the sytem admin New Project button" do
+      sign_in system_admin
+      visit "/"
+      expect(page).not_to have_content "New Project"
+    end
+    it "does not allow the system administrato to load New Projects page" do
+      sign_in system_admin
       visit "/projects/new"
       expect(current_path).to eq root_path
     end
@@ -196,6 +209,42 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
+    end
+  end
+
+  context "only system admins and super users can approve a project" do
+    let(:project) { FactoryBot.create(:project, status: Project::PENDING_STATUS) }
+
+    it "allows a system admins user to approve the project" do
+      sign_in system_admin
+      visit project_approve_path(project)
+      click_on "Approve"
+      expect(page).to have_content "Approve this project by appending a mediaflux id"
+    end
+
+    it "allows a super user to approve the project" do
+      sign_in superuser
+      visit project_approve_path(project)
+      click_on "Approve"
+      expect(page).to have_content "Approve this project by appending a mediaflux id"
+    end
+
+    it "does not allow a data sponsor to approve the project" do
+      sign_in sponsor_user
+      visit project_approve_path(project)
+      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
+    end
+
+    it "does not allow a data manager to approve the project" do
+      sign_in data_manager
+      visit project_approve_path(project)
+      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
+    end
+
+    it "does not allow a data user to approve the project" do
+      sign_in read_only
+      visit project_approve_path(project)
+      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
     end
   end
 end
