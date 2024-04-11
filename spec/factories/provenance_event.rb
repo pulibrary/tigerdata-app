@@ -7,6 +7,10 @@ FactoryBot.define do
       event_type { ProvenanceEvent::SUBMISSION_EVENT_TYPE }
       event_details { "Requested by #{FFaker::Name.name}" }
     end
+    factory :approval_event do
+      event_type { ProvenanceEvent::APPROVAL_EVENT_TYPE }
+      event_details { "The project was approved by #{FFaker::Name.name}" }
+    end
     factory :status_update_event do
       event_type { ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE }
       event_details { "The Status was updated from pending to approved" }

@@ -87,7 +87,7 @@ class ProjectsController < ApplicationController
     user_model_names = @data_users.map(&:display_name_safe)
     @data_user_names = user_model_names.join(", ")
 
-    @submission_events = project.provenance_events.where(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE)
+    @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
     @project_status = project.metadata[:status]
 
     @approve_status = Project::APPROVE_STATUS
@@ -122,6 +122,9 @@ class ProjectsController < ApplicationController
     if params.key?("mediaflux_id")
       project.mediaflux_id = params["mediaflux_id"]
       project.metadata_json["status"] = Project::APPROVE_STATUS
+      project_metadata = ProjectMetadata.new(project: project, current_user:)
+      project_params = params.dup
+      project_metadata.approve_project(params: project_params)
     end
 
     #Edit action
