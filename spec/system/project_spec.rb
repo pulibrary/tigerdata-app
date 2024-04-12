@@ -28,7 +28,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:mediaflux_id) { 1097 }
   let(:project_in_mediaflux) do
     project_not_in_mediaflux
-    project_not_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+    project_not_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
     project_not_in_mediaflux.mediaflux_id = mediaflux_id
     project_not_in_mediaflux.save!
     project_not_in_mediaflux.reload
@@ -114,7 +114,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "a project is active" do
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
-        #project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        #project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
         #project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
 
@@ -124,7 +124,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       before do
         sign_in sponsor_user
-        project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
       end
@@ -448,7 +448,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       project.reload
       expect(project.mediaflux_id).to eq(mediaflux_id)
-      expect(project.metadata_json["status"]).to eq Project::APPROVE_STATUS
+      expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
 
       # redirects the user to the project show page
     end

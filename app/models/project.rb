@@ -6,7 +6,7 @@ class Project < ApplicationRecord
   # Valid project status described in ADR 7
   # See `architecture-decisions/0007-valid-project-statuses.md`
   PENDING_STATUS = "pending"
-  APPROVE_STATUS = "approved"
+  APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
   
   delegate :to_json, to: :metadata_json
