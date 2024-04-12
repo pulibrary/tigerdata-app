@@ -3,9 +3,12 @@ class Project < ApplicationRecord
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
 
-  # TODO: What are the valid statuses?
+  # Valid project status described in ADR 7
+  # See `architecture-decisions/0007-valid-project-statuses.md`
   PENDING_STATUS = "pending"
-  APPROVE_STATUS = "active"
+  APPROVE_STATUS = "approved"
+  ACTIVE_STATUS = "active"
+  
   delegate :to_json, to: :metadata_json
 
   def metadata
