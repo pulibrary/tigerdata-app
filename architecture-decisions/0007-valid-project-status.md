@@ -21,6 +21,6 @@ Date: 2024-04-12
 ## Consequences
 
 - A system administrator has to take action in mediaflux and the rails application before a project can become active
-- Approve and Active currently are distinct stages of a project, but may become the same in the future.
+- Approved and Active currently are distinct stages of a project, but may become the same in the future.
 - There is currently no way to move backwards or downgrade a project from approved to pending or active back to approved.
 
