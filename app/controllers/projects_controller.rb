@@ -120,8 +120,6 @@ class ProjectsController < ApplicationController
     project
     #Approve action
     if params.key?("mediaflux_id")
-      project.mediaflux_id = params["mediaflux_id"]
-      project.metadata_json["status"] = Project::APPROVED_STATUS
       project_metadata = ProjectMetadata.new(project: project, current_user:)
       project_params = params.dup
       project_metadata.approve_project(params: project_params)

@@ -145,6 +145,16 @@ RSpec.describe ProjectMetadata, type: :model do
     end
 
     describe "#approve_project" do
+    it "Records the mediaflux id and sets the status to approved" do 
+      project_metadata = described_class.new(current_user: current_user, project:)
+      params = {mediaflux_id: 001 }
+      project_metadata.approve_project(params:) # doesn't call the doi service twice
+      
+      project.reload
+
+      expect(project.mediaflux_id).not_to be_nil
+      expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+    end
     it "Creates a Provenance Event: Approval" do
       project_metadata = described_class.new(current_user: current_user, project:)
       params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
