@@ -36,7 +36,7 @@ RSpec.describe ProvenanceEvent, type: :model do
     it "creates an active event type" do
       pe = described_class.new
       pe.event_type = ProvenanceEvent::ACTIVE_EVENT_TYPE
-      pe.event_details = "The Status was updated from pending to approved"
+      pe.event_details = "The Status was updated from approved to active"
       pe.event_person = "abc123"
       pe.save
       expect(pe.event_type).to eq(ProvenanceEvent::ACTIVE_EVENT_TYPE)
