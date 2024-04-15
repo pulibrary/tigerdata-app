@@ -14,7 +14,7 @@ Stop the current Docker container and remove both the container and the image us
 ```
 docker stop mediaflux
 docker rm mediaflux
-docker rmi princeton_dev:23.08.25 (if you had this old version)
+docker rmi princeton_dev:latest  (or the version you had previously like mediaflux_dev:latest )
 ```
 
 ## Load the new Docker image
