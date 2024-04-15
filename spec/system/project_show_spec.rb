@@ -31,7 +31,7 @@
       context "Navigation Buttons" do
         it "Shows the correct nav buttons for an approved project" do
           sign_in sponsor_user
-          project_in_mediaflux.metadata_json["status"] = Project::APPROVE_STATUS
+          project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
           project_in_mediaflux.save!
           visit "/projects/#{project_in_mediaflux.id}"
 
@@ -136,7 +136,7 @@
       end
 
       context "system administrator" do
-        let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVE_STATUS, metadata: metadata) }
+        let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVED_STATUS, metadata: metadata) }
         let(:project_not_in_mediaflux) { FactoryBot.create(:project) }
         it "shows the sysadmin buttons for an approved project" do
           sign_in sysadmin_user

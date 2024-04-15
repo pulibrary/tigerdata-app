@@ -90,9 +90,9 @@ class ProjectsController < ApplicationController
     @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
     @project_status = project.metadata[:status]
 
-    @approve_status = Project::APPROVE_STATUS
+    @approved_status = Project::APPROVED_STATUS
     @eligible_editor = eligible_editor?
-    @project_eligible_to_edit = true if @project_status == @approve_status && eligible_editor?
+    @project_eligible_to_edit = true if @project_status == @approved_status && eligible_editor?
 
     respond_to do |format|
       format.html
@@ -107,10 +107,10 @@ class ProjectsController < ApplicationController
 
   def edit
     project
-    if project.metadata[:status] != Project::APPROVE_STATUS
+    if project.metadata[:status] != Project::APPROVED_STATUS
       flash[:notice] = "Pending projects can not be edited."
       redirect_to project
-    elsif project.metadata[:status] == Project::APPROVE_STATUS && !eligible_editor? #check if the current user is a sponsor of manager
+    elsif project.metadata[:status] == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor of manager
       flash[:notice] = "Only data sponsors and data managers can revise this project."
       redirect_to project
     end
@@ -121,7 +121,7 @@ class ProjectsController < ApplicationController
     #Approve action
     if params.key?("mediaflux_id")
       project.mediaflux_id = params["mediaflux_id"]
-      project.metadata_json["status"] = Project::APPROVE_STATUS
+      project.metadata_json["status"] = Project::APPROVED_STATUS
       project_metadata = ProjectMetadata.new(project: project, current_user:)
       project_params = params.dup
       project_metadata.approve_project(params: project_params)

@@ -142,7 +142,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in sponsor_user
       sponsor_user["eligible_sponsor"] = true
       sponsor_user.save!
-      project.metadata_json["status"] = Project::APPROVE_STATUS
+      project.metadata_json["status"] = Project::APPROVED_STATUS
       project.save!
       visit "/projects/#{project.id}/edit"
       fill_in "data_manager", with: new_data_manager.uid
@@ -155,7 +155,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in data_manager
       data_manager["eligible_sponsor"] = true
       data_manager.save
-      project.metadata_json["status"] = Project::APPROVE_STATUS
+      project.metadata_json["status"] = Project::APPROVED_STATUS
       project.save!
       visit "/projects/#{project.id}/edit"
       expect(page.find(:css, "#non-editable-data-sponsor").text).to eq sponsor_user.uid
@@ -173,7 +173,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
   end
 
   context "Data Sponsors and Data Managers can assign Data Users" do
-    let(:project) { FactoryBot.create(:project, status: Project::APPROVE_STATUS) }
+    let(:project) { FactoryBot.create(:project, status: Project::APPROVED_STATUS) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_json["data_sponsor"]) }
     let(:data_manager) { User.find_by(uid: project.metadata_json["data_manager"]) }
     let!(:ro_data_user) { FactoryBot.create(:user) }
