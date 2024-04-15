@@ -14,6 +14,23 @@ class ProjectMetadata
     form_metadata
   end
 
+  def activate_project(collection_id:)
+    #TODO: FIGURE OUT THE VALID BOOLEAN RESPONSE FOR A MEDIAFLUX QUERY
+    return unless (MEDIAFLUX::HTTP::GetMetadataRequest(session_token: current_user.mediaflux_session, id: collection_id)) # If the collection id exists
+    
+    byebug # check if the project doi in rails matches the project doi in mediaflux
+    
+
+    #activate a project by setting the status to 'active' 
+    project.metadata_json["status"] = Project::ACTIVE_STATUS
+    project.save!
+    
+    #create two provenance events, one for approving the project and another for changing the status of the project
+    #TODO: FILL THE APPROPRIATE EVENT DETAILS
+    project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}")
+    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
+  end
+
   def approve_project(params:)
     #approve a project by recording the mediaflux id & setting the status to 'approved' 
     project.mediaflux_id = params[:mediaflux_id]
