@@ -134,7 +134,6 @@ RSpec.describe ProjectMetadata, type: :model do
         expect(status_update_event.event_details).to eq "The Status of this project has been set to pending"
       end
 
-
       it "does not call out to draft a doi if one isalready set" do
         project.metadata_json["project_id"] = "aaabbb123"
         project_metadata = described_class.new(current_user: current_user, project:)
@@ -145,27 +144,27 @@ RSpec.describe ProjectMetadata, type: :model do
     end
 
     describe "#approve_project" do
-    it "Records the mediaflux id and sets the status to approved" do 
-      project_metadata = described_class.new(current_user: current_user, project:)
-      params = {mediaflux_id: 001 }
-      project_metadata.approve_project(params:)
-      
-      project.reload
+      it "Records the mediaflux id and sets the status to approved" do 
+        project_metadata = described_class.new(current_user: current_user, project:)
+        params = {mediaflux_id: 001 }
+        project_metadata.approve_project(params:)
+        
+        project.reload
 
-      expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
-    end
-    it "Creates a Provenance Event: Approval" do
-      project_metadata = described_class.new(current_user: current_user, project:)
-      params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
-      project_metadata.approve_project(params: {}) # doesn't call the doi service twice
-      
-      project.reload
-      expect(project.provenance_events.count).to eq 2
-      approval_event = project.provenance_events.first #testing the approval Event
-      expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
-      expect(approval_event.event_person).to eq current_user.uid
-      expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
+        expect(project.mediaflux_id).not_to be_nil
+        expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+      end
+      it "Creates a Provenance Event: Approval" do
+        project_metadata = described_class.new(current_user: current_user, project:)
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        project_metadata.approve_project(params: {}) # doesn't call the doi service twice
+        
+        project.reload
+        expect(project.provenance_events.count).to eq 2
+        approval_event = project.provenance_events.first #testing the approval Event
+        expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
+        expect(approval_event.event_person).to eq current_user.uid
+        expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
       end
     end
 
@@ -177,7 +176,7 @@ RSpec.describe ProjectMetadata, type: :model do
       after do
         Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
-      let(:valid_project) { FactoryBot.create(:project, directory: "something-else")}
+      let(:valid_project) { FactoryBot.create(:project, directory: "something-else", project_id: "10.34770/tbd")}
       let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
       it "validates the doi for a project" do
         params = {mediaflux_id: 001 }
