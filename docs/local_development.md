@@ -14,7 +14,7 @@ Stop the current Docker container and remove both the container and the image us
 ```
 docker stop mediaflux
 docker rm mediaflux
-docker rmi princeton_dev:23.08.25
+docker rmi princeton_dev:latest  (or the version you had previously like mediaflux_dev:latest )
 ```
 
 ## Load the new Docker image
@@ -44,16 +44,16 @@ docker images
 1. Set the `repository` and `tag` values of your local image (notice that the `IMAGE ID` might be different in your local installation)
 
 ```
-docker image tag 85b0eb016889 princeton_dev:latest
+docker image tag 85b0eb016889 mediaflux_dev:latest
 ```
 
 1. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
 
 ```
-docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev:latest
+docker create --name mediaflux --publish 0.0.0.0:8888:8888 mediaflux_dev:latest
 ```
 
-You may need to add ` --mac-address 02:42:ac:11:00:02` before princeton_dev if mediaflux does not start
+You may need to add ` --mac-address 02:42:ac:11:00:02` before mediaflux_dev if mediaflux does not start
 
 1. From now on when you need _start this container_ you can use:
 
