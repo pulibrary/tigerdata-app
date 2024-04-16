@@ -166,7 +166,54 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
       expect(approval_event.event_person).to eq current_user.uid
       expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
+      end
     end
+
+    describe "#activate_project" do 
+      before do 
+        @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+      end
+      after do
+        Rails.configuration.mediaflux["api_host"] = @original_api_host
+      end
+      let(:valid_project) { FactoryBot.create(:project, directory: "something-else")}
+      let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
+      it "validates the doi for a project" do
+        params = {mediaflux_id: 001 }
+        project_metadata.approve_project(params:)
+        
+        #create a project in mediaflux
+        session_token = current_user.mediaflux_session
+        collection_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
+        
+        #validate that the collection id exists in mediaflux
+        project_metadata.activate_project(collection_id:)
+        response = Mediaflux::Http::GetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+        metadata = response.metadata
+        expect(metadata[:collection]).to be_truthy
+
+        #validate that the project doi in rails matches the project doi in mediaflux
+        xml = response.response_xml
+        asset = xml.xpath("/response/reply/result/asset")
+        doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
+        expect(doi).to eq project.metadata_json["project_id"]
+
+        #change the status of the project to active
+        project.metadata_json["status"] = Project::ACTIVE_STATUS
+        project.save!
+        expect(project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
+
+        #activate the project by setting the status to active and creating the necessary provenance events
+        project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
+        project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
+        expect(project.provenance_events.count).to eq 2
+        activate_event = project.provenance_events.first #testing the approval Event
+        expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
+        expect(activate_event.event_person).to eq current_user.uid
+        expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
+        byebug
+      end
     end
   end
 end

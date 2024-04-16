@@ -10,7 +10,7 @@ FactoryBot.define do
       title { FFaker::Movie.title }
       created_on { Time.current.in_time_zone("America/New_York").iso8601 }
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
-      project_id { nil }
+      project_id { "10.34770/tbd" }
       status { "pending" }
       storage_capacity { "500 GB" }
       storage_performance { "standard" }
