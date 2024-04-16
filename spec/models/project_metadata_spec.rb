@@ -197,22 +197,19 @@ RSpec.describe ProjectMetadata, type: :model do
         xml = response.response_xml
         asset = xml.xpath("/response/reply/result/asset")
         doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
-        expect(doi).to eq project.metadata_json["project_id"]
+        expect(doi).to eq valid_project.metadata_json["project_id"]
 
         #change the status of the project to active
-        project.metadata_json["status"] = Project::ACTIVE_STATUS
-        project.save!
-        expect(project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
+        valid_project.metadata_json["status"] = Project::ACTIVE_STATUS
+        valid_project.save!
+        expect(valid_project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
 
         #activate the project by setting the status to active and creating the necessary provenance events
-        project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
-        project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
-        expect(project.provenance_events.count).to eq 2
-        activate_event = project.provenance_events.first #testing the approval Event
+        expect(valid_project.provenance_events.count).to eq 4
+        activate_event = valid_project.provenance_events.third #testing the approval Event
         expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
         expect(activate_event.event_person).to eq current_user.uid
         expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
-        byebug
       end
     end
   end
