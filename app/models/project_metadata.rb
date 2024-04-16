@@ -16,7 +16,8 @@ class ProjectMetadata
 
   def activate_project(collection_id:)
     #TODO: FIGURE OUT THE VALID BOOLEAN RESPONSE FOR A MEDIAFLUX QUERY
-    return unless (MEDIAFLUX::HTTP::GetMetadataRequest(session_token: current_user.mediaflux_session, id: collection_id)) # If the collection id exists
+    metadata = MEDIAFLUX::HTTP::GetMetadataRequest(session_token: current_user.mediaflux_session, id: collection_id)
+    return unless metadata[:collection] == true # If the collection id exists
     
     byebug # check if the project doi in rails matches the project doi in mediaflux
     
