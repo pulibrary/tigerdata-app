@@ -15,13 +15,15 @@ class ProjectMetadata
   end
 
   def activate_project(collection_id:)
-    #TODO: FIGURE OUT THE VALID BOOLEAN RESPONSE FOR A MEDIAFLUX QUERY
-    metadata = MEDIAFLUX::HTTP::GetMetadataRequest(session_token: current_user.mediaflux_session, id: collection_id)
+    response = MEDIAFLUX::HTTP::GetMetadataRequest(session_token: current_user.mediaflux_session, id: collection_id)
+    metadata = response.metadata
     return unless metadata[:collection] == true # If the collection id exists
     
-    byebug # check if the project doi in rails matches the project doi in mediaflux
-    
-
+     # check if the project doi in rails matches the project doi in mediaflux
+    xml = response.response_xml
+    asset = xml.xpath("/response/reply/result/asset")
+    doi = asset.xpath("./meta/tigerdata:project/ProjectID")
+    return unless doi == project.metadata_json["project_id"]
     #activate a project by setting the status to 'active' 
     project.metadata_json["status"] = Project::ACTIVE_STATUS
     project.save!
