@@ -24,6 +24,7 @@ class ProjectMetadata
     asset = xml.xpath("/response/reply/result/asset")
     doi = asset.xpath("./meta/tigerdata:project/ProjectID")
     return unless doi == project.metadata_json["project_id"]
+    
     #activate a project by setting the status to 'active' 
     project.metadata_json["status"] = Project::ACTIVE_STATUS
     project.save!
