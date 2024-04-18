@@ -74,7 +74,7 @@
         end
       end
 
-      context "Project Contents" do
+      context "Project Contents", connect_to_mediaflux: true do
         let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
         let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
         let(:first_file) { file_list.select { |asset| asset.collection == false }.first }
@@ -82,8 +82,6 @@
         let(:last_file) { file_list.select { |asset| asset.collection == false }.last }
 
         before do
-          @original_api_host = Rails.configuration.mediaflux["api_host"]
-          Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
           session_id = sponsor_user.mediaflux_session
 
           # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
@@ -96,7 +94,6 @@
 
         after do
           Mediaflux::Http::DestroyAssetRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
-          Rails.configuration.mediaflux["api_host"] = @original_api_host
         end
 
         it "Contents page has collection summary data" do
