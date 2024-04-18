@@ -35,7 +35,8 @@ class TigerdataMailer < ApplicationMailer
       content: @xml_content
     }
 
-    mail(to: config[:to_email], subject: "Project Creation Request", cc: config[:cc_email])
+    subject = "New Project Request Ready for Review"
+    mail(to: config[:to_email], cc: config[:cc_email], subject:)
   end
 
   private
