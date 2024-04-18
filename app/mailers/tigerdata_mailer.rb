@@ -14,7 +14,7 @@ class TigerdataMailer < ApplicationMailer
     }
 
     # attaching xml response to the mailer
-    @xml_content = project.to_xml
+    @xml_content = project.to_xml.html_safe
 
     data_sponsor = project_metadata[:data_sponsor]
     created_on = project_metadata[:created_on]
