@@ -15,6 +15,12 @@ class TigerdataMailer < ApplicationMailer
 
     # attaching xml response to the mailer
     xml_content = project.to_xml
+    @xml_payload = xml_content # passing the xml payload to the mailer
+
+    submission_provenance = {
+      "RequestedBy":project.metadata[:data_sponsor].uid,
+      "RequestDateTime":project.created_on
+    }
     attachments["#{filebase}.xml"] = {
       mime_type: "application/xml",
       content: xml_content
