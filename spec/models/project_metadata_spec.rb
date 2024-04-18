@@ -168,14 +168,7 @@ RSpec.describe ProjectMetadata, type: :model do
       end
     end
 
-    describe "#activate_project" do 
-      before do 
-        @original_api_host = Rails.configuration.mediaflux["api_host"]
-        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-      end
-      after do
-        Rails.configuration.mediaflux["api_host"] = @original_api_host
-      end
+    describe "#activate_project", connect_to_mediaflux: true do 
       let(:valid_project) { FactoryBot.create(:project, directory: "something-else", project_id: "10.34770/tbd")}
       let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
       it "validates the doi for a project" do
