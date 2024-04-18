@@ -14,19 +14,29 @@ class TigerdataMailer < ApplicationMailer
     }
 
     # attaching xml response to the mailer
-    xml_content = project.to_xml
-    @xml_payload = xml_content # passing the xml payload to the mailer
+    @xml_content = project.to_xml.html_safe
 
+    data_sponsor = project_metadata[:data_sponsor]
+    created_on = project_metadata[:created_on]
     submission_provenance = {
-      "RequestedBy":project.metadata[:data_sponsor].uid,
-      "RequestDateTime":project.created_on
+      # "RequestedBy": data_sponsor,
+      "requested_by": data_sponsor,
+      # "RequestDateTime": created_on
+      "request_date_time": created_on
     }
+
+    updated = project_metadata.dup # This is needed to ensure that the Hash is mutable for the Project Model
+    updated[:submission] = submission_provenance
+    project.metadata = updated
+    project.save
+
     attachments["#{filebase}.xml"] = {
       mime_type: "application/xml",
-      content: xml_content
+      content: @xml_content
     }
 
-    mail(to: config[:to_email], subject: "Project Creation Request", cc: config[:cc_email])
+    subject = "New Project Request Ready for Review"
+    mail(to: config[:to_email], cc: config[:cc_email], subject:)
   end
 
   private
