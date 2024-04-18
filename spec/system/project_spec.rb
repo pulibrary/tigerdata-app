@@ -320,15 +320,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
     end
 
-    context "when the description is empty" do
+    context "when the description is empty", connect_to_mediaflux: true do
       before do
-        @original_api_host = Rails.configuration.mediaflux["api_host"]
-        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
         @session_id = sponsor_user.mediaflux_session
-      end
-
-      after do
-        Rails.configuration.mediaflux["api_host"] = @original_api_host
       end
 
       it "allows the projects to be created" do
