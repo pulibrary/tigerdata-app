@@ -14,6 +14,26 @@ class ProjectMetadata
     form_metadata
   end
 
+  def activate_project(collection_id:)
+    response = Mediaflux::Http::GetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+    metadata = response.metadata
+    return unless metadata[:collection] == true # If the collection id exists
+    
+     # check if the project doi in rails matches the project doi in mediaflux
+    xml = response.response_xml
+    asset = xml.xpath("/response/reply/result/asset")
+    doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
+    return unless doi == project.metadata_json["project_id"]
+    
+    #activate a project by setting the status to 'active' 
+    project.metadata_json["status"] = Project::ACTIVE_STATUS
+    project.save!
+    
+    #create two provenance events, one for approving the project and another for changing the status of the project
+    project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
+    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
+  end
+
   def approve_project(params:)
     #approve a project by recording the mediaflux id & setting the status to 'approved' 
     project.mediaflux_id = params[:mediaflux_id]
