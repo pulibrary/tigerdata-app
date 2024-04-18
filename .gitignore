@@ -67,3 +67,6 @@ aterm.jar
 
 public 
 doc
+
+# Ignore test created to not get accidentally added to commit
+project_create_8.txt

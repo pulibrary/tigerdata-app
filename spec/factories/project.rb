@@ -39,5 +39,12 @@ FactoryBot.define do
         project_purpose: project_purpose
       }
     end
+    factory :project_with_dynamic_directory, class: "Project" do
+      transient do
+        sequence :directory do |n|
+          "#{FFaker::Food.fruit}#{n}"
+        end
+      end
+    end
   end
 end
