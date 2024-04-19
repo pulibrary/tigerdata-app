@@ -93,7 +93,7 @@
         end
 
         after do
-          Mediaflux::Http::DestroyAssetRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+          Mediaflux::Http::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
         end
 
         it "Contents page has collection summary data" do

@@ -172,7 +172,7 @@ RSpec.describe ProjectMetadata, type: :model do
       let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
       let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
       after do 
-        Mediaflux::Http::DestroyAssetRequest.new(session_token: current_user.mediaflux_session, collection: valid_project.mediaflux_id, members: true).resolve
+        Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: valid_project.mediaflux_id, members: true).resolve
       end
       it "validates the doi for a project" do
         params = {mediaflux_id: 001 }
