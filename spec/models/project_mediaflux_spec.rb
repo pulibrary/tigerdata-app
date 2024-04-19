@@ -85,13 +85,13 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
     #   let(:incomplete_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
     #   let(:project_metadata) {ProjectMetadata.new(current_user:, project: incomplete_project)}
     #   let(:namespace_request) {Mediaflux::Http::NamespaceCreateRequest}
-    #   after do 
+    #   after do
     #     Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
     #   end
     #   it "fails to create a project" do
     #     params = {mediaflux_id: 001 }
     #     project_metadata.approve_project(params:)
-        
+
     #     #create a project in mediaflux
     #     session_token = current_user.mediaflux_session
     #     collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
