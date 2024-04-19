@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class DestroyAssetRequest < Request
+    class AssetDestroyRequest < Request
       attr_reader :collection, :members
 
       # Constructor
