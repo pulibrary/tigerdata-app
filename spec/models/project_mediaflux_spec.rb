@@ -8,6 +8,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
   let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, "error?": false) }
   let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project }
+  let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
 
   let(:create_asset_request) { instance_double(Mediaflux::Http::GetMetadataRequest) }
 
@@ -79,6 +80,23 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         expect(mediaflux_id).to be "123"
       end
     end
+
+    # context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
+    #   let(:incomplete_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
+    #   let(:project_metadata) {ProjectMetadata.new(current_user:, project: incomplete_project)}
+    #   let(:namespace_request) {Mediaflux::Http::NamespaceCreateRequest}
+    #   after do 
+    #     Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
+    #   end
+    #   it "fails to create a project" do
+    #     params = {mediaflux_id: 001 }
+    #     project_metadata.approve_project(params:)
+        
+    #     #create a project in mediaflux
+    #     session_token = current_user.mediaflux_session
+    #     collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+    #   end
+    # end
   end
 
   describe "#safe_name" do
