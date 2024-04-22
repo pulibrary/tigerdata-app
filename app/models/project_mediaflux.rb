@@ -31,8 +31,10 @@ class ProjectMediaflux
       when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
         raise "Project name already taken"
       when /'asset.create' failed/
-        project.metadata_model.valid?
-        raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6",fields: project.metadata_model.errors)
+
+        # Ensure that the metadata validations are run
+        project.metadata_model.validate
+        raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6", errors: project.metadata_model.errors)
       else
         raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
       end

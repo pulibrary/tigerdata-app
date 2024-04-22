@@ -16,7 +16,7 @@ class Project < ApplicationRecord
   end
 
   def metadata_model
-    ProjectMetadata.new(project: self)
+    @metadata_model ||= ProjectMetadata.new(project: self)
   end
 
   def metadata=(metadata)

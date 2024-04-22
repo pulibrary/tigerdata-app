@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 class ProjectMetadata
   include ActiveModel::API
+
   class Validator < ActiveModel::Validator
     def validate(record)
-      if record.required_values.include?(nil)
+      if record.required_attributes.values.include?(nil)
 
-        record.required_attributes.each do |attr|
+        record.required_keys.each do |attr|
           value = record.attributes[attr]
           record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil?
         end
@@ -18,6 +19,7 @@ class ProjectMetadata
   def initialize(project:, current_user: nil)
     @project = project
     @current_user = current_user
+    @params = {}
   end
 
   # Generates a Hash of updated Project metadata attributes
@@ -71,21 +73,48 @@ class ProjectMetadata
     end
     project.metadata["project_id"]
   end
-  def required_values
-    form_metadata.select { |k,v| required_attributes.include?(k) }
+
+  def required_keys
+    tableized = required_field_labels.map { |v| v.parameterize.underscore }
+    tableized.map(&:to_sym)
   end
-  
+
+  def required_attributes
+    attributes.select { |k,v| required_keys.include?(k) }
+  end
+
+  def attributes
+        {
+          data_sponsor: params[:data_sponsor],
+          data_manager: params[:data_manager],
+          departments: params[:departments],
+          directory: params[:directory],
+          title: params[:title],
+          description: params[:description],
+          status: params[:status],
+          project_id: project.metadata[:project_id],
+          storage_capacity_requested: project.metadata[:storage_capacity_requested] || Rails.configuration.project_defaults[:storage_capacity_requested],
+          storage_performance_expectations_requested: project.metadata[:storage_performance_expectations_requested] || Rails.configuration.project_defaults[:storage_performance_expectations_requested],
+          project_purpose: project.metadata[:project_purpose] || Rails.configuration.project_defaults[:project_purpose]
+        }
+        #[:codes, :titles, :statuses, :"data sponsors", :"data managers", :"affiliated department(s)s", :"created ons", :"created bies", :"project ids", :"storage capacities", :"storage performance expectations", :"project purposes"]
+      end
+
     private
 
       def read_only_counter
+        return if params.nil?
         params[:ro_user_counter].to_i
       end
 
       def read_write_counter
+        return if params.nil?
         params[:rw_user_counter].to_i
       end
 
       def user_list_params(counter, key_prefix)
+        return if params.nil?
+
         users = []
         (1..counter).each do |i|
           key = "#{key_prefix}#{i}"
@@ -109,34 +138,20 @@ class ProjectMetadata
         timestamps
       end
 
+      
       def form_metadata
         ro_users = user_list_params(read_only_counter, "ro_user_")
         rw_users = user_list_params(read_write_counter, "rw_user_")
-        data = {
-          data_sponsor: params[:data_sponsor],
-          data_manager: params[:data_manager],
-          departments: params[:departments],
-          directory: params[:directory],
-          title: params[:title],
-          description: params[:description],
-          status: params[:status],
+        data_users = {
           data_user_read_only: ro_users,
           data_user_read_write: rw_users,
-          project_id: project.metadata[:project_id],
-          storage_capacity_requested: project.metadata[:storage_capacity_requested] || Rails.configuration.project_defaults[:storage_capacity_requested],
-          storage_performance_expectations_requested: project.metadata[:storage_performance_expectations_requested] || Rails.configuration.project_defaults[:storage_performance_expectations_requested],
-          project_purpose: project.metadata[:project_purpose] || Rails.configuration.project_defaults[:project_purpose]
         }
+        data = attributes.merge(data_users)
         timestamps = project_timestamps
         data.merge(timestamps)
       end
 
-      def attributes
-        form_metadata.keys
-      end
-
-      def required_attributes
-        tableized = required_field_labels.map(&:tableize)
-        tableized.map(&:to_sym)
+      def required_field_labels
+        TigerdataSchema.required_project_schema_fields.map { |field| field[:label] }
       end
 end
