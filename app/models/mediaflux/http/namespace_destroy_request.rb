@@ -16,17 +16,17 @@ module Mediaflux
         @namespace = namespace
       end
 
-      def destroy; end
-
-      # Specifies the Mediaflux service to use when creating assets
-      # @return [String]
-      def self.service
-        "asset.namespace.create"
+      def destroy
+        self.resolve
+        if error?
+          self.response_error
+        end
       end
 
-      # Specifies the Mediaflux service to use when destroying assets
+      # Specifies the Mediaflux service to use when destroying namespaces
+      # @return [String]
       def self.service
-        "asset.namespace.hard.destroy :atomic true :force true :namespace(:valid_project.directory)"
+        "asset.namespace.hard.destroy"
       end
 
       private
@@ -34,14 +34,8 @@ module Mediaflux
         def build_http_request_body(name:)
           super do |xml|
             xml.args do
-              if namespace.present?
-                xml.namespace do
-                  xml.parent.set_attribute("all", true)
-                  xml.text(namespace)
-                end
-              end
-              xml.description description if description.present?
-              xml.store store if store.present?
+              xml.namespace @namespace
+              xml.atomic true
             end
           end
         end
