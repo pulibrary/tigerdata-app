@@ -15,7 +15,7 @@ RSpec.describe Mediaflux::Http::NamespaceDestroyRequest, type: :model, connect_t
     expect(namespace_names).to include(namespace)
 
     # Destroy the namespace of the project and everything in it
-    response = described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
+    described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
     namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
     namespace_names = namespace_list.map { |a| a[:name] }
     expect(namespace_names).not_to include(namespace)

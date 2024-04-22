@@ -17,9 +17,9 @@ module Mediaflux
       end
 
       def destroy
-        self.resolve
+        resolve
         if error?
-          self.response_error
+          response_error
         end
       end
 
