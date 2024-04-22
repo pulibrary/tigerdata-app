@@ -9,14 +9,14 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect { described_class.with(project_id:).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
-    expect(mail.subject).to eq "Project Creation Request"
+    expect(mail.subject).to eq "New Project Request Ready for Review"
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq ["test_to@example.com"]
     expect(mail.from).to eq ["no-reply@princeton.edu"]
     html_body = mail.html_part.body.to_s
     expect(html_body).to have_content(project.metadata[:title])
     project.metadata.keys.each do |field|
-      next if ["updated_on", "created_on", "created_by", "updated_by"].include?(field)
+      next if ["updated_on", "created_on", "created_by", "updated_by", "departments"].include?(field)
       value = project.metadata[field]
       value = value.sort.join(", ") if value.is_a? Array
       expect(html_body).to have_content(value)
@@ -31,6 +31,30 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.attachments.second.filename).to eq "abc123_def.xml"
     expect(mail.attachments.second.body.raw_source).to eq project.to_xml.gsub("\n", "\r\n")
     expect(mail.attachments.second.mime_type).to eq "application/xml"
+  end
+
+  it "creates a provenance entry for the project creation" do
+
+    expect { described_class.with(project_id:).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    mail = ActionMailer::Base.deliveries.last
+
+    project.reload
+    expect(project.metadata).to include("submission")
+    expect(project.metadata["submission"]).to include("requested_by")
+    expect(project.metadata["submission"]).to include("request_date_time")
+
+    expect(mail.subject).to eq "New Project Request Ready for Review"
+    expect(mail.to).to eq ["test@example.com"]
+    expect(mail.cc).to eq ["test_to@example.com"]
+    expect(mail.from).to eq ["no-reply@princeton.edu"]
+    html_body = mail.html_part.body.to_s
+
+    expect(html_body).not_to be_empty
+
+    expect(html_body).to include("The following project request is ready for review:")
+    expect(html_body).to include("Please log in to the Presentation Layer to view more details and approve the project.")
+    expect(html_body).to include("Gratefully, the RDSS Team")
+    expect(html_body).to include(project.to_xml)
   end
 
   context "when the project ID is invalid or nil" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::DestroyAssetRequest, type: :model do
+RSpec.describe Mediaflux::Http::AssetDestroyRequest, type: :model do
   let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
   let(:metdata_response) do
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n  <reply type=\"result\">\n    <result/>\n  </reply>\n</response>\n"

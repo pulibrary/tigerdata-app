@@ -21,6 +21,10 @@ Layout/LineLength:
   Exclude:
     - "spec/system/data_migration/*"
 
+Metrics/AbcSize:
+  Exclude:
+    - "app/mailers/tigerdata_mailer.rb"
+
 Metrics/BlockLength:
   Exclude:
     - "app/models/mediaflux/http/create_asset_request.rb"
@@ -38,6 +42,7 @@ Metrics/MethodLength:
   Max: 15 # default: 10
   Exclude:
     - app/models/media_flux_client.rb
+    - "app/mailers/tigerdata_mailer.rb"
 
 Metrics/ParameterLists:
   Enabled: false
