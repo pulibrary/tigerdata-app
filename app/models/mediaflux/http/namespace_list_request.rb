@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
+    # List all of the namespaces that are inside of a given namespace
+    # @example
+    #   namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
+    #   => [{:id=>"1264", :name=>"Avocado1NS"}, {:id=>"1282", :name=>"Banana1NS"}]
     class NamespaceListRequest < Request
       attr_reader :parent_namespace
 
       # Constructor
-      # @param session_token [String] the API token for the authenticated session
-      # @param name [String] Name of the Asset
-      # @param collection [Boolean] create a collection asset if true
-      # @param namespace [String] Optional Parent namespace for the asset to be created in
-      # @param pid [Integer] Optional Parent id for the asset to be created in
+      # @param session_token [String] the API token for the authenticated session, same as session_id
+      # @param parent_namespace [String] Parent namespace for the query
       def initialize(session_token:, parent_namespace:)
         super(session_token: session_token)
         @parent_namespace = parent_namespace
