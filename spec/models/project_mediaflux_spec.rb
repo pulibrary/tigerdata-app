@@ -89,14 +89,20 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       after do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
-      it "fails to create a project" do
+      it "should raise a MetadataError if any required is missing" do
         params = {mediaflux_id: 001 }
         project_metadata.approve_project(params:)
 
         #create a project in mediaflux
         session_token = current_user.mediaflux_session
         collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
-        expect(collection_id).to eq ""
+        expect(collection_id).to be_blank
+
+        #raise a metadata error & log what specific required fields are missing
+        error = assert_raises(Tigerdata::MetadataError) {
+          Tigerdata.new.missing_metadata
+        }
+        assert error.message = "My error msg"
       end
     end
   end
