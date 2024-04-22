@@ -9,7 +9,6 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
   let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project }
   let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
-
   let(:create_asset_request) { instance_double(Mediaflux::Http::GetMetadataRequest) }
 
   describe "#create!" do
@@ -90,19 +89,14 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if any required is missing" do
-        params = {mediaflux_id: 001 }
+        params = {mediaflux_id: 001}
         project_metadata.approve_project(params:)
-
-        #create a project in mediaflux
         session_token = current_user.mediaflux_session
-        collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
-        expect(collection_id).to be_blank
-
-        #raise a metadata error & log what specific required fields are missing
-        error = assert_raises(Tigerdata::MetadataError) {
-          Tigerdata.new.missing_metadata
-        }
-        assert error.message = "My error msg"
+        
+        #raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
+        expect{
+          collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+      }.to raise_error(TigerData::MetadataError,"My error msg")
       end
     end
   end
