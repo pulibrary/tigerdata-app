@@ -23,26 +23,3 @@ RSpec.describe Mediaflux::Http::NamespaceDestroyRequest, type: :model, connect_t
     expect(response[:message]).to include("The namespace '/td-test-001/tigerdataNS/#{namespace}' does not exist or is not accessible")
   end
 end
-#     describe "#new" do
-#     before do
-#       request_body = <<-XML
-# <?xml version=\"1.0\"?>
-# <request>
-#   <service name=\"asset.namespace.hard.destroy :atomic true :force true :namespace\"
-#     <args>
-#       <namespace>Pineapple1</namespace>
-#     </args>
-#   </service>
-# </request>
-#   XML
-#     it "destroys an existing project" do
-#       valid_project.directory
-#       self.service
-#       expect(asset.namespace.exists :namespace valid_project).to eq false
-#     end
-
-#     # Specifies the Mediaflux service to use when destroying assets
-#     def self.service
-#       "asset.namespace.hard.destroy :atomic true :force true :namespace(:valid_project.directory)"
-#     end
-# end
