@@ -1,5 +1,13 @@
 # frozen_string_literal: true
+
+# Take an instance of Project and adds it to MediaFlux
 class ProjectMediaflux
+  # Create a project in MediaFlux
+  #
+  # @param project [Project] the project that needs to be added to MediaFlux
+  # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
+  # @param xml_namespace [] 
+  # @return [String] The id of the project that got created
   def self.create!(project:, session_id:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
 
