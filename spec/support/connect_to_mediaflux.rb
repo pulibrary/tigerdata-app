@@ -11,6 +11,8 @@ RSpec.configure do |config|
       require "rake"
       Rails.application.load_tasks
       Rake::Task["schema:create"].invoke
+      user = FactoryBot.create(:user)
+      Mediaflux::Http::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_ns]).destroy
     end
   end
 
