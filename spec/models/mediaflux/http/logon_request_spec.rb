@@ -88,5 +88,11 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
                           body: /<user>/)
       end
     end
+    context "#resolve", connect_to_mediaflux: true do
+      it "returns the net response" do
+        response = request.resolve
+        expect(response).to be_instance_of(Net::HTTPOK)
+      end
+    end
   end
 end
