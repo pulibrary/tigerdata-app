@@ -1,22 +1,27 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
+    # Describes a namespace
+    # @example
+    #   namespace = Mediaflux::Http::NamespaceDescribeRequest.new(session_token: session_id).metadata
+    #   => {:id=>"1", :path=>"/", :name=>"", :description=>"", :store=>"data"}
+    # @example
+    #   namespace = Mediaflux::Http::NamespaceDescribeRequest.new(session_token: session_id, path: "/td-test-001/tigerdataNS").metadata
+    #   => {:id=>"1182", :path=>"/td-test-001/tigerdataNS", :name=>"tigerdataNS", :description=>"TigerData client app root namespace", :store=>"db"}
     class NamespaceDescribeRequest < Request
       attr_reader :path, :id
 
       # Constructor
       # @param session_token [String] the API token for the authenticated session
-      # @param name [String] Name of the Asset
-      # @param collection [Boolean] create a collection asset if true
-      # @param namespace [String] Optional Parent namespace for the asset to be created in
-      # @param pid [Integer] Optional Parent id for the asset to be created in
+      # @param path [String] path of the asset to be described
+      # @param id [Integer] TODO: Define what this is and how to use it.
       def initialize(session_token:, path: nil, id: nil)
         super(session_token: session_token)
         @path = path
         @id = id
       end
 
-      # Specifies the Mediaflux service to use when creating assets
+      # Specifies the Mediaflux service to use
       # @return [String]
       def self.service
         "asset.namespace.describe"

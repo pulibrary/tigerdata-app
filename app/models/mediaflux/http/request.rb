@@ -95,7 +95,6 @@ module Mediaflux
       # @return [Nokogiri::XML::Document]
       def response_xml
         resolve unless resolved?
-
         Rails.logger.debug(response_body)
         @response_xml ||= Nokogiri::XML.parse(response_body)
         Rails.logger.debug(@response_xml)
