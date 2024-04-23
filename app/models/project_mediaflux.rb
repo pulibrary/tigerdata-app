@@ -24,9 +24,9 @@ class ProjectMediaflux
           #TODO: custom exception class raised for metadata issues. This would allow us to see them in Honeybadger and know how often they're happening. 
           #All exceptions that are raised should include the current expected metadata schema version number, as well as what metadata is missing.
     id = create_request.id
-    response_xml = create_request.response_xml
-    response_text = response_xml.text
     if id.blank?
+      response_xml = create_request.response_xml
+      response_text = response_xml.text
       case response_text
       when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
         raise "Project name already taken"

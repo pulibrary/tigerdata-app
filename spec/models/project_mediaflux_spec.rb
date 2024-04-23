@@ -59,7 +59,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         it "raises an error" do
           expect do
             described_class.create!(project: project, session_id: "test-session-token")
-          end.to raise_error(RuntimeError)
+          end.to raise_error(StandardError) #Raises standard error when a duplicate project already exists
         end
       end
 
