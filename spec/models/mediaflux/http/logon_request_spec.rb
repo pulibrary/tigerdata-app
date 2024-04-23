@@ -88,5 +88,11 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
                           body: /<user>/)
       end
     end
+    context "#resolve", connect_to_mediaflux: true do
+      it "returns the session token" do
+        token = request.resolve
+        expect(token).to eq request.session_token
+      end
+    end
   end
 end

@@ -40,8 +40,7 @@ module Mediaflux
         @session_token = nil
         super
         @session_token = response_session_token
-
-        @http_response
+        @session_token
       end
 
       private
