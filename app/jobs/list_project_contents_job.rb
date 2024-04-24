@@ -19,7 +19,6 @@ class ListProjectContentsJob < ApplicationJob
 
     def mediaflux_session
       logon_request = Mediaflux::Http::LogonRequest.new
-      logon_request.resolve
       logon_request.session_token
     end
 
