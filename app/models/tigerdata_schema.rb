@@ -62,7 +62,7 @@ class TigerdataSchema
   end
 
   # rubocop:disable Metrics/MethodLength
-  def project_schema_fields
+  def self.project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
     code = { name: "Code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Code", description: "The unique identifier for the project" }
     title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Title", 
@@ -125,6 +125,13 @@ class TigerdataSchema
      storage_performance, project_purpose]
   end
   # rubocop:enable Metrics/MethodLength
+  def project_schema_fields
+    self.class.project_schema_fields
+  end
+
+  def self.required_project_schema_fields
+    project_schema_fields.select { |field| field["min-occurs"] > 0 }
+  end
 
   private
 

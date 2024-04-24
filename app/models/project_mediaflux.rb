@@ -28,9 +28,24 @@ class ProjectMediaflux
     prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
+
+          #TODO: custom exception class raised for metadata issues. This would allow us to see them in Honeybadger and know how often they're happening. 
+          #All exceptions that are raised should include the current expected metadata schema version number, as well as what metadata is missing.
     id = create_request.id
-    if id.blank? && create_request.response_xml.text.include?("failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'")
-      raise "Project name already taken"
+    if id.blank?
+      response_xml = create_request.response_xml
+      response_text = response_xml.text
+      case response_text
+      when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
+        raise "Project name already taken"
+      when /'asset.create' failed/
+
+        # Ensure that the metadata validations are run
+        project.metadata_model.validate
+        raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6", errors: project.metadata_model.errors)
+      else
+        raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
+      end
     end
     id
   end
