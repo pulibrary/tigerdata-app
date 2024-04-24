@@ -190,7 +190,7 @@ RSpec.describe "/projects", type: :request do
       <namespace>/td-test-001/big-data-ns</namespace>
       <meta>
         <tigerdata:project>
-          <Code>big-data</code>
+          <ProjectDirectory>big-data</ProjectDirectory>
           <Title>foo</Title>
           <Description>test2</Description>
           <DataSponsor>test4</DataSponsor>

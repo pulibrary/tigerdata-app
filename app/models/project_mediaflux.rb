@@ -67,8 +67,11 @@ class ProjectMediaflux
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def self.project_values(project:)
+    split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
+    size = split_capacity[0]
+    unit = split_capacity[1]
     values = {
-      code: project.directory,
+      project_directory: project.directory,
       title: project.metadata[:title],
       description: project.metadata[:description],
       status: project.metadata[:status],
@@ -82,7 +85,7 @@ class ProjectMediaflux
       updated_on: format_date_for_mediaflux(project.metadata[:updated_on]),
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
-      storage_capacity: project.metadata[:storage_capacity_requested],
+      storage_capacity: { size: , unit: },
       storage_performance: project.metadata[:storage_performance_expectations_requested],
       project_purpose: project.metadata[:project_purpose]
     }
