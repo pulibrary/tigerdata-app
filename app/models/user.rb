@@ -58,7 +58,6 @@ class User < ApplicationRecord
   def mediaflux_session
     @mediaflux_session ||= begin
                             logon_request = Mediaflux::Http::LogonRequest.new
-                            logon_request.resolve
                             logon_request.session_token
                           end
   end

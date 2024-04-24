@@ -31,10 +31,8 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
     stub_request(:post, mediflux_url).to_return(status: 200, body: response_body)
   end
 
-  describe "#resolve" do
+  describe "#session_token" do
     it "authenticates and stores the session token" do
-      request.resolve
-
       expect(request.session_token).to eq(session_token)
       assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
                        body: /<domain>system<\/domain>.*<user>manager<\/user>.*<password>change_me<\/password>/m)
@@ -45,8 +43,6 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
     context "with a different domain" do
       subject(:request) { described_class.new domain: "princeton" }
       it "authenticates and stores the session token" do
-        request.resolve
-
         expect(request.session_token).to eq(session_token)
         assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
                          body: /<domain>princeton<\/domain>/)
@@ -56,8 +52,6 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
     context "with a different username" do
       subject(:request) { described_class.new user: "atest" }
       it "authenticates and stores the session token" do
-        request.resolve
-
         expect(request.session_token).to eq(session_token)
         assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
                          body: /<user>atest<\/user>/)
@@ -67,8 +61,6 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
     context "with a different password" do
       subject(:request) { described_class.new password: "password" }
       it "authenticates and stores the session token" do
-        request.resolve
-
         expect(request.session_token).to eq(session_token)
         assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
                          body: /<password>password<\/password>/)
@@ -79,8 +71,6 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
       subject(:request) { described_class.new identity_token: "tokentoken" }
 
       it "authenticates and stores the session token" do
-        request.resolve
-
         expect(request.session_token).to eq(session_token)
         assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
                           body: /<token>tokentoken/)
@@ -88,11 +78,11 @@ RSpec.describe Mediaflux::Http::LogonRequest, type: :model do
                           body: /<user>/)
       end
     end
-    context "#resolve", connect_to_mediaflux: true do
-      it "returns the net response" do
-        response = request.resolve
-        expect(response).to be_instance_of(Net::HTTPOK)
-      end
+  end
+  describe "#resolve", connect_to_mediaflux: true do
+    it "returns the net response" do
+      response = request.resolve
+      expect(response).to be_instance_of(Net::HTTPOK)
     end
   end
 end
