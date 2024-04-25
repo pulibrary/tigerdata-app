@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class CreateAssetRequest < Request
+    class AssetCreateRequest < Request
       attr_reader :namespace, :asset_name, :collection
 
       # Constructor

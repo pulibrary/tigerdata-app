@@ -15,7 +15,7 @@ RSpec.describe TestProjectGenerator do
 
   describe "#generate" do
 
-    let(:test_collection_create) { instance_double(Mediaflux::Http::CreateAssetRequest, resolve: true, id: "5678") }
+    let(:test_collection_create) { instance_double(Mediaflux::Http::AssetCreateRequest, resolve: true, id: "5678") }
     let(:test_namespace_describe) { instance_double(Mediaflux::Http::NamespaceDescribeRequest, "exists?": true)}   
     let(:test_store_list) { instance_double(Mediaflux::Http::StoreListRequest, stores: [{ id: "1", name: "db", tag: "", type: "database" }])}  
     let(:test_namespace_create) { instance_double(Mediaflux::Http::NamespaceCreateRequest, "error?": false) }
@@ -28,7 +28,7 @@ RSpec.describe TestProjectGenerator do
     end
 
     it "creates test data" do
-      allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: "test-project-00001", namespace: "/td-test-001/tigerdataNS/test-project-00001NS",
+      allow(Mediaflux::Http::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: "test-project-00001", namespace: "/td-test-001/tigerdataNS/test-project-00001NS",
           tigerdata_values: {title: "Project  00001", updated_by: nil, updated_on: nil, code: "test-project-00001",
            created_by: user.uid, created_on: anything, data_manager: user2.uid, data_sponsor: user2.uid, data_user_read_only: [], data_user_read_write: [], 
            departments: ["HPC"], description: "Description of project test-project 00001", project_id: "doi-not-generated", project_purpose: "Research", status: "pending", storage_capacity: "500 GB", 
