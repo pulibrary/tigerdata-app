@@ -27,7 +27,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - "app/models/mediaflux/http/create_asset_request.rb"
+    - "app/models/mediaflux/http/asset_create_request.rb"
     - "config/environments/**/*"
     - "lib/tasks/**/*"
     - "spec/**/*"

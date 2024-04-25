@@ -3,13 +3,13 @@ require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
   let(:namespace_request) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true, "error?": false) }
-  let(:collection_request) { instance_double(Mediaflux::Http::CreateAssetRequest, id: 123) }
+  let(:collection_request) { instance_double(Mediaflux::Http::AssetCreateRequest, id: 123) }
   let(:metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: collection_metadata) }
   let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, "error?": false) }
   let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project }
   let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
-  let(:create_asset_request) { instance_double(Mediaflux::Http::GetMetadataRequest) }
+  let(:asset_create_request) { instance_double(Mediaflux::Http::GetMetadataRequest) }
 
   describe "#create!" do
     context "Using test data" do
@@ -18,13 +18,13 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
                                                                             namespace: "/td-test-001/tigerdataNS/big-dataNS",
                                                                             description: "Namespace for project #{project.title}",
                                                                             store: "db").and_return(namespace_request)
-        allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "big-data",
+        allow(Mediaflux::Http::AssetCreateRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "big-data",
                                                                                         namespace: "/td-test-001/tigerdataNS/big-dataNS",
-                                                                                        pid: "path=/td-test-001/tigerdata")).and_return(create_asset_request)
+                                                                                        pid: "path=/td-test-001/tigerdata")).and_return(asset_create_request)
         allow(Mediaflux::Http::GetMetadataRequest).to receive(:new).with(hash_including(session_token: "test-session-token",
                                                                                         id: "path=/td-test-001/tigerdata")).and_return(parent_metadata_request)
-        allow(create_asset_request).to receive(:resolve).and_return("<xml>...")
-        allow(create_asset_request).to receive(:id).and_return("123")
+        allow(asset_create_request).to receive(:resolve).and_return("<xml>...")
+        allow(asset_create_request).to receive(:id).and_return("123")
       end
 
       context "it formats dates correctly for MediaFlux" do
@@ -43,7 +43,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
         expect(namespace_request).to have_received("error?")
         expect(parent_metadata_request).to have_received("error?")
-        expect(create_asset_request).to have_received("id")
+        expect(asset_create_request).to have_received("id")
         expect(mediaflux_id).to be "123"
       end
 
@@ -52,8 +52,8 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         let(:mediaflux_create_body) { Nokogiri::XML.parse(File.read(mediaflux_create_fixture_path)) }
 
         before do
-          allow(create_asset_request).to receive(:id).and_return(nil)
-          allow(create_asset_request).to receive(:response_xml).and_return(mediaflux_create_body)
+          allow(asset_create_request).to receive(:id).and_return(nil)
+          allow(asset_create_request).to receive(:response_xml).and_return(mediaflux_create_body)
         end
 
         it "raises an error" do
@@ -65,10 +65,10 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
 
       context "when the parent colllection does not exist" do
         let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: {}, "error?": true) }
-        let(:parent_collection_request) { instance_double(Mediaflux::Http::CreateAssetRequest, id: 567, "error?": false) }
+        let(:parent_collection_request) { instance_double(Mediaflux::Http::AssetCreateRequest, id: 567, "error?": false) }
 
         before do
-          allow(Mediaflux::Http::CreateAssetRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "tigerdata",
+          allow(Mediaflux::Http::AssetCreateRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "tigerdata",
                                                                                           namespace: "/td-test-001")).and_return(parent_collection_request)
         end
 
@@ -76,7 +76,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
           mediaflux_id = described_class.create!(project: project, session_id: "test-session-token")
           expect(namespace_request).to have_received("error?")
           expect(parent_collection_request).to have_received("error?")
-          expect(create_asset_request).to have_received("id")
+          expect(asset_create_request).to have_received("id")
           expect(mediaflux_id).to be "123"
         end
       end

@@ -26,7 +26,7 @@ class ProjectMediaflux
     tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
 
           #TODO: custom exception class raised for metadata issues. This would allow us to see them in Honeybadger and know how often they're happening. 
@@ -97,7 +97,7 @@ class ProjectMediaflux
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
 
     tigerdata_values = project_values(project: project)
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
   end
@@ -133,7 +133,7 @@ class ProjectMediaflux
         get_parent = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: project_parent)
         if get_parent.error?
           if project_parent.include?("path=")
-            create_parent_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
+            create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
                                                                             name: Rails.configuration.mediaflux["api_root_collection_name"])
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
           end
