@@ -52,7 +52,7 @@ class ProjectMediaflux
 
   def self.update(project:, session_id:)
     tigerdata_values = project_values(project: project)
-    Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
+    Mediaflux::Http::AssetUpdateRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   end
 
   # This method is used for transforming iso8601 dates to dates that MediaFlux likes
