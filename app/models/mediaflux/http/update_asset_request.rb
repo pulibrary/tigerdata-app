@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class UpdateAssetRequest < Request
+    class AssetUpdateRequest < Request
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param id [Int] Mediaflux asset ID of the asset to update
