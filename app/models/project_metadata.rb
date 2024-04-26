@@ -4,11 +4,10 @@ class ProjectMetadata
 
   class Validator < ActiveModel::Validator
     def validate(record)
-      if record.required_attributes.values.include?(nil)
-
+      if record.required_attributes(record).values.include?(nil)
         record.required_keys.each do |attr|
-          value = record.attributes[attr]
-          record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil?
+          value = record.required_attributes(record)[attr]
+          record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil? && record.project.metadata_json.include?(attr)
         end
       end
     end
@@ -76,11 +75,11 @@ class ProjectMetadata
 
   def required_keys
     tableized = required_field_labels.map { |v| v.parameterize.underscore }
-    tableized.map(&:to_sym)
+    tableized
   end
 
-  def required_attributes
-    attributes.select { |k,v| required_keys.include?(k) }
+  def required_attributes(record)
+    record.project.metadata_json.select { |k,v| required_keys.include?(k) }
   end
 
   def attributes
