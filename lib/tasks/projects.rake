@@ -27,7 +27,7 @@ namespace :projects do
   desc "Create a test project and a small number of assets in that project"
   task :create_small_project, [:uid, :prefix] => [:environment] do |_, args|
     uid = args[:uid]
-    raise "Count must be specified" if uid.blank?
+    raise "User id must be specified" if uid.blank?
     user = User.find_by(uid:)
     project_prefix = args[:prefix]
     raise "Project prefix must be specified" if project_prefix.nil?

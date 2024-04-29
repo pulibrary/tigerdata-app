@@ -26,22 +26,23 @@ class TestProjectGenerator
 
     def create_project
       metadata = {
-        directory: project_prefix,
-        created_on: Time.current.in_time_zone("America/New_York").iso8601,
-        created_by: user.uid,
-        data_sponsor: sponsor.uid,
-        data_manager: sponsor.uid,
-        departments: departments,
-        directory: "#{project_prefix}-#{sequence}",
-        title: "Project #{project_prefix} #{sequence}",
-        description: "Description of project #{project_prefix} #{sequence}",
-        data_user_read_only: [],
-        data_user_read_write: [],
-        project_id: "doi-not-generated",
-        storage_capacity_requested: Rails.configuration.project_defaults[:storage_capacity_requested],
-        project_purpose: Rails.configuration.project_defaults[:project_purpose],
-        storage_performance_expectations_requested: Rails.configuration.project_defaults[:storage_performance_expectations_requested],
-        status: Project::PENDING_STATUS
+      data_sponsor: sponsor.uid,
+      data_manager: sponsor.uid,
+      data_user_read_only: [],
+      data_user_read_write: [],
+      departments: departments,
+      directory: "#{project_prefix}-#{sequence}",
+      title: "Project #{project_prefix} #{sequence}",
+      description: "Description of project #{project_prefix} #{sequence}",
+      created_on: Time.current.in_time_zone("America/New_York").iso8601,
+      created_by: user.uid,
+      updated_on: Time.current.in_time_zone("America/New_York").iso8601,
+      updated_by: user.uid,
+      project_id: "doi-not-generated",
+      storage_capacity_requested: Rails.configuration.project_defaults[:storage_capacity_requested],
+      storage_performance_expectations_requested: Rails.configuration.project_defaults[:storage_performance_expectations_requested],
+      project_purpose: Rails.configuration.project_defaults[:project_purpose],
+      status: Project::PENDING_STATUS
       }
       project = Project.new(metadata: )
       project.save!
