@@ -5,7 +5,7 @@
       <id>1234</id>
       <meta>
         <tigerdata:project>
-          <Code>code</Code>
+          <ProjectDirectory>code</ProjectDirectory>
           <Title>title</Title>
           <Description>description</Description>
           <DataSponsor>data_sponsor</DataSponsor>

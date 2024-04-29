@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
+RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
   let(:metadata) do
     {
-      code: "code",
+      project_directory: "code",
       title: "title",
       description: "description",
       data_sponsor: "data_sponsor",
@@ -78,7 +78,7 @@ RSpec.describe Mediaflux::Http::UpdateAssetRequest, type: :model do
     "      <id>1234</id>\n" \
     "      <meta>\n" \
     "        <tigerdata:project>\n" \
-    "          <Code>#{project.directory}</Code>\n" \
+    "          <ProjectDirectory>#{project.directory}</ProjectDirectory>\n" \
     "          <Title>#{project.metadata[:title]}</Title>\n" \
     "          <Description>#{project.metadata[:description]}</Description>\n" \
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \

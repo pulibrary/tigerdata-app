@@ -44,7 +44,7 @@
             <type>create</type>
           </mf-revision-history>
           <tigerdata:project xmlns:tigerdata="tigerdata" id="2">
-            <Code>foo</Code>
+            <ProjectDirectory>foo</ProjectDirectory>
             <Title>foo</Title>
             <Description>test</Description>
             <Status>active</Status>
