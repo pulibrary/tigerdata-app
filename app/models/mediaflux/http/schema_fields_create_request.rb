@@ -40,6 +40,7 @@ module Mediaflux
           attributes =  dup_field.delete(:attributes)
           description = dup_field.delete(:description)
           instructions = dup_field.delete(:instructions)
+          sub_elements = dup_field.delete(:sub_elements) || []
           xml.element(dup_field) do
             if attributes.present?
               attributes.each do |attribute|
@@ -54,6 +55,9 @@ module Mediaflux
             end
             if instructions.present?
               xml.instructions instructions
+            end
+            sub_elements.each do |field|
+              build_field(xml:, field:)
             end
           end
         end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class CreateAssetRequest < Request
+    class AssetCreateRequest < Request
       attr_reader :namespace, :asset_name, :collection
 
       # Constructor
@@ -83,7 +83,7 @@ module Mediaflux
 
             element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
             xml.send(element_name) do
-              xml.Code @tigerdata_values[:code]
+              xml.ProjectDirectory @tigerdata_values[:project_directory]
               xml.Title @tigerdata_values[:title]
               xml.Description @tigerdata_values[:description] if @tigerdata_values[:description].present?
               xml.Status @tigerdata_values[:status]
@@ -107,9 +107,20 @@ module Mediaflux
               xml.CreatedOn @tigerdata_values[:created_on]
               xml.CreatedBy @tigerdata_values[:created_by]
               xml.ProjectID @tigerdata_values[:project_id]
-              xml.StorageCapacity @tigerdata_values[:storage_capacity]
-              xml.StoragePerformance @tigerdata_values[:storage_performance]
+              xml.StorageCapacity do
+                xml.Size @tigerdata_values[:storage_capacity][:size]
+                xml.Unit @tigerdata_values[:storage_capacity][:unit]
+              end
+              xml.Performance do
+                xml.parent.set_attribute("Requested", @tigerdata_values[:storage_performance])
+                xml.text(@tigerdata_values[:storage_performance])
+              end
+              xml.Submission do
+                xml.RequestedBy @tigerdata_values[:created_by]
+                xml.RequestDateTime @tigerdata_values[:created_on]
+              end
               xml.ProjectPurpose @tigerdata_values[:project_purpose]
+              xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
             end
           end
         end

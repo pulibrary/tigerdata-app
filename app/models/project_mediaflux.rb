@@ -26,18 +26,33 @@ class ProjectMediaflux
     tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
+
+          #TODO: custom exception class raised for metadata issues. This would allow us to see them in Honeybadger and know how often they're happening. 
+          #All exceptions that are raised should include the current expected metadata schema version number, as well as what metadata is missing.
     id = create_request.id
-    if id.blank? && create_request.response_xml.text.include?("failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'")
-      raise "Project name already taken"
+    if id.blank?
+      response_xml = create_request.response_xml
+      response_text = response_xml.text
+      case response_text
+      when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
+        raise "Project name already taken"
+      when /'asset.create' failed/
+
+        # Ensure that the metadata validations are run
+        project.metadata_model.validate
+        raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6", errors: project.metadata_model.errors)
+      else
+        raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
+      end
     end
     id
   end
 
   def self.update(project:, session_id:)
     tigerdata_values = project_values(project: project)
-    Mediaflux::Http::UpdateAssetRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
+    Mediaflux::Http::AssetUpdateRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   end
 
   # This method is used for transforming iso8601 dates to dates that MediaFlux likes
@@ -52,8 +67,11 @@ class ProjectMediaflux
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def self.project_values(project:)
+    split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
+    size = split_capacity[0]
+    unit = split_capacity[1]
     values = {
-      code: project.directory,
+      project_directory: project.directory,
       title: project.metadata[:title],
       description: project.metadata[:description],
       status: project.metadata[:status],
@@ -67,7 +85,7 @@ class ProjectMediaflux
       updated_on: format_date_for_mediaflux(project.metadata[:updated_on]),
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
-      storage_capacity: project.metadata[:storage_capacity_requested],
+      storage_capacity: { size: , unit: },
       storage_performance: project.metadata[:storage_performance_expectations_requested],
       project_purpose: project.metadata[:project_purpose]
     }
@@ -82,7 +100,7 @@ class ProjectMediaflux
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
 
     tigerdata_values = project_values(project: project)
-    create_request = Mediaflux::Http::CreateAssetRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
   end
@@ -118,7 +136,7 @@ class ProjectMediaflux
         get_parent = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: project_parent)
         if get_parent.error?
           if project_parent.include?("path=")
-            create_parent_request = Mediaflux::Http::CreateAssetRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
+            create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
                                                                             name: Rails.configuration.mediaflux["api_root_collection_name"])
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
           end

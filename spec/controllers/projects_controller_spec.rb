@@ -35,7 +35,7 @@ RSpec.describe ProjectsController do
         "      <namespace>/td-test-001/tigerdataNS/#{project.directory}NS</namespace>\n" \
         "      <meta>\n" \
         "        <tigerdata:project>\n" \
-        "          <Code>#{project.directory}</Code>\n" \
+        "          <ProjectDirectory>#{project.directory}</ProjectDirectory>\n" \
         "          <Title>#{project.metadata[:title]}</Title>\n" \
         "          <Description>#{project.metadata[:description]}</Description>\n" \
         "          <Status>#{project.metadata[:status]}</Status>\n" \
@@ -46,9 +46,17 @@ RSpec.describe ProjectsController do
         "          <CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
         "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
         "          <ProjectID>abc-123</ProjectID>\n" \
-        "          <StorageCapacity>500 GB</StorageCapacity>\n" \
-        "          <StoragePerformance>standard</StoragePerformance>\n" \
+        "          <StorageCapacity>\n" \
+        "            <Size>500</Size>\n" \
+        "            <Unit>GB</Unit>\n" \
+        "          </StorageCapacity>\n" \
+        "          <Performance Requested=\"standard\">standard</Performance>\n" \
+        "          <Submission>\n" \
+        "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
+        "            <RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
+        "          </Submission>\n" \
         "          <ProjectPurpose>research</ProjectPurpose>\n" \
+        "          <SchemaVersion>6.1</SchemaVersion>\n" \
         "        </tigerdata:project>\n" \
         "      </meta>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \

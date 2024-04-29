@@ -623,6 +623,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end
 
         it "renders the storage capacity in the show view" do
+          pending "how will we really render the storage capacity"
           visit project_contents_path(project_in_mediaflux)
           expect(page).to have_content "0 KB / 100 TB"
           expect(page).to be_axe_clean

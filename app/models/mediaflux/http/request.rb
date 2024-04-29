@@ -144,7 +144,9 @@ module Mediaflux
 
         def build_http_request_body(name:)
           args = { name: name }
-          args[:session] = session_token unless session_token.nil?
+                                                # must use @session_token here instead of session_token 
+                                                #  for login to not go into an infinaite loop
+          args[:session] = session_token unless @session_token.nil?
 
           Nokogiri::XML::Builder.new(namespace_inheritance: false) do |xml|
             xml.request do

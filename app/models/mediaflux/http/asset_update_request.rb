@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class UpdateAssetRequest < Request
+    class AssetUpdateRequest < Request
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param id [Int] Mediaflux asset ID of the asset to update
@@ -48,7 +48,7 @@ module Mediaflux
 
                   element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
                   xml.send(element_name) do
-                    xml.Code @tigerdata_values[:code]
+                    xml.ProjectDirectory @tigerdata_values[:project_directory]
                     xml.Title @tigerdata_values[:title]
                     xml.Description @tigerdata_values[:description]
                     xml.DataSponsor @tigerdata_values[:data_sponsor]
