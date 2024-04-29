@@ -98,7 +98,9 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
           collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         }.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
-          expect(error.message).to include("Project failed to create with metadata schema version 0.6 with the missing fields:")
+          expect(error.message).to include("Project creation failed with metadata schema version 0.6 due to the missing fields:")
+          expect(incomplete_project.metadata_model.errors.attribute_names.size).to eq 1
+          expect(incomplete_project.metadata_model.errors.attribute_names[0].to_s).to eq "project_id"
         end
       end
     end
