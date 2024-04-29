@@ -4,9 +4,9 @@ class ProjectMetadata
 
   class Validator < ActiveModel::Validator
     def validate(record)
-      if record.required_attributes(record).values.include?(nil)
+      if record.required_attributes.values.include?(nil)
         record.required_keys.each do |attr|
-          value = record.required_attributes(record)[attr]
+          value = record.required_attributes[attr]
           record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil? && record.project.metadata_json.include?(attr)
         end
       end
@@ -78,8 +78,8 @@ class ProjectMetadata
     tableized
   end
 
-  def required_attributes(record)
-    record.project.metadata_json.select { |k,v| required_keys.include?(k) }
+  def required_attributes
+    self.project.metadata_json.select { |k,v| required_keys.include?(k) }
   end
 
   def attributes
