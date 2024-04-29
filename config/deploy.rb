@@ -51,7 +51,19 @@ namespace :load_users do
   end
 end
 
+namespace :schema do
+  desc "Load the current schema"
+  task :load do
+    on roles(:schema) do
+      within release_path do
+        execute("cd #{release_path} && bundle exec rake schema:create")
+      end
+    end
+  end
+end
+
 after "deploy:published", "load_users:from_registration_list"
+after "load_users:from_registration_list", "schema:load"
 
 before "deploy:reverted", "npm:install"
 
