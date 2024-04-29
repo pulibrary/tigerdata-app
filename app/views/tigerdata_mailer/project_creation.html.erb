@@ -26,7 +26,7 @@
           <dd><%= @project.metadata[:data_sponsor] %></dd>
           <dt>Data Manager</dt>
           <dd><%= @project.metadata[:data_manager] %></dd>
-          <dt>Affiliated Departments</dt>
+          <dt>Departments</dt>
           <dd><%= @project.departments.join(", ") %></dd>
           <dt>Project Directory</dt>
           <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %> </dd>

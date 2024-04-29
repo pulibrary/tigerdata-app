@@ -48,7 +48,7 @@ module Mediaflux
 
                   element_name = @xml_namespace.nil? ? "project" : "#{@xml_namespace}:project"
                   xml.send(element_name) do
-                    xml.Code @tigerdata_values[:code]
+                    xml.ProjectDirectory @tigerdata_values[:project_directory]
                     xml.Title @tigerdata_values[:title]
                     xml.Description @tigerdata_values[:description]
                     xml.DataSponsor @tigerdata_values[:data_sponsor]

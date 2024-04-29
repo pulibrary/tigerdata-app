@@ -1,4 +1,4 @@
-# This file was automatically generated on 2024-03-20T14:11:44-04:00
+# This file was automatically generated on 2024-04-26T09:42:04-04:00
 # Create the "tigerdata" namespace schema and the "project" definition inside of it.
 #
 # To run this script, issue the following command from Aterm
@@ -10,80 +10,221 @@
 asset.doc.namespace.update :create true :namespace tigerdata :description "TigerData metadata schema"
 
 asset.doc.type.update :create true :description "Project metadata" :type tigerdata:project :definition < \
- :element -name Code -type string -index true -min-occurs 1 -max-occurs 1 -label "Code" \
-   < \
-     :description "The unique identifier for the project" \
-   > \
- :element -name Title -type string -min-occurs 1 -max-occurs 1 -label "Title" \
-   < \
-     :description "A plain-language title for the project" \
-     :instructions "A plain-language title for the project (at the highest level, if sub-projects exist), which will display in metadata records and search results, and which can be edited later (unlike the Project ID)." \
-   > \
- :element -name Description -type string -min-occurs 0 -max-occurs 1 -label "Description" \
-   < \
-     :description "A brief description of the project" \
-     :instructions "A brief description of the project (at the highest level, if sub-projects exist), which serves to summarize the project objectives and (anticipated) data and metadata included in the project." \
-   > \
- :element -name Status -type string -index true -min-occurs 1 -max-occurs 1 -label "Status" \
-   < \
-     :description "The current status of the project" \
-   > \
- :element -name DataSponsor -type string -index true -min-occurs 1 -max-occurs 1 -label "Data Sponsor" \
-   < \
-     :description "The person who takes primary responsibility for the project" \
-     :instructions "The ‘Data Sponsor’ is the person who takes primary responsibility for the project, including oversight of all of the other roles, all of the data contained in the project, and all of the metadata associated with the data and the project itself. This field is required for all projects in TigerData, and all files in a given project inherit the Data Sponsor value from the project metadata. The person filling the role must be both a registered TigerData user and a current member of the list of eligible Data Sponsors for TigerData." \
-   > \
- :element -name DataManager -type string -index true -min-occurs 1 -max-occurs 1 -label "Data Manager" \
-   < \
-     :description "The person who manages the day-to-day activities for the project" \
-     :instructions "The ‘Data Manager’ is the person who manages the day-to-day activities for the project, including both data and metadata, but not including role assignments, which is instead determined by the Data Sponsor. (However, the same person may fill both the Data Sponsor and the Data Manager roles on the same project, provided they are eligible for both.) This field is required for all projects in TigerData, and all files in a given project inherit the Data Manager value from the project metadata. The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData." \
-   > \
- :element -name DataUser -type string -index true -min-occurs 0 -label "Data User(s)" \
-   < \
-     :description "A person who has read and write access privileges to the project" \
-     :instructions "A ‘Data User’ is a person who has access privileges to a given project or file, including data and metadata. This field is optional for both projects and files. Any number of Data Users may be assigned to a given project or file, with or without a read-only restriction. All Data Users must be registered for TigerData prior to assignment." \
-     :attribute -name ReadOnly -type boolean -min-occurs 0 \
-       < :description "Determines whether a given Data User is limited to read-only access to files" > \
-   > \
- :element -name Department -type string -index true -min-occurs 1 -label "Affiliated Department(s)" \
-   < \
-     :description "The primary Princeton University department(s) affiliated with the project" \
-     :instructions "The primary Princeton University department(s) affiliated with the project. In cases where the Data Sponsor holds cross-appointments, or where multiple departments are otherwise involved with the project, multiple departments may be recorded." \
-   > \
- :element -name CreatedOn -type date -min-occurs 1 -max-occurs 1 -label "Created On" \
-   < \
-     :description "Timestamp project was created" \
-   > \
- :element -name CreatedBy -type string -min-occurs 1 -max-occurs 1 -label "Created By" \
-   < \
-     :description "User that created the project" \
-   > \
- :element -name UpdatedOn -type date -min-occurs 0 -max-occurs 1 -label "Updated On" \
-   < \
-     :description "Timestamp project was updated" \
-   > \
- :element -name UpdatedBy -type string -min-occurs 0 -max-occurs 1 -label "Updated By" \
-   < \
-     :description "User that updated the project" \
-   > \
- :element -name ProjectID -type string -index true -min-occurs 1 -max-occurs 1 -label "Project ID" \
-   < \
-     :description "The pul datacite drafted doi" \
-     :instructions "Records the DOI reserved for the project, from which the automatic code component of the Project ID is determined" \
-   > \
- :element -name StorageCapacity -type string -index true -min-occurs 1 -max-occurs 1 -label "Storage Capacity" \
-   < \
-     :description "The requested storage capacity (default 500 GB)" \
-     :instructions "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team" \
-   > \
- :element -name StoragePerformance -type string -index true -min-occurs 1 -max-occurs 1 -label "Storage Performance Expectations" \
-   < \
-     :description "The requested storage performance (default Standard)" \
-     :instructions "The expected needs for storage performance, i.e. relative read/write and transfer speeds. The ‘Standard’ default for TigerData is balanced and tuned for moderate usage. Those who expect more intensive usage should select the ‘Premium’ option, while those who expect to simply store their data for long-term, low-usage should select the ‘Eco’ option" \
-   > \
- :element -name ProjectPurpose -type string -index true -min-occurs 1 -max-occurs 1 -label "Project Purpose" \
-   < \
-     :description "The project purpose (default Research)" \
-     :instructions "The high-level category for the purpose of the project: ‘Research’ (default), ‘Administrative’, or ‘Library Archive’." \
-   > \
+  :element -name ProjectDirectory -type string -index true -min-occurs 1 -max-occurs 1 -label "Project Directory" \
+    < \
+      :description "The locally unique name for the project's top-level directory" \
+      :instructions "The locally unique name for the project's top-level directory, as shown in a file path. Data Sponsors may suggest a project directory name that is meaningful to them, subject to system administrator approval." \
+    > \
+  :element -name Title -type string -min-occurs 1 -max-occurs 1 -label "Title" \
+    < \
+      :description "A plain-language title for the project" \
+      :instructions "A plain-language title for the project (at the highest level, if sub-projects exist), which will display in metadata records and search results, and which can be edited later (unlike the Project ID)." \
+    > \
+  :element -name Description -type string -min-occurs 0 -max-occurs 1 -label "Description" \
+    < \
+      :description "A brief description of the project" \
+      :instructions "A brief description of the project (at the highest level, if sub-projects exist), which serves to summarize the project objectives and (anticipated) data and metadata included in the project." \
+    > \
+  :element -name Status -type string -index true -min-occurs 1 -max-occurs 1 -label "Status" \
+    < \
+      :description "The current status of the project" \
+      :instructions "The current status of the project, as it pertains to the major events tracked by provenance fields (e.g., active, approved, pending, published, or retired)." \
+    > \
+  :element -name DataSponsor -type string -index true -min-occurs 1 -max-occurs 1 -label "Data Sponsor" \
+    < \
+      :description "The person who takes primary responsibility for the project" \
+      :instructions "The 'Data Sponsor' is the person who takes primary responsibility for the project, including oversight of all of the other roles, all of the data contained in the project, and all of the metadata associated with the data and the project itself. This field is required for all projects in TigerData, and all files in a given project inherit the Data Sponsor value from the project metadata. The person filling the role must be both a registered TigerData user and a current member of the list of eligible Data Sponsors for TigerData." \
+    > \
+  :element -name DataManager -type string -index true -min-occurs 1 -max-occurs 1 -label "Data Manager" \
+    < \
+      :description "The person who manages the day-to-day activities for the project" \
+      :instructions "The 'Data Manager' is the person who manages the day-to-day activities for the project, including both data and metadata, but not including role assignments, which is instead determined by the Data Sponsor. (However, the same person may fill both the Data Sponsor and the Data Manager roles on the same project, provided they are eligible for both.) This field is required for all projects in TigerData, and all files in a given project inherit the Data Manager value from the project metadata. The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData." \
+    > \
+  :element -name DataUser -type string -index true -min-occurs 0 -label "Data User(s)" \
+    < \
+      :description "A person who has read and write access privileges to the project" \
+      :instructions "A 'Data User' is a person who has access privileges to a given project or file, including data and metadata. This field is optional for both projects and files. Any number of Data Users may be assigned to a given project or file, with or without a read-only restriction. All Data Users must be registered for TigerData prior to assignment." \
+      :attribute -name ReadOnly -type boolean -min-occurs 0 \
+        < :description "Determines whether a given Data User is limited to read-only access to files" > \
+    > \
+  :element -name Department -type string -index true -min-occurs 1 -label "Department(s)" \
+    < \
+      :description "The primary Princeton University department(s) affiliated with the project" \
+      :instructions "The primary Princeton University department(s) affiliated with the project. In cases where the Data Sponsor holds cross-appointments, or where multiple departments are otherwise involved with the project, multiple departments may be recorded. This field is not meant to capture the departmental affiliations of every person connected to this project, but rather the departments directly tied to the project itself." \
+    > \
+  :element -name CreatedOn -type date -min-occurs 1 -max-occurs 1 -label "Created On" \
+    < \
+      :description "Timestamp project was created" \
+    > \
+  :element -name CreatedBy -type string -min-occurs 1 -max-occurs 1 -label "Created By" \
+    < \
+      :description "User that created the project" \
+    > \
+  :element -name UpdatedOn -type date -min-occurs 0 -max-occurs 1 -label "Updated On" \
+    < \
+      :description "Timestamp project was updated" \
+    > \
+  :element -name UpdatedBy -type string -min-occurs 0 -max-occurs 1 -label "Updated By" \
+    < \
+      :description "User that updated the project" \
+    > \
+  :element -name ProjectID -type string -index true -min-occurs 1 -max-occurs 1 -label "Project ID" \
+    < \
+      :description "The universally unique identifier for the project (or in some cases, for the sub-project), automatically generated as a valid DOI compliant with ISO 26324:2012." \
+      :instructions "Records the DOI reserved for the project, from which the automatic code component of the Project ID is determined" \
+    > \
+  :element -name StorageCapacity -type document -min-occurs 1 -max-occurs 1 -label "Storage Capacity" \
+    < \
+      :description "The requested storage capacity (default 500 GB)" \
+      :instructions "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team" \
+      :element -name Size -type float -min-occurs 1 -max-occurs 1 -label "Size" \
+        < \
+          :description "The numerical value of the quantity" \
+          :instructions "The numerical value of the quantity (e.g., count, size, magnitude, etc.)" \
+          :attribute -name Requested -type string -min-occurs 0 \
+            < :description "The requested value provided by the Data Sponsor or Data Manager." > \
+          :attribute -name Approved -type string -min-occurs 0 \
+            < :description "The value approved and assigned by a system administrator (may not be the same as the requested value)." > \
+        > \
+      :element -name Unit -type string -min-occurs 1 -max-occurs 1 -label "Unit" \
+        < \
+          :description "TThe unit of measure for the quantity" \
+          :instructions "TThe unit of measure for the quantity (e.g., MB, GB, TB, etc." \
+          :attribute -name Requested -type string -min-occurs 0 \
+            < :description "The requested value provided by the Data Sponsor or Data Manager." > \
+          :attribute -name Approved -type string -min-occurs 0 \
+            < :description "The value approved and assigned by a system administrator (may not be the same as the requested value)." > \
+        > \
+    > \
+  :element -name Performance -type string -index true -min-occurs 1 -max-occurs 1 -label "Storage Performance Expectations" \
+    < \
+      :description "The requested storage performance (default Standard)" \
+      :instructions "The expected needs for storage performance, i.e. relative read/write and transfer speeds. The 'Standard' default for TigerData is balanced and tuned for moderate usage. Those who expect more intensive usage should select the 'Premium' option, while those who expect to simply store their data for long-term, low-usage should select the 'Eco' option" \
+      :attribute -name Requested -type string -min-occurs 0 \
+        < :description "The requested value provided by the Data Sponsor or Data Manager." > \
+      :attribute -name Approved -type string -min-occurs 0 \
+        < :description "The value approved and assigned by a system administrator (may not be the same as the requested value)." > \
+    > \
+  :element -name ProjectPurpose -type string -index true -min-occurs 1 -max-occurs 1 -label "Project Purpose" \
+    < \
+      :description "The high-level category for the purpose of the project (research, administrative, or library)" \
+      :instructions "The high-level category for the purpose of the project: 'Research' (default), 'Administrative', or 'Library Archive'." \
+    > \
+  :element -name Submission -type document -min-occurs 1 -max-occurs 1 -label "Submission" \
+    < \
+      :description "A record of a project's initial submission" \
+      :instructions "A record of a project's initial submission, including the request to create a new project and the approval or denial by system administrators." \
+      :element -name RequestedBy -type string -min-occurs 1 -max-occurs 1 -label "Requested By" \
+        < \
+          :description "The person who made the request" \
+          :instructions "The person who made the request, given as a locally unique user." \
+        > \
+      :element -name RequestDateTime -type date -min-occurs 1 -max-occurs 1 -label "Request Date-Time" \
+        < \
+          :description "The date and time the request was made" \
+          :instructions "The date and time the request was made, following ISO 8601 standards for timestamps." \
+        > \
+      :element -name ApprovedBy -type string -min-occurs 0 -max-occurs 1 -label "Approved By" \
+        < \
+          :description "The person who approved the request" \
+          :instructions "The person who approved the request, given as a locally unique user." \
+        > \
+      :element -name ApprovalDateTime -type date -min-occurs 0 -max-occurs 1 -label "Approval Date-Time" \
+        < \
+          :description "The date and time the request was approved" \
+          :instructions "The date and time the request was approved, following ISO 8601 standards for timestamps" \
+        > \
+      :element -name DeniedBy -type string -min-occurs 0 -max-occurs 1 -label "Denied  By" \
+        < \
+          :description "The person who denied the request" \
+          :instructions "The person who denied the request, given as a locally unique user." \
+        > \
+      :element -name DenialDateTime -type date -min-occurs 0 -max-occurs 1 -label "Denial Date-Time" \
+        < \
+          :description "The date and time the request was denied" \
+          :instructions "The date and time the request was denied, following ISO 8601 standards for timestamps" \
+        > \
+      :element -name EventlNote -type document -min-occurs 0 -label "Event Note(s)" \
+        < \
+          :description "A supplementary record for a provenance event" \
+          :instructions "A supplementary record of noteworthy details for a given provenance event (e.g., quota decisions, storage tier assignments, revisions to submitted metadata, explanations of extenuating circumstances, etc.)" \
+          :element -name NoteBy -type string -min-occurs 1 -max-occurs 1 -label "Note By" \
+            < \
+              :description "The person making the note." \
+            > \
+          :element -name NoteDateTime -type date -min-occurs 1 -max-occurs 1 -label "Note Date-Time" \
+            < \
+              :description "The date and time the note was made" \
+            > \
+          :element -name EventType -type string -min-occurs 1 -max-occurs 1 -label "Event Type" \
+            < \
+              :description "A general category label for the event note" \
+            > \
+          :element -name Message -type string -min-occurs 1 -max-occurs 1 -label "Message" \
+            < \
+              :description "The plain-language message contents of the event note." \
+            > \
+        > \
+    > \
+  :element -name Revision -type document -min-occurs 0 -max-occurs 1 -label "Revision(s)" \
+    < \
+      :description "A record of major revisions to an active project, if applicable" \
+      :instructions "A record of major revisions to an active project, if applicable–i.e., those requiring a special request and approval from a system administrator, such as a change in the Data Sponsor or capacity and performance increases." \
+      :element -name RequestedBy -type string -min-occurs 1 -max-occurs 1 -label "Requested By" \
+        < \
+          :description "The person who made the request" \
+          :instructions "The person who made the request, given as a locally unique user." \
+        > \
+      :element -name RequestDateTime -type date -min-occurs 1 -max-occurs 1 -label "Request Date-Time" \
+        < \
+          :description "The date and time the request was made" \
+          :instructions "The date and time the request was made, following ISO 8601 standards for timestamps." \
+        > \
+      :element -name ApprovedBy -type string -min-occurs 0 -max-occurs 1 -label "Approved By" \
+        < \
+          :description "The person who approved the request" \
+          :instructions "The person who approved the request, given as a locally unique user." \
+        > \
+      :element -name ApprovalDateTime -type date -min-occurs 0 -max-occurs 1 -label "Approval Date-Time" \
+        < \
+          :description "The date and time the request was approved" \
+          :instructions "The date and time the request was approved, following ISO 8601 standards for timestamps" \
+        > \
+      :element -name DeniedBy -type string -min-occurs 0 -max-occurs 1 -label "Denied  By" \
+        < \
+          :description "The person who denied the request" \
+          :instructions "The person who denied the request, given as a locally unique user." \
+        > \
+      :element -name DenialDateTime -type date -min-occurs 0 -max-occurs 1 -label "Denial Date-Time" \
+        < \
+          :description "The date and time the request was denied" \
+          :instructions "The date and time the request was denied, following ISO 8601 standards for timestamps" \
+        > \
+      :element -name EventlNote -type document -min-occurs 0 -label "Event Note(s)" \
+        < \
+          :description "A supplementary record for a provenance event" \
+          :instructions "A supplementary record of noteworthy details for a given provenance event (e.g., quota decisions, storage tier assignments, revisions to submitted metadata, explanations of extenuating circumstances, etc.)" \
+          :element -name NoteBy -type string -min-occurs 1 -max-occurs 1 -label "Note By" \
+            < \
+              :description "The person making the note." \
+            > \
+          :element -name NoteDateTime -type date -min-occurs 1 -max-occurs 1 -label "Note Date-Time" \
+            < \
+              :description "The date and time the note was made" \
+            > \
+          :element -name EventType -type string -min-occurs 1 -max-occurs 1 -label "Event Type" \
+            < \
+              :description "A general category label for the event note" \
+            > \
+          :element -name Message -type string -min-occurs 1 -max-occurs 1 -label "Message" \
+            < \
+              :description "The plain-language message contents of the event note." \
+            > \
+        > \
+    > \
+  :element -name SchemaVersion -type string -min-occurs 1 -max-occurs 1 -label "Schema Version" \
+    < \
+      :description "The version of the TigerData Standard Metadata Schema used" \
+      :instructions "The version of the TigerData Standard Metadata Schema used for this project or subproject record. Ordinarily, the version is recorded at the time of the (sub)project creation. Values are expected to follow the numerical semantic versioning convention." \
+    > \
 >
