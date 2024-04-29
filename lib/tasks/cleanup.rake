@@ -6,7 +6,9 @@ namespace :cleanup do
     login = Mediaflux::Http::LogonRequest.new
     login.resolve
     session_id = login.session_token
-    byebug
+    message = "Deleting everything from mediaflux namespace: #{Rails.configuration.mediaflux[:api_root_ns]}"
+    puts message
+    Rails.logger.warn message
     Mediaflux::Http::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_ns]).destroy
     [User, Project].each(&:delete_all)
   end
