@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-namespace :cleanup do
+namespace :mediaflux do
   desc "Delete everything from the current environment (use with caution)"
-  task everything: :environment do
+  task destructive_cleanup: :environment do
     raise "You can't run this in production!" if Rails.env.production?
     login = Mediaflux::Http::LogonRequest.new
     login.resolve
@@ -10,6 +10,6 @@ namespace :cleanup do
     puts message
     Rails.logger.warn message
     Mediaflux::Http::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_ns]).destroy
-    [User, Project].each(&:delete_all)
+    [UserJob, User, Project].each(&:delete_all)
   end
 end
