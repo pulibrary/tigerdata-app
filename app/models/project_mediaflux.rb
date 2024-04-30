@@ -33,16 +33,18 @@ class ProjectMediaflux
           #All exceptions that are raised should include the current expected metadata schema version number, as well as what metadata is missing.
     id = create_request.id
     if id.blank?
-      response_xml = create_request.response_xml
-      response_text = response_xml.text
-      case response_text
+      response_error = create_request.response_error
+      case response_error[:message]
       when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
         raise "Project name already taken"
       when /'asset.create' failed/
 
         # Ensure that the metadata validations are run
-        project.metadata_model.validate
-        raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6", errors: project.metadata_model.errors)
+        if project.valid? &&  project.metadata_model.valid?
+          raise response_error[:message]  # something strange went wrong
+        else
+          raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.metadata_model.errors)
+        end
       else
         raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
       end
@@ -63,13 +65,9 @@ class ProjectMediaflux
   end
 
   # Translates database record into mediaflux meta document.
-  # This is where the XML payload is generated.
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
+  # This is where the data for XML payload is generated.
   def self.project_values(project:)
     split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
-    size = split_capacity[0]
-    unit = split_capacity[1]
     values = {
       project_directory: project.directory,
       title: project.metadata[:title],
@@ -85,14 +83,12 @@ class ProjectMediaflux
       updated_on: format_date_for_mediaflux(project.metadata[:updated_on]),
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
-      storage_capacity: { size: , unit: },
-      storage_performance: project.metadata[:storage_performance_expectations_requested],
+      storage_capacity: project.metadata[:storage_capacity].symbolize_keys,
+      storage_performance: project.metadata[:storage_performance_expectations].symbolize_keys,
       project_purpose: project.metadata[:project_purpose]
     }
-    values
+    values.with_indifferent_access
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   def self.xml_payload(project:, xml_namespace: nil)
     project_name = safe_name(project.directory)

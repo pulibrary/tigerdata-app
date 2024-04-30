@@ -56,7 +56,7 @@ RSpec.describe ProjectsController do
         "            <RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
         "          </Submission>\n" \
         "          <ProjectPurpose>research</ProjectPurpose>\n" \
-        "          <SchemaVersion>6.1</SchemaVersion>\n" \
+        "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
         "        </tigerdata:project>\n" \
         "      </meta>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \

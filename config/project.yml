@@ -1,6 +1,14 @@
 production: &default
-  storage_capacity_requested: "500 GB"
-  storage_performance_expectations_requested: "Standard"
+  storage_capacity: 
+    size:
+      requested: 500
+      approved: null
+    unit: 
+      requested: "GB"
+      approved: null
+  storage_performance_expectations: 
+      requested: "Standard"
+      approved: null
   project_purpose: "Research"
 qa:
   <<: *default

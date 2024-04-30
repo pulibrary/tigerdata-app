@@ -129,7 +129,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       "            <RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
       "          </Submission>\n" \
       "          <ProjectPurpose>research</ProjectPurpose>\n" \
-      "          <SchemaVersion>6.1</SchemaVersion>\n" \
+      "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
       "        </tigerdata:project>\n" \
       "      </meta>\n" \
       "    </args>\n" \

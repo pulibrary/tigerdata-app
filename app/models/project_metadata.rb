@@ -92,9 +92,9 @@ class ProjectMetadata
           description: params[:description],
           status: params[:status],
           project_id: project.metadata[:project_id],
-          storage_capacity_requested: project.metadata[:storage_capacity_requested] || Rails.configuration.project_defaults[:storage_capacity_requested],
-          storage_performance_expectations_requested: project.metadata[:storage_performance_expectations_requested] || Rails.configuration.project_defaults[:storage_performance_expectations_requested],
-          project_purpose: project.metadata[:project_purpose] || Rails.configuration.project_defaults[:project_purpose]
+          storage_capacity: project.metadata[:storage_capacity],
+          storage_performance_expectations: project.metadata[:storage_performance_expectations],
+          project_purpose: project.metadata[:project_purpose],
         }
         #[:codes, :titles, :statuses, :"data sponsors", :"data managers", :"affiliated department(s)s", :"created ons", :"created bies", :"project ids", :"storage capacities", :"storage performance expectations", :"project purposes"]
       end

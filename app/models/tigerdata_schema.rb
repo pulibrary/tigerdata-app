@@ -5,7 +5,7 @@
 class TigerdataSchema
   attr_accessor :schema_name, :schema_description
 
-  SCHEMA_VERSION = "6.1"
+  SCHEMA_VERSION = "0.6.1"
 
   def initialize(schema_name: nil, schema_description: nil, session_id:)
     @schema_name = schema_name || "tigerdata"

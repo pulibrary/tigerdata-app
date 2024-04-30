@@ -37,9 +37,9 @@
           <dt>Status</dt>
           <dd><%= @project.metadata[:status] %></dd>
           <dt>Storage Capacity</dt>
-          <dd><%= @project.metadata[:storage_capacity_requested] %></dd>
+          <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>
           <dt>Storage Performance</dt>
-          <dd><%= @project.metadata[:storage_performance_expectations_requested] %></dd>
+          <dd><%= @project.metadata[:storage_performance_expectations][:requested] %></dd>
           <dt>Project Purpose</dt>
           <dd><%= @project.metadata[:project_purpose] %></dd>
         </dl>
