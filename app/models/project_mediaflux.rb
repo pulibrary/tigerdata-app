@@ -43,7 +43,7 @@ class ProjectMediaflux
         if project.valid? &&  project.metadata_model.valid?
           raise response_error[:message]  # something strange went wrong
         else
-          raise TigerData::MissingMetadata.missing_metadata(schema_version:"0.6", errors: project.metadata_model.errors)
+          raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.metadata_model.errors)
         end
       else
         raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
