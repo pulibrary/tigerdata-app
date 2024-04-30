@@ -38,9 +38,9 @@ class TestProjectGenerator
         data_user_read_only: [],
         data_user_read_write: [],
         project_id: "doi-not-generated",
-        storage_capacity_requested: Rails.configuration.project_defaults[:storage_capacity_requested],
+        storage_capacity: Rails.configuration.project_defaults[:storage_capacity],
         project_purpose: Rails.configuration.project_defaults[:project_purpose],
-        storage_performance_expectations_requested: Rails.configuration.project_defaults[:storage_performance_expectations_requested],
+        storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
         status: Project::PENDING_STATUS
       }
       project = Project.new(metadata: )

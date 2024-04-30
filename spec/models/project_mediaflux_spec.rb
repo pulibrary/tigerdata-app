@@ -48,12 +48,9 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
 
       context "when the name is already taken" do
-        let(:mediaflux_create_fixture_path) { Rails.root.join("spec", "fixtures", "files", "asset_create_error_response.xml") }
-        let(:mediaflux_create_body) { Nokogiri::XML.parse(File.read(mediaflux_create_fixture_path)) }
-
         before do
           allow(asset_create_request).to receive(:id).and_return(nil)
-          allow(asset_create_request).to receive(:response_xml).and_return(mediaflux_create_body)
+          allow(asset_create_request).to receive(:response_error).and_return({message: "call to service 'asset.create' failed: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'"})
         end
 
         it "raises an error" do
@@ -82,7 +79,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
     end
     context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
-      let(:incomplete_project) { FactoryBot.create(:project_with_dynamic_directory)}
+      let(:incomplete_project) { FactoryBot.build(:project_with_dynamic_directory, project_id: '')}
       let(:project_metadata) {ProjectMetadata.new(current_user:, project: incomplete_project)}
       let(:namespace_request) {Mediaflux::Http::NamespaceCreateRequest}
       after do
@@ -95,12 +92,27 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         
         #raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
         expect {
+          incomplete_project.metadata_json["project_id"] = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
           collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         }.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
           expect(error.message).to include("Project creation failed with metadata schema version 0.6 due to the missing fields:")
           expect(incomplete_project.metadata_model.errors.attribute_names.size).to eq 1
           expect(incomplete_project.metadata_model.errors.attribute_names[0].to_s).to eq "project_id"
+        end
+      end
+
+      it "should raise a error if any error occurs in mediaflux" do
+        params = {mediaflux_id: 001}
+        project_metadata.approve_project(params:)
+        session_token = current_user.mediaflux_session
+        
+        #raise an error & log what was returned from mediaflux
+        expect {
+          collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+        }.to raise_error do |error|
+          expect(error).to be_a(StandardError)
+          expect(error.message).to include("call to service 'asset.create' failed: XPath tigerdata:project/ProjectID is invalid: missing value")
         end
       end
     end

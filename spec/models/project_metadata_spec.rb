@@ -92,11 +92,12 @@ RSpec.describe ProjectMetadata, type: :model do
       end
 
       it "does not call out to draft a doi if the project is invalid" do
+        project.metadata_json["data_sponsor"] = ''
         project_metadata = described_class.new(current_user: current_user, project:)
         doi = project_metadata.create(params: {})
         project_metadata.create(params: {}) # doesn't call the doi service twice
         expect(datacite_stub).not_to have_received(:draft_doi)
-        expect(doi).to be_nil
+        expect(doi).to be_blank
       end
       
       it "calls out to draft a doi" do

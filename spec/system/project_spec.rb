@@ -75,8 +75,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           data_user_read_only: [],
           data_user_read_write: [],
           project_id: "abc-123",
-          storage_capacity_requested: "100 TB",
-          storage_performance_expectations_requested: "Standard",
+          storage_capacity: {size: {requested: 100}, unit: {requested: "TB"}},
+          storage_performance_expectations: {requested: "Standard"},
           project_purpose: "Research"
         }
       end
@@ -567,8 +567,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
             data_user_read_only: [],
             data_user_read_write: [],
             project_id: "abc-123",
-            storage_capacity_requested: "100 TB",
-            storage_performance_expectations_requested: "Standard",
+            storage_capacity: {size: {requested: 100}, unit: {requested: "TB"}},
+            storage_performance_expectations: {requested: "Standard"},
             project_purpose: "Research"
           }
         end
@@ -644,8 +644,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
             data_user_read_only: [],
             data_user_read_write: [],
             project_id: "abc-123",
-            storage_capacity_requested: "500 GB",
-            storage_performance_expectations_requested: "Standard",
+            storage_capacity: {size: {requested: 500}, unit: {requested: "GB"}},
+            storage_performance_expectations: {requested: "Standard"},
             project_purpose: "Research"
           }
         end

@@ -31,8 +31,9 @@ RSpec.describe TestProjectGenerator do
       allow(Mediaflux::Http::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", name: "test-project-00001", namespace: "/td-test-001/tigerdataNS/test-project-00001NS",
           tigerdata_values: {title: "Project  00001", updated_by: nil, updated_on: nil, project_directory: "test-project-00001",
            created_by: user.uid, created_on: anything, data_manager: user2.uid, data_sponsor: user2.uid, data_user_read_only: [], data_user_read_write: [], 
-           departments: ["HPC"], description: "Description of project test-project 00001", project_id: "doi-not-generated", project_purpose: "Research", status: "pending", storage_capacity: {size:"500", unit: "GB"}, 
-           storage_performance: "Standard", title: "Project test-project 00001", updated_by: nil, updated_on: nil}, 
+           departments: ["HPC"], description: "Description of project test-project 00001", project_id: "doi-not-generated", project_purpose: "Research", status: "pending", 
+           storage_capacity: {size: {"approved" => nil, "requested" =>500}, unit: {"approved" => nil, "requested" => "GB"}},
+           storage_performance: {approved: nil, requested: "Standard"}, title: "Project test-project 00001", updated_by: nil, updated_on: nil, updated_by: nil}, 
           xml_namespace: "tigerdata", pid: "path=/td-test-001/tigerdata").and_return(test_collection_create)
       allow(Mediaflux::Http::NamespaceDescribeRequest).to receive(:new).with(session_token: "mediaflux_sessionid", path: "/td-test-001/tigerdataNS").and_return(test_namespace_describe)
       allow(Mediaflux::Http::StoreListRequest).to receive(:new).with(session_token: "mediaflux_sessionid").and_return(test_store_list)

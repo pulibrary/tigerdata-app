@@ -12,7 +12,7 @@ class Project < ApplicationRecord
   delegate :to_json, to: :metadata_json
 
   def metadata
-    (metadata_json || {}).with_indifferent_access
+    metadata_with_defaults.with_indifferent_access
   end
 
   def metadata_model
@@ -20,7 +20,8 @@ class Project < ApplicationRecord
   end
 
   def metadata=(metadata)
-    self.metadata_json = metadata
+    metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
+    self.metadata_json = metadata.with_indifferent_access
   end
 
   # TODO: Presumably we should display other statuses as well?
@@ -200,5 +201,11 @@ class Project < ApplicationRecord
         lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
       end
       lines
+    end
+
+    def metadata_with_defaults
+      data = (metadata_json&.dup || { }).with_indifferent_access
+      Rails.configuration.project_defaults.each { |key, value| data[key] ||= value }
+      data
     end
 end
