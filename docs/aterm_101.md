@@ -411,11 +411,11 @@ For example:
   **Note 2** Our version of mediaflux in docker does not have this command. The xtoshell command does exist on td-meta1
   ```
   session_id = User.first.mediaflux_session
-  project = project.first
+  project = Project.first
   project_name = ProjectMediaflux.safe_name(project.directory)
   project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
   store_name = Store.default(session_id: session_id).name
   namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id) 
- puts namespace.xml_payload.gsub("\n","").gsub("  "," ").gsub("  "," ").gsub("  "," ").gsub("\"","'").gsub("> <","><").gsub("<args>","").gsub("</args>","").gsub(/session='.*'/,"")
+ puts "\n\n #{namespace.xtoshell_xml}\n\n"
 ```
 Copy the output and in aterm run `service.execute` and paste the output

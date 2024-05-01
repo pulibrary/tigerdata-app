@@ -138,4 +138,22 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       expect(create_request.xml_payload).to eq(expected_xml)
     end
   end
+
+  describe "#xtoshell_xml" do
+    it "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
+      project = FactoryBot.create :project, project_id: "abc-123"
+      tigerdata_values = ProjectMediaflux.project_values(project:)
+      create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
+      expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \
+                     "<meta><tigerdata:project><ProjectDirectory>#{project.directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
+                     "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
+                     "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
+                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
+                     "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
+                     "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
+                     "<RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
+                     "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta></service></request>"
+      expect(create_request.xtoshell_xml).to eq(expected_xml)
+    end
+  end
 end
