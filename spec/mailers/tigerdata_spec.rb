@@ -16,10 +16,18 @@ RSpec.describe TigerdataMailer, type: :mailer do
     html_body = mail.html_part.body.to_s
     expect(html_body).to have_content(project.metadata[:title])
     project.metadata.keys.each do |field|
-      next if ["updated_on", "created_on", "created_by", "updated_by", "departments", "storage_capacity_requested"].include?(field)
+      next if ["updated_on", "created_on", "created_by", "updated_by", "departments"].include?(field)
+      
       value = project.metadata[field]
       value = value.sort.join(", ") if value.is_a? Array
-      expect(html_body).to have_content(value)
+      if field == "storage_capacity"
+        expect(html_body).to have_content(value[:size][:requested])
+        expect(html_body).to have_content(value[:unit][:requested])
+      elsif field == "storage_performance_expectations"
+        expect(html_body).to have_content(value[:requested])
+      else
+        expect(html_body).to have_content(value)
+      end
     end
     expect(mail.attachments.count).to be_positive
     # testing the json response

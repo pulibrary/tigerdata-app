@@ -12,8 +12,8 @@ FactoryBot.define do
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
       project_id { nil }
       status { "pending" }
-      storage_capacity { "500 GB" }
-      storage_performance { "standard" }
+      storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } } }
+      storage_performance { { requested: "standard" } }
       project_purpose { "research" }
       directory { "big-data" }
     end
@@ -34,8 +34,8 @@ FactoryBot.define do
         updated_by: FactoryBot.create(:user).uid,
         project_id: project_id,
         status: status,
-        storage_capacity_requested: storage_capacity,
-        storage_performance_expectations_requested: storage_performance,
+        storage_capacity: storage_capacity,
+        storage_performance_expectations: storage_performance,
         project_purpose: project_purpose
       }
     end

@@ -108,12 +108,12 @@ module Mediaflux
               xml.CreatedBy @tigerdata_values[:created_by]
               xml.ProjectID @tigerdata_values[:project_id]
               xml.StorageCapacity do
-                xml.Size @tigerdata_values[:storage_capacity][:size]
-                xml.Unit @tigerdata_values[:storage_capacity][:unit]
+                xml.Size @tigerdata_values[:storage_capacity][:size][:requested]
+                xml.Unit @tigerdata_values[:storage_capacity][:unit][:requested]
               end
               xml.Performance do
-                xml.parent.set_attribute("Requested", @tigerdata_values[:storage_performance])
-                xml.text(@tigerdata_values[:storage_performance])
+                xml.parent.set_attribute("Requested", @tigerdata_values[:storage_performance][:requested])
+                xml.text(@tigerdata_values[:storage_performance][:requested])
               end
               xml.Submission do
                 xml.RequestedBy @tigerdata_values[:created_by]

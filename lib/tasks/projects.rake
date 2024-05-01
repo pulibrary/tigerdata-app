@@ -109,8 +109,8 @@ namespace :projects do
             :CreatedOn "#{created_on}"
             :CreatedBy "#{project.metadata_json["created_by"]}"
             :ProjectID "#{project.metadata_json["project_id"]}"
-            :StorageCapacity "#{project.metadata_json["storage_capacity_requested"]}"
-            :StoragePerformance "#{project.metadata_json["storage_performance_expectations_requested"]}"
+            :StorageCapacity < :Size "#{project.metadata_json["storage_capacity"]["size"]["requested"]}>" :Unit #{project.metadata_json["storage_capacity"]["unit"]["requested"]}"
+            :StoragePerformance "#{project.metadata_json["storage_performance_expectations"]["requested"]}"
             :ProjectPurpose "#{project.metadata_json["project_purpose"]}"
           >
         >
