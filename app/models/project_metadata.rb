@@ -18,7 +18,7 @@ class ProjectMetadata
   def initialize(project:, current_user: nil)
     @project = project
     @current_user = current_user
-    @params = {}
+    @params = { }
   end
 
   # Generates a Hash of updated Project metadata attributes
@@ -90,8 +90,8 @@ class ProjectMetadata
           directory: params[:directory],
           title: params[:title],
           description: params[:description],
-          status: params[:status],
-          project_id: project.metadata[:project_id],
+          status: params[:status] || project.metadata[:status],
+          project_id: project.metadata[:project_id] || '', # allow validation to pass until doi can be generated
           storage_capacity: project.metadata[:storage_capacity],
           storage_performance_expectations: project.metadata[:storage_performance_expectations],
           project_purpose: project.metadata[:project_purpose],

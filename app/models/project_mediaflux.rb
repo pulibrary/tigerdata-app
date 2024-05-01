@@ -40,7 +40,7 @@ class ProjectMediaflux
       when /'asset.create' failed/
 
         # Ensure that the metadata validations are run
-        if project.valid? &&  project.metadata_model.valid?
+        if project.valid?
           raise response_error[:message]  # something strange went wrong
         else
           raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.metadata_model.errors)
