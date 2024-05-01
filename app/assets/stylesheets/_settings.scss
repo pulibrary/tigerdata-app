@@ -212,6 +212,10 @@
     margin-right: 23em;
     margin-left: 23.5em;
   }
+  .field{
+    display: inline-flex;
+    margin-bottom: 2em;
+  }
   h2 {// Heading for the details div
     margin-left: 0.2em;
     text-decoration: underline;
@@ -237,10 +241,23 @@
   }
   dd{
     margin-bottom: .5rem;
-    margin-left: 0;
+    
 
   }
   p {
     margin-left: 1em;
+  }
+  label{
+    margin-right: 5em;
+    max-width: 8em;
+    font-weight: bold;
+  }
+  input{
+    width: 10em;
+    max-height: 38px;
+    margin-right: 5px;
+  }
+  button{
+    width: 10em;
   }
 }

@@ -2,7 +2,37 @@
 <%= render 'data_list' %>
 
 <div class="container" id="approve">
-  <label for="mediaflux_id" class="form-label">Input the Mediaflux ID for the project</label>
-  <input class="form-control" type="text" required name="mediaflux_id"></input>
+  <%
+=begin%>
+  TODO: ALL FIELDS EXCEPT FOR EVENT MUST BE REQUIRED
+        ALL FIELDS MUST EITHER VALIDATE OR OVERWRITE METADATA
+        PROJECT DIRECTORY, STORAGE CAPACITY, APPROVER, APPROVED TIME MUST ALL BE PRE-POPULATED AND IMMUTABLE
+<%
+=end%>
+  <div class="field">
+    <label for="TEMP_FILLER" class="form-label">Confirm Project Directory</label>
+    <input class="form-control" type="text" name="TEMP_FILLER"></input>  
+  </div>
+  <div class="field">
+    <label for="TEMP_FILLER" class="form-label">Confirm Storage Capacity</label>
+    <input class="form-control" type="text" name="TEMP_FILLER"></input> GB
+  </div>
+  <div class="field">
+    <label for="mediaflux_id" class="form-label">Collection ID</label>
+    <input class="form-control" type="text" required name="mediaflux_id"></input>
+  </div>
+  <div class="field">
+    <label for="TEMP_FILLER" class="form-label">Approver</label>
+    <input class="form-control" type="text" name="TEMP_FILLER"></input>
+  </div>
+  <div class="field">
+    <label for="TEMP_FILLER" class="form-label">Approval Date Time</label>
+    <input class="form-control" type="text" name="TEMP_FILLER"></input>
+  </div>
+  <div class="field">
+    <label for="TEMP_FILLER" class="form-label">Event Note</label>
+    <input class="form-control" type="text" name="TEMP_FILLER"></input>
+  </div>
+    
     <button type="submit" class="btn btn-primary">Approve </button>
 </div>
