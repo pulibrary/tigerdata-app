@@ -198,6 +198,12 @@ class ProjectsController < ApplicationController
   def approve
     if current_user.eligible_sysadmin?
       project
+      @departments = project.departments.join(", ")
+      @project_metadata = project.metadata
+      sponsor_uid = @project_metadata[:data_sponsor]
+      @data_sponsor = User.find_by(uid: sponsor_uid)
+      @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
+
       @project_metadata = project.metadata
       @title = @project_metadata["title"]
     else redirect_to root_path
