@@ -18,11 +18,11 @@ RSpec.describe ProvenanceEvent, type: :model do
       pe.event_type = ProvenanceEvent::APPROVAL_EVENT_TYPE
       pe.event_details = "Approved by Jane Doe, 2023-01-19T12:00:00"
       pe.event_person = "abc123"
-      pe.event_note ={
+      pe.event_note = {
         NoteBy: pe.event_person,
         NoteDateTime: pe.created_at,
         EventType: "Other",
-        Message: "Approval Note" 
+        Message: "Approval Note"
       }
       pe.save
       expect(pe.event_type).to eq(ProvenanceEvent::APPROVAL_EVENT_TYPE)
