@@ -132,6 +132,16 @@ module Mediaflux
         xml_payload = body.to_xml
       end
 
+      # The output of this routine can be passed to xtoshell in aterm.  The output of which can be sent to service.execute
+      # @param [String] name name of the service this request will send
+      # @return [String] xml that can be passed to xtoshell without manipulation
+      def xtoshell_xml( name: self.class.service)
+        xml_builder = build_http_request_body(name: )
+        xml_builder.doc.xpath("//request/service/@session").remove
+        xml = xml_builder.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+        xml.strip.gsub("\"","'").gsub("<args>","").gsub("</args>","")
+      end
+
       private
 
         def http_request

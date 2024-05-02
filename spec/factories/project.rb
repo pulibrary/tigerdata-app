@@ -10,12 +10,13 @@ FactoryBot.define do
       title { FFaker::Movie.title }
       created_on { Time.current.in_time_zone("America/New_York").iso8601 }
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
-      project_id { nil }
+      project_id { "" }
       status { "pending" }
       storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } } }
       storage_performance { { requested: "standard" } }
       project_purpose { "research" }
       directory { "big-data" }
+      schema_version { "0.6.1" }
     end
     mediaflux_id { nil }
     metadata do
@@ -36,7 +37,8 @@ FactoryBot.define do
         status: status,
         storage_capacity: storage_capacity,
         storage_performance_expectations: storage_performance,
-        project_purpose: project_purpose
+        project_purpose: project_purpose,
+        schema_version: schema_version
       }
     end
     factory :project_with_dynamic_directory, class: "Project" do

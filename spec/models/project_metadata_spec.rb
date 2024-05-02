@@ -65,7 +65,7 @@ RSpec.describe ProjectMetadata, type: :model do
         project_metadata = described_class.new(current_user: current_user, project: Project.new)
         update = project_metadata.create(params: {})
         expect(datacite_stub).not_to have_received(:draft_doi)
-        expect(update).to be_nil
+        expect(update).to be_blank
       end
     end
   end

@@ -33,6 +33,7 @@ RSpec.describe "/projects", type: :request do
 
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:user, uid: "pul123") }
+      let(:title) { "a title" }
       let(:response_body) do
         filename = Rails.root.join("spec", "fixtures", "files", "version_response.xml")
         File.new(filename).read
