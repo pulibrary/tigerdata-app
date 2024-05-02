@@ -216,6 +216,25 @@
     display: inline-flex;
     margin-bottom: 2em;
   }
+  .form-directory{
+    min-width: 13em;
+  }
+  .form-directory-confirm{
+    margin-left: 1em;
+    min-width: fit-content;
+  }
+  .form-message{
+    min-width: 15em;
+    min-height: 3em;
+    margin-left: 5px;
+  }
+  .form-date{
+    min-width: 14em;
+  }
+  .form-dropdown{
+    max-width: fit-content;
+    margin-right: 1em;
+  }
   h2 {// Heading for the details div
     margin-left: 0.2em;
     text-decoration: underline;
@@ -253,11 +272,17 @@
     font-weight: bold;
   }
   input{
+    .placeholder{
+      opacity: 1;
+    }
     width: 10em;
     max-height: 38px;
     margin-right: 5px;
   }
   button{
     width: 10em;
+  }
+  select{
+    max-height: 38px;
   }
 }
