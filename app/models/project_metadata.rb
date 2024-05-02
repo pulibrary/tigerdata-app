@@ -53,6 +53,9 @@ class ProjectMetadata
     #approve a project by recording the mediaflux id & setting the status to 'approved' 
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
+    project.metadata_json["directory"] = params[:directory]
+    project.metadata_json["storage_capacity"] = params[:storage_capacity]
+
     project.save!
     
     #create two provenance events, one for approving the project and another for changing the status of the project

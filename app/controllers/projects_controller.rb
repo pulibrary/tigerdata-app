@@ -122,7 +122,13 @@ class ProjectsController < ApplicationController
     if params.key?("mediaflux_id")
       project_metadata = ProjectMetadata.new(project: project, current_user:)
       project_params = params.dup
-      project_metadata.approve_project(params: project_params)
+      metadata_params = project_params.merge({
+        directory: project_params["project_directory"],
+        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
+                            "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                            "unit"=>{"approved"=>"GB", "requested"=>"GB"}}
+      })
+      project_metadata.approve_project(params: metadata_params)
     end
 
     #Edit action

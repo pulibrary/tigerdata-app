@@ -7,12 +7,6 @@
   TODO: ALL FIELDS EXCEPT FOR EVENT MUST BE REQUIRED
         ALL FIELDS MUST EITHER VALIDATE OR OVERWRITE METADATA
         MAP SUBMISSION FIELDS TO THEIR PROPER VALUES
-            PROJECT DIRECTORY => project.metadata[:directory]
-            STORAGE CAPACITY => project.metadata[:storage_capacity][:size][:approved]
-                                project.metadata[:storage_capacity][:unit][:approved] = GB
-            COLLECTION ID => project.mediaflux_id (ALREADY DONE)
-            APPROVER => ProvenanceEvent::APPROVAL_EVENT_TYPE.event_person (ALREADY DONE)
-            APPROVAL DATE TIME => ProvenanceEvent::APPROVAL_EVENT_TYPE.created_at (ALREADY DONE)
             EVENT NOTE => ProvenanceEvent::APPROVAL_EVENT_TYPE.event_note (NEEDS TO BE CREATED)
 
 <%
