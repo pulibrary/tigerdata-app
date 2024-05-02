@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class GetMetadataRequest < Request
+    class AssetMetadataRequest < Request
       attr_reader :id
 
       # Constructor

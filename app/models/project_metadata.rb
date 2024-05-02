@@ -30,7 +30,7 @@ class ProjectMetadata
   end
 
   def activate_project(collection_id:)
-    response = Mediaflux::Http::GetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     metadata = response.metadata
     return unless metadata[:collection] == true # If the collection id exists
 
