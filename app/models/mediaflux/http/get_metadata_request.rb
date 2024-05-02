@@ -24,6 +24,7 @@ module Mediaflux
         asset = xml.xpath("/response/reply/result/asset")
         metadata = parse(asset)
 
+        # Update to version 0.6.1 of the schema
         if metadata[:collection]
           metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
           metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
@@ -60,6 +61,7 @@ module Mediaflux
           end
         end
 
+        # Update this to match full 0.6.1 schema
         def parse(asset)
           {
             id: asset.xpath("./@id").text,
