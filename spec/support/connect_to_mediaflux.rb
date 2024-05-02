@@ -11,6 +11,12 @@ RSpec.configure do |config|
       require "rake"
       Rails.application.load_tasks
       Rake::Task["schema:create"].invoke
+      # Clean out the namespace before running tests to avoid collisions
+      user = FactoryBot.create :user
+      Mediaflux::Http::NamespaceDestroyRequest.new(
+        session_token: user.mediaflux_session,
+        namespace: Rails.configuration.mediaflux[:api_root_ns]
+      ).destroy
     end
   end
 

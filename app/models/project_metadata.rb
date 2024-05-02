@@ -18,7 +18,7 @@ class ProjectMetadata
   def initialize(project:, current_user: nil)
     @project = project
     @current_user = current_user
-    @params = { }
+    @params = {}
   end
 
   # Generates a Hash of updated Project metadata attributes
@@ -30,33 +30,34 @@ class ProjectMetadata
   end
 
   def activate_project(collection_id:)
-    response = Mediaflux::Http::GetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     metadata = response.metadata
     return unless metadata[:collection] == true # If the collection id exists
-    
-     # check if the project doi in rails matches the project doi in mediaflux
+
+    # check if the project doi in rails matches the project doi in mediaflux
     xml = response.response_xml
     asset = xml.xpath("/response/reply/result/asset")
     doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
     return unless doi == project.metadata_json["project_id"]
-    
-    #activate a project by setting the status to 'active' 
+
+    # activate a project by setting the status to 'active'
     project.metadata_json["status"] = Project::ACTIVE_STATUS
     project.save!
-    
-    #create two provenance events, one for approving the project and another for changing the status of the project
+
+    # create two provenance events, one for approving the project and another for changing the status of the project
     project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
   end
 
   def approve_project(params:)
-    #approve a project by recording the mediaflux id & setting the status to 'approved' 
+    # approve a project by recording the mediaflux id & setting the status to 'approved'
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
     project.metadata_json["directory"] = params[:directory]
     project.metadata_json["storage_capacity"] = params[:storage_capacity]
     
     project.save!
+
     
     #create two provenance events, one for approving the project and another for changing the status of the project
     approval_note = {
@@ -68,16 +69,11 @@ class ProjectMetadata
     project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}", event_note: approval_note)
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
   end
-  
-  def create( params:)
-    project.metadata = update_metadata(params:)
+
+  def create(params:)
+    project.metadata = update_metadata(params: params)
     if project.valid? && project.metadata["project_id"].blank?
-      puldatacite = PULDatacite.new
-      project.metadata_json["project_id"] = puldatacite.draft_doi
-      project.save!
-      data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
-      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
-      project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
+      draft_doi
     end
     project.metadata["project_id"]
   end
@@ -88,25 +84,24 @@ class ProjectMetadata
   end
 
   def required_attributes
-    self.project.metadata_json.select { |k,v| required_keys.include?(k) }
+    project.metadata_json.select { |k, _v| required_keys.include?(k) }
   end
 
   def attributes
-        {
-          data_sponsor: params[:data_sponsor],
-          data_manager: params[:data_manager],
-          departments: params[:departments],
-          directory: params[:directory],
-          title: params[:title],
-          description: params[:description],
-          status: params[:status] || project.metadata[:status],
-          project_id: project.metadata[:project_id] || '', # allow validation to pass until doi can be generated
-          storage_capacity: project.metadata[:storage_capacity],
-          storage_performance_expectations: project.metadata[:storage_performance_expectations],
-          project_purpose: project.metadata[:project_purpose],
-        }
-        #[:codes, :titles, :statuses, :"data sponsors", :"data managers", :"affiliated department(s)s", :"created ons", :"created bies", :"project ids", :"storage capacities", :"storage performance expectations", :"project purposes"]
-      end
+    {
+      data_sponsor: params[:data_sponsor],
+      data_manager: params[:data_manager],
+      departments: params[:departments],
+      directory: params[:directory],
+      title: params[:title],
+      description: params[:description],
+      status: params[:status] || project.metadata[:status],
+      project_id: project.metadata[:project_id] || "", # allow validation to pass until doi can be generated
+      storage_capacity: project.metadata[:storage_capacity],
+      storage_performance_expectations: project.metadata[:storage_performance_expectations],
+      project_purpose: project.metadata[:project_purpose]
+    }
+  end
 
     private
 
@@ -146,13 +141,12 @@ class ProjectMetadata
         timestamps
       end
 
-      
       def form_metadata
         ro_users = user_list_params(read_only_counter, "ro_user_")
         rw_users = user_list_params(read_write_counter, "rw_user_")
         data_users = {
           data_user_read_only: ro_users,
-          data_user_read_write: rw_users,
+          data_user_read_write: rw_users
         }
         data = attributes.merge(data_users)
         timestamps = project_timestamps
@@ -160,6 +154,15 @@ class ProjectMetadata
       end
 
       def required_field_labels
-        TigerdataSchema.required_project_schema_fields.map { |field| field[:label] }
+        TigerdataSchema.required_project_schema_fields.pluck(:label)
+      end
+
+      def draft_doi
+        puldatacite = PULDatacite.new
+        project.metadata_json["project_id"] = puldatacite.draft_doi
+        project.save!
+        data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
+        project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
+        project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
       end
 end
