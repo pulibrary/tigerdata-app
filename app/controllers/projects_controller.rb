@@ -126,7 +126,13 @@ class ProjectsController < ApplicationController
         directory: project_params["project_directory"],
         storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
                             "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                            "unit"=>{"approved"=>"GB", "requested"=>"GB"}}
+                            "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+        approval_note: {
+          note_by: current_user.uid,
+          note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+          event_type: project_params[:event_note],
+          message: project_params[:event_note_message]
+        }
       })
       project_metadata.approve_project(params: metadata_params)
     end
