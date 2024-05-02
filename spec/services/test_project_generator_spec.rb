@@ -4,27 +4,18 @@ require "rails_helper"
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   let(:subject) { described_class.new(user:, number: 1, project_prefix: 'test-project') }
   let(:user) { FactoryBot.create :user }
-  let(:user2) { FactoryBot.create :user }
-  let(:user3) { FactoryBot.create :user }
-
-  before do
-    # make sure 3 users exist
-    user2
-    user3
-  end
 
   describe "#generate" do
-
-    it "creates test data" do
+    it "creates a project in mediaflux" do
       subject.generate
+      project = Project.last
       expect(project).to be_persisted
-      # expect(user).to have_received(:mediaflux_session)
-      # expect(test_collection_create).to have_received(:id)
-      # expect(test_namespace_describe).to have_received(:exists?)
-      # expect(test_namespace_create).to have_received(:error?)
-      # expect(parent_metadata_request).to have_received(:error?)
-      # expect(test_accum_size_create).to have_received(:resolve)
-      # expect(test_accum_count_create).to have_received(:resolve)
+      metadata_query = Mediaflux::Http::GetMetadataRequest.new(
+        session_token: user.mediaflux_session, 
+        id: project.mediaflux_id
+      )      
+      metadata_query.resolve
+      expect(metadata_query.metadata[:path]).to eq "/td-test-001/tigerdata/test-project-00001"
     end
   end
 end
