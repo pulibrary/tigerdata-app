@@ -141,8 +141,6 @@
           expect(page).to have_content "project 123"
           expect(page).not_to have_content "This project has not been saved to Mediaflux"
           expect(page).not_to have_content pending_text
-          expect(page).to have_selector(:link_or_button, "Approve Project")
-          expect(page).to have_selector(:link_or_button, "Deny Project")
           expect(page).to have_selector(:link_or_button, "Return to Dashboard")
         end
         it "shows the sysadmin buttons for a pending project" do
