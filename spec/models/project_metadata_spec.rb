@@ -191,7 +191,7 @@ RSpec.describe ProjectMetadata, type: :model do
       end
       it "validates the doi for a project" do
         params = {mediaflux_id: 001,
-                  directory: project.metadata[:directory],
+                  directory: valid_project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},

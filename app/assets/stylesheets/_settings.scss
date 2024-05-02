@@ -286,10 +286,15 @@
     max-height: 38px;
     margin-right: 5px;
   }
-  button{
-    width: 10em;
-  }
   select{
     max-height: 38px;
+  }
+  button{
+    min-width: 160px;
+    min-height: 38px
+  }
+  a{
+    min-width: 160px;
+    min-height: 38px
   }
 }

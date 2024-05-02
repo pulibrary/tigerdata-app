@@ -2,13 +2,6 @@
 <%= render 'data_list' %>
 
 <div class="container" id="approve">
-  <%
-=begin%>
-  TODO: MAP SUBMISSION FIELDS TO THEIR PROPER VALUES
-          EVENT NOTE => ProvenanceEvent::APPROVAL_EVENT_TYPE.event_note (NEEDS TO BE CREATED)
-
-<%
-=end%>
   <div class="field">
     <label for="project_directory" class="form-label">Confirm Project Directory</label>
     <input class="form-directory" type="text" name="project_directory-prefix" disabled readonly value= <%= Rails.configuration.mediaflux["api_root_ns"] %>></input> /  
@@ -41,6 +34,8 @@
     <label for="event_note_message" class="form-label">Message</label>
     <input class="form-message" type="text" name="event_note_message"> </input>
   </div>
-    
-    <button type="submit" class="btn btn-primary">Approve </button>
+    <div class="controls">
+      <button type="submit" class="btn btn-primary">Approve</button>
+      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+    </div>
 </div>
