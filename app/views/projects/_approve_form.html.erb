@@ -4,10 +4,8 @@
 <div class="container" id="approve">
   <%
 =begin%>
-  TODO: ALL FIELDS EXCEPT FOR EVENT MUST BE REQUIRED
-        ALL FIELDS MUST EITHER VALIDATE OR OVERWRITE METADATA
-        MAP SUBMISSION FIELDS TO THEIR PROPER VALUES
-            EVENT NOTE => ProvenanceEvent::APPROVAL_EVENT_TYPE.event_note (NEEDS TO BE CREATED)
+  TODO: MAP SUBMISSION FIELDS TO THEIR PROPER VALUES
+          EVENT NOTE => ProvenanceEvent::APPROVAL_EVENT_TYPE.event_note (NEEDS TO BE CREATED)
 
 <%
 =end%>
@@ -30,18 +28,18 @@
   </div>
   <div class="field">
     <label for="approval_date" class="form-label">Approval Date Time</label>
-    <input class="form-date" type="text" name="approval_date" disabled value=<%=DateTime.now.in_time_zone("America/New_York").iso8601%>></input>
+    <input class="form-date" type="text" name="approval_date" disabled value=<%=Time.now.in_time_zone("America/New_York").iso8601%>></input>
   </div>
   <div class="field">
-    <label for="Event Note" class="form-label">Event Note</label>
-    <select class="form-dropdown" name="Event Note" id="Event Note">
+    <label for="event_note" class="form-label">Event Note</label>
+    <select class="form-dropdown" name="event_note" id="Event Note">
       <option disabled selected value> -- select an option -- </option>
-      <option value="Event-Quota">Quota</option>
-      <option value="Event-Tier">Tier</option>
-      <option value="Event-Other">Other</option>
+      <option value="Quota">Quota</option>
+      <option value="Tier">Tier</option>
+      <option value="Other">Other</option>
     </select>
-    Message
-    <input class="form-message" type="text"> </input>
+    <label for="event_note_message" class="form-label">Message</label>
+    <input class="form-message" type="text" name="event_note_message"> </input>
   </div>
     
     <button type="submit" class="btn btn-primary">Approve </button>

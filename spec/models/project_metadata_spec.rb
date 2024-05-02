@@ -151,7 +151,10 @@ RSpec.describe ProjectMetadata, type: :model do
                   directory: project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         project.reload
@@ -165,7 +168,10 @@ RSpec.describe ProjectMetadata, type: :model do
                   directory: project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:) # doesn't call the doi service twice
         
         project.reload
@@ -185,10 +191,13 @@ RSpec.describe ProjectMetadata, type: :model do
       end
       it "validates the doi for a project" do
         params = {mediaflux_id: 001,
-                  directory: valid_project.metadata[:directory],
+                  directory: project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         #create a project in mediaflux

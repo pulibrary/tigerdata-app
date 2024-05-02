@@ -440,6 +440,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "storage_capacity", with: 500
       fill_in "project_directory", with: project.metadata_json["directory"]
       fill_in "mediaflux_id", with: mediaflux_id
+      select "Other", :from => "event_note"
+      fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
       project.reload
@@ -460,6 +462,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "storage_capacity", with: 500
       fill_in "project_directory", with: project.metadata_json["directory"]
       fill_in "mediaflux_id", with: mediaflux_id
+      select "Other", :from => "event_note"
+      fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
       # This is the confirmation page. It needs a button to return to the dashboard

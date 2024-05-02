@@ -90,7 +90,10 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
                   directory: incomplete_project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
@@ -111,7 +114,10 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
                   directory: incomplete_project.metadata[:directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
