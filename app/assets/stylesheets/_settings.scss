@@ -275,6 +275,13 @@
     .placeholder{
       opacity: 1;
     }
+    -webkit-outer-spin-button, -webkit-inner-spin-button {
+      display: none;
+      margin: 0; 
+    }
+    [type=number]{
+      -moz-appearance:textfield;
+    }
     width: 10em;
     max-height: 38px;
     margin-right: 5px;

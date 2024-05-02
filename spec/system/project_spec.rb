@@ -437,6 +437,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
 
+      fill_in "storage_capacity", with: 500
+      fill_in "project_directory", with: project.metadata_json["directory"]
       fill_in "mediaflux_id", with: mediaflux_id
       click_on "Approve"
 
@@ -455,6 +457,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
 
+      fill_in "storage_capacity", with: 500
+      fill_in "project_directory", with: project.metadata_json["directory"]
       fill_in "mediaflux_id", with: mediaflux_id
       click_on "Approve"
 
