@@ -10,7 +10,7 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
       subject.generate
       project = Project.last
       expect(project).to be_persisted
-      metadata_query = Mediaflux::Http::GetMetadataRequest.new(
+      metadata_query = Mediaflux::Http::AssetMetadataRequest.new(
         session_token: user.mediaflux_session, 
         id: project.mediaflux_id
       )      
