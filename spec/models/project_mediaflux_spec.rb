@@ -86,7 +86,11 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if any required is missing" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  directory: incomplete_project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
@@ -103,7 +107,11 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
 
       it "should raise a error if any error occurs in mediaflux" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  directory: incomplete_project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}}}
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
