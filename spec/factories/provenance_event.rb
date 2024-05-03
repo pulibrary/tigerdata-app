@@ -10,6 +10,14 @@ FactoryBot.define do
     factory :approval_event do
       event_type { ProvenanceEvent::APPROVAL_EVENT_TYPE }
       event_details { "The project was approved by #{FFaker::Name.name}" }
+      event_note do
+        {
+          NoteBy: FFaker::Name.name.to_s,
+          NoteDateTime: Time.current.in_time_zone("America/New_York").iso8601,
+          EventType: "Other",
+          Message: "Filler Message"
+        }
+      end
     end
     factory :status_update_event do
       event_type { ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE }

@@ -147,7 +147,14 @@ RSpec.describe ProjectMetadata, type: :model do
     describe "#approve_project" do
       it "Records the mediaflux id and sets the status to approved" do 
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {mediaflux_id: 001 }
+        params = {mediaflux_id: 001,
+                  directory: project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         project.reload
@@ -157,8 +164,15 @@ RSpec.describe ProjectMetadata, type: :model do
       end
       it "Creates a Provenance Event: Approval" do
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
-        project_metadata.approve_project(params: {}) # doesn't call the doi service twice
+        params = {mediaflux_id: 001,
+                  directory: project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
+        project_metadata.approve_project(params:) # doesn't call the doi service twice
         
         project.reload
         expect(project.provenance_events.count).to eq 2
@@ -176,7 +190,14 @@ RSpec.describe ProjectMetadata, type: :model do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: valid_project.mediaflux_id, members: true).resolve
       end
       it "validates the doi for a project" do
-        params = {mediaflux_id: 001 }
+        params = {mediaflux_id: 001,
+                  directory: valid_project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         #create a project in mediaflux
