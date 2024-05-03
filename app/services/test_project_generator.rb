@@ -26,7 +26,6 @@ class TestProjectGenerator
 
     def create_project
       metadata = {
-        directory: project_prefix,
         created_on: Time.current.in_time_zone("America/New_York").iso8601,
         created_by: user.uid,
         data_sponsor: sponsor.uid,

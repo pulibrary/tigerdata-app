@@ -219,14 +219,14 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in system_admin
       visit project_approve_path(project)
       click_on "Approve"
-      expect(page).to have_content "Approve this project by appending a mediaflux id"
+      expect(page).to have_content "Metadata Highlights"
     end
 
     it "allows a super user to approve the project" do
       sign_in superuser
       visit project_approve_path(project)
       click_on "Approve"
-      expect(page).to have_content "Approve this project by appending a mediaflux id"
+      expect(page).to have_content "Metadata Highlights"
     end
 
     it "does not allow a data sponsor to approve the project" do

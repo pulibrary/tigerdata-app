@@ -40,7 +40,7 @@ class ProjectMediaflux
       when /'asset.create' failed/
 
         # Ensure that the metadata validations are run
-        if project.valid? &&  project.metadata_model.valid?
+        if project.valid?
           raise response_error[:message]  # something strange went wrong
         else
           raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.metadata_model.errors)
@@ -129,7 +129,7 @@ class ProjectMediaflux
 
     private
       def prepare_parent_collection(project_parent:, session_id:)
-        get_parent = Mediaflux::Http::GetMetadataRequest.new(session_token: session_id, id: project_parent)
+        get_parent = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project_parent)
         if get_parent.error?
           if project_parent.include?("path=")
             create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],

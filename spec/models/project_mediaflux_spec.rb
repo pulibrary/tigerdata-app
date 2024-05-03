@@ -4,12 +4,12 @@ require "rails_helper"
 RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
   let(:namespace_request) { instance_double(Mediaflux::Http::NamespaceCreateRequest, resolve: true, "error?": false) }
   let(:collection_request) { instance_double(Mediaflux::Http::AssetCreateRequest, id: 123) }
-  let(:metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: collection_metadata) }
-  let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, "error?": false) }
+  let(:metadata_request) { instance_double(Mediaflux::Http::AssetMetadataRequest, metadata: collection_metadata) }
+  let(:parent_metadata_request) { instance_double(Mediaflux::Http::AssetMetadataRequest, "error?": false) }
   let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project }
   let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
-  let(:asset_create_request) { instance_double(Mediaflux::Http::GetMetadataRequest) }
+  let(:asset_create_request) { instance_double(Mediaflux::Http::AssetMetadataRequest) }
 
   describe "#create!" do
     context "Using test data" do
@@ -21,7 +21,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         allow(Mediaflux::Http::AssetCreateRequest).to receive(:new).with(hash_including(session_token: "test-session-token", name: "big-data",
                                                                                         namespace: "/td-test-001/tigerdataNS/big-dataNS",
                                                                                         pid: "path=/td-test-001/tigerdata")).and_return(asset_create_request)
-        allow(Mediaflux::Http::GetMetadataRequest).to receive(:new).with(hash_including(session_token: "test-session-token",
+        allow(Mediaflux::Http::AssetMetadataRequest).to receive(:new).with(hash_including(session_token: "test-session-token",
                                                                                         id: "path=/td-test-001/tigerdata")).and_return(parent_metadata_request)
         allow(asset_create_request).to receive(:resolve).and_return("<xml>...")
         allow(asset_create_request).to receive(:id).and_return("123")
@@ -61,7 +61,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
 
       context "when the parent colllection does not exist" do
-        let(:parent_metadata_request) { instance_double(Mediaflux::Http::GetMetadataRequest, metadata: {}, "error?": true) }
+        let(:parent_metadata_request) { instance_double(Mediaflux::Http::AssetMetadataRequest, metadata: {}, "error?": true) }
         let(:parent_collection_request) { instance_double(Mediaflux::Http::AssetCreateRequest, id: 567, "error?": false) }
 
         before do
@@ -86,7 +86,14 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if any required is missing" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  directory: incomplete_project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
@@ -103,7 +110,14 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
 
       it "should raise a error if any error occurs in mediaflux" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  directory: incomplete_project.metadata[:directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         

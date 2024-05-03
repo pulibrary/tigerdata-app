@@ -202,3 +202,99 @@
     margin-top: 1em;
   }
 }
+
+#approve{ 
+  .details{
+    margin-left: 2em;
+  }
+  .provenance{
+    display: inline-block;
+    margin-right: 23em;
+    margin-left: 23.5em;
+  }
+  .field{
+    display: inline-flex;
+    margin-bottom: 2em;
+  }
+  .form-directory{
+    min-width: 13em;
+  }
+  .form-directory-confirm{
+    margin-left: 1em;
+    min-width: fit-content;
+  }
+  .form-message{
+    min-width: 15em;
+    min-height: 3em;
+    margin-left: 5px;
+  }
+  .form-date{
+    min-width: 14em;
+  }
+  .form-dropdown{
+    max-width: fit-content;
+    margin-right: 1em;
+  }
+  h2 {// Heading for the details div
+    margin-left: 0.2em;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    .btn.btn-primary.btn-sm{
+      margin-left: 1.5em;
+    }
+  }
+  dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0
+  }
+  dt {
+    float: left;
+    min-width: calc(25% + 5em);
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0;
+    margin-left: 1em;
+    clear: both
+  }
+  dd{
+    margin-bottom: .5rem;
+    
+
+  }
+  p {
+    margin-left: 1em;
+  }
+  label{
+    margin-right: 5em;
+    max-width: 8em;
+    font-weight: bold;
+  }
+  input{
+    .placeholder{
+      opacity: 1;
+    }
+    -webkit-outer-spin-button, -webkit-inner-spin-button {
+      display: none;
+      margin: 0; 
+    }
+    [type=number]{
+      -moz-appearance:textfield;
+    }
+    width: 10em;
+    max-height: 38px;
+    margin-right: 5px;
+  }
+  select{
+    max-height: 38px;
+  }
+  button{
+    min-width: 160px;
+    min-height: 38px
+  }
+  a{
+    min-width: 160px;
+    min-height: 38px
+  }
+}

@@ -7,6 +7,11 @@ class ProjectValidator < ActiveModel::Validator
         # Validate if present
         project.metadata[:data_user_read_only]&.each { |read_only| validate_role(project:, netid: read_only, role: "Data User Read Only")}
         project.metadata[:data_user_read_write]&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
+
+        # validate all required fields
+        if !project.metadata_model.valid?
+            project.errors.add :base, "Invalid Project Metadata it does not match the schema #{TigerdataSchema::SCHEMA_VERSION}\n #{project.metadata_model.errors.to_a.join(", ")}"
+        end
     end
 
     private

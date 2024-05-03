@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::GetMetadataRequest, type: :model do
+RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
   let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
 
   let(:metdata_response) do
