@@ -108,7 +108,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       "      <name>testasset</name>\n" \
       "      <meta>\n" \
       "        <tigerdata:project>\n" \
-      "          <ProjectDirectory>#{project.directory}</ProjectDirectory>\n" \
+      "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
       "          <Title>#{project.metadata[:title]}</Title>\n" \
       "          <Description>#{project.metadata[:description]}</Description>\n" \
       "          <Status>#{project.metadata[:status]}</Status>\n" \
@@ -145,7 +145,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       tigerdata_values = ProjectMediaflux.project_values(project:)
       create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
       expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \
-                     "<meta><tigerdata:project><ProjectDirectory>#{project.directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
+                     "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
                      "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
                      "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
                      "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \

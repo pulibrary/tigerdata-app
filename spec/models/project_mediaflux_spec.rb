@@ -87,7 +87,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
       it "should raise a MetadataError if any required is missing" do
         params = {mediaflux_id: 001,
-                  directory: incomplete_project.metadata[:directory],
+                  project_directory: incomplete_project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
@@ -112,7 +112,7 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
 
       it "should raise a error if any error occurs in mediaflux" do
         params = {mediaflux_id: 001,
-                  directory: incomplete_project.metadata[:directory],
+                  project_directory: incomplete_project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},

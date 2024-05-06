@@ -15,7 +15,7 @@
       {
         data_sponsor: sponsor_user.uid,
         data_manager: data_manager.uid,
-        directory: "project-123",
+        project_directory: "project-123",
         title: "project 123",
         departments: ["RDSS"],
         description: "hello world",
@@ -75,7 +75,7 @@
       end
 
       context "Project Contents", connect_to_mediaflux: true do
-        let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, directory: FFaker::Food.ingredient.underscore) }
+        let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, project_directory: FFaker::Food.ingredient.underscore) }
         let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
         let(:first_file) { file_list.select { |asset| asset.collection == false }.first }
         let(:second_file) { file_list.select { |asset| asset.collection == false }.second }

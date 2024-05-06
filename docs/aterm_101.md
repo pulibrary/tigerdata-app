@@ -412,7 +412,7 @@ For example:
   ```
   session_id = User.first.mediaflux_session
   project = Project.first
-  project_name = ProjectMediaflux.safe_name(project.directory)
+  project_name = ProjectMediaflux.safe_name(project.project_directory)
   project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
   store_name = Store.default(session_id: session_id).name
   namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id) 

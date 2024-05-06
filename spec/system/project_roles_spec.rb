@@ -68,7 +68,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
 
     page.find("#departments").find(:xpath, "option[3]").select_option
 
-    fill_in "directory", with: "test_project"
+    fill_in "project_directory", with: "test_project"
     fill_in "title", with: "My test project"
     expect(page).to have_content("Project Directory: /td-test-001/")
     expect(page.find_all("input:invalid").count).to eq(0)
