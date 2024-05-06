@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  include ActiveModel::API
-
-  class Validator < ActiveModel::Validator
-    def validate(record)
-      if record.required_attributes.values.include?(nil)
-        record.required_keys.each do |attr|
-          value = record.required_attributes[attr]
-          record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil? && record.project.metadata_json.include?(attr)
-        end
-      end
-    end
-  end
-  validates_with Validator
-
   attr_reader :project, :current_user, :params
   def initialize(project:, current_user: nil)
     @project = project
@@ -69,15 +55,6 @@ class ProjectMetadata
       draft_doi
     end
     project.metadata["project_id"]
-  end
-
-  def required_keys
-    tableized = required_field_labels.map { |v| v.parameterize.underscore }
-    tableized
-  end
-
-  def required_attributes
-    project.metadata_json.select { |k, _v| required_keys.include?(k) }
   end
 
   def attributes
@@ -144,10 +121,6 @@ class ProjectMetadata
         data = attributes.merge(data_users)
         timestamps = project_timestamps
         data.merge(timestamps)
-      end
-
-      def required_field_labels
-        TigerdataSchema.required_project_schema_fields.pluck(:label)
       end
 
       def draft_doi
