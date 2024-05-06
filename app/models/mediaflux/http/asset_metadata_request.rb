@@ -24,7 +24,6 @@ module Mediaflux
         asset = xml.xpath("/response/reply/result/asset")
         metadata = parse(asset)
 
-        # Update to version 0.6.1 of the schema
         if metadata[:collection]
           metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
           metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
@@ -71,7 +70,9 @@ module Mediaflux
             path: asset.xpath("./path").text,
             type: asset.xpath("./type").text,
             namespace: asset.xpath("./namespace").text,
-            accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
+            accumulators: asset.xpath("./collection/accumulator/value"), # list of accumulator values in xml format. Can parse further through xpath
+            project_id: asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text,
+            project_directory: asset.xpath("//tigerdata:project/ProjectDirectory", "tigerdata" => "tigerdata").text
           }
         end
     end

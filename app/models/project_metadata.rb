@@ -21,10 +21,7 @@ class ProjectMetadata
     return unless metadata[:collection] == true # If the collection id exists
 
     # check if the project doi in rails matches the project doi in mediaflux
-    xml = response.response_xml
-    asset = xml.xpath("/response/reply/result/asset")
-    doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
-    return unless doi == project.metadata_json["project_id"]
+    return unless metadata[:project_id] == project.metadata_json["project_id"]
 
     # activate a project by setting the status to 'active'
     project.metadata_json["status"] = Project::ACTIVE_STATUS
