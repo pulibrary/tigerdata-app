@@ -17,7 +17,7 @@ RSpec.describe ProjectValidator, type: :model do
         project = FactoryBot.build(:project, data_sponsor: nil, data_manager: sponsor.uid, project_id: "abc123", schema_version: nil)
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Mising netid for role Data Sponsor",
-                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Data sponsor Missing metadata value for data_sponsor"])
+                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for data_sponsor"])
       end
     end
 
@@ -27,7 +27,7 @@ RSpec.describe ProjectValidator, type: :model do
         project = FactoryBot.build(:project, data_sponsor: nil, data_manager: sponsor.uid, project_id: "abc123")
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Mising netid for role Data Sponsor",
-                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Data sponsor Missing metadata value for data_sponsor"])
+                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for data_sponsor"])
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe ProjectValidator, type: :model do
         project = FactoryBot.build(:project, data_sponsor: sponsor.uid, data_manager: nil)
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Mising netid for role Data Manager",
-                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Data manager Missing metadata value for data_manager"])
+                                                          "Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for data_manager"])
       end
     end
 
