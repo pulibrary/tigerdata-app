@@ -204,21 +204,9 @@ RSpec.describe ProjectMetadata, type: :model do
         session_token = current_user.mediaflux_session
         collection_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
         
-        #validate that the collection id exists in mediaflux
         project_metadata.activate_project(collection_id:)
-        response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
-        metadata = response.metadata
-        expect(metadata[:collection]).to be_truthy
 
-        #validate that the project doi in rails matches the project doi in mediaflux
-        xml = response.response_xml
-        asset = xml.xpath("/response/reply/result/asset")
-        doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
-        expect(doi).to eq valid_project.metadata_json["project_id"]
-
-        #change the status of the project to active
-        valid_project.metadata_json["status"] = Project::ACTIVE_STATUS
-        valid_project.save!
+        #change the status of the project to active if the doi
         expect(valid_project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
 
         #activate the project by setting the status to active and creating the necessary provenance events
@@ -227,6 +215,40 @@ RSpec.describe ProjectMetadata, type: :model do
         expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
         expect(activate_event.event_person).to eq current_user.uid
         expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
+      end
+    end
+
+    # check the logic for not activating when the 
+    context "non matching doi", connect_to_mediaflux: false do
+      let(:metadata) { { id: '', creator: '', description: '', collection: '', path: '', type: '', namespace: '', accumulators: '', project_id: '' } }
+      
+      before do
+        metadata_request = instance_double(Mediaflux::Http::AssetMetadataRequest, metadata: )
+        allow(Mediaflux::Http::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
+        logon_request = instance_double(Mediaflux::Http::LogonRequest, session_token: "abc123")
+        allow(Mediaflux::Http::LogonRequest).to receive(:new).and_return(logon_request)
+      end
+
+      describe "#activate_project", connect_to_mediaflux: true do 
+        let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
+        let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
+        it "validates the doi for a project and does nothing" do
+          params = {mediaflux_id: 001,
+                    directory: valid_project.metadata[:directory],
+                    storage_capacity: {"size"=>{"approved"=>600, 
+                    "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                    "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                    event_note: "Other",
+                    event_note_message: "Message filler"
+                    }
+          project_metadata.approve_project(params:)
+
+          # activation should do nothing because the project_id (DOI) will not match
+          project_metadata.activate_project(collection_id: "112233")
+                    
+          expect(valid_project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+          expect(valid_project.provenance_events.count).to eq 2
+        end
       end
     end
   end
