@@ -5,13 +5,14 @@ class ActivateProjectJob < ApplicationJob
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
     collection_id = project.metadata_json["project_id"]
+    project_metadata = project.metadata_model
 
     # ACTIVATE THE PROJECT IF THE DOI IN RAILS AND MF MATCH
-    ProjectMetadata.activate_project(collection_id: collection_id, session_token: mediaflux_session)
+    project_metadata.activate_project(collection_id: collection_id, current_user: user)
     
     project.reload
-    return unless project.status != ACTIVE_STATUS #CHECK IF PROJECT ACTIVATION WAS SUCCESSFUL
-    @activation_failure_msg = "Project with #{collection_id} failed to activate due to mismatched DOI's between rails and mediaflux"
+    return unless project.status != Project::ACTIVE_STATUS #CHECK IF PROJECT ACTIVATION WAS SUCCESSFUL
+    activation_failure_msg = "Project with #{collection_id} failed to activate due to mismatched DOI's between rails and mediaflux"
     
     #SEND EMAIL
     mailer = TigerdataMailer.with(project_id: project.id, user:, activation_failure_msg:)

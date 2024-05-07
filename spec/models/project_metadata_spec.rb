@@ -205,7 +205,7 @@ RSpec.describe ProjectMetadata, type: :model do
         collection_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
         
         #validate that the collection id exists in mediaflux
-        project_metadata.activate_project(collection_id:)
+        project_metadata.activate_project(collection_id:,current_user:)
         response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
         metadata = response.metadata
         expect(metadata[:collection]).to be_truthy
