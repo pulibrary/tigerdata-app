@@ -15,7 +15,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
-      directory: "project-123",
+      project_directory: "project-123",
       title: "project 123",
       departments: ["RDSS"],
       description: "hello world",
@@ -68,7 +68,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         {
           data_sponsor: sponsor_user.uid,
           data_manager: data_manager.uid,
-          directory: "project-123",
+          project_directory: "project-123",
           title: "project 123",
           departments: ["RDSS"],
           description: "hello world",
@@ -132,7 +132,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "preserves the readonly directory field" do
         click_on "Submit"
         project_in_mediaflux.reload
-        expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
+        expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
       end
 
       it "loads existing Data Sponsor" do
@@ -142,7 +142,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       it "redirects the user to the revision request confirmation page upon submission" do
         click_on "Submit"
         project_in_mediaflux.reload
-        expect(project_in_mediaflux.metadata[:directory]).to eq "project-123"
+        expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
 
         # This is the confirmation page. It needs a button to return to the dashboard
         # and it needs to be_axe_clean.
@@ -181,7 +181,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       click_on "btn-add-rw-user"
       #select a department
       select 'RDSS', :from => 'departments'
-      fill_in "directory", with: "test_project"
+      fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
       expect do
@@ -227,7 +227,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       # Without removing the focus from the form field, the "change" event is not propagated for the DOM
       page.find("body").click
       click_on "btn-add-rw-user"
-      fill_in "directory", with: "test_project"
+      fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
       expect do
@@ -252,7 +252,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         click_on "btn-add-rw-user"
-        fill_in "directory", with: "test_project"
+        fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect(page.find("button[value=Submit]")).to be_disabled
@@ -273,7 +273,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "rw-user-uid-to-add", with: "zzz"
         page.find("body").click
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-        fill_in "directory", with: "test_project"
+        fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect do
@@ -311,8 +311,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         fill_in "rw-user-uid-to-add", with: read_write.uid
         page.find("body").click
         click_on "btn-add-rw-user"
-        fill_in "directory", with: "test?project"
-        valid = page.find("input#directory:invalid")
+        fill_in "project_directory", with: "test?project"
+        valid = page.find("input#project_directory:invalid")
         expect(valid).to be_truthy
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
@@ -341,7 +341,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         page.find("body").click
         click_on "btn-add-rw-user"
         select "RDSS", from: 'departments'
-        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "project_directory", with: FFaker::Name.name.gsub(" ","_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect(page.find_all("input:invalid").count).to eq(0)
@@ -387,7 +387,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         page.find("body").click
         click_on "btn-add-rw-user"
         select "RDSS", from: 'departments'
-        fill_in "directory", with: FFaker::Name.name.gsub(" ","_")
+        fill_in "project_directory", with: FFaker::Name.name.gsub(" ","_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         sleep 1
@@ -437,7 +437,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
 
+      fill_in "storage_capacity", with: 500
+      fill_in "project_directory", with: project.metadata_json["project_directory"]
       fill_in "mediaflux_id", with: mediaflux_id
+      select "Other", :from => "event_note"
+      fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
       project.reload
@@ -455,7 +459,11 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
 
+      fill_in "storage_capacity", with: 500
+      fill_in "project_directory", with: project.metadata_json["project_directory"]
       fill_in "mediaflux_id", with: mediaflux_id
+      select "Other", :from => "event_note"
+      fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
       # This is the confirmation page. It needs a button to return to the dashboard
@@ -560,7 +568,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           {
             data_sponsor: sponsor_user.uid,
             data_manager: data_manager.uid,
-            directory: "project-123",
+            project_directory: "project-123",
             title: "project 123",
             departments: ["RDSS"],
             description: "hello world",
@@ -637,7 +645,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           {
             data_sponsor: sponsor_user.uid,
             data_manager: data_manager.uid,
-            directory: "project-123",
+            project_directory: "project-123",
             title: "project 123",
             departments: ["RDSS"],
             description: "hello world",

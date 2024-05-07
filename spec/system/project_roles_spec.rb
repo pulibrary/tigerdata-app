@@ -68,7 +68,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
 
     page.find("#departments").find(:xpath, "option[3]").select_option
 
-    fill_in "directory", with: "test_project"
+    fill_in "project_directory", with: "test_project"
     fill_in "title", with: "My test project"
     expect(page).to have_content("Project Directory: /td-test-001/")
     expect(page.find_all("input:invalid").count).to eq(0)
@@ -219,14 +219,14 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system do
       sign_in system_admin
       visit project_approve_path(project)
       click_on "Approve"
-      expect(page).to have_content "Approve this project by appending a mediaflux id"
+      expect(page).to have_content "Metadata Highlights"
     end
 
     it "allows a super user to approve the project" do
       sign_in superuser
       visit project_approve_path(project)
       click_on "Approve"
-      expect(page).to have_content "Approve this project by appending a mediaflux id"
+      expect(page).to have_content "Metadata Highlights"
     end
 
     it "does not allow a data sponsor to approve the project" do

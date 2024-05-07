@@ -78,7 +78,7 @@ namespace :projects do
     project_id = args[:project_id]
     project = Project.find(project_id)
 
-    project_directory = project.metadata_json["directory"]
+    project_directory = project.metadata_json["project_directory"]
     project_parent = Rails.configuration.mediaflux['api_root_collection']
     path_id = "#{project_parent}/#{project_directory}"
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_directory}NS"
@@ -95,7 +95,7 @@ namespace :projects do
       asset.create
         :pid #{project_parent}
         :namespace #{project_namespace}
-        :name #{project.metadata_json["directory"]}
+        :name #{project.metadata_json["project_directory"]}
         :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
         :type "application/arc-asset-collection"
         :meta <

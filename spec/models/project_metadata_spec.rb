@@ -9,13 +9,13 @@ RSpec.describe ProjectMetadata, type: :model do
     describe "#update_metadata" do
 
       it "parses the basic metadata" do
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123", status: "pending" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123", status: "pending" }
         project_metadata = described_class.new(current_user: current_user, project: project)
         update = project_metadata.update_metadata(params: params)
         expect(update[:data_sponsor]).to eq("abc")
         expect(update[:data_manager]).to eq("def")
         expect(update[:departments]).to eq("dep")
-        expect(update[:directory]).to eq("dir")
+        expect(update[:project_directory]).to eq("dir")
         expect(update[:title]).to eq("title abc")
         expect(update[:description]).to eq("description 123")
         expect(update[:status]).to eq("pending")
@@ -105,7 +105,7 @@ RSpec.describe ProjectMetadata, type: :model do
         data_manager =  FactoryBot.create(:user, uid: "def")
 
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123" }
         doi = project_metadata.create(params:)
         project_metadata.create(params: {}) # doesn't call the doi service twice
         expect(datacite_stub).to have_received(:draft_doi)
@@ -118,7 +118,7 @@ RSpec.describe ProjectMetadata, type: :model do
         data_manager =  FactoryBot.create(:user, uid: "def")
         data_sponsor = User.find_by(uid: "abc")
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123" }
         doi = project_metadata.create(params:)
         project_metadata.create(params: {}) # doesn't call the doi service twice
         
@@ -147,7 +147,14 @@ RSpec.describe ProjectMetadata, type: :model do
     describe "#approve_project" do
       it "Records the mediaflux id and sets the status to approved" do 
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {mediaflux_id: 001 }
+        params = {mediaflux_id: 001,
+                  project_directory: project.metadata[:project_directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         project.reload
@@ -157,8 +164,15 @@ RSpec.describe ProjectMetadata, type: :model do
       end
       it "Creates a Provenance Event: Approval" do
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
-        project_metadata.approve_project(params: {}) # doesn't call the doi service twice
+        params = {mediaflux_id: 001,
+                  project_directory: project.metadata[:project_directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
+        project_metadata.approve_project(params:) # doesn't call the doi service twice
         
         project.reload
         expect(project.provenance_events.count).to eq 2
@@ -176,28 +190,23 @@ RSpec.describe ProjectMetadata, type: :model do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: valid_project.mediaflux_id, members: true).resolve
       end
       it "validates the doi for a project" do
-        params = {mediaflux_id: 001 }
+        params = {mediaflux_id: 001,
+                  project_directory: valid_project.metadata[:project_directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                  }
         project_metadata.approve_project(params:)
         
         #create a project in mediaflux
         session_token = current_user.mediaflux_session
         collection_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
         
-        #validate that the collection id exists in mediaflux
         project_metadata.activate_project(collection_id:)
-        response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
-        metadata = response.metadata
-        expect(metadata[:collection]).to be_truthy
 
-        #validate that the project doi in rails matches the project doi in mediaflux
-        xml = response.response_xml
-        asset = xml.xpath("/response/reply/result/asset")
-        doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
-        expect(doi).to eq valid_project.metadata_json["project_id"]
-
-        #change the status of the project to active
-        valid_project.metadata_json["status"] = Project::ACTIVE_STATUS
-        valid_project.save!
+        #change the status of the project to active if the doi
         expect(valid_project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
 
         #activate the project by setting the status to active and creating the necessary provenance events
@@ -206,6 +215,40 @@ RSpec.describe ProjectMetadata, type: :model do
         expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
         expect(activate_event.event_person).to eq current_user.uid
         expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
+      end
+    end
+
+    # check the logic for not activating when the 
+    context "non matching doi", connect_to_mediaflux: false do
+      let(:metadata) { { id: '', creator: '', description: '', collection: '', path: '', type: '', namespace: '', accumulators: '', project_id: '' } }
+      
+      before do
+        metadata_request = instance_double(Mediaflux::Http::AssetMetadataRequest, metadata: )
+        allow(Mediaflux::Http::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
+        logon_request = instance_double(Mediaflux::Http::LogonRequest, session_token: "abc123")
+        allow(Mediaflux::Http::LogonRequest).to receive(:new).and_return(logon_request)
+      end
+
+      describe "#activate_project", connect_to_mediaflux: true do 
+        let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
+        let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
+        it "validates the doi for a project and does nothing" do
+          params = {mediaflux_id: 001,
+                    project_directory: valid_project.metadata[:project_directory],
+                    storage_capacity: {"size"=>{"approved"=>600, 
+                    "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                    "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                    event_note: "Other",
+                    event_note_message: "Message filler"
+                    }
+          project_metadata.approve_project(params:)
+
+          # activation should do nothing because the project_id (DOI) will not match
+          project_metadata.activate_project(collection_id: "112233")
+                    
+          expect(valid_project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+          expect(valid_project.provenance_events.count).to eq 2
+        end
       end
     end
   end

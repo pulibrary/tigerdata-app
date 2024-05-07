@@ -31,7 +31,7 @@ class TestProjectGenerator
         data_sponsor: sponsor.uid,
         data_manager: sponsor.uid,
         departments: departments,
-        directory: "#{project_prefix}-#{sequence}",
+        project_directory: "#{project_prefix}-#{sequence}",
         title: "Project #{project_prefix} #{sequence}",
         description: "Description of project #{project_prefix} #{sequence}",
         data_user_read_only: [],

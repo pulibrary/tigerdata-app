@@ -1,6 +1,31 @@
+<approve id="approve"> 
 <h1>Project Approval: <%=@title%> </h1>
-<h2 >Approve this project by appending a mediaflux id</h2>
 
-<%= form_with url: project_path(@project), method: :put do |form| %>
-  <%= render "approve_form" %>
-<% end %>
+<div class="details">
+  <h4>Metadata Highlights</h4>
+  <dl>
+      <dt>Data Sponsor</dt> <dd><%= @data_sponsor.display_name_safe %></dd>
+      <dt>Affiliated Department(s)</dt> <dd><%= @departments %></dd>
+      <dt>Project Directory</dt> <dd><%=  Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:project_directory] %></dd>
+      <dt>Title</dt> <dd><%=@project.metadata[:title] %></dd>
+      <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
+      <dt>Storage Capacity - Request</dt> <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>
+    </dl>
+  <p>
+    Submission
+    <ul class>
+    <% @provenance_events.each do |event| %>
+      <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%> </li>
+    <% end %>
+    </ul>
+  </p>
+</div>
+
+<div class="details">
+  <h4>Project Approval Confirmation Information</h4>
+  <%= form_with url: project_path(@project), method: :put do |form| %>
+    <%= render "approve_form" %>
+  <% end %>
+</div>
+
+</approve>

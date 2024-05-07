@@ -5,6 +5,7 @@
       <asset id="1065" version="1" collection="true" vid="1516">
         <type>application/arc-asset-collection</type>
         <namespace id="1099">/td-test-001</namespace>
+        <parent>1587</parent>
         <path>/td-test-001/collection-96-58278</path>
         <name>collection-96-58278</name>
         <creator id="15">
@@ -46,35 +47,43 @@
             <type>create</type>
           </mf-revision-history>
           <tigerdata:project xmlns:tigerdata="tigerdata" id="2">
-            <code>Oblivion</code>
-            <title>Oblivion</title>
-            <description>Testing</description>
-            <status>pending</status>
-            <data_sponsor>jh6441</data_sponsor>
-            <data_manager>bs3097</data_manager>
-            <departments>RDSS</departments>
-            <created_on>29-Jan-2024 14:04:18</created_on>
-            <created_by>jh6441</created_by>
-            <project_id>10.34770/tbd</project_id>
-            <storage_capacity>500 GB</storage_capacity>
-            <storage_performance>Standard</storage_performance>
-            <project_purpose>Research</project_purpose>
+            <ProjectDirectory>accum-07576</ProjectDirectory>
+            <Title>Project accum 07576</Title>
+            <Description>Description of project accum 07576</Description>
+            <Status>pending</Status>
+            <DataSponsor>mjc12</DataSponsor>
+            <DataManager>mjc12</DataManager>
+            <Department>HPC</Department>
+            <CreatedOn>06-May-2024 14:04:49</CreatedOn>
+            <CreatedBy>cac9</CreatedBy>
+            <ProjectID>doi-not-generated</ProjectID>
+            <StorageCapacity>
+              <Size>500</Size>
+              <Unit>GB</Unit>
+            </StorageCapacity>
+            <Performance Requested="Standard">Standard</Performance>
+            <Submission>
+              <RequestedBy>cac9</RequestedBy>
+              <RequestDateTime>06-May-2024 14:04:49</RequestDateTime>
+            </Submission>
+            <ProjectPurpose>Research</ProjectPurpose>
+            <SchemaVersion>0.6.1</SchemaVersion>
           </tigerdata:project>
         </meta>
         <collection>
+          <leaf>true</leaf>
           <unique-name-index>true</unique-name-index>
-          <store inherited="true">db</store>
+          <store inherited="true">data</store>
           <contained-asset-index cascade="true">true</contained-asset-index>
-          <member-change-time tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1707076006057">04-Feb-2024 19:46:46</member-change-time>
-          <accumulator type="collection.asset.count" name="number of assets">
-            <stime>31058435</stime>
+          <accumulator type="collection.asset.count" name="accum-count">
+            <stime>3841</stime>
             <value>
               <collections>25</collections>
               <non-collections>60</non-collections>
             </value>
           </accumulator>
-          <accumulator type="content.all.size" name="total storage">
-            <stime>31058435</stime>
+          <accumulator type="content.all.size" name="accum-size">
+            <stime>3841</stime>
             <value>
               <total count="60" count-zero="0" h="6 KB">6000</total>
             </value>
@@ -88,9 +97,6 @@
             <mtime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1711125296487">22-Mar-2024 16:34:56</mtime>
           </quota>
         </collection>
-        <members>
-          <static>1</static>
-        </members>
       </asset>
     </result>
   </reply>

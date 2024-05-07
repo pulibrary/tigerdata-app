@@ -86,7 +86,14 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if any required is missing" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  project_directory: incomplete_project.metadata[:project_directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         
@@ -97,13 +104,21 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
         }.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
           expect(error.message).to include("Project creation failed with metadata schema version 0.6.1 due to the missing fields:")
-          expect(incomplete_project.metadata_model.errors.attribute_names.size).to eq 1
-          expect(incomplete_project.metadata_model.errors.attribute_names[0].to_s).to eq "project_id"
+          expect(incomplete_project.errors.attribute_names.size).to eq 1
+          expect(incomplete_project.errors.attribute_names[0].to_s).to eq "base"
+          expect(incomplete_project.errors.messages[:base]).to eq ["Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for project_id"]
         end
       end
 
       it "should raise a error if any error occurs in mediaflux" do
-        params = {mediaflux_id: 001}
+        params = {mediaflux_id: 001,
+                  project_directory: incomplete_project.metadata[:project_directory],
+                  storage_capacity: {"size"=>{"approved"=>600, 
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  event_note: "Other",
+                  event_note_message: "Message filler"
+                }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
         

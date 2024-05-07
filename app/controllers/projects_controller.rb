@@ -122,7 +122,19 @@ class ProjectsController < ApplicationController
     if params.key?("mediaflux_id")
       project_metadata = ProjectMetadata.new(project: project, current_user:)
       project_params = params.dup
-      project_metadata.approve_project(params: project_params)
+      metadata_params = project_params.merge({
+        project_directory: project_params["project_directory"],
+        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
+                            "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                            "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+        approval_note: {
+          note_by: current_user.uid,
+          note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+          event_type: project_params[:event_note],
+          message: project_params[:event_note_message]
+        }
+      })
+      project_metadata.approve_project(params: metadata_params)
     end
 
     #Edit action
@@ -198,6 +210,12 @@ class ProjectsController < ApplicationController
   def approve
     if current_user.eligible_sysadmin?
       project
+      @departments = project.departments.join(", ")
+      @project_metadata = project.metadata
+      sponsor_uid = @project_metadata[:data_sponsor]
+      @data_sponsor = User.find_by(uid: sponsor_uid)
+      @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
+
       @project_metadata = project.metadata
       @title = @project_metadata["title"]
     else redirect_to root_path

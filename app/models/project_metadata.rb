@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  include ActiveModel::API
-
-  class Validator < ActiveModel::Validator
-    def validate(record)
-      if record.required_attributes.values.include?(nil)
-        record.required_keys.each do |attr|
-          value = record.required_attributes[attr]
-          record.errors.add(attr, "Missing metadata value for #{attr}") if value.nil? && record.project.metadata_json.include?(attr)
-        end
-      end
-    end
-  end
-  validates_with Validator
-
   attr_reader :project, :current_user, :params
   def initialize(project:, current_user: nil)
     @project = project
@@ -35,10 +21,7 @@ class ProjectMetadata
     return unless metadata[:collection] == true # If the collection id exists
 
     # check if the project doi in rails matches the project doi in mediaflux
-    xml = response.response_xml
-    asset = xml.xpath("/response/reply/result/asset")
-    doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
-    return unless doi == project.metadata_json["project_id"]
+    return unless metadata[:project_id] == project.metadata_json["project_id"]
 
     # activate a project by setting the status to 'active'
     project.metadata_json["status"] = Project::ACTIVE_STATUS
@@ -53,10 +36,13 @@ class ProjectMetadata
     # approve a project by recording the mediaflux id & setting the status to 'approved'
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
-    project.save!
+    project.metadata_json["project_directory"] = params[:project_directory]
+    project.metadata_json["storage_capacity"] = params[:storage_capacity]
 
+    project.save!
     # create two provenance events, one for approving the project and another for changing the status of the project
-    project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}")
+    project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}",
+                                     event_note: params[:approval_note])
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
   end
 
@@ -68,21 +54,12 @@ class ProjectMetadata
     project.metadata["project_id"]
   end
 
-  def required_keys
-    tableized = required_field_labels.map { |v| v.parameterize.underscore }
-    tableized
-  end
-
-  def required_attributes
-    project.metadata_json.select { |k, _v| required_keys.include?(k) }
-  end
-
   def attributes
     {
       data_sponsor: params[:data_sponsor],
       data_manager: params[:data_manager],
       departments: params[:departments],
-      directory: params[:directory],
+      project_directory: params[:project_directory],
       title: params[:title],
       description: params[:description],
       status: params[:status] || project.metadata[:status],
@@ -141,10 +118,6 @@ class ProjectMetadata
         data = attributes.merge(data_users)
         timestamps = project_timestamps
         data.merge(timestamps)
-      end
-
-      def required_field_labels
-        TigerdataSchema.required_project_schema_fields.pluck(:label)
       end
 
       def draft_doi

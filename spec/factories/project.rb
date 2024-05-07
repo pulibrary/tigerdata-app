@@ -15,7 +15,7 @@ FactoryBot.define do
       storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } } }
       storage_performance { { requested: "standard" } }
       project_purpose { "research" }
-      directory { "big-data" }
+      project_directory { "big-data" }
       schema_version { "0.6.1" }
     end
     mediaflux_id { nil }
@@ -26,7 +26,7 @@ FactoryBot.define do
         data_user_read_only: data_user_read_only,
         data_user_read_write: data_user_read_write,
         departments: ["RDSS", "PRDS"],
-        directory: directory,
+        project_directory: project_directory,
         title: title,
         description: "a random description",
         created_on: created_on,
@@ -43,7 +43,7 @@ FactoryBot.define do
     end
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
-        sequence :directory do |n|
+        sequence :project_directory do |n|
           "#{FFaker::Food.fruit}#{n}"
         end
       end

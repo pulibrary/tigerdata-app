@@ -9,7 +9,7 @@ RSpec.describe "/projects", type: :request do
     let(:data_user_read_write) { nil }
     let(:departments) { nil }
     let(:description) { nil }
-    let(:directory) { nil }
+    let(:project_directory) { nil }
     let(:title) { nil }
     let(:params) do
       {
@@ -19,7 +19,7 @@ RSpec.describe "/projects", type: :request do
         data_user_read_write: data_user_read_write,
         departments: departments,
         description: description,
-        directory: directory,
+        project_directory: project_directory,
         title: title
       }
     end
@@ -34,6 +34,7 @@ RSpec.describe "/projects", type: :request do
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:user, uid: "pul123") }
       let(:title) { "a title" }
+      let(:project_directory) { "/test-project" }
       let(:response_body) do
         filename = Rails.root.join("spec", "fixtures", "files", "version_response.xml")
         File.new(filename).read
@@ -95,7 +96,7 @@ RSpec.describe "/projects", type: :request do
           ]
         end
         let(:data_user_read_write) { rw_user_models.map(&:uid) }
-        let(:directory) { "/test-project" }
+        let(:project_directory) { "/test-project" }
         let(:title) { "test project" }
         let(:params) do
           {
@@ -109,7 +110,7 @@ RSpec.describe "/projects", type: :request do
             rw_user_2: data_user_read_write.last,
             departments: departments,
             description: description,
-            directory: directory,
+            project_directory: project_directory,
             title: title
           }
         end
@@ -137,7 +138,7 @@ RSpec.describe "/projects", type: :request do
       FactoryBot.create(:project,
                         metadata: {
                           title: "foo",
-                          directory: "big-data",
+                          project_directory: "big-data",
                           departments: ["RDSS"],
                           description: "test2",
                           data_manager: data_manager.uid,
@@ -214,7 +215,7 @@ XML
           FactoryBot.create(:project,
                             metadata: {
                               title: "foo",
-                              directory: "big-data",
+                              project_directory: "big-data",
                               departments: ["RDSS"],
                               description: "test2",
                               data_manager: data_manager.uid,

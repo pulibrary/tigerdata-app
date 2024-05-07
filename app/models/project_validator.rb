@@ -9,8 +9,16 @@ class ProjectValidator < ActiveModel::Validator
         project.metadata[:data_user_read_write]&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
 
         # validate all required fields
-        if !project.metadata_model.valid?
-            project.errors.add :base, "Invalid Project Metadata it does not match the schema #{TigerdataSchema::SCHEMA_VERSION}\n #{project.metadata_model.errors.to_a.join(", ")}"
+        required_metadata_field_errors = []
+        required_metadata = required_attributes(project:)
+        if required_metadata.values.include?(nil)
+            required_keys.each do |attr|
+                value = required_metadata[attr]
+                required_metadata_field_errors << "Missing metadata value for #{attr}" if value.nil? && project.metadata_json.include?(attr)
+            end
+        end
+        if required_metadata_field_errors.count > 0
+            project.errors.add :base, "Invalid Project Metadata it does not match the schema #{TigerdataSchema::SCHEMA_VERSION}\n #{required_metadata_field_errors.join(", ")}"
         end
     end
 
@@ -23,4 +31,18 @@ class ProjectValidator < ActiveModel::Validator
             project.errors.add :base, "Invalid netid: #{netid} for role #{role}"
         end
     end
+
+    def required_field_labels
+        TigerdataSchema.required_project_schema_fields.pluck(:label)
+    end
+
+    def required_keys
+        tableized = required_field_labels.map { |v| v.parameterize.underscore }
+        tableized
+      end
+    
+      def required_attributes(project:)
+        project.metadata_json.select { |k, _v| required_keys.include?(k) }
+      end
+    
 end
