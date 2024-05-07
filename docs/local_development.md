@@ -127,9 +127,7 @@ You can also utilize the TestAssetGenerator in the rails console to add assets t
 rails c
   user = User.first
   project = Project.last
-  id = ProjectMediaflux.create!(project:, session_id: user.mediaflux_session, xml_namespace: "tigerdata")
-  project.mediaflux_id = id
-  project.save!
+  project.save_in_mediaflux(session_id: user.mediaflux_session)
   gen = TestAssetGenerator.new(project_id: project.id,user:, levels: 2, directory_per_level: 2,file_count_per_directory: 20)
   gen.generate
 ```

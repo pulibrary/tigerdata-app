@@ -190,8 +190,7 @@ RSpec.describe ProjectMetadata, type: :model do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: valid_project.mediaflux_id, members: true).resolve
       end
       it "validates the doi for a project" do
-        params = {mediaflux_id: 001,
-                  project_directory: valid_project.metadata[:project_directory],
+        params = { project_directory: valid_project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
@@ -202,7 +201,7 @@ RSpec.describe ProjectMetadata, type: :model do
         
         #create a project in mediaflux
         session_token = current_user.mediaflux_session
-        collection_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
+        collection_id = valid_project.save_in_mediaflux(session_id: session_token)
         
         project_metadata.activate_project(collection_id:)
 
