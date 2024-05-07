@@ -75,8 +75,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           data_user_read_only: [],
           data_user_read_write: [],
           project_id: "abc-123",
-          storage_capacity: {size: {requested: 100}, unit: {requested: "TB"}},
-          storage_performance_expectations: {requested: "Standard"},
+          storage_capacity: { size: { requested: 100 }, unit: { requested: "TB" } },
+          storage_performance_expectations: { requested: "Standard" },
           project_purpose: "Research"
         }
       end
@@ -114,8 +114,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "a project is active" do
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
-        #project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
-        #project_in_mediaflux.save!
+        # project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+        # project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
 
         expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
@@ -179,8 +179,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       # Without removing the focus from the form field, the "change" event is not propagated for the DOM
       page.find("body").click
       click_on "btn-add-rw-user"
-      #select a department
-      select 'RDSS', :from => 'departments'
+      # select a department
+      select "RDSS", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
@@ -215,24 +215,24 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     context "when a department has not been selected" do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
-      visit "/"
-      click_on "New Project"
-      expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-      fill_in "data_manager", with: data_manager.uid
-      fill_in "ro-user-uid-to-add", with: read_only.uid
-      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
-      page.find("body").click
-      click_on "btn-add-ro-user"
-      fill_in "rw-user-uid-to-add", with: read_write.uid
-      # Without removing the focus from the form field, the "change" event is not propagated for the DOM
-      page.find("body").click
-      click_on "btn-add-rw-user"
-      fill_in "project_directory", with: "test_project"
-      fill_in "title", with: "My test project"
-      expect(page).to have_content("Project Directory: /td-test-001/")
-      expect do
-        click_on "Submit"
-      end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
+        visit "/"
+        click_on "New Project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in "data_manager", with: data_manager.uid
+        fill_in "ro-user-uid-to-add", with: read_only.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-ro-user"
+        fill_in "rw-user-uid-to-add", with: read_write.uid
+        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
+        page.find("body").click
+        click_on "btn-add-rw-user"
+        fill_in "project_directory", with: "test_project"
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect do
+          click_on "Submit"
+        end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
       end
     end
 
@@ -326,7 +326,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       end
 
       it "allows the projects to be created" do
-
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
@@ -340,8 +339,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         click_on "btn-add-rw-user"
-        select "RDSS", from: 'departments'
-        fill_in "project_directory", with: FFaker::Name.name.gsub(" ","_")
+        select "RDSS", from: "departments"
+        fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         expect(page.find_all("input:invalid").count).to eq(0)
@@ -353,8 +352,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end
         expect(page).to have_content "New Project Request Received"
         project = Project.last
-        project.mediaflux_id = ProjectMediaflux.create!(project:, session_id: @session_id)
-        expect(project.mediaflux_id).not_to be_nil
+        project.save_in_mediaflux(session_id: @session_id)
+        expect(project.mediaflux_id).not_to be_blank
         expect(Mediaflux::Http::AssetDestroyRequest.new(session_token: @session_id, collection: project.mediaflux_id, members: true).error?).to be_falsey
       end
     end
@@ -363,7 +362,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       let(:mailer) { double(ActionMailer::Parameterized::Mailer) }
       let(:message_delivery) { instance_double(ActionMailer::Parameterized::MessageDelivery) }
       let(:error_message) { "Connection refused - connect(2) for 127.0.0.1:6379" }
-      let(:flash_message) { "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. Please know that this error has been logged, and shall be reviewed by members of RDSS." }
+      let(:flash_message) do
+        "We are sorry, while the project was successfully created, an error was encountered which prevents the delivery of an e-mail message confirming this. " \
+          "Please know that this error has been logged, and shall be reviewed by members of RDSS."
+      end
 
       before do
         allow(Honeybadger).to receive(:notify)
@@ -386,8 +388,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         click_on "btn-add-rw-user"
-        select "RDSS", from: 'departments'
-        fill_in "project_directory", with: FFaker::Name.name.gsub(" ","_")
+        select "RDSS", from: "departments"
+        fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
         sleep 1
@@ -404,10 +406,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).to have_content flash_message
 
         expect(Honeybadger).to have_received(:notify).with(kind_of(TigerData::MailerError), context: {
-          current_user_email: sponsor_user.email,
-          project_id: new_project.id,
-          project_metadata: new_project.metadata
-        })
+                                                             current_user_email: sponsor_user.email,
+                                                             project_id: new_project.id,
+                                                             project_metadata: new_project.metadata
+                                                           })
       end
     end
   end
@@ -440,7 +442,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "storage_capacity", with: 500
       fill_in "project_directory", with: project.metadata_json["project_directory"]
       fill_in "mediaflux_id", with: mediaflux_id
-      select "Other", :from => "event_note"
+      select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
@@ -462,7 +464,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       fill_in "storage_capacity", with: 500
       fill_in "project_directory", with: project.metadata_json["project_directory"]
       fill_in "mediaflux_id", with: mediaflux_id
-      select "Other", :from => "event_note"
+      select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
 
@@ -535,15 +537,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
         before do
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml,
+            body: mediaflux_asset_collection_query_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml,
+            body: mediaflux_asset_collection_iterate_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml,
+            body: mediaflux_asset_collection_destroy_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
         end
 
@@ -575,8 +577,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
             data_user_read_only: [],
             data_user_read_write: [],
             project_id: "abc-123",
-            storage_capacity: {size: {requested: 100}, unit: {requested: "TB"}},
-            storage_performance_expectations: {requested: "Standard"},
+            storage_capacity: { size: { requested: 100 }, unit: { requested: "TB" } },
+            storage_performance_expectations: { requested: "Standard" },
             project_purpose: "Research"
           }
         end
@@ -618,15 +620,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
         before do
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml,
+            body: mediaflux_asset_collection_query_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml,
+            body: mediaflux_asset_collection_iterate_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml,
+            body: mediaflux_asset_collection_destroy_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
         end
 
@@ -652,8 +654,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
             data_user_read_only: [],
             data_user_read_write: [],
             project_id: "abc-123",
-            storage_capacity: {size: {requested: 500}, unit: {requested: "GB"}},
-            storage_performance_expectations: {requested: "Standard"},
+            storage_capacity: { size: { requested: 500 }, unit: { requested: "GB" } },
+            storage_performance_expectations: { requested: "Standard" },
             project_purpose: "Research"
           }
         end
@@ -694,21 +696,21 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         end
         before do
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml,
+            body: mediaflux_asset_collection_query_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml,
+            body: mediaflux_asset_collection_iterate_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
 
           stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml,
+            body: mediaflux_asset_collection_destroy_request.to_xml
           ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
         end
 
         it "renders the storage capacity in the show view" do
           visit project_contents_path(project_in_mediaflux)
-          expect(page).to have_content "6 KB / 300 GB" #should be 300 GB which is the quota, instead of 500GB which is the requested capacity
+          expect(page).to have_content "6 KB / 300 GB" # should be 300 GB which is the quota, instead of 500GB which is the requested capacity
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')
