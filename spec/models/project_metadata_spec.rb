@@ -256,7 +256,7 @@ RSpec.describe ProjectMetadata, type: :model do
           project_metadata.approve_project(params:)
 
           # activation should do nothing because the project_id (DOI) will not match
-          project_metadata.activate_project(collection_id: "112233")
+          project_metadata.activate_project(collection_id: "112233", current_user:)
                     
           expect(valid_project.metadata_json["status"]).to eq Project::APPROVED_STATUS
           expect(valid_project.provenance_events.count).to eq 2
