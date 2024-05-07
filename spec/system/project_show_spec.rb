@@ -56,7 +56,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
             visit "/projects/#{project_in_mediaflux.id}"
 
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
-            expect(page).not_to have_selector(:link_or_button, "Review Contents")
+            expect(page).to have_selector(:link_or_button, "Review Contents")
             expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
             expect(page).to have_selector(:link_or_button, "Return to Dashboard")
             # The project has already been approved
@@ -74,6 +74,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
             expect(page).not_to have_link("Edit")
+            expect(page).to have_selector(:link_or_button, "Review Contents")
             click_on("Return to Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
             click_on(project_not_in_mediaflux.title)
@@ -89,6 +90,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
             expect(page).not_to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Approve Project")
             expect(page).to have_selector(:link_or_button, "Deny Project")
+            expect(page).to have_selector(:link_or_button, "Review Contents")
           end
         end
       end

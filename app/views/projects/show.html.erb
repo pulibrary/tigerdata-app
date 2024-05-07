@@ -107,6 +107,7 @@ Project Details:
       <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
       <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
     <% end %>
+    <%= link_to "Review Contents", project_contents_path(@project), class: "btn btn-primary btn-sm" %>
     <%= link_to "Return to Dashboard", root_path, class: "btn btn-return btn-sm" %>
   <% end %>
 </div>
