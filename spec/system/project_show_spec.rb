@@ -29,31 +29,68 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
   context "Show page" do
     context "Navigation Buttons" do
-      it "Shows the correct nav buttons for an approved project" do
-        sign_in sponsor_user
-        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
-        project_in_mediaflux.save!
-        visit "/projects/#{project_in_mediaflux.id}"
+      context "Approved projects" do
+        context "Sponsor user" do
+          it "Shows the correct nav buttons" do
+            sign_in sponsor_user
+            project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+            project_in_mediaflux.save!
+            visit "/projects/#{project_in_mediaflux.id}"
 
-        expect(page).to have_content(project_in_mediaflux.title)
-        expect(page).not_to have_content(pending_text)
-        expect(page).to have_link("Edit") # button next to role and description heading
-        click_on("Return to Dashboard")
-        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-        click_on(project_in_mediaflux.title)
-        expect(page).to have_link("Withdraw Project Request")
+            expect(page).to have_content(project_in_mediaflux.title)
+            expect(page).not_to have_content(pending_text)
+            expect(page).to have_selector(:link_or_button, "Edit") # button next to role and description heading
+            expect(page).to have_selector(:link_or_button, "Review Contents")
+            expect(page).to have_selector(:link_or_button, "Withdraw Project Request")
+            expect(page).to have_selector(:link_or_button, "Return to Dashboard")
+            click_on("Return to Dashboard")
+            expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+            click_on(project_in_mediaflux.title)
+          end
+        end
+        context "SysAdmin" do
+          it "Shows the correct nav buttons" do
+            sign_in sysadmin_user
+            project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+            project_in_mediaflux.save!
+            visit "/projects/#{project_in_mediaflux.id}"
+
+            expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
+            expect(page).not_to have_selector(:link_or_button, "Review Contents")
+            expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
+            expect(page).to have_selector(:link_or_button, "Return to Dashboard")
+            # The project has already been approved
+            expect(page).not_to have_selector(:link_or_button, "Approve Project")
+            expect(page).not_to have_selector(:link_or_button, "Deny Project")
+          end
+        end
       end
 
-      it "Shows the correct nav buttons for a pending project" do
-        sign_in sponsor_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content(project_not_in_mediaflux.title)
-        expect(page).to have_content(pending_text)
-        expect(page).not_to have_link("Edit")
-        click_on("Return to Dashboard")
-        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-        click_on(project_not_in_mediaflux.title)
-        expect(page).to have_link("Withdraw Project Request")
+      context "Pending projects" do
+        context "Sponsor user" do
+          it "Shows the correct nav buttons for a pending project" do
+            sign_in sponsor_user
+            visit "/projects/#{project_not_in_mediaflux.id}"
+            expect(page).to have_content(project_not_in_mediaflux.title)
+            expect(page).to have_content(pending_text)
+            expect(page).not_to have_link("Edit")
+            click_on("Return to Dashboard")
+            expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+            click_on(project_not_in_mediaflux.title)
+            expect(page).to have_link("Withdraw Project Request")
+          end
+        end
+        context "SysAdmin" do
+          it "Shows the correct nav buttons for a pending project" do
+            sign_in sysadmin_user
+            visit "/projects/#{project_not_in_mediaflux.id}"
+            expect(page).to have_content(project_not_in_mediaflux.title)
+            expect(page).to have_content(pending_text)
+            expect(page).not_to have_link("Edit")
+            expect(page).to have_selector(:link_or_button, "Approve Project")
+            expect(page).to have_selector(:link_or_button, "Deny Project")
+          end
+        end
       end
     end
 
