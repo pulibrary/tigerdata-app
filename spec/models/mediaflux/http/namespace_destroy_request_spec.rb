@@ -7,8 +7,7 @@ RSpec.describe Mediaflux::Http::NamespaceDestroyRequest, type: :model, connect_t
   let(:sponsor_user) { FactoryBot.create(:project_sponsor) }
   let(:session_id) { sponsor_user.mediaflux_session }
   it "deletes a namespace and everything inside of it" do
-    valid_project
-    mediaflux_id = ProjectMediaflux.create!(project: valid_project, session_id: session_id)
+    mediaflux_id = valid_project.save_in_mediaflux(session_id: session_id)
     expect(mediaflux_id).not_to be_nil
     namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
     namespace_names = namespace_list.pluck(:name)
