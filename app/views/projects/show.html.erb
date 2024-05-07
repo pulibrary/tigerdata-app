@@ -103,7 +103,7 @@ Project Details:
 
 <div class="details">
   <% if current_user.eligible_sysadmin? %>
-      <% if @project_status == "pending" %> 
+      <% if @project_status == Project::PENDING_STATUS %> 
         <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
         <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
       <% end %> 
