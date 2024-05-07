@@ -48,7 +48,7 @@ class TigerdataMailer < ApplicationMailer
     @message_body = params[:activation_failure_msg]
 
     subject = "Project Failed to Activate"
-    mail(to: user_email, cc: config[:cc_email], subject:)
+    mail(to: user_email, cc: config[:cc_email], subject:, template_name: 'activate')
   end
 
   private
