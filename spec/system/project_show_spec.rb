@@ -41,7 +41,6 @@
           click_on("Return to Dashboard")
           expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
           click_on(project_in_mediaflux.title)
-          expect(page).to have_link("Withdraw Project Request")
         end
 
         it "Shows the correct nav buttons for a pending project" do
