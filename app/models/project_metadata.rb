@@ -18,6 +18,7 @@ class ProjectMetadata
   def activate_project(collection_id:, session_token: nil)
     response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     metadata = response.metadata
+    @session_token = session_token
     return unless metadata[:collection] == true # If the collection id exists
 
     # check if the project doi in rails matches the project doi in mediaflux

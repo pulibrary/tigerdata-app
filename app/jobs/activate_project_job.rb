@@ -4,27 +4,28 @@ class ActivateProjectJob < ApplicationJob
   def perform(user:, project_id:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
-
     collection_id = project.metadata_json["project_id"]
 
     # ACTIVATE THE PROJECT IF THE DOI IN RAILS AND MF MATCH
     ProjectMetadata.activate_project(collection_id: collection_id, session_token: mediaflux_session)
-    # SEND AN EMAIL TO THE SYSADMIN IF THE DOIs DO NOT MATCH
+    
     project.reload
-    activation_failure_msg = "Project with #{collection_id} failed to activate due to mismatched DOI's between rails and mediaflux"
-    if project.status != ACTIVE_STATUS
-      #send email
+    return unless project.status != ACTIVE_STATUS #CHECK IF PROJECT ACTIVATION WAS SUCCESSFUL
+    @activation_failure_msg = "Project with #{collection_id} failed to activate due to mismatched DOI's between rails and mediaflux"
+    
+    #SEND EMAIL
+    mailer = TigerdataMailer.with(project_id: project.id, user:, activation_failure_msg:)
+    message_delivery = mailer.project_activation
+    message_delivery.deliver_later
 
-      
-      # SEND A NOTI TO HONEYBADGER IF THE DOIs DO NOT MATCH
-      honeybadger_context = {
-        project_id: project.id,
-        project_metadata: project.metadata
-      }
-      Honeybadger.notify(activation_failure_msg, context: honeybadger_context)
-    end
+    # NOTIFY HONEYBADGER
+    honeybadger_context = {
+      project_id: project.id,
+      project_metadata: project.metadata
+    }
+    Honeybadger.notify(activation_failure_msg, context: honeybadger_context)
 
-      mark_user_job_as_complete(project: project, user: user)
+    mark_user_job_as_complete(project: project, user: user)
   end
 
   private
