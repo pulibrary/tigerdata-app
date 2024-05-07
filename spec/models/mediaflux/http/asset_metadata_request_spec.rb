@@ -73,13 +73,13 @@ RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path].include?(valid_project.metadata_json["directory"])).to be_truthy
+        expect(metadata[:path].include?(valid_project.metadata_json["project_directory"])).to be_truthy
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("") # accumulators are not added to project when created
         expect(metadata[:total_file_count]).to eq("") # accumulators are not added to project when created
         expect(metadata[:quota_allocation]).to eq("") # quotas are not added to project when created
         expect(metadata[:project_id]).to eq("10.34770/tbd")
-        expect(metadata[:project_directory]).to eq(valid_project.metadata_json["directory"])
+        expect(metadata[:project_directory]).to eq(valid_project.metadata_json["project_directory"])
       end
     end
   end

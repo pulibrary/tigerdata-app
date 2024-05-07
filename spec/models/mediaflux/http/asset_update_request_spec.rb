@@ -78,7 +78,7 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
     "      <id>1234</id>\n" \
     "      <meta>\n" \
     "        <tigerdata:project>\n" \
-    "          <ProjectDirectory>#{project.directory}</ProjectDirectory>\n" \
+    "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
     "          <Title>#{project.metadata[:title]}</Title>\n" \
     "          <Description>#{project.metadata[:description]}</Description>\n" \
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \

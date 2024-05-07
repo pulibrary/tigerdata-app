@@ -6,7 +6,7 @@
   <dl>
       <dt>Data Sponsor</dt> <dd><%= @data_sponsor.display_name_safe %></dd>
       <dt>Affiliated Department(s)</dt> <dd><%= @departments %></dd>
-      <dt>Project Directory</dt> <dd><%=  Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
+      <dt>Project Directory</dt> <dd><%=  Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:project_directory] %></dd>
       <dt>Title</dt> <dd><%=@project.metadata[:title] %></dd>
       <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
       <dt>Storage Capacity - Request</dt> <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>

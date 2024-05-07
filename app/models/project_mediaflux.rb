@@ -15,8 +15,8 @@ class ProjectMediaflux
     create_root_ns(session_id: session_id)
 
     # Create a namespace for the project
-    # The namespace is directly under our root namespace
-    project_name = safe_name(project.directory)
+    # The namespace is directly under our root namespace'
+    project_name = safe_name(project.project_directory)
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
     namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
     if namespace.error?
@@ -69,7 +69,7 @@ class ProjectMediaflux
   def self.project_values(project:)
     split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
     values = {
-      project_directory: project.directory,
+      project_directory: project.project_directory,
       title: project.metadata[:title],
       description: project.metadata[:description],
       status: project.metadata[:status],
@@ -91,7 +91,7 @@ class ProjectMediaflux
   end
 
   def self.xml_payload(project:, xml_namespace: nil)
-    project_name = safe_name(project.directory)
+    project_name = safe_name(project.project_directory)
     project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
 

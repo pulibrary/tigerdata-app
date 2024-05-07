@@ -9,13 +9,13 @@ RSpec.describe ProjectMetadata, type: :model do
     describe "#update_metadata" do
 
       it "parses the basic metadata" do
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123", status: "pending" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123", status: "pending" }
         project_metadata = described_class.new(current_user: current_user, project: project)
         update = project_metadata.update_metadata(params: params)
         expect(update[:data_sponsor]).to eq("abc")
         expect(update[:data_manager]).to eq("def")
         expect(update[:departments]).to eq("dep")
-        expect(update[:directory]).to eq("dir")
+        expect(update[:project_directory]).to eq("dir")
         expect(update[:title]).to eq("title abc")
         expect(update[:description]).to eq("description 123")
         expect(update[:status]).to eq("pending")
@@ -105,7 +105,7 @@ RSpec.describe ProjectMetadata, type: :model do
         data_manager =  FactoryBot.create(:user, uid: "def")
 
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123" }
         doi = project_metadata.create(params:)
         project_metadata.create(params: {}) # doesn't call the doi service twice
         expect(datacite_stub).to have_received(:draft_doi)
@@ -118,7 +118,7 @@ RSpec.describe ProjectMetadata, type: :model do
         data_manager =  FactoryBot.create(:user, uid: "def")
         data_sponsor = User.find_by(uid: "abc")
         project_metadata = described_class.new(current_user: current_user, project:)
-        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", directory: "dir", title: "title abc", description: "description 123" }
+        params = {data_sponsor: "abc", data_manager: "def", departments: "dep", project_directory: "dir", title: "title abc", description: "description 123" }
         doi = project_metadata.create(params:)
         project_metadata.create(params: {}) # doesn't call the doi service twice
         
@@ -148,7 +148,7 @@ RSpec.describe ProjectMetadata, type: :model do
       it "Records the mediaflux id and sets the status to approved" do 
         project_metadata = described_class.new(current_user: current_user, project:)
         params = {mediaflux_id: 001,
-                  directory: project.metadata[:directory],
+                  project_directory: project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
@@ -165,7 +165,7 @@ RSpec.describe ProjectMetadata, type: :model do
       it "Creates a Provenance Event: Approval" do
         project_metadata = described_class.new(current_user: current_user, project:)
         params = {mediaflux_id: 001,
-                  directory: project.metadata[:directory],
+                  project_directory: project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
@@ -191,7 +191,7 @@ RSpec.describe ProjectMetadata, type: :model do
       end
       it "validates the doi for a project" do
         params = {mediaflux_id: 001,
-                  directory: valid_project.metadata[:directory],
+                  project_directory: valid_project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
@@ -234,7 +234,7 @@ RSpec.describe ProjectMetadata, type: :model do
         let(:project_metadata) {described_class.new(current_user:, project: valid_project)}
         it "validates the doi for a project and does nothing" do
           params = {mediaflux_id: 001,
-                    directory: valid_project.metadata[:directory],
+                    project_directory: valid_project.metadata[:project_directory],
                     storage_capacity: {"size"=>{"approved"=>600, 
                     "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                     "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
