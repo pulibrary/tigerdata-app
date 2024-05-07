@@ -167,4 +167,15 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       expect(Mediaflux::Http::AssetMetadataRequest).to have_received(:new).once
     end
   end
+
+  describe "#save_in_mediaflux" do
+    let(:project) { FactoryBot.create(:project) }
+    it "calls ProjectMediaflux to create the project and save the id" do
+      allow(ProjectMediaflux).to receive(:create!).with(project: project, session_id: "111222333").and_return(27)
+      project.save_in_mediaflux(session_id: "111222333")
+      expect(ProjectMediaflux).to have_received(:create!)
+      expect(project.mediaflux_id).to eq(27)
+      expect(project).not_to be_changed # the method saves the id to the database
+    end
+  end
 end

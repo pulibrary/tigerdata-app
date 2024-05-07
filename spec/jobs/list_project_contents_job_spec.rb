@@ -8,7 +8,7 @@ RSpec.describe ListProjectContentsJob, stub_mediaflux: true do
     {
       data_sponsor: sponsor_user.uid,
       data_manager: sponsor_user.uid,
-      directory: "project-123",
+      project_directory: "project-123",
       title: "project 123",
       departments: ["RDSS"],
       description: "hello world",

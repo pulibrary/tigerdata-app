@@ -57,7 +57,7 @@ Project Details:
       <dd><%= @departments %></dd>
     <% end %>
     <dt>Project Directory</dt>
-    <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:directory] %></dd>
+    <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:project_directory] %></dd>
     <dt>Title</dt>
     <dd><%= @project.metadata[:title] %></dd>
     <dt>Description:<dt/> <dd><%= @project.metadata[:description] %></dd>
@@ -103,8 +103,10 @@ Project Details:
 
 <div class="details">
   <% if current_user.eligible_sysadmin? %>
-    <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
-    <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
+    <% if @project_status == Project::PENDING_STATUS %> 
+      <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
+      <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
+    <% end %>
     <%= link_to "Return to Dashboard", root_path, class: "btn btn-return btn-sm" %>
   <% end %>
 </div>

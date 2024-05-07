@@ -39,8 +39,8 @@ class Project < ApplicationRecord
     unsorted.sort
   end
 
-  def directory
-    metadata[:directory]
+  def project_directory
+    metadata[:project_directory]
   end
 
   def status

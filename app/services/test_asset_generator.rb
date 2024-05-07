@@ -7,7 +7,7 @@ class TestAssetGenerator
     @levels = levels
     @directory_per_level = directory_per_level
     @file_count_per_directory = file_count_per_directory
-    @base_name = @project.directory
+    @base_name = @project.project_directory
     @mediaflux_session = @user.mediaflux_session
   end
 

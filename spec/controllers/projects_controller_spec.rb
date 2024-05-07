@@ -31,11 +31,11 @@ RSpec.describe ProjectsController do
         "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
         "  <service name=\"asset.create\">\n" \
         "    <args>\n" \
-        "      <name>#{project.directory}</name>\n" \
-        "      <namespace>/td-test-001/tigerdataNS/#{project.directory}NS</namespace>\n" \
+        "      <name>#{project.project_directory}</name>\n" \
+        "      <namespace>/td-test-001/tigerdataNS/#{project.project_directory}NS</namespace>\n" \
         "      <meta>\n" \
         "        <tigerdata:project>\n" \
-        "          <ProjectDirectory>#{project.directory}</ProjectDirectory>\n" \
+        "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
         "          <Title>#{project.metadata[:title]}</Title>\n" \
         "          <Description>#{project.metadata[:description]}</Description>\n" \
         "          <Status>#{project.metadata[:status]}</Status>\n" \
@@ -78,7 +78,7 @@ RSpec.describe ProjectsController do
       it "creates one provenance event only" do
         post :create, params: {
           "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
-          "directory" => "testparams", "title" => "Params",
+          "project_directory" => "testparams", "title" => "Params",
           "description" => "testing controller params", "ro_user_counter" => "0",
           "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
         }

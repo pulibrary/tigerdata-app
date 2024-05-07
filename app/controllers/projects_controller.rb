@@ -123,7 +123,7 @@ class ProjectsController < ApplicationController
       project_metadata = ProjectMetadata.new(project: project, current_user:)
       project_params = params.dup
       metadata_params = project_params.merge({
-        directory: project_params["project_directory"],
+        project_directory: project_params["project_directory"],
         storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
                             "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                             "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
