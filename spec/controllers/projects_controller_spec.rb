@@ -31,8 +31,8 @@ RSpec.describe ProjectsController do
         "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
         "  <service name=\"asset.create\">\n" \
         "    <args>\n" \
-        "      <name>#{project.project_directory}</name>\n" \
-        "      <namespace>/td-test-001/tigerdataNS/#{project.project_directory}NS</namespace>\n" \
+        "      <name>#{project.project_directory_short}</name>\n" \
+        "      <namespace>#{project.project_directory}NS</namespace>\n" \
         "      <meta>\n" \
         "        <tigerdata:project>\n" \
         "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \

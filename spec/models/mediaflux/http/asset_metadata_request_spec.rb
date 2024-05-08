@@ -79,7 +79,7 @@ RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
         expect(metadata[:total_file_count]).to eq("") # accumulators are not added to project when created
         expect(metadata[:quota_allocation]).to eq("") # quotas are not added to project when created
         expect(metadata[:project_id]).to eq("10.34770/tbd")
-        expect(metadata[:project_directory]).to eq(valid_project.metadata_json["project_directory"])
+        expect(metadata[:project_directory]).to eq(valid_project.project_directory)
       end
     end
   end

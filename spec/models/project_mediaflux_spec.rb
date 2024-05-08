@@ -132,12 +132,4 @@ RSpec.describe ProjectMediaflux, type: :model, stub_mediaflux: true do
       end
     end
   end
-
-  describe "#safe_name" do
-    it "handles special characters" do
-      expect(described_class.safe_name("hello-world")).to eq "hello-world"
-      expect(described_class.safe_name(" hello world 123")).to eq "hello-world-123"
-      expect(described_class.safe_name("/hello/world")).to eq "-hello-world"
-    end
-  end
 end
