@@ -16,8 +16,8 @@ class ProjectMediaflux
 
     # Create a namespace for the project
     # The namespace is directly under our root namespace'
-    project_name = safe_name(project.project_directory)
-    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
+    project_name = project.project_directory
+    project_namespace = "#{project_name}NS"
     namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
     if namespace.error?
       raise "Can not create the namespace #{namespace.response_error}"
@@ -26,7 +26,7 @@ class ProjectMediaflux
     tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
-    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project.project_directory_short, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
 
           #TODO: custom exception class raised for metadata issues. This would allow us to see them in Honeybadger and know how often they're happening. 
@@ -91,12 +91,12 @@ class ProjectMediaflux
   end
 
   def self.xml_payload(project:, xml_namespace: nil)
-    project_name = safe_name(project.project_directory)
-    project_namespace = "#{Rails.configuration.mediaflux['api_root_ns']}/#{project_name}NS"
+    project_name = project.project_directory
+    project_namespace = "#{project_name}NS"
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
 
     tigerdata_values = project_values(project: project)
-    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: nil, namespace: project_namespace, name: project_name, tigerdata_values: tigerdata_values,
+    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: nil, namespace: project_namespace, name: project.project_directory_short, tigerdata_values: tigerdata_values,
                                                              xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
   end
@@ -104,11 +104,6 @@ class ProjectMediaflux
   def self.document(project:, xml_namespace: nil)
     xml_body = xml_payload(project:, xml_namespace:)
     Nokogiri::XML.parse(xml_body)
-  end
-
-  def self.safe_name(name)
-    # only alphanumeric characters
-    name.strip.gsub(/[^A-Za-z\d]/, "-")
   end
 
   def self.create_root_ns(session_id:)

@@ -178,4 +178,39 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       expect(project).not_to be_changed # the method saves the id to the database
     end
   end
+
+  describe "#project_directory" do
+    it "includes the full path" do
+      project = FactoryBot.create(:project)
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/#{project.metadata_json['project_directory']}")
+    end
+
+    it "does not include the default path if a path is already included" do
+      project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
+      expect(project.project_directory).to eq("/123/abc/directory")
+    end
+
+    it "makes sure the directory is safe" do
+      project = FactoryBot.create(:project, project_directory: "directory?")
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/directory-")
+      project = FactoryBot.create(:project, project_directory: "direc tory ")
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory")
+      project = FactoryBot.create(:project, project_directory: "direc/tory/")
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory-")
+    end
+  end
+
+  describe "#project_directory_short" do
+    it "does not include the full path" do
+      project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
+      expect(project.project_directory_short).to eq("directory")
+    end
+  end
+
+  describe "#project_directory_parent_path" do
+    it "does notinclude the directory" do
+      project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
+      expect(project.project_directory_parent_path).to eq("/123/abc")
+    end
+  end
 end
