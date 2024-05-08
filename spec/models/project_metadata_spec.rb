@@ -203,9 +203,22 @@ RSpec.describe ProjectMetadata, type: :model do
         session_token = current_user.mediaflux_session
         collection_id = valid_project.save_in_mediaflux(session_id: session_token)
         
-        project_metadata.activate_project(collection_id:)
+        #validate that the collection id exists in mediaflux
+        project_metadata.activate_project(collection_id:,current_user:)
+        response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+        metadata = response.metadata
+        expect(metadata[:collection]).to be_truthy
 
-        #change the status of the project to active if the doi
+        #validate that the project doi in rails matches the project doi in mediaflux
+        xml = response.response_xml
+        asset = xml.xpath("/response/reply/result/asset")
+        doi = asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text
+        expect(doi).to eq valid_project.metadata_json["project_id"]
+
+        #change the status of the project to active
+        valid_project.metadata_json["status"] = Project::ACTIVE_STATUS
+        valid_project.save!
+
         expect(valid_project.metadata_json["status"]).to eq Project::ACTIVE_STATUS
 
         #activate the project by setting the status to active and creating the necessary provenance events
@@ -243,7 +256,7 @@ RSpec.describe ProjectMetadata, type: :model do
           project_metadata.approve_project(params:)
 
           # activation should do nothing because the project_id (DOI) will not match
-          project_metadata.activate_project(collection_id: "112233")
+          project_metadata.activate_project(collection_id: "112233", current_user:)
                     
           expect(valid_project.metadata_json["status"]).to eq Project::APPROVED_STATUS
           expect(valid_project.provenance_events.count).to eq 2
