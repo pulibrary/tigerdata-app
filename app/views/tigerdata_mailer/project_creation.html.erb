@@ -29,7 +29,7 @@
           <dt>Departments</dt>
           <dd><%= @project.departments.join(", ") %></dd>
           <dt>Project Directory</dt>
-          <dd><%= Rails.configuration.mediaflux["api_root_ns"] %>/<%= @project.metadata[:project_directory] %> </dd>
+          <dd><%= @project.project_directory %> </dd>
           <dt>Title</dt>
           <dd><%= @project.metadata[:title] %></dd>
           <dt>Description</dt>

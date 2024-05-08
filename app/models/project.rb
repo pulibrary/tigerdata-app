@@ -40,7 +40,23 @@ class Project < ApplicationRecord
   end
 
   def project_directory
-    metadata[:project_directory]
+    return nil if metadata[:project_directory].nil?
+    dirname, basename = project_directory_pathname.split
+    if (dirname.relative?)
+      "#{Rails.configuration.mediaflux["api_root_ns"]}/#{safe_name(metadata[:project_directory])}"
+    else
+      project_directory_pathname.to_s
+    end
+  end
+
+  def project_directory_parent_path
+    return Rails.configuration.mediaflux["api_root_ns"] if metadata[:project_directory].nil?
+    project_directory_pathname.dirname.to_s
+  end
+
+  def project_directory_short
+    return nil if metadata[:project_directory].nil?
+    project_directory_pathname.basename.to_s
   end
 
   def status
@@ -207,5 +223,14 @@ class Project < ApplicationRecord
       data = (metadata_json&.dup || { }).with_indifferent_access
       Rails.configuration.project_defaults.each { |key, value| data[key] ||= value }
       data
+    end
+
+    def project_directory_pathname
+      @project_directory_pathname ||= Pathname.new(metadata[:project_directory])
+    end
+
+    def safe_name(name)
+      # only alphanumeric characters
+      name.strip.gsub(/[^A-Za-z\d]/, "-")
     end
 end
