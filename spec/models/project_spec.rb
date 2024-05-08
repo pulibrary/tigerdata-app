@@ -193,10 +193,13 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     it "makes sure the directory is safe" do
       project = FactoryBot.create(:project, project_directory: "directory?")
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/directory-")
-      project = FactoryBot.create(:project, project_directory: "direc tory ")
+      project.metadata_json["project_directory"] = "direc tory "
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory")
       project = FactoryBot.create(:project, project_directory: "direc/tory/")
+      project.metadata_json["project_directory"] = "direc/tory/"
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory-")
+      project.metadata_json["project_directory"] = "/direc/tory/"
+      expect(project.project_directory).to eq("/direc/tory/")
     end
   end
 

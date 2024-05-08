@@ -25,6 +25,10 @@ class ProjectMetadata
 
     # activate a project by setting the status to 'active'
     project.metadata_json["status"] = Project::ACTIVE_STATUS
+
+    # also read in the actual project directory
+    project.metadata_json["project_directory"] = metadata[:project_directory]
+
     project.save!
 
     # create two provenance events, one for approving the project and another for changing the status of the project
