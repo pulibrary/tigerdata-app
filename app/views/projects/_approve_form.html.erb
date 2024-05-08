@@ -1,7 +1,7 @@
 <%= render 'form_errors' %>
 <%= render 'data_list' %>
 
-<div class="container" id="approve">
+<div class="container">
   <div class="field">
     <label for="project_directory" class="form-label">Confirm Project Directory</label>
     <input class="form-directory" type="text" name="project_directory-prefix" disabled readonly value="<%= @project.project_directory_parent_path %>"></input> /  
@@ -9,7 +9,14 @@
   </div>
   <div class="field">
     <label for="storage_capacity" class="form-label">Confirm Storage Capacity</label>
-    <input class="form-control" type="number" min="1" name="storage_capacity" required placeholder=<%= "#{@project.metadata[:storage_capacity][:size][:requested]}"%>>GB</input> 
+    <input class="form-control" type="number" min="1" name="storage_capacity" id="storage_capacity" required placeholder=<%= "#{@project.metadata[:storage_capacity][:size][:requested]}"%>></input>
+    <label for="storage_unit" class="form-label" hidden>Storage Unit</label>
+    <select class="form-dropdown" name="storage_unit" id="storage_unit" required>
+      <option disabled selected value> -- unit -- </option>
+      <option value="GB">GB</option>
+      <option value="TB">TB</option>
+      <option value="PB">PB</option>
+    </select>
   </div>
   <div class="field">
     <label for="mediaflux_id" class="form-label">Collection ID</label>
@@ -25,7 +32,7 @@
   </div>
   <div class="field">
     <label for="event_note" class="form-label">Event Note</label>
-    <select class="form-dropdown" name="event_note" id="Event Note">
+    <select class="form-dropdown" name="event_note" id="event_note">
       <option disabled selected value> -- select an option -- </option>
       <option value="Quota">Quota</option>
       <option value="Tier">Tier</option>
@@ -34,8 +41,8 @@
     <label for="event_note_message" class="form-label">Message</label>
     <input class="form-message" type="text" name="event_note_message"> </input>
   </div>
-    <div class="controls">
-      <button type="submit" class="btn btn-primary">Approve</button>
-      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
-    </div>
+  <div class="controls">
+    <button type="submit" class="btn btn-primary">Approve</button>
+    <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+  </div>
 </div>
