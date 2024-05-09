@@ -439,19 +439,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
 
-      fill_in "storage_capacity", with: 500
-      select "GB", from: "storage_unit"
-      fill_in "project_directory", with: project.metadata_json["project_directory"]
       fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
+      expect(page).to have_content("Project Approval Received")
 
       project.reload
       expect(project.mediaflux_id).to eq(mediaflux_id)
       expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
-
-      # redirects the user to the project show page
     end
 
     it "redirects the user to the project approval confirmation page upon submission" do
