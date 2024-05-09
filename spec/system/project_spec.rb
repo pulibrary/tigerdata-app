@@ -378,6 +378,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         sign_in sponsor_user
         visit "/"
         click_on "New Project"
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast')
+
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid

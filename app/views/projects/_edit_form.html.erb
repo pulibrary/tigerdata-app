@@ -13,9 +13,9 @@
   <p>Data Manager: 
   
     <% if !@project.persisted? || @project.metadata_json["data_sponsor"] == current_user.uid %> 
-      <input type="text" list="manager-users" id="data_manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
+      <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
     <% else %>
-      <input type="hidden" id="data_manager" name="data_manager" value="<%= @project.metadata[:data_manager] %>">
+      <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata[:data_manager] %>">
       <span id="non-editable-data-manager"><%= @project.metadata[:data_manager] %></span>
     <% end %> 
   </p>
@@ -55,7 +55,7 @@
     <h2>Project Description</h2>
     <div class="description-container">
     <div>Departments:<br/>
-      <select id="departments" name="departments[]" required value class="form-select" multiple >
+      <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>
           <% if @project.departments.include?(affiliation[:code]) %>
             <option selected><%= affiliation[:code] %></option>
@@ -71,17 +71,17 @@
         Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
         send back to the controller (we don't want to lose this value)
       -->
-      <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
+      <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
         (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
         This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
     <% else %>
       <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
-      <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" /></p>
+      <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" /></p>
     <% end %>
 
-    <p>Title: <input type="text" id="title" name="title" required value="<%= @project.metadata[:title] %>" /></p>
+    <p>Title: <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata[:title] %>" /></p>
     <div>Description:</div>
-    <textarea type="text" id="description" name="description" class="input-text-long"
+    <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
         rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
     </div>
 </div>
