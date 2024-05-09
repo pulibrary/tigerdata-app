@@ -71,7 +71,7 @@ RSpec.describe ProjectMetadata, type: :model do
   end
 
   context "when a project is present" do
-    let(:project) { FactoryBot.create :project }
+    let(:project) { FactoryBot.create :project_with_doi }
 
     describe "#update_metadata" do
 

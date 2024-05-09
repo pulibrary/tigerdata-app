@@ -41,6 +41,11 @@ FactoryBot.define do
         schema_version: schema_version
       }
     end
+    factory :project_with_doi, class: "Project" do
+      sequence :project_id do |n|
+        "doi:000000#{n}/00000000000#{n}"
+      end
+    end
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
