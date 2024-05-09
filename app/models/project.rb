@@ -51,7 +51,12 @@ class Project < ApplicationRecord
 
   def project_directory_parent_path
     return Rails.configuration.mediaflux["api_root_ns"] if metadata[:project_directory].nil?
-    project_directory_pathname.dirname.to_s
+    dirname  = project_directory_pathname.dirname
+    if (dirname.relative?)
+      Rails.configuration.mediaflux["api_root_ns"]
+    else
+      dirname.to_s
+    end
   end
 
   def project_directory_short
@@ -226,7 +231,13 @@ class Project < ApplicationRecord
     end
 
     def project_directory_pathname
-      @project_directory_pathname ||= Pathname.new(metadata[:project_directory])
+      # allow the directory to be modified by changes in the metadata_json
+      @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata[:project_directory]
+
+      @project_directory_pathname ||= begin
+        @original_directory = metadata[:project_directory]
+        Pathname.new(@original_directory)
+      end 
     end
 
     def safe_name(name)
