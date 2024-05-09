@@ -1,6 +1,6 @@
 <% if banner_content %>
   <div id="banner">
-    <%= sanitize @banner_title %>
-    <%= sanitize @banner_body, attributes: %w(href target)%>
+  <h1><%= sanitize @banner_title %></h1>
+  <p><%= sanitize @banner_body, attributes: %w(href target)%></p>
   </div>
 <% end %>
