@@ -16,7 +16,7 @@ FactoryBot.define do
       storage_performance { { requested: "standard" } }
       project_purpose { "research" }
       project_directory { "big-data" }
-      schema_version { "0.6.1" }
+      schema_version { ::TigerdataSchema::SCHEMA_VERSION }
     end
     mediaflux_id { nil }
     metadata do
@@ -40,6 +40,11 @@ FactoryBot.define do
         project_purpose: project_purpose,
         schema_version: schema_version
       }
+    end
+    factory :project_with_doi, class: "Project" do
+      sequence :project_id do |n|
+        "doi:000000#{n}/00000000000#{n}"
+      end
     end
     factory :project_with_dynamic_directory, class: "Project" do
       transient do

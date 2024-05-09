@@ -51,7 +51,12 @@ class Project < ApplicationRecord
 
   def project_directory_parent_path
     return Rails.configuration.mediaflux["api_root_ns"] if metadata[:project_directory].nil?
-    project_directory_pathname.dirname.to_s
+    dirname  = project_directory_pathname.dirname
+    if (dirname.relative?)
+      Rails.configuration.mediaflux["api_root_ns"]
+    else
+      dirname.to_s
+    end
   end
 
   def project_directory_short

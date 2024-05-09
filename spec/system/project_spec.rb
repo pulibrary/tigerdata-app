@@ -454,13 +454,15 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
-
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
+      expect(page).to have_content(Rails.configuration.mediaflux["api_root_ns"])
+      expect(page).to have_content(project.project_directory_short)
 
       fill_in "storage_capacity", with: 500
       select "GB", from: "storage_unit"
-      fill_in "project_directory", with: project.metadata_json["project_directory"]
+      fill_in "project_directory_prefix", with: project.project_directory_parent_path
+      fill_in "project_directory", with: project.project_directory_short
       fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
