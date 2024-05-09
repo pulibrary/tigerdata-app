@@ -1,0 +1,16 @@
+---
+development:
+  title: Welcome to the development site
+  body: This is a message for development
+test:
+  title: Welcome to the <i>test</i> site
+  body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
+staging:
+  title: Welcome to TigerData (Staging)!
+  body: PRDS is proud to share our new website for the management of research data.
+qa:
+  title: Welcome to TigerData (QA)!
+  body: PRDS is proud to share our new website for the management of research data.
+production:
+  title: Welcome to TigerData!
+  body: PRDS is proud to share our new website for the management of research data.
