@@ -211,9 +211,14 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   end
 
   describe "#project_directory_parent_path" do
-    it "does notinclude the directory" do
+    it "does not include the directory" do
       project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
       expect(project.project_directory_parent_path).to eq("/123/abc")
+    end
+
+    it "defaults to the configured vaule if no directory is present" do
+      project = FactoryBot.create(:project, project_directory: "directory")
+      expect(project.project_directory_parent_path).to eq(Rails.configuration.mediaflux["api_root_ns"])
     end
   end
 end

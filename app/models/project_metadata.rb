@@ -40,7 +40,7 @@ class ProjectMetadata
     # approve a project by recording the mediaflux id & setting the status to 'approved'
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
-    project.metadata_json["project_directory"] = params[:project_directory]
+    project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
     project.metadata_json["storage_capacity"] = params[:storage_capacity]
 
     project.save!
