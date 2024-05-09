@@ -16,7 +16,7 @@ FactoryBot.define do
       storage_performance { { requested: "standard" } }
       project_purpose { "research" }
       project_directory { "big-data" }
-      schema_version { "0.6.1" }
+      schema_version { ::TigerdataSchema::SCHEMA_VERSION }
     end
     mediaflux_id { nil }
     metadata do
