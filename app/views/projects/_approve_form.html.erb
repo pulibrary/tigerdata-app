@@ -4,7 +4,7 @@
 <div class="container">
   <div class="field">
     <label for="project_directory" class="form-label">Confirm Project Directory</label>
-    <input class="form-directory" type="text" name="project_directory-prefix" required value="<%= @project.project_directory_parent_path %>"></input> /  
+    <input class="form-directory" type="text" name="project_directory_prefix" required value="<%= @project.project_directory_parent_path %>"></input> /
     <input class="form-directory-confirm" type="text" name="project_directory" required value=<%= "#{@project.project_directory_short}"%>></input>  
   </div>
   <div class="field">
