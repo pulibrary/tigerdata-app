@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# A custom exception class for when a namespace path is already taken
+class MediafluxDuplicateNamespaceError < StandardError
+end
+
 # Take an instance of Project and adds it to MediaFlux
 class ProjectMediaflux
   # Create a project in MediaFlux
@@ -20,7 +24,7 @@ class ProjectMediaflux
     project_namespace = "#{project_name}NS"
     namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
     if namespace.error?
-      raise "Can not create the namespace #{namespace.response_error}"
+      raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
     end
     # Create a collection asset under the root namespace and set its metadata
     tigerdata_values = project_values(project: project)
