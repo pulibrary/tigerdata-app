@@ -73,14 +73,6 @@ RSpec.describe ProjectMediaflux, type: :model do
         end
         let(:project_parent) { Rails.configuration.mediaflux["api_root_collection"] }
 
-        before do
-          # Destroy the parent collection
-          Mediaflux::Http::NamespaceDestroyRequest.new(
-            session_token: current_user.mediaflux_session,
-            namespace: project_parent
-          ).destroy
-        end
-
         it "creates a project namespace" do
           namespace_path = mediaflux_metadata[:namespace]
           namespace_metadata = Mediaflux::Http::NamespaceDescribeRequest.new(
@@ -111,7 +103,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       after do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
-      it "should raise a MetadataError if any required is missing" do
+      it "should raise a MetadataError if project is invalid" do
         params = {mediaflux_id: 001,
                   project_directory: incomplete_project.metadata[:project_directory],
                   storage_capacity: {"size"=>{"approved"=>600, 

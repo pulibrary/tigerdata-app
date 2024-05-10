@@ -6,19 +6,25 @@ RSpec.describe Mediaflux::Http::NamespaceDestroyRequest, type: :model, connect_t
   let(:namespace) { "#{valid_project.project_directory_short}NS".strip.gsub(/[^A-Za-z\d]/, "-") }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor) }
   let(:session_id) { sponsor_user.mediaflux_session }
-  it "deletes a namespace and everything inside of it" do
-    mediaflux_id = valid_project.save_in_mediaflux(session_id: session_id)
-    expect(mediaflux_id).not_to be_nil
-    namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
-    namespace_names = namespace_list.pluck(:name)
-    expect(namespace_names).to include(namespace)
+  context "when a namespace exists" do
+    it "deletes a namespace and everything inside of it" do
+      mediaflux_id = valid_project.save_in_mediaflux(session_id: session_id)
+      expect(mediaflux_id).not_to be_nil
+      namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
+      namespace_names = namespace_list.pluck(:name)
+      expect(namespace_names).to include(namespace)
 
-    # Destroy the namespace of the project and everything in it
-    described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
-    namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
-    namespace_names = namespace_list.pluck(:name)
-    expect(namespace_names).not_to include(namespace)
-    response = described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
-    expect(response[:message]).to include("The namespace '/td-test-001/tigerdataNS/#{namespace}' does not exist or is not accessible")
+      # Destroy the namespace of the project and everything in it
+      described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
+      namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
+      namespace_names = namespace_list.pluck(:name)
+      expect(namespace_names).not_to include(namespace)
+
+      # Should raise an error when attempting to destroy a namespace that does not exist
+      expect { described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy }.to raise_error do |error|
+        expect(error).to be_a(StandardError)
+        expect(error.message).to include("call to service 'asset.namespace.hard.destroy' failed: The namespace /td-test-001/tigerdataNS/#{namespace} does not exist or is not accessible")
+      end
+    end
   end
 end
