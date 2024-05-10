@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
+    # Get metadata about an asset in mediaflux
+    # @example
+    #   metadata_request = Mediaflux::Http::AssetMetadataRequest.new(
+    #   session_token: current_user.mediaflux_session, id: mediaflux_id).metadata
     class AssetMetadataRequest < Request
       attr_reader :id
 

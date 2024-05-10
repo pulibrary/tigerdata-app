@@ -12,11 +12,7 @@ class TestProjectGenerator
   def generate
     project = create_project
     session_id = user.mediaflux_session
-    id = project.save_in_mediaflux(session_id:)
-    accum_count = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, name: "accum-count", collection: id, type: "collection.asset.count")
-    accum_count.resolve
-    accum_size = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, name: "accum-size", collection: id, type: "content.all.size")
-    accum_size.resolve
+    project.save_in_mediaflux(session_id:)
     project.save!
     project
   end
