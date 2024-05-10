@@ -168,14 +168,13 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
   end
 
-  describe "#save_in_mediaflux" do
-    let(:project) { FactoryBot.create(:project) }
+  describe "#save_in_mediaflux", connect_to_mediaflux: true do
+    let(:user) { FactoryBot.create(:user) }
+    let(:project) { FactoryBot.create(:project_with_doi) }
     it "calls ProjectMediaflux to create the project and save the id" do
-      allow(ProjectMediaflux).to receive(:create!).with(project: project, session_id: "111222333").and_return(27)
-      project.save_in_mediaflux(session_id: "111222333")
-      expect(ProjectMediaflux).to have_received(:create!)
-      expect(project.mediaflux_id).to eq(27)
-      expect(project).not_to be_changed # the method saves the id to the database
+      expect(project.mediaflux_id).to be nil
+      project.save_in_mediaflux(session_id: user.mediaflux_session)
+      expect(project.mediaflux_id).not_to be nil
     end
   end
 
