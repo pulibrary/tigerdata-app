@@ -19,14 +19,14 @@ RSpec.describe Mediaflux::Http::NamespaceDestroyRequest, type: :model, connect_t
       namespace_list = Mediaflux::Http::NamespaceListRequest.new(session_token: session_id, parent_namespace: "/td-test-001/tigerdataNS").namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).not_to include(namespace)
-      
+
       # Should raise an error when attempting to destroy a namespace that does not exist
-      expect {
-          described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
-        }.to raise_error do |error|
-          expect(error).to be_a(StandardError)
-          expect(error.message).to include("call to service 'asset.namespace.hard.destroy' failed: The namespace /td-test-001/tigerdataNS/#{namespace} does not exist or is not accessible")
-        end
+      expect do
+        described_class.new(session_token: session_id, namespace: "/td-test-001/tigerdataNS/#{namespace}").destroy
+      end.to raise_error do |error|
+        expect(error).to be_a(StandardError)
+        expect(error.message).to include("call to service 'asset.namespace.hard.destroy' failed: The namespace /td-test-001/tigerdataNS/#{namespace} does not exist or is not accessible")
+      end
     end
   end
 end
