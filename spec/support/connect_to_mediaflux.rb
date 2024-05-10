@@ -18,6 +18,10 @@ RSpec.configure do |config|
         namespace: Rails.configuration.mediaflux[:api_root_ns]
       ).destroy
     end
+    rescue StandardError => namespace_error
+      message = "Bypassing pre-test cleanup error"
+      Rails.logger.error(message)
+    
   end
 
   config.after(:each) do |ex|
