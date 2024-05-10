@@ -19,8 +19,8 @@ RSpec.configure do |config|
       ).destroy
     end
   rescue StandardError => namespace_error
-    message = "Bypassing pre-test cleanup error"
-    Rails.logger.error(message, namespace_error)
+    message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
+    Rails.logger.error(message)
   end
 
   config.after(:each) do |ex|
