@@ -130,7 +130,8 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect {
           ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         }.to raise_error do |error|
-          expect([MediafluxDuplicateNamespaceError, StandardError, RuntimeError]).to include(error.class)
+          expect(error).to be_a(StandardError)
+          expect(error.message).to include("call to service 'asset.create' failed: XPath tigerdata:project/ProjectID is invalid: missing value")
         end
       end
     end
