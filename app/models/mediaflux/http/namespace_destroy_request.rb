@@ -20,6 +20,7 @@ module Mediaflux
         resolve
         if error?
           response_error
+          raise(StandardError, "call to service 'asset.namespace.hard.destroy' failed: The namespace #{namespace} does not exist or is not accessible")
         end
       end
 
