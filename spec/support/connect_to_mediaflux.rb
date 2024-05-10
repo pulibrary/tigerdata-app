@@ -20,7 +20,7 @@ RSpec.configure do |config|
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error"
-    Rails.logger.error(message)
+    Rails.logger.error(message, namespace_error)
   end
 
   config.after(:each) do |ex|
