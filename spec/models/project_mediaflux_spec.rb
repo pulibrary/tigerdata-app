@@ -36,6 +36,20 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect(namespace_metadata[:description]).to match(/Namespace for/)
       end
 
+      describe "accumulators", connect_to_mediaflux: true do
+        it "adds accumulators when it creates a project in mediaflux" do
+          project = FactoryBot.create(:project_with_doi)
+          described_class.create!(project: project, session_id: current_user.mediaflux_session)
+          # project.save_in_mediaflux(session_id: current_user.mediaflux_session)
+          metadata = Mediaflux::Http::AssetMetadataRequest.new(
+            session_token: current_user.mediaflux_session, 
+            id: project.mediaflux_id
+            ).metadata
+          expect(metadata[:accumulators]).not_to be_empty
+          expect(metadata[:accumulators].size).to eq 2
+        end
+      end
+
       context "when the name is already taken" do
         it "raises an error" do
           # Make the project once

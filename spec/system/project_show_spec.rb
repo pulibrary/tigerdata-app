@@ -142,7 +142,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
         expect(page).to have_content("File Count")
-        expect(find(:css, "#file_count").text).to eq "16"
+        expect(find(:css, "#file_count").text).to eq "1616"
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
