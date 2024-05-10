@@ -10,6 +10,12 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       expect(page).to have_content "Log In"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
+
+    it "forwards to login page" do
+      project = FactoryBot.create(:project)
+      visit project_path(project)
+      expect(page).to have_content "You need to sign in or sign up before continuing."
+    end
   end
 
   context "authenticated user" do
