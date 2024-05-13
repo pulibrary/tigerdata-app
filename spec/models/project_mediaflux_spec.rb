@@ -58,6 +58,7 @@ RSpec.describe ProjectMediaflux, type: :model do
             id: project.mediaflux_id
             ).metadata
           expect(metadata[:quota_allocation]).not_to be_empty
+          expect(metadata[:quota_allocation]).to eq("500 GB")
         end
       end
 
