@@ -53,6 +53,7 @@ class ProjectMediaflux
     project.mediaflux_id = id
     project.save!
     self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
+    self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
     id
   end
 
@@ -75,6 +76,17 @@ class ProjectMediaflux
       type: "content.all.size"
       )
     accum_size.resolve
+  end
+
+  def self.create_quota(project:, mediaflux_project_id:, session_id:)
+    #TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
+    allocation = project.metadata_json["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata_json["storage_capacity"]["unit"]["requested"]
+    quota_request = Mediaflux::Http::CreateCollectionQuotaRequest.new(
+      session_token: session_id,
+      collection: mediaflux_project_id,
+      allocation: allocation
+    )
+    quota_request.resolve
   end
 
   def self.update(project:, session_id:)
