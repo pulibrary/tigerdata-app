@@ -10,6 +10,21 @@ Project Details:
   </div>
 <% end %>
 
+<% if !@project.in_mediaflux? %>
+  <div class="alert alert-warning" role="alert">
+    <dl>
+    <dt>Status</dt> <dd><%=@project_status%></dd>
+    </dl>
+  </div>
+<% end %>
+<% if @project.in_mediaflux? %>
+  <div class="alert alert-success" role="alert">
+    <dl>
+    <dt>Status</dt> <dd><%=@project_status%></dd>
+    </dl>
+  </div>
+<% end %>
+
 <div class="details">
   <h2>Roles
     <% if @project_eligible_to_edit %>
@@ -87,10 +102,6 @@ Project Details:
       <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%> </li>
     <% end %>
   </ul>
-  <dl>
-      <dd></dd>
-      <dt>Status</dt> <dd><%=@project_status%></dd>
-  </dl>
 </div>
 
 <div class="details">
