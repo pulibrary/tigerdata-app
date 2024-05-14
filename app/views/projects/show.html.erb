@@ -16,8 +16,7 @@ Project Details:
     <dt>Status</dt> <dd><%=@project_status%></dd>
     </dl>
   </div>
-<% end %>
-<% if @project.in_mediaflux? %>
+<% else @project.in_mediaflux? %>
   <div class="alert alert-success" role="alert">
     <dl>
     <dt>Status</dt> <dd><%=@project_status%></dd>

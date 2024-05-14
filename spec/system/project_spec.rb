@@ -442,7 +442,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
-
       fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
