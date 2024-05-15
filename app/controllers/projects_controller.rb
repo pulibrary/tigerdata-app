@@ -90,6 +90,7 @@ class ProjectsController < ApplicationController
     @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
     @project_status = project.metadata[:status]
 
+    @pending_status = Project::PENDING_STATUS
     @approved_status = Project::APPROVED_STATUS
     @eligible_editor = eligible_editor?
     @project_eligible_to_edit = true if @project_status == @approved_status && eligible_editor?
