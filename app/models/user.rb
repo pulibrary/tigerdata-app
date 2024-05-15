@@ -105,6 +105,10 @@ class User < ApplicationRecord
     return true if superuser || sysadmin
   end
 
+  def tester_trainer
+    user = User.where(tester_trainer: true)
+  end
+
   # Parse the USER_REGISTRATION_LIST csv
   # @return [CSV::Table]
   def self.csv_data

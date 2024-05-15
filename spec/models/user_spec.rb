@@ -79,6 +79,7 @@ RSpec.describe User, type: :model do
       expect(user.display_name_safe).to eq("Guess Y'Who")
     end
   end
+
   context "loading Registration List" do
     let(:updated_csv_file) { Rails.root.join("spec", "fixtures", "files", "updated_user_registration_list.csv") }
     let(:updated_csv_data) do
@@ -111,6 +112,7 @@ RSpec.describe User, type: :model do
       expect(updated_name_user.family_name).to eq "Nøme"
       expect(updated_name_user.display_name).to eq "Fáké Nøme"
     end
+
     it "loads the eligible sponsor and manager roles" do
       User.load_registration_list
       sponsor_user = User.first
@@ -139,6 +141,16 @@ RSpec.describe User, type: :model do
       other_user = User.find_by(uid: "munan")
       expect(other_user.superuser).to be_falsey
       expect(other_user.sysadmin).to be_falsey
+    end
+
+    it "loads the tester-trainer roles" do
+      User.load_registration_list
+      allow(User).to receive(:csv_data).and_return(updated_csv_data)
+      User.load_registration_list
+      user = User.find_by(uid: "mjc12")
+      expect(user.tester_trainer).to be_truthy 
+      other_user = User.find_by(uid: "eparham")
+      expect(user.tester_trainer).to be_falsey
     end
   end
 

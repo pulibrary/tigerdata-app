@@ -12,6 +12,7 @@ FactoryBot.define do
     eligible_manager { false }
     sysadmin { false }
     superuser { false }
+    tester_trainer { false }
 
     ##
     # A user who is allowed to sponsor a project
@@ -23,6 +24,12 @@ FactoryBot.define do
     # A user who is allowed to manage a project
     factory :data_manager do
       eligible_manager { true }
+    end
+
+    ##
+    # A user who is a tester trainer for TigerData
+    factory :tester_trainer do
+      tester_trainer { true }
     end
 
     ##
