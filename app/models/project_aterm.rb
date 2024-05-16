@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
 class ProjectAterm
-
   # Produces an Aterm script to create a project in Mediaflux
   def self.create_script(project)
     root_collection_namespace = Rails.configuration.mediaflux["api_root_collection_namespace"]
@@ -11,7 +12,7 @@ class ProjectAterm
     project_parent = project.project_directory_parent_path
     project_namespace_full = "#{root_namespace}/#{project.project_directory}NS"
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
-    created_on = Time.parse(project.metadata_json["created_on"]).strftime("%e-%b-%Y %H:%M:%S").upcase
+    created_on = ProjectMediaflux.format_date_for_mediaflux(project.metadata_json["created_on"])
     requested_by = project.metadata["submission"]["requested_by"]
     requested_date = ProjectMediaflux.format_date_for_mediaflux(project.metadata["submission"]["request_date_time"])
 
@@ -38,20 +39,20 @@ class ProjectAterm
         :meta <
           :tigerdata:project <
             :ProjectDirectory "#{project_directory}"
-            :Title "#{project.metadata_json["title"]}"
-            :Description "#{project.metadata_json["description"]}"
-            :Status "#{project.metadata_json["status"]}"
-            :DataSponsor "#{project.metadata_json["data_sponsor"]}"
-            :DataManager "#{project.metadata_json["data_manager"]}"
-            #{department_fields.join(" ")}
+            :Title "#{project.metadata_json['title']}"
+            :Description "#{project.metadata_json['description']}"
+            :Status "#{project.metadata_json['status']}"
+            :DataSponsor "#{project.metadata_json['data_sponsor']}"
+            :DataManager "#{project.metadata_json['data_manager']}"
+            #{department_fields.join(' ')}
             :CreatedOn "#{created_on}"
-            :CreatedBy "#{project.metadata_json["created_by"]}"
-            :ProjectID "#{project.metadata_json["project_id"]}"
-            :StorageCapacity < :Size "#{project.metadata_json["storage_capacity"]["size"]["requested"]}" :Unit "#{project.metadata_json["storage_capacity"]["unit"]["requested"]}" >
-            :ProjectPurpose "#{project.metadata_json["project_purpose"]}"
-            :Performance "#{project.metadata_json["storage_performance_expectations"]["requested"]}"
+            :CreatedBy "#{project.metadata_json['created_by']}"
+            :ProjectID "#{project.metadata_json['project_id']}"
+            :StorageCapacity < :Size "#{project.metadata_json['storage_capacity']['size']['requested']}" :Unit "#{project.metadata_json['storage_capacity']['unit']['requested']}" >
+            :ProjectPurpose "#{project.metadata_json['project_purpose']}"
+            :Performance "#{project.metadata_json['storage_performance_expectations']['requested']}"
             :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
-            :SchemaVersion "#{project.metadata["schema_version"]}"
+            :SchemaVersion "#{project.metadata['schema_version']}"
           >
         >
 
@@ -83,3 +84,5 @@ class ProjectAterm
     script
   end
 end
+# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/MethodLength
