@@ -77,7 +77,7 @@ namespace :projects do
   task :create_script, [:project_id] => [:environment] do |_, args|
     project_id = args[:project_id]
     project = Project.find(project_id)
-    script = ProjectAterm.generate_script(project)
+    script = ProjectAterm.create_script(project)
     file_name = "project_create_#{project.id}.txt"
     puts "Saving script to #{file_name}"
     File.write(file_name, script)
