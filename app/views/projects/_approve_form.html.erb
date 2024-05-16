@@ -1,3 +1,13 @@
+<style>
+  .visible-section {
+    visibility: unset;
+  }
+
+  .invisible-section {
+    visibility: collapse;
+  }
+</style>
+
 <%= render 'form_errors' %>
 <%= render 'data_list' %>
 
@@ -5,7 +15,7 @@
   <div class="field">
     <label for="project_directory" class="form-label">Confirm Project Directory</label>
     <input class="form-directory" type="text" name="project_directory_prefix" required value="<%= @project.project_directory_parent_path %>"></input> /
-    <input class="form-directory-confirm" type="text" name="project_directory" required value=<%= "#{@project.project_directory_short}"%>></input>  
+    <input class="form-directory-confirm" type="text" name="project_directory" required value=<%= "#{@project.project_directory_short}"%>></input>
   </div>
   <div class="field">
     <label for="storage_capacity" class="form-label">Confirm Storage Capacity</label>
@@ -44,5 +54,19 @@
   <div class="controls">
     <button type="submit" class="btn btn-primary">Approve</button>
     <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+    <%= link_to "Aterm Script", "#", class: "btn btn-secondary", id: "aterm-script", title: "Show base Aterm script to create this project in Mediaflux" %>
+  </div>
+
+  <div id="aterm-section" class="invisible-section" style="font-family: 'Courier New', Courier, monospace; background-color: rgb(239, 239, 239); margin-top: 20px;">
+    <hr/>
+    <%= ProjectAterm.create_script(@project).gsub("\n", "<br/>").html_safe %>
   </div>
 </div>
+
+<script>
+  $("#aterm-script").on("click", function(el) {
+    $("#aterm-section").addClass("visible-section");
+    $("#aterm-section").removeClass("invisible-section");
+    el.preventDefault();
+  })
+</script>
