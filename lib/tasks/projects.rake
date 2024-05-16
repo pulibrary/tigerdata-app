@@ -78,29 +78,41 @@ namespace :projects do
     project_id = args[:project_id]
     project = Project.find(project_id)
 
+    root_collection_namespace = Rails.configuration.mediaflux["api_root_collection_namespace"]
+    root_namespace = Rails.configuration.mediaflux["api_root_ns"]
+    root_collection_name = Rails.configuration.mediaflux["api_root_collection_name"]
     project_directory = project.project_directory_short
+    project_directory_full = project.project_directory_full
     project_parent = project.project_directory_parent_path
-    path_id = project.project_directory
-    project_namespace = "#{project.project_directory}NS"
+    project_namespace_full = "#{root_namespace}/#{project.project_directory}NS"
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
     created_on = Time.parse(project.metadata_json["created_on"]).strftime("%e-%b-%Y %H:%M:%S").upcase
+    requested_by = project.metadata["submission"]["requested_by"]
+    requested_date = project.metadata["submission"]["request_date_time"]
 
     script = <<-ATERM
       # Run these steps from Aterm to create a project in Mediaflux with its related components
 
-      # Create the namespace for the project
-      asset.namespace.create :namespace #{project_namespace}
+      # --- These statements are only needed on an EMPTY MEDIAFLUX ---
+      # Create root namespace, the tigerdata root namespace, and the tigerdata root collection under the root namespace
+      # asset.namespace.create :namespace #{root_collection_namespace}
+      # asset.namespace.create :namespace #{root_namespace}
+      # asset.create :name #{root_collection_name} :namespace #{root_collection_namespace} :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+      # ---------------------------------------------------------------
+
+      # Create the namespace for the project under the tigerdata root namespace
+      asset.namespace.create :namespace #{project_namespace_full}
 
       # Create the collection asset for the project
       asset.create
-        :pid #{project_parent}
-        :namespace #{project_namespace}
+        :pid path=#{project_parent}
+        :namespace #{project_namespace_full}
         :name #{project_directory}
         :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
         :type "application/arc-asset-collection"
         :meta <
           :tigerdata:project <
-            :Code "#{project_directory}"
+            :ProjectDirectory "#{project_directory}"
             :Title "#{project.metadata_json["title"]}"
             :Description "#{project.metadata_json["description"]}"
             :Status "#{project.metadata_json["status"]}"
@@ -110,15 +122,17 @@ namespace :projects do
             :CreatedOn "#{created_on}"
             :CreatedBy "#{project.metadata_json["created_by"]}"
             :ProjectID "#{project.metadata_json["project_id"]}"
-            :StorageCapacity < :Size "#{project.metadata_json["storage_capacity"]["size"]["requested"]}>" :Unit #{project.metadata_json["storage_capacity"]["unit"]["requested"]}"
-            :StoragePerformance "#{project.metadata_json["storage_performance_expectations"]["requested"]}"
+            :StorageCapacity < :Size "#{project.metadata_json["storage_capacity"]["size"]["requested"]}" :Unit "#{project.metadata_json["storage_capacity"]["unit"]["requested"]}" >
             :ProjectPurpose "#{project.metadata_json["project_purpose"]}"
+            :Performance "#{project.metadata_json["storage_performance_expectations"]["requested"]}"
+            :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
+            :SchemaVersion "#{project.metadata["schema_version"]}"
           >
         >
 
     # Define accumulator for file count
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_directory_full}
       :cascade true
       :accumulator <
         :name #{project_directory}-count
@@ -127,7 +141,7 @@ namespace :projects do
 
     # Define accumulator for total file size
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_directory_full}
       :cascade true
       :accumulator <
       :name #{project_directory}-size
@@ -136,7 +150,7 @@ namespace :projects do
 
     # Define storage quota
     asset.collection.quota.set
-      :id path=#{path_id}
+      :id path=#{project_directory_full}
       :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
 
     ATERM

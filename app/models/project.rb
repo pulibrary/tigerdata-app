@@ -8,7 +8,7 @@ class Project < ApplicationRecord
   PENDING_STATUS = "pending"
   APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
-  
+
   delegate :to_json, to: :metadata_json
 
   def metadata
@@ -41,22 +41,18 @@ class Project < ApplicationRecord
 
   def project_directory
     return nil if metadata[:project_directory].nil?
-    dirname, basename = project_directory_pathname.split
-    if (dirname.relative?)
-      "#{Rails.configuration.mediaflux["api_root_ns"]}/#{safe_name(metadata[:project_directory])}"
-    else
-      project_directory_pathname.to_s
-    end
+    safe_name(metadata[:project_directory])
+  end
+
+  def project_directory_full
+    "#{project_directory_parent_path}/#{project_directory}"
   end
 
   def project_directory_parent_path
-    return Rails.configuration.mediaflux["api_root_ns"] if metadata[:project_directory].nil?
-    dirname  = project_directory_pathname.dirname
-    if (dirname.relative?)
-      Rails.configuration.mediaflux["api_root_ns"]
-    else
-      dirname.to_s
-    end
+    root_collection_namespace = Rails.configuration.mediaflux["api_root_collection_namespace"]  # e.g. /princeton or /td-demo-001
+    root_collection_name = Rails.configuration.mediaflux["api_root_collection_name"]            # e.g. /tigerdata
+    parent_path = Pathname.new(root_collection_namespace).join(root_collection_name).to_s
+    parent_path
   end
 
   def project_directory_short
@@ -97,7 +93,7 @@ class Project < ApplicationRecord
   end
 
   # If the project hasn't yet been created in mediaflux, create it.
-  # If it already exists, update it. 
+  # If it already exists, update it.
   # @return [String] the mediaflux id of the project
   def save_in_mediaflux(session_id:)
     if mediaflux_id.nil?
@@ -124,7 +120,7 @@ class Project < ApplicationRecord
   end
 
   def mediaflux_metadata(session_id:)
-    @mediaflux_metadata ||= begin 
+    @mediaflux_metadata ||= begin
       accum_req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
       accum_req.metadata
     end
@@ -145,7 +141,7 @@ class Project < ApplicationRecord
 
     values = mediaflux_metadata(session_id:)
     value = values.fetch(:size, 0)
-    
+
     if value.blank?
       return self.class.default_storage_usage
     else
@@ -169,7 +165,7 @@ class Project < ApplicationRecord
     quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
 
     backup_value = requested_capacity || self.class.default_storage_capacity #return the default storage capacity, if the requested capacity is nil
-    
+
     return backup_value if quota_value.blank?
     quota_value #return the requested storage capacity if a quota has not been set for a project, if storage has not been requested return "0 GB"
   end
@@ -240,7 +236,7 @@ class Project < ApplicationRecord
       @project_directory_pathname ||= begin
         @original_directory = metadata[:project_directory]
         Pathname.new(@original_directory)
-      end 
+      end
     end
 
     def safe_name(name)
