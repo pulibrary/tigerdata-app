@@ -143,9 +143,7 @@ RSpec.describe User, type: :model do
       expect(other_user.sysadmin).to be_falsey
     end
 
-    it "loads the tester-trainer roles" do
-      User.load_registration_list
-      allow(User).to receive(:csv_data).and_return(updated_csv_data)
+    it "loads users with the tester-trainer role" do
       User.load_registration_list
       user = User.find_by(uid: "mjc12")
       expect(user.tester_trainer).to be_truthy 
