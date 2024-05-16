@@ -88,7 +88,7 @@ namespace :projects do
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
     created_on = Time.parse(project.metadata_json["created_on"]).strftime("%e-%b-%Y %H:%M:%S").upcase
     requested_by = project.metadata["submission"]["requested_by"]
-    requested_date = project.metadata["submission"]["request_date_time"]
+    requested_date = ProjectMediaflux.format_date_for_mediaflux(project.metadata["submission"]["request_date_time"])
 
     script = <<-ATERM
       # Run these steps from Aterm to create a project in Mediaflux with its related components
