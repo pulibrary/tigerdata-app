@@ -17,18 +17,27 @@ docker rm mediaflux
 docker rmi princeton_dev:latest  (or the version you had previously like mediaflux_dev:latest )
 ```
 
+You can use `docker images` to find out the exact name of the image to delete.
+
+
 ## Load the new Docker image
 
-1. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to pass your `netid` in the following command and enter your password when prompted:
+1. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to use your `netid` in the following command and *enter your password* when prompted:
 
 ```
-scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev_image_v3.tar .
+scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev_image_v4.tar.bz2 .
+```
+
+1. Unzip the downloaded file, this process takes a few minutes:
+
+```
+bunzip2 princeton_dev_image_v4.tar.bz2
 ```
 
 1. Load the tar file as a Docker image:
 
 ```
-docker load -i princeton_dev_image_v3.tar
+docker load -i princeton_dev_image_v4.tar
 ```
 
 You can view the loaded image via `docker images`:
@@ -37,20 +46,14 @@ You can view the loaded image via `docker images`:
 docker images
 
   # REPOSITORY           TAG                    IMAGE ID       CREATED         SIZE
-  # <none>               <none>                 85b0eb016889   3 days ago      1.4GB
+  # princeton_dev_image  4                      4b651c21ca10   3 days ago      1.4GB
   # ...other images...
 ```
 
-1. Set the `repository` and `tag` values of your local image (notice that the `IMAGE ID` might be different in your local installation)
+1. Now that we have the loaded the image we can _create a container_ with it (notice we name it `mediaflux`)
 
 ```
-docker image tag 85b0eb016889 mediaflux_dev:latest
-```
-
-1. Now that we have the loaded the image we can _create a container_ with it (notice we name it "mediaflux")
-
-```
-docker create --name mediaflux --publish 0.0.0.0:8888:8888 mediaflux_dev:latest
+docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev_image:4
 ```
 
 You may need to add ` --mac-address 02:42:ac:11:00:02` before mediaflux_dev if mediaflux does not start
@@ -58,7 +61,7 @@ You may need to add ` --mac-address 02:42:ac:11:00:02` before mediaflux_dev if m
 1. From now on when you need _start this container_ you can use:
 
 ```
-$ docker start mediaflux
+docker start mediaflux
 ```
 
 6. Once the container is running you can access it at the default endpoints:
@@ -72,14 +75,31 @@ $ docker start mediaflux
 8. You can stop the container in the Docker dashboard or via
 
 ```
-$ docker stop mediaflux
+docker stop mediaflux
 ```
 
 and restart it via and it will preserve your changes (e.g. the assets that you added)
 
 ```
-$ docker start mediaflux
+docker start mediaflux
 ```
+
+
+## Initializing the new Mediaflux
+
+Remember that this is a brand new Mediaflux and therefore you'll need to recreate the schema
+
+```
+bundle exec rake schema:create
+```
+
+and re-exectute the Aterm command so that the Desktop shows collections properly:
+
+```
+actor.grant :type user :name system:manager :role -type role desktop-experimental`
+```
+
+and recreate any collections and namespaces that you need.
 
 
 ## SSHing into the container
@@ -87,7 +107,7 @@ $ docker start mediaflux
 Once the container is running we can SSH into it, this is useful to look at the logs of the running MediaFlux server:
 
 ```
-$ docker exec -it mediaflux /bin/bash
+docker exec -it mediaflux /bin/bash
 root@12345:/setup#
 ```
 
@@ -96,7 +116,7 @@ The logs are found under the `/usr/local/mediaflux/volatile/logs` folder.
 If for some reason you need to _manually_ launch MediaFlux server you can use a command as follows:
 
 ```
-$ root@12345:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
+root@12345:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar application.home=/usr/local/mediaflux nogui
 ```
 
 ## Accessing the thick client (Aterm)
@@ -104,13 +124,13 @@ $ root@12345:/setup# /usr/bin/env java -jar /usr/local/mediaflux/bin/aserver.jar
 1. Get a copy of `aterm.jar` to run locally.  While the container is running run the following cURL command to download it:
 
 ```
-$ curl -OL http://0.0.0.0:8888/mflux/aterm.jar
+curl -OL http://0.0.0.0:8888/mflux/aterm.jar
 ```
 
 2. Run it
 
 ```
-$ java -jar aterm.jar
+java -jar aterm.jar
 ```
 
 3. At the login screen, change "server" to `0.0.0.0` and "port" to `8888`.  Use the default domain, user, and password information.
