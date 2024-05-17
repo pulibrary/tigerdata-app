@@ -183,7 +183,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#project_directory" do
     it "includes the full path" do
       project = FactoryBot.create(:project)
-      expect(project.project_directory_full).to eq(root_path + "/" + project.metadata_json['project_directory'])
+      expect(project.project_directory_full).to eq(root_path + "/" + project.metadata_json["project_directory"])
     end
 
     it "makes sure the directory is safe" do
