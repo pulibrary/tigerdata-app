@@ -143,12 +143,22 @@ RSpec.describe User, type: :model do
       expect(other_user.sysadmin).to be_falsey
     end
 
-    it "loads users with the tester-trainer role" do
-      User.load_registration_list
-      user = User.find_by(uid: "mjc12")
-      expect(user.tester_trainer).to be_truthy 
-      other_user = User.find_by(uid: "eparham")
-      expect(user.tester_trainer).to be_falsey
+  context "when a user is created with the tester-trainer role" do  
+      it "loads users with the tester-trainer role" do
+        User.load_registration_list
+        user = User.find_by(uid: "mjc12")
+        expect(user.tester_trainer).to be_truthy 
+        other_user = User.find_by(uid: "eparham")
+        expect(user.tester_trainer).to be_falsey
+      end
+      it "allows the tester-trainer to emulate the Data Sponsor role in QA" do
+      end
+      it "allows the tester-trainer to emulate the Data Manager role in QA" do
+      end
+      it "allows the tester-trainer to emulate the Data User role in QA" do
+      end
+      it "allows the tester-trainer to emulate the SysAdmin role in QA" do
+      end
     end
   end
 

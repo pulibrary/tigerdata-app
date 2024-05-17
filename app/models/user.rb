@@ -105,8 +105,10 @@ class User < ApplicationRecord
     return true if superuser || sysadmin
   end
 
-  def tester_trainer
-    user = User.where(tester_trainer: true)
+  # Is this user eligible to be a tester trainer in this environment? 
+  # @return [Boolean] 
+  def tester_trainer?
+    return true if superuser || tester_trainer
   end
 
   # Parse the USER_REGISTRATION_LIST csv
