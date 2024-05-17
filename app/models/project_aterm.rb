@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+#
+# Disable these Rubocop warnings since generating an Aterm script is a prototype.
+# If we decide to pursue this idea forward we can refactor the code.
+#
 # rubocop:disable Metrics/AbcSize
 # rubocop:disable Metrics/MethodLength
 class ProjectAterm
@@ -13,8 +17,8 @@ class ProjectAterm
     project_namespace_full = "#{root_namespace}/#{project.project_directory}NS"
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
     created_on = ProjectMediaflux.format_date_for_mediaflux(project.metadata_json["created_on"])
-    requested_by = project.metadata["submission"]["requested_by"]
-    requested_date = ProjectMediaflux.format_date_for_mediaflux(project.metadata["submission"]["request_date_time"])
+    requested_by = project.metadata.dig("submission", "requested_by") || ""
+    requested_date = ProjectMediaflux.format_date_for_mediaflux(project.metadata.dig("submission", "request_date_time"))
 
     script = <<-ATERM
       # Run these steps from Aterm to create a project in Mediaflux with its related components
