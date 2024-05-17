@@ -14,7 +14,7 @@ class ProjectAterm
     project_directory = project.project_directory_short
     project_directory_full = project.project_directory_full
     project_parent = project.project_directory_parent_path
-    project_namespace_full = "#{root_namespace}/#{project.project_directory}NS"
+    project_namespace_full = project.default_namespace
     department_fields = project.metadata_json["departments"].map { |department| ":Department \"#{department}\"" }
     created_on = ProjectMediaflux.format_date_for_mediaflux(project.metadata_json["created_on"])
     requested_by = project.metadata.dig("submission", "requested_by") || ""
@@ -52,9 +52,9 @@ class ProjectAterm
             :CreatedOn "#{created_on}"
             :CreatedBy "#{project.metadata_json['created_by']}"
             :ProjectID "#{project.metadata_json['project_id']}"
-            :StorageCapacity < :Size "#{project.metadata_json['storage_capacity']['size']['requested']}" :Unit "#{project.metadata_json['storage_capacity']['unit']['requested']}" >
+            :StorageCapacity < :Size "#{project.metadata_json.dig('storage_capacity', 'size', 'requested')}" :Unit "#{project.metadata_json.dig('storage_capacity', 'unit', 'requested')}" >
             :ProjectPurpose "#{project.metadata_json['project_purpose']}"
-            :Performance "#{project.metadata_json['storage_performance_expectations']['requested']}"
+            :Performance "#{project.metadata_json.dig('storage_performance_expectations', 'requested')}"
             :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
             :SchemaVersion "#{project.metadata['schema_version']}"
           >

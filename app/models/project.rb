@@ -55,6 +55,11 @@ class Project < ApplicationRecord
     parent_path
   end
 
+  def default_namespace
+    root_namespace = Rails.configuration.mediaflux["api_root_ns"]
+    "#{root_namespace}/#{project_directory}NS"
+  end
+
   def project_directory_short
     return nil if metadata[:project_directory].nil?
     project_directory_pathname.basename.to_s
