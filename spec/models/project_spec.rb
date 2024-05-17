@@ -2,6 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model, stub_mediaflux: true do
+  let(:root_path) { Rails.configuration.mediaflux["api_root_collection_namespace"] + "/" + Rails.configuration.mediaflux["api_root_collection_name"] }
+
   describe "#sponsored_projects" do
     let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
     before do
@@ -181,24 +183,17 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#project_directory" do
     it "includes the full path" do
       project = FactoryBot.create(:project)
-      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/#{project.metadata_json['project_directory']}")
-    end
-
-    it "does not include the default path if a path is already included" do
-      project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
-      expect(project.project_directory).to eq("/123/abc/directory")
+      expect(project.project_directory_full).to eq(root_path + "/" + project.metadata_json['project_directory'])
     end
 
     it "makes sure the directory is safe" do
       project = FactoryBot.create(:project, project_directory: "directory?")
-      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/directory-")
+      expect(project.project_directory).to eq("directory-")
       project.metadata_json["project_directory"] = "direc tory "
-      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory")
+      expect(project.project_directory).to eq("direc-tory")
       project = FactoryBot.create(:project, project_directory: "direc/tory/")
       project.metadata_json["project_directory"] = "direc/tory/"
-      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory-")
-      project.metadata_json["project_directory"] = "/direc/tory/"
-      expect(project.project_directory).to eq("/direc/tory/")
+      expect(project.project_directory).to eq("direc-tory-")
     end
   end
 
@@ -210,14 +205,12 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   end
 
   describe "#project_directory_parent_path" do
-    it "does not include the directory" do
-      project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
-      expect(project.project_directory_parent_path).to eq("/123/abc")
-    end
+    it "picks the parent path configured regarless of the project directory" do
+      project = FactoryBot.create(:project, project_directory: "directory1/directory2")
+      expect(project.project_directory_parent_path).to eq(root_path)
 
-    it "defaults to the configured vaule if no directory is present" do
       project = FactoryBot.create(:project, project_directory: "directory")
-      expect(project.project_directory_parent_path).to eq(Rails.configuration.mediaflux["api_root_ns"])
+      expect(project.project_directory_parent_path).to eq(root_path)
     end
   end
 end
