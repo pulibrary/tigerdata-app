@@ -105,6 +105,9 @@ class User < ApplicationRecord
     return true if superuser || sysadmin
   end
 
+  def tester_trainer
+  end
+
   # Parse the USER_REGISTRATION_LIST csv
   # @return [CSV::Table]
   def self.csv_data
@@ -126,6 +129,7 @@ class User < ApplicationRecord
       user.eligible_manager = line["eligible_manager"] == "TRUE"
       user.superuser = line["superuser"] == "TRUE"
       user.sysadmin = line["sysadmin"] == "TRUE"
+      user.tester_trainer = line["tester_trainer"] == "TRUE"
       user.save
     end
   end
