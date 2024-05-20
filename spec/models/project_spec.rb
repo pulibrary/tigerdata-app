@@ -220,4 +220,13 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       expect(project.project_directory_parent_path).to eq(Rails.configuration.mediaflux["api_root_ns"])
     end
   end
+
+  describe "#pending?" do
+    it "checks the status" do
+      project = FactoryBot.create(:project)
+      expect(project).to be_pending
+      project.metadata_json["status"] = Project::APPROVED_STATUS
+      expect(project).not_to be_pending
+    end
+  end
 end

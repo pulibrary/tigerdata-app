@@ -88,12 +88,8 @@ class ProjectsController < ApplicationController
     @data_user_names = user_model_names.join(", ")
 
     @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
-    @project_status = project.metadata[:status]
 
-    @pending_status = Project::PENDING_STATUS
-    @approved_status = Project::APPROVED_STATUS
-    @eligible_editor = eligible_editor?
-    @project_eligible_to_edit = true if @project_status == @approved_status && eligible_editor?
+    @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?
 
     respond_to do |format|
       format.html
@@ -127,7 +123,11 @@ class ProjectsController < ApplicationController
         project_directory: project_params["project_directory"],
         storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
                             "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                            "unit"=>{"approved"=>project_params["storage_unit"], "requested"=>"GB"}},
+                            "unit"=>{"approved"=>project_params["storage_unit"], 
+                                     "requested"=>project.metadata[:storage_capacity][:unit][:requested]}},
+        # no current input to set approved storage performance, so just copy requested
+        storage_performance_expectations: {"requested"=>project.metadata[:storage_performance_expectations][:requested],
+                                           "approved"=>project.metadata[:storage_performance_expectations][:requested]},
         approval_note: {
           note_by: current_user.uid,
           note_date_time: Time.current.in_time_zone("America/New_York").iso8601,

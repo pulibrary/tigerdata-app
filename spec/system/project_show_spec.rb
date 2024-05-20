@@ -21,7 +21,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       description: "hello world",
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
-      status: ::Project::PENDING_STATUS
+      status: ::Project::PENDING_STATUS,
+      storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
+      storage_performance_expectations: { "requested" => "standard" }
     }
   end
 
@@ -99,6 +101,23 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       end
     end
 
+    context "Approved projects" do
+      it "Shows the approved values" do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+        project_in_mediaflux.metadata_json["storage_capacity"]["size"]["approved"] = 1
+        project_in_mediaflux.metadata_json["storage_capacity"]["unit"]["approved"] = "TB"
+        project_in_mediaflux.metadata_json["storage_performance_expectations"]["approved"] = "slow"
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}"
+
+        expect(page).to have_content(project_in_mediaflux.title)
+        expect(page).to have_content("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
+        expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
+        expect(page).not_to have_content(pending_text)
+      end
+    end
+
     context "Provenance Events" do
       let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
@@ -128,8 +147,6 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
 
         # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
         project.save_in_mediaflux(session_id: session_id)
-        accum_req = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(session_token: session_id, collection: project.mediaflux_id, name: "file count", type: "collection.asset.count")
-        accum_req.resolve
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
       end
 
@@ -145,7 +162,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         click_on("Review Contents")
         expect(page).to have_content("Project Contents")
         expect(page).to have_content("File Count")
-        expect(find(:css, "#file_count").text).to eq "1616"
+        expect(find(:css, "#file_count").text).to eq "16"
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")

@@ -115,6 +115,9 @@
     padding: 0;
     margin: 0
   }
+  dl dl {
+    padding-left: 2rem;
+  }
   dt {
     float: left;
     min-width: calc(25% + 5em);
