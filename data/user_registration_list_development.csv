@@ -1,37 +1,38 @@
-uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,superuser,sysadmin,DateAdded,AddedBy,Notes
-mjc12,,Matt,Chandler,Matt Chandler,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
-hb0344,,Halle,Burns,Halle Burns,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
-eparham,,Beth,Holtz,Beth Holtz,TRUE,TRUE,,TRUE,2023-12-05,Matt Chandler,TigerData Staff
-cbentler,,Chuck,Bentler,Chuck Bentler,TRUE,TRUE,,TRUE,2023-12-05,Matt Chandler,TigerData Staff
-knight,,Robert,Knight,Robert Knight,TRUE,TRUE,,TRUE,2023-12-05,Matt Chandler,TigerData Staff
-kl37,,Kate,Lynch,Kate Lynch,TRUE,TRUE,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-hc8719,,Hector,Correa,Hector Correa,,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-bs3097,,Bess,Sadler,Bess Sadler,,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-cac9,,Carolyn,Cole,Carolyn Cole,,TRUE,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-jrg5,,James,Griffin,James Griffin,,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-rl3667,,Robert,Lee-Faison,Robert Lee-Faison,,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-jh6441,,Jaymee,Hyppolite,Jaymee Hyppolite,,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
-changgoo,,Chang-Goo,Kim,Chang-Goo Kim,TRUE,TRUE,,,2023-12-05,Matt Chandler,Early Adopter
-eostrike,,Eve,Ostriker,Eve Ostriker,TRUE,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-la15,,Lucia,Armillotta,Lucia Armillotta,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-rh1136,,Ronan,Hix,Ronan Hix,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-sm4550,,Shaunak,Modak,Shaunak Modak,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-jk11,,Justin,Kim,Justin Kim,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-nlinzer,,Nora,Linzer,Nora Linzer,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-sm69,,Sanghyuk,Moon,Sanghyuk Moon,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-lachlanl,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-ikaul,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-woongkim,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-munan,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
-sswang,,Sam,Wang,Sam Wang,TRUE,,,,2024-02-05,Matt Chandler,Early Adopter
-mkislin,,Mikhail,Kislin,Mikhail Kislin,,TRUE,,,2024-02-05,Matt Chandler,"Early Adopter, under Sam Wang"
-jdunkley,,Jo,Dunkley,Jo Dunkley,TRUE,,,,2024-02-05,Matt Chandler,Early Adopter
-zatkins,,Zach,Atkins,Zach Atkins,,TRUE,,,2024-02-05,Matt Chandler,"Early Adopter, under Jo Dunkley"
-lboustan,,Leah,Boustan,Leah Boustan,TRUE,,,,2024-02-05,Matt Chandler,Early Adopter
-aegreen,,Allison,Green,Allison Green,,TRUE,,,2024-02-05,Matt Chandler,"Early Adopter, under Leah Boustan"
-mm4,,Meredith,Martin,Meredith Martin,TRUE,,,,2024-02-05,Matt Chandler,Early Adopter
-mnaydan,,Mary,Neyden,Mary Neyden,,TRUE,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
-rkoeser,,Rebecca,Koeser,Rebecca Koeser,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
-rh6841,,Ryan,Heuser,Ryan Heuser,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
-wh4213,,Wouter,Haverals,Wouter Haverals,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
-lauret,,Laure,Thompson,Laure Thompson,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,superuser,sysadmin,tester_trainer,DateAdded,AddedBy,Notes
+mjc12,,Matt,Chandler,Matt Chandler,TRUE,TRUE,,,TRUE,2023-12-05,Matt Chandler,TigerData Staff
+hb0344,,Halle,Burns,Halle Burns,TRUE,TRUE,,,TRUE,2023-12-05,Matt Chandler,TigerData Staff
+eparham,,Beth,Holtz,Beth Holtz,TRUE,TRUE,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
+cbentler,,Chuck,Bentler,Chuck Bentler,TRUE,TRUE,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
+knight,,Robert,Knight,Robert Knight,TRUE,TRUE,,TRUE,,2023-12-05,Matt Chandler,TigerData Staff
+kl37,,Kate,Lynch,Kate Lynch,TRUE,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+hc8719,,Hector,Correa,Hector Correa,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+bs3097,,Bess,Sadler,Bess Sadler,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+cac9,,Carolyn,Cole,Carolyn Cole,,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+jrg5,,James,Griffin,James Griffin,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+rl3667,,Robert,Lee-Faison,Robert Lee-Faison,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+jh6441,,Jaymee,Hyppolite,Jaymee Hyppolite,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
+changgoo,,Chang-Goo,Kim,Chang-Goo Kim,TRUE,TRUE,,,,2023-12-05,Matt Chandler,Early Adopter
+eostrike,,Eve,Ostriker,Eve Ostriker,TRUE,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+la15,,Lucia,Armillotta,Lucia Armillotta,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+rh1136,,Ronan,Hix,Ronan Hix,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+sm4550,,Shaunak,Modak,Shaunak Modak,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+jk11,,Justin,Kim,Justin Kim,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+nlinzer,,Nora,Linzer,Nora Linzer,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+sm69,,Sanghyuk,Moon,Sanghyuk Moon,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+lachlanl,,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+ikaul,,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+woongkim,,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+munan,,,,,,,,,,2023-12-05,Matt Chandler,"Early Adopter, under Chang-Goo Kim"
+sswang,,Sam,Wang,Sam Wang,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
+mkislin,,Mikhail,Kislin,Mikhail Kislin,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Sam Wang"
+jdunkley,,Jo,Dunkley,Jo Dunkley,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
+zatkins,,Zach,Atkins,Zach Atkins,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Jo Dunkley"
+lboustan,,Leah,Boustan,Leah Boustan,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
+aegreen,,Allison,Green,Allison Green,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Leah Boustan"
+mm4,,Meredith,Martin,Meredith Martin,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
+mnaydan,,Mary,Neyden,Mary Neyden,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+rkoeser,,Rebecca,Koeser,Rebecca Koeser,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+rh6841,,Ryan,Heuser,Ryan Heuser,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+wh4213,,Wouter,Haverals,Wouter Haverals,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+lauret,,Laure,Thompson,Laure Thompson,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+huston,,Steve,Huston,Steve Huston,,,,TRUE,,2024-03-12,Matt Chandler,TigerData Staff
