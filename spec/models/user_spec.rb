@@ -140,6 +140,15 @@ RSpec.describe User, type: :model do
       expect(other_user.superuser).to be_falsey
       expect(other_user.sysadmin).to be_falsey
     end
+    it "loads users with the trainer role" do
+      User.load_registration_list
+      user = User.find_by(uid: "mjc12")
+      expect(user.trainer).to be_truthy
+      expect(user.trainer?).to be_truthy
+      other_user = User.find_by(uid: "eparham")
+      expect(other_user.trainer).to be_falsey
+      expect(other_user.trainer?).to be_falsey
+    end
   end
 
   context "Devise Methods" do

@@ -128,7 +128,7 @@ class User < ApplicationRecord
       user.eligible_manager = line["eligible_manager"] == "TRUE"
       user.superuser = line["superuser"] == "TRUE"
       user.sysadmin = line["sysadmin"] == "TRUE"
-      user.tester_trainer = line["tester_trainer"] == "TRUE"
+      user.trainer = line["tester_trainer"] == "TRUE"
       user.save
     end
   end
