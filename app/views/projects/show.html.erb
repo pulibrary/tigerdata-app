@@ -87,7 +87,9 @@ Project Details:
     <dt>Project Purpose</dt> <dd><%= @project.metadata[:project_purpose] %></dd>
   </dl>
   <% if @project.in_mediaflux? %>
-    <p>Mediaflux id: <%= @project.mediaflux_id %></p>
+    <dl>
+      <dt>Mediaflux id:</dt> <dd><%= @project.mediaflux_id %></dd>
+    </dl>
   <% else %>
     <p>This project has not been saved to Mediaflux</p>
   <% end %>
