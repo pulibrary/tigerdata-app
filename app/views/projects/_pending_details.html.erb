@@ -1,0 +1,14 @@
+<h2>Automatic Settings </h2>
+<dl>
+  <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
+  <dt>Storage Capacity (Requested)</dt> <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>
+  <dt>Storage Performance Expectations (Requested)</dt> <dd><%= @project.metadata[:storage_performance_expectations][:requested] %></dd>
+  <dt>Project Purpose</dt> <dd><%= @project.metadata[:project_purpose] %></dd>
+</dl>
+<% if @project.in_mediaflux? %>
+  <dl>
+    <dt>Mediaflux id:</dt> <dd><%= @project.mediaflux_id %></dd>
+  </dl>
+<% else %>
+  <p>This project has not been saved to Mediaflux</p>
+<% end %>
