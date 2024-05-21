@@ -90,8 +90,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).not_to have_button "Approve Project"
         expect(page).to have_content "Data Users\nNone"
         expect(page).to have_content "Project ID\nabc-123"
-        expect(page).to have_content "Storage Capacity (Requested)\n100 TB"
-        expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
+        expect(page).to have_content "Storage Capacity\nRequested\n100 TB"
+        expect(page).to have_content "Storage Performance Expectations\nRequested\nStandard"
         expect(page).to have_content "Project Purpose\nResearch"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
