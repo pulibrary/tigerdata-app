@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class MediafluxTime
   def convert(xml_snip:)
-    # takes an xml snip of a time object from a mediaflux response and returns a Princeton time value
+    # takes an xml snip of a nokigiri based time object from a mediaflux response and returns a Princeton time value
     # xml_snip: (required) The xml path to a time object from mediaflux
 
     xml = xml_snip
