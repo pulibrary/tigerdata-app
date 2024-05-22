@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 class MediafluxTime
+  # Converts the givin time snippet into local princeton time while accounting for potential time zone of the asset.
+  #
+  # @param xml_snip [:nokigiri], response_xml from a mediaflux request
+  # @return [String] returns a iso8601 Princeton time value.
   def convert(xml_snip:)
-    # takes an xml snip of a nokigiri based time object from a mediaflux response and returns a Princeton time value
-    # xml_snip: (required) The xml path to a time object from mediaflux
-
     xml = xml_snip
     time = xml.text.to_time
     gmt = xml.xpath("./@gmt-offset").text.to_f
