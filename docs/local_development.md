@@ -84,7 +84,6 @@ and restart it via and it will preserve your changes (e.g. the assets that you a
 docker start mediaflux
 ```
 
-
 ## Initializing the new Mediaflux
 
 Remember that this is a brand new Mediaflux and therefore you'll need to recreate the schema

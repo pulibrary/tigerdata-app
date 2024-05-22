@@ -68,6 +68,10 @@ class Project < ApplicationRecord
     metadata[:status]
   end
 
+  def pending?
+    status == PENDING_STATUS
+  end
+
   def in_mediaflux?
     mediaflux_id.present?
   end

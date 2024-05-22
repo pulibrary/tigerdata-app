@@ -10,19 +10,17 @@ Project Details:
   </div>
 <% end %>
 
-<% if @project.status == @pending_status %>
-  <div class="alert alert-warning" role="alert">
-    <dl>
-    <dt>Status</dt> <dd><%=@project_status%></dd>
-    </dl>
-  </div>
-<% else %>
-  <div class="alert alert-success" role="alert">
-    <dl>
-    <dt>Status</dt> <dd><%=@project_status%></dd>
-    </dl>
-  </div>
-<% end %>
+<% alert_class = if @project.pending?
+                   "alert-warning"
+                 else 
+                   "alert-success"
+                 end %>
+  
+<div class="alert <%= alert_class %>" role="alert">
+  <dl>
+  <dt>Status</dt> <dd><%= @project.status %></dd>
+  </dl>
+</div>
 
 <div class="details">
   <h2>Roles
@@ -79,20 +77,11 @@ Project Details:
 </div>
 
 <div class="details">
-  <h2>Automatic Settings </h2>
-  <dl>
-    <dt>Project ID</dt> <dd><%= @project.metadata[:project_id] %></dd>
-    <dt>Storage Capacity (Requested)</dt> <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>
-    <dt>Storage Performance Expectations (Requested)</dt> <dd><%= @project.metadata[:storage_performance_expectations][:requested] %></dd>
-    <dt>Project Purpose</dt> <dd><%= @project.metadata[:project_purpose] %></dd>
-  </dl>
-  <% if @project.in_mediaflux? %>
-    <dl>
-      <dt>Mediaflux id:</dt> <dd><%= @project.mediaflux_id %></dd>
-    </dl>
-  <% else %>
-    <p>This project has not been saved to Mediaflux</p>
-  <% end %>
+  <%= if @project.pending? 
+    render partial: "pending_details"
+  else
+    render partial: "approved_details"
+  end %>
 </div>
 
 <div class="details">
@@ -115,7 +104,7 @@ Project Details:
 
 <div class="details">
   <% if current_user.eligible_sysadmin? %>
-    <% if @project_status == Project::PENDING_STATUS %> 
+    <% if @project.pending? %> 
       <%= link_to "Approve Project", project_approve_path(@project), class: "btn btn-primary btn-sm" %>
       <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
     <% end %>
