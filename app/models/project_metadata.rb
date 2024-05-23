@@ -7,7 +7,7 @@ class ProjectMetadata
     @params = {}
   end
 
-  # Generates a Hash of updated Project metadata attributes
+  # Generate a Hash of updated Project metadata attributes
   # @param params [Hash] the updated Project metadata attributes
   # @return [Hash]
   def update_metadata(params:)
@@ -36,8 +36,9 @@ class ProjectMetadata
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
   end
 
+  # Approve a project by recording the mediaflux id & setting the status to 'approved'
+  # @param params [Hash] the updated Project metadata attributes
   def approve_project(params:)
-    # approve a project by recording the mediaflux id & setting the status to 'approved'
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
     project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"

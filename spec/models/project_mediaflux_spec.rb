@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model do
-  let(:collection_metadata) { { id: "abc", name: "test", path: "td-demo-001/rc/test-ns/test", description: "description", namespace: "td-demo-001/rc/test-ns" } }
+  let(:collection_metadata) { { id: "abc", name: "test", path: "/td-demo-001/rc/test-ns/test", description: "description", namespace: "/td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project_with_doi }
   let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
 
@@ -130,7 +130,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         #raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
         expect {
           incomplete_project.metadata_json["project_id"] = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
-          collection_id = ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+          ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         }.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
           expect(error.message).to include("Project creation failed with metadata schema version 0.6.1 due to the missing fields:")
