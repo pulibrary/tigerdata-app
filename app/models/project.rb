@@ -221,6 +221,19 @@ class Project < ApplicationRecord
     Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
+  # Ensure that the project directory is a valid path
+  # @example
+  #   Project.safe_name("My Project") # => "My-Project"
+  def self.safe_name(name)
+    # only alphanumeric characters
+    name.strip.gsub(/[^A-Za-z\d]/, "-")
+  end
+
+  # Ensure that the project directory is a valid path
+  def safe_name(name)
+    Project.safe_name(name)
+  end
+
   private
 
     def files_from_iterator(iterator_resp)
@@ -245,10 +258,5 @@ class Project < ApplicationRecord
         @original_directory = metadata[:project_directory]
         Pathname.new(@original_directory)
       end 
-    end
-
-    def safe_name(name)
-      # only alphanumeric characters
-      name.strip.gsub(/[^A-Za-z\d]/, "-")
     end
 end
