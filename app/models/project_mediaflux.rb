@@ -6,6 +6,16 @@ end
 
 # Take an instance of Project and adds it to MediaFlux
 class ProjectMediaflux
+
+  attr_reader :project, :session_id, :xml_namespace, :store_name
+
+  def initialize(project:, session_id:, xml_namespace: nil)
+    @project = project
+    @session_id = session_id
+    @xml_namespace = xml_namespace
+    @store_name = Store.default(session_id: session_id).name
+  end
+
   # Create a project in MediaFlux
   #
   # @param project [Project] the project that needs to be added to MediaFlux
@@ -13,7 +23,7 @@ class ProjectMediaflux
   # @param xml_namespace [] 
   # @return [String] The id of the project that got created
   def self.create!(project:, session_id:, xml_namespace: nil)
-    store_name = Store.default(session_id: session_id).name
+    pm = ProjectMediaflux.new(project: project, session_id: session_id, xml_namespace: xml_namespace)
 
     # Make sure the root namespace exists
     create_root_ns(session_id: session_id)
@@ -22,7 +32,11 @@ class ProjectMediaflux
     # The namespace is directly under our root namespace'
     project_name = project.project_directory
     project_namespace = "#{project_name}NS"
-    namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
+    namespace = Mediaflux::Http::NamespaceCreateRequest.new(
+                  namespace: project_namespace, 
+                  description: "Namespace for project #{project.title}", 
+                  store: pm.store_name, 
+                  session_token: pm.session_id)
     if namespace.error?
       raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
     end
