@@ -247,7 +247,6 @@ RSpec.describe ProjectMetadata, type: :model do
                     event_note: "Other",
                     event_note_message: "Message filler"
                     }
-
           project_metadata.approve_project(params:)
           # activation should do nothing because the project_id (DOI) will not match
           project_metadata.activate_project(collection_id: "112233", current_user:)
