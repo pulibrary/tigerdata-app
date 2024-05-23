@@ -229,11 +229,6 @@ class Project < ApplicationRecord
     name.strip.gsub(/[^A-Za-z\d]/, "-")
   end
 
-  # Ensure that the project directory is a valid path
-  def safe_name(name)
-    Project.safe_name(name)
-  end
-
   private
 
     def files_from_iterator(iterator_resp)
@@ -258,5 +253,10 @@ class Project < ApplicationRecord
         @original_directory = metadata[:project_directory]
         Pathname.new(@original_directory)
       end 
+    end
+    
+    # Ensure that the project directory is a valid path
+    def safe_name(name)
+      Project.safe_name(name)
     end
 end

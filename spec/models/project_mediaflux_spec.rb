@@ -138,7 +138,6 @@ RSpec.describe ProjectMediaflux, type: :model do
           expect(incomplete_project.errors.attribute_names[0].to_s).to eq "base"
           expect(incomplete_project.errors.messages[:base]).to eq ["Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for project_id"]
         end
-        puts incomplete_project.project_directory
       end
 
       it "should raise a error if any error occurs in mediaflux" do
