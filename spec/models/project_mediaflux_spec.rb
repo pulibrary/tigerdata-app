@@ -152,10 +152,11 @@ RSpec.describe ProjectMediaflux, type: :model do
               }
       project_metadata.approve_project(params:)
       session_token = current_user.mediaflux_session
-      
       #raise an error & log what was returned from mediaflux
       expect {
+
         ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+              
       }.to raise_error do |error|
         expect(error).to be_a(StandardError)
         expect(error.message).to include("call to service 'asset.create' failed: XPath tigerdata:project/ProjectID is invalid: missing value")

@@ -46,7 +46,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(created_on)}</CreatedOn>") }).to have_been_made
+        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedOn>#{MediafluxTime.format_date_for_mediaflux(created_on)}</CreatedOn>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedBy>#{project.metadata[:created_by]}</CreatedBy>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
         expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
@@ -116,7 +116,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
       "          <Department>RDSS</Department>\n" \
       "          <Department>PRDS</Department>\n" \
-      "          <CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
+      "          <CreatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
       "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
       "          <ProjectID>abc-123</ProjectID>\n" \
       "          <StorageCapacity>\n" \
@@ -126,7 +126,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       "          <Performance Requested=\"standard\">standard</Performance>\n" \
       "          <Submission>\n" \
       "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
-      "            <RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
+      "            <RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
       "          </Submission>\n" \
       "          <ProjectPurpose>research</ProjectPurpose>\n" \
       "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
@@ -148,10 +148,10 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
                      "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
                      "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
                      "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
-                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
+                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
                      "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
                      "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
-                     "<RequestDateTime>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
+                     "<RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
                      "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta></service></request>"
       expect(create_request.xtoshell_xml).to eq(expected_xml)
     end

@@ -31,16 +31,14 @@ class ProjectMediaflux
 
     # Create a namespace for the project
     pm.create_project_ns
-
     # Create a collection asset under the root namespace and set its metadata
-    tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::AssetCreateRequest.new(
                       session_token: pm.session_id, 
                       namespace: pm.project_namespace, 
                       name: pm.project.project_directory_short, 
-                      tigerdata_values: tigerdata_values,
+                      tigerdata_values: pm.project_values,
                       xml_namespace: pm.xml_namespace, 
                       pid: project_parent
                       )
@@ -123,15 +121,32 @@ class ProjectMediaflux
     Mediaflux::Http::AssetUpdateRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   end
 
-  # This method is used for transforming iso8601 dates to dates that MediaFlux likes
-  # Take a string like "2024-02-26T10:33:11-05:00" and convert this string to "22-FEB-2024 13:57:19"
-  def self.format_date_for_mediaflux(iso8601_date)
-    return if iso8601_date.nil?
-    Time.parse(iso8601_date).strftime("%e-%b-%Y %H:%M:%S").upcase
-  end
-
   # Translates database record into mediaflux meta document.
   # This is where the data for XML payload is generated.
+  def project_values
+    split_capacity  = @project.metadata[:storage_capacity_requested]&.split(" ") || []
+    values = {
+      project_directory: @project.project_directory,
+      title: @project.metadata[:title],
+      description: @project.metadata[:description],
+      status: @project.metadata[:status],
+      data_sponsor: @project.metadata[:data_sponsor],
+      data_manager: @project.metadata[:data_manager],
+      data_user_read_only: @project.metadata[:data_user_read_only],
+      data_user_read_write: @project.metadata[:data_user_read_write],
+      departments: @project.metadata[:departments],
+      created_on: MediafluxTime.format_date_for_mediaflux(@project.metadata[:created_on]),
+      created_by: @project.metadata[:created_by],
+      updated_on: MediafluxTime.format_date_for_mediaflux(@project.metadata[:updated_on]),
+      updated_by: @project.metadata[:updated_by],
+      project_id: @project.metadata[:project_id],
+      storage_capacity: @project.metadata[:storage_capacity].symbolize_keys,
+      storage_performance: @project.metadata[:storage_performance_expectations].symbolize_keys,
+      project_purpose: @project.metadata[:project_purpose]
+    }
+    values.with_indifferent_access
+  end
+
   def self.project_values(project:)
     split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
     values = {
@@ -144,9 +159,9 @@ class ProjectMediaflux
       data_user_read_only: project.metadata[:data_user_read_only],
       data_user_read_write: project.metadata[:data_user_read_write],
       departments: project.metadata[:departments],
-      created_on: format_date_for_mediaflux(project.metadata[:created_on]),
+      created_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on]),
       created_by: project.metadata[:created_by],
-      updated_on: format_date_for_mediaflux(project.metadata[:updated_on]),
+      updated_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on]),
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
       storage_capacity: project.metadata[:storage_capacity].symbolize_keys,
