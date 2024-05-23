@@ -26,7 +26,7 @@ class ProjectMediaflux
     pm = ProjectMediaflux.new(project: project, session_id: session_id, xml_namespace: xml_namespace)
 
     # Make sure the root namespace exists
-    create_root_ns(session_id: session_id)
+    pm.create_root_ns
 
     # Create a namespace for the project
     # The namespace is directly under our root namespace'
@@ -158,18 +158,21 @@ class ProjectMediaflux
   end
 
   # Create the root namespace if it does not exist
-  #
-  # @param session_id [String] the session id for the user who is currently authenticated to MediaFlux
-  def self.create_root_ns(session_id:)
+  def create_root_ns
     root_namespace = Rails.configuration.mediaflux["api_root_ns"]
-    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(
+                          path: root_namespace, 
+                          session_token: @session_id
+                          )
     if namespace_request.exists?
       Rails.logger.debug "Root namespace #{root_namespace} already exists"
     else
       Rails.logger.info "Created root namespace #{root_namespace}"
-      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(namespace: root_namespace, description: "TigerData client app root namespace",
-                                                                      store: Store.all(session_id: session_id).first.name,
-                                                                      session_token: session_id)
+      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(
+                            namespace: root_namespace, 
+                            description: "TigerData client app root namespace",
+                            store: Store.all(session_id: @session_id).first.name,
+                            session_token: @session_id)
       namespace_request.response_body
     end
   end
