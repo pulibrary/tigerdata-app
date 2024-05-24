@@ -59,3 +59,4 @@ test:
   api_user: 'manager'
   api_password: 'change_me'
   shared_files_location: './public/'
+

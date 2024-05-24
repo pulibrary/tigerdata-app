@@ -1,9 +1,33 @@
 version: 2.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.4.8
+  ruby: circleci/ruby@2.1
+
 commands:
+  install_ruby:
+    steps:
+      - run: sudo apt update
+      - run: sudo NEEDRESTART_MODE=a apt install -y postgresql-client libmsgpack-dev libpq-dev libgnutls-openssl27
+      - run:
+          name: Import the GPG2 keys
+          command: |
+            curl -sSL https://rvm.io/mpapis.asc | sudo gpg2 --import -
+            curl -sSL https://rvm.io/pkuczynski.asc | sudo gpg2 --import -
+      - ruby/install:
+          version: '3.3.2'
+      - ruby/install-deps:
+          pre-install-steps:
+          - run:
+              name: reinstall
+              command: |
+                rvm get stable
+                rvm autolibs enable
+                rvm reinstall ruby-3.3.2
+
   install_dependencies:
     steps:
-      - run: rbenv install 3.3.1
-      - run: gem install bundler -v '2.5.6'
+      - run: gem install bundler -v '2.5.11'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
@@ -25,52 +49,96 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+
   run_mediaflux:
     steps:
-      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
-      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:4
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+      - run: sudo apt-get update
+      - run: sudo apt-cache search docker
+      - run: sudo apt-get install -y docker-ce-cli
+      - run: docker run --help
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:8888 --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:4
+
   run_postgres:
     steps:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
       - run: docker start postgres
-orbs:
-  browser-tools: cimg/browser-tools@1.4.6
-  ruby: cimg/ruby@3.3.1
+
 jobs:
   build: # name of your job
     working_directory: ~/tiger_data
-    machine: # executor type
+    machine: &machine # executor type
       image: default
       docker_layer_caching: true
     environment:
-        POSTGRES_USER: tiger_data_user
-        POSTGRES_DB: test_db
-        POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: tiger_data_user
+      POSTGRES_DB: test_db
+      POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - checkout  
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - checkout
+      - install_ruby
       - install_dependencies
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
+
+  rubocop:
+    working_directory: ~/tiger_data
+    machine: *machine
+    steps:
+      - attach_workspace:
+          at: *root
+      - install_ruby
       - run:
           name: Run rubocop
           command: bundle exec rubocop
-          paths: '*'
+
+  eslint:
+    working_directory: ~/tiger_data
+    machine: *machine
+    steps:
+      - attach_workspace:
+          at: *root
+      - install_ruby
+      - install_dependencies
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
+      - persist_to_workspace:
+          root: &root '~/tiger_data'
+          paths: '*'
+
+  vitest:
+    working_directory: ~/tiger_data
+    machine: *machine
+    steps:
+      - attach_workspace:
+          at: *root
+      - install_ruby
+      - install_dependencies
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
+      - persist_to_workspace:
+          root: &root '~/tiger_data'
+          paths: '*'
+
+  rspec:
+    working_directory: ~/tiger_data
+    machine: *machine
+    steps:
+      - attach_workspace:
+          at: *root
+      - install_ruby
+      - install_dependencies
+      # wait for postgres and mediaflux
       - run_mediaflux
       - run_postgres
-      # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run: bundle exec rake schema:create
       - run:
-          name: Run Rspec
+          name: Run RSpec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
@@ -81,6 +149,19 @@ jobs:
 
 workflows:
   version: 2
-  build_accept_deploy:
+  ci:
     jobs:
       - build
+      - rubocop:
+          requires:
+            - build
+      - eslint:
+          requires:
+            - build
+      - vitest:
+          requires:
+            - build
+      - rspec:
+          requires:
+            - build
+
