@@ -2,7 +2,7 @@ version: 2.1
 commands:
   install_dependencies:
     steps:
-      - run: rbenv install 3.2.3
+      - run: rbenv install 3.3.1
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -34,8 +34,8 @@ commands:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
       - run: docker start postgres
 orbs:
-  browser-tools: circleci/browser-tools@1.4.6
-  ruby: circleci/ruby@2.1.1
+  browser-tools: cimg/browser-tools@1.4.6
+  ruby: cimg/ruby@3.3.1
 jobs:
   build: # name of your job
     working_directory: ~/tiger_data
