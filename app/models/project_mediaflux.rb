@@ -94,13 +94,6 @@ class ProjectMediaflux
     Mediaflux::Http::AssetUpdateRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
   end
 
-  # This method is used for transforming iso8601 dates to dates that MediaFlux likes
-  # Take a string like "2024-02-26T10:33:11-05:00" and convert this string to "22-FEB-2024 13:57:19"
-  def self.format_date_for_mediaflux(iso8601_date)
-    return if iso8601_date.nil?
-    Time.parse(iso8601_date).strftime("%e-%b-%Y %H:%M:%S").upcase
-  end
-
   # Translates database record into mediaflux meta document.
   # This is where the data for XML payload is generated.
   def self.project_values(project:)
@@ -115,9 +108,9 @@ class ProjectMediaflux
       data_user_read_only: project.metadata[:data_user_read_only],
       data_user_read_write: project.metadata[:data_user_read_write],
       departments: project.metadata[:departments],
-      created_on: format_date_for_mediaflux(project.metadata[:created_on]),
+      created_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on]),
       created_by: project.metadata[:created_by],
-      updated_on: format_date_for_mediaflux(project.metadata[:updated_on]),
+      updated_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on]),
       updated_by: project.metadata[:updated_by],
       project_id: project.metadata[:project_id],
       storage_capacity: project.metadata[:storage_capacity].symbolize_keys,

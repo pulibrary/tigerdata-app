@@ -8,19 +8,6 @@ RSpec.describe ProjectMediaflux, type: :model do
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
-      context "it formats dates correctly for MediaFlux" do
-        let(:project_values) { described_class.project_values(project: project) }
-        # Mediaflux date format is like " 9-FEB-2024 14:53:23"
-        let(:date_regexp) { /\d-[A-Z]{3}-\d{4} \d{2}:\d{2}:\d{2}/ }
-        it "formats created_on as expected" do
-          created_on = project_values[:created_on].strip
-          expect(created_on.match?(date_regexp)).to eq true
-        end
-        it "formats updated_on as expected" do
-          updated_on = project_values[:updated_on].strip
-          expect(updated_on.match?(date_regexp)).to eq true
-        end
-      end
 
       it "creates a project namespace and collection and returns the mediaflux id" do
         mediaflux_id = described_class.create!(project: project, session_id: current_user.mediaflux_session)

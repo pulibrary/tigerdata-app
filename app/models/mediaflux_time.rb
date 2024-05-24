@@ -20,4 +20,12 @@ class MediafluxTime
     princeton_time = time.in_time_zone("America/New_York").iso8601
     princeton_time
   end
+
+  # Transform iso8601 dates to MediaFlux expected format
+  # @example
+  #   MediafluxTime.format_date_for_mediaflux("2024-02-26T10:33:11-05:00") => "22-FEB-2024 13:57:19"
+  def self.format_date_for_mediaflux(iso8601_date)
+    return if iso8601_date.nil?
+    Time.zone.parse(iso8601_date).strftime("%e-%b-%Y %H:%M:%S").upcase
+  end
 end
