@@ -57,7 +57,7 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>") }).to have_been_made
+        expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
         expect(a_request(:post, mediaflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
@@ -84,7 +84,7 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
     "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
     "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
-    "          <UpdatedOn>#{ProjectMediaflux.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
+    "          <UpdatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
     "          <Department>RDSS</Department>\n" \
     "          <Department>PRDS</Department>\n" \
     "        </tigerdata:project>\n" \
