@@ -109,7 +109,8 @@ RSpec.describe ProjectMediaflux, type: :model do
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
-                  event_note_message: "Message filler"
+                  event_note_message: "Message filler",
+                  storage_performance_expectations: { "requested" => "standard" }
                 }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
@@ -134,7 +135,8 @@ RSpec.describe ProjectMediaflux, type: :model do
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
-                  event_note_message: "Message filler"
+                  event_note_message: "Message filler",
+                  storage_performance_expectations: { "requested" => "standard" }
                 }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session

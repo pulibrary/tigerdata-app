@@ -152,6 +152,7 @@ RSpec.describe ProjectMetadata, type: :model do
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  storage_performance_expectations: { requested: "Standard", approved: "Fast" },
                   event_note: "Other",
                   event_note_message: "Message filler"
                   }
@@ -169,6 +170,7 @@ RSpec.describe ProjectMetadata, type: :model do
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  storage_performance_expectations: { requested: "Standard", approved: "Fast" },
                   event_note: "Other",
                   event_note_message: "Message filler"
                   }
@@ -194,6 +196,7 @@ RSpec.describe ProjectMetadata, type: :model do
                   storage_capacity: {"size"=>{"approved"=>600, 
                   "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                  storage_performance_expectations: { requested: "Standard", approved: "Fast" },
                   event_note: "Other",
                   event_note_message: "Message filler"
                   }
@@ -244,6 +247,7 @@ RSpec.describe ProjectMetadata, type: :model do
                     storage_capacity: {"size"=>{"approved"=>600, 
                     "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
                     "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
+                    storage_performance_expectations: { requested: "Standard", approved: "Fast" },
                     event_note: "Other",
                     event_note_message: "Message filler"
                     }
