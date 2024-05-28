@@ -75,9 +75,30 @@ module Mediaflux
             path: asset.xpath("./path").text,
             type: asset.xpath("./type").text,
             namespace: asset.xpath("./namespace").text,
-            accumulators: asset.xpath("./collection/accumulator/value"), # list of accumulator values in xml format. Can parse further through xpath
-            project_id: asset.xpath("//tigerdata:project/ProjectID", "tigerdata" => "tigerdata").text,
-            project_directory: asset.xpath("//tigerdata:project/ProjectDirectory", "tigerdata" => "tigerdata").text
+            accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
+          }.merge(parse_project(asset))
+        end
+
+        def parse_project(asset)
+          project = asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first
+          if project.present?
+            {
+              project_id: project.xpath("./ProjectID").text,
+              project_directory: project.xpath("./ProjectDirectory").text,
+              submission: parse_submission(project)
+            }
+          else
+            {}
+          end
+        end
+
+        def parse_submission(project)
+          submission = project.xpath("./Submission")
+          {
+            requested_by: submission.xpath("./RequestedBy").text,
+            requested_on: submission.xpath("./RequestDateTime").text,
+            approved_by: submission.xpath("./ApprovedBy").text,
+            approved_on: submission.xpath("./ApprovalDateTime").text
           }
         end
     end

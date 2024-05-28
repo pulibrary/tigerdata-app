@@ -48,6 +48,10 @@ RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
         expect(metadata[:quota_allocation]).to eq("300 GB")
         expect(metadata[:project_directory]).to eq("accum-07576")
         expect(metadata[:project_id]).to eq("doi-not-generated")
+        expect(metadata[:submission]).to eq({ approved_by: "",
+                                              approved_on: "",
+                                              requested_by: "cac9",
+                                              requested_on: "06-May-2024 14:04:49" })
         expect(WebMock).to have_requested(:post, mediflux_url)
       end
     end
