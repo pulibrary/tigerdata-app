@@ -72,7 +72,7 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "lib-ponyexpr.princeton.edu"
+    address: "lib-ponyexpr-prod.princeton.edu"
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
