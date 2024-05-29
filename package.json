@@ -1,6 +1,6 @@
 {
   "name": "tiger-data-app",
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@4.2.2",
   "browserslist": [
     "defaults"
   ],
