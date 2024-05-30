@@ -65,6 +65,7 @@ gem "mailcatcher"
 gem "net-http-persistent"
 gem "sidekiq"
 
+gem "whenever", require: false
 group :staging, :production do
   gem "ddtrace", require: "ddtrace/auto_instrument"
 end

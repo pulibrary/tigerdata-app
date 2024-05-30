@@ -9,9 +9,9 @@ namespace :exports do
     end
   end
 
-  desc "Deletes files that are too old (default to 30 days)"
+  desc "Deletes files that are too old (default to 7 days)"
   task :delete_old, [:days] => [:environment] do |_, args|
-    days = (args[:days] || "30").to_i
+    days = (args[:days] || "7").to_i
     pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
     scan_directory(pathname.join("*.csv")).each do |file|
       if file[:age] > days
