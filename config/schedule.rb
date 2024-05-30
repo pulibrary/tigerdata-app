@@ -20,6 +20,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.week do
+every 1.day do
   rake "exports:delete_old"
 end
