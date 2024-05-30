@@ -21,5 +21,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.week do
-  rake exports: delete_old
+  rake "exports:delete_old"
 end
