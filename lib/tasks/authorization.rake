@@ -9,7 +9,7 @@ namespace :authorization do
     main_logon = Mediaflux::Http::LogonRequest.new
     main_logon.resolve
     time_action("1 New Token") do
-      create = Mediaflux::Http::CreateTokenRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
+      create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
                                                        session_token: main_logon.session_token)
       identity_token = create.identity
       logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
@@ -19,7 +19,7 @@ namespace :authorization do
 
     time_action("1000 New Tokens") do
       1000.times do
-        create = Mediaflux::Http::CreateTokenRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
+        create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
                                                          session_token: main_logon.session_token)
         identity_token = create.identity
         logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
@@ -33,7 +33,7 @@ namespace :authorization do
   task by_existing_token:  :environment do
     logon = Mediaflux::Http::LogonRequest.new
     logon.resolve
-    create = Mediaflux::Http::CreateTokenRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
+    create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
     identity_token = create.identity
     time_action("1 Existing Token") do
       logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
@@ -98,7 +98,7 @@ namespace :authorization do
   task service_with_token:  :environment do
     logon = Mediaflux::Http::LogonRequest.new
     logon.resolve
-    create = Mediaflux::Http::CreateTokenRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
+    create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
     identity_token = create.identity
     time_action("1 list namespaces with token") do
       sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)

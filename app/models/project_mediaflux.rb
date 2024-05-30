@@ -62,14 +62,14 @@ class ProjectMediaflux
   # @param mediaflux_project_id [] the id of the project that needs accumulators
   # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
   def self.create_accumulators(mediaflux_project_id:, session_id:)
-    accum_count = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(
+    accum_count = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
       session_token: session_id, 
       name: "accum-count", 
       collection: mediaflux_project_id, 
       type: "collection.asset.count"
       )
     accum_count.resolve
-    accum_size = Mediaflux::Http::CreateCollectionAccumulatorRequest.new(
+    accum_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
       session_token: session_id, 
       name: "accum-size", 
       collection: mediaflux_project_id, 
@@ -81,7 +81,7 @@ class ProjectMediaflux
   def self.create_quota(project:, mediaflux_project_id:, session_id:)
     #TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
     allocation = project.metadata_json["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata_json["storage_capacity"]["unit"]["requested"]
-    quota_request = Mediaflux::Http::CreateCollectionQuotaRequest.new(
+    quota_request = Mediaflux::Http::QuotaCreateCollectionRequest.new(
       session_token: session_id,
       collection: mediaflux_project_id,
       allocation: allocation

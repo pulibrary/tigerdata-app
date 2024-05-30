@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::CreateTokenRequest, type: :model do
+RSpec.describe Mediaflux::Http::TokenCreateRequest, type: :model do
   subject(:request) { described_class.new(session_token: session_token, domain: "example", user: "atest") }
 
   let(:session_token) { "test-session-token" }
