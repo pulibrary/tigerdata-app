@@ -6,6 +6,20 @@ end
 
 # Take an instance of Project and adds it to MediaFlux
 class ProjectMediaflux
+
+  attr_reader :project, :session_id, :xml_namespace, :store_name, :project_name, :project_parent
+
+  def initialize(project:, session_id:, xml_namespace: nil)
+    @project = project
+    @session_id = session_id
+    @xml_namespace = xml_namespace
+    @store_name = Store.default(session_id: session_id).name
+    @project_name = project.project_directory
+    @project_parent = Rails.configuration.mediaflux["api_root_collection"]
+    # Create a collection asset under the root namespace and set its metadata
+    prepare_parent_collection
+  end
+
   # Create a project in MediaFlux
   #
   # @param project [Project] the project that needs to be added to MediaFlux
@@ -13,48 +27,72 @@ class ProjectMediaflux
   # @param xml_namespace [] 
   # @return [String] The id of the project that got created
   def self.create!(project:, session_id:, xml_namespace: nil)
-    store_name = Store.default(session_id: session_id).name
+    pm = ProjectMediaflux.new(project: project, session_id: session_id, xml_namespace: xml_namespace)
 
     # Make sure the root namespace exists
-    create_root_ns(session_id: session_id)
+    pm.create_root_ns
 
     # Create a namespace for the project
-    # The namespace is directly under our root namespace'
-    project_name = project.project_directory
-    project_namespace = "#{project_name}NS"
-    namespace = Mediaflux::Http::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
-    if namespace.error?
-      raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
-    end
-    # Create a collection asset under the root namespace and set its metadata
-    tigerdata_values = project_values(project: project)
-    project_parent = Rails.configuration.mediaflux["api_root_collection"]
-    prepare_parent_collection(project_parent:, session_id:)
-    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project.project_directory_short, tigerdata_values: tigerdata_values,
-                                                             xml_namespace: xml_namespace, pid: project_parent)
+    pm.create_project_ns
+
+    # Create the project asset in MediaFlux
+    id = pm.create_project_asset
+
+    self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
+    self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
+    id
+  end
+
+  # Create a project asset in MediaFlux
+  def create_project_asset
+    create_request = Mediaflux::Http::AssetCreateRequest.new(
+                      session_token: @session_id, 
+                      namespace: @project_namespace, 
+                      name: @project.project_directory_short, 
+                      tigerdata_values: @project_values,
+                      xml_namespace: @xml_namespace, 
+                      pid: @project_parent
+                      )
     id = create_request.id
     if id.blank?
       response_error = create_request.response_error
       case response_error[:message]
-      when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
+      when "failed: The namespace #{@project_namespace} already contains an asset named '#{@project_name}'"
         raise "Project name already taken"
       when /'asset.create' failed/
-
         # Ensure that the metadata validations are run
-        if project.valid?
+        if @project.valid?
           raise response_error[:message]  # something strange went wrong
         else
-          raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.errors)
+          raise TigerData::MissingMetadata.missing_metadata(
+                  schema_version: ::TigerdataSchema::SCHEMA_VERSION, 
+                  errors: project.errors
+                  )
         end
       else
         raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
       end
     end
-    project.mediaflux_id = id
-    project.save!
-    self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
-    self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
+    @project.mediaflux_id = id
+    @project.save!
     id
+  end
+
+  def project_namespace 
+    "#{@project_name}NS"
+  end
+
+  # Create a namespace for the project
+  def create_project_ns
+    namespace = Mediaflux::Http::NamespaceCreateRequest.new(
+                  namespace: project_namespace, 
+                  description: "Namespace for project #{@project.title}", 
+                  store: @store_name, 
+                  session_token: @session_id
+                  )
+    if namespace.error?
+      raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
+    end
   end
 
   # Create accumulators for all newly created mediaflux projects
@@ -96,6 +134,30 @@ class ProjectMediaflux
 
   # Translates database record into mediaflux meta document.
   # This is where the data for XML payload is generated.
+  def project_values
+    split_capacity  = @project.metadata[:storage_capacity_requested]&.split(" ") || []
+    values = {
+      project_directory: @project.project_directory,
+      title: @project.metadata[:title],
+      description: @project.metadata[:description],
+      status: @project.metadata[:status],
+      data_sponsor: @project.metadata[:data_sponsor],
+      data_manager: @project.metadata[:data_manager],
+      data_user_read_only: @project.metadata[:data_user_read_only],
+      data_user_read_write: @project.metadata[:data_user_read_write],
+      departments: @project.metadata[:departments],
+      created_on: MediafluxTime.format_date_for_mediaflux(@project.metadata[:created_on]),
+      created_by: @project.metadata[:created_by],
+      updated_on: MediafluxTime.format_date_for_mediaflux(@project.metadata[:updated_on]),
+      updated_by: @project.metadata[:updated_by],
+      project_id: @project.metadata[:project_id],
+      storage_capacity: @project.metadata[:storage_capacity].symbolize_keys,
+      storage_performance: @project.metadata[:storage_performance_expectations].symbolize_keys,
+      project_purpose: @project.metadata[:project_purpose]
+    }
+    values.with_indifferent_access
+  end
+
   def self.project_values(project:)
     split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
     values = {
@@ -136,32 +198,41 @@ class ProjectMediaflux
     Nokogiri::XML.parse(xml_body)
   end
 
-  def self.create_root_ns(session_id:)
+  # Create the root namespace if it does not exist
+  def create_root_ns
     root_namespace = Rails.configuration.mediaflux["api_root_ns"]
-    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
+    namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(
+                          path: root_namespace, 
+                          session_token: @session_id
+                          )
     if namespace_request.exists?
-      Rails.logger.info "Root namespace #{root_namespace} already exists"
+      Rails.logger.debug "Root namespace #{root_namespace} already exists"
     else
       Rails.logger.info "Created root namespace #{root_namespace}"
-      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(namespace: root_namespace, description: "TigerData client app root namespace",
-                                                                      store: Store.all(session_id: session_id).first.name,
-                                                                      session_token: session_id)
+      namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(
+                            namespace: root_namespace, 
+                            description: "TigerData client app root namespace",
+                            store: Store.all(session_id: @session_id).first.name,
+                            session_token: @session_id)
       namespace_request.response_body
     end
   end
 
-  class << self
-
-    private
-      def prepare_parent_collection(project_parent:, session_id:)
-        get_parent = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project_parent)
-        if get_parent.error?
-          if project_parent.include?("path=")
-            create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
-                                                                            name: Rails.configuration.mediaflux["api_root_collection_name"])
-            raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
-          end
-        end    
-      end
-  end
+  private
+    def prepare_parent_collection
+      get_parent = Mediaflux::Http::AssetMetadataRequest.new(
+                    session_token: @session_id, 
+                    id: @project_parent
+                    )
+      if get_parent.error?
+        if project_parent.include?("path=")
+          create_parent_request = Mediaflux::Http::AssetCreateRequest.new(
+                                    session_token: @session_id, 
+                                    namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
+                                    name: Rails.configuration.mediaflux["api_root_collection_name"]
+                                    )
+          raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
+        end
+      end    
+    end
 end

@@ -170,7 +170,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
   describe "#save_in_mediaflux", connect_to_mediaflux: true do
     let(:user) { FactoryBot.create(:user) }
-    let(:project) { FactoryBot.create(:project_with_doi) }
+    let(:project) { FactoryBot.create(:project_with_dynamic_directory) }
     it "calls ProjectMediaflux to create the project and save the id" do
       expect(project.mediaflux_id).to be nil
       project.save_in_mediaflux(session_id: user.mediaflux_session)
