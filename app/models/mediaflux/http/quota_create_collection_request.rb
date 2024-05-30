@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class CreateCollectionQuotaRequest < Request
+    class QuotaCreateCollectionRequest < Request
       attr_reader :name, :collection, :allocation
 
       # Constructor

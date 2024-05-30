@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   module Http
-    class CreateTokenRequest < Request
+    class TokenCreateRequest < Request
       # Specifies the logon service within the Mediaflux API
       # @return [String]
       def self.service

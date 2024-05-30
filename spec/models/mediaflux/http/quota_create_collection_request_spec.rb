@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::CreateCollectionQuotaRequest, type: :model do
+RSpec.describe Mediaflux::Http::QuotaCreateCollectionRequest, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
 
   let(:create_response) do
