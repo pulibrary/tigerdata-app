@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 class ListProjectContentsJob < ApplicationJob
+  after_perform do |job|
+    uid = job.arguments.first[:user_id]
+    DeleteUserJob.set(wait: 1.week).perform_later(job_id: job_id, user_id: uid)
+  end
+
   def perform(user_id:, project_id:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
