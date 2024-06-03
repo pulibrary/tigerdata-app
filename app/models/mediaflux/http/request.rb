@@ -142,6 +142,13 @@ module Mediaflux
         xml.strip.gsub("\"","'").gsub("<args>","").gsub("</args>","")
       end
 
+      # This method is used for transforming iso8601 dates to dates that MediaFlux likes
+      # Take a string like "2024-02-26T10:33:11-05:00" and convert this string to "22-FEB-2024 13:57:19"
+      def self.format_date_for_mediaflux(iso8601_date)
+        return if iso8601_date.nil?
+        Time.parse(iso8601_date).strftime("%e-%b-%Y %H:%M:%S").upcase
+      end
+
       private
 
         def http_request

@@ -43,11 +43,16 @@ class ProjectMetadata
     project.metadata_json["status"] = Project::APPROVED_STATUS
     project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
     project.metadata_json["storage_capacity"] = params[:storage_capacity]
+    project.metadata_json["storage_performance_expectations"] = params[:storage_performance_expectations]
 
     project.save!
+    generate_approval_events(params[:approval_note])
+  end
+
+  def generate_approval_events(note)
     # create two provenance events, one for approving the project and another for changing the status of the project
     project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}",
-                                     event_note: params[:approval_note])
+                                     event_note: note)
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
   end
 

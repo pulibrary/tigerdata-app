@@ -17,6 +17,8 @@ FactoryBot.define do
       project_purpose { "research" }
       project_directory { "big-data" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
+      approved_by { nil }
+      approved_on { nil }
     end
     mediaflux_id { nil }
     metadata do
@@ -38,7 +40,9 @@ FactoryBot.define do
         storage_capacity: storage_capacity,
         storage_performance_expectations: storage_performance,
         project_purpose: project_purpose,
-        schema_version: schema_version
+        schema_version: schema_version,
+        approved_by: approved_by,
+        approved_on: approved_on
       }
     end
     factory :project_with_doi, class: "Project" do
@@ -51,6 +55,17 @@ FactoryBot.define do
         sequence :project_directory do |n|
           Project.safe_name("#{FFaker::Food.fruit}#{n}")
         end
+      end
+    end
+
+    factory :approved_project, class: "Project" do
+      transient do
+        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } } }
+        storage_performance { { requested: "standard", approved: "performant" } }
+        status { "approved" }
+        approved_by { FactoryBot.create(:sysadmin).uid }
+        approved_on { Time.current.in_time_zone("America/New_York").iso8601 }
+        project_id { "10.34770/tbd" }
       end
     end
   end
