@@ -1,97 +1,110 @@
-<% unless current_user %>
-  <h1>Welcome to TigerData</h1>
-  Please log in.
-<% else %>
-  <h1>Welcome, <%= current_user.given_name %>!</h1>
-  <div style="display: inline-flex">
-    <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
-    <div id="dashboard-projects">
-      <h1>My Projects</h1>
-      <% if @sponsored_projects.size > 0 %>
-        <h2>Sponsored by Me</h2>
-        <ul class="project-list">
-          <% @sponsored_projects.each do |project| %>
-            <li><%= link_to(project.title, project) %> </li>
+<div id="welcome">
+  <% unless current_user %>
+    <h1>Welcome to TigerData</h1>
+    Please log in.
+  <% else %>
+    <h1>Welcome, <%= current_user.given_name %>!</h1>
+    <% if !Rails.env.production? && current_user.trainer?%>
+      <h3 class="emulation">View As</h4>
+      <select class="emulation" name="emulation_bar" id="emulation_bar" required>
+          <option disabled="disabled" <%= "selected" if current_user.trainer?%>>Trainer</option>
+          <option value="Eligible Data Sponsor" <%= "selected" if current_user.eligible_sponsor%>>Eligible Data Sponsor</option>
+          <option value="Eligible Data Manager" <%= "selected" if current_user.eligible_manager%>>Eligible Data Manager</option>
+          <option value="Eligible Data User" <%= "selected" if @eligible_sysadmin%>>Eligible Data User</option>
+          <option value="System Administrator" <%= "selected" if current_user.sysadmin%>>System Administrator</option>
+          <option value="Return to Self">Return to Self</option>
+      </select>
+    <% end %>
+    <div style="display: inline-flex">
+      <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
+      <div id="dashboard-projects">
+        <h1>My Projects</h1>
+        <% if @sponsored_projects.size > 0 %>
+          <h2>Sponsored by Me</h2>
+          <ul class="project-list">
+            <% @sponsored_projects.each do |project| %>
+              <li><%= link_to(project.title, project) %> </li>
+            <%end%>
+          </ul>
+        <% end %>
+        <% if @managed_projects.size > 0 %>
+          <h2>Managed by Me</h2>
+          <ul class="project-list">
+            <% @managed_projects.each do |project| %>
+              <li><%= link_to(project.title, project) %> </li>
+            <%end%>
+          </ul>
+        <% end %>
+        <% if @data_user_projects.size > 0 %>
+          <h2>Shared with Me</h2>
+          <ul class="project-list">
+            <% @data_user_projects.each do |project| %>
+              <li><%= link_to(project.title, project) %> </li>
+            <%end%>
+          </ul>
+        <% end %>
+        <div>
+          <br/>
+          <%if current_user.eligible_sponsor?%>
+            <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
           <%end%>
-        </ul>
-      <% end %>
-      <% if @managed_projects.size > 0 %>
-        <h2>Managed by Me</h2>
-        <ul class="project-list">
-          <% @managed_projects.each do |project| %>
-            <li><%= link_to(project.title, project) %> </li>
-          <%end%>
-        </ul>
-      <% end %>
-      <% if @data_user_projects.size > 0 %>
-        <h2>Shared with Me</h2>
-        <ul class="project-list">
-          <% @data_user_projects.each do |project| %>
-            <li><%= link_to(project.title, project) %> </li>
-          <%end%>
-        </ul>
-      <% end %>
-      <div>
-        <br/>
-        <%if current_user.eligible_sponsor?%>
-          <%= link_to "New Project", new_project_path(), class: "btn btn-dark btn-sm" %>
-        <%end%>
+        </div>
       </div>
+      <div id="dashboard-activity">
+          <h2>Recent Activity</h2>
+          <% if !@my_jobs.empty? %>
+          <ul>
+            <% @my_jobs.each do |job| %>
+              <li>
+                <%= job.title %>
+                <% if job.complete? %>
+                  (<%= link_to("download", project_file_list_download_path(job_id: job.job_id, target: "_blank")) %>)
+                <% end %>
+                <ul>
+                  <li><%= job.description %></li>
+                  <% if job.completed_at.present? %>
+                    <li><%= job.completion %></li>
+                  <% end %>
+                </ul>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <% end %>
     </div>
-    <div id="dashboard-activity">
-        <h2>Recent Activity</h2>
-        <% if !@my_jobs.empty? %>
-        <ul>
-          <% @my_jobs.each do |job| %>
-            <li>
-              <%= job.title %>
-              <% if job.complete? %>
-                (<%= link_to("download", project_file_list_download_path(job_id: job.job_id, target: "_blank")) %>)
-              <% end %>
-              <ul>
-                <li><%= job.description %></li>
-                <% if job.completed_at.present? %>
-                  <li><%= job.completion %></li>
+    <div style="display: inline-flex">
+      <% if current_user.eligible_sysadmin?%>
+        <div id="dashboard-pending">
+          <h1>Project Administration</h1>
+            <h4>Pending Projects</h4>
+            <% if !@pending_projects.empty? %>
+              <ul class="project-list">
+                <% @pending_projects.each do |project| %>
+                  <li>
+                    <%= link_to(project.title, project) %>
+                  </li>
                 <% end %>
               </ul>
-            </li>
-          <% end %>
-        </ul>
-      <% end %>
+            <% else %>
+              <p> (none) </p>
+            <% end %>
+            <h4>Recently Approved Projects</h4>
+            <% if !@approved_projects.empty? %>
+              <table class="sysadmin-list">
+                <% @approved_projects.each_with_index do |project, index| %>
+                  <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
+                  <tr class ="<%=@row_css%>">
+                    <td><%= link_to(project.title, project) %> </td>
+                  </tr>
+                <% end %>
+              </table>
+              <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
+            <% else %>
+              <p> (none) </p>
+            <% end %>
+        </div>
+      <%end%>
     </div>
     <% end %>
   </div>
-  <div style="display: inline-flex">
-    <% if current_user.eligible_sysadmin?%>
-      <div id="dashboard-pending">
-        <h1>Project Administration</h1>
-          <h4>Pending Projects</h4>
-          <% if !@pending_projects.empty? %>
-            <ul class="project-list">
-              <% @pending_projects.each do |project| %>
-                <li>
-                  <%= link_to(project.title, project) %>
-                </li>
-              <% end %>
-            </ul>
-          <% else %>
-            <p> (none) </p>
-          <% end %>
-          <h4>Recently Approved Projects</h4>
-          <% if !@approved_projects.empty? %>
-            <table class="sysadmin-list">
-              <% @approved_projects.each_with_index do |project, index| %>
-                <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
-                <tr class ="<%=@row_css%>">
-                  <td><%= link_to(project.title, project) %> </td>
-                </tr>
-              <% end %>
-            </table>
-            <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
-          <% else %>
-            <p> (none) </p>
-          <% end %>
-      </div>
-    <%end%>
-  </div>
-  <% end %>
