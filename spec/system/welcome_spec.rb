@@ -107,8 +107,8 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
       end
     end
 
-    context "for tester-trainers" do 
-      it "shows the emulation bar" do 
+    context "for tester-trainers" do
+      it "shows the emulation bar" do
         sign_in current_user
         current_user.trainer = true
         current_user.save!
