@@ -12,15 +12,14 @@ class WelcomeController < ApplicationController
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @my_jobs = current_user.user_jobs
-    
+
     User.emulate(user: current_user, session_data: session)
   end
 
   def help; end
 
-  private
-    # def session_active?
-    #   User.reset_trainer
-    #   main_app.destroy_user_session
-    # end;
+  # def session_active?
+  #   User.reset_trainer
+  #   main_app.destroy_user_session
+  # end;
 end
