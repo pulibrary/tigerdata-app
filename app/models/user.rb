@@ -15,6 +15,7 @@ class User < ApplicationRecord
     return unless user.trainer
 
     # TODO: FIGURE OUT HOW TO MAKE EMULATION TEMPORARY AND TIED TO A SINGLE SESSION
+    Rails.logger.debug(session_data)
     if role == "sponsor"
       user.eligible_sponsor = true
     elsif role == "manager"
