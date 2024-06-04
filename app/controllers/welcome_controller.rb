@@ -13,7 +13,7 @@ class WelcomeController < ApplicationController
 
     @my_jobs = current_user.user_jobs
 
-    User.emulate(user: current_user, session_data: session)
+    #User.emulate(user: current_user, session_data: session)
   end
 
   def help; end
