@@ -10,6 +10,29 @@ class User < ApplicationRecord
 
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 
+  def self.emulate(user:, session_data:, role:)
+    return if Rails.env.production?
+    return unless user.trainer
+    
+    #TODO: FIGURE OUT HOW TO MAKE EMULATION TEMPORARY AND TIED TO A SINGLE SESSION
+    if role == "sponsor"
+      user.eligible_sponsor = true
+    elsif role == "manager"
+      user.eligible_manager = true 
+    elsif role == "sysadmin"
+      user.sysadmin = true 
+    else
+      user.reset_trainer()
+    end
+  end
+
+  def reset_trainer()
+    user = user 
+    if user.eligible_sponsor? or user.eligible_manager?
+      user.eligible_sponsor = false
+    end
+  end
+
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
