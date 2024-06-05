@@ -12,11 +12,16 @@ RSpec.configure do |config|
       Rails.application.load_tasks
       Rake::Task["schema:create"].invoke
       # Clean out the namespace before running tests to avoid collisions
-      user = FactoryBot.create :user
+      user = User.new
       Mediaflux::Http::NamespaceDestroyRequest.new(
         session_token: user.mediaflux_session,
         namespace: Rails.configuration.mediaflux[:api_root_ns]
       ).destroy
+      # then create it so it exists for any tests
+      Mediaflux::Http::NamespaceCreateRequest.new(
+        session_token: user.mediaflux_session,
+        namespace: Rails.configuration.mediaflux[:api_root_ns]
+      ).resolve
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
