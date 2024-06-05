@@ -17,13 +17,13 @@ class WelcomeController < ApplicationController
   def emulate
     return if Rails.env.production?
     return unless current_user.trainer
-    
-    if params.key?("emulation_menu")  
+
+    if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
     end
     # TODO: POST TO EMULATE AND PASS THE UPDATED SESSION
     # call emulate_user on the user object
-  end;
+  end
 
   def help; end
 end
