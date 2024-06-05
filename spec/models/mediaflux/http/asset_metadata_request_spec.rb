@@ -39,7 +39,7 @@ RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
         metadata = metadata_request.metadata
         expect(metadata[:id]).to eq("1065")
         expect(metadata[:creator]).to eq("manager")
-        expect(metadata[:description]).to eq("")
+        expect(metadata[:description]).to eq("Description of project accum 07576")
         expect(metadata[:collection]).to be_truthy
         expect(metadata[:path]).to eq("/td-test-001/collection-96-58278")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
@@ -75,7 +75,7 @@ RSpec.describe Mediaflux::Http::AssetMetadataRequest, type: :model do
         metadata = metadata_request.metadata
         expect(metadata[:id]).to eq(valid_project.mediaflux_id.to_s)
         expect(metadata[:creator]).to eq("manager")
-        expect(metadata[:description]).to eq("")
+        expect(metadata[:description]).to eq("a random description")
         expect(metadata[:collection]).to be_truthy
         expect(metadata[:path].include?(valid_project.metadata_json["project_directory"])).to be_truthy
         expect(metadata[:type]).to eq("application/arc-asset-collection")

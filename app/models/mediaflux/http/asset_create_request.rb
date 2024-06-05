@@ -7,16 +7,14 @@ module Mediaflux
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       # @param name [String] Name of the Asset
-      # @param collection [Boolean] create a collection asset if true
       # @param namespace [String] Optional Parent namespace for the asset to be created in
       # @param pid [String] Optional Parent collection id (use this or a namespace not both)
       # @param tigerdata_values [Hash] Optional parameter for the tigerdata metdata to be applied to the new asset in the meta field
       # @param xml_namespace [String]
-      def initialize(session_token:, namespace: nil, name:, collection: true, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
+      def initialize(session_token:, namespace: nil, name:, tigerdata_values: nil, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
         super(session_token: session_token)
         @namespace = namespace
         @asset_name = name
-        @collection = collection
         @tigerdata_values = tigerdata_values
         @xml_namespace = xml_namespace || self.class.default_xml_namespace
         @xml_namespace_uri = xml_namespace_uri || self.class.default_xml_namespace_uri
@@ -61,12 +59,11 @@ module Mediaflux
         end
 
         def collection_xml(xml)
-          return unless collection
           xml.collection do
             xml.parent.set_attribute("cascade-contained-asset-index", true)
             xml.parent.set_attribute("contained-asset-index", true)
             xml.parent.set_attribute("unique-name-index", true)
-            xml.text(collection)
+            xml.text(true)
           end
           xml.type "application/arc-asset-collection"
         end
