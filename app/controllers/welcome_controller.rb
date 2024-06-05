@@ -12,14 +12,18 @@ class WelcomeController < ApplicationController
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @my_jobs = current_user.user_jobs
-
-    # User.emulate(user: current_user, session_data: session)
   end
 
-  def help; end
+  def emulate
+    return if Rails.env.production?
+    return unless current_user.trainer
+    
+    if params.key?("emulation_menu")  
+      session[:emulation_role] = params[:emulation_menu]
+    end
+    # TODO: POST TO EMULATE AND PASS THE UPDATED SESSION
+    # call emulate_user on the user object
+  end;
 
-  # def session_active?
-  #   User.reset_trainer
-  #   main_app.destroy_user_session
-  # end;
+  def help; end
 end
