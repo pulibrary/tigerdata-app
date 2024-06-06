@@ -21,5 +21,63 @@ RSpec.describe WelcomeController do
       # assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
       #                  body: /<service name="system.logon">/)
     end
+
+    it "accepts a post to change the emulation role" do
+      user.trainer = true
+      user.save!
+      post :emulate, params: { emulation_menu: "sysadmin" }
+      expect(session[:emulation_role]).to eq "sysadmin"
+
+      get :index, session: session
+      expect(assigns(:current_user).sysadmin).to be_truthy
+    end
+
+    context "when a trainer is emulating sysadmin" do
+      it "renders the index page" do
+        user.trainer = true
+        user.save!
+        get :index, session: { emulation_role: "sysadmin" }
+        expect(response).to render_template("index")
+
+        expect(assigns(:current_user).sysadmin).to be_truthy
+        expect(assigns(:current_user).eligible_sponsor).to be_falsey
+        expect(assigns(:current_user).eligible_manager).to be_falsey
+      end
+    end
+    context "when a trainer is emulating eligible_sponsor" do
+      it "renders the index page" do
+        user.trainer = true
+        user.save!
+        get :index, session: { emulation_role: "sponsor" }
+        expect(response).to render_template("index")
+        expect(assigns(:current_user).sysadmin).to be_falsey
+        expect(assigns(:current_user).eligible_sponsor).to be_truthy
+        expect(assigns(:current_user).eligible_manager).to be_falsey
+      end
+    end
+    context "when a trainer is emulating eligible_manager" do
+      it "renders the index page" do
+        user.trainer = true
+        user.save!
+        get :index, session: { emulation_role: "manager" }
+        expect(response).to render_template("index")
+
+        expect(assigns(:current_user).sysadmin).to be_falsey
+        expect(assigns(:current_user).eligible_sponsor).to be_falsey
+        expect(assigns(:current_user).eligible_manager).to be_truthy
+      end
+    end
+    context "when a trainer is emulating eligible_data_user" do
+      it "renders the index page" do
+        user.trainer = true
+        user.save!
+        get :index, session: { emulation_role: "data_user" }
+        expect(response).to render_template("index")
+
+        expect(assigns(:current_user).sysadmin).to be_falsey
+        expect(assigns(:current_user).eligible_sponsor).to be_falsey
+        expect(assigns(:current_user).eligible_manager).to be_falsey
+      end
+    end
   end
 end

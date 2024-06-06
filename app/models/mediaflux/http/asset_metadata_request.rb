@@ -69,6 +69,7 @@ module Mediaflux
         def parse(asset)
           {
             id: asset.xpath("./@id").text,
+            name: asset.xpath("./name").text,
             creator: asset.xpath("./creator/user").text,
             description: asset.xpath("./description").text,
             collection: asset.xpath("./@collection")&.text == "true",
@@ -76,20 +77,25 @@ module Mediaflux
             type: asset.xpath("./type").text,
             namespace: asset.xpath("./namespace").text,
             accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
-          }.merge(parse_project(asset))
+          }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first))
         end
 
-        def parse_project(asset)
-          project = asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first
-          if project.present?
-            {
-              project_id: project.xpath("./ProjectID").text,
-              project_directory: project.xpath("./ProjectDirectory").text,
-              submission: parse_submission(project)
-            }
-          else
-            {}
-          end
+        def parse_project(project)
+          return {} if project.blank?
+          {
+            created_by: project.xpath("./CreatedBy").text,
+            created_on: project.xpath("./CreatedOn").text,
+            description: project.xpath("./Description").text,
+            data_sponsor: project.xpath("./DataSponsor").text,
+            data_manager: project.xpath("./DataManager").text,
+            departments: project.xpath("./Department").children.map(&:text),
+            project_directory: project.xpath("./ProjectDirectory").text,
+            project_id: project.xpath("./ProjectID").text,
+            ro_users: project.xpath("./DataUser[@ReadOnly]").map(&:text),
+            rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
+            submission: parse_submission(project),
+            title: project.xpath("./Title").text
+          }
         end
 
         def parse_submission(project)

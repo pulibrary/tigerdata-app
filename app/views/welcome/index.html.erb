@@ -5,8 +5,8 @@
   <% else %>
     <h1>Welcome, <%= current_user.given_name %>!</h1>
     <% if !Rails.env.production? && current_user.trainer?%>
-      <h3 class="emulation">View As</h4>
-      <select class="emulation" name="emulation_bar" id="emulation_bar" required>
+      <label for="emulation-menu" name= "emulation-menu" class="form-label">View As</label>
+      <select id="emulation-menu" name="emulation-menu" class="form-dropdown" required>
           <option disabled="disabled" <%= "selected" if current_user.trainer?%>>Trainer</option>
           <option value="Eligible Data Sponsor" <%= "selected" if current_user.eligible_sponsor%>>Eligible Data Sponsor</option>
           <option value="Eligible Data Manager" <%= "selected" if current_user.eligible_manager%>>Eligible Data Manager</option>
@@ -14,6 +14,8 @@
           <option value="System Administrator" <%= "selected" if current_user.sysadmin%>>System Administrator</option>
           <option value="Return to Self">Return to Self</option>
       </select>
+      <button type="submit" class="btn btn-primary">Emulate</button> 
+    
     <% end %>
     <div style="display: inline-flex">
       <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
