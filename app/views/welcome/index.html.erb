@@ -5,7 +5,7 @@
   <% else %>
     <h1>Welcome, <%= current_user.given_name %>!</h1>
     <% if !Rails.env.production? && current_user.trainer?%>
-      <label for="emulation-menu" name= "emulation-menu" class="form-label">View as</label>
+      <label for="emulation-menu" name= "emulation-menu" class="form-label">View As</label>
       <select id="emulation-menu" name="emulation-menu" class="form-dropdown" required>
           <option disabled="disabled" <%= "selected" if current_user.trainer?%>>Trainer</option>
           <option value="Eligible Data Sponsor" <%= "selected" if current_user.eligible_sponsor%>>Eligible Data Sponsor</option>

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   around_action :mediaflux_session
-  before_action :emulate_user # should this be after_emulate instead of before_action?
+  before_action :emulate_user
 
   def new_session_path(_scope)
     new_user_session_path
@@ -23,27 +23,43 @@ class ApplicationController < ActionController::Base
 
     def emulate_user
       return if Rails.env.production?
-      return unless current_user.trainer
+      return if current_user.blank? || !current_user.trainer
 
       if session[:emulation_role]
         role = session[:emulation_role]
         if role == "sponsor"
-          current_user.eligible_sponsor = true
-          current_user.eligible_manager = false
-          current_user.sysadmin = false
+          emulate_sponsor
         elsif role == "manager"
-          current_user.eligible_sponsor = false
-          current_user.eligible_manager = true
-          current_user.sysadmin = false
+          emulate_manager
         elsif role == "sysadmin"
-          current_user.eligible_sponsor = false
-          current_user.eligible_manager = false
-          current_user.sysadmin = true
+          emulate_sysadmin
         elsif role == "data_user"
-          current_user.eligible_sponsor = false
-          current_user.eligible_manager = false
-          current_user.sysadmin = false
+          emulate_data_user
         end
       end
+    end
+
+    def emulate_sponsor
+      current_user.eligible_sponsor = true
+      current_user.eligible_manager = false
+      current_user.sysadmin = false
+    end
+
+    def emulate_manager
+      current_user.eligible_manager = true
+      current_user.eligible_sponsor = false
+      current_user.sysadmin = false
+    end
+
+    def emulate_sysadmin
+      current_user.sysadmin = true
+      current_user.eligible_manager = false
+      current_user.eligible_sponsor = false
+    end
+
+    def emulate_data_user
+      current_user.eligible_sponsor = false
+      current_user.eligible_manager = false
+      current_user.sysadmin = false
     end
 end
