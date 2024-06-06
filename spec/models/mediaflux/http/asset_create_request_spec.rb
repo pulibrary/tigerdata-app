@@ -17,60 +17,31 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
         .to_return(status: 200, body: create_response, headers: {})
     end
 
-    it "parses a metadata response" do
-      create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false)
-      expect(create_request.id).to eq("1068")
-      expect(a_request(:post, mediflux_url).with do |req| 
-        req.body.include?("<name>testasset</name>")
-      end
-      ).to have_been_made
-    end
+    it "sends the metadata to the server", connect_to_mediaflux: true do
+      data_user_ro = FactoryBot.create :user
+      data_user_rw = FactoryBot.create :user
+      session_id =  data_user_ro.mediaflux_session
 
-    context "an asset with metadata" do
-      before do
-        stub_request(:post, mediflux_url).to_return(status: 200, body: create_response, headers: {})
-      end
-      it "sends the metadata to the server" do
-        data_user_ro = FactoryBot.create :user
-        data_user_rw = FactoryBot.create :user
-        created_on = Time.current.in_time_zone("America/New_York").iso8601
-        project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on
-        tigerdata_values = ProjectMediaflux.project_values(project:)
-        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: false, tigerdata_values: tigerdata_values)
-        expect(create_request.id).to eq("1068")
-        puts "created on #{project.metadata[:created_on]}"
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<name>testasset</name>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Title>#{project.metadata[:title]}</Title>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Description>#{project.metadata[:description]}</Description>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataManager>#{project.metadata[:data_manager]}</DataManager>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].first}</Department>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<Department>#{project.metadata[:departments].last}</Department>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedOn>#{MediafluxTime.format_date_for_mediaflux(created_on)}</CreatedOn>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<CreatedBy>#{project.metadata[:created_by]}</CreatedBy>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser ReadOnly=\"true\">#{data_user_ro.uid}</DataUser>") }).to have_been_made
-        expect(a_request(:post, mediflux_url).with { |req| req.body.include?("<DataUser>#{data_user_rw.uid}</DataUser>") }).to have_been_made
-      end
-    end
-
-    context "A collection" do
-      before do
-        stub_request(:post, mediflux_url)
-          .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.create\" session=\"secretsecret/2/31\">\n    "\
-                      "<args>\n      <name>testasset</name>\n      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n"\
-                      "      <type>application/arc-asset-collection</type>\n    </args>\n  </service>\n</request>\n")
-          .to_return(status: 200, body: create_response, headers: {})
-      end
-
-      it "parses a metadata response" do
-        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: true)
-        expect(create_request.id).to eq("1068")
-        expect(a_request(:post, mediflux_url).with do |req| 
-            req.body.include?("<name>testasset</name>") && 
-            req.body.include?("<type>application/arc-asset-collection</type>")
-          end
-        ).to have_been_made
-      end
+      created_on = Time.current.in_time_zone("America/New_York").iso8601
+      project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on, project_id: "abc/123"
+      tigerdata_values = ProjectMediaflux.project_values(project:)
+      create_request = described_class.new(session_token: session_id, name: "testasset", tigerdata_values: tigerdata_values, namespace: Rails.configuration.mediaflux[:api_root_ns])
+      expect(create_request.response_error).to be_blank
+      expect(create_request.id).not_to be_blank
+      req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
+      metadata  = req.metadata
+      
+      puts "created on #{project.metadata[:created_on]}"
+      expect(metadata[:name]).to eq("testasset")
+      expect(metadata[:title]).to eq(project.metadata[:title])
+      expect(metadata[:description]).to eq(project.metadata[:description])
+      expect(metadata[:data_sponsor]).to eq(project.metadata[:data_sponsor])
+      expect(metadata[:departments]).to eq(project.metadata[:departments])
+      # TODO Should really utilize MediafluxTime, but the time class upcases the date and does not zero pad the day
+      expect(metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
+      expect(metadata[:created_by]).to eq(project.metadata[:created_by])
+      expect(metadata[:ro_users]).to eq([data_user_ro.uid])
+      expect(metadata[:rw_users]).to eq([data_user_rw.uid])
     end
 
     context "A collection within a collection" do
@@ -84,7 +55,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       end
 
       it "parses a metadata response" do
-        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", collection: true, pid: "5678")
+        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", pid: "5678")
         expect(create_request.id).to eq("1068")
         expect(a_request(:post, mediflux_url).with do |req| 
             req.body.include?("<name>testasset</name>") && 
@@ -100,7 +71,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
     it "creates the asset create payload" do
       project = FactoryBot.create :project, project_id: "abc-123"
       tigerdata_values = ProjectMediaflux.project_values(project:)
-      create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
+      create_request = described_class.new(session_token: nil, name: "testasset", tigerdata_values: tigerdata_values)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
       "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
       "  <service name=\"asset.create\">\n" \
@@ -132,6 +103,8 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
       "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
       "        </tigerdata:project>\n" \
       "      </meta>\n" \
+      "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
+      "      <type>application/arc-asset-collection</type>\n" \
       "    </args>\n" \
       "  </service>\n" \
       "</request>\n"
@@ -143,7 +116,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
     it "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
       project = FactoryBot.create :project, project_id: "abc-123"
       tigerdata_values = ProjectMediaflux.project_values(project:)
-      create_request = described_class.new(session_token: nil, name: "testasset", collection: false, tigerdata_values: tigerdata_values)
+      create_request = described_class.new(session_token: nil, name: "testasset", tigerdata_values: tigerdata_values)
       expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \
                      "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
                      "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
@@ -152,7 +125,9 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
                      "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
                      "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
                      "<RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
-                     "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta></service></request>"
+                     "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta>" \
+                     "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
+                     "<type>application/arc-asset-collection</type></service></request>"
       expect(create_request.xtoshell_xml).to eq(expected_xml)
     end
   end
