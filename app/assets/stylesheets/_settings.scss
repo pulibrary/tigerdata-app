@@ -60,26 +60,38 @@
   }
 }
 
-#dashboard-projects {
-  @include dashboard-component;
-  min-width: 40em;
- 
-  .btn-dark {
-    margin-left: 0.5em;
-    margin-bottom: 0.5em;
+#welcome {
+  .emulation {
+    display: inline-flex;
   }
+  
+  #emulation_bar {
+    margin-left: 5px
+  }
+
+  #dashboard-projects {
+    @include dashboard-component;
+    min-width: 40em;
+  
+    .btn-dark {
+      margin-left: 0.5em;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  #dashboard-activity{
+    @include dashboard-component;
+    min-height: 15em;
+  }
+
+  #dashboard-pending{
+    @include dashboard-component;
+    margin-top: 1em;
+    min-width: 30em;
+  }
+
 }
 
-#dashboard-activity{
-  @include dashboard-component;
-  min-height: 15em;
-}
-
-#dashboard-pending{
-  @include dashboard-component;
-  margin-top: 1em;
-  min-width: 30em;
-}
 
 #show{
   .pending-project {

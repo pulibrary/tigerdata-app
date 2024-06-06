@@ -9,8 +9,20 @@ class WelcomeController < ApplicationController
     @my_projects_count = @sponsored_projects.count + @managed_projects.count + @data_user_projects.count
     @pending_projects = Project.pending_projects
     @approved_projects = Project.approved_projects
+    @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @my_jobs = current_user.user_jobs
+  end
+
+  def emulate
+    return if Rails.env.production?
+    return unless current_user.trainer
+
+    if params.key?("emulation_menu")
+      session[:emulation_role] = params[:emulation_menu]
+    end
+    # TODO: POST TO EMULATE AND PASS THE UPDATED SESSION
+    # call emulate_user on the user object
   end
 
   def help; end

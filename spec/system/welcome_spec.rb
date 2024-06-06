@@ -106,5 +106,15 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).to have_content("Approved Projects")
       end
     end
+
+    context "for tester-trainers" do
+      it "shows the emulation bar" do
+        sign_in current_user
+        current_user.trainer = true
+        current_user.save!
+        visit "/"
+        expect(page).to have_select("emulation-menu")
+      end
+    end
   end
 end
