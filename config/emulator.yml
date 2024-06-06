@@ -1,0 +1,14 @@
+---
+development:
+  title: As an approved tester-trainer
+  body: You may select another role to emulate
+qa:
+  title: As an approved tester-trainer
+  body: You may select another role to emulate
+staging:
+  title: As an approved tester-trainer
+  body: You may select another role to emulate
+test:
+  title: As an approved tester-trainer
+  body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
+
