@@ -2,9 +2,9 @@
   <div id="emulator">
   <h1><%= sanitize @emulator_title %></h1>
   <p><%= sanitize @emulator_body, attributes: %w(href target)%></p>
-  <% if !Rails.env.production? && current_user.trainer?%>
-      <label for="emulation-menu" name= "emulation-menu" class="form-label">Current Role:</label>
-      <select id="emulation-menu" name="emulation-menu" class="form-dropdown" required>
+  <form action="emulate" method="post" id="emulation-form">
+      <label for="emulation_menu" class="form-label">Current Role:</label>
+      <select id="emulation_menu" name="emulation_menu" class="form-dropdown" required>
           <option disabled="disabled" <%= "selected" if current_user.trainer?%>>Trainer</option>
           <option value="Eligible Data Sponsor" <%= "selected" if current_user.eligible_sponsor%>>Eligible Data Sponsor</option>
           <option value="Eligible Data Manager" <%= "selected" if current_user.eligible_manager%>>Eligible Data Manager</option>
@@ -13,6 +13,6 @@
           <option value="Return to Self">Return to Self</option>
       </select>
       <button type="submit" class="btn btn-dark btn-sm">Emulate</button> 
-    <% end %>
+    </form>
   </div>
 <% end %>

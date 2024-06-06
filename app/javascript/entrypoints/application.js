@@ -178,6 +178,22 @@ function showMoreLessSysAdmin() {
   });
 }
 
+function emulate(form) {
+  $(document).ready(function(e) {
+    $("[name='emulation_menu']").on('change', function() {
+      $.ajax({
+        type: "POST",
+        url: $("#emulation-form").attr("action"),
+        data: $("#emulation-form").serialize(),
+        success: function(data) {
+          $(".tnxforate").html(data)
+        }
+      });
+      debugger;
+    });
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -188,6 +204,7 @@ function initPage() {
   initListContentsModal();
   showMoreLessContent();
   showMoreLessSysAdmin();
+  emulate();
 }
 
 window.addEventListener('load', () => initPage());
