@@ -16,6 +16,8 @@ class WelcomeController < ApplicationController
 
   def emulate
     return if Rails.env.production?
+    return if current_user.nil? || current_user.id.nil?
+
     absolute_user = User.find(current_user.id)
     return unless absolute_user.trainer
 
