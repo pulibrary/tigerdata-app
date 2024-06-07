@@ -21,8 +21,6 @@ class WelcomeController < ApplicationController
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
     end
-    # TODO: POST TO EMULATE AND PASS THE UPDATED SESSION
-    # call emulate_user on the user object
   end
 
   def help; end

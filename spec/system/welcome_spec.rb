@@ -113,7 +113,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         current_user.trainer = true
         current_user.save!
         visit "/"
-        expect(page).to have_select("emulation-menu")
+        expect(page).to have_select("emulation_menu")
       end
     end
   end

@@ -1,0 +1,25 @@
+#emulator {
+    text-align: center;
+    background-color: rgb(231, 117, 0);
+    padding: 20px 0px 10px 0px;
+    border-bottom: #000000 solid 2px;
+    color: rgb(0, 0, 0);
+    box-shadow: inset 0px 9px 10px 2px rgba(0,0,0,0.5);
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    p {
+      font-size: 18px;
+    }
+    a {
+      text-decoration: underline;
+    }
+  }
+  
+  @media all and (max-width: 860px) {
+    #emulator {
+      padding: 10px 3px 5px 3px;
+    }
+  }
