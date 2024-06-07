@@ -178,18 +178,17 @@ function showMoreLessSysAdmin() {
   });
 }
 
-function emulate(form) {
-  $(document).ready(function(e) {
-    $("[name='emulation_menu']").on('change', function() {
+function emulate() {
+  $(document).ready(() => {
+    $("[name='emulation_menu']").on('change', () => {
       $.ajax({
-        type: "POST",
-        url: $("#emulation-form").attr("action"),
-        data: $("#emulation-form").serialize(),
-        success: function(data) {
-          $(".tnxforate").html(data)
-        }
+        type: 'POST',
+        url: $('#emulation-form').attr('action'),
+        data: $('#emulation-form').serialize(),
+        success(data) {
+          $('.tnxforate').html(data);
+        },
       });
-      debugger;
     });
   });
 }
