@@ -184,7 +184,7 @@ function emulate() {
       $.ajax({
         type: 'POST',
         url: $('#emulation-form').attr('action'),
-        data: $('#emulation-form').serialize()
+        data: $('#emulation-form').serialize(),
       });
     });
   });
