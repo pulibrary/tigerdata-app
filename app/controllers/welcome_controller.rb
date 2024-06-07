@@ -16,8 +16,9 @@ class WelcomeController < ApplicationController
 
   def emulate
     return if Rails.env.production?
-    return unless current_user.trainer
-
+    absolute_user = User.find(current_user.id)
+    return unless absolute_user.trainer
+    
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
     end

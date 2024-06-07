@@ -2,13 +2,21 @@
 development:
   title: As an approved tester-trainer
   body: You may select another role to emulate
+  alt_title: As an approved tester-trainer
+  alt_body: You are currently emulating
 qa:
   title: As an approved tester-trainer
   body: You may select another role to emulate
+  alt_title: As an approved tester-trainer
+  alt_body: You are currently emulating
 staging:
   title: As an approved tester-trainer
   body: You may select another role to emulate
+  alt_title: As an approved tester-trainer
+  alt_body: You are currently emulating
 test:
   title: As an approved tester-trainer
-  body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
+  body: You may select another role to emulate
+  alt_title: As an approved tester-trainer
+  alt_body: You are currently emulating
 
