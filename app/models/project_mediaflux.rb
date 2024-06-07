@@ -30,8 +30,7 @@ class ProjectMediaflux
     tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
-    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: project_namespace, name: project.project_directory_short, tigerdata_values: tigerdata_values,
-                                                             xml_namespace: xml_namespace, pid: project_parent)
+    create_request = Mediaflux::Http::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
     id = create_request.id
     if id.blank?
       response_error = create_request.response_error
@@ -125,9 +124,7 @@ class ProjectMediaflux
     project_namespace = "#{project_name}NS"
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
 
-    tigerdata_values = project_values(project: project)
-    create_request = Mediaflux::Http::AssetCreateRequest.new(session_token: nil, namespace: project_namespace, name: project.project_directory_short, tigerdata_values: tigerdata_values,
-                                                             xml_namespace: xml_namespace, pid: project_parent)
+    create_request = Mediaflux::Http::ProjectCreateRequest.new(session_token: nil, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
   end
 
