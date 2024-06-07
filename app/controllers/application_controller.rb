@@ -27,13 +27,13 @@ class ApplicationController < ActionController::Base
 
       if session[:emulation_role]
         role = session[:emulation_role]
-        if role == "sponsor"
+        if role == "Eligible Data Sponsor"
           emulate_sponsor
-        elsif role == "manager"
+        elsif role == "Eligible Data Manager"
           emulate_manager
-        elsif role == "sysadmin"
+        elsif role == "System Administrator"
           emulate_sysadmin
-        elsif role == "data_user"
+        elsif role == "Eligible Data User" || "Return to Self"
           emulate_data_user
         end
       end

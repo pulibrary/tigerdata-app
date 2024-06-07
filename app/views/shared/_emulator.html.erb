@@ -12,6 +12,7 @@
           <option value="System Administrator" <%= "selected" if current_user.sysadmin%>>System Administrator</option>
           <option value="Return to Self">Return to Self</option>
       </select>
+      <%= token_tag nil %>
     </form>
   </div>
 <% end %>

@@ -18,7 +18,6 @@ class WelcomeController < ApplicationController
     return if Rails.env.production?
     return unless current_user.trainer
 
-    # TODO: POST TO EMULATE AND PASS THE UPDATED SESSION
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
     end

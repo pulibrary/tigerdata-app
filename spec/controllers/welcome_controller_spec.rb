@@ -25,8 +25,8 @@ RSpec.describe WelcomeController do
     it "accepts a post to change the emulation role" do
       user.trainer = true
       user.save!
-      post :emulate, params: { emulation_menu: "sysadmin" }
-      expect(session[:emulation_role]).to eq "sysadmin"
+      post :emulate, params: { emulation_menu: "System Administrator" }
+      expect(session[:emulation_role]).to eq "System Administrator"
 
       get :index, session: session
       expect(assigns(:current_user).sysadmin).to be_truthy

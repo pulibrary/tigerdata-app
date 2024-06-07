@@ -184,10 +184,7 @@ function emulate() {
       $.ajax({
         type: 'POST',
         url: $('#emulation-form').attr('action'),
-        data: $('#emulation-form').serialize(),
-        success(data) {
-          $('.tnxforate').html(data);
-        },
+        data: $('#emulation-form').serialize()
       });
     });
   });
