@@ -26,14 +26,15 @@ class ApplicationController < ActionController::Base
       return if current_user.blank? || !current_user.trainer
 
       if session[:emulation_role]
-        role = session[:emulation_role]
-        if role == "Eligible Data Sponsor"
+        if session[:emulation_role] == "Eligible Data Sponsor"
           emulate_sponsor
-        elsif role == "Eligible Data Manager"
+        elsif session[:emulation_role] == "Eligible Data Manager"
           emulate_manager
-        elsif role == "System Administrator"
+        elsif session[:emulation_role] == "System Administrator"
           emulate_sysadmin
-        elsif role == "Eligible Data User" || "Return to Self"
+        elsif session[:emulation_role] == "Eligible Data User"
+          emulate_data_user
+        elsif session[:emulation_role] == "Return to Self"
           emulate_data_user
         end
       end
