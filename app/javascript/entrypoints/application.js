@@ -185,9 +185,9 @@ function emulate() {
         type: 'POST',
         url: $('#emulation-form').attr('action'),
         data: $('#emulation-form').serialize(),
-        success: function () { // on success..
-          location.reload(); // update the DIV
-      }
+        success() { // on success..
+          window.location.reload(); // update the DIV
+        },
       });
     });
   });
