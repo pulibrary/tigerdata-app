@@ -10,4 +10,5 @@ export default defineConfig({
       }),
     ViteRails(),
   ],
+  include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)']
 })
