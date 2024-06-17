@@ -99,6 +99,13 @@ class User < ApplicationRecord
     super
   end
 
+  # Is this user eligible to be a data user in this environment?
+  # @return [Boolean]
+  def eligible_data_user?
+    return true if superuser
+    return true if !eligible_sponsor? && !eligible_manager
+  end
+
   # Is this user eligible to be a sysadmin in this environment?
   # @return [Boolean]
   def eligible_sysadmin?

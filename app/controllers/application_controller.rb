@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
         elsif session[:emulation_role] == "Eligible Data User"
           emulate_data_user
         elsif session[:emulation_role] == "Return to Self"
-          emulate_data_user
+          return_to_self
         end
       end
     end
@@ -59,6 +59,14 @@ class ApplicationController < ActionController::Base
     end
 
     def emulate_data_user
+      current_user.eligible_sponsor = false
+      current_user.eligible_manager = false
+      current_user.trainer = false
+      current_user.sysadmin = false
+    end
+
+    def return_to_self
+      current_user.trainer = true
       current_user.eligible_sponsor = false
       current_user.eligible_manager = false
       current_user.sysadmin = false
