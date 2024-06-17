@@ -1881,19 +1881,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.12":
-  version: 3.3.1
-  resolution: "fast-glob@npm:3.3.1"
-  dependencies:
-    "@nodelib/fs.stat": "npm:^2.0.2"
-    "@nodelib/fs.walk": "npm:^1.2.3"
-    glob-parent: "npm:^5.1.2"
-    merge2: "npm:^1.3.0"
-    micromatch: "npm:^4.0.4"
-  checksum: 10c0/b68431128fb6ce4b804c5f9622628426d990b66c75b21c0d16e3d80e2d1398bf33f7e1724e66a2e3f299285dcf5b8d745b122d0304e7dd66f5231081f33ec67c
-  languageName: node
-  linkType: hard
-
 "fast-glob@npm:^3.3.2":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
@@ -3522,12 +3509,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-gzip@npm:^3.0":
-  version: 3.1.0
-  resolution: "rollup-plugin-gzip@npm:3.1.0"
+"rollup-plugin-gzip@npm:^3.1.0":
+  version: 3.1.2
+  resolution: "rollup-plugin-gzip@npm:3.1.2"
   peerDependencies:
     rollup: ">=2.0.0"
-  checksum: 10c0/72166000b2d7a92d0f6c36148596b9f1e7964fcafa95a374102548f38caf7a9fae7814b0deb081bc3a85650c1aebcbbe5d6f0151dc15de5860831993d7ae268c
+  checksum: 10c0/5129d3970cca37bfb5a2fdeddb863bc76be12489ec0a6fcb2be2764902aa2f8548eb8e6532c4e15912d95e8baaa7391a5ed6b58790ed2529c86a98fa75467edc
   languageName: node
   linkType: hard
 
@@ -4009,7 +3996,7 @@ __metadata:
     jsdom: "npm:^21.1.0"
     rollup: "npm:^3.16.0"
     vite: "npm:^5.0.0"
-    vite-plugin-rails: "npm:^0.1.0"
+    vite-plugin-rails: "npm:^0.5.0"
     vite-plugin-ruby: "npm:^5.0.0"
     vitest: "npm:^0.29.1"
   languageName: unknown
@@ -4259,7 +4246,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-environment@npm:^1.1":
+"vite-plugin-environment@npm:^1.1.3":
   version: 1.1.3
   resolution: "vite-plugin-environment@npm:1.1.3"
   peerDependencies:
@@ -4268,50 +4255,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-full-reload@npm:^1.0":
-  version: 1.0.5
-  resolution: "vite-plugin-full-reload@npm:1.0.5"
+"vite-plugin-full-reload@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "vite-plugin-full-reload@npm:1.1.0"
   dependencies:
     picocolors: "npm:^1.0.0"
     picomatch: "npm:^2.3.1"
-  peerDependencies:
-    vite: ^2 || ^3 || ^4
-  checksum: 10c0/7281857fe6a56dc92a5477261d67852c6256cf1d0859b310d8307581d7607a21dcb6308c80c9a53648a1a5eac636108688abc564dfa6fe19dc6564803b5dfeb0
+  checksum: 10c0/f33ccb4c58051e43b7d261d60f0078c0e28c49631dd86218cfa1902e0a61f038d1f6839f64a4fb95da0445720612d75656eb9b3d13c8b50d336e2548251c54b8
   languageName: node
   linkType: hard
 
-"vite-plugin-manifest-sri@npm:^0.1":
-  version: 0.1.0
-  resolution: "vite-plugin-manifest-sri@npm:0.1.0"
-  checksum: 10c0/872b573d1aea40046b7832c976142f6ffd388be673f666f576ae9f1ca56ba1a0bd2d225ebde7909c9a826819fb87d8d7d619afc512447f58b1476db24f8765f7
+"vite-plugin-manifest-sri@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "vite-plugin-manifest-sri@npm:0.2.0"
+  checksum: 10c0/02d75c0e7b2fb8ed3a49df30f12eb33821d78fca6241cac8a61aaace8e7f6874fdb9a5a4f2e293bdcc25852f02fb80dd04cee0ed85b45e776bc0fa683f06d018
   languageName: node
   linkType: hard
 
-"vite-plugin-rails@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "vite-plugin-rails@npm:0.1.0"
+"vite-plugin-rails@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "vite-plugin-rails@npm:0.5.0"
   dependencies:
-    rollup-plugin-gzip: "npm:^3.0"
-    vite-plugin-environment: "npm:^1.1"
-    vite-plugin-full-reload: "npm:^1.0"
-    vite-plugin-manifest-sri: "npm:^0.1"
-    vite-plugin-ruby: "npm:^3.1"
-    vite-plugin-stimulus-hmr: "npm:^3.0"
+    rollup-plugin-gzip: "npm:^3.1.0"
+    vite-plugin-environment: "npm:^1.1.3"
+    vite-plugin-full-reload: "npm:^1.1.0"
+    vite-plugin-manifest-sri: "npm:^0.2.0"
+    vite-plugin-ruby: "npm:^5.0.0"
+    vite-plugin-stimulus-hmr: "npm:^3.0.0"
   peerDependencies:
-    vite: ">=2.5.0"
-  checksum: 10c0/1052d223a70d537ede2858af743a4863196f543f85c941848deb328671f5fc666d3bfba447d3f3fc1d549e9c4f6f93650177c648b7f10093daec6e9e587d26a3
-  languageName: node
-  linkType: hard
-
-"vite-plugin-ruby@npm:^3.1":
-  version: 3.2.2
-  resolution: "vite-plugin-ruby@npm:3.2.2"
-  dependencies:
-    debug: "npm:^4.3.4"
-    fast-glob: "npm:^3.2.12"
-  peerDependencies:
-    vite: ">=4.0.0"
-  checksum: 10c0/b6dbdccba7797fa180a95d1bcae75eaf558fa903092e03c4f8b463022932103d1b2614bc2cf20bc3ec2edff8acf2a11ad234a136b442a9ddc2914a070ad53fcf
+    vite: ">=5.0.0"
+  checksum: 10c0/c1648e87326527ed92339d10f46b7745849a4b1374ed3581410cbd43d9f3ab7aaf4a9285644d2c70a206d8b8330b5949ad69fbe2a2f616b8d8dbec447d75c366
   languageName: node
   linkType: hard
 
@@ -4327,7 +4300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-stimulus-hmr@npm:^3.0":
+"vite-plugin-stimulus-hmr@npm:^3.0.0":
   version: 3.0.0
   resolution: "vite-plugin-stimulus-hmr@npm:3.0.0"
   dependencies:
