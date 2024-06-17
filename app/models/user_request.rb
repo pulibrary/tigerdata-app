@@ -1,0 +1,2 @@
+class UserRequest < ApplicationRecord
+end
