@@ -148,12 +148,13 @@ class Project < ApplicationRecord
     return unless in_mediaflux?
 
     values = mediaflux_metadata(session_id:)
-    value = values.fetch(:size, 0)
+    #value = values.fetch(:size, 0)
+    quota_value = values.fetch(:quota_used, '')
     
-    if value.blank?
+    if quota_value.blank?
       return self.class.default_storage_usage
     else
-      return value
+      return quota_value
     end
   end
 

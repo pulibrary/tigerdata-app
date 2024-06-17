@@ -12,6 +12,7 @@ FactoryBot.define do
     eligible_manager { false }
     sysadmin { false }
     superuser { false }
+    trainer { false }
 
     ##
     # A user who is allowed to sponsor a project
@@ -42,6 +43,12 @@ FactoryBot.define do
     # A user who is allowed see all projects in the system
     factory :superuser do
       superuser { true }
+    end
+
+    ##
+    # A user who is allowed to emulate other roles in the system
+    factory :trainer do
+      trainer { true }
     end
   end
 end
