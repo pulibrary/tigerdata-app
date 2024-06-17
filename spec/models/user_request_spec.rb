@@ -2,16 +2,14 @@
 require "rails_helper"
 
 describe UserRequest, type: :model do
-  subject(:user_request) { described_class.new(**args) }
+  subject(:user_request) { described_class.create(**args) }
 
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
   # This uses the base class for all ActiveJobs within the application. Hence, any job should be supported.
-  let(:job) { instance_double(ApplicationJob, id: 1234) }
+  # let(:job) { instance_double(ApplicationJob, jid: 1234) }
+  let(:job) { ListProjectContentsJob.new }
 
-  before do
-    user_request.save
-  end
 
   describe "#user_id" do
     let(:args) do
@@ -40,12 +38,12 @@ describe UserRequest, type: :model do
   describe "#job_id" do
     let(:args) do
       {
-        job_id: job.id
+        job_id: job.job_id
       }
     end
 
     it "accesses and mutates the associations with ActiveJob instances" do
-      expect(user_request.job_id).to eq(job.id)
+      expect(user_request.job_id).to eq(job.job_id)
     end
   end
 end

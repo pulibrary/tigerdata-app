@@ -3,7 +3,7 @@ class CreateUserRequests < ActiveRecord::Migration[7.0]
     create_table :user_requests do |t|
       t.integer :user_id
       t.integer :project_id
-      t.integer :job_id
+      t.uuid :job_id
       t.datetime :completion_time
       t.string :state
       t.string :type

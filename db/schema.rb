@@ -45,7 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_17_174803) do
   create_table "user_requests", force: :cascade do |t|
     t.integer "user_id"
     t.integer "project_id"
-    t.integer "job_id"
+    t.uuid "job_id"
     t.datetime "completion_time"
     t.string "state"
     t.string "type"
