@@ -1,0 +1,19 @@
+
+.mediaflux {
+  display: inline-block;
+  color: white;
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  &-status {
+    display: inline-block;
+
+    &.active::before {
+      content: "\1f7e2";
+    }
+
+    &.inactive::before {
+      content: "\1f534";
+    }
+  }
+}

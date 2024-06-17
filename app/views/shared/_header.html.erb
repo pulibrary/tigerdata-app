@@ -4,6 +4,10 @@
   <a href="/">
   <%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %>
   </a>
+      <div class="mediaflux">
+        Mediaflux Status
+        <div class="mediaflux-status inactive"></div>
+      </div>
     <div class="body">
     <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>

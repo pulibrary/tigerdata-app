@@ -15,6 +15,9 @@ import * as bootstrap from 'bootstrap';
 import { setTargetHtml } from './helper';
 import UserDatalist from './user_datalist';
 
+// ActionCable Channels
+import '../channels';
+
 window.bootstrap = bootstrap;
 
 function initDataUsers() {
