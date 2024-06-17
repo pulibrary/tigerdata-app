@@ -7,9 +7,7 @@ describe UserRequest, type: :model do
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
   # This uses the base class for all ActiveJobs within the application. Hence, any job should be supported.
-  # let(:job) { instance_double(ApplicationJob, jid: 1234) }
   let(:job) { ListProjectContentsJob.new }
-
 
   describe "#user_id" do
     let(:args) do
