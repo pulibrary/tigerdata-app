@@ -54,7 +54,7 @@ gem "vite_rails"
 
 # Single sign on
 gem "devise"
-gem "omniauth-cas"
+gem "omniauth-cas", "~> 3.0"
 
 gem "csv"
 gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"

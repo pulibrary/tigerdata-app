@@ -557,7 +557,7 @@ DEPENDENCIES
   jbuilder
   mailcatcher
   net-http-persistent
-  omniauth-cas
+  omniauth-cas (~> 3.0)
   pg
   pry-rails
   puma (~> 5.0)
