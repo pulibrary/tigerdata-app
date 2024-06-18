@@ -27,7 +27,6 @@ class ProjectMediaflux
       raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
     end
     # Create a collection asset under the root namespace and set its metadata
-    tigerdata_values = project_values(project: project)
     project_parent = Rails.configuration.mediaflux["api_root_collection"]
     prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
