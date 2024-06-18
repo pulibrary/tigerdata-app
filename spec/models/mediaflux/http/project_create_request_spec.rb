@@ -25,7 +25,6 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
       metadata  = req.metadata
       
-      puts "created on #{project.metadata[:created_on]}"
       expect(metadata[:name]).to eq("testasset")
       expect(metadata[:title]).to eq(project.metadata[:title])
       expect(metadata[:description]).to eq(project.metadata[:description])

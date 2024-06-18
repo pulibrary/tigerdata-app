@@ -84,8 +84,6 @@ module Mediaflux
         def parse_project(project)
           return {} if project.blank?
           {
-            created_by: project.xpath("./CreatedBy").text,
-            created_on: project.xpath("./CreatedOn").text,
             description: project.xpath("./Description").text,
             data_sponsor: project.xpath("./DataSponsor").text,
             data_manager: project.xpath("./DataManager").text,
@@ -96,6 +94,15 @@ module Mediaflux
             rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
             submission: parse_submission(project),
             title: project.xpath("./Title").text
+          }.merge(parse_project_dates(project))
+        end
+
+        def parse_project_dates(project)
+          {
+            created_by: project.xpath("./CreatedBy").text,
+            created_on: project.xpath("./CreatedOn").text,
+            updated_by: project.xpath("./UpdatedBy").text,
+            updated_on: project.xpath("./UpdatedOn").text
           }
         end
 
