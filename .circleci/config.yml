@@ -1,7 +1,10 @@
 version: 2.1
+
 commands:
+
   install_dependencies:
     steps:
+      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -24,19 +27,20 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
       - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:4
+
   run_postgres:
     steps:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
       - run: docker start postgres
-orbs:
-  browser-tools: circleci/browser-tools@1.4.6
-  ruby: circleci/ruby@2.1.1
+
 jobs:
-  build: # name of your job
+
+  build:
     working_directory: ~/tiger_data
     machine: # executor type
       image: default
@@ -46,8 +50,23 @@ jobs:
         POSTGRES_DB: test_db
         POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - checkout  
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - checkout
+      - install_dependencies
+      - persist_to_workspace:
+          root: &root '~/tiger_data'
+          paths: '*'
+
+  lint:
+    working_directory: ~/tiger_data
+    machine:
+      image: default
+      docker_layer_caching: true
+    environment:
+        POSTGRES_USER: tiger_data_user
+        POSTGRES_DB: test_db
+        POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+      - checkout
       - install_dependencies
       - persist_to_workspace:
           root: &root '~/tiger_data'
@@ -59,6 +78,22 @@ jobs:
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
+
+  test:
+    working_directory: ~/tiger_data
+    machine:
+      image: default
+      docker_layer_caching: true
+    environment:
+        POSTGRES_USER: tiger_data_user
+        POSTGRES_DB: test_db
+        POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+      - checkout
+      - install_dependencies
+      - persist_to_workspace:
+          root: &root '~/tiger_data'
+          paths: '*'
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
@@ -83,3 +118,9 @@ workflows:
   build_accept_deploy:
     jobs:
       - build
+      - lint:
+          requires:
+          - build
+      - test:
+          requires:
+          - build
