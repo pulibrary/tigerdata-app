@@ -2,12 +2,13 @@
 require "rails_helper"
 
 describe UserRequest, type: :model do
-  let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id) }
+  let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state) }
 
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
-  # This uses the base class for all ActiveJobs within the application. Hence, any job should be supported.
   let(:job) { ListProjectContentsJob.new }
+  let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
+  let(:state) { "Temp" }
 
   describe "#user_id" do
     it "has a user id" do
@@ -24,6 +25,31 @@ describe UserRequest, type: :model do
   describe "#job_id" do
     it "has a job id" do
       expect(user_request.job_id).to eq(job.job_id)
+    end
+  end
+
+  #TODO: TEST STATE, TYPE, REQUEST DETAILS
+
+  describe "#created_at" do 
+    it "has a creation time" do 
+      expect(user_request.created_at).to be_instance_of(ActiveSupport::TimeWithZone)
+    end
+  end
+
+  describe "#completion_time" do
+    it "has a completion time" do
+      expect(user_request.completion_time).to eq(completion_time)
+    end
+  end
+
+  describe "#state" do
+    it "has a state" do
+      expect(user_request.state).to eq(state)
+    end
+
+    it "raises an error if set to a non-standard value" do
+      user_request.state = "foobar"
+      user_request.save
     end
   end
 end
