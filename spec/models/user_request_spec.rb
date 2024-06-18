@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 require "rails_helper"
+require "json"
 
 describe UserRequest, type: :model do
-  let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state) }
+  let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state, request_details: request_details) }
 
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
   let(:job) { ListProjectContentsJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
   let(:state) { UserRequest::PENDING }
+  let(:request_details) { { temp_key: "temp_val" } }
 
   describe "#user_id" do
     it "has a user id" do
@@ -27,8 +29,6 @@ describe UserRequest, type: :model do
       expect(user_request.job_id).to eq(job.job_id)
     end
   end
-
-  # TODO: TEST TYPE, REQUEST DETAILS
 
   describe "#created_at" do
     it "has a creation time" do
@@ -71,4 +71,12 @@ describe UserRequest, type: :model do
       expect(user_request.errors[:state]).to include("is not included in the list")
     end
   end
+
+  describe "#request_details" do
+    it "has request details in json" do
+      expect(user_request.request_details["temp_key"]).to eq("temp_val")
+    end
+  end
+
+  # TODO: TEST TYPE
 end
