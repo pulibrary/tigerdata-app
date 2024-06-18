@@ -2,7 +2,7 @@
 require "rails_helper"
 
 describe UserRequest, type: :model do
-  subject(:user_request) { described_class.create(**args) }
+  let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id) }
 
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
@@ -10,37 +10,19 @@ describe UserRequest, type: :model do
   let(:job) { ListProjectContentsJob.new }
 
   describe "#user_id" do
-    let(:args) do
-      {
-        user: user
-      }
-    end
-
-    it "accesses and mutates the associations with user models" do
-      expect(user_request.user).to be(user)
+    it "has a user id" do
+      expect(user_request.user.id).to be(user.id)
     end
   end
 
   describe "#project_id" do
-    let(:args) do
-      {
-        project: project
-      }
-    end
-
-    it "accesses and mutates the associations with project models" do
-      expect(user_request.project).to be(project)
+    it "has a project id" do
+      expect(user_request.project.id).to be(project.id)
     end
   end
 
   describe "#job_id" do
-    let(:args) do
-      {
-        job_id: job.job_id
-      }
-    end
-
-    it "accesses and mutates the associations with ActiveJob instances" do
+    it "has a job id" do
       expect(user_request.job_id).to eq(job.job_id)
     end
   end
