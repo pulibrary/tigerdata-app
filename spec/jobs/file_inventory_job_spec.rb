@@ -1,38 +1,20 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe FileInventoryJob, stub_mediaflux: true do
+RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
-  let(:metadata) do
-    {
-      data_sponsor: sponsor_user.uid,
-      data_manager: sponsor_user.uid,
-      project_directory: "project-123",
-      title: "project 123",
-      departments: ["RDSS"],
-      description: "hello world",
-      status: ::Project::PENDING_STATUS
-    }
-  end
-
-  let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata: metadata) }
-
-  before do
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(body: /<service name=\"asset.query\" session=\"test-session-token\">/)
-      .to_return(status: 200, body: fixture_file("files/query_response.xml"))
-
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(body: /<service name=\"asset.query.iterate\" session=\"test-session-token\">/)
-      .to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"))
-
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(body: /<service name=\"asset.query.iterator.destroy\" session=\"test-session-token\">/)
-      .to_return(status: 200, body: "")
-  end
+  let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi)}
 
   describe "#perform_now" do
+    let(:file_inventory_job) { described_class.perform_now(user_id:, project_id:) }
+    it "creates a file inventory request attached to the user and the project" do
+      expect(FileInventoryRequest.count).to be 0
+      FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      expect(FileInventoryRequest.count).to be 1
+      file_inventory_request = FileInventoryRequest.first 
+      expect(file_inventory_request.state).to eq UserRequest::PENDING
+    end
     it "updates the UserJob#completed_at attribute" do
       job = described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
       user_job = UserJob.where(job_id: job.job_id).first
