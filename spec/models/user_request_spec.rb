@@ -8,7 +8,7 @@ describe UserRequest, type: :model do
   let(:project) { FactoryBot.create(:project) }
   let(:job) { ListProjectContentsJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
-  let(:state) { "Temp" }
+  let(:state) { UserRequest::PENDING }
 
   describe "#user_id" do
     it "has a user id" do
@@ -28,10 +28,10 @@ describe UserRequest, type: :model do
     end
   end
 
-  #TODO: TEST STATE, TYPE, REQUEST DETAILS
+  # TODO: TEST TYPE, REQUEST DETAILS
 
-  describe "#created_at" do 
-    it "has a creation time" do 
+  describe "#created_at" do
+    it "has a creation time" do
       expect(user_request.created_at).to be_instance_of(ActiveSupport::TimeWithZone)
     end
   end
@@ -47,9 +47,28 @@ describe UserRequest, type: :model do
       expect(user_request.state).to eq(state)
     end
 
-    it "raises an error if set to a non-standard value" do
-      user_request.state = "foobar"
+    it "can be pending" do
+      user_request.state = UserRequest::PENDING
       user_request.save
+      expect(user_request.state).to eq(UserRequest::PENDING)
+    end
+
+    it "can be completed" do
+      user_request.state = UserRequest::COMPLETED
+      user_request.save
+      expect(user_request.state).to eq(UserRequest::COMPLETED)
+    end
+
+    it "can be stale" do
+      user_request.state = UserRequest::STALE
+      user_request.save
+      expect(user_request.state).to eq(UserRequest::STALE)
+    end
+
+    it "has an error if set to a non-standard value" do
+      user_request.state = "foobar"
+      expect(user_request.save).to be(false)
+      expect(user_request.errors[:state]).to include("is not included in the list")
     end
   end
 end
