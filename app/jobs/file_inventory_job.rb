@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ListProjectContentsJob < ApplicationJob
+class FileInventoryJob < ApplicationJob
   after_perform do |job|
     uid = job.arguments.first[:user_id]
     DeleteUserJob.set(wait: 1.week).perform_later(job_id: job_id, user_id: uid)

@@ -7,7 +7,7 @@ describe UserRequest, type: :model do
 
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
-  let(:job) { ListProjectContentsJob.new }
+  let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
   let(:state) { UserRequest::PENDING }
   let(:request_details) { { temp_key: "temp_val" } }

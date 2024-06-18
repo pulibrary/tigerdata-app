@@ -35,7 +35,7 @@ RSpec.describe DeleteUserJob, stub_mediaflux: true do
   describe "#perform_now" do
     it "deletes the user job that requested file inventory" do
       # Request inventory
-      job = ListProjectContentsJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      job = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
 
       # Delete the inventory request record after a week
       uid = user.id.to_s
