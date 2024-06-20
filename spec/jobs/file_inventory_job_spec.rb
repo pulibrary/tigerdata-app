@@ -3,7 +3,6 @@ require "rails_helper"
 
 RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user) }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi)}
 
   before do 
