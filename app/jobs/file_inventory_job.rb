@@ -20,7 +20,8 @@ class FileInventoryJob < ApplicationJob
 
     # Make the FileInventoryRequest object
     # TODO: Figure out what request_details should have.
-    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: { output_file: filename, project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
+    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: { output_file: filename, project_title: project.title },
+                                completion_time: Time.current.in_time_zone("America/New_York"))
   end
 
   private
@@ -35,5 +36,4 @@ class FileInventoryJob < ApplicationJob
       pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
       pathname.join("#{job_id}.csv").to_s
     end
-
 end

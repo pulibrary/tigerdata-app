@@ -22,5 +22,5 @@ RSpec.describe FileInventoryRequest, type: :model do
     it "accesses the output file" do
       expect(file_inventory_request.output_file).to eq("filename")
     end
-end
+  end
 end
