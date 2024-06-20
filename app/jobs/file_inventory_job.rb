@@ -11,15 +11,19 @@ class FileInventoryJob < ApplicationJob
     user = User.find(user_id)
     raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
     Rails.logger.debug inspect
-    # Make the FileInventoryRequest object
-    # TODO: Figure out what request_details should have.
-    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: {})
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
     filename = filename_for_export
     Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
     project.file_list_to_file(session_id: mediaflux_session, filename: filename)
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
+
+
+    # Make the FileInventoryRequest object
+    # TODO: Figure out what request_details should have.
+    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: {output_file: filename})
+
+
 
     mark_user_job_as_complete(project: project, user: user)
   end

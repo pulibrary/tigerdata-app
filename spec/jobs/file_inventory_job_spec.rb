@@ -27,6 +27,13 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
       expect(File.exist?(output_file)).to be true
     end
 
+    it "puts the file path into the file inventory request" do
+      job = described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      output_file = Pathname.new(Rails.configuration.mediaflux["shared_files_location"]).join("#{job.job_id}.csv").to_s
+      file_inventory_request = FileInventoryRequest.first
+      expect(file_inventory_request.request_details["output_file"]).to eq(output_file)
+    end
+
     context "when an invalid User ID is specified" do
       it "raises an error" do
         expect do
