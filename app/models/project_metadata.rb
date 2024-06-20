@@ -23,7 +23,6 @@ class ProjectMetadata
     # check if the project doi in rails matches the project doi in mediaflux
     return unless metadata[:project_id] == project.metadata_json["project_id"]
 
-    byebug
     # activate a project by setting the status to 'active'
     project.metadata_json["status"] = Project::ACTIVE_STATUS
 
