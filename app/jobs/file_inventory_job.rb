@@ -20,9 +20,7 @@ class FileInventoryJob < ApplicationJob
 
     # Make the FileInventoryRequest object
     # TODO: Figure out what request_details should have.
-    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: { output_file: filename })
-
-    mark_user_job_as_complete(project: project, user: user)
+    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: { output_file: filename, project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
   end
 
   private
@@ -38,10 +36,4 @@ class FileInventoryJob < ApplicationJob
       pathname.join("#{job_id}.csv").to_s
     end
 
-    def mark_user_job_as_complete(project:, user:)
-      user_job = UserJob.create_and_link_to_user(job_id: job_id, user: user, job_title: "File list for #{project.title}")
-      user_job.completed_at = Time.current.in_time_zone("America/New_York").iso8601
-      user_job.save!
-      user_job.reload
-    end
 end
