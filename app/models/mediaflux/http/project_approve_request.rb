@@ -6,10 +6,10 @@ module Mediaflux
     # @example
     #  project = Project.first
     #  project.save_in_mediaflux(session_id: User.first.mediaflux_session)
-    #  approve_req = Mediaflux::Http::AssetApproveRequest.new(session_token: User.first.mediaflux_session, project:)
+    #  approve_req = Mediaflux::Http::ProjectApproveRequest.new(session_token: User.first.mediaflux_session, project:)
     #  approve_req.resolve
     #
-    class AssetApproveRequest < Request
+    class ProjectApproveRequest < Request
       attr_reader :project_metadata, :project
       # Constructor
       # @param session_token [String] the API token for the authenticated session
