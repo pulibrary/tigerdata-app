@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class FileInventoryJob < ApplicationJob
-
   def perform(user_id:, project_id:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
