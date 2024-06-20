@@ -5,15 +5,30 @@
       <id>1234</id>
       <meta>
         <tigerdata:project>
-          <ProjectDirectory>code</ProjectDirectory>
-          <Title>title</Title>
-          <Description>description</Description>
-          <DataSponsor>data_sponsor</DataSponsor>
-          <DataManager>data_manager</DataManager>
-          <UpdatedBy>abc123</UpdatedBy>
-          <UpdatedOn>now</UpdatedOn>
+          <ProjectDirectory>/td-test-001/tigerdataNS/big-data</ProjectDirectory>
+          <Title>Danger Cat</Title>
+          <Description>a random description</Description>
+          <Status>pending</Status>
+          <SchemaVersion>0.6.1</SchemaVersion>
+          <DataSponsor>ds1</DataSponsor>
+          <DataManager>dm1</DataManager>
           <Department>RDSS</Department>
-          <Department>HPC</Department>
+          <Department>PRDS</Department>
+          <CreatedBy>uid1</CreatedBy>
+          <CreatedOn>17-JUN-2024 20:32:37</CreatedOn>
+          <UpdatedBy>uid2</UpdatedBy>
+          <UpdatedOn>18-JUN-2024 20:32:37</UpdatedOn>
+          <ProjectID/>
+          <StorageCapacity>
+            <Size>500</Size>
+            <Unit>GB</Unit>
+          </StorageCapacity>
+          <Performance Requested="standard">standard</Performance>
+          <Submission>
+            <RequestedBy>uid1</RequestedBy>
+            <RequestDateTime>17-JUN-2024 20:32:37</RequestDateTime>
+          </Submission>
+          <ProjectPurpose>research</ProjectPurpose>
         </tigerdata:project>
       </meta>
     </args>

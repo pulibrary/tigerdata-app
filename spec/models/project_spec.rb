@@ -176,6 +176,16 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       project.save_in_mediaflux(session_id: user.mediaflux_session)
       expect(project.mediaflux_id).not_to be nil
     end
+
+    context "when the projects has already beed saved" do
+      before do
+        project.save_in_mediaflux(session_id: user.mediaflux_session)
+      end
+      it "calls out to mediuaflus with an update " do
+        project.metadata_json[:title] = "New title"
+        expect { project.save_in_mediaflux(session_id: user.mediaflux_session) }.not_to raise_error
+      end
+    end
   end
 
   describe "#project_directory" do

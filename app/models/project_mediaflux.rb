@@ -88,34 +88,7 @@ class ProjectMediaflux
   end
 
   def self.update(project:, session_id:)
-    tigerdata_values = project_values(project: project)
-    Mediaflux::Http::AssetUpdateRequest.new(session_token: session_id, id: project.mediaflux_id, tigerdata_values: tigerdata_values).resolve
-  end
-
-  # Translates database record into mediaflux meta document.
-  # This is where the data for XML payload is generated.
-  def self.project_values(project:)
-    split_capacity  = project.metadata[:storage_capacity_requested]&.split(" ") || []
-    values = {
-      project_directory: project.project_directory,
-      title: project.metadata[:title],
-      description: project.metadata[:description],
-      status: project.metadata[:status],
-      data_sponsor: project.metadata[:data_sponsor],
-      data_manager: project.metadata[:data_manager],
-      data_user_read_only: project.metadata[:data_user_read_only],
-      data_user_read_write: project.metadata[:data_user_read_write],
-      departments: project.metadata[:departments],
-      created_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on]),
-      created_by: project.metadata[:created_by],
-      updated_on: MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on]),
-      updated_by: project.metadata[:updated_by],
-      project_id: project.metadata[:project_id],
-      storage_capacity: project.metadata[:storage_capacity].symbolize_keys,
-      storage_performance: project.metadata[:storage_performance_expectations].symbolize_keys,
-      project_purpose: project.metadata[:project_purpose]
-    }
-    values.with_indifferent_access
+    Mediaflux::Http::ProjectUpdateRequest.new(session_token: session_id, project: project).resolve
   end
 
   def self.xml_payload(project:, xml_namespace: nil)
