@@ -16,11 +16,20 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job d
       req.completion_time = eight_days_ago
       req.save
 
-      # TODO
-      #  run cleanup job, expect file to not exist
       expect(File.exist?(req.output_file)).to be_truthy
       described_class.perform_now
       expect(File.exist?(req.output_file)).to be_falsey
+    end
+
+    it "marks the file inventory request stale" do
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      req.completion_time = eight_days_ago
+      req.save
+
+      expect(req.state).to eq(UserRequest::PENDING)
+      described_class.perform_now
+      req.reload
+      expect(req.state).to eq(UserRequest::STALE)
     end
   end
 end
