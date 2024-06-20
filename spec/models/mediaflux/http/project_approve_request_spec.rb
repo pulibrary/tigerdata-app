@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::AssetApproveRequest, type: :model, connect_to_mediaflux: true do
+RSpec.describe Mediaflux::Http::ProjectApproveRequest, type: :model, connect_to_mediaflux: true do
   let(:approver) { FactoryBot.create :sysadmin }
   let(:session_id) { approver.mediaflux_session }
   let(:approved_project) do

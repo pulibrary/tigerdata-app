@@ -75,6 +75,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0.0"
 
   gem "bixby"
+  gem "byebug"
   gem "pry-rails"
 
   gem "bcrypt_pbkdf"
