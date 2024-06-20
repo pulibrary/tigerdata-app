@@ -31,7 +31,14 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
       job = described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
       output_file = Pathname.new(Rails.configuration.mediaflux["shared_files_location"]).join("#{job.job_id}.csv").to_s
       file_inventory_request = FileInventoryRequest.first
-      expect(file_inventory_request.request_details["output_file"]).to eq(output_file)
+      expect(file_inventory_request.output_file).to eq(output_file)
+    end
+
+    it "puts the title into the file inventory request" do
+      job = described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      output_file = Pathname.new(Rails.configuration.mediaflux["shared_files_location"]).join("#{job.job_id}.csv").to_s
+      file_inventory_request = FileInventoryRequest.first
+      expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
     end
 
     context "when an invalid User ID is specified" do

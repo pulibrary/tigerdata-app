@@ -11,11 +11,16 @@ RSpec.describe FileInventoryRequest, type: :model do
   let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
   let(:state) { UserRequest::PENDING }
-  let(:request_details) { { temp_key: "temp_val" } }
+  let(:request_details) { { output_file: "filename" } }
 
   describe "#type" do
     it "has a type representing the class name" do
       expect(file_inventory_request.type).to eq("FileInventoryRequest")
     end
   end
+  describe "#output_file" do
+    it "accesses the output file" do
+      expect(file_inventory_request.output_file).to eq("filename")
+    end
+end
 end
