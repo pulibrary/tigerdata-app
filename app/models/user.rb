@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   has_many :user_jobs, dependent: :destroy
 
-  #TODO: Add the association to the FileInventoryJob model
+  # TODO: Add the association to the FileInventoryJob model
 
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 

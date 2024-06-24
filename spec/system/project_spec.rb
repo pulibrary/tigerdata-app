@@ -562,9 +562,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           sleep 1
           click_on "Yes"
           expect(page).to have_content("File list for \"#{project_in_mediaflux.title}\" is being generated in the background.")
-          expect(sponsor_user.user_jobs).not_to be_empty
-          user_job = sponsor_user.user_jobs.first
-          expect(user_job.job_id).not_to be nil
+          expect(FileInventoryRequest.count).to eq(1)
+          request = FileInventoryRequest.first
+          expect(request.job_id).not_to be nil
+          expect(request.user_id).to eq(sponsor_user.id)
         end
       end
 

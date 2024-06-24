@@ -26,7 +26,7 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job d
       req.completion_time = eight_days_ago
       req.save
 
-      expect(req.state).to eq(UserRequest::PENDING)
+      expect(req.state).to eq(UserRequest::COMPLETED)
       described_class.perform_now
       req.reload
       expect(req.state).to eq(UserRequest::STALE)
