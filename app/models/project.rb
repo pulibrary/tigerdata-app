@@ -204,6 +204,7 @@ class Project < ApplicationRecord
     query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
     iterator_id = query_req.result
 
+
     File.open(filename, "w") do |file|
       # file header
       file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")

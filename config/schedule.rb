@@ -21,5 +21,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day do
-  rake "exports:delete_old"
+  FileInventoryCleanupJob.perform_later
 end
