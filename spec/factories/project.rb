@@ -9,7 +9,9 @@ FactoryBot.define do
       data_user_read_write { [] }
       title { FFaker::Movie.title }
       created_on { Time.current.in_time_zone("America/New_York").iso8601 }
+      created_by { FactoryBot.create(:user).uid }
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
+      updated_by { FactoryBot.create(:user).uid }
       project_id { "" }
       status { "pending" }
       storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } } }
@@ -32,9 +34,9 @@ FactoryBot.define do
         title: title,
         description: "a random description",
         created_on: created_on,
-        created_by: FactoryBot.create(:user).uid,
+        created_by: created_by,
         updated_on: updated_on,
-        updated_by: FactoryBot.create(:user).uid,
+        updated_by: updated_by,
         project_id: project_id,
         status: status,
         storage_capacity: storage_capacity,

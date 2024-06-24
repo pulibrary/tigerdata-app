@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
+RSpec.describe Mediaflux::Http::ProjectUpdateRequest, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
   let(:metadata) do
     {
@@ -34,7 +34,11 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
     end
 
     it "passes the metadata values in the request" do
-      update_request = described_class.new(session_token: "secretsecret/2/31", id: "1234", tigerdata_values: metadata)
+      FactoryBot.create :user, uid: "dm1"
+      FactoryBot.create :user, uid: "ds1"
+      project = FactoryBot.create :project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC"), created_on: Time.parse("17-JUN-2024 20:32:37 UTC"),
+                                            created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1"
+      update_request = described_class.new(session_token: "secretsecret/2/31", project: project)
       update_request.resolve
       expect(WebMock).to have_requested(:post, mediaflux_url)
     end
@@ -52,15 +56,14 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
         expect(create_request.response_error).to be_blank
         expect(create_request.id).not_to be_blank
 
+        project.mediaflux_id = create_request.id
         project.metadata_json[:title] = "New Title"
         project.metadata_json[:updated_by] = data_user_rw.uid
         project.metadata_json[:updated_on] = updated_on
-        tigerdata_values = ProjectMediaflux.project_values(project:)
-        update_request = described_class.new(session_token: session_id, id: create_request.id, tigerdata_values: tigerdata_values)
+        update_request = described_class.new(session_token: session_id, project: project)
         update_request.resolve
         expect(update_request.response_error).to be_blank
-        # binding.pry
-        req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
+        req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project.mediaflux_id)
         metadata  = req.metadata
         
         expect(metadata[:name]).to eq("testasset")
@@ -82,9 +85,11 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
 
   describe "#xml_payload" do
   it "creates the asset update payload" do
-    project = FactoryBot.create :project
-    tigerdata_values = ProjectMediaflux.project_values(project:)
-    update_request = described_class.new(session_token: nil, id: '1234', tigerdata_values: tigerdata_values)
+    FactoryBot.create :user, uid: "dm1"
+    FactoryBot.create :user, uid: "ds1"
+    project = FactoryBot.create :project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC"), created_on: Time.parse("17-JUN-2024 20:32:37 UTC"),
+                                          created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1"
+    update_request = described_class.new(session_token: nil, project:)
     expected_xml = "<?xml version=\"1.0\"?>\n" \
     "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
     "  <service name=\"asset.set\">\n" \
@@ -95,12 +100,27 @@ RSpec.describe Mediaflux::Http::AssetUpdateRequest, type: :model do
     "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
     "          <Title>#{project.metadata[:title]}</Title>\n" \
     "          <Description>#{project.metadata[:description]}</Description>\n" \
+    "          <Status>pending</Status>\n" \
+    "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
     "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
-    "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
-    "          <UpdatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
     "          <Department>RDSS</Department>\n" \
     "          <Department>PRDS</Department>\n" \
+    "          <CreatedBy>uid1</CreatedBy>\n" \
+    "          <CreatedOn>17-JUN-2024 20:32:37</CreatedOn>\n" \
+    "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
+    "          <UpdatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
+    "          <ProjectID/>\n" \
+    "          <StorageCapacity>\n" \
+    "            <Size>500</Size>\n" \
+    "            <Unit>GB</Unit>\n" \
+    "          </StorageCapacity>\n" \
+    "          <Performance Requested=\"standard\">standard</Performance>\n" \
+    "          <Submission>\n" \
+    "            <RequestedBy>uid1</RequestedBy>\n" \
+    "            <RequestDateTime>17-JUN-2024 20:32:37</RequestDateTime>\n" \
+    "          </Submission>\n" \
+    "          <ProjectPurpose>research</ProjectPurpose>\n" \
     "        </tigerdata:project>\n" \
     "      </meta>\n" \
     "    </args>\n" \
