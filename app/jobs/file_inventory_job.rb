@@ -14,8 +14,7 @@ class FileInventoryJob < ApplicationJob
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
 
     # Make the FileInventoryRequest object
-    # TODO: Figure out what request_details should have.
-    FileInventoryRequest.create(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::PENDING, request_details: { output_file: filename, project_title: project.title },
+    FileInventoryRequest.update(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::COMPLETED, request_details: { output_file: filename, project_title: project.title },
                                 completion_time: Time.current.in_time_zone("America/New_York"))
   end
 

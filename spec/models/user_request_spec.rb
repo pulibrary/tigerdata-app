@@ -77,6 +77,4 @@ describe UserRequest, type: :model do
       expect(user_request.request_details["temp_key"]).to eq("temp_val")
     end
   end
-
-  # TODO: TEST TYPE
 end
