@@ -6,9 +6,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :rememberable, :omniauthable
 
-  has_many :user_jobs, dependent: :destroy
-
-  # TODO: Add the association to the FileInventoryJob model
+  has_many :user_requests, dependent: :destroy
 
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 

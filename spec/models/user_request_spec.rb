@@ -77,4 +77,12 @@ describe UserRequest, type: :model do
       expect(user_request.request_details["temp_key"]).to eq("temp_val")
     end
   end
+
+  describe "#complete?" do
+    it "returns true if the current state is completed" do
+      expect(user_request.complete?).to be_falsey
+      user_request.update(state: UserRequest::COMPLETED)
+      expect(user_request.complete?).to be_truthy
+    end
+  end
 end

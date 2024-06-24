@@ -11,11 +11,7 @@ class WelcomeController < ApplicationController
     @approved_projects = Project.approved_projects
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
-    @my_jobs = current_user.user_jobs
-
-    # TODO: Get the file inventory jobs for the current user
-
-    @my_inventory_requests = FileInventoryRequest.where(user_id: current_user.id)
+    @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
   end
 
   def emulate
