@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 class FileInventoryJob < ApplicationJob
+  before_perform do |job|
+    project = Project.find(job.arguments.first[:project_id])
+    FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: UserRequest::PENDING, request_details: { project_title: project.title })
+    self
+  end
   def perform(user_id:, project_id:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
@@ -14,7 +19,8 @@ class FileInventoryJob < ApplicationJob
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
 
     # Make the FileInventoryRequest object
-    FileInventoryRequest.update(user_id: user.id, project_id: project.id, job_id: @job_id, state: UserRequest::COMPLETED, request_details: { output_file: filename, project_title: project.title },
+    inventory_request = FileInventoryRequest.find_by(user_id: user.id, project_id: project.id, job_id: @job_id)
+    inventory_request.update(state: UserRequest::COMPLETED, request_details: { output_file: filename, project_title: project.title },
                                 completion_time: Time.current.in_time_zone("America/New_York"))
   end
 

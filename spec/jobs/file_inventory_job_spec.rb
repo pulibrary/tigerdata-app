@@ -13,6 +13,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
     let(:file_inventory_job) { described_class.perform_now(user_id:, project_id:) }
     it "creates a file inventory request attached to the user and the project" do
       expect(FileInventoryRequest.count).to be 0
+      FileInventoryRequest.create(user_id: user.id, project_id: @project.id, job_id: job.job_id, state: UserRequest::PENDING, request_details: { project_title: project.title })
       FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
       expect(FileInventoryRequest.count).to be 1
       file_inventory_request = FileInventoryRequest.first 
