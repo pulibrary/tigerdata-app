@@ -198,12 +198,12 @@ class ProjectsController < ApplicationController
 
   def file_list_download
     job_id = params[:job_id]
-    user_job = UserJob.where(job_id:job_id).first
-    if user_job.nil?
+    user_request = FileInventoryRequest.where(job_id:job_id).first
+    if user_request.nil?
       # TODO: handle error
       redirect_to "/"
     else
-      filename = shared_file_location("#{job_id}.csv")
+      filename = user_request.output_file
       send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
     end
   end

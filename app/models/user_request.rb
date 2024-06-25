@@ -8,4 +8,8 @@ class UserRequest < ApplicationRecord
   STALE = "stale"
 
   validates :state, inclusion: { in: [PENDING, COMPLETED, STALE] }
+
+  def complete?
+    state == COMPLETED
+  end
 end

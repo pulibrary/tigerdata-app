@@ -78,5 +78,11 @@ describe UserRequest, type: :model do
     end
   end
 
-  # TODO: TEST TYPE
+  describe "#complete?" do
+    it "returns true if the current state is completed" do
+      expect(user_request.complete?).to be_falsey
+      user_request.update(state: UserRequest::COMPLETED)
+      expect(user_request.complete?).to be_truthy
+    end
+  end
 end

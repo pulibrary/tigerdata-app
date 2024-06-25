@@ -10,6 +10,5 @@ class ProjectJobService
     # Log the job id and the Sidekiq JID in case we need to troubleshoot the job
     # https://github.com/sidekiq/sidekiq/wiki/Active-Job#job-id
     Rails.logger.info("Job scheduled, job id: #{job.job_id}, (Sidekiq JID: #{job.provider_job_id || 'nil'})")
-    UserJob.create_and_link_to_user(job_id: job.job_id, user: user, job_title: "File list for #{@project.title}")
   end
 end

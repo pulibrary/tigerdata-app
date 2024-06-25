@@ -2,21 +2,35 @@
 require "rails_helper"
 
 RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create(:user) }
-  let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi)}
+  include ActiveJob::TestHelper
 
-  before do 
+  let(:user) { FactoryBot.create(:user) }
+  let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
+
+  before do
     ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
   end
 
+  describe "#perform_later" do
+    it "creates a file inventory request attached to the user and the project" do
+      expect(FileInventoryRequest.count).to be 0
+      perform_enqueued_jobs do
+        FileInventoryJob.perform_later(user_id: user.id, project_id: project_in_mediaflux.id)
+      end
+      expect(FileInventoryRequest.count).to be 1
+      file_inventory_request = FileInventoryRequest.first
+      expect(file_inventory_request.state).to eq UserRequest::COMPLETED
+    end
+  end
+
   describe "#perform_now" do
-    let(:file_inventory_job) { described_class.perform_now(user_id:, project_id:) }
+    # let(:file_inventory_job) { described_class.perform_now(user_id:, project_id:) }
     it "creates a file inventory request attached to the user and the project" do
       expect(FileInventoryRequest.count).to be 0
       FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
       expect(FileInventoryRequest.count).to be 1
-      file_inventory_request = FileInventoryRequest.first 
-      expect(file_inventory_request.state).to eq UserRequest::PENDING
+      file_inventory_request = FileInventoryRequest.first
+      expect(file_inventory_request.state).to eq UserRequest::COMPLETED
     end
 
     it "saves the output to a file" do
@@ -38,7 +52,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
       expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
     end
 
-    it "puts the completion time into the file inventory request" do 
+    it "puts the completion time into the file inventory request" do
       described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
       file_inventory_request = FileInventoryRequest.first
       expect(file_inventory_request.completion_time).to be_instance_of(ActiveSupport::TimeWithZone)
