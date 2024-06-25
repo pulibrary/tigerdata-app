@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_17_174803) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_25_182512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,16 +30,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_17_174803) do
     t.integer "project_id"
     t.jsonb "event_note"
     t.index ["project_id"], name: "index_project_id"
-  end
-
-  create_table "user_jobs", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "job_id"
-    t.string "project_title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "completed_at"
-    t.index ["user_id"], name: "index_user_jobs_on_user_id"
   end
 
   create_table "user_requests", force: :cascade do |t|
@@ -86,5 +76,4 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_17_174803) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
-  add_foreign_key "user_jobs", "users"
 end
