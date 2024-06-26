@@ -29,9 +29,11 @@ module Mediaflux
         metadata = parse(asset)
 
         if metadata[:collection]
+          byebug
           metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
           metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
           metadata[:quota_allocation] = asset.xpath("./collection/quota/allocation/@h").text
+          metadata[:accum_names] = asset.xpath("./collection/accumulator/@name")
           metadata[:quota_used] = asset.xpath("./collection/quota/used/@h").text
           metadata[:ctime] = asset.xpath("./ctime")
 
