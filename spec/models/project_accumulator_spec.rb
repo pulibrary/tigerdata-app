@@ -29,14 +29,14 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true, type: :model do
 
   describe "#validate" do
     it "returns true if the collection has the expected accumulators" do
-      project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       project_accumulators.create!
       expect(project_accumulators.validate).to eq(true)
     end
 
     it "returns an array of accumulators if the collection does not have all expected accumulators" do
-      project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       expect(described_class.new(project: project_in_mediaflux, session_id: session_id).validate).to be_a(Array)
     end
   end
