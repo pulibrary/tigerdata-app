@@ -1,33 +1,30 @@
 # frozen_string_literal: true
 class ProjectAccumulator
-  # TODO: modify create! to validate and create accumulators if they are not present
-  # change accum_names to be a an array of strings instead of an array of xml objects
-
   def create!(mediaflux_project_id:, session_id:)
-    collection_metadata = validate(mediaflux_project_id: mediaflux_project_id, session_id: session_id)
-    return unless collection_metadata.length < 3
+    accum_names = validate(mediaflux_project_id: mediaflux_project_id, session_id: session_id)
+    return true if accum_names == true
 
-    Rails.logger.info("ProjectAccumulator: Accumulators not complete for project #{mediaflux_project_id}")
-
-    accum_names = collection_metadata[:accum_names]
+    # Create accumulators if they do not exist
     if accum_names.exclude?("accum-count")
-      create_accum_count
-    elsif accum_names.exclude?("accum-size")
-      create_accum_size
-    elsif accum_names.exclude?("accum-store-size")
-      create_accum_store_size
+      create_accum_count(mediaflux_project_id:, session_id:)
+    end
+    if accum_names.exclude?("accum-size")
+      create_accum_size(mediaflux_project_id:, session_id:)
+    end
+    if accum_names.exclude?("accum-store-size")
+      create_accum_store_size(mediaflux_project_id:, session_id:)
     end
   end
 
   def validate(mediaflux_project_id:, session_id:)
     collection_metadata = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_project_id).metadata
-
-    collection_metadata
+    accum_names = collection_metadata[:accum_names].to_a.map(&:to_s)
+    (accum_names.length == 3) ? true : accum_names
   end
 
   private
 
-    def create_accum_count
+    def create_accum_count(mediaflux_project_id:, session_id:)
       accum_count = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-count",
@@ -37,7 +34,7 @@ class ProjectAccumulator
       accum_count.resolve
     end
 
-    def create_accum_size
+    def create_accum_size(mediaflux_project_id:, session_id:)
       accum_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-size",
@@ -47,7 +44,7 @@ class ProjectAccumulator
       accum_size.resolve
     end
 
-    def create_accum_store_size
+    def create_accum_store_size(mediaflux_project_id:, session_id:)
       accum_store_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-store-size",
