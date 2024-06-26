@@ -18,7 +18,7 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true, type: :model do
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-store-size")
     end
 
-    it "does not create accumulators if they already exist" do 
+    it "does not create accumulators if they already exist" do
       project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       project_accumulators = described_class.new
       project_accumulators.create!(mediaflux_project_id: project_id, session_id: session_id)
