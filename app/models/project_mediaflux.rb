@@ -50,8 +50,8 @@ class ProjectMediaflux
     end
     project.mediaflux_id = id
     project.save!
-    self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
-    self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
+    # self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
+    # self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
     id
   end
 
