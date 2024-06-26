@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 class ProjectAccumulator
+    # Create accumulators for all newly created mediaflux projects
+  #
+  # @param mediaflux_project_id [] the id of the project that needs accumulators
+  # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
   def create!(mediaflux_project_id:, session_id:)
     accum_names = validate(mediaflux_project_id: mediaflux_project_id, session_id: session_id)
     return true if accum_names == true
@@ -19,7 +23,7 @@ class ProjectAccumulator
   def validate(mediaflux_project_id:, session_id:)
     collection_metadata = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_project_id).metadata
     accum_names = collection_metadata[:accum_names].to_a.map(&:to_s)
-    (accum_names.length == 3) ? true : accum_names
+    (accum_names.size == 3) ? true : accum_names
   end
 
   private

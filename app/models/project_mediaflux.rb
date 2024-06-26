@@ -50,30 +50,9 @@ class ProjectMediaflux
     end
     project.mediaflux_id = id
     project.save!
-    # self.create_accumulators(mediaflux_project_id: id, session_id: session_id)
-    # self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
+  
+    self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
     id
-  end
-
-  # Create accumulators for all newly created mediaflux projects
-  #
-  # @param mediaflux_project_id [] the id of the project that needs accumulators
-  # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
-  def self.create_accumulators(mediaflux_project_id:, session_id:)
-    accum_count = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
-      session_token: session_id, 
-      name: "accum-count", 
-      collection: mediaflux_project_id, 
-      type: "collection.asset.count"
-      )
-    accum_count.resolve
-    accum_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
-      session_token: session_id, 
-      name: "accum-size", 
-      collection: mediaflux_project_id, 
-      type: "content.all.size"
-      )
-    accum_size.resolve
   end
 
   def self.create_quota(project:, mediaflux_project_id:, session_id:)
