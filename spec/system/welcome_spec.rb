@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController", stub_mediaflux: true do
+RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
@@ -59,6 +59,14 @@ RSpec.describe "WelcomeController", stub_mediaflux: true do
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Log Out"
       end
+
+      it "shows the Mediflux version on the home page for a logged in user" do
+        sign_in current_user
+        visit "/"
+        sleep(1)
+        expect(page).to have_content "Mediaflux: 4.16.032"
+      end
+
       it "shows the user projects regardless of the user's role" do
         sign_in current_user
         visit "/"
