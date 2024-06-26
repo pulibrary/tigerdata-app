@@ -14,7 +14,7 @@ import * as bootstrap from 'bootstrap';
 
 import { setTargetHtml } from './helper';
 import UserDatalist from './user_datalist';
-import { displayMediafluxVersion } from './mediafluxVersion.js';
+import { displayMediafluxVersion } from './mediafluxVersion';
 
 // ActionCable Channels
 import '../channels';
