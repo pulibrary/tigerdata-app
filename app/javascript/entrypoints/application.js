@@ -14,11 +14,13 @@ import * as bootstrap from 'bootstrap';
 
 import { setTargetHtml } from './helper';
 import UserDatalist from './user_datalist';
+import { displayMediafluxVersion } from './mediafluxVersion';
 
 // ActionCable Channels
 import '../channels';
 
 window.bootstrap = bootstrap;
+window.displayMediafluxVersion = displayMediafluxVersion;
 
 function initDataUsers() {
   function counterIncrement(counterId) {

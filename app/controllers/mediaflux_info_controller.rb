@@ -4,5 +4,9 @@ class MediafluxInfoController < ApplicationController
   def index
     version_request = Mediaflux::Http::VersionRequest.new(session_token: current_user.mediaflux_session)
     @mf_version = version_request.version
+    respond_to do |format|
+      format.html
+      format.json { render json: @mf_version }
+    end
   end
 end
