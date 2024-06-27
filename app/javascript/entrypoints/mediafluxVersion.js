@@ -4,7 +4,7 @@ export function displayMediafluxVersion(url) {
   if (placeholderInPage === true) {
     $.ajax({
       type: 'GET',
-      url: url,
+      url,
       success(data) {
         $('#mediaflux_version').text(`| Mediaflux: ${data.version}`);
       },
