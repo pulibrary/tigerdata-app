@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectAccumulator, connect_to_mediaflux: true, type: :model do
+RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user) }
   let(:session_id) { user.mediaflux_session }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi, status: Project::APPROVED_STATUS) }
@@ -10,12 +10,13 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true, type: :model do
     it "creates accumulators for the project" do
       project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
-      project_accumulators.create!
+      proj_accum = project_accumulators.create!
       metadata = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project_id).metadata
 
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-count")
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-size")
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-store-size")
+      expect(proj_accum).to eq(true)
     end
 
     it "does not create accumulators if they already exist" do
@@ -23,7 +24,7 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true, type: :model do
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       project_accumulators.create!
 
-      expect(project_accumulators.create!).to eq(true)
+      expect(project_accumulators.create!).to eq(false)
     end
   end
 

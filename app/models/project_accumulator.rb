@@ -9,7 +9,7 @@ class ProjectAccumulator
   #
   def create!
     accum_names = validate
-    return true if accum_names == true
+    return false if accum_names == true # Return false if accumulators already exist, and no change is needed
 
     # Create accumulators if they do not exist
     if accum_names.exclude?("accum-count")
@@ -21,6 +21,8 @@ class ProjectAccumulator
     if accum_names.exclude?("accum-store-size")
       create_accum_store_size(collection_id: @collection_id, session_id: @session_id)
     end
+
+    true # Return true if accumulators were created
   end
 
   # Validate that a project has the expected accumulators
