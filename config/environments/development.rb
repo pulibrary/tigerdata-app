@@ -2,6 +2,10 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # By default, when set to `nil`, strategy loading errors are suppressed in test
+  # mode. Set to `true` to always raise errors, or `false` to always warn.
+  config.flipflop.raise_strategy_errors = nil
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time

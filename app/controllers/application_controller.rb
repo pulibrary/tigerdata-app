@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
     new_user_session_path
   end
 
+  def require_admin_user
+    head :forbidden unless current_user&.eligible_sysadmin?
+  end
+
   private
 
     def mediaflux_session
