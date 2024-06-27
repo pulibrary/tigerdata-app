@@ -53,7 +53,7 @@ test:
   api_root_collection_namespace: '/td-test-001'
   api_root_collection: 'path=/td-test-001/tigerdata'
   api_transport: 'http'
-  api_host: '0.0.0.0'
+  api_host: 'mediaflux.example.com'
   api_port: '8888'
   api_domain: 'system'
   api_user: 'manager'
