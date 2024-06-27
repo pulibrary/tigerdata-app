@@ -105,7 +105,8 @@ class Project < ApplicationRecord
   # @return [String] the mediaflux id of the project
   def save_in_mediaflux(session_id:)
     if mediaflux_id.nil?
-      ProjectMediaflux.create!(project: self, session_id: session_id)
+      mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
+      ProjectAccumulator.new(project: self, session_id: session_id).create!()
       self.reload
       Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{mediaflux_id})"
     else
