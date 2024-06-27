@@ -63,7 +63,7 @@ module Mediaflux
               rw_users.each do |rw_user|
                 xml.DataUser rw_user
               end
-              created_on = MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])
+              created_on = Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])
               xml.CreatedOn created_on
               xml.CreatedBy project.metadata[:created_by]
               xml.ProjectID project.metadata[:project_id]

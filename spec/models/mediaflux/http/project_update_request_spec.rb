@@ -71,7 +71,7 @@ RSpec.describe Mediaflux::Http::ProjectUpdateRequest, type: :model do
         expect(metadata[:description]).to eq(project.metadata[:description])
         expect(metadata[:data_sponsor]).to eq(project.metadata[:data_sponsor])
         expect(metadata[:departments]).to eq(project.metadata[:departments])
-        # TODO Should really utilize MediafluxTime, but the time class upcases the date and does not zero pad the day
+        # TODO Should really utilize Mediaflux::Time, but the time class upcases the date and does not zero pad the day
         expect(metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
         expect(metadata[:created_by]).to eq(project.metadata[:created_by])
         expect(metadata[:updated_on]).to eq(Time.zone.parse(updated_on).strftime("%d-%b-%Y %H:%M:%S"))
@@ -109,7 +109,7 @@ RSpec.describe Mediaflux::Http::ProjectUpdateRequest, type: :model do
     "          <CreatedBy>uid1</CreatedBy>\n" \
     "          <CreatedOn>17-JUN-2024 20:32:37</CreatedOn>\n" \
     "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
-    "          <UpdatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
+    "          <UpdatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
     "          <ProjectID/>\n" \
     "          <StorageCapacity>\n" \
     "            <Size>500</Size>\n" \
