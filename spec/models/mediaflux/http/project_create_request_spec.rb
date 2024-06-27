@@ -30,7 +30,7 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       expect(metadata[:description]).to eq(project.metadata[:description])
       expect(metadata[:data_sponsor]).to eq(project.metadata[:data_sponsor])
       expect(metadata[:departments]).to eq(project.metadata[:departments])
-      # TODO Should really utilize MediafluxTime, but the time class upcases the date and does not zero pad the day
+      # TODO Should really utilize Mediaflux""Time, but the time class upcases the date and does not zero pad the day
       expect(metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
       expect(metadata[:created_by]).to eq(project.metadata[:created_by])
       expect(metadata[:ro_users]).to eq([data_user_ro.uid])
@@ -57,7 +57,7 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
       "          <Department>RDSS</Department>\n" \
       "          <Department>PRDS</Department>\n" \
-      "          <CreatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
+      "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
       "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
       "          <ProjectID>abc-123</ProjectID>\n" \
       "          <StorageCapacity>\n" \
@@ -67,7 +67,7 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       "          <Performance Requested=\"standard\">standard</Performance>\n" \
       "          <Submission>\n" \
       "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
-      "            <RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
+      "            <RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
       "          </Submission>\n" \
       "          <ProjectPurpose>research</ProjectPurpose>\n" \
       "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
@@ -90,10 +90,10 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
                      "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
                      "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
                      "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
-                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
+                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
                      "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
                      "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
-                     "<RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
+                     "<RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
                      "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta>" \
                      "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
                      "<type>application/arc-asset-collection</type></service></request>"
