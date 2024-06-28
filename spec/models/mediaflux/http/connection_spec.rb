@@ -13,7 +13,7 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
         test_strategy.switch!(:alternate_mediaflux, true)
       end
 
-      after do 
+      after do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:alternate_mediaflux, false)
       end
@@ -24,10 +24,10 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
     end
   end
 
-  describe "##port" do 
+  describe "##port" do
     it "returns the mediaflux port" do
       expect(Mediaflux::Http::Connection.port).to eq(Rails.configuration.mediaflux["api_port"].to_i)
-    end  
+    end
 
     context "alternate mediaflux" do
       before do
@@ -35,7 +35,7 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
         test_strategy.switch!(:alternate_mediaflux, true)
       end
 
-      after do 
+      after do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:alternate_mediaflux, false)
       end
@@ -46,25 +46,25 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
     end
   end
 
-  describe "##transport" do 
-  it "returns the mediaflux transport" do
-    expect(Mediaflux::Http::Connection.transport).to eq(Rails.configuration.mediaflux["api_transport"])
-  end  
-
-  context "alternate mediaflux" do
-    before do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:alternate_mediaflux, true)
+  describe "##transport" do
+    it "returns the mediaflux transport" do
+      expect(Mediaflux::Http::Connection.transport).to eq(Rails.configuration.mediaflux["api_transport"])
     end
 
-    after do 
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:alternate_mediaflux, false)
-    end
+    context "alternate mediaflux" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, true)
+      end
 
-    it "returns the alternate mediaflux transport" do
-      expect(Mediaflux::Http::Connection.transport).to eq(Rails.configuration.mediaflux["api_alternate_transport"])
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, false)
+      end
+
+      it "returns the alternate mediaflux transport" do
+        expect(Mediaflux::Http::Connection.transport).to eq(Rails.configuration.mediaflux["api_alternate_transport"])
+      end
     end
   end
-end
 end
