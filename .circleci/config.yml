@@ -102,7 +102,7 @@ jobs:
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
-      - run: bundle exec rake schema:create
+      - run: bundle exec rake schema:create  RAILS_ENV=test
       - run:
           name: Run Rspec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
