@@ -55,6 +55,14 @@ module Mediaflux
           Rails.configuration.mediaflux["api_root_collection_name"]
         end
       end
+
+      def self.root_namespace
+        if Flipflop.alternate_mediaflux?
+          Rails.configuration.mediaflux["api_alternate_root_ns"]
+        else
+          Rails.configuration.mediaflux["api_root_ns"]
+        end
+      end
     end
   end
 end

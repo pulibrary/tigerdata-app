@@ -112,7 +112,7 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
     end
   end
 
-  describe "##root_collection_name" do
+  describe "##root_collection_names" do
     it "returns the mediaflux root collection name" do
       expect(Mediaflux::Http::Connection.root_collection_name).to eq(Rails.configuration.mediaflux["api_root_collection_name"])
     end
@@ -130,6 +130,27 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
 
       it "returns the alternate mediaflux root collection name" do
         expect(Mediaflux::Http::Connection.root_collection_name).to eq(Rails.configuration.mediaflux["api_alternate_root_collection_name"])
+      end
+    end
+  end
+  describe "##root_namespace" do
+    it "returns the mediaflux root namespace" do
+      expect(Mediaflux::Http::Connection.root_namespace).to eq(Rails.configuration.mediaflux["api_root_ns"])
+    end
+
+    context "alternate mediaflux" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, false)
+      end
+
+      it "returns the alternate mediaflux root namespace" do
+        expect(Mediaflux::Http::Connection.root_namespace).to eq(Rails.configuration.mediaflux["api_alternate_root_ns"])
       end
     end
   end

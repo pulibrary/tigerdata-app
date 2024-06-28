@@ -15,7 +15,6 @@ module Mediaflux
       end
 
       def self.uri
-        # TODO use connection here
         URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}/#{request_path}")
       end
 
@@ -23,12 +22,6 @@ module Mediaflux
       # @return [Net::HTTP::Post]
       def self.build_post_request
         Net::HTTP::Post.new(request_path)
-      end
-
-      # The Rails configuration options specifying the Mediaflux server
-      # @return [Hash]
-      def self.mediaflux
-        Rails.configuration.mediaflux
       end
 
       # The default XML namespace which should be used for building the XML

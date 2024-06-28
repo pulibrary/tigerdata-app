@@ -43,17 +43,17 @@ class Project < ApplicationRecord
     return nil if metadata[:project_directory].nil?
     dirname, basename = project_directory_pathname.split
     if (dirname.relative?)
-      "#{Rails.configuration.mediaflux["api_root_ns"]}/#{safe_name(metadata[:project_directory])}"
+      "#{Mediaflux::Http::Connection.root_namespace}/#{safe_name(metadata[:project_directory])}"
     else
       project_directory_pathname.to_s
     end
   end
 
   def project_directory_parent_path
-    return Rails.configuration.mediaflux["api_root_ns"] if metadata[:project_directory].nil?
+    return Mediaflux::Http::Connection.root_namespace if metadata[:project_directory].nil?
     dirname  = project_directory_pathname.dirname
     if (dirname.relative?)
-      Rails.configuration.mediaflux["api_root_ns"]
+      Mediaflux::Http::Connection.root_namespace
     else
       dirname.to_s
     end

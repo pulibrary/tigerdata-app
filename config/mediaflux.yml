@@ -74,14 +74,14 @@ development:
   api_host: <%= ENV["MEDIAFLUX_HOST"] || '0.0.0.0' %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
 
-  # Alternate to development is staging
-  api_alternate_root_ns:  '/td-staging-001/tigerdataNS'
-  api_alternate_root_collection: 'path=/td-staging-001/tigerdata'
-  api_alternate_root_collection_name:  'tigerdata'
-  api_alternate_root_collection_namespace: '/td-staging-001'
-  api_alternate_transport: <%= ENV["MEDIAFLUX_ALTERNATE_TRANSPORT"] || 'https' %>
-  api_alternate_host: <%= ENV["MEDIAFLUX_ALTERNATE_HOST"] %>
-  api_alternate_port: <%= ENV["MEDIAFLUX_ALTERNATE_PORT"] || 443 %>
+  # Alternate to development is an alternate location in docker
+  api_alternate_root_ns:  '/td-alternate-001/tigerdataNS'
+  api_alternate_root_collection: 'path=/td-alternate-001/tigerdata'
+  api_alternate_root_collection_name:  'tigerdata-alternate'
+  api_alternate_root_collection_namespace: '/td-alternate-001'
+  api_alternate_transport: <%= 'http' %>
+  api_alternate_host: <%= '0.0.0.0' %>
+  api_alternate_port: <%= '8888' %>
 
 
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'system' %>

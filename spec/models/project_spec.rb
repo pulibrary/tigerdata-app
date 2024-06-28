@@ -227,7 +227,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
     it "defaults to the configured vaule if no directory is present" do
       project = FactoryBot.create(:project, project_directory: "directory")
-      expect(project.project_directory_parent_path).to eq(Rails.configuration.mediaflux["api_root_ns"])
+      expect(project.project_directory_parent_path).to eq(Mediaflux::Http::Connection.root_namespace)
     end
   end
 

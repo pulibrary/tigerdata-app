@@ -85,7 +85,7 @@ class ProjectMediaflux
   end
 
   def self.create_root_ns(session_id:)
-    root_namespace = Rails.configuration.mediaflux["api_root_ns"]
+    root_namespace = Mediaflux::Http::Connection.root_namespace
     namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
     if namespace_request.exists?
       Rails.logger.info "Root namespace #{root_namespace} already exists"
