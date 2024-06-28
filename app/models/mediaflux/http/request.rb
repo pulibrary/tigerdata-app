@@ -23,6 +23,7 @@ module Mediaflux
       end
 
       def self.uri
+        # TODO use connection here
         URI("#{protocol}://#{mediaflux_host}:#{mediaflux_port}/#{request_path}")
       end
 
