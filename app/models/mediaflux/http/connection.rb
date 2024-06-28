@@ -31,6 +31,30 @@ module Mediaflux
           Rails.configuration.mediaflux["api_transport"]
         end
       end
+
+      def self.root_collection
+        if Flipflop.alternate_mediaflux?
+          Rails.configuration.mediaflux["api_alternate_root_collection"]
+        else
+          Rails.configuration.mediaflux["api_root_collection"]
+        end
+      end
+
+      def self.root_collection_namespace
+        if Flipflop.alternate_mediaflux?
+          Rails.configuration.mediaflux["api_alternate_root_collection_namespace"]
+        else
+          Rails.configuration.mediaflux["api_root_collection_namespace"]
+        end
+      end
+
+      def self.root_collection_name
+        if Flipflop.alternate_mediaflux?
+          Rails.configuration.mediaflux["api_alternate_root_collection_name"]
+        else
+          Rails.configuration.mediaflux["api_root_collection_name"]
+        end
+      end
     end
   end
 end

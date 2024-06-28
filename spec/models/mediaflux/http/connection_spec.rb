@@ -67,4 +67,70 @@ RSpec.describe Mediaflux::Http::Connection, type: :model do
       end
     end
   end
+
+  describe "##root_collection" do
+    it "returns the mediaflux root collection" do
+      expect(Mediaflux::Http::Connection.root_collection).to eq(Rails.configuration.mediaflux["api_root_collection"])
+    end
+
+    context "alternate mediaflux" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, false)
+      end
+
+      it "returns the alternate mediaflux root collection" do
+        expect(Mediaflux::Http::Connection.root_collection).to eq(Rails.configuration.mediaflux["api_alternate_root_collection"])
+      end
+    end
+  end
+
+  describe "##root_collection_namespace" do
+    it "returns the mediaflux root collection namespace" do
+      expect(Mediaflux::Http::Connection.root_collection_namespace).to eq(Rails.configuration.mediaflux["api_root_collection_namespace"])
+    end
+
+    context "alternate mediaflux" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, false)
+      end
+
+      it "returns the alternate mediaflux root collection namespace" do
+        expect(Mediaflux::Http::Connection.root_collection_namespace).to eq(Rails.configuration.mediaflux["api_alternate_root_collection_namespace"])
+      end
+    end
+  end
+
+  describe "##root_collection_name" do
+    it "returns the mediaflux root collection name" do
+      expect(Mediaflux::Http::Connection.root_collection_name).to eq(Rails.configuration.mediaflux["api_root_collection_name"])
+    end
+
+    context "alternate mediaflux" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:alternate_mediaflux, false)
+      end
+
+      it "returns the alternate mediaflux root collection name" do
+        expect(Mediaflux::Http::Connection.root_collection_name).to eq(Rails.configuration.mediaflux["api_alternate_root_collection_name"])
+      end
+    end
+  end
 end
