@@ -14,17 +14,9 @@ module Mediaflux
         "/__mflux_svc__"
       end
 
-      def self.protocol
-        if mediaflux_port == 443
-          "https"
-        else
-          "http"
-        end
-      end
-
       def self.uri
         # TODO use connection here
-        URI("#{protocol}://#{mediaflux_host}:#{mediaflux_port}/#{request_path}")
+        URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}/#{request_path}")
       end
 
       # Constructs a new HTTP POST request for usage with the Mediaflux API
@@ -37,18 +29,6 @@ module Mediaflux
       # @return [Hash]
       def self.mediaflux
         Rails.configuration.mediaflux
-      end
-
-      # The host URL for the Mediaflux server
-      # @return [String]
-      def self.mediaflux_host
-        Rails.configuration.mediaflux["api_host"]
-      end
-
-      # The host port for the Mediaflux server
-      # @return [String]
-      def self.mediaflux_port
-        Rails.configuration.mediaflux["api_port"].to_i
       end
 
       # The default XML namespace which should be used for building the XML
