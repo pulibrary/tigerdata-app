@@ -146,7 +146,7 @@ module Mediaflux
       # Take a string like "2024-02-26T10:33:11-05:00" and convert this string to "22-FEB-2024 13:57:19"
       def self.format_date_for_mediaflux(iso8601_date)
         return if iso8601_date.nil?
-        Time.parse(iso8601_date).strftime("%e-%b-%Y %H:%M:%S").upcase
+        Time.format_date_for_mediaflux(iso8601_date)
       end
 
       private

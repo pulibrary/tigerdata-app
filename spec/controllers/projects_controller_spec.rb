@@ -43,7 +43,7 @@ RSpec.describe ProjectsController do
         "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
         "          <Department>RDSS</Department>\n" \
         "          <Department>PRDS</Department>\n" \
-        "          <CreatedOn>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
+        "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
         "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
         "          <ProjectID>abc-123</ProjectID>\n" \
         "          <StorageCapacity>\n" \
@@ -53,7 +53,7 @@ RSpec.describe ProjectsController do
         "          <Performance Requested=\"standard\">standard</Performance>\n" \
         "          <Submission>\n" \
         "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
-        "            <RequestDateTime>#{MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
+        "            <RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
         "          </Submission>\n" \
         "          <ProjectPurpose>research</ProjectPurpose>\n" \
         "          <SchemaVersion>0.6.1</SchemaVersion>\n" \

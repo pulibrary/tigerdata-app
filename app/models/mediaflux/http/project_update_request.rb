@@ -70,10 +70,10 @@ module Mediaflux
                     xml.DataUser rw_user
                   end
                   xml.CreatedBy project.metadata[:created_by]
-                  created_on = MediafluxTime.format_date_for_mediaflux(project.metadata[:created_on])
+                  created_on = Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])
                   xml.CreatedOn created_on
                   xml.UpdatedBy project.metadata[:updated_by]
-                  updated_on = MediafluxTime.format_date_for_mediaflux(project.metadata[:updated_on])
+                  updated_on = Mediaflux::Time.format_date_for_mediaflux(project.metadata[:updated_on])
                   xml.UpdatedOn updated_on
                   xml.ProjectID project.metadata[:project_id]
                   capacity = project.metadata[:storage_capacity]
