@@ -2,7 +2,6 @@
 module Mediaflux
   module Http
     class AssetExistRequest < Request
-
       # Constructor
       # @param session_token [String] the API token for the authenticated session
       def initialize(session_token:, path:)

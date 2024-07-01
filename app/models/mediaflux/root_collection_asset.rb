@@ -11,7 +11,7 @@ module Mediaflux
       @error = nil
     end
 
-    def create()
+    def create
       check_root = Mediaflux::Http::AssetExistRequest.new(session_token: @session_token, path: @path)
       return true if check_root.exist?
 
