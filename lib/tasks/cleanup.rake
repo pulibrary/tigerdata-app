@@ -6,10 +6,10 @@ namespace :mediaflux do
     login = Mediaflux::Http::LogonRequest.new
     login.resolve
     session_id = login.session_token
-    message = "Deleting everything from mediaflux namespace: #{Rails.configuration.mediaflux[:api_root_ns]}"
+    message = "Deleting everything from mediaflux namespace: #{Mediaflux::Http::Connection.root_namespace}"
     puts message
     Rails.logger.warn message
-    Mediaflux::Http::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_ns]).destroy
+    Mediaflux::Http::NamespaceDestroyRequest.new(session_token: session_id, namespace: Mediaflux::Http::Connection.root_namespace).destroy
     [UserRequest, User, Project].each(&:delete_all)
     # Now load the users for this environment from the registration list
     Rake::Task["load_users:from_registration_list"].execute
