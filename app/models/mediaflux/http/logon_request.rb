@@ -43,6 +43,14 @@ module Mediaflux
 
       private
 
+        class << self
+          # The Rails configuration options specifying the Mediaflux server
+          # @return [Hash]
+          def mediaflux
+            Rails.configuration.mediaflux
+          end
+        end
+
         def response_session_element
           response_xml.xpath("response/reply/result/session")
         end
