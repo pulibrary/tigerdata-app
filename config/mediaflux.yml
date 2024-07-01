@@ -94,8 +94,8 @@ test:
   api_root_collection_namespace: '/td-test-001'
   api_root_collection: 'path=/td-test-001/tigerdata'
   api_transport: 'http'
-  api_host: 'mediaflux.example.com'
-  api_port: '8888'
+  api_host: <%= ENV["TEST_MEDIAFLUX_HOST"] || 'mediaflux.example.com' %>
+  api_port: <%= ENV["TEST_MEDIAFLUX_PORT"] || '8888' %>
 
   # Alternate to test is still a test location
   api_alternate_root_ns:  '/td-test-002/tigerdataNS'
