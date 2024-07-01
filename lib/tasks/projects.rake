@@ -10,7 +10,7 @@ namespace :projects do
 
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)
-    root_ns = Rails.configuration.mediaflux["api_root_ns"]
+    root_ns = Mediaflux::Http::Connection.root_namespace
 
     time_action("Creating projects") do
       puts "Creating #{count} projects with prefix #{project_prefix}..."
@@ -48,7 +48,7 @@ namespace :projects do
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
     data_sponsor = args[:data_sponsor]
     department = args[:department]
-    root_ns = Rails.configuration.mediaflux["api_root_ns"]
+    root_ns = Mediaflux::Http::Connection.root_namespace
 
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)

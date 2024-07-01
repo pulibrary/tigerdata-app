@@ -27,7 +27,7 @@ class ProjectMediaflux
       raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
     end
     # Create a collection asset under the root namespace and set its metadata
-    project_parent = Rails.configuration.mediaflux["api_root_collection"]
+    project_parent = Mediaflux::Http::Connection.root_collection
     prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::Http::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
     id = create_request.id
@@ -73,7 +73,7 @@ class ProjectMediaflux
   def self.xml_payload(project:, xml_namespace: nil)
     project_name = project.project_directory
     project_namespace = "#{project_name}NS"
-    project_parent = Rails.configuration.mediaflux["api_root_collection"]
+    project_parent = Mediaflux::Http::Connection.root_collection
 
     create_request = Mediaflux::Http::ProjectCreateRequest.new(session_token: nil, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
     create_request.xml_payload
@@ -85,7 +85,7 @@ class ProjectMediaflux
   end
 
   def self.create_root_ns(session_id:)
-    root_namespace = Rails.configuration.mediaflux["api_root_ns"]
+    root_namespace = Mediaflux::Http::Connection.root_namespace
     namespace_request = Mediaflux::Http::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
     if namespace_request.exists?
       Rails.logger.info "Root namespace #{root_namespace} already exists"
@@ -105,8 +105,8 @@ class ProjectMediaflux
         get_parent = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project_parent)
         if get_parent.error?
           if project_parent.include?("path=")
-            create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux["api_root_collection_namespace"],
-                                                                            name: Rails.configuration.mediaflux["api_root_collection_name"])
+            create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Mediaflux::Http::Connection.root_collection_namespace,
+                                                                            name: Mediaflux::Http::Connection.root_collection_name)
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
           end
         end    
