@@ -59,6 +59,4 @@ describe "featrues", type: :system, js: true do
       expect(page).to have_content("Alternate mediaflux")
     end
   end
-
-  
 end
