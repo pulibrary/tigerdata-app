@@ -1,1 +1,5 @@
 <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Mediaflux::Http::Connection.host %></b>
+<dl> 
+    <dt> Mediaflux Port: </dt> 
+    <dd> <%= Mediaflux::Http::Connection.port %></dd>
+</dl> 

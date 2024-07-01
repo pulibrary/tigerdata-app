@@ -3,7 +3,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  mount Flipflop::Engine => "/flipflop"
+  mount Flipflop::Engine => "/features"
   mount HealthMonitor::Engine, at: "/"
   mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 

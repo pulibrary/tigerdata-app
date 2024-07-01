@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-describe "flipflop", type: :system, js: true do
+describe "featrues", type: :system, js: true do
   it "flip flop doesn't show for un logged in user" do
-    visit "/flipflop"
+    visit "/features"
     expect(page).to have_content("You need to sign in")
   end
 
@@ -16,7 +16,7 @@ describe "flipflop", type: :system, js: true do
     end
 
     it "flip flop doesn't show for any user" do
-      visit "/flipflop"
+      visit "/features"
       expect(page).not_to have_content("Alternate mediaflux")
     end
   end
@@ -29,7 +29,7 @@ describe "flipflop", type: :system, js: true do
     end
 
     it "flip flop doesn't show for any user" do
-      visit "/flipflop"
+      visit "/features"
       expect(page).not_to have_content("Alternate mediaflux")
     end
   end
@@ -42,7 +42,7 @@ describe "flipflop", type: :system, js: true do
     end
 
     it "flip flop doesn't show for any user" do
-      visit "/flipflop"
+      visit "/features"
       expect(page).to have_content("Alternate mediaflux")
     end
   end
@@ -55,8 +55,10 @@ describe "flipflop", type: :system, js: true do
     end
 
     it "flip flop doesn't show for any user" do
-      visit "/flipflop"
+      visit "/features"
       expect(page).to have_content("Alternate mediaflux")
     end
   end
+
+  
 end
