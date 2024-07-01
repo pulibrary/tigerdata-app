@@ -16,6 +16,10 @@ module Mediaflux
         "asset.exists"
       end
 
+      # Be aware that asset.exists does not return the ID of the asset validated
+      # so we cannot return it back to the user (Mediaflux returns the path that
+      # we validated but not the actual asset ID. Hence we return true/false for
+      # this kind of request.
       def exist?
         response_xml.xpath("/response/reply/result/exists").text == "true"
       end

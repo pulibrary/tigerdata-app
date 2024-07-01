@@ -20,7 +20,7 @@ namespace :schema do
 
   task asset_exist: :environment do
     user = User.where(uid:"hc8719").first
-    path = "/td-test-001/root1"
+    path = "/td-test-001/root3"
     exist_req = Mediaflux::Http::AssetExistRequest.new(session_token: user.mediaflux_session, path:)
     puts "#{path} exists? #{exist_req.exist?}"
   end
@@ -28,9 +28,22 @@ namespace :schema do
   task root_create: :environment do
     user = User.where(uid:"hc8719").first
     namespace = "/td-test-001"
-    name = "root2"
-    create_req = Mediaflux::Http::CollectionAssetCreateRoot.new(session_token: user.mediaflux_session, namespace:, name:)
+    name = "root3"
+    create_req = Mediaflux::Http::CollectionAssetCreateRootRequest.new(session_token: user.mediaflux_session, namespace:, name:)
     puts "root created with id #{create_req.id}"
   end
+
+  task root_create_model: :environment do
+    user = User.where(uid:"hc8719").first
+    namespace = "/td-test-002"
+    name = "root5"
+    model = Mediaflux::RootCollectionAsset.new(session_token: user.mediaflux_session, namespace:, name:)
+    if model.create
+      puts "root created (or already exist)"
+    else
+      puts "Error creating root: #{model.error[:message]}"
+    end
+  end
+
 end
 # :nocov:
