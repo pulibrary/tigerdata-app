@@ -7,6 +7,16 @@ production:
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
+
+  # Alternate to production is real production
+  api_alternate_root_ns:  '/princeton/tigerdataNS'
+  api_alternate_root_collection: 'path=/princeton/tigerdata'
+  api_alternate_root_collection_name:  'tigerdata'
+  api_alternate_root_collection_namespace: '/princeton'
+  api_alternate_transport: <%= ENV["MEDIAFLUX_ALTERNATE_TRANSPORT"] || 'https' %>
+  api_alternate_host: <%= ENV["MEDIAFLUX_ALTERNATE_HOST"] %>
+  api_alternate_port: <%= ENV["MEDIAFLUX_ALTERNATE_PORT"] || 443 %>
+
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
@@ -19,6 +29,16 @@ qa:
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
+
+  # Alternate to qa is staging
+  api_alternate_root_ns:  '/td-staging-001/tigerdataNS'
+  api_alternate_root_collection: 'path=/td-staging-001/tigerdata'
+  api_alternate_root_collection_name:  'tigerdata'
+  api_alternate_root_collection_namespace: '/td-staging-001'
+  api_alternate_transport: <%= ENV["MEDIAFLUX_ALTERNATE_TRANSPORT"] || 'https' %>
+  api_alternate_host: <%= ENV["MEDIAFLUX_ALTERNATE_HOST"] %>
+  api_alternate_port: <%= ENV["MEDIAFLUX_ALTERNATE_PORT"] || 443 %>
+
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
@@ -31,6 +51,16 @@ staging:
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
+
+  # Alternate to staging is qa
+  api_alternate_root_ns:  '/td-qa-001/tigerdataNS'
+  api_alternate_root_collection: 'path=/td-qa-001/tigerdata'
+  api_alternate_root_collection_name:  'tigerdata'
+  api_alternate_root_collection_namespace: '/td-qa-001'
+  api_alternate_transport: <%= ENV["MEDIAFLUX_ALTERNATE_TRANSPORT"] || 'https' %>
+  api_alternate_host: <%= ENV["MEDIAFLUX_ALTERNATE_HOST"] %>
+  api_alternate_port: <%= ENV["MEDIAFLUX_ALTERNATE_PORT"] || 443 %>
+
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] %>
   api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
@@ -43,6 +73,17 @@ development:
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'http' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] || '0.0.0.0' %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
+
+  # Alternate to development is an alternate location in docker
+  api_alternate_root_ns:  '/td-alternate-001/tigerdataNS'
+  api_alternate_root_collection: 'path=/td-alternate-001/tigerdata'
+  api_alternate_root_collection_name:  'tigerdata-alternate'
+  api_alternate_root_collection_namespace: '/td-alternate-001'
+  api_alternate_transport: <%= 'http' %>
+  api_alternate_host: <%= '0.0.0.0' %>
+  api_alternate_port: <%= '8888' %>
+
+
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'system' %>
   api_user: <%= ENV["MEDIAFLUX_USER"] || 'manager' %>
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
@@ -55,6 +96,16 @@ test:
   api_transport: 'http'
   api_host: 'mediaflux.example.com'
   api_port: '8888'
+
+  # Alternate to test is still a test location
+  api_alternate_root_ns:  '/td-test-002/tigerdataNS'
+  api_alternate_root_collection: 'path=/td-test-002/tigerdata-alt'
+  api_alternate_root_collection_name:  'tigerdata-alt'
+  api_alternate_root_collection_namespace: '/td-test-002'
+  api_alternate_transport: 'https'
+  api_alternate_host: 'mediaflux-alt.example.com'
+  api_alternate_port: '7777'
+
   api_domain: 'system'
   api_user: 'manager'
   api_password: 'change_me'
