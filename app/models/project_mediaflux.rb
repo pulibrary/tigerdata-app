@@ -55,15 +55,27 @@ class ProjectMediaflux
     id
   end
 
+  # Generates the quota during project creation 
   def self.create_quota(project:, mediaflux_project_id:, session_id:)
     #TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
     allocation = project.metadata_json["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata_json["storage_capacity"]["unit"]["requested"]
-    quota_request = Mediaflux::Http::QuotaCreateCollectionRequest.new(
-      session_token: session_id,
-      collection: mediaflux_project_id,
-      allocation: allocation
-    )
-    quota_request.resolve
+      # Constructor
+      # @param session_token [String] the API token for the authenticated session
+      # @param collection [String] Id of the collection
+      # @param allocation [String] Quota allocation to be set for the collection, e.g. "1 MB" or "1 GB"
+      def quota_request(session_token:, collection:, allocation:)
+        super(session_token: session_token)
+        @collection = collection
+        @allocation = allocation
+        @name = "#{@allocation} quota for #{@collection}"
+        quota_request.resolve
+      end
+
+      # Specifies the Mediaflux service to use when creating assets
+      # @return [String]
+      def self.service
+        "asset.collection.quota.set"
+      end
   end
 
   def self.update(project:, session_id:)
@@ -108,6 +120,21 @@ class ProjectMediaflux
             create_parent_request = Mediaflux::Http::AssetCreateRequest.new(session_token: session_id, namespace: Mediaflux::Http::Connection.root_collection_namespace,
                                                                             name: Mediaflux::Http::Connection.root_collection_name)
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
+          end
+        end
+      end
+
+      # The generated XML mimics what we get when we issue an Aterm command as follows:
+      # > asset.collection.quota.set :id 1282 :quota
+      #     < :allocation 1 MB :on-overflow fail :description "1 MB quota for 1282" >
+      def build_http_request_body(name:)
+        super do |xml|
+          xml.args do
+            xml.id @collection
+            xml.quota do
+              xml.allocation @allocation
+              xml.description @name
+            end
           end
         end
       end
