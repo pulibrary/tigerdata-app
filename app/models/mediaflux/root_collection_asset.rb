@@ -3,11 +3,12 @@ module Mediaflux
   class RootCollectionAsset
     attr_reader :error
 
-    def initialize(session_token:, namespace:, name:)
+    def initialize(session_token:, root_ns:, parent_collection:)
       @session_token = session_token
-      @namespace = namespace || Rails.configuration.mediaflux["api_root_collection_namespace"]   # /princeton or /td-demo-001
-      @name = name || Rails.configuration.mediaflux["api_root_collection_name"]                  # tigerdata
-      @path = Pathname.new(namespace).join(name).to_s
+      @root_ns = root_ns || Rails.configuration.mediaflux["api_root_collection_namespace"]                  # /princeton or /td-demo-001
+      @parent_collection = parent_collection || Rails.configuration.mediaflux["api_root_collection_name"]   # tigerdata
+      @parent_ns = Rails.configuration.mediaflux["api_root_ns"]                                             # /td-demo-001/tigerdataNS
+      @path = Pathname.new(@root_ns).join(@parent_collection).to_s
       @error = nil
     end
 
@@ -18,10 +19,11 @@ module Mediaflux
       return true if check_root.exist?
 
       if create_root_namespace
-        create_request = Mediaflux::Http::CollectionAssetCreateRootRequest.new(session_token: @session_token, namespace: @namespace, name: @name)
+        create_request = Mediaflux::Http::CollectionAssetCreateRootRequest.new(session_token: @session_token, namespace: @root_ns, name: @parent_collection)
         create_request.resolve
         @error = create_request.response_error
-        create_request.id.present?
+        return false if @error.present?
+        create_parent_ns
       else
         false
       end
@@ -30,10 +32,20 @@ module Mediaflux
     private
 
       def create_root_namespace
-        check_root_namespace = Mediaflux::Http::NamespaceExistRequest.new(session_token: @session_token, namespace: @namespace)
+        check_root_namespace = Mediaflux::Http::NamespaceExistRequest.new(session_token: @session_token, namespace: @root_ns)
         return true if check_root_namespace.exist?
 
-        create_namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(session_token: @session_token, namespace: @namespace)
+        create_namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(session_token: @session_token, namespace: @root_ns)
+        create_namespace_request.resolve
+        @error = create_namespace_request.response_error
+        @error.blank?
+      end
+
+      def create_parent_ns
+        check_namespace = Mediaflux::Http::NamespaceExistRequest.new(session_token: @session_token, namespace: @parent_ns)
+        return true if check_namespace.exist?
+
+        create_namespace_request = Mediaflux::Http::NamespaceCreateRequest.new(session_token: @session_token, namespace: @parent_ns)
         create_namespace_request.resolve
         @error = create_namespace_request.response_error
         @error.blank?
