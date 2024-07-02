@@ -16,8 +16,8 @@ RSpec.describe TigerdataMailer, type: :mailer do
     html_body = mail.html_part.body.to_s
     expect(html_body).to have_content(project.metadata[:title])
     project.metadata.keys.each do |field|
-      next if ["updated_on", "created_on", "created_by", "updated_by", "departments"].include?(field)
-      
+      next if ["updated_on", "created_on", "created_by", "updated_by", "departments", "submission"].include?(field)
+
       value = project.metadata[field]
       value = value.sort.join(", ") if value.is_a? Array
       if field == "storage_capacity"

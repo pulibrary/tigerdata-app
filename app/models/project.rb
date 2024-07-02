@@ -8,7 +8,7 @@ class Project < ApplicationRecord
   PENDING_STATUS = "pending"
   APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
-  
+
   delegate :to_json, to: :metadata_json
 
   def metadata
@@ -255,9 +255,9 @@ class Project < ApplicationRecord
       @project_directory_pathname ||= begin
         @original_directory = metadata[:project_directory]
         Pathname.new(@original_directory)
-      end 
+      end
     end
-    
+
     # Ensure that the project directory is a valid path
     def safe_name(name)
       Project.safe_name(name)
