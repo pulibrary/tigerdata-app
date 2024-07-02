@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 class ProjectMetadata
   attr_reader :project, :current_user, :params
+  attr_accessor :title
+
   def initialize(project:, current_user: nil)
     @project = project
+    # TODO: add the rest of the metadata properties
+    @title = project.metadata[:title]
     @current_user = current_user
     @params = {}
   end

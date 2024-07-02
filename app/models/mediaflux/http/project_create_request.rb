@@ -2,7 +2,7 @@
 module Mediaflux
   module Http
     class ProjectCreateRequest < AssetCreateRequest
-      attr_reader :namespace, :project, :collection
+      attr_reader :namespace, :project, :collection, :project_metadata
 
       # Constructor
       # @param session_token [String] the API token for the authenticated session
@@ -10,10 +10,11 @@ module Mediaflux
       # @param project [Project] project to be created in Mediaflux
       # @param pid [String] Optional Parent collection id (use this or a namespace not both)
       # @param xml_namespace [String] Optional parameter for metadata xml namspace
-      # @param xml_namespace_uri [String] Optional parameter for metadata xml namspace url 
+      # @param xml_namespace_uri [String] Optional parameter for metadata xml namspace url
       def initialize(session_token:, namespace:, project:,  xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
         super(session_token:, namespace:, name: project.project_directory_short,  xml_namespace:, xml_namespace_uri:,  pid:)
         @project = project
+        @project_metadata = ProjectMetadata.new(project: project)
       end
 
       private
@@ -40,10 +41,10 @@ module Mediaflux
           xml.meta do
             root = xml.doc.root
             root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
-      
+
             xml.send("#{@xml_namespace}:project") do
               xml.ProjectDirectory project.project_directory
-              xml.Title project.metadata[:title]
+              xml.Title project_metadata.title
               xml.Description project.metadata[:description] if project.metadata[:description].present?
               xml.Status project.metadata[:status]
               xml.DataSponsor project.metadata[:data_sponsor]
