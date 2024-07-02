@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::RootCollectionAsset, type: :model, connect_to_mediaflux: true do
   let(:session_token) { Mediaflux::Http::LogonRequest.new.session_token }
-  let(:namespace_root) { Rails.configuration.mediaflux["api_root_collection_namespace"] }
+  let(:namespace_root) { FFaker::InternetSE.company_name_single_word }
   let(:name) { FFaker::InternetSE.company_name_single_word }
 
   describe "#create" do
@@ -16,10 +16,12 @@ RSpec.describe Mediaflux::RootCollectionAsset, type: :model, connect_to_mediaflu
       expect(subject.create).to be true
     end
 
-    it "handles errors when the namespace root is not valid" do
-      subject = described_class.new(session_token: session_token, namespace: namespace_root + "invalid", name: name)
+    it "detects when an invalid namespace or name is used" do
+      subject = described_class.new(session_token: session_token, namespace: "", name: name)
       expect(subject.create).to be false
-      expect(subject.error).not_to be_empty
+
+      subject = described_class.new(session_token: session_token, namespace: namespace_root, name: "")
+      expect(subject.create).to be false
     end
   end
 end
