@@ -3,6 +3,9 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
   let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+  let(:session_token) { Mediaflux::Http::LogonRequest.new.session_token }
+  let(:root_ns) { Rails.configuration.mediaflux["api_root_collection_namespace"] }        # /td-test-001
+  let(:parent_collection) { Rails.configuration.mediaflux["api_root_collection_name"] }   # tigerdata
 
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
@@ -11,6 +14,7 @@ RSpec.describe Mediaflux::Http::AssetCreateRequest, type: :model do
 
   describe "#id" do
     it "creates a collection on the server", connect_to_mediaflux: true do
+      Mediaflux::RootCollectionAsset.new(session_token: session_token, root_ns: root_ns, parent_collection: parent_collection).create
       session_id = User.new.mediaflux_session
 
       create_request = described_class.new(session_token: session_id, name: "testasset", namespace: Rails.configuration.mediaflux[:api_root_ns])

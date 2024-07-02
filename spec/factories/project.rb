@@ -21,6 +21,12 @@ FactoryBot.define do
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
+      submission do
+        {
+          requested_by: FactoryBot.create(:user).uid,
+          request_date_time: Time.current.in_time_zone("America/New_York").iso8601
+        }
+      end
     end
     mediaflux_id { nil }
     metadata do
@@ -44,7 +50,8 @@ FactoryBot.define do
         project_purpose: project_purpose,
         schema_version: schema_version,
         approved_by: approved_by,
-        approved_on: approved_on
+        approved_on: approved_on,
+        submission: submission
       }
     end
     factory :project_with_doi, class: "Project" do
