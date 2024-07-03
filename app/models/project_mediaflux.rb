@@ -10,7 +10,7 @@ class ProjectMediaflux
   #
   # @param project [Project] the project that needs to be added to MediaFlux
   # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
-  # @param xml_namespace [] 
+  # @param xml_namespace []
   # @return [String] The id of the project that got created
   def self.create!(project:, session_id:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
@@ -50,7 +50,7 @@ class ProjectMediaflux
     end
     project.mediaflux_id = id
     project.save!
-  
+
     self.create_quota(project: project, mediaflux_project_id: id, session_id: session_id)
     id
   end
@@ -109,7 +109,7 @@ class ProjectMediaflux
                                                                             name: Mediaflux::Http::Connection.root_collection_name)
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
           end
-        end    
+        end
       end
   end
 end

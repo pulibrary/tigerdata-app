@@ -1,11 +1,38 @@
 # frozen_string_literal: true
 class ProjectMetadata
   attr_reader :project, :current_user, :params
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users, :created_on, :created_by, :project_id, :project_purpose, :storage_capacity,
+:storage_performance_expectations, :updated_by, :updated_on
+
   def initialize(project:, current_user: nil)
     @project = project
+    initialize_from_metadata
     @current_user = current_user
     @params = {}
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def initialize_from_metadata
+    @title = project.metadata[:title]
+    @description = project.metadata[:description]
+    @status = project.metadata[:status]
+    @data_sponsor = project.metadata[:data_sponsor]
+    @data_manager = project.metadata[:data_manager]
+    @departments = project.metadata[:departments]
+    @ro_users = project.metadata[:data_user_read_only]
+    @rw_users = project.metadata[:data_user_read_write]
+    @created_on = project.metadata[:created_on]
+    @created_by = project.metadata[:created_by]
+    @project_id = project.metadata[:project_id]
+    @project_purpose = project.metadata[:project_purpose]
+    @storage_capacity = project.metadata[:storage_capacity]
+    @storage_performance_expectations = project.metadata[:storage_performance_expectations]
+    @updated_by = project.metadata[:updated_by]
+    @updated_on = project.metadata[:updated_on]
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # Generate a Hash of updated Project metadata attributes
   # @param params [Hash] the updated Project metadata attributes
