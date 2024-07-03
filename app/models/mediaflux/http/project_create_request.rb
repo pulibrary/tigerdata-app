@@ -45,44 +45,44 @@ module Mediaflux
             xml.send("#{@xml_namespace}:project") do
               xml.ProjectDirectory project.project_directory
               xml.Title project_metadata.title
-              xml.Description project.metadata[:description] if project.metadata[:description].present?
-              xml.Status project.metadata[:status]
-              xml.DataSponsor project.metadata[:data_sponsor]
-              xml.DataManager project.metadata[:data_manager]
-              departments =  project.metadata[:departments] || []
+              xml.Description project_metadata.description if project_metadata.description.present?
+              xml.Status project_metadata.status
+              xml.DataSponsor project_metadata.data_sponsor
+              xml.DataManager project_metadata.data_manager
+              departments =  project_metadata.departments || []
               departments.each do |department|
                 xml.Department department
               end
-              ro_users = project.metadata[:data_user_read_only] || []
+              ro_users = project_metadata.ro_users || []
               ro_users.each do |ro_user|
                 xml.DataUser do
                   xml.parent.set_attribute("ReadOnly", true)
                   xml.text(ro_user)
                 end
               end
-              rw_users = project.metadata[:data_user_read_write] || []
+              rw_users = project_metadata.rw_users || []
               rw_users.each do |rw_user|
                 xml.DataUser rw_user
               end
-              created_on = Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])
+              created_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.created_on)
               xml.CreatedOn created_on
-              xml.CreatedBy project.metadata[:created_by]
-              xml.ProjectID project.metadata[:project_id]
-              capacity = project.metadata[:storage_capacity]
+              xml.CreatedBy project_metadata.created_by
+              xml.ProjectID project_metadata.project_id
+              capacity = project_metadata.storage_capacity
               xml.StorageCapacity do
                 xml.Size capacity["size"]["requested"]
                 xml.Unit capacity["unit"]["requested"]
               end
-              performance = project.metadata[:storage_performance_expectations]
+              performance = project_metadata.storage_performance_expectations
               xml.Performance do
                 xml.parent.set_attribute("Requested", performance["requested"])
                 xml.text(performance["requested"])
               end
               xml.Submission do
-                xml.RequestedBy project.metadata[:created_by]
+                xml.RequestedBy project_metadata.created_by
                 xml.RequestDateTime created_on
               end
-              xml.ProjectPurpose project.metadata[:project_purpose]
+              xml.ProjectPurpose project_metadata.project_purpose
               xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
             end
           end
