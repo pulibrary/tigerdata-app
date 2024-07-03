@@ -55,7 +55,7 @@ module Mediaflux
                   xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
                   xml.DataSponsor project_metadata.data_sponsor
                   xml.DataManager project_metadata.data_manager
-                  departments =  project_metadata.departments || []
+                  departments = project_metadata.departments || []
                   departments.each do |department|
                     xml.Department department
                   end
