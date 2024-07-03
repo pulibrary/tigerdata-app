@@ -9,7 +9,7 @@ class Project < ApplicationRecord
   APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
 
-  delegate :to_json, to: :metadata_json
+  delegate :to_json, to: :metadata_json # field in the database
 
   def metadata
     metadata_with_defaults.with_indifferent_access
@@ -19,7 +19,7 @@ class Project < ApplicationRecord
     @metadata_model ||= ProjectMetadata.new(project: self)
   end
 
-  def metadata=(metadata)
+  def metadata=(project_metadata)
     metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
     self.metadata_json = metadata.with_indifferent_access
   end
