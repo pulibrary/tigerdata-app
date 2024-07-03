@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 class ProjectMetadata
   attr_reader :project, :current_user, :params
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users, :created_on, :created_by, :project_id, :project_purpose, :storage_capacity, :storage_performance_expectations
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users, :created_on, :created_by, :project_id, :project_purpose, :storage_capacity,
+:storage_performance_expectations
 
   def initialize(project:, current_user: nil)
     @project = project
-    # TODO: add the rest of the metadata properties
+    initialize_from_metadata
+    @current_user = current_user
+    @params = {}
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def initialize_from_metadata
     @title = project.metadata[:title]
     @description = project.metadata[:description]
     @status = project.metadata[:status]
@@ -20,9 +27,8 @@ class ProjectMetadata
     @project_purpose = project.metadata[:project_purpose]
     @storage_capacity = project.metadata[:storage_capacity]
     @storage_performance_expectations = project.metadata[:storage_performance_expectations]
-    @current_user = current_user
-    @params = {}
   end
+  # rubocop:enable Metrics/AbcSize
 
   # Generate a Hash of updated Project metadata attributes
   # @param params [Hash] the updated Project metadata attributes
