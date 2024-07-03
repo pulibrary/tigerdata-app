@@ -20,9 +20,19 @@ class Project < ApplicationRecord
   end
 
   def metadata=(metadata)
-    # TODO: we should have schema_version as a propertu on ProjectMetadata
-    metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
-    self.metadata_json = metadata.with_indifferent_access
+    # TODO: we should have schema_version as a property on ProjectMetadata
+    # metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
+
+    # Save our new fancy metadata class instead of the hash
+    #
+    # Q. Can we save the class as-is or do we need to save to_json?
+    #
+    # We also have an issue with circular dependencies since ProjectMetadata
+    # references the project and the project will reference ProjectMetadata
+    # (via the metadata method above)
+
+    # self.metadata_json = metadata.with_indifferent_access
+    self.metadata_json = metadata
   end
 
   # TODO: Presumably we should display other statuses as well?
@@ -244,7 +254,20 @@ class Project < ApplicationRecord
     end
 
     def metadata_with_defaults
-      data = (metadata_json&.dup || { }).with_indifferent_access
+      temp_metadata = nil
+      if metadata_json != nil
+        if metadata_json.class == Hash
+          temp_metadata = metadata_json
+        else
+          temp_metadata = JSON.parse(metadata_json)
+        end
+        puts temp_metadata
+      end
+
+      # TODO: we will need to serialize the hash to ProjectMetadata
+      # https://api.rubyonrails.org/classes/ActiveModel/Serialization.html
+
+      data = (temp_metadata&.dup || { }).with_indifferent_access
       Rails.configuration.project_defaults.each { |key, value| data[key] ||= value }
       data
     end

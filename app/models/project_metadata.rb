@@ -11,6 +11,17 @@ class ProjectMetadata
     @params = {}
   end
 
+  # https://gist.github.com/jrgriffiniii/d60e05fbbae0088c4abacf84805591e5
+  # Hack to get the old access to properties to work.
+  # Should be removed once the refactor has been completed.
+  def [](key)
+    value = self.send(key)
+  end
+
+  def []=(key, value)
+    self.send(key, value)
+  end
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def initialize_from_metadata
@@ -86,11 +97,13 @@ class ProjectMetadata
 
   def create(params:)
     byebug
-    project.metadata = update_metadata(params: params)
 
-    # initialize_from_params(params: params)
-    # project.metadata = self
+    # Store the params into the class properties and pass the class to the project
+    # project.metadata = update_metadata(params: params)
+    initialize_from_params(params: params)
+    project.metadata = self.to_json
 
+    # WARNING: This gets into a circular reference between project and project metadata.
     if project.valid? && project.metadata["project_id"].blank?
       draft_doi
     end
