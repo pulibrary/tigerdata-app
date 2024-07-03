@@ -12,6 +12,7 @@ class ProjectMetadata
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def initialize_from_metadata
     @title = project.metadata[:title]
     @description = project.metadata[:description]
@@ -31,6 +32,7 @@ class ProjectMetadata
     @updated_on = project.metadata[:updated_on]
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # Generate a Hash of updated Project metadata attributes
   # @param params [Hash] the updated Project metadata attributes
