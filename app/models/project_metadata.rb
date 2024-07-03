@@ -38,6 +38,7 @@ class ProjectMetadata
   # @param params [Hash] the updated Project metadata attributes
   # @return [Hash]
   def update_metadata(params:)
+    byebug
     @params = params
     form_metadata
   end
@@ -84,7 +85,12 @@ class ProjectMetadata
   end
 
   def create(params:)
+    byebug
     project.metadata = update_metadata(params: params)
+
+    # initialize_from_params(params: params)
+    # project.metadata = self
+
     if project.valid? && project.metadata["project_id"].blank?
       draft_doi
     end
@@ -155,6 +161,34 @@ class ProjectMetadata
         data = attributes.merge(data_users)
         timestamps = project_timestamps
         data.merge(timestamps)
+      end
+
+      def initialize_from_params(params:)
+        self.ro_users = user_list_params(read_only_counter, "ro_user_")
+        self.rw_users = user_list_params(read_write_counter, "rw_user_")
+
+        # TODO: figure out if we need to create accessor for data_users
+        data_users = {
+          data_user_read_only: ro_users,
+          data_user_read_write: rw_users
+        }
+
+        self.data_sponsor = params[:data_sponsor]
+        self.data_manager = params[:data_manager]
+        self.departments = params[:departments]
+        # self.project_directory = params[:project_directory]
+        self.title = params[:title]
+        self.description = params[:description]
+        self.status = params[:status] # || project.metadata[:status]
+        # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
+        # self.storage_capacity = project.metadata[:storage_capacity]
+        # self.storage_performance_expectations = project.metadata[:storage_performance_expectations]
+        # self.project_purpose = project.metadata[:project_purpose]
+
+        # TODO: figure out timestamps
+        # data = attributes.merge(data_users)
+        timestamps = project_timestamps
+        # data.merge(timestamps)
       end
 
       def draft_doi

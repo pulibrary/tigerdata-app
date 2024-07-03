@@ -19,7 +19,8 @@ class Project < ApplicationRecord
     @metadata_model ||= ProjectMetadata.new(project: self)
   end
 
-  def metadata=(project_metadata)
+  def metadata=(metadata)
+    # TODO: we should have schema_version as a propertu on ProjectMetadata
     metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
     self.metadata_json = metadata.with_indifferent_access
   end
@@ -101,7 +102,7 @@ class Project < ApplicationRecord
   end
 
   # If the project hasn't yet been created in mediaflux, create it.
-  # If it already exists, update it. 
+  # If it already exists, update it.
   # @return [String] the mediaflux id of the project
   def save_in_mediaflux(session_id:)
     if mediaflux_id.nil?
@@ -129,7 +130,7 @@ class Project < ApplicationRecord
   end
 
   def mediaflux_metadata(session_id:)
-    @mediaflux_metadata ||= begin 
+    @mediaflux_metadata ||= begin
       accum_req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
       accum_req.metadata
     end
@@ -151,7 +152,7 @@ class Project < ApplicationRecord
     values = mediaflux_metadata(session_id:)
     #value = values.fetch(:size, 0)
     quota_value = values.fetch(:quota_used, '')
-    
+
     if quota_value.blank?
       return self.class.default_storage_usage
     else
@@ -175,7 +176,7 @@ class Project < ApplicationRecord
     quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
 
     backup_value = requested_capacity || self.class.default_storage_capacity #return the default storage capacity, if the requested capacity is nil
-    
+
     return backup_value if quota_value.blank?
     quota_value #return the requested storage capacity if a quota has not been set for a project, if storage has not been requested return "0 GB"
   end

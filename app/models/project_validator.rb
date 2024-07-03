@@ -40,9 +40,9 @@ class ProjectValidator < ActiveModel::Validator
         tableized = required_field_labels.map { |v| v.parameterize.underscore }
         tableized
       end
-    
+
       def required_attributes(project:)
         project.metadata_json.select { |k, _v| required_keys.include?(k) }
       end
-    
+
 end

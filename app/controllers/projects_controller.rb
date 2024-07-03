@@ -16,7 +16,10 @@ class ProjectsController < ApplicationController
     metadata_params = new_project_params.merge({
       status: Project::PENDING_STATUS
     })
+
+    # populates project.metadata with the values from the form (i.e. params)
     project_metadata.create(params: metadata_params)
+
     if project.save
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
@@ -121,9 +124,9 @@ class ProjectsController < ApplicationController
       project_params = params.dup
       metadata_params = project_params.merge({
         project_directory: project_params["project_directory"],
-        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
-                            "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                            "unit"=>{"approved"=>project_params["storage_unit"], 
+        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i,
+                            "requested"=>project.metadata[:storage_capacity][:size][:requested]},
+                            "unit"=>{"approved"=>project_params["storage_unit"],
                                      "requested"=>project.metadata[:storage_capacity][:unit][:requested]}},
         # no current input to set approved storage performance, so just copy requested
         storage_performance_expectations: {"requested"=>project.metadata[:storage_performance_expectations][:requested],
