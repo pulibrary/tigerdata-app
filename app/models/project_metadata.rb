@@ -1,49 +1,84 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  attr_reader :project, :current_user, :params
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users, :created_on, :created_by, :project_id, :project_purpose, :storage_capacity,
-:storage_performance_expectations, :updated_by, :updated_on
+  attr_reader :current_user, :params
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users,
+    :created_on, :created_by, :project_id, :project_purpose, :storage_capacity, :storage_performance_expectations,
+    :updated_by, :updated_on
 
-  def initialize(project:, current_user: nil)
-    @project = project
-    initialize_from_metadata
-    @current_user = current_user
-    @params = {}
+  def self.new_from_hash(metadata_hash)
+    pm = ProjectMetadata.new
+    pm.initialize_from_hash(metadata_hash)
+    pm
   end
 
-  # https://gist.github.com/jrgriffiniii/d60e05fbbae0088c4abacf84805591e5
-  # Hack to get the old access to properties to work.
-  # Should be removed once the refactor has been completed.
-  def [](key)
-    value = self.send(key)
-  end
-
-  def []=(key, value)
-    self.send(key, value)
+  def self.new_from_params(metadata_params)
+    pm = ProjectMetadata.new
+    pm.initialize_from_params(metadata_params)
+    pm
   end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def initialize_from_metadata
-    @title = project.metadata[:title]
-    @description = project.metadata[:description]
-    @status = project.metadata[:status]
-    @data_sponsor = project.metadata[:data_sponsor]
-    @data_manager = project.metadata[:data_manager]
-    @departments = project.metadata[:departments]
-    @ro_users = project.metadata[:data_user_read_only]
-    @rw_users = project.metadata[:data_user_read_write]
-    @created_on = project.metadata[:created_on]
-    @created_by = project.metadata[:created_by]
-    @project_id = project.metadata[:project_id]
-    @project_purpose = project.metadata[:project_purpose]
-    @storage_capacity = project.metadata[:storage_capacity]
-    @storage_performance_expectations = project.metadata[:storage_performance_expectations]
-    @updated_by = project.metadata[:updated_by]
-    @updated_on = project.metadata[:updated_on]
+  def initialize_from_hash(metadata_hash)
+    @title = metadata_hash[:title]
+    @description = metadata_hash[:description]
+    @status = metadata_hash[:status]
+    @data_sponsor = metadata_hash[:data_sponsor]
+    @data_manager = metadata_hash[:data_manager]
+    @departments = metadata_hash[:departments]
+    @ro_users = metadata_hash[:data_user_read_only]
+    @rw_users = metadata_hash[:data_user_read_write]
+    @created_on = metadata_hash[:created_on]
+    @created_by = metadata_hash[:created_by]
+    @project_id = metadata_hash[:project_id]
+    @project_purpose = metadata_hash[:project_purpose]
+    @storage_capacity = metadata_hash[:storage_capacity]
+    @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
+    @updated_by = metadata_hash[:updated_by]
+    @updated_on = metadata_hash[:updated_on]
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+
+  def initialize_from_params(params:)
+    self.ro_users = user_list_params(read_only_counter, "ro_user_")
+    self.rw_users = user_list_params(read_write_counter, "rw_user_")
+
+    # TODO: figure out if we need to create accessor for data_users
+    data_users = {
+      data_user_read_only: ro_users,
+      data_user_read_write: rw_users
+    }
+
+    self.data_sponsor = params[:data_sponsor]
+    self.data_manager = params[:data_manager]
+    self.departments = params[:departments]
+    # self.project_directory = params[:project_directory]
+    self.title = params[:title]
+    self.description = params[:description]
+    self.status = params[:status] # || project.metadata[:status]
+    # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
+    # self.storage_capacity = project.metadata[:storage_capacity]
+    # self.storage_performance_expectations = project.metadata[:storage_performance_expectations]
+    # self.project_purpose = project.metadata[:project_purpose]
+
+    # TODO: figure out timestamps
+    # data = attributes.merge(data_users)
+    # timestamps = project_timestamps
+    # data.merge(timestamps)
+  end
+
+  def draft_doi
+    self.project_id = "TBD"
+    # TODO: re-implement this method
+    return
+    puldatacite = PULDatacite.new
+    project.metadata_json["project_id"] = puldatacite.draft_doi
+    project.save!
+    data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
+    project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
+    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
+  end
 
   # Generate a Hash of updated Project metadata attributes
   # @param params [Hash] the updated Project metadata attributes
@@ -78,6 +113,7 @@ class ProjectMetadata
   # Approve a project by recording the mediaflux id & setting the status to 'approved'
   # @param params [Hash] the updated Project metadata attributes
   def approve_project(params:)
+    raise "To be refactored"
     project.mediaflux_id = params[:mediaflux_id]
     project.metadata_json["status"] = Project::APPROVED_STATUS
     project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
@@ -176,40 +212,5 @@ class ProjectMetadata
         data.merge(timestamps)
       end
 
-      def initialize_from_params(params:)
-        self.ro_users = user_list_params(read_only_counter, "ro_user_")
-        self.rw_users = user_list_params(read_write_counter, "rw_user_")
 
-        # TODO: figure out if we need to create accessor for data_users
-        data_users = {
-          data_user_read_only: ro_users,
-          data_user_read_write: rw_users
-        }
-
-        self.data_sponsor = params[:data_sponsor]
-        self.data_manager = params[:data_manager]
-        self.departments = params[:departments]
-        # self.project_directory = params[:project_directory]
-        self.title = params[:title]
-        self.description = params[:description]
-        self.status = params[:status] # || project.metadata[:status]
-        # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
-        # self.storage_capacity = project.metadata[:storage_capacity]
-        # self.storage_performance_expectations = project.metadata[:storage_performance_expectations]
-        # self.project_purpose = project.metadata[:project_purpose]
-
-        # TODO: figure out timestamps
-        # data = attributes.merge(data_users)
-        timestamps = project_timestamps
-        # data.merge(timestamps)
-      end
-
-      def draft_doi
-        puldatacite = PULDatacite.new
-        project.metadata_json["project_id"] = puldatacite.draft_doi
-        project.save!
-        data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
-        project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
-        project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
-      end
 end

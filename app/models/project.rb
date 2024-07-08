@@ -11,28 +11,34 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
+  def create!(initial_metadata:)
+    self.metadata = initial_metadata
+    if self.valid?
+      if initial_metadata.project_id.blank?
+        initial_metadata.draft_doi
+        self.metadata = initial_metadata
+      end
+    end
+    self.save!
+    initial_metadata.project_id
+  end
+
   def metadata
-    metadata_with_defaults.with_indifferent_access
+    metadata_hash = (metadata_json || {}).with_indifferent_access
+    metadata_hash
   end
 
   def metadata_model
-    @metadata_model ||= ProjectMetadata.new(project: self)
+    @metadata_model ||= ProjectMetadata.new_from_hash(self.metadata)
   end
 
   def metadata=(metadata)
     # TODO: we should have schema_version as a property on ProjectMetadata
     # metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
 
-    # Save our new fancy metadata class instead of the hash
-    #
-    # Q. Can we save the class as-is or do we need to save to_json?
-    #
-    # We also have an issue with circular dependencies since ProjectMetadata
-    # references the project and the project will reference ProjectMetadata
-    # (via the metadata method above)
-
-    # self.metadata_json = metadata.with_indifferent_access
-    self.metadata_json = metadata
+    # Convert our metadata to a hash so it can be saved on our JSONB field
+    metadata_hash = JSON.parse(metadata.to_json)
+    self.metadata_json = metadata_hash
   end
 
   # TODO: Presumably we should display other statuses as well?

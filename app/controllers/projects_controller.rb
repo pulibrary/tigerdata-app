@@ -11,16 +11,18 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    project_metadata = ProjectMetadata.new( current_user:, project: build_new_project)
-    new_project_params = project_params
-    metadata_params = new_project_params.merge({
+    byebug
+    project = Project.new
+    project_metadata = ProjectMetadata.new_from_hash(project.metadata)
+    metadata_params = params.dup.merge({
       status: Project::PENDING_STATUS
     })
 
-    # populates project.metadata with the values from the form (i.e. params)
-    project_metadata.create(params: metadata_params)
+    project_metadata.initialize_from_params(params: metadata_params)
+    project.create!(initial_metadata: project_metadata)
 
-    if project.save
+    byebug
+    if project.project_id != nil
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
         message_delivery = mailer.project_creation
@@ -48,6 +50,7 @@ class ProjectsController < ApplicationController
 
     render :new
   rescue StandardError => error
+    byebug
     logger_message = if project.persisted?
                       "Error encountered creating the project #{project.id} as user #{current_user.email}"
                      else
