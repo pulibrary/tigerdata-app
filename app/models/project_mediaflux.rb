@@ -99,20 +99,5 @@ class ProjectMediaflux
           end
         end
       end
-
-      # The generated XML mimics what we get when we issue an Aterm command as follows:
-      # > asset.collection.quota.set :id 1282 :quota
-      #     < :allocation 1 MB :on-overflow fail :description "1 MB quota for 1282" >
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id @collection
-            xml.quota do
-              xml.allocation @allocation
-              xml.description @name
-            end
-          end
-        end
-      end
   end
 end
