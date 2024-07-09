@@ -35,6 +35,7 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       expect(metadata[:created_by]).to eq(project.metadata[:created_by])
       expect(metadata[:ro_users]).to eq([data_user_ro.uid])
       expect(metadata[:rw_users]).to eq([data_user_rw.uid])
+      expect(metadata[:quota_allocation]).to eq("500 GB")
     end
   end
 
@@ -73,6 +74,10 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
       "        </tigerdata:project>\n" \
       "      </meta>\n" \
+      "      <quota>\n" \
+       "        <allocation>500 GB</allocation>\n" \
+       "        <description>Project Quota</description>\n" \
+       "      </quota>\n" \
       "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
       "      <type>application/arc-asset-collection</type>\n" \
       "    </args>\n" \
@@ -95,6 +100,7 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
                      "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
                      "<RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
                      "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta>" \
+                     "<quota><allocation>500 GB</allocation><description>Project Quota</description></quota>" \
                      "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
                      "<type>application/arc-asset-collection</type></service></request>"
       expect(create_request.xtoshell_xml).to eq(expected_xml)
