@@ -19,44 +19,8 @@ This application provides a front end for users to create and manage projects th
 
 ## Structure
 
-These are our initial plans: In the eventual implementation different systems
-(Mediaflux, PostgreSQL, LDAP) may have responsibility for different bits of data.
-Cardinality constraints (projects must have sponsors, etc.) will be enforced in software.
+The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework. 
 
-```mermaid
-erDiagram
-  Project }|--|{ User : "via metadata_json"
-  User ||--o{ UsersRoles : ""
-  Role ||--o{ UsersRoles :  ""
-
-  Project {
-    integer created_by_user_id
-    integer mediaflux_id
-    jsonb metadata_json "hash with metadata"
-    datetime created_at
-    datetime updated_at
-  }
-
-  Role {
-    string name
-    string resource "default nil role applies to all Objects"
-  }
-
-  UsersRoles {
-    int user FK
-    int role FK
-  }
-
-  User {
-    string uid "Princeton netid"
-    string provider "should always be cas"
-    string email
-    string given_name
-    string family_name
-    string display_name
-
-  }
-```
 ### Roles
 The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tiger-data-app/blob/main/docs/roles.md) of the system roles
 
