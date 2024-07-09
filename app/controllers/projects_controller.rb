@@ -11,7 +11,6 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    byebug
     project = Project.new
     project_metadata = ProjectMetadata.new_from_hash(project.metadata)
     metadata_params = params.dup.merge({
@@ -21,8 +20,7 @@ class ProjectsController < ApplicationController
     project_metadata.initialize_from_params(params: metadata_params)
     project.create!(initial_metadata: project_metadata)
 
-    byebug
-    if project.project_id != nil
+    if project.metadata_model.project_id != nil
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
         message_delivery = mailer.project_creation
@@ -36,6 +34,7 @@ class ProjectsController < ApplicationController
       render :new
     end
   rescue TigerData::MailerError => mailer_error
+    byebug
     logger_message = "Error encountered creating the project #{project.id} as user #{current_user.email}"
     Rails.logger.error(logger_message)
     honeybadger_context = {

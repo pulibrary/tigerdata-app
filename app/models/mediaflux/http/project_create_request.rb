@@ -14,7 +14,7 @@ module Mediaflux
       def initialize(session_token:, namespace:, project:,  xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
         super(session_token:, namespace:, name: project.project_directory_short,  xml_namespace:, xml_namespace_uri:,  pid:)
         @project = project
-        @project_metadata = ProjectMetadata.new(project: project)
+        @project_metadata = project.metadata_model
       end
 
       private

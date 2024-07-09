@@ -29,11 +29,12 @@ class ProjectMetadata
     @ro_users = metadata_hash[:data_user_read_only]
     @rw_users = metadata_hash[:data_user_read_write]
     @created_on = metadata_hash[:created_on]
-    @created_by = metadata_hash[:created_by]
+    # TODO: make sure we get this value as a parameter
+    @created_by = metadata_hash[:created_by] || User.first.uid
     @project_id = metadata_hash[:project_id]
     @project_purpose = metadata_hash[:project_purpose]
-    @storage_capacity = metadata_hash[:storage_capacity]
-    @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
+    @storage_capacity = metadata_hash[:storage_capacity] || default_storage_capacity
+    @storage_performance_expectations = metadata_hash[:storage_performance_expectations] || default_storage_performance_expectations
     @updated_by = metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on]
   end
@@ -41,25 +42,25 @@ class ProjectMetadata
   # rubocop:enable Metrics/MethodLength
 
   def initialize_from_params(params:)
-    self.ro_users = user_list_params(read_only_counter, "ro_user_")
-    self.rw_users = user_list_params(read_write_counter, "rw_user_")
+    @ro_users = user_list_params(read_only_counter, "ro_user_")
+    @rw_users = user_list_params(read_write_counter, "rw_user_")
 
     # TODO: figure out if we need to create accessor for data_users
     data_users = {
-      data_user_read_only: ro_users,
-      data_user_read_write: rw_users
+      data_user_read_only: @ro_users,
+      data_user_read_write: @rw_users
     }
 
-    self.data_sponsor = params[:data_sponsor]
-    self.data_manager = params[:data_manager]
-    self.departments = params[:departments]
+    @data_sponsor = params[:data_sponsor]
+    @data_manager = params[:data_manager]
+    @departments = params[:departments]
     # self.project_directory = params[:project_directory]
-    self.title = params[:title]
-    self.description = params[:description]
-    self.status = params[:status] # || project.metadata[:status]
+    @title = params[:title]
+    @description = params[:description]
+    @status = params[:status] # || project.metadata[:status]
     # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
-    # self.storage_capacity = project.metadata[:storage_capacity]
-    # self.storage_performance_expectations = project.metadata[:storage_performance_expectations]
+    @storage_capacity = params[:storage_capacity] || default_storage_capacity
+    @storage_performance_expectations = params[:storage_performance_expectations] || default_storage_performance_expectations
     # self.project_purpose = project.metadata[:project_purpose]
 
     # TODO: figure out timestamps
@@ -212,5 +213,18 @@ class ProjectMetadata
         data.merge(timestamps)
       end
 
+      # TODO: use good default values
+      def default_storage_capacity
+        {
+          size: { approved: 0, requested: 0 },
+          unit: { approved: "GB", requested: "GB" }
+        }
+      end
 
+      # TODO: use good default values
+      def default_storage_performance_expectations
+        {
+          requested: "Standard", approved: "Standard"
+        }
+      end
 end

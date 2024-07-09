@@ -11,6 +11,7 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
+  # NOTE: Moved from ProjectMetadata to Project
   def create!(initial_metadata:)
     self.metadata = initial_metadata
     if self.valid?
@@ -23,9 +24,11 @@ class Project < ApplicationRecord
     initial_metadata.project_id
   end
 
+  # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
+  # but we'll keep them both while we are refactoring the code so that we don't break
+  # everything at once since `metadata` is used everywhere.
   def metadata
-    metadata_hash = (metadata_json || {}).with_indifferent_access
-    metadata_hash
+    @metadata_hash = (metadata_json || {}).with_indifferent_access
   end
 
   def metadata_model
@@ -48,7 +51,7 @@ class Project < ApplicationRecord
               else
                 " (#{::Project::PENDING_STATUS})"
               end
-    metadata[:title] + trailer
+    self.metadata_model.title + trailer
   end
 
   def departments
