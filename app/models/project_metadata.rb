@@ -47,14 +47,14 @@ class ProjectMetadata
   def initialize_from_params(params:)
     @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
     @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
-    
+
     @data_sponsor = params[:data_sponsor]
     @data_manager = params[:data_manager]
     @departments = params[:departments]
     # self.project_directory = params[:project_directory]
     @title = params[:title]
     @description = params[:description]
-    @status = params[:status] if params[:status]# || project.metadata[:status]
+    @status = params[:status] if params[:status] # || project.metadata[:status]
     # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
     @storage_capacity = params[:storage_capacity]
     @storage_performance_expectations = params[:storage_performance_expectations]
@@ -68,31 +68,31 @@ class ProjectMetadata
   end
 
   def update_with_params(params, current_user)
-    if params["project_directory"] != nil
+    unless params["project_directory"].nil?
       self.project_directory = params["project_directory"]
       # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
     end
 
-    if params["storage_capacity"] != nil
+    unless params["storage_capacity"].nil?
       self.storage_capacity = {
-        "size"=>{
-          "approved"=>params["storage_capacity"].to_i,
-          "requested"=>self.storage_capacity[:size][:requested]
+        "size" => {
+          "approved" => params["storage_capacity"].to_i,
+          "requested" => storage_capacity[:size][:requested]
         },
-        "unit"=>{
-          "approved"=>params["storage_unit"],
-          "requested"=>self.storage_capacity[:unit][:requested]
+        "unit" => {
+          "approved" => params["storage_unit"],
+          "requested" => storage_capacity[:unit][:requested]
         }
       }
     end
 
     # we don't allow the user to specify an approve value so we use the requested
     self.storage_performance_expectations = {
-      "requested"=>self.storage_performance_expectations[:requested],
-      "approved"=>self.storage_performance_expectations[:requested]
+      "requested" => storage_performance_expectations[:requested],
+      "approved" => storage_performance_expectations[:requested]
     }
 
-    if params["approval_note"] != nil
+    unless params["approval_note"].nil?
       self.approval_note = {
         note_by: current_user.uid,
         note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
@@ -101,23 +101,21 @@ class ProjectMetadata
       }
     end
 
-    #Fields that come from the edit form
-    self.data_sponsor = params["data_sponsor"] if params["data_sponsor"] != nil
+    # Fields that come from the edit form
+    self.data_sponsor = params["data_sponsor"] unless params["data_sponsor"].nil?
 
-    self.data_manager = params["data_manager"] if params["data_manager"] != nil
-      
-    self.departments = params["departments"] if params["departments"] != nil
+    self.data_manager = params["data_manager"] unless params["data_manager"].nil?
 
-    self.title = params["title"] if params["title"] != nil
+    self.departments = params["departments"] unless params["departments"].nil?
 
-    self.description = params["description"] if params["description"] != nil
+    self.title = params["title"] unless params["title"].nil?
 
-    self.status = params["status"] if params["status"] != nil
+    self.description = params["description"] unless params["description"].nil?
+
+    self.status = params["status"] unless params["status"].nil?
 
     self.updated_by = current_user.uid
     self.updated_on = Time.current.in_time_zone("America/New_York").iso8601
-
-
   end
 
   def draft_doi
@@ -172,7 +170,7 @@ class ProjectMetadata
         params[:rw_user_counter].to_i
       end
 
-      def user_list_params(params,counter, key_prefix)
+      def user_list_params(params, counter, key_prefix)
         return if params.nil?
 
         users = []
@@ -204,18 +202,18 @@ class ProjectMetadata
       # The yml approach made sense when we were using a (dynamic) hash, but
       # less so now that we have an explicit class for the values.
       def set_defaults
-        if self.storage_capacity == nil
+        if storage_capacity.nil?
           self.storage_capacity = {
-            size: {requested: 500, approved: nil},
-            unit: {requested: "GB", approved: nil}
+            size: { requested: 500, approved: nil },
+            unit: { requested: "GB", approved: nil }
           }
         end
 
-        if self.storage_performance_expectations == nil
-          self.storage_performance_expectations = {requested: "Standard", approved: nil}
+        if storage_performance_expectations.nil?
+          self.storage_performance_expectations = { requested: "Standard", approved: nil }
         end
 
-        if self.project_purpose.nil?
+        if project_purpose.nil?
           self.project_purpose = "Research"
         end
       end
