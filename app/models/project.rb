@@ -262,25 +262,6 @@ class Project < ApplicationRecord
       lines
     end
 
-    def metadata_with_defaults
-      temp_metadata = nil
-      if metadata_json != nil
-        if metadata_json.class == Hash
-          temp_metadata = metadata_json
-        else
-          temp_metadata = JSON.parse(metadata_json)
-        end
-        puts temp_metadata
-      end
-
-      # TODO: we will need to serialize the hash to ProjectMetadata
-      # https://api.rubyonrails.org/classes/ActiveModel/Serialization.html
-
-      data = (temp_metadata&.dup || { }).with_indifferent_access
-      Rails.configuration.project_defaults.each { |key, value| data[key] ||= value }
-      data
-    end
-
     def project_directory_pathname
       # allow the directory to be modified by changes in the metadata_json
       @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata[:project_directory]
