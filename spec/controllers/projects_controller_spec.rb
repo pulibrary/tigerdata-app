@@ -59,6 +59,10 @@ RSpec.describe ProjectsController do
         "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
         "        </tigerdata:project>\n" \
         "      </meta>\n" \
+        "      <quota>\n" \
+        "        <allocation>500 GB</allocation>\n" \
+        "        <description>Project Quota</description>\n" \
+        "      </quota>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
         "      <type>application/arc-asset-collection</type>\n" \
         "      <pid>path=/td-test-001/tigerdata</pid>\n" \
