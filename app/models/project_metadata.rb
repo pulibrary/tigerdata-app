@@ -17,6 +17,9 @@ class ProjectMetadata
     pm
   end
 
+  # TODO: we might NOT need two separate methods
+  # (i.e initialize_from_hash and initialize_from_params)
+  #
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def initialize_from_hash(metadata_hash)
@@ -33,10 +36,11 @@ class ProjectMetadata
     @created_by = metadata_hash[:created_by] || User.first.uid
     @project_id = metadata_hash[:project_id]
     @project_purpose = metadata_hash[:project_purpose]
-    @storage_capacity = metadata_hash[:storage_capacity] || default_storage_capacity
-    @storage_performance_expectations = metadata_hash[:storage_performance_expectations] || default_storage_performance_expectations
+    @storage_capacity = metadata_hash[:storage_capacity]
+    @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
     @updated_by = metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on]
+    set_defaults
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
@@ -59,14 +63,15 @@ class ProjectMetadata
     @description = params[:description]
     @status = params[:status] # || project.metadata[:status]
     # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
-    @storage_capacity = params[:storage_capacity] || default_storage_capacity
-    @storage_performance_expectations = params[:storage_performance_expectations] || default_storage_performance_expectations
+    @storage_capacity = params[:storage_capacity]
+    @storage_performance_expectations = params[:storage_performance_expectations]
     # self.project_purpose = project.metadata[:project_purpose]
 
     # TODO: figure out timestamps
     # data = attributes.merge(data_users)
     # timestamps = project_timestamps
     # data.merge(timestamps)
+    set_defaults
   end
 
   def draft_doi
@@ -213,18 +218,25 @@ class ProjectMetadata
         data.merge(timestamps)
       end
 
-      # TODO: use good default values
-      def default_storage_capacity
-        {
-          size: { approved: 0, requested: 0 },
-          unit: { approved: "GB", requested: "GB" }
-        }
-      end
+      # I copied these values from project.yml
+      #
+      # TODO: review if we want to keep project.yml or hard code them here.
+      # The yml approach made sense when we were using a (dynamic) hash, but
+      # less so now that we have an explicit class for the values.
+      def set_defaults
+        if self.storage_capacity == nil
+          self.storage_capacity = {
+            size: {requested: 500, approved: nil},
+            unit: {requested: "GB", approved: nil}
+          }
+        end
 
-      # TODO: use good default values
-      def default_storage_performance_expectations
-        {
-          requested: "Standard", approved: "Standard"
-        }
+        if self.storage_performance_expectations == nil
+          self.storage_performance_expectations = {requested: "Standard", approved: nil}
+        end
+
+        if self.project_purpose.nil?
+          self.project_purpose = "Research"
+        end
       end
 end
