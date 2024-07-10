@@ -186,7 +186,7 @@ class ProjectsController < ApplicationController
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {
-      message: "File list for \"#{project.title}\" is being generated in the background."
+      message: "File list for \"#{project.title}\" is being generated in the background. A link to the downloadable file list will be available in the \"Recent Activity\" section of your dashboard when it is available. You may safely navigate away from this page or close this tab."
     }
     render json: json_response
   rescue => ex
