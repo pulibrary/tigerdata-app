@@ -2,6 +2,10 @@
 class Project < ApplicationRecord
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
+  before_save do |project|
+    # Ensure that the metadata JSONB postgres field is persisted properly
+    project.metadata = project.metadata_model
+  end
 
   # Valid project status described in ADR 7
   # See `architecture-decisions/0007-valid-project-statuses.md`
@@ -13,11 +17,12 @@ class Project < ApplicationRecord
 
   # NOTE: Moved from ProjectMetadata to Project
   def create!(initial_metadata:)
-    self.metadata = initial_metadata
+    byebug
+    self.metadata_model = initial_metadata
     if self.valid?
       if initial_metadata.project_id.blank?
         initial_metadata.draft_doi
-        self.metadata = initial_metadata
+        self.metadata_model = initial_metadata
       end
     end
     self.save!
@@ -27,7 +32,6 @@ class Project < ApplicationRecord
   def approve!(mediaflux_id)
     self.mediaflux_id = mediaflux_id
     self.metadata_model.status = Project::APPROVED_STATUS
-    self.metadata = self.metadata_model
     self.save!
     # TODO: generate_approval_events(params[:approval_note])
   end
@@ -43,12 +47,16 @@ class Project < ApplicationRecord
     @metadata_model ||= ProjectMetadata.new_from_hash(self.metadata)
   end
 
-  def metadata=(metadata)
+  def metadata_model=(new_metadata_model)
+    @metadata_model = new_metadata_model
+  end
+
+  def metadata=(metadata_model)
     # TODO: we should have schema_version as a property on ProjectMetadata
     # metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
 
     # Convert our metadata to a hash so it can be saved on our JSONB field
-    metadata_hash = JSON.parse(metadata.to_json)
+    metadata_hash = JSON.parse(metadata_model.to_json)
     self.metadata_json = metadata_hash
   end
 

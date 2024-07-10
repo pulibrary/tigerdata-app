@@ -28,8 +28,8 @@ class ProjectMetadata
     @data_sponsor = metadata_hash[:data_sponsor]
     @data_manager = metadata_hash[:data_manager]
     @departments = metadata_hash[:departments]
-    @ro_users = metadata_hash[:data_user_read_only]
-    @rw_users = metadata_hash[:data_user_read_write]
+    @ro_users = metadata_hash[:ro_users]
+    @rw_users = metadata_hash[:rw_users]
     @created_on = metadata_hash[:created_on]
     # TODO: make sure we get this value as a parameter
     @created_by = metadata_hash[:created_by] || User.first.uid
@@ -45,22 +45,16 @@ class ProjectMetadata
   # rubocop:enable Metrics/MethodLength
 
   def initialize_from_params(params:)
-    @ro_users = user_list_params(read_only_counter, "ro_user_")
-    @rw_users = user_list_params(read_write_counter, "rw_user_")
-
-    # TODO: figure out if we need to create accessor for data_users
-    data_users = {
-      data_user_read_only: @ro_users,
-      data_user_read_write: @rw_users
-    }
-
+    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
+    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
+    
     @data_sponsor = params[:data_sponsor]
     @data_manager = params[:data_manager]
     @departments = params[:departments]
     # self.project_directory = params[:project_directory]
     @title = params[:title]
     @description = params[:description]
-    @status = params[:status] # || project.metadata[:status]
+    @status = params[:status] if params[:status]# || project.metadata[:status]
     # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
     @storage_capacity = params[:storage_capacity]
     @storage_performance_expectations = params[:storage_performance_expectations]
@@ -73,7 +67,7 @@ class ProjectMetadata
     set_defaults
   end
 
-  def update_with_params(params)
+  def update_with_params(params, current_user)
     if params["project_directory"] != nil
       self.project_directory = params["project_directory"]
       # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
@@ -106,6 +100,24 @@ class ProjectMetadata
         message: project_params[:event_note_message]
       }
     end
+
+    #Fields that come from the edit form
+    self.data_sponsor = params["data_sponsor"] if params["data_sponsor"] != nil
+
+    self.data_manager = params["data_manager"] if params["data_manager"] != nil
+      
+    self.departments = params["departments"] if params["departments"] != nil
+
+    self.title = params["title"] if params["title"] != nil
+
+    self.description = params["description"] if params["description"] != nil
+
+    self.status = params["status"] if params["status"] != nil
+
+    self.updated_by = current_user.uid
+    self.updated_on = Time.current.in_time_zone("America/New_York").iso8601
+
+
   end
 
   def draft_doi
@@ -118,15 +130,6 @@ class ProjectMetadata
     data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
     project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
-  end
-
-  # Generate a Hash of updated Project metadata attributes
-  # @param params [Hash] the updated Project metadata attributes
-  # @return [Hash]
-  def update_metadata(params:)
-    byebug
-    @params = params
-    form_metadata
   end
 
   def activate_project(collection_id:, current_user:)
@@ -157,35 +160,19 @@ class ProjectMetadata
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
   end
 
-  def attributes
-    {
-      data_sponsor: params[:data_sponsor],
-      data_manager: params[:data_manager],
-      departments: params[:departments],
-      project_directory: params[:project_directory],
-      title: params[:title],
-      description: params[:description],
-      status: params[:status] || project.metadata[:status],
-      project_id: project.metadata[:project_id] || "", # allow validation to pass until doi can be generated
-      storage_capacity: project.metadata[:storage_capacity],
-      storage_performance_expectations: project.metadata[:storage_performance_expectations],
-      project_purpose: project.metadata[:project_purpose]
-    }
-  end
-
     private
 
-      def read_only_counter
+      def read_only_counter(params)
         return if params.nil?
         params[:ro_user_counter].to_i
       end
 
-      def read_write_counter
+      def read_write_counter(params)
         return if params.nil?
         params[:rw_user_counter].to_i
       end
 
-      def user_list_params(counter, key_prefix)
+      def user_list_params(params,counter, key_prefix)
         return if params.nil?
 
         users = []
@@ -209,18 +196,6 @@ class ProjectMetadata
           timestamps[:updated_on] = Time.current.in_time_zone("America/New_York").iso8601
         end
         timestamps
-      end
-
-      def form_metadata
-        ro_users = user_list_params(read_only_counter, "ro_user_")
-        rw_users = user_list_params(read_write_counter, "rw_user_")
-        data_users = {
-          data_user_read_only: ro_users,
-          data_user_read_write: rw_users
-        }
-        data = attributes.merge(data_users)
-        timestamps = project_timestamps
-        data.merge(timestamps)
       end
 
       # I copied these values from project.yml

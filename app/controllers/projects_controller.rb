@@ -34,7 +34,6 @@ class ProjectsController < ApplicationController
       render :new
     end
   rescue TigerData::MailerError => mailer_error
-    byebug
     logger_message = "Error encountered creating the project #{project.id} as user #{current_user.email}"
     Rails.logger.error(logger_message)
     honeybadger_context = {
@@ -49,7 +48,6 @@ class ProjectsController < ApplicationController
 
     render :new
   rescue StandardError => error
-    byebug
     logger_message = if project.persisted?
                       "Error encountered creating the project #{project.id} as user #{current_user.email}"
                      else
@@ -122,18 +120,14 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     #Approve action
     if params.key?("mediaflux_id")
-      @project.metadata_model.update_with_params(params)
+      @project.metadata_model.update_with_params(params, current_user)
       @project.approve!(params["mediaflux_id"])
     end
 
     #Edit action
     if params.key?("title")
-      project_metadata = @project.metadata_model
-      project_params = params.dup
-      metadata_params = project_params.merge({
-        status: project.metadata[:status]
-      })
-      project.metadata = project_metadata.update_metadata(params: metadata_params)
+      @project.metadata_model.status = @project.metadata_model.status || Project::PENDING_STATUS
+      @project.metadata_model.update_with_params(params, current_user)
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
