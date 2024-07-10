@@ -24,6 +24,14 @@ class Project < ApplicationRecord
     initial_metadata.project_id
   end
 
+  def approve!(mediaflux_id)
+    self.mediaflux_id = mediaflux_id
+    self.metadata_model.status = Project::APPROVED_STATUS
+    self.metadata = self.metadata_model
+    self.save!
+    # TODO: generate_approval_events(params[:approval_note])
+  end
+
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
   # but we'll keep them both while we are refactoring the code so that we don't break
   # everything at once since `metadata` is used everywhere.

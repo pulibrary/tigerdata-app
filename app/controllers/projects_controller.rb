@@ -119,33 +119,16 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    project
+    @project = Project.find(params[:id])
     #Approve action
     if params.key?("mediaflux_id")
-      project_metadata = ProjectMetadata.new(project: project, current_user:)
-      project_params = params.dup
-      metadata_params = project_params.merge({
-        project_directory: project_params["project_directory"],
-        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i,
-                            "requested"=>project.metadata[:storage_capacity][:size][:requested]},
-                            "unit"=>{"approved"=>project_params["storage_unit"],
-                                     "requested"=>project.metadata[:storage_capacity][:unit][:requested]}},
-        # no current input to set approved storage performance, so just copy requested
-        storage_performance_expectations: {"requested"=>project.metadata[:storage_performance_expectations][:requested],
-                                           "approved"=>project.metadata[:storage_performance_expectations][:requested]},
-        approval_note: {
-          note_by: current_user.uid,
-          note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-          event_type: project_params[:event_note],
-          message: project_params[:event_note_message]
-        }
-      })
-      project_metadata.approve_project(params: metadata_params)
+      @project.metadata_model.update_with_params(params)
+      @project.approve!(params["mediaflux_id"])
     end
 
     #Edit action
     if params.key?("title")
-      project_metadata = ProjectMetadata.new(project: project, current_user:)
+      project_metadata = @project.metadata_model
       project_params = params.dup
       metadata_params = project_params.merge({
         status: project.metadata[:status]

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  attr_reader :current_user, :params
   attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users,
-    :created_on, :created_by, :project_id, :project_purpose, :storage_capacity, :storage_performance_expectations,
-    :updated_by, :updated_on
+    :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity,
+    :storage_performance_expectations, :updated_by, :updated_on, :approval_note
 
   def self.new_from_hash(metadata_hash)
     pm = ProjectMetadata.new
@@ -74,6 +73,41 @@ class ProjectMetadata
     set_defaults
   end
 
+  def update_with_params(params)
+    if params["project_directory"] != nil
+      self.project_directory = params["project_directory"]
+      # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
+    end
+
+    if params["storage_capacity"] != nil
+      self.storage_capacity = {
+        "size"=>{
+          "approved"=>params["storage_capacity"].to_i,
+          "requested"=>self.storage_capacity[:size][:requested]
+        },
+        "unit"=>{
+          "approved"=>params["storage_unit"],
+          "requested"=>self.storage_capacity[:unit][:requested]
+        }
+      }
+    end
+
+    # we don't allow the user to specify an approve value so we use the requested
+    self.storage_performance_expectations = {
+      "requested"=>self.storage_performance_expectations[:requested],
+      "approved"=>self.storage_performance_expectations[:requested]
+    }
+
+    if params["approval_note"] != nil
+      self.approval_note = {
+        note_by: current_user.uid,
+        note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+        event_type: project_params[:event_note],
+        message: project_params[:event_note_message]
+      }
+    end
+  end
+
   def draft_doi
     self.project_id = "TBD"
     # TODO: re-implement this method
@@ -116,40 +150,11 @@ class ProjectMetadata
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
   end
 
-  # Approve a project by recording the mediaflux id & setting the status to 'approved'
-  # @param params [Hash] the updated Project metadata attributes
-  def approve_project(params:)
-    raise "To be refactored"
-    project.mediaflux_id = params[:mediaflux_id]
-    project.metadata_json["status"] = Project::APPROVED_STATUS
-    project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
-    project.metadata_json["storage_capacity"] = params[:storage_capacity]
-    project.metadata_json["storage_performance_expectations"] = params[:storage_performance_expectations]
-
-    project.save!
-    generate_approval_events(params[:approval_note])
-  end
-
   def generate_approval_events(note)
     # create two provenance events, one for approving the project and another for changing the status of the project
     project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}",
                                      event_note: note)
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
-  end
-
-  def create(params:)
-    byebug
-
-    # Store the params into the class properties and pass the class to the project
-    # project.metadata = update_metadata(params: params)
-    initialize_from_params(params: params)
-    project.metadata = self.to_json
-
-    # WARNING: This gets into a circular reference between project and project metadata.
-    if project.valid? && project.metadata["project_id"].blank?
-      draft_doi
-    end
-    project.metadata["project_id"]
   end
 
   def attributes
