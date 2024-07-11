@@ -4,6 +4,12 @@ class ProjectMetadata
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity,
     :storage_performance_expectations, :updated_by, :updated_on, :approval_note
 
+  def initialize
+    @departments = []
+    @ro_users = []
+    @rw_users = []
+  end
+
   def self.new_from_hash(metadata_hash)
     pm = ProjectMetadata.new
     pm.initialize_from_hash(metadata_hash)
@@ -33,8 +39,7 @@ class ProjectMetadata
 
     @project_id = metadata_hash[:project_id]
     @project_purpose = metadata_hash[:project_purpose]
-    # TODO: make sure handle this?
-    # @project_directory = ?
+    @project_directory = metadata_hash[:project_directory]
 
     @storage_capacity = metadata_hash[:storage_capacity]
     @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
@@ -47,6 +52,7 @@ class ProjectMetadata
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
+  # Initializes the object with the values in the params (which is an ActionController::Parameters)
   def initialize_from_params(params)
     @title = params[:title]
     @description = params[:description]
@@ -57,9 +63,9 @@ class ProjectMetadata
     @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
     @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
 
-    # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
-    # self.project_purpose = project.metadata[:project_purpose]
-    # self.project_directory = params[:project_directory]
+    @project_id = params[:project_id]
+    @project_purpose = params[:project_purpose]
+    @project_directory = params[:project_directory]
 
     @storage_capacity = params[:storage_capacity]
     @storage_performance_expectations = params[:storage_performance_expectations]
@@ -71,25 +77,28 @@ class ProjectMetadata
     set_defaults
   end
 
+  # Updates the object with the values in the params (which is an ActionController::Parameters)
+  # Notice how we only update values that come in the params and don't change the values that
+  # don't come as part of the params
   def update_with_params(params, current_user)
-    self.title = params["title"] unless params["title"].nil?
-    self.description = params["description"] unless params["description"].nil?
-    self.status = params["status"] unless params["status"].nil?
-    self.data_sponsor = params["data_sponsor"] unless params["data_sponsor"].nil?
-    self.data_manager = params["data_manager"] unless params["data_manager"].nil?
-    self.departments = params["departments"] unless params["departments"].nil?
-    self.ro_users = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
-    self.rw_users = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
+    @title = params["title"] if params["title"].present?
+    @description = params["description"] if params["description"].present?
+    @status = params["status"] if params["status"].present?
+    @data_sponsor = params["data_sponsor"] if params["data_sponsor"].present?
+    @data_manager = params["data_manager"] if params["data_manager"].present?
+    @departments = params["departments"] if params["departments"].present?
+    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
+    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
 
-    # project_id is not defined by the user (it's the DOI)
-    # project_purpose is not defined by the user
-    unless params["project_directory"].nil?
-      self.project_directory = params["project_directory"]
+    @project_id = params["project_id"] if params["project_id"].present?
+    @project_purpose = params["project_purpose"] if params["project_purpose"].present?
+    if params["project_directory"].present?
+      @project_directory = params["project_directory"]
       # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
     end
 
-    unless params["storage_capacity"].nil?
-      self.storage_capacity = {
+    if params["storage_capacity"].present?
+      @storage_capacity = {
         "size" => {
           "approved" => params["storage_capacity"].to_i,
           "requested" => storage_capacity[:size][:requested]
@@ -102,13 +111,13 @@ class ProjectMetadata
     end
 
     # we don't allow the user to specify an approve value so we use the requested
-    self.storage_performance_expectations = {
+    @storage_performance_expectations = {
       "requested" => storage_performance_expectations[:requested],
       "approved" => storage_performance_expectations[:requested]
     }
 
-    unless params["approval_note"].nil?
-      self.approval_note = {
+    if params["approval_note"].present?
+      @approval_note = {
         note_by: current_user.uid,
         note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
         event_type: project_params[:event_note],
@@ -117,12 +126,12 @@ class ProjectMetadata
     end
 
     # Fields that come from the edit form
-    self.updated_by = current_user.uid
-    self.updated_on = Time.current.in_time_zone("America/New_York").iso8601
+    @updated_by = current_user.uid
+    @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
 
   def draft_doi
-    self.project_id = "TBD"
+    @project_id = "TBD"
     # TODO: re-implement this method
     return
     puldatacite = PULDatacite.new
@@ -184,25 +193,19 @@ class ProjectMetadata
         users.compact.uniq
       end
 
-      # I copied these values from project.yml
-      #
-      # TODO: review if we want to keep project.yml or hard code them here.
-      # The yml approach made sense when we were using a (dynamic) hash, but
-      # less so now that we have an explicit class for the values.
+      # Initializes values that we have defaults for.
       def set_defaults
-        if storage_capacity.nil?
-          self.storage_capacity = {
+        if @storage_capacity.nil?
+          @storage_capacity = {
             size: { requested: 500, approved: nil },
             unit: { requested: "GB", approved: nil }
           }
         end
 
-        if storage_performance_expectations.nil?
-          self.storage_performance_expectations = { requested: "Standard", approved: nil }
+        if @storage_performance_expectations.nil?
+          @storage_performance_expectations = { requested: "Standard", approved: nil }
         end
 
-        if project_purpose.nil?
-          self.project_purpose = "Research"
-        end
+        @project_purpose = "Research" if @project_purpose.nil?
       end
 end
