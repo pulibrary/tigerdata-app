@@ -30,13 +30,30 @@ class Project < ApplicationRecord
     self.mediaflux_id = mediaflux_id
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
-    # TODO: generate_approval_events(params[:approval_note])
+
+    # TODO: should we receive the user as a parameter instead
+    user = User.find_by_uid(self.metadata_model.updated_by)
+
+    # create two provenance events, one for approving the project and
+    # another for changing the status of the project
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
+      event_person: user.uid,
+      event_details: "Approved by #{user.display_name_safe}",
+      event_note: self.metadata_model.approval_note
+    )
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
+      event_person: user.uid,
+      event_details: "The Status of this project has been set to approved"
+    )
   end
 
   def draft_doi
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
     self.save!
+    # TODO: should we receive the user as a parameter instead
     user = User.find_by_uid(self.metadata_model.created_by)
     self.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: user.uid, event_details: "Requested by #{user.display_name_safe}")
     self.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: user.uid, event_details: "The Status of this project has been set to pending")

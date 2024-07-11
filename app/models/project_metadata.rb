@@ -116,12 +116,12 @@ class ProjectMetadata
       "approved" => storage_performance_expectations[:requested]
     }
 
-    if params["approval_note"].present?
+    if params[:event_note_message].present?
       @approval_note = {
         note_by: current_user.uid,
         note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-        event_type: project_params[:event_note],
-        message: project_params[:event_note_message]
+        event_type: params[:event_note],
+        message: params[:event_note_message]
       }
     end
 
@@ -149,13 +149,6 @@ class ProjectMetadata
     # create two provenance events, one for approving the project and another for changing the status of the project
     project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
     project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
-  end
-
-  def generate_approval_events(note)
-    # create two provenance events, one for approving the project and another for changing the status of the project
-    project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}",
-                                     event_note: note)
-    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
   end
 
     private
