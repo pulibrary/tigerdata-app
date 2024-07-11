@@ -17,8 +17,8 @@ class ProjectsController < ApplicationController
     metadata_params[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
     project_metadata = ProjectMetadata.new_from_params(metadata_params)
 
-    project = Project.new
-    project.create!(initial_metadata: project_metadata)
+    build_new_project # calling private method to build a new project and set a class variable @project
+    project.create!(initial_metadata: project_metadata, user: current_user)
     if project.metadata_model.project_id != nil
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
@@ -117,7 +117,7 @@ class ProjectsController < ApplicationController
     #Approve action
     if params.key?("mediaflux_id")
       @project.metadata_model.update_with_params(params, current_user)
-      @project.approve!(params["mediaflux_id"])
+      @project.approve!(mediaflux_id: params["mediaflux_id"],current_user:)
     end
 
     #Edit action

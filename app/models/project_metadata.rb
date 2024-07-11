@@ -22,9 +22,7 @@ class ProjectMetadata
     pm
   end
 
-  # TODO: we might NOT need two separate methods
-  # (i.e initialize_from_hash and initialize_from_params)
-  #
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def initialize_from_hash(metadata_hash)
@@ -52,6 +50,9 @@ class ProjectMetadata
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
+  # TODO: we might NOT need two separate methods
+  # (i.e initialize_from_params and update_with_params) to initialize and update the object
+  #
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
   def initialize_from_params(params)
     @title = params[:title]
@@ -128,27 +129,6 @@ class ProjectMetadata
     # Fields that come from the edit form
     @updated_by = current_user.uid
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
-  end
-
-  def activate_project(collection_id:, current_user:)
-    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
-    metadata = response.metadata
-    return unless metadata[:collection] == true # If the collection id exists
-
-    # check if the project doi in rails matches the project doi in mediaflux
-    return unless metadata[:project_id] == project.metadata_json["project_id"]
-
-    # activate a project by setting the status to 'active'
-    project.metadata_json["status"] = Project::ACTIVE_STATUS
-
-    # also read in the actual project directory
-    project.metadata_json["project_directory"] = metadata[:project_directory]
-
-    project.save!
-
-    # create two provenance events, one for approving the project and another for changing the status of the project
-    project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
-    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
   end
 
     private

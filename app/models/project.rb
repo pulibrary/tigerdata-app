@@ -15,48 +15,81 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  def create!(initial_metadata:)
+  def create!(initial_metadata:, user:)
     self.metadata_model = initial_metadata
     if self.valid?
       if initial_metadata.project_id.blank?
-        self.draft_doi
+        self.draft_doi(user: user)
       end
     end
     self.save!
     self.metadata_model.project_id
   end
 
-  def approve!(mediaflux_id)
+  def approve!(mediaflux_id:, current_user:)
     self.mediaflux_id = mediaflux_id
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
-
-    # TODO: should we receive the user as a parameter instead
-    user = User.find_by_uid(self.metadata_model.updated_by)
 
     # create two provenance events, one for approving the project and
     # another for changing the status of the project
     self.provenance_events.create(
       event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
-      event_person: user.uid,
-      event_details: "Approved by #{user.display_name_safe}",
+      event_person: current_user.uid,
+      event_details: "Approved by #{current_user.display_name_safe}",
       event_note: self.metadata_model.approval_note
     )
     self.provenance_events.create(
       event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
-      event_person: user.uid,
+      event_person: current_user.uid,
       event_details: "The Status of this project has been set to approved"
     )
   end
 
-  def draft_doi
+  def activate!(collection_id:, current_user:)
+    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+    mediaflux_metadata = response.metadata # get the metadata of the collection from mediaflux
+
+    return unless mediaflux_metadata[:collection] == true # If the collection id exists
+
+    # check if the project doi in rails matches the project doi in mediaflux
+    return unless mediaflux_metadata[:project_id] == self.metadata_model.project_id
+
+    # activate a project by setting the status to 'active'
+    self.metadata_model.status = Project::ACTIVE_STATUS
+
+    # also read in the actual project directory
+    self.metadata_model.project_directory = mediaflux_metadata[:project_directory]
+
+    self.save!
+
+    # create two provenance events, one for approving the project and another for changing the status of the project
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE,
+      event_person: current_user.uid,
+      event_details: "Activated by Tigerdata Staff"
+    )
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
+      event_person: current_user.uid,
+      event_details: "The Status of this project has been set to active"
+    )
+  end
+
+  def draft_doi(user:)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
     self.save!
-    # TODO: should we receive the user as a parameter instead
-    user = User.find_by_uid(self.metadata_model.created_by)
-    self.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: user.uid, event_details: "Requested by #{user.display_name_safe}")
-    self.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: user.uid, event_details: "The Status of this project has been set to pending")
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE,
+      event_person: user.uid,
+      event_details: "Requested by #{user.display_name_safe}"
+    )
+    self.provenance_events.create(
+      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
+      event_person: user.uid,
+      event_details: "The Status of this project has been set to pending"
+    )
   end
 
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
@@ -75,15 +108,11 @@ class Project < ApplicationRecord
   end
 
   def metadata=(metadata_model)
-    # TODO: we should have schema_version as a property on ProjectMetadata
-    # metadata[:schema_version] ||= TigerdataSchema::SCHEMA_VERSION
-
     # Convert our metadata to a hash so it can be saved on our JSONB field
     metadata_hash = JSON.parse(metadata_model.to_json)
     self.metadata_json = metadata_hash
   end
 
-  # TODO: Presumably we should display other statuses as well?
   def title
     trailer = if in_mediaflux?
                 ""
