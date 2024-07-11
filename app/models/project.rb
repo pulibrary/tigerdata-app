@@ -15,18 +15,15 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  # NOTE: Moved from ProjectMetadata to Project
   def create!(initial_metadata:)
-    byebug
     self.metadata_model = initial_metadata
     if self.valid?
       if initial_metadata.project_id.blank?
-        initial_metadata.draft_doi
-        self.metadata_model = initial_metadata
+        self.draft_doi
       end
     end
     self.save!
-    initial_metadata.project_id
+    self.metadata_model.project_id
   end
 
   def approve!(mediaflux_id)
@@ -34,6 +31,15 @@ class Project < ApplicationRecord
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
     # TODO: generate_approval_events(params[:approval_note])
+  end
+
+  def draft_doi
+    puldatacite = PULDatacite.new
+    self.metadata_model.project_id = puldatacite.draft_doi
+    self.save!
+    user = User.find_by_uid(self.metadata_model.created_by)
+    self.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: user.uid, event_details: "Requested by #{user.display_name_safe}")
+    self.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: user.uid, event_details: "The Status of this project has been set to pending")
   end
 
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)

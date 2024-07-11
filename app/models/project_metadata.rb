@@ -130,18 +130,6 @@ class ProjectMetadata
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
 
-  def draft_doi
-    @project_id = "TBD"
-    # TODO: re-implement this method
-    return
-    puldatacite = PULDatacite.new
-    project.metadata_json["project_id"] = puldatacite.draft_doi
-    project.save!
-    data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
-    project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
-    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
-  end
-
   def activate_project(collection_id:, current_user:)
     response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     metadata = response.metadata
