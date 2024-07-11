@@ -17,13 +17,19 @@ class Project < ApplicationRecord
 
   def create!(initial_metadata:, user:)
     self.metadata_model = initial_metadata
-    if self.valid?
-      if initial_metadata.project_id.blank?
+    byebug
+    if initial_metadata.project_id.blank?
         self.draft_doi(user: user)
-      end
     end
-    self.save!
-    self.metadata_model.project_id
+    if self.valid?
+      self.save!
+      ProvenanceEvent.generate_submission_events(project: self, user: user)
+
+      #return doi
+      self.metadata_model.project_id
+    else
+      nil
+    end
   end
 
   def approve!(mediaflux_id:, current_user:)
@@ -32,18 +38,9 @@ class Project < ApplicationRecord
     self.save!
 
     # create two provenance events, one for approving the project and
-    # another for changing the status of the project
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
-      event_person: current_user.uid,
-      event_details: "Approved by #{current_user.display_name_safe}",
-      event_note: self.metadata_model.approval_note
-    )
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
-      event_person: current_user.uid,
-      event_details: "The Status of this project has been set to approved"
-    )
+      # another for changing the status of the project
+    ProvenanceEvent.generate_approval_events(project: self, user: current_user)
+
   end
 
   def activate!(collection_id:, current_user:)
@@ -60,36 +57,15 @@ class Project < ApplicationRecord
 
     # also read in the actual project directory
     self.metadata_model.project_directory = mediaflux_metadata[:project_directory]
-
     self.save!
 
-    # create two provenance events, one for approving the project and another for changing the status of the project
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE,
-      event_person: current_user.uid,
-      event_details: "Activated by Tigerdata Staff"
-    )
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
-      event_person: current_user.uid,
-      event_details: "The Status of this project has been set to active"
-    )
+    ProvenanceEvent.generate_active_events(project: self, user: current_user)
   end
 
   def draft_doi(user:)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
-    self.save!
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE,
-      event_person: user.uid,
-      event_details: "Requested by #{user.display_name_safe}"
-    )
-    self.provenance_events.create(
-      event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
-      event_person: user.uid,
-      event_details: "The Status of this project has been set to pending"
-    )
+    # self.save!
   end
 
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)

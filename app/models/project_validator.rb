@@ -1,14 +1,16 @@
 class ProjectValidator < ActiveModel::Validator
     def validate(project)
-        # TODO: re-implement the validation
-        return
+        # we need this because this method references the metadata_json which is not updated until the project is saved
+        project.metadata = project.metadata_model
+        byebug
+
         # Required fields, always validate
-        validate_role(project:, netid: project.metadata[:data_manager], role: "Data Manager")
-        validate_role(project:, netid: project.metadata[:data_sponsor], role: "Data Sponsor")
+        validate_role(project:, netid: project.metadata_model.data_manager, role: "Data Manager")
+        validate_role(project:, netid: project.metadata_model.data_sponsor, role: "Data Sponsor")
 
         # Validate if present
-        project.metadata[:data_user_read_only]&.each { |read_only| validate_role(project:, netid: read_only, role: "Data User Read Only")}
-        project.metadata[:data_user_read_write]&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
+        project.metadata_model.ro_users&.each { |read_only| validate_role(project:, netid: read_only, role: "Data User Read Only")}
+        project.metadata_model.rw_users&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
 
         # validate all required fields
         required_metadata_field_errors = []
