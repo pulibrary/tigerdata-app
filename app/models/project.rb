@@ -71,7 +71,7 @@ class Project < ApplicationRecord
   end
 
   def departments
-    unsorted = metadata[:departments] || []
+    unsorted = metadata_model.departments || []
     unsorted.sort
   end
 

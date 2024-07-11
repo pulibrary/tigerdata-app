@@ -30,13 +30,16 @@ class ProjectMetadata
     @departments = metadata_hash[:departments]
     @ro_users = metadata_hash[:ro_users]
     @rw_users = metadata_hash[:rw_users]
-    @created_on = metadata_hash[:created_on]
-    # TODO: make sure we get this value as a parameter
-    @created_by = metadata_hash[:created_by] || User.first.uid
+
     @project_id = metadata_hash[:project_id]
     @project_purpose = metadata_hash[:project_purpose]
+    # TODO: make sure handle this?
+    # @project_directory = ?
+
     @storage_capacity = metadata_hash[:storage_capacity]
     @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
+    @created_on = metadata_hash[:created_on]
+    @created_by = metadata_hash[:created_by]
     @updated_by = metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on]
     set_defaults
@@ -44,30 +47,42 @@ class ProjectMetadata
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
-  def initialize_from_params(params:)
-    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
-    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
-
+  def initialize_from_params(params)
+    @title = params[:title]
+    @description = params[:description]
+    @status = params[:status] if params[:status]
     @data_sponsor = params[:data_sponsor]
     @data_manager = params[:data_manager]
     @departments = params[:departments]
-    # self.project_directory = params[:project_directory]
-    @title = params[:title]
-    @description = params[:description]
-    @status = params[:status] if params[:status] # || project.metadata[:status]
+    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
+    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
+
     # self.project_id = project.metadata[:project_id] || "" # allow validation to pass until doi can be generated
+    # self.project_purpose = project.metadata[:project_purpose]
+    # self.project_directory = params[:project_directory]
+
     @storage_capacity = params[:storage_capacity]
     @storage_performance_expectations = params[:storage_performance_expectations]
-    # self.project_purpose = project.metadata[:project_purpose]
 
-    # TODO: figure out timestamps
-    # data = attributes.merge(data_users)
-    # timestamps = project_timestamps
-    # data.merge(timestamps)
+    @created_by = params[:created_by] if params[:created_by]
+    @created_on = params[:created_on] if params[:created_on]
+    @updated_by = params[:updated_by] if params[:updated_by]
+    @updated_on = params[:updated_on] if params[:updated_on]
     set_defaults
   end
 
   def update_with_params(params, current_user)
+    self.title = params["title"] unless params["title"].nil?
+    self.description = params["description"] unless params["description"].nil?
+    self.status = params["status"] unless params["status"].nil?
+    self.data_sponsor = params["data_sponsor"] unless params["data_sponsor"].nil?
+    self.data_manager = params["data_manager"] unless params["data_manager"].nil?
+    self.departments = params["departments"] unless params["departments"].nil?
+    self.ro_users = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
+    self.rw_users = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
+
+    # project_id is not defined by the user (it's the DOI)
+    # project_purpose is not defined by the user
     unless params["project_directory"].nil?
       self.project_directory = params["project_directory"]
       # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
@@ -102,18 +117,6 @@ class ProjectMetadata
     end
 
     # Fields that come from the edit form
-    self.data_sponsor = params["data_sponsor"] unless params["data_sponsor"].nil?
-
-    self.data_manager = params["data_manager"] unless params["data_manager"].nil?
-
-    self.departments = params["departments"] unless params["departments"].nil?
-
-    self.title = params["title"] unless params["title"].nil?
-
-    self.description = params["description"] unless params["description"].nil?
-
-    self.status = params["status"] unless params["status"].nil?
-
     self.updated_by = current_user.uid
     self.updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
@@ -179,21 +182,6 @@ class ProjectMetadata
           users << params[key]
         end
         users.compact.uniq
-      end
-
-      def project_timestamps
-        timestamps = {}
-        if project.metadata[:created_by].nil?
-          timestamps[:created_by] = current_user.uid
-          timestamps[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
-
-        else
-          timestamps[:created_by] = project.metadata[:created_by]
-          timestamps[:created_on] = project.metadata[:created_on]
-          timestamps[:updated_by] = current_user.uid
-          timestamps[:updated_on] = Time.current.in_time_zone("America/New_York").iso8601
-        end
-        timestamps
       end
 
       # I copied these values from project.yml

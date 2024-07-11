@@ -11,15 +11,14 @@ class ProjectsController < ApplicationController
   end
 
   def create
+    metadata_params = params.dup
+    metadata_params[:status] = Project::PENDING_STATUS
+    metadata_params[:created_by] = current_user.uid
+    metadata_params[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
+    project_metadata = ProjectMetadata.new_from_params(metadata_params)
+
     project = Project.new
-    project_metadata = ProjectMetadata.new_from_hash(project.metadata)
-    metadata_params = params.dup.merge({
-      status: Project::PENDING_STATUS
-    })
-
-    project_metadata.initialize_from_params(params: metadata_params)
     project.create!(initial_metadata: project_metadata)
-
     if project.metadata_model.project_id != nil
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
@@ -70,18 +69,15 @@ class ProjectsController < ApplicationController
   def show
     project
     @departments = project.departments.join(", ")
-    @project_metadata = project.metadata
+    @project_metadata = project.metadata_model
 
-    sponsor_uid = @project_metadata[:data_sponsor]
-    @data_sponsor = User.find_by(uid: sponsor_uid)
+    @data_sponsor = User.find_by(uid: @project_metadata.data_sponsor)
+    @data_manager = User.find_by(uid: @project_metadata.data_manager)
 
-    manager_uid = @project_metadata[:data_manager]
-    @data_manager = User.find_by(uid: manager_uid)
-
-    read_only_uids = @project_metadata.fetch(:data_user_read_only, [])
+    read_only_uids = @project_metadata.ro_users
     data_read_only_users = read_only_uids.map { |uid| ReadOnlyUser.find_by(uid:) }.reject(&:blank?)
 
-    read_write_uids = @project_metadata.fetch(:data_user_read_write, [])
+    read_write_uids = @project_metadata.rw_users
     data_read_write_users = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
 
     unsorted_data_users = data_read_only_users + data_read_write_users
