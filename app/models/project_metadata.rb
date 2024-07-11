@@ -22,7 +22,6 @@ class ProjectMetadata
     pm
   end
 
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def initialize_from_hash(metadata_hash)
