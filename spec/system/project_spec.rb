@@ -11,24 +11,28 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:pending_text) do
     "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
   end
-  let(:metadata) do
-    {
+  let(:metadata_model) do
+    hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
       project_directory: "project-123",
       title: "project 123",
       departments: ["RDSS"],
       description: "hello world",
-      data_user_read_only: [read_only.uid],
-      data_user_read_write: [read_write.uid],
-      status: ::Project::PENDING_STATUS
+      ro_users: [read_only.uid],
+      rw_users: [read_write.uid],
+      status: ::Project::PENDING_STATUS,
+      created_on: Time.current.in_time_zone("America/New_York").iso8601,
+      created_by: FactoryBot.create(:user).uid,
+      project_id:  ""
     }
+    ProjectMetadata.new_from_hash(hash)
   end
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
   let(:mediaflux_id) { 1097 }
   let(:project_in_mediaflux) do
     project_not_in_mediaflux
-    project_not_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+    project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
     project_not_in_mediaflux.mediaflux_id = mediaflux_id
     project_not_in_mediaflux.save!
     project_not_in_mediaflux.reload
