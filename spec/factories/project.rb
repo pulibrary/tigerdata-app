@@ -21,6 +21,7 @@ FactoryBot.define do
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
+      #TODO: remove submission from the project factory
       submission do
         {
           requested_by: FactoryBot.create(:user).uid,
@@ -72,8 +73,8 @@ FactoryBot.define do
 
     factory :approved_project, class: "Project" do
       transient do
-        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } } }
-        storage_performance { { requested: "standard", approved: "performant" } }
+        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } }.with_indifferent_access }
+        storage_performance { { requested: "standard", approved: "performant" }.with_indifferent_access }
         status { "approved" }
         approved_by { FactoryBot.create(:sysadmin).uid }
         approved_on { Time.current.in_time_zone("America/New_York").iso8601 }

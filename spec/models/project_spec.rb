@@ -36,16 +36,16 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#data_users" do
     let(:data_user) { FactoryBot.create(:user, uid: "hc1234") }
     before do
-      FactoryBot.create(:project, title: "project 111", data_user_read_only: [data_user.uid])
-      FactoryBot.create(:project, title: "project 222", data_user_read_only: [data_user.uid])
-      FactoryBot.create(:project, title: "project 333", data_user_read_only: [data_user.uid])
+      FactoryBot.create(:project, title: "project 111", ro_users: [data_user.uid])
+      FactoryBot.create(:project, title: "project 222", ro_users: [data_user.uid])
+      FactoryBot.create(:project, title: "project 333", ro_users: [data_user.uid])
     end
 
     it "returns projects for the data users" do
       data_user_projects = described_class.data_user_projects("hc1234")
-      expect(data_user_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
-      expect(data_user_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
-      expect(data_user_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
+      expect(data_user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
+      expect(data_user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
+      expect(data_user_projects.find { |project| project.metadata_model.title == "project 444" }).to be nil
     end
   end
 
@@ -58,9 +58,9 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
     it "returns projects that are not in mediaflux" do
       pending_projects = described_class.pending_projects
-      expect(pending_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).to be nil
-      expect(pending_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).to be nil
-      expect(pending_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id.nil? }).not_to be nil
+      expect(pending_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).to be nil
+      expect(pending_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).to be nil
+      expect(pending_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).not_to be nil
     end
   end
 
@@ -73,9 +73,9 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
     it "returns projects that are not in mediaflux" do
       approved_projects = described_class.approved_projects
-      expect(approved_projects.find { |project| project.metadata[:title] == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
-      expect(approved_projects.find { |project| project.metadata[:title] == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
-      expect(approved_projects.find { |project| project.metadata[:title] == "project 333" and project.mediaflux_id.nil? }).to be nil
+      expect(approved_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
+      expect(approved_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
+      expect(approved_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).to be nil
     end
   end
 
@@ -181,8 +181,8 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       before do
         project.save_in_mediaflux(session_id: user.mediaflux_session)
       end
-      it "calls out to mediuaflus with an update " do
-        project.metadata_json[:title] = "New title"
+      it "calls out to mediuaflux with an update " do
+        project.metadata_model.title = "New title"
         expect { project.save_in_mediaflux(session_id: user.mediaflux_session) }.not_to raise_error
       end
     end

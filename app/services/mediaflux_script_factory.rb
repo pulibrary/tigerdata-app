@@ -39,20 +39,12 @@ class MediafluxScriptFactory
     created_on_formatted.upcase
   end
 
-  def submission
-    project.metadata.fetch("submission", nil)
-  end
-
   def requested_by
-    return "" if submission.nil?
-
-    submission.fetch("requested_by", "")
+    project.metadata_model.created_by
   end
 
   def request_date_time
-    return if submission.nil?
-
-    submission.fetch("request_date_time")
+    project.metadata_model.created_on
   end
 
   def requested_date
@@ -89,7 +81,6 @@ class MediafluxScriptFactory
             :StorageCapacity < :Size "#{project.metadata_json['storage_capacity']['size']['requested']}>" :Unit #{project.metadata_json['storage_capacity']['unit']['requested']}"
             :StoragePerformance "#{project.metadata_json['storage_performance_expectations']['requested']}"
             :ProjectPurpose "#{project.metadata_json['project_purpose']}"
-            :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
             :SchemaVersion "#{project.metadata['schema_version']}"
           >
         >

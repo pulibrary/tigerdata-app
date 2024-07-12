@@ -84,8 +84,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           project_purpose: "Research",
           status: ::Project::PENDING_STATUS,
           created_on: Time.current.in_time_zone("America/New_York").iso8601,
-          created_by: FactoryBot.create(:user).uid,
-          project_id:  "abc-123"
+          created_by: FactoryBot.create(:user).uid
         }
         ProjectMetadata.new_from_hash(hash)
       end

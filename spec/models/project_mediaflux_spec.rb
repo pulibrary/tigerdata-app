@@ -12,12 +12,12 @@ RSpec.describe ProjectMediaflux, type: :model do
       it "creates a project namespace and collection and returns the mediaflux id" do
         mediaflux_id = described_class.create!(project: project, session_id: current_user.mediaflux_session)
         mediaflux_metadata = Mediaflux::Http::AssetMetadataRequest.new(
-                              session_token: current_user.mediaflux_session, 
+                              session_token: current_user.mediaflux_session,
                               id: mediaflux_id
                               ).metadata
         namespace_path = mediaflux_metadata[:namespace]
         namespace_metadata = Mediaflux::Http::NamespaceDescribeRequest.new(
-                              session_token: current_user.mediaflux_session, 
+                              session_token: current_user.mediaflux_session,
                               path: namespace_path
                               ).metadata
         expect(namespace_metadata[:description]).to match(/Namespace for/)
@@ -28,7 +28,7 @@ RSpec.describe ProjectMediaflux, type: :model do
           project = FactoryBot.create(:project_with_doi)
           described_class.create!(project: project, session_id: current_user.mediaflux_session)
           metadata = Mediaflux::Http::AssetMetadataRequest.new(
-            session_token: current_user.mediaflux_session, 
+            session_token: current_user.mediaflux_session,
             id: project.mediaflux_id
             ).metadata
           expect(metadata[:quota_allocation]).not_to be_empty
@@ -49,11 +49,11 @@ RSpec.describe ProjectMediaflux, type: :model do
 
       context "when the parent colllection does not exist" do
         let(:mediaflux_id) { described_class.create!(
-                              project: project, 
+                              project: project,
                               session_id: current_user.mediaflux_session) }
         let(:mediaflux_metadata) do
            Mediaflux::Http::AssetMetadataRequest.new(
-                              session_token: current_user.mediaflux_session, 
+                              session_token: current_user.mediaflux_session,
                               id: mediaflux_id
                               ).metadata
         end
@@ -62,10 +62,10 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "creates a project namespace" do
           namespace_path = mediaflux_metadata[:namespace]
           namespace_metadata = Mediaflux::Http::NamespaceDescribeRequest.new(
-            session_token: current_user.mediaflux_session, 
+            session_token: current_user.mediaflux_session,
             path: namespace_path
             ).metadata
-          
+
           expect(namespace_metadata[:description]).to match(/Namespace for/)
         end
 
@@ -75,7 +75,7 @@ RSpec.describe ProjectMediaflux, type: :model do
 
         it "creates a parent collection" do
           parent_collection_metadata = Mediaflux::Http::AssetMetadataRequest.new(
-                                        session_token: current_user.mediaflux_session, 
+                                        session_token: current_user.mediaflux_session,
                                         id: project_parent
                                         ).metadata
           expect(parent_collection_metadata[:path]).to eq project_parent.gsub("path=",'')
@@ -84,7 +84,7 @@ RSpec.describe ProjectMediaflux, type: :model do
     end
     context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
       let(:incomplete_project) { FactoryBot.build(:project_with_dynamic_directory, project_id: '')}
-      let(:project_metadata) {ProjectMetadata.new(current_user:, project: incomplete_project)}
+      let(:project_metadata) {incomplete_project.metadata_model}
       let(:namespace_request) {Mediaflux::Http::NamespaceCreateRequest}
       after do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
@@ -92,8 +92,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       it "should raise a MetadataError if project is invalid" do
         params = {mediaflux_id: 001,
                   project_directory: incomplete_project.metadata[:project_directory],
-                  storage_capacity: {"size"=>{"approved"=>600, 
-                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  storage_capacity: {"size"=>{"approved"=>600,
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]},
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
                   event_note_message: "Message filler",
@@ -101,7 +101,7 @@ RSpec.describe ProjectMediaflux, type: :model do
                 }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
-        
+
         #raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
         expect {
           incomplete_project.metadata_json["project_id"] = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
@@ -118,8 +118,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       it "should raise a error if any error occurs in mediaflux" do
         params = {mediaflux_id: 001,
                   project_directory: incomplete_project.metadata[:project_directory],
-                  storage_capacity: {"size"=>{"approved"=>600, 
-                  "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
+                  storage_capacity: {"size"=>{"approved"=>600,
+                  "requested"=>project.metadata[:storage_capacity][:size][:requested]},
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
                   event_note_message: "Message filler",
@@ -127,7 +127,7 @@ RSpec.describe ProjectMediaflux, type: :model do
                 }
         project_metadata.approve_project(params:)
         session_token = current_user.mediaflux_session
-        
+
         #raise an error & log what was returned from mediaflux
         expect {
           ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
