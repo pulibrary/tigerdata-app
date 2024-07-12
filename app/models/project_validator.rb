@@ -2,7 +2,6 @@ class ProjectValidator < ActiveModel::Validator
     def validate(project)
         # we need this because this method references the metadata_json which is not updated until the project is saved
         project.metadata = project.metadata_model
-        byebug
 
         # Required fields, always validate
         validate_role(project:, netid: project.metadata_model.data_manager, role: "Data Manager")
