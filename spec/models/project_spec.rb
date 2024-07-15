@@ -202,12 +202,12 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     it "makes sure the directory is safe" do
       project = FactoryBot.create(:project, project_directory: "directory?")
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/directory-")
-      project.metadata_json["project_directory"] = "direc tory "
+      project.metadata_model.project_directory = "direc tory "
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory")
       project = FactoryBot.create(:project, project_directory: "direc/tory/")
-      project.metadata_json["project_directory"] = "direc/tory/"
+      project.metadata_model.project_directory = "direc/tory/"
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root_ns']}/direc-tory-")
-      project.metadata_json["project_directory"] = "/direc/tory/"
+      project.metadata_model.project_directory = "/direc/tory/"
       expect(project.project_directory).to eq("/direc/tory/")
     end
   end
@@ -235,7 +235,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     it "checks the status" do
       project = FactoryBot.create(:project)
       expect(project).to be_pending
-      project.metadata_json["status"] = Project::APPROVED_STATUS
+      project.metadata_model.status = Project::APPROVED_STATUS
       expect(project).not_to be_pending
     end
   end
