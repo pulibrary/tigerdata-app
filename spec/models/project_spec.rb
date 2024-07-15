@@ -240,7 +240,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
   end
 
-  describe "#create" do
+  describe "#create!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
     let(:current_user) { FactoryBot.create(:user) }
     let(:project) { FactoryBot.create(:project) }
@@ -282,4 +282,88 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       end
     end
   end
+
+  describe "#approve!" do
+    let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
+    let(:current_user) { FactoryBot.create(:user) }
+    let(:project) { FactoryBot.create(:project) }
+
+    before do
+      allow(PULDatacite).to receive(:new).and_return(datacite_stub)
+    end
+
+    it "Records the mediaflux id and sets the status to approved" do
+      project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+      project.create!(initial_metadata: project.metadata_model, user: current_user)
+
+      project.approve!(mediaflux_id: 9876, current_user: current_user)
+      project.reload
+
+      expect(project.mediaflux_id).not_to be_nil
+      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+    end
+
+    it "creates the provenance events when creating a new project" do
+      project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+      project.create!(initial_metadata: project.metadata_model, user: current_user)
+      project.approve!(mediaflux_id: 9876, current_user: current_user)
+      project.reload
+
+
+      expect(project.mediaflux_id).not_to be_nil
+      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+
+      expect(project.provenance_events.count).to eq 4
+      approval_event = project.provenance_events.select { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE}.first
+
+      expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
+      expect(approval_event.event_person).to eq current_user.uid
+      expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
+    end
+  end
+
+  describe "#activate!", connect_to_mediaflux: true do
+  let(:project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
+  let(:current_user) { FactoryBot.create(:user) }
+  let(:project_metadata) {project.metadata_model}
+  after do
+    Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+  end
+  it "activates a project" do
+    project.create!(initial_metadata: project.metadata_model, user: current_user)
+
+    # create a project in mediaflux
+    session_token = current_user.mediaflux_session
+    collection_id = project.save_in_mediaflux(session_id: session_token)
+    project.approve!(mediaflux_id: collection_id, current_user: current_user)
+
+    #validate that the collection id exists in mediaflux
+    project.activate!(collection_id:,current_user:)
+    expect(project.mediaflux_id).to eq(collection_id)
+    expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
+
+    #activate the project by setting the status to active and creating the necessary provenance events
+    activate_event = project.provenance_events.select { |event| event.event_type == ProvenanceEvent::ACTIVE_EVENT_TYPE}.first  #testing the approval Event
+    expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
+    expect(activate_event.event_person).to eq current_user.uid
+    expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
+  end
+
+  it "tries to activate a project that has a mismatched doi" do
+      project.create!(initial_metadata: project.metadata_model, user: current_user)
+
+      # create a project in mediaflux
+      session_token = current_user.mediaflux_session
+      collection_id = project.save_in_mediaflux(session_id: session_token)
+      project.approve!(mediaflux_id: collection_id, current_user: current_user)
+
+      # change the doi so it will not match up when activated
+      project.metadata_model.project_id = "90.34770/xyz"
+      project.save!
+
+      #validate that the collection id exists in mediaflux
+      project.activate!(collection_id:,current_user:)
+      expect(project.metadata_model.status).to_not eq Project::ACTIVE_STATUS
+  end
+end
 end

@@ -50,7 +50,7 @@ class ProjectMediaflux
     end
     project.mediaflux_id = id
     project.save!
-  
+
     id
   end
 

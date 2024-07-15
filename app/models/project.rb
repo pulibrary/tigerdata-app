@@ -167,16 +167,16 @@ class Project < ApplicationRecord
   # If it already exists, update it.
   # @return [String] the mediaflux id of the project
   def save_in_mediaflux(session_id:)
-    if mediaflux_id.nil?
-      mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
+    if self.mediaflux_id.nil?
+      self.mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
       ProjectAccumulator.new(project: self, session_id: session_id).create!()
       self.reload
-      Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{mediaflux_id})"
+      Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{self.mediaflux_id})"
     else
       ProjectMediaflux.update(project: self, session_id: session_id)
-      Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{mediaflux_id})"
+      Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{self.mediaflux_id})"
     end
-    mediaflux_id
+    self.mediaflux_id
   end
 
   def created_by_user
