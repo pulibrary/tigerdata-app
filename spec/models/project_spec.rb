@@ -239,4 +239,47 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       expect(project).not_to be_pending
     end
   end
+
+  describe "#create" do
+    let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
+    let(:current_user) { FactoryBot.create(:user) }
+    let(:project) { FactoryBot.create(:project) }
+
+    before do
+      allow(PULDatacite).to receive(:new).and_return(datacite_stub)
+    end
+
+    context "DOI minting" do
+      it "attempts to mint a DOI when project_id is empty" do
+        initial_metadata = ProjectMetadata.new_from_hash({})
+        project.create!(initial_metadata: initial_metadata, user: current_user)
+        expect(datacite_stub).to have_received(:draft_doi)
+      end
+
+      it "does not mint a new DOI when the project has a project_id" do
+        project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+        doi = project.create!(initial_metadata: project.metadata_model, user: current_user)
+        expect(datacite_stub).not_to have_received(:draft_doi)
+        expect(doi).to eq "123"
+      end
+    end
+
+    context "Provenance events" do
+      it "creates the provenance events when creating a new project" do
+        project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+        project.create!(initial_metadata: project.metadata_model, user: current_user)
+
+        expect(project.provenance_events.count).to eq 2
+        submission_event = project.provenance_events.first #testing the Submission Event
+        expect(submission_event.event_type).to eq ProvenanceEvent::SUBMISSION_EVENT_TYPE
+        expect(submission_event.event_person).to eq current_user.uid
+        expect(submission_event.event_details).to eq "Requested by #{current_user.display_name_safe}"
+
+        status_update_event = project.provenance_events.last #testing the Status Update Event when the project is first submitted, #TODO: will need a separate test for when a project is approved by an admin
+        expect(status_update_event.event_type).to eq ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE
+        expect(status_update_event.event_person).to eq current_user.uid
+        expect(status_update_event.event_details).to eq "The Status of this project has been set to pending"
+      end
+    end
+  end
 end
