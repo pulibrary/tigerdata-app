@@ -68,7 +68,7 @@ module Mediaflux
               xml.CreatedOn created_on
               xml.CreatedBy project_metadata.created_by
               xml.ProjectID project_metadata.project_id
-              capacity = project_metadata.storage_capacity
+              capacity = project_metadata.storage_capacity.with_indifferent_access
               xml.StorageCapacity do
                 xml.Size capacity["size"]["requested"]
                 xml.Unit capacity["unit"]["requested"]
