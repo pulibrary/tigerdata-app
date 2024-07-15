@@ -20,9 +20,15 @@ class ApplicationController < ActionController::Base
       # current_user&.mediaflux_from_session(session)
       yield
     rescue Mediaflux::Http::SessionExpired
+      @retry_count ||= 0
+      @retry_count += 1
       current_user.clear_mediaflux_session(session)
       current_user.mediaflux_from_session(session)
-      retry
+      if @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
+        retry
+      else
+        raise
+      end
     end
 
     def emulate_user

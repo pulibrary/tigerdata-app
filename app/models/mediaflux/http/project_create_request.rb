@@ -86,6 +86,13 @@ module Mediaflux
               xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
             end
           end
+          # TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
+          allocation = project.metadata["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata["storage_capacity"]["unit"]["requested"]
+
+          xml.quota do
+            xml.allocation allocation
+            xml.description "Project Quota"
+          end
         end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength

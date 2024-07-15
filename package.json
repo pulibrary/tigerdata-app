@@ -1,6 +1,6 @@
 {
   "name": "tiger-data-app",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.3.1",
   "browserslist": [
     "defaults"
   ],
@@ -22,7 +22,8 @@
     "bootstrap": "^5.2.3",
     "browserslist": "^4.21.5",
     "jquery": "^3.6.3",
-    "vite-plugin-rails": "^0.5.0"
+    "vite-plugin-rails": "^0.5.0",
+    "yarn.lock": "^0.0.1-security"
   },
   "scripts": {
     "lint": "eslint 'app/javascript/**/*.js'",

@@ -67,11 +67,11 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         expect(page).to have_content "Mediaflux: 4.16.032"
       end
 
-      it "shows the user projects regardless of the user's role" do
+      it "shows the projects based on the user's role" do
         sign_in current_user
         visit "/"
-        expect(page).to have_content "Sponsored by Me"
-        expect(page).to have_content "project 111"
+        expect(page).not_to have_content "Sponsored by Me"
+        expect(page).not_to have_content "project 111"
         expect(page).to have_content "Managed by Me"
         expect(page).to have_content "project 222"
         expect(page).to have_content "Shared with Me"
@@ -79,6 +79,24 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         # The current user has no access to this project so we don't expect to see it
         expect(page).not_to have_content "project 444"
       end
+
+      context "the user signed in is an eligible sponsor" do
+        it "shows the projects based on the user's role" do
+          current_user.update(eligible_sponsor: true)
+
+          sign_in current_user
+          visit "/"
+          expect(page).to have_content "Sponsored by Me"
+          expect(page).to have_content "project 111"
+          expect(page).to have_content "Managed by Me"
+          expect(page).to have_content "project 222"
+          expect(page).to have_content "Shared with Me"
+          expect(page).to have_content "project 333"
+          # The current user has no access to this project so we don't expect to see it
+          expect(page).not_to have_content "project 444"
+        end
+      end
+
       it "allows for navigation back to user dashboard when clicking logo" do
         sign_in current_user
         visit "/projects"
@@ -107,10 +125,10 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
       end
 
       context "if the user is a sponsor" do
-        it "shows the New Project button" do
+        it "shows the New Project button and shows the Sponsored by Me heading" do
           sign_in no_projects_sponsor
           visit "/"
-          expect(page).not_to have_content("Sponsored by Me")
+          expect(page).to have_content("Sponsored by Me")
           expect(page).to have_content("Recent Activity")
           expect(page).to have_selector(:link_or_button, "New Project")
         end
@@ -143,6 +161,15 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         current_user.save!
         visit "/"
         expect(page).to have_select("emulation_menu")
+      end
+      it "displays sponsored projects when emulating a data sponsor" do
+        sign_in current_user
+        current_user.trainer = true
+        current_user.save!
+        visit "/"
+        select "Data Sponsor", from: "emulation_menu"
+        expect(page).to have_content("Sponsored by Me")
+        expect(page).to have_content("Managed by Me")
       end
     end
   end
