@@ -8,7 +8,7 @@
       <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
       <div id="dashboard-projects">
         <h1>My Projects</h1>
-        <% if @sponsored_projects.size > 0 %>
+        <%if current_user.eligible_sponsor?%>
           <h2>Sponsored by Me</h2>
           <ul class="project-list">
             <% @sponsored_projects.each do |project| %>
