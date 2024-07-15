@@ -14,7 +14,7 @@ RSpec.describe ProjectMetadata, type: :model do
       title: "title abc",
       description: "description 123",
       status: "pending"
-  }.with_indifferent_access
+    }.with_indifferent_access
   end
 
   let(:default_storage_capacity) do
@@ -25,7 +25,7 @@ RSpec.describe ProjectMetadata, type: :model do
     { requested: "Standard", approved: nil }.with_indifferent_access
   end
 
-  let(:default_project_purpose ) { "Research"}
+  let(:default_project_purpose) { "Research" }
 
   describe "#initialize_from_hash" do
     it "parses basic metadata" do

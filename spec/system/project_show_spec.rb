@@ -14,21 +14,21 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
 
   let(:metadata_model) do
     hash = {
-        data_sponsor: sponsor_user.uid,
-        data_manager: data_manager.uid,
-        project_directory: "project-123",
-        title: "project 123",
-        departments: ["RDSS"],
-        description: "hello world",
-        ro_users: [read_only.uid],
-        rw_users: [read_write.uid],
-        status: ::Project::PENDING_STATUS,
-        storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
-        storage_performance_expectations: { "requested" => "standard" },
-        created_on: Time.current.in_time_zone("America/New_York").iso8601,
-        created_by: FactoryBot.create(:user).uid,
-        project_id:  ""
-      }
+      data_sponsor: sponsor_user.uid,
+      data_manager: data_manager.uid,
+      project_directory: "project-123",
+      title: "project 123",
+      departments: ["RDSS"],
+      description: "hello world",
+      ro_users: [read_only.uid],
+      rw_users: [read_write.uid],
+      status: ::Project::PENDING_STATUS,
+      storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
+      storage_performance_expectations: { "requested" => "standard" },
+      created_on: Time.current.in_time_zone("America/New_York").iso8601,
+      created_by: FactoryBot.create(:user).uid,
+      project_id: ""
+    }
     ProjectMetadata.new_from_hash(hash)
   end
 

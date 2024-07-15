@@ -24,7 +24,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       status: ::Project::PENDING_STATUS,
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
-      project_id:  ""
+      project_id: ""
     }
     ProjectMetadata.new_from_hash(hash)
   end
@@ -69,7 +69,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
 
     context "when the data user is empty" do
       let(:metadata_model) do
-       hash = {
+        hash = {
           data_sponsor: sponsor_user.uid,
           data_manager: data_manager.uid,
           project_directory: "project-123",
