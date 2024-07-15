@@ -17,14 +17,14 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       session_id =  data_user_ro.mediaflux_session
 
       created_on = Time.current.in_time_zone("America/New_York").iso8601
-      project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on, 
+      project = FactoryBot.create :project, ro_users: [data_user_ro.uid], rw_users: [data_user_rw.uid], created_on: created_on,
                                             project_id: "abc/123", project_directory: "testasset"
       create_request = described_class.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
       metadata  = req.metadata
-      
+
       expect(metadata[:name]).to eq("testasset")
       expect(metadata[:title]).to eq(project.metadata[:title])
       expect(metadata[:description]).to eq(project.metadata[:description])
