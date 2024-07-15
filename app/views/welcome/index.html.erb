@@ -104,3 +104,66 @@
   // to Mediaflux for every page loaded.
   displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
 </script>
+
+# user is a tester-trainer emulating a data sponsor
+<% if !current_user.trainer? %>
+<div id="dashboard-projects">
+  <h1>My Projects</h1>
+  <% if @sponsored_projects.size = 0 %>
+    <h2>Sponsored by Me</h2>
+    <ul class="project-list">
+      <% @sponsored_projects.each do |project| %>
+        <li><%= link_to(project.title, project) %> </li>
+      <%end%>
+    </ul>
+    <% if @managed_projects.size = 0 %>
+    <h2>Managed by Me</h2>
+    <ul class="project-list">
+      <% @managed_projects.each do |project| %>
+        <li><%= link_to(project.title, project) %> </li>
+      <%end%>
+    </ul>
+  <% end %>
+<% end %>
+
+# user is a tester-trainer emulating a data manager 
+<% if !current_user.trainer? %>
+<div id="dashboard-projects">
+<h1>My Projects</h1>
+<% if @managed_projects.size = 0 %>
+  <h2>Managed by Me</h2>
+  <ul class="project-list">
+    <% @sponsored_projects.each do |project| %>
+      <li><%= link_to(project.title, project) %> </li>
+    <%end%>
+  </ul>
+  <% if @sponsored_projects.size > 0 %>
+  <h2>Managed by Me</h2>
+  <ul class="project-list">
+    <% @managed_projects.each do |project| %>
+      <li><%= link_to(project.title, project) %> </li>
+    <%end%>
+  </ul>
+<% end %>
+<% end %>
+
+# user is a tester-trainer emulating a data user
+<% if !current_user.trainer? %>
+<div id="dashboard-projects">
+  <h1>My Projects</h1>
+  <% if @sponsored_projects.size > 0 %>
+      <h2>Shared with Me</h2>
+      <ul class="project-list">
+        <% @data_user_projects.each do |project| %>
+          <li><%= link_to(project.title, project) %> </li>
+        <%end%>
+      </ul>
+    <% if @managed_projects.size > 0 %>
+      <h2>Shared with Me</h2>
+      <ul class="project-list">
+        <% @data_user_projects.each do |project| %>
+          <li><%= link_to(project.title, project) %> </li>
+        <%end%>
+      </ul>
+  <% end %>
+<% end %>

@@ -144,6 +144,14 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         visit "/"
         expect(page).to have_select("emulation_menu")
       end
+      it "displays sponsored projects when emulating a data sponsor" do
+        sign_in current_user
+        current_user.trainer = true
+        current_user.save!
+        visit "/"
+        expect(page).to have_content("Sponsored by Me")
+        expect(page).to have_content("Managed by Me")
+      end
     end
   end
 end
