@@ -103,17 +103,17 @@ class Project < ApplicationRecord
   end
 
   def project_directory
-    return nil if metadata[:project_directory].nil?
+    return nil if metadata_model.project_directory.nil?
     dirname, basename = project_directory_pathname.split
     if (dirname.relative?)
-      "#{Mediaflux::Http::Connection.root_namespace}/#{safe_name(metadata[:project_directory])}"
+      "#{Mediaflux::Http::Connection.root_namespace}/#{safe_name(metadata_model.project_directory)}"
     else
       project_directory_pathname.to_s
     end
   end
 
   def project_directory_parent_path
-    return Mediaflux::Http::Connection.root_namespace if metadata[:project_directory].nil?
+    return Mediaflux::Http::Connection.root_namespace if metadata_model.project_directory.nil?
     dirname  = project_directory_pathname.dirname
     if (dirname.relative?)
       Mediaflux::Http::Connection.root_namespace
@@ -123,12 +123,12 @@ class Project < ApplicationRecord
   end
 
   def project_directory_short
-    return nil if metadata[:project_directory].nil?
+    return nil if metadata_model.project_directory.nil?
     project_directory_pathname.basename.to_s
   end
 
   def status
-    metadata[:status]
+    metadata_model.status
   end
 
   def pending?
@@ -180,7 +180,7 @@ class Project < ApplicationRecord
   end
 
   def created_by_user
-    User.find_by(uid: metadata[:created_by])
+    User.find_by(uid: metadata_model.created_by)
   end
 
   def to_xml
@@ -307,10 +307,10 @@ class Project < ApplicationRecord
 
     def project_directory_pathname
       # allow the directory to be modified by changes in the metadata_json
-      @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata[:project_directory]
+      @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata_model.project_directory
 
       @project_directory_pathname ||= begin
-        @original_directory = metadata[:project_directory]
+        @original_directory = metadata_model.project_directory
         Pathname.new(@original_directory)
       end
     end

@@ -91,20 +91,20 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
       it "should raise a MetadataError if project is invalid" do
         params = {mediaflux_id: 001,
-                  project_directory: incomplete_project.metadata[:project_directory],
+                  project_directory: incomplete_project.metadata_model.project_directory,
                   storage_capacity: {"size"=>{"approved"=>600,
-                  "requested"=>project.metadata[:storage_capacity][:size][:requested]},
+                  "requested"=>project.metadata_model.storage_capacity[:size][:requested]},
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
                   event_note_message: "Message filler",
                   storage_performance_expectations: { "requested" => "standard" }
                 }
-        project_metadata.approve_project(params:)
+        project.approve!(mediaflux_id: params[:mediaflux_id], current_user: current_user)
         session_token = current_user.mediaflux_session
 
         #raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
         expect {
-          incomplete_project.metadata_json["project_id"] = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
+          incomplete_project.metadata_model.project_id = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
           ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         }.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
@@ -117,15 +117,15 @@ RSpec.describe ProjectMediaflux, type: :model do
 
       it "should raise a error if any error occurs in mediaflux" do
         params = {mediaflux_id: 001,
-                  project_directory: incomplete_project.metadata[:project_directory],
+                  project_directory: incomplete_project.metadata_model.project_directory,
                   storage_capacity: {"size"=>{"approved"=>600,
-                  "requested"=>project.metadata[:storage_capacity][:size][:requested]},
+                  "requested"=>project.metadata_model.storage_capacity[:size][:requested]},
                   "unit"=>{"approved"=>"GB", "requested"=>"GB"}},
                   event_note: "Other",
                   event_note_message: "Message filler",
                   storage_performance_expectations: { "requested" => "standard" }
                 }
-        project_metadata.approve_project(params:)
+        incomplete_project.approve!(mediaflux_id: params[:mediaflux_id], current_user: current_user)
         session_token = current_user.mediaflux_session
 
         #raise an error & log what was returned from mediaflux
