@@ -72,8 +72,8 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         visit "/"
         expect(page).not_to have_content "Sponsored by Me"
         expect(page).not_to have_content "project 111"
-        expect(page).to have_content "Managed by Me"
-        expect(page).to have_content "project 222"
+        expect(page).not_to have_content "Managed by Me"
+        expect(page).not_to have_content "project 222"
         expect(page).to have_content "Shared with Me"
         expect(page).to have_content "project 333"
         # The current user has no access to this project so we don't expect to see it
@@ -88,6 +88,27 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
           visit "/"
           expect(page).to have_content "Sponsored by Me"
           expect(page).to have_content "project 111"
+          expect(page).not_to have_content "Managed by Me"
+          expect(page).not_to have_content "project 222"
+          expect(page).to have_content "Shared with Me"
+          expect(page).to have_content "project 333"
+          # The current user has no access to this project so we don't expect to see it
+          expect(page).not_to have_content "project 444"
+          expect(page).to be_axe_clean
+            .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+            .skipping(:'color-contrast') # false positives
+            .excluding(".tt-hint") # Issue is in typeahead.js library
+        end
+      end
+
+      context "the user signed in is an eligible manager" do
+        it "shows the projects based on the user's role" do
+          current_user.update(eligible_manager: true)
+
+          sign_in current_user
+          visit "/"
+          expect(page).not_to have_content "Sponsored by Me"
+          expect(page).not_to have_content "project 111"
           expect(page).to have_content "Managed by Me"
           expect(page).to have_content "project 222"
           expect(page).to have_content "Shared with Me"
@@ -169,7 +190,22 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
         visit "/"
         select "Data Sponsor", from: "emulation_menu"
         expect(page).to have_content("Sponsored by Me")
+        expect(page).not_to have_content("Managed by Me")
+        expect(page).to have_content("Shared with Me")
+      end
+      it "displays sponsored projects when emulating a data manager" do
+        sign_in current_user
+        current_user.trainer = true
+        current_user.save!
+        visit "/"
+        select "Data Manager", from: "emulation_menu"
+        expect(page).not_to have_content("Sponsored by Me")
         expect(page).to have_content("Managed by Me")
+        expect(page).to have_content("Shared with Me")
+        expect(page).to be_axe_clean
+          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
+          .skipping(:'color-contrast') # false positives
+          .excluding(".tt-hint") # Issue is in typeahead.js library
       end
     end
   end
