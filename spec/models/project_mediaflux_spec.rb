@@ -92,18 +92,12 @@ RSpec.describe ProjectMediaflux, type: :model do
         Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if project is invalid" do
-        params = { mediaflux_id: 0o01,
-                   project_directory: incomplete_project.metadata_model.project_directory,
-                   storage_capacity: { "size" => { "approved" => 600,
-                                                   "requested" => project.metadata_model.storage_capacity[:size][:requested] },
-                                       "unit" => { "approved" => "GB", "requested" => "GB" } },
-                   event_note: "Other",
-                   event_note_message: "Message filler",
-                   storage_performance_expectations: { "requested" => "standard" } }
-        project.approve!(mediaflux_id: params[:mediaflux_id], current_user: current_user)
+        mediaflux_id = 1001
+        project.approve!(mediaflux_id: mediaflux_id, current_user: current_user)
         session_token = current_user.mediaflux_session
 
         # raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
+        # rubocop:disable Style/MultilineBlockChain
         expect do
           incomplete_project.metadata_model.project_id = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
           ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
@@ -114,27 +108,23 @@ RSpec.describe ProjectMediaflux, type: :model do
           expect(incomplete_project.errors.attribute_names[0].to_s).to eq "base"
           expect(incomplete_project.errors.messages[:base]).to eq ["Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for project_id"]
         end
+        # rubocop:enable Style/MultilineBlockChain
       end
 
       it "should raise a error if any error occurs in mediaflux" do
-        params = { mediaflux_id: 0o01,
-                   project_directory: incomplete_project.metadata_model.project_directory,
-                   storage_capacity: { "size" => { "approved" => 600,
-                                                   "requested" => project.metadata_model.storage_capacity[:size][:requested] },
-                                       "unit" => { "approved" => "GB", "requested" => "GB" } },
-                   event_note: "Other",
-                   event_note_message: "Message filler",
-                   storage_performance_expectations: { "requested" => "standard" } }
-        incomplete_project.approve!(mediaflux_id: params[:mediaflux_id], current_user: current_user)
+        mediaflux_id = 1001
+        incomplete_project.approve!(mediaflux_id: mediaflux_id, current_user: current_user)
         session_token = current_user.mediaflux_session
 
         # raise an error & log what was returned from mediaflux
+        # rubocop:disable Style/MultilineBlockChain
         expect do
           ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
         end.to raise_error do |error|
           expect(error).to be_a(StandardError)
           expect(error.message).to include("call to service 'asset.create' failed: XPath tigerdata:project/ProjectID is invalid: missing value")
         end
+        # rubocop:enable Style/MultilineBlockChain
       end
     end
   end

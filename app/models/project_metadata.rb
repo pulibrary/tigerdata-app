@@ -22,7 +22,6 @@ class ProjectMetadata
     pm
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def initialize_from_hash(metadata_hash)
     @title = metadata_hash[:title]
@@ -46,13 +45,10 @@ class ProjectMetadata
     @updated_on = metadata_hash[:updated_on]
     set_defaults
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
-  # TODO: we might NOT need two separate methods
-  # (i.e initialize_from_params and update_with_params) to initialize and update the object
-  #
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
+  # rubocop:disable Metrics/MethodLength
   def initialize_from_params(params)
     @title = params[:title]
     @description = params[:description]
@@ -76,59 +72,35 @@ class ProjectMetadata
     @updated_on = params[:updated_on] if params[:updated_on]
     set_defaults
   end
+  # rubocop:enable Metrics/MethodLength
 
   # Updates the object with the values in the params (which is an ActionController::Parameters)
   # Notice how we only update values that come in the params and don't change the values that
   # don't come as part of the params
+  # rubocop:disable Metrics/MethodLength
   def update_with_params(params, current_user)
-    @title = params["title"] if params["title"].present?
-    @description = params["description"] if params["description"].present?
-    @status = params["status"] if params["status"].present?
-    @data_sponsor = params["data_sponsor"] if params["data_sponsor"].present?
-    @data_manager = params["data_manager"] if params["data_manager"].present?
-    @departments = params["departments"] if params["departments"].present?
+    set_value(params, "title")
+    set_value(params, "description")
+    set_value(params, "status")
+    set_value(params, "data_sponsor")
+    set_value(params, "data_manager")
+    set_value(params, "departments")
+    set_value(params, "project_id")
+    set_value(params, "project_purpose")
+    set_value(params, "project_directory")
+
     @ro_users = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
     @rw_users = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
 
-    @project_id = params["project_id"] if params["project_id"].present?
-    @project_purpose = params["project_purpose"] if params["project_purpose"].present?
-    if params["project_directory"].present?
-      @project_directory = params["project_directory"]
-      # TODO: "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
-    end
-
-    if params["storage_capacity"].present?
-      @storage_capacity = {
-        "size" => {
-          "approved" => params["storage_capacity"].to_i,
-          "requested" => storage_capacity[:size][:requested]
-        },
-        "unit" => {
-          "approved" => params["storage_unit"],
-          "requested" => storage_capacity[:unit][:requested]
-        }
-      }
-    end
-
-    # we don't allow the user to specify an approve value so we use the requested
-    @storage_performance_expectations = {
-      "requested" => storage_performance_expectations[:requested],
-      "approved" => storage_performance_expectations[:requested]
-    }
-
-    if params[:event_note_message].present?
-      @approval_note = {
-        note_by: current_user.uid,
-        note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-        event_type: params[:event_note],
-        message: params[:event_note_message]
-      }
-    end
+    update_storage_capacity(params)
+    update_storage_performance_expectations
+    update_approval_note(params, current_user)
 
     # Fields that come from the edit form
     @updated_by = current_user.uid
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -167,5 +139,46 @@ class ProjectMetadata
         end
 
         @project_purpose = "Research" if @project_purpose.nil?
+      end
+
+      # Sets a value in the object if the value exists in the params
+      def set_value(params, key)
+        if params[key].present?
+          send("#{key}=", params[key])
+        end
+      end
+
+      def update_storage_capacity(params)
+        if params["storage_capacity"].present?
+          @storage_capacity = {
+            "size" => {
+              "approved" => params["storage_capacity"].to_i,
+              "requested" => storage_capacity[:size][:requested]
+            },
+            "unit" => {
+              "approved" => params["storage_unit"],
+              "requested" => storage_capacity[:unit][:requested]
+            }
+          }
+        end
+      end
+
+      def update_storage_performance_expectations
+        # we don't allow the user to specify an approve value so we use the requested
+        @storage_performance_expectations = {
+          "requested" => storage_performance_expectations[:requested],
+          "approved" => storage_performance_expectations[:requested]
+        }
+      end
+
+      def update_approval_note(params, current_user)
+        if params[:event_note_message].present?
+          @approval_note = {
+            note_by: current_user.uid,
+            note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+            event_type: params[:event_note],
+            message: params[:event_note_message]
+          }
+        end
       end
 end
