@@ -163,20 +163,8 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
-  # If the project hasn't yet been created in mediaflux, create it.
-  # If it already exists, update it.
-  # @return [String] the mediaflux id of the project
   def save_in_mediaflux(session_id:)
-    if self.mediaflux_id.nil?
-      self.mediaflux_id = ProjectMediaflux.create!(project: self, session_id: session_id)
-      ProjectAccumulator.new(project: self, session_id: session_id).create!()
-      self.reload
-      Rails.logger.debug "Project #{id} has been created in MediaFlux (asset id #{self.mediaflux_id})"
-    else
-      ProjectMediaflux.update(project: self, session_id: session_id)
-      Rails.logger.debug "Project #{id} has been updated in MediaFlux (asset id #{self.mediaflux_id})"
-    end
-    self.mediaflux_id
+    ProjectMediaflux.save(project: self, session_id: session_id)
   end
 
   def created_by_user
