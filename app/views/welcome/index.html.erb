@@ -16,7 +16,7 @@
             <%end%>
           </ul>
         <% end %>
-        <% if @managed_projects.size > 0 %>
+        <% if current_user.eligible_manager? %>
           <h2>Managed by Me</h2>
           <ul class="project-list">
             <% @managed_projects.each do |project| %>
