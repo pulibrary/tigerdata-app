@@ -87,7 +87,7 @@ module Mediaflux
             end
           end
           # TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
-          allocation = project.metadata["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata["storage_capacity"]["unit"]["requested"]
+          allocation = project_metadata.storage_capacity["size"]["requested"].to_s << " " << project_metadata.storage_capacity["unit"]["requested"]
 
           xml.quota do
             xml.allocation allocation
