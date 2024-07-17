@@ -81,6 +81,7 @@ class MediafluxScriptFactory
             :StorageCapacity < :Size "#{project.metadata_json['storage_capacity']['size']['requested']}>" :Unit #{project.metadata_json['storage_capacity']['unit']['requested']}"
             :StoragePerformance "#{project.metadata_json['storage_performance_expectations']['requested']}"
             :ProjectPurpose "#{project.metadata_json['project_purpose']}"
+            :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
             :SchemaVersion "#{project.metadata['schema_version']}"
           >
         >

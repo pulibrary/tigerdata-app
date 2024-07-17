@@ -139,23 +139,23 @@ class ProjectMetadata
       # Initializes values that we have defaults for.
       def set_defaults
         if @storage_capacity.nil?
-          @storage_capacity = {
-            size: { requested: 500, approved: nil },
-            unit: { requested: "GB", approved: nil }
-          }
+          @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
         end
 
         if @storage_performance_expectations.nil?
-          @storage_performance_expectations = { requested: "Standard", approved: nil }
+          @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
         end
 
-        @project_purpose = "Research" if @project_purpose.nil?
+        if @project_purpose.nil?
+          @project_purpose = Rails.configuration.project_defaults[:project_purpose]
+        end
+
         @schema_version = TigerdataSchema::SCHEMA_VERSION
       end
 
       # Sets a value in the object if the value exists in the params
       def set_value(params, key)
-        if params[key].present?
+        if params.include?(key)
           send("#{key}=", params[key])
         end
       end

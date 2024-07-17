@@ -104,10 +104,10 @@ RSpec.describe ProjectMetadata, type: :model do
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.title).to eq("title abc")
 
-      # it preserves the original title when no title is given
+      # it blanks the title
       hash["title"] = nil
       project_metadata.update_with_params(hash, current_user)
-      expect(project_metadata.title).to eq("title abc")
+      expect(project_metadata.title).to be nil
 
       # changes the title when one is given
       hash["title"] = "title abc again"
