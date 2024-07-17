@@ -33,5 +33,6 @@ module TigerDataApp
     Warden::Manager.before_logout do |user, _auth, _opts|
       user.terminate_mediaflux_session
     end
+    config.action_cable.mount_path = "/cable/"
   end
 end
