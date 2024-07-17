@@ -106,7 +106,7 @@ class ProjectsController < ApplicationController
     if project.metadata_model.status != Project::APPROVED_STATUS
       flash[:notice] = "Pending projects can not be edited."
       redirect_to project
-    elsif project.metadata_model.status == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor of manager
+    elsif project.metadata_model.status == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor or a manager
       flash[:notice] = "Only data sponsors and data managers can revise this project."
       redirect_to project
     end
