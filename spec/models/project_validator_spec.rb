@@ -51,7 +51,7 @@ RSpec.describe ProjectValidator, type: :model do
 
     context "with invalid data readers" do
       it "finds the errors" do
-        project = FactoryBot.build(:project, ro_users: ["xxx"])
+        project = FactoryBot.build(:project, data_user_read_only: ["xxx"])
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Invalid netid: xxx for role Data User Read Only"])
       end
@@ -59,7 +59,7 @@ RSpec.describe ProjectValidator, type: :model do
 
     context "with invalid data writers" do
       it "finds the errors" do
-        project = FactoryBot.build(:project, rw_users: ["xxx"])
+        project = FactoryBot.build(:project, data_user_read_write: ["xxx"])
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Invalid netid: xxx for role Data User Read Write"])
       end

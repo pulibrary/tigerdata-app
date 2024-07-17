@@ -8,8 +8,8 @@ class ProjectValidator < ActiveModel::Validator
         validate_role(project:, netid: project.metadata_model.data_sponsor, role: "Data Sponsor")
 
         # Validate if present
-        project.metadata_model.ro_users&.each { |read_only| validate_role(project:, netid: read_only, role: "Data User Read Only")}
-        project.metadata_model.rw_users&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
+        project.metadata_model.data_user_read_only&.each { |read_only| validate_role(project:, netid: read_only, role: "Data User Read Only")}
+        project.metadata_model.data_user_read_write&.each { |read_write| validate_role(project:, netid: read_write, role: "Data User Read Write")}
 
         # validate all required fields
         required_metadata_field_errors = []

@@ -5,8 +5,8 @@ FactoryBot.define do
     transient do
       data_sponsor { FactoryBot.create(:project_sponsor).uid }
       data_manager { FactoryBot.create(:data_manager).uid }
-      ro_users { [] }
-      rw_users { [] }
+      data_user_read_only { [] }
+      data_user_read_write { [] }
       title { FFaker::Movie.title }
       created_on { Time.current.in_time_zone("America/New_York").iso8601 }
       created_by { FactoryBot.create(:user).uid }
@@ -33,8 +33,8 @@ FactoryBot.define do
       hash = {
         data_sponsor: data_sponsor,
         data_manager: data_manager,
-        ro_users: ro_users,
-        rw_users: rw_users,
+        data_user_read_only: data_user_read_only,
+        data_user_read_write: data_user_read_write,
         departments: ["RDSS", "PRDS"],
         project_directory: project_directory,
         title: title,

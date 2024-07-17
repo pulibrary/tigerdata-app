@@ -47,7 +47,7 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
     before do
       FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
-      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, ro_users: [current_user.uid], title: "project 333")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
     end
 

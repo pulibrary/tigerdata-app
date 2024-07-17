@@ -36,9 +36,9 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#data_users" do
     let(:data_user) { FactoryBot.create(:user, uid: "hc1234") }
     before do
-      FactoryBot.create(:project, title: "project 111", ro_users: [data_user.uid])
-      FactoryBot.create(:project, title: "project 222", ro_users: [data_user.uid])
-      FactoryBot.create(:project, title: "project 333", ro_users: [data_user.uid])
+      FactoryBot.create(:project, title: "project 111", data_user_read_only: [data_user.uid])
+      FactoryBot.create(:project, title: "project 222", data_user_read_only: [data_user.uid])
+      FactoryBot.create(:project, title: "project 333", data_user_read_only: [data_user.uid])
     end
 
     it "returns projects for the data users" do

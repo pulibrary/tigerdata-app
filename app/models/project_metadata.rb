@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users,
-    :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity,
-    :storage_performance_expectations, :updated_by, :updated_on, :approval_note
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments,
+    :data_user_read_only, :data_user_read_write, :created_on, :created_by, :project_id,
+    :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
+    :updated_by, :updated_on, :approval_note, :schema_version
 
   def initialize
     @departments = []
-    @ro_users = []
-    @rw_users = []
+    @data_user_read_only = []
+    @data_user_read_write = []
   end
 
   def self.new_from_hash(metadata_hash)
@@ -30,8 +31,8 @@ class ProjectMetadata
     @data_sponsor = metadata_hash[:data_sponsor]
     @data_manager = metadata_hash[:data_manager]
     @departments = metadata_hash[:departments]
-    @ro_users = metadata_hash[:ro_users]
-    @rw_users = metadata_hash[:rw_users]
+    @data_user_read_only = metadata_hash[:data_user_read_only]
+    @data_user_read_write = metadata_hash[:data_user_read_write]
 
     @project_id = metadata_hash[:project_id]
     @project_purpose = metadata_hash[:project_purpose]
@@ -56,8 +57,8 @@ class ProjectMetadata
     @data_sponsor = params[:data_sponsor]
     @data_manager = params[:data_manager]
     @departments = params[:departments]
-    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_")
-    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_")
+    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_")
+    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_")
 
     @project_id = params[:project_id]
     @project_purpose = params[:project_purpose]
@@ -89,8 +90,8 @@ class ProjectMetadata
     set_value(params, "project_purpose")
     set_value(params, "project_directory")
 
-    @ro_users = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
-    @rw_users = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
+    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
+    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
 
     update_storage_capacity(params)
     update_storage_performance_expectations
@@ -100,7 +101,17 @@ class ProjectMetadata
     @updated_by = current_user.uid
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
-    # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength
+
+  # Alias for `data_user_read_only`
+  def ro_users
+    @data_user_read_only
+  end
+
+  # Alias for `data_user_read_write`
+  def rw_users
+    @data_user_read_write
+  end
 
     private
 
@@ -139,6 +150,7 @@ class ProjectMetadata
         end
 
         @project_purpose = "Research" if @project_purpose.nil?
+        @schema_version = TigerdataSchema::SCHEMA_VERSION
       end
 
       # Sets a value in the object if the value exists in the params
