@@ -39,20 +39,12 @@ class MediafluxScriptFactory
     created_on_formatted.upcase
   end
 
-  def submission
-    project.metadata.fetch("submission", nil)
-  end
-
   def requested_by
-    return "" if submission.nil?
-
-    submission.fetch("requested_by", "")
+    project.metadata_model.created_by
   end
 
   def request_date_time
-    return if submission.nil?
-
-    submission.fetch("request_date_time")
+    project.metadata_model.created_on
   end
 
   def requested_date

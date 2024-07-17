@@ -45,10 +45,10 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     before do
-      FactoryBot.create(:project, metadata: { data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111" })
-      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222" })
-      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333" })
-      FactoryBot.create(:project, metadata: { data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444" })
+      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
     end
 
     context "current user dashboard" do

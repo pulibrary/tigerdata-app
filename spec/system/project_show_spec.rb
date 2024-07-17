@@ -11,8 +11,9 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
   let(:pending_text) do
     "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
   end
-  let(:metadata) do
-    {
+
+  let(:metadata_model) do
+    hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
       project_directory: "project-123",
@@ -23,19 +24,23 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       data_user_read_write: [read_write.uid],
       status: ::Project::PENDING_STATUS,
       storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
-      storage_performance_expectations: { "requested" => "standard" }
+      storage_performance_expectations: { "requested" => "standard" },
+      created_on: Time.current.in_time_zone("America/New_York").iso8601,
+      created_by: FactoryBot.create(:user).uid,
+      project_id: ""
     }
+    ProjectMetadata.new_from_hash(hash)
   end
 
-  let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata: metadata) }
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata_model: metadata_model) }
+  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
   context "Show page" do
     context "Navigation Buttons" do
       context "Approved projects" do
         context "Sponsor user" do
           it "Shows the correct nav buttons" do
             sign_in sponsor_user
-            project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+            project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
             visit "/projects/#{project_in_mediaflux.id}"
 
@@ -54,7 +59,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
         context "SysAdmin" do
           it "Shows the correct nav buttons" do
             sign_in sysadmin_user
-            project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+            project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
             visit "/projects/#{project_in_mediaflux.id}"
 
@@ -104,10 +109,10 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     context "Approved projects" do
       it "Shows the approved values" do
         sign_in sponsor_user
-        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
-        project_in_mediaflux.metadata_json["storage_capacity"]["size"]["approved"] = 1
-        project_in_mediaflux.metadata_json["storage_capacity"]["unit"]["approved"] = "TB"
-        project_in_mediaflux.metadata_json["storage_performance_expectations"]["approved"] = "slow"
+        project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+        project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
+        project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
+        project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}"
 
@@ -191,7 +196,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
     end
 
     context "system administrator" do
-      let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVED_STATUS, metadata: metadata) }
+      let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVED_STATUS, metadata_model: metadata_model) }
       let(:project_not_in_mediaflux) { FactoryBot.create(:project) }
       it "shows the sysadmin buttons for an approved project" do
         sign_in sysadmin_user
@@ -206,7 +211,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       it "shows the sysadmin buttons for a pending project" do
         sign_in sysadmin_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "#{project_not_in_mediaflux.metadata[:title]} (#{::Project::PENDING_STATUS})"
+        expect(page).to have_content "#{project_not_in_mediaflux.metadata_model.title} (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")

@@ -11,8 +11,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
   let(:pending_text) do
     "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
   end
-  let(:metadata) do
-    {
+  let(:metadata_model) do
+    hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
       project_directory: "project-123",
@@ -21,14 +21,18 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
       description: "hello world",
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
-      status: ::Project::PENDING_STATUS
+      status: ::Project::PENDING_STATUS,
+      created_on: Time.current.in_time_zone("America/New_York").iso8601,
+      created_by: FactoryBot.create(:user).uid,
+      project_id: ""
     }
+    ProjectMetadata.new_from_hash(hash)
   end
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata: metadata) }
+  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
   let(:mediaflux_id) { 1097 }
   let(:project_in_mediaflux) do
     project_not_in_mediaflux
-    project_not_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+    project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
     project_not_in_mediaflux.mediaflux_id = mediaflux_id
     project_not_in_mediaflux.save!
     project_not_in_mediaflux.reload
@@ -64,8 +68,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
     end
 
     context "when the data user is empty" do
-      let(:metadata) do
-        {
+      let(:metadata_model) do
+        hash = {
           data_sponsor: sponsor_user.uid,
           data_manager: data_manager.uid,
           project_directory: "project-123",
@@ -75,10 +79,14 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
           data_user_read_only: [],
           data_user_read_write: [],
           project_id: "abc-123",
-          storage_capacity: { size: { requested: 100 }, unit: { requested: "TB" } },
+          storage_capacity: { size: { requested: "100" }, unit: { requested: "TB" } }.with_indifferent_access,
           storage_performance_expectations: { requested: "Standard" },
-          project_purpose: "Research"
+          project_purpose: "Research",
+          status: ::Project::PENDING_STATUS,
+          created_on: Time.current.in_time_zone("America/New_York").iso8601,
+          created_by: FactoryBot.create(:user).uid
         }
+        ProjectMetadata.new_from_hash(hash)
       end
 
       it "shows none when the data user is empty" do
@@ -90,8 +98,8 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         expect(page).not_to have_button "Approve Project"
         expect(page).to have_content "Data Users\nNone"
         expect(page).to have_content "Project ID\nabc-123"
-        expect(page).to have_content "Storage Capacity\nRequested\n100 TB"
-        expect(page).to have_content "Storage Performance Expectations\nRequested\nStandard"
+        expect(page).to have_content "Storage Capacity (Requested)\n100 TB"
+        expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
         expect(page).to have_content "Project Purpose\nResearch"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)

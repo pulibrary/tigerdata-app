@@ -7,12 +7,13 @@ RSpec.describe Mediaflux::Http::ProjectApproveRequest, type: :model, connect_to_
   let(:approved_project) do
     project = FactoryBot.create :approved_project
     mediaflux_id = project.save_in_mediaflux(session_id: )
-    meta = ProjectMetadata.new(project: project, current_user: approver)
-    data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
-    project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: data_sponsor.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
-    meta.approve_project(params: { mediaflux_id:, project_directory_prefix: "tigerns/test", project_directory: "approved_project",
-                                   storage_capacity: { size: { requested: 200, approved: 100 }, unit: { requested: "PB", approved: "TB" } },
-                                   storage_performance_expectations: { requested: "Standard", approved: "Fast" } })
+    data_sponsor = User.find_by(uid: project.metadata_model.data_sponsor)
+    ProvenanceEvent.generate_submission_events(project: project, user: data_sponsor)
+    project.metadata_model.project_directory = "approved_project"
+    project.metadata_model.storage_capacity = { size: { requested: 200, approved: 100 }, unit: { requested: "PB", approved: "TB" } }
+    project.metadata_model.storage_performance_expectations = { requested: "Standard", approved: "Fast" }
+    project.mediaflux_id = mediaflux_id
+    project.approve!(current_user: approver, mediaflux_id:)
     project
   end
 

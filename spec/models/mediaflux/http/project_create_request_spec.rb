@@ -17,25 +17,25 @@ RSpec.describe Mediaflux::Http::ProjectCreateRequest, type: :model do
       session_id =  data_user_ro.mediaflux_session
 
       created_on = Time.current.in_time_zone("America/New_York").iso8601
-      project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on, 
-                                            project_id: "abc/123", project_directory: "testasset", storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" } }
+      project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
+                                            project_id: "abc/123", project_directory: "testasset", storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" }.with_indifferent_access }
       create_request = described_class.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
-      metadata  = req.metadata
-      
-      expect(metadata[:name]).to eq("testasset")
-      expect(metadata[:title]).to eq(project.metadata[:title])
-      expect(metadata[:description]).to eq(project.metadata[:description])
-      expect(metadata[:data_sponsor]).to eq(project.metadata[:data_sponsor])
-      expect(metadata[:departments]).to eq(project.metadata[:departments])
+      mf_metadata  = req.metadata
+
+      expect(mf_metadata[:name]).to eq("testasset")
+      expect(mf_metadata[:title]).to eq(project.metadata_model.title)
+      expect(mf_metadata[:description]).to eq(project.metadata_model.description)
+      expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
+      expect(mf_metadata[:departments]).to eq(project.metadata_model.departments)
       # TODO Should really utilize Mediaflux""Time, but the time class upcases the date and does not zero pad the day
-      expect(metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
-      expect(metadata[:created_by]).to eq(project.metadata[:created_by])
-      expect(metadata[:ro_users]).to eq([data_user_ro.uid])
-      expect(metadata[:rw_users]).to eq([data_user_rw.uid])
-      expect(metadata[:quota_allocation]).to eq("700 TB")
+      expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
+      expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
+      expect(mf_metadata[:ro_users]).to eq([data_user_ro.uid])
+      expect(mf_metadata[:rw_users]).to eq([data_user_rw.uid])
+      expect(mf_metadata[:quota_allocation]).to eq("700 TB")
     end
   end
 

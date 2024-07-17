@@ -14,7 +14,7 @@ module Mediaflux
       def initialize(session_token:, namespace:, project:,  xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
         super(session_token:, namespace:, name: project.project_directory_short,  xml_namespace:, xml_namespace_uri:,  pid:)
         @project = project
-        @project_metadata = ProjectMetadata.new(project: project)
+        @project_metadata = project.metadata_model
       end
 
       private
@@ -68,7 +68,7 @@ module Mediaflux
               xml.CreatedOn created_on
               xml.CreatedBy project_metadata.created_by
               xml.ProjectID project_metadata.project_id
-              capacity = project_metadata.storage_capacity
+              capacity = project_metadata.storage_capacity.with_indifferent_access
               xml.StorageCapacity do
                 xml.Size capacity["size"]["requested"]
                 xml.Unit capacity["unit"]["requested"]
@@ -87,7 +87,7 @@ module Mediaflux
             end
           end
           # TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?
-          allocation = project.metadata["storage_capacity"]["size"]["requested"].to_s << " " << project.metadata["storage_capacity"]["unit"]["requested"]
+          allocation = project_metadata.storage_capacity[:size][:requested].to_s << " " << project_metadata.storage_capacity[:unit][:requested]
 
           xml.quota do
             xml.allocation allocation

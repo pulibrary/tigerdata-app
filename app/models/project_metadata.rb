@@ -1,125 +1,133 @@
 # frozen_string_literal: true
 class ProjectMetadata
-  attr_reader :project, :current_user, :params
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :ro_users, :rw_users, :created_on, :created_by, :project_id, :project_purpose, :storage_capacity,
-:storage_performance_expectations, :updated_by, :updated_on
+  DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
-  def initialize(project:, current_user: nil)
-    @project = project
-    initialize_from_metadata
-    @current_user = current_user
-    @params = {}
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
+    :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
+    :updated_by, :updated_on, :approval_note, :schema_version, :submission
+
+  def initialize
+    @departments = []
+    @data_user_read_only = []
+    @data_user_read_write = []
   end
 
-  # rubocop:disable Metrics/AbcSize
+  def self.new_from_hash(metadata_hash)
+    pm = ProjectMetadata.new
+    pm.initialize_from_hash(metadata_hash)
+    pm
+  end
+
+  def self.new_from_params(metadata_params)
+    pm = ProjectMetadata.new
+    pm.initialize_from_params(metadata_params)
+    pm
+  end
+
   # rubocop:disable Metrics/MethodLength
-  def initialize_from_metadata
-    @title = project.metadata[:title]
-    @description = project.metadata[:description]
-    @status = project.metadata[:status]
-    @data_sponsor = project.metadata[:data_sponsor]
-    @data_manager = project.metadata[:data_manager]
-    @departments = project.metadata[:departments]
-    @ro_users = project.metadata[:data_user_read_only]
-    @rw_users = project.metadata[:data_user_read_write]
-    @created_on = project.metadata[:created_on]
-    @created_by = project.metadata[:created_by]
-    @project_id = project.metadata[:project_id]
-    @project_purpose = project.metadata[:project_purpose]
-    @storage_capacity = project.metadata[:storage_capacity]
-    @storage_performance_expectations = project.metadata[:storage_performance_expectations]
-    @updated_by = project.metadata[:updated_by]
-    @updated_on = project.metadata[:updated_on]
+  def initialize_from_hash(metadata_hash)
+    @title = metadata_hash[:title]
+    @description = metadata_hash[:description]
+    @status = metadata_hash[:status]
+    @data_sponsor = metadata_hash[:data_sponsor]
+    @data_manager = metadata_hash[:data_manager]
+    @departments = metadata_hash[:departments]
+    @data_user_read_only = metadata_hash[:data_user_read_only]
+    @data_user_read_write = metadata_hash[:data_user_read_write]
+
+    @project_id = metadata_hash[:project_id] || ProjectMetadata::DOI_NOT_MINTED
+    @project_purpose = metadata_hash[:project_purpose]
+    @project_directory = metadata_hash[:project_directory]
+
+    @storage_capacity = metadata_hash[:storage_capacity]
+    @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
+    @created_on = metadata_hash[:created_on]
+    @created_by = metadata_hash[:created_by]
+    @updated_by = metadata_hash[:updated_by]
+    @updated_on = metadata_hash[:updated_on]
+    set_defaults
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
-  # Generate a Hash of updated Project metadata attributes
-  # @param params [Hash] the updated Project metadata attributes
-  # @return [Hash]
-  def update_metadata(params:)
-    @params = params
-    form_metadata
+  # Initializes the object with the values in the params (which is an ActionController::Parameters)
+  # rubocop:disable Metrics/MethodLength
+  def initialize_from_params(params)
+    @title = params[:title]
+    @description = params[:description]
+    @status = params[:status] if params[:status]
+    @data_sponsor = params[:data_sponsor]
+    @data_manager = params[:data_manager]
+    @departments = params[:departments]
+    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_")
+    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_")
+
+    @project_id = params[:project_id] || ProjectMetadata::DOI_NOT_MINTED
+    @project_purpose = params[:project_purpose]
+    @project_directory = params[:project_directory]
+
+    @storage_capacity = params[:storage_capacity]
+    @storage_performance_expectations = params[:storage_performance_expectations]
+
+    @created_by = params[:created_by] if params[:created_by]
+    @created_on = params[:created_on] if params[:created_on]
+    @updated_by = params[:updated_by] if params[:updated_by]
+    @updated_on = params[:updated_on] if params[:updated_on]
+    set_defaults
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  # Updates the object with the values in the params (which is an ActionController::Parameters)
+  # Notice how we only update values that come in the params and don't change the values that
+  # don't come as part of the params
+  # rubocop:disable Metrics/MethodLength
+  def update_with_params(params, current_user)
+    set_value(params, "title")
+    set_value(params, "description")
+    set_value(params, "status")
+    set_value(params, "data_sponsor")
+    set_value(params, "data_manager")
+    set_value(params, "departments")
+    set_value(params, "project_id")
+    set_value(params, "project_purpose")
+    set_value(params, "project_directory")
+
+    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
+    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
+
+    update_storage_capacity(params)
+    update_storage_performance_expectations
+    update_approval_note(params, current_user)
+    @submission = params[:submission] if params[:submission]
+
+    # Fields that come from the edit form
+    @updated_by = current_user.uid
+    @updated_on = Time.current.in_time_zone("America/New_York").iso8601
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  # Alias for `data_user_read_only`
+  def ro_users
+    @data_user_read_only
   end
 
-  def activate_project(collection_id:, current_user:)
-    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
-    metadata = response.metadata
-    return unless metadata[:collection] == true # If the collection id exists
-
-    # check if the project doi in rails matches the project doi in mediaflux
-    return unless metadata[:project_id] == project.metadata_json["project_id"]
-
-    # activate a project by setting the status to 'active'
-    project.metadata_json["status"] = Project::ACTIVE_STATUS
-
-    # also read in the actual project directory
-    project.metadata_json["project_directory"] = metadata[:project_directory]
-
-    project.save!
-
-    # create two provenance events, one for approving the project and another for changing the status of the project
-    project.provenance_events.create(event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE, event_person: current_user.uid, event_details: "Activated by Tigerdata Staff")
-    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to active")
-  end
-
-  # Approve a project by recording the mediaflux id & setting the status to 'approved'
-  # @param params [Hash] the updated Project metadata attributes
-  def approve_project(params:)
-    project.mediaflux_id = params[:mediaflux_id]
-    project.metadata_json["status"] = Project::APPROVED_STATUS
-    project.metadata_json["project_directory"] = "#{params[:project_directory_prefix]}/#{params[:project_directory]}"
-    project.metadata_json["storage_capacity"] = params[:storage_capacity]
-    project.metadata_json["storage_performance_expectations"] = params[:storage_performance_expectations]
-
-    project.save!
-    generate_approval_events(params[:approval_note])
-  end
-
-  def generate_approval_events(note)
-    # create two provenance events, one for approving the project and another for changing the status of the project
-    project.provenance_events.create(event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE, event_person: current_user.uid, event_details: "Approved by #{current_user.display_name_safe}",
-                                     event_note: note)
-    project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to approved")
-  end
-
-  def create(params:)
-    project.metadata = update_metadata(params: params)
-    if project.valid? && project.metadata["project_id"].blank?
-      draft_doi
-    end
-    project.metadata["project_id"]
-  end
-
-  def attributes
-    {
-      data_sponsor: params[:data_sponsor],
-      data_manager: params[:data_manager],
-      departments: params[:departments],
-      project_directory: params[:project_directory],
-      title: params[:title],
-      description: params[:description],
-      status: params[:status] || project.metadata[:status],
-      project_id: project.metadata[:project_id] || "", # allow validation to pass until doi can be generated
-      storage_capacity: project.metadata[:storage_capacity],
-      storage_performance_expectations: project.metadata[:storage_performance_expectations],
-      project_purpose: project.metadata[:project_purpose]
-    }
+  # Alias for `data_user_read_write`
+  def rw_users
+    @data_user_read_write
   end
 
     private
 
-      def read_only_counter
+      def read_only_counter(params)
         return if params.nil?
         params[:ro_user_counter].to_i
       end
 
-      def read_write_counter
+      def read_write_counter(params)
         return if params.nil?
         params[:rw_user_counter].to_i
       end
 
-      def user_list_params(counter, key_prefix)
+      def user_list_params(params, counter, key_prefix)
         return if params.nil?
 
         users = []
@@ -130,39 +138,62 @@ class ProjectMetadata
         users.compact.uniq
       end
 
-      def project_timestamps
-        timestamps = {}
-        if project.metadata[:created_by].nil?
-          timestamps[:created_by] = current_user.uid
-          timestamps[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
-
-        else
-          timestamps[:created_by] = project.metadata[:created_by]
-          timestamps[:created_on] = project.metadata[:created_on]
-          timestamps[:updated_by] = current_user.uid
-          timestamps[:updated_on] = Time.current.in_time_zone("America/New_York").iso8601
+      # Initializes values that we have defaults for.
+      def set_defaults
+        if @storage_capacity.nil?
+          @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
         end
-        timestamps
+
+        if @storage_performance_expectations.nil?
+          @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
+        end
+
+        if @project_purpose.nil?
+          @project_purpose = Rails.configuration.project_defaults[:project_purpose]
+        end
+
+        @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
+        @schema_version = TigerdataSchema::SCHEMA_VERSION
       end
 
-      def form_metadata
-        ro_users = user_list_params(read_only_counter, "ro_user_")
-        rw_users = user_list_params(read_write_counter, "rw_user_")
-        data_users = {
-          data_user_read_only: ro_users,
-          data_user_read_write: rw_users
+      # Sets a value in the object if the value exists in the params
+      def set_value(params, key)
+        if params.include?(key)
+          send("#{key}=", params[key])
+        end
+      end
+
+      def update_storage_capacity(params)
+        if params["storage_capacity"].present?
+          @storage_capacity = {
+            "size" => {
+              "approved" => params["storage_capacity"].to_i,
+              "requested" => storage_capacity[:size][:requested]
+            },
+            "unit" => {
+              "approved" => params["storage_unit"],
+              "requested" => storage_capacity[:unit][:requested]
+            }
+          }
+        end
+      end
+
+      def update_storage_performance_expectations
+        # we don't allow the user to specify an approve value so we use the requested
+        @storage_performance_expectations = {
+          "requested" => storage_performance_expectations[:requested],
+          "approved" => storage_performance_expectations[:requested]
         }
-        data = attributes.merge(data_users)
-        timestamps = project_timestamps
-        data.merge(timestamps)
       end
 
-      def draft_doi
-        puldatacite = PULDatacite.new
-        project.metadata_json["project_id"] = puldatacite.draft_doi
-        project.save!
-        data_sponsor = User.find_by(uid: project.metadata[:data_sponsor])
-        project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: current_user.uid, event_details: "Requested by #{data_sponsor.display_name_safe}")
-        project.provenance_events.create(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE, event_person: current_user.uid, event_details: "The Status of this project has been set to pending")
+      def update_approval_note(params, current_user)
+        if params[:event_note_message].present?
+          @approval_note = {
+            note_by: current_user.uid,
+            note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+            event_type: params[:event_note],
+            message: params[:event_note_message]
+          }
+        end
       end
 end

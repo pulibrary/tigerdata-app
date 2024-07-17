@@ -11,13 +11,15 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    project_metadata = ProjectMetadata.new( current_user:, project: build_new_project)
-    new_project_params = project_params
-    metadata_params = new_project_params.merge({
-      status: Project::PENDING_STATUS
-    })
-    project_metadata.create(params: metadata_params)
-    if project.save
+    metadata_params = params.dup
+    metadata_params[:status] = Project::PENDING_STATUS
+    metadata_params[:created_by] = current_user.uid
+    metadata_params[:created_on] = Time.current.in_time_zone("America/New_York").iso8601
+    project_metadata = ProjectMetadata.new_from_params(metadata_params)
+
+    build_new_project # calling private method to build a new project and set a class variable @project
+    project.create!(initial_metadata: project_metadata, user: current_user)
+    if project.metadata_model.project_id != nil
       begin
         mailer = TigerdataMailer.with(project_id: project.id)
         message_delivery = mailer.project_creation
@@ -67,18 +69,15 @@ class ProjectsController < ApplicationController
   def show
     project
     @departments = project.departments.join(", ")
-    @project_metadata = project.metadata
+    @project_metadata = project.metadata_model
 
-    sponsor_uid = @project_metadata[:data_sponsor]
-    @data_sponsor = User.find_by(uid: sponsor_uid)
+    @data_sponsor = User.find_by(uid: @project_metadata.data_sponsor)
+    @data_manager = User.find_by(uid: @project_metadata.data_manager)
 
-    manager_uid = @project_metadata[:data_manager]
-    @data_manager = User.find_by(uid: manager_uid)
-
-    read_only_uids = @project_metadata.fetch(:data_user_read_only, [])
+    read_only_uids = @project_metadata.ro_users
     data_read_only_users = read_only_uids.map { |uid| ReadOnlyUser.find_by(uid:) }.reject(&:blank?)
 
-    read_write_uids = @project_metadata.fetch(:data_user_read_write, [])
+    read_write_uids = @project_metadata.rw_users
     data_read_write_users = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
 
     unsorted_data_users = data_read_only_users + data_read_write_users
@@ -104,48 +103,27 @@ class ProjectsController < ApplicationController
 
   def edit
     project
-    if project.metadata[:status] != Project::APPROVED_STATUS
+    if project.metadata_model.status != Project::APPROVED_STATUS
       flash[:notice] = "Pending projects can not be edited."
       redirect_to project
-    elsif project.metadata[:status] == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor of manager
+    elsif project.metadata_model.status == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor or a manager
       flash[:notice] = "Only data sponsors and data managers can revise this project."
       redirect_to project
     end
   end
 
   def update
-    project
+    @project = Project.find(params[:id])
     #Approve action
     if params.key?("mediaflux_id")
-      project_metadata = ProjectMetadata.new(project: project, current_user:)
-      project_params = params.dup
-      metadata_params = project_params.merge({
-        project_directory: project_params["project_directory"],
-        storage_capacity: {"size"=>{"approved"=>project_params["storage_capacity"].to_i, 
-                            "requested"=>project.metadata[:storage_capacity][:size][:requested]}, 
-                            "unit"=>{"approved"=>project_params["storage_unit"], 
-                                     "requested"=>project.metadata[:storage_capacity][:unit][:requested]}},
-        # no current input to set approved storage performance, so just copy requested
-        storage_performance_expectations: {"requested"=>project.metadata[:storage_performance_expectations][:requested],
-                                           "approved"=>project.metadata[:storage_performance_expectations][:requested]},
-        approval_note: {
-          note_by: current_user.uid,
-          note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-          event_type: project_params[:event_note],
-          message: project_params[:event_note_message]
-        }
-      })
-      project_metadata.approve_project(params: metadata_params)
+      @project.metadata_model.update_with_params(params, current_user)
+      @project.approve!(mediaflux_id: params["mediaflux_id"],current_user:)
     end
 
     #Edit action
     if params.key?("title")
-      project_metadata = ProjectMetadata.new(project: project, current_user:)
-      project_params = params.dup
-      metadata_params = project_params.merge({
-        status: project.metadata[:status]
-      })
-      project.metadata = project_metadata.update_metadata(params: metadata_params)
+      @project.metadata_model.status = @project.metadata_model.status || Project::PENDING_STATUS
+      @project.metadata_model.update_with_params(params, current_user)
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)

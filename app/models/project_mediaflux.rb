@@ -6,6 +6,22 @@ end
 
 # Take an instance of Project and adds it to MediaFlux
 class ProjectMediaflux
+  # If the project hasn't yet been created in mediaflux, create it.
+  # If it already exists, update it.
+  # @return [String] the mediaflux id of the project
+  def self.save(project:, session_id:, xml_namespace: nil)
+    if project.mediaflux_id.nil?
+      mediaflux_id = ProjectMediaflux.create!(project: project, session_id: session_id)
+      ProjectAccumulator.new(project: project, session_id: session_id).create!()
+      project.reload
+      Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
+    else
+      ProjectMediaflux.update(project: project, session_id: session_id)
+      Rails.logger.debug "Project #{project.id} has been updated in MediaFlux (asset id #{project.mediaflux_id})"
+    end
+    project.mediaflux_id
+  end
+
   # Create a project in MediaFlux
   #
   # @param project [Project] the project that needs to be added to MediaFlux
@@ -50,7 +66,7 @@ class ProjectMediaflux
     end
     project.mediaflux_id = id
     project.save!
-  
+
     id
   end
 
