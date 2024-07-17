@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class ProjectMetadata
-
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
   attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments,
