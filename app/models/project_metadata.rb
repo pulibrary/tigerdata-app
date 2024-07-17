@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class ProjectMetadata
+
+  DOI_NOT_MINTED = "DOI-NOT-MINTED"
+
   attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments,
     :data_user_read_only, :data_user_read_write, :created_on, :created_by, :project_id,
     :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
@@ -34,7 +37,7 @@ class ProjectMetadata
     @data_user_read_only = metadata_hash[:data_user_read_only]
     @data_user_read_write = metadata_hash[:data_user_read_write]
 
-    @project_id = metadata_hash[:project_id]
+    @project_id = metadata_hash[:project_id] || ProjectMetadata::DOI_NOT_MINTED
     @project_purpose = metadata_hash[:project_purpose]
     @project_directory = metadata_hash[:project_directory]
 
@@ -60,7 +63,7 @@ class ProjectMetadata
     @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_")
     @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_")
 
-    @project_id = params[:project_id]
+    @project_id = params[:project_id] || ProjectMetadata::DOI_NOT_MINTED
     @project_purpose = params[:project_purpose]
     @project_directory = params[:project_directory]
 

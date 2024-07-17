@@ -17,14 +17,15 @@ class Project < ApplicationRecord
 
   def create!(initial_metadata:, user:)
     self.metadata_model = initial_metadata
-    if initial_metadata.project_id.blank?
-        self.draft_doi(user: user)
-    end
     if self.valid?
-      self.save!
-      ProvenanceEvent.generate_submission_events(project: self, user: user)
-
-      #return doi
+      if initial_metadata.project_id == ProjectMetadata::DOI_NOT_MINTED
+        self.draft_doi(user: user)
+        self.save!
+        ProvenanceEvent.generate_submission_events(project: self, user: user)
+      else
+        self.save!
+      end
+      # return doi
       self.metadata_model.project_id
     else
       nil
@@ -64,7 +65,6 @@ class Project < ApplicationRecord
   def draft_doi(user:)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
-    # self.save!
   end
 
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)

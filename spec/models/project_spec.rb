@@ -250,23 +250,29 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
 
     context "DOI minting" do
-      it "attempts to mint a DOI when project_id is empty" do
+      it "does not mint a DOI when project is invalid" do
         initial_metadata = ProjectMetadata.new_from_hash({})
         project.create!(initial_metadata: initial_metadata, user: current_user)
-        expect(datacite_stub).to have_received(:draft_doi)
+        expect(datacite_stub).to_not have_received(:draft_doi)
       end
 
       it "does not mint a new DOI when the project has a project_id" do
         project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
         doi = project.create!(initial_metadata: project.metadata_model, user: current_user)
-        expect(datacite_stub).not_to have_received(:draft_doi)
+        expect(datacite_stub).to_not have_received(:draft_doi)
         expect(doi).to eq "123"
+      end
+
+      it "mints a DOI when needed" do
+        project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED},  current_user)
+        project.create!(initial_metadata: project.metadata_model, user: current_user)
+        expect(datacite_stub).to have_received(:draft_doi)
       end
     end
 
     context "Provenance events" do
       it "creates the provenance events when creating a new project" do
-        project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+        project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED},  current_user)
         project.create!(initial_metadata: project.metadata_model, user: current_user)
 
         expect(project.provenance_events.count).to eq 2
@@ -304,7 +310,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
 
     it "creates the provenance events when creating a new project" do
-      project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+      project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED}, current_user)
       project.create!(initial_metadata: project.metadata_model, user: current_user)
       project.approve!(mediaflux_id: 9876, current_user: current_user)
       project.reload

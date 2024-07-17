@@ -29,7 +29,7 @@ class ProjectValidator < ActiveModel::Validator
 
     def validate_role(project:, netid:, role:)
         if netid.blank?
-            project.errors.add :base, "Mising netid for role #{role}"
+            project.errors.add :base, "Missing netid for role #{role}"
         elsif User.where(uid: netid).empty?
             project.errors.add :base, "Invalid netid: #{netid} for role #{role}"
         end
