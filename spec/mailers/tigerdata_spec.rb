@@ -47,11 +47,8 @@ RSpec.describe TigerdataMailer, type: :mailer do
     mail = ActionMailer::Base.deliveries.last
 
     project.reload
-    # These fields are not currently, nor ever were a part of the project metadata
-    # they should be reintroduced when we update the tigerdata rails schema.
-    # expect(project.metadata).to include("submission")
-    # expect(project.metadata["submission"]).to include("requested_by")
-    # expect(project.metadata["submission"]).to include("request_date_time")
+    expect(project.metadata_model.submission).to include("requested_by")
+    expect(project.metadata_model.submission).to include("request_date_time")
 
     expect(mail.subject).to eq "New Project Request Ready for Review"
     expect(mail.to).to eq ["test@example.com"]

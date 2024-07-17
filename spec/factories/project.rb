@@ -21,7 +21,6 @@ FactoryBot.define do
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
-      # TODO: remove submission from the project factory
       submission do
         {
           requested_by: FactoryBot.create(:user).uid,

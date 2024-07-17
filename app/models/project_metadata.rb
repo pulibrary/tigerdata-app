@@ -2,10 +2,9 @@
 class ProjectMetadata
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments,
-    :data_user_read_only, :data_user_read_write, :created_on, :created_by, :project_id,
-    :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
-    :updated_by, :updated_on, :approval_note, :schema_version
+  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
+    :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
+    :updated_by, :updated_on, :approval_note, :schema_version, :submission
 
   def initialize
     @departments = []
@@ -98,6 +97,7 @@ class ProjectMetadata
     update_storage_capacity(params)
     update_storage_performance_expectations
     update_approval_note(params, current_user)
+    @submission = params[:submission] if params[:submission]
 
     # Fields that come from the edit form
     @updated_by = current_user.uid
@@ -152,6 +152,7 @@ class ProjectMetadata
           @project_purpose = Rails.configuration.project_defaults[:project_purpose]
         end
 
+        @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
         @schema_version = TigerdataSchema::SCHEMA_VERSION
       end
 
