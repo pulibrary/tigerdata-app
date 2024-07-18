@@ -160,11 +160,11 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#mediaflux_metadata" do
     let(:project) { FactoryBot.create(:project) }
     it "calls out to mediaflux once" do
-      metadata_request = instance_double Mediaflux::Http::AssetMetadataRequest, metadata: {}
-      allow(Mediaflux::Http::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
+      metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: {}
+      allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
       project.mediaflux_metadata(session_id: "")
       project.mediaflux_metadata(session_id: "") # intentionally calling twice, to see if mediaflux is only called once.
-      expect(Mediaflux::Http::AssetMetadataRequest).to have_received(:new).once
+      expect(Mediaflux::AssetMetadataRequest).to have_received(:new).once
     end
   end
 
@@ -227,7 +227,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
 
     it "defaults to the configured vaule if no directory is present" do
       project = FactoryBot.create(:project, project_directory: "directory")
-      expect(project.project_directory_parent_path).to eq(Mediaflux::Http::Connection.root_namespace)
+      expect(project.project_directory_parent_path).to eq(Mediaflux::Connection.root_namespace)
     end
   end
 
@@ -333,7 +333,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   let(:current_user) { FactoryBot.create(:user) }
   let(:project_metadata) {project.metadata_model}
   after do
-    Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+    Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
   end
   it "activates a project" do
     project.create!(initial_metadata: project.metadata_model, user: current_user)

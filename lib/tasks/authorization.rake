@@ -6,46 +6,46 @@ require "net/http/persistent"
 namespace :authorization do
   desc "Timing test for logon in via a newly created token"
   task by_new_token: :environment do
-    main_logon = Mediaflux::Http::LogonRequest.new
+    main_logon = Mediaflux::LogonRequest.new
     main_logon.resolve
     time_action("1 New Token") do
-      create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
-                                                       session_token: main_logon.session_token)
+      create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user,
+                                                 session_token: main_logon.session_token)
       identity_token = create.identity
-      logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
+      logon = Mediaflux::LogonRequest.new(identity_token: identity_token)
       logon.resolve
-      Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+      Mediaflux::LogoutRequest.new(session_token: logon.session_token)
     end
 
     time_action("1000 New Tokens") do
       1000.times do
-        create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user,
-                                                         session_token: main_logon.session_token)
+        create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user,
+                                                   session_token: main_logon.session_token)
         identity_token = create.identity
-        logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
+        logon = Mediaflux::LogonRequest.new(identity_token: identity_token)
         logon.resolve
-        Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+        Mediaflux::LogoutRequest.new(session_token: logon.session_token)
       end
     end
   end
 
   desc "Timing test for logon in via an exiting created token"
-  task by_existing_token:  :environment do
-    logon = Mediaflux::Http::LogonRequest.new
+  task by_existing_token: :environment do
+    logon = Mediaflux::LogonRequest.new
     logon.resolve
-    create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
+    create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
     identity_token = create.identity
     time_action("1 Existing Token") do
-      logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
+      logon = Mediaflux::LogonRequest.new(identity_token: identity_token)
       logon.resolve
-      Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+      Mediaflux::LogoutRequest.new(session_token: logon.session_token)
     end
 
     time_action("1000 Existing Tokens") do
       1000.times do
-        logon = Mediaflux::Http::LogonRequest.new(identity_token: identity_token)
+        logon = Mediaflux::LogonRequest.new(identity_token: identity_token)
         logon.resolve
-        Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+        Mediaflux::LogoutRequest.new(session_token: logon.session_token)
       end
     end
   end
@@ -53,27 +53,27 @@ namespace :authorization do
   desc "Timing test for logon in via a user session"
   task by_session:  :environment do
     time_action("1 Sesssion") do
-      logon = Mediaflux::Http::LogonRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, password: "change_me")
+      logon = Mediaflux::LogonRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, password: "change_me")
       logon.resolve
-      Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+      Mediaflux::LogoutRequest.new(session_token: logon.session_token)
     end
 
     time_action("1000 Sesssions") do
       1000.times do
-        logon = Mediaflux::Http::LogonRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, password: "change_me")
+        logon = Mediaflux::LogonRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, password: "change_me")
         logon.resolve
-        Mediaflux::Http::LogoutRequest.new(session_token: logon.session_token)
+        Mediaflux::LogoutRequest.new(session_token: logon.session_token)
       end
     end
   end
 
   desc "Timing test for logon via just http"
   task by_http: :environment do
-    uri = URI "http://#{Mediaflux::Http::Request.mediaflux_host}:#{Mediaflux::Http::Request.mediaflux_port}/#{Mediaflux::Http::Request.request_path}"
+    uri = URI "http://#{Mediaflux::Request.mediaflux_host}:#{Mediaflux::Request.mediaflux_port}/#{Mediaflux::Request.request_path}"
     http = Net::HTTP::Persistent.new # 'my_app_name'
     time_action("1000 Sesssions") do
       1000.times do
-        request = Net::HTTP::Post.new(Mediaflux::Http::Request.request_path)
+        request = Net::HTTP::Post.new(Mediaflux::Request.request_path)
         body = Nokogiri::XML::Builder.new do |xml|
           xml.request do
             xml.service(name: "system.logon") do
@@ -95,20 +95,20 @@ namespace :authorization do
   end
 
   desc "Timing test for executing a service with a token"
-  task service_with_token:  :environment do
-    logon = Mediaflux::Http::LogonRequest.new
+  task service_with_token: :environment do
+    logon = Mediaflux::LogonRequest.new
     logon.resolve
-    create = Mediaflux::Http::TokenCreateRequest.new(domain: Mediaflux::Http::LogonRequest.mediaflux_domain, user: Mediaflux::Http::LogonRequest.mediaflux_user, session_token: logon.session_token)
+    create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
     identity_token = create.identity
     time_action("1 list namespaces with token") do
-      sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
+      sexec = Mediaflux::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
       sexec.resolve
       puts sexec.response_xml
     end
 
     time_action("1000 list namespaces with token") do
       1000.times do
-        sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
+        sexec = Mediaflux::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list", token: identity_token)
         sexec.resolve
       end
     end
@@ -116,17 +116,17 @@ namespace :authorization do
 
   desc "Timing test for executing a service without a token"
   task service_without_token: :environment do
-    logon = Mediaflux::Http::LogonRequest.new
+    logon = Mediaflux::LogonRequest.new
     logon.resolve
     time_action("1 list namespaces") do
-      sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
+      sexec = Mediaflux::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
       sexec.resolve
       puts sexec.response_xml
     end
 
     time_action("1000 list namespaces") do
       1000.times do
-        sexec = Mediaflux::Http::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
+        sexec = Mediaflux::ServiceExecuteRequest.new(session_token: logon.session_token, service_name: "asset.namespace.list")
         sexec.resolve
       end
     end

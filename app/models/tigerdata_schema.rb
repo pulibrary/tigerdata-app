@@ -19,14 +19,14 @@ class TigerdataSchema
   end
 
   def define_schema_namespace
-    schema_request = Mediaflux::Http::SchemaCreateRequest.new(name: @schema_name,
+    schema_request = Mediaflux::SchemaCreateRequest.new(name: @schema_name,
                                                               description: @schema_description,
                                                               session_token: @session_id)
     schema_request.resolve
   end
 
   def define_project
-    fields_request = Mediaflux::Http::SchemaFieldsCreateRequest.new(
+    fields_request = Mediaflux::SchemaFieldsCreateRequest.new(
       schema_name: @schema_name,
       document: "project",
       description: "Project Metadata",
