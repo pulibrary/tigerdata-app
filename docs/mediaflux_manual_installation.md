@@ -66,3 +66,4 @@ sudo systemctl start mediaflux
 ```
 
 Next: open port 80 
+Seems to be running, but can't reach it.
