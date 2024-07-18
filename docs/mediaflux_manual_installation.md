@@ -13,6 +13,10 @@ Note that when we re-build these boxes we need to keep the mac address the same,
 
 -- end of first meeting --
 
+Steps to install on mflux-staging
+
+`dnf search java | grep 1.8` 
+`sudo dnf install java-1.8.0-openjdk`
 
 ### 3. Francis registered a lib-mflux service acccount
 This will be used to bind Mediaflux servers to active directory. 
