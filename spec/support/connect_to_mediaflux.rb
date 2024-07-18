@@ -13,18 +13,28 @@ RSpec.configure do |config|
       Rake::Task["schema:create"].invoke
       # Clean out the namespace before running tests to avoid collisions
       user = User.new
-      Mediaflux::NamespaceDestroyRequest.new(
+      destroy_request = Mediaflux::NamespaceDestroyRequest.new(
         session_token: user.mediaflux_session,
         namespace: Rails.configuration.mediaflux[:api_root_ns]
-      ).destroy
+      )
+      destroy_request.destroy
+      if destroy_request.error?
+        puts "Error destroying the mediaflux root namespace #{destroy_request.response_error}" # allow the message to show in CI output
+      end
+
       # then create it so it exists for any tests
-      Mediaflux::NamespaceCreateRequest.new(
+      create_request = Mediaflux::NamespaceCreateRequest.new(
         session_token: user.mediaflux_session,
         namespace: Rails.configuration.mediaflux[:api_root_ns]
-      ).resolve
+      )
+      create_request.resolve
+      if create_request.error?
+        puts "Error creating the mediaflux root namespace #{create_request.response_error}" # allow the message to show in CI output
+      end
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
+    puts message # allow the message to show in CI output
     Rails.logger.error(message)
   end
 

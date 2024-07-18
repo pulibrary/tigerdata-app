@@ -112,6 +112,8 @@ class ProjectMediaflux
             create_parent_request = Mediaflux::AssetCreateRequest.new(session_token: session_id, namespace: Mediaflux::Connection.root_collection_namespace,
                                                                             name: Mediaflux::Connection.root_collection_name)
             raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
+          else
+            raise "Error finding parent collection (#{project_parent}) #{get_parent.response_error}"
           end
         end
       end
