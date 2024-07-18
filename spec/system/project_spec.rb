@@ -362,7 +362,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
         project = Project.last
         project.save_in_mediaflux(session_id: @session_id)
         expect(project.mediaflux_id).not_to be_blank
-        expect(Mediaflux::Http::AssetDestroyRequest.new(session_token: @session_id, collection: project.mediaflux_id, members: true).error?).to be_falsey
+        expect(Mediaflux::AssetDestroyRequest.new(session_token: @session_id, collection: project.mediaflux_id, members: true).error?).to be_falsey
       end
     end
 

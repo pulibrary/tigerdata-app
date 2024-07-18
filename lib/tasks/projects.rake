@@ -10,7 +10,7 @@ namespace :projects do
 
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)
-    root_ns = Mediaflux::Http::Connection.root_namespace
+    root_ns = Mediaflux::Connection.root_namespace
 
     time_action("Creating projects") do
       puts "Creating #{count} projects with prefix #{project_prefix}..."
@@ -48,13 +48,13 @@ namespace :projects do
   task :query, [:data_sponsor, :department] => [:environment] do |_, args|
     data_sponsor = args[:data_sponsor]
     department = args[:department]
-    root_ns = Mediaflux::Http::Connection.root_namespace
+    root_ns = Mediaflux::Connection.root_namespace
 
     user = User.first
     Organization.create_defaults(session_id: user.mediaflux_session)
 
     time_action("Getting counts by data_sponsor #{data_sponsor} department #{department} took") do
-      count_request = Mediaflux::Http::CollectionCountRequest.new(
+      count_request = Mediaflux::CollectionCountRequest.new(
         session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor, department: department
       )
       count_request.resolve
@@ -104,7 +104,7 @@ namespace :projects do
     counts = []
     ["zz001", "zz003", "zz007", nil].each do |data_sponsor|
       time_action("Getting counts by data_sponsor #{data_sponsor}") do
-        count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor)
+        count_request = Mediaflux::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor)
         count_request.resolve
         counts << { data_sponsor: data_sponsor || "total", count: count_request.count }
       end
@@ -113,7 +113,7 @@ namespace :projects do
 
     total73 = 0
     time_action("Getting counts by data_sponsor zz007 department THREE") do
-      count_request = Mediaflux::Http::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: "zz007", department: "THREE")
+      count_request = Mediaflux::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: "zz007", department: "THREE")
       count_request.resolve
       total73 = count_request.count
     end

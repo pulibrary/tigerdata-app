@@ -44,7 +44,7 @@ class Project < ApplicationRecord
   end
 
   def activate!(collection_id:, current_user:)
-    response = Mediaflux::Http::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
+    response = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     mediaflux_metadata = response.metadata # get the metadata of the collection from mediaflux
 
     return unless mediaflux_metadata[:collection] == true # If the collection id exists
@@ -106,17 +106,17 @@ class Project < ApplicationRecord
     return nil if metadata_model.project_directory.nil?
     dirname, basename = project_directory_pathname.split
     if (dirname.relative?)
-      "#{Mediaflux::Http::Connection.root_namespace}/#{safe_name(metadata_model.project_directory)}"
+      "#{Mediaflux::Connection.root_namespace}/#{safe_name(metadata_model.project_directory)}"
     else
       project_directory_pathname.to_s
     end
   end
 
   def project_directory_parent_path
-    return Mediaflux::Http::Connection.root_namespace if metadata_model.project_directory.nil?
+    return Mediaflux::Connection.root_namespace if metadata_model.project_directory.nil?
     dirname  = project_directory_pathname.dirname
     if (dirname.relative?)
-      Mediaflux::Http::Connection.root_namespace
+      Mediaflux::Connection.root_namespace
     else
       dirname.to_s
     end
@@ -181,7 +181,7 @@ class Project < ApplicationRecord
 
   def mediaflux_metadata(session_id:)
     @mediaflux_metadata ||= begin
-      accum_req = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+      accum_req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
       accum_req.metadata
     end
     @mediaflux_metadata
@@ -235,16 +235,16 @@ class Project < ApplicationRecord
   def file_list(session_id:, size: 10)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
     iterator_id = query_req.result
 
-    iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
+    iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
 
     # Destroy _after_ fetching the first set of results from iterator_req.
     # This call is required since it possible that we have read less assets than
     # what the collection has but we are done with the iterator.
-    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
 
     results
   end
@@ -253,7 +253,7 @@ class Project < ApplicationRecord
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::Http::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
     iterator_id = query_req.result
 
 
@@ -261,7 +261,7 @@ class Project < ApplicationRecord
       # file header
       file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
       loop do
-        iterator_req = Mediaflux::Http::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
+        iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
         iterator_resp = iterator_req.result
         lines = files_from_iterator(iterator_resp)
         file.write(lines.join("\r\n") + "\r\n")
@@ -272,7 +272,7 @@ class Project < ApplicationRecord
     # Destroy _after_ fetching the results from iterator_req
     # This call is technically not necessary since Mediaflux automatically deletes the iterator
     # once we have ran through it and by now we have. But it does not hurt either.
-    Mediaflux::Http::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
   # Ensure that the project directory is a valid path

@@ -30,8 +30,8 @@ module Mediaflux
     #   path_short  -> "/projectg/folder1/file-abc.txt"
     def path_short
       return nil if path.nil?
-      if path.starts_with?(Mediaflux::Http::Connection.root_namespace)
-        path[Mediaflux::Http::Connection.root_namespace.length..-1]
+      if path.starts_with?(Mediaflux::Connection.root_namespace)
+        path[Mediaflux::Connection.root_namespace.length..-1]
       else
         path
       end

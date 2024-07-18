@@ -10,7 +10,7 @@ namespace :schema do
     if saved_alternate
       Rake::Task["flipflop:turn_off"].invoke("alternate_mediaflux", "active_record")
     end
-    logon_request = Mediaflux::Http::LogonRequest.new
+    logon_request = Mediaflux::LogonRequest.new
     logon_request.resolve
     schema = TigerdataSchema.new(session_id: logon_request.session_token)
     schema.create

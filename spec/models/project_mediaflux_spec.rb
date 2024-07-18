@@ -10,12 +10,12 @@ RSpec.describe ProjectMediaflux, type: :model do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id" do
         mediaflux_id = described_class.create!(project: project, session_id: current_user.mediaflux_session)
-        mediaflux_metadata = Mediaflux::Http::AssetMetadataRequest.new(
+        mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
                               session_token: current_user.mediaflux_session,
                               id: mediaflux_id
                             ).metadata
         namespace_path = mediaflux_metadata[:namespace]
-        namespace_metadata = Mediaflux::Http::NamespaceDescribeRequest.new(
+        namespace_metadata = Mediaflux::NamespaceDescribeRequest.new(
                               session_token: current_user.mediaflux_session,
                               path: namespace_path
                             ).metadata
@@ -26,7 +26,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "adds a quota when it creates a project in mediaflux" do
           project = FactoryBot.create(:project_with_doi)
           described_class.create!(project: project, session_id: current_user.mediaflux_session)
-          metadata = Mediaflux::Http::AssetMetadataRequest.new(
+          metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: current_user.mediaflux_session,
             id: project.mediaflux_id
           ).metadata
@@ -54,7 +54,7 @@ RSpec.describe ProjectMediaflux, type: :model do
                             )
         end
         let(:mediaflux_metadata) do
-          Mediaflux::Http::AssetMetadataRequest.new(
+          Mediaflux::AssetMetadataRequest.new(
                              session_token: current_user.mediaflux_session,
                              id: mediaflux_id
                            ).metadata
@@ -63,7 +63,7 @@ RSpec.describe ProjectMediaflux, type: :model do
 
         it "creates a project namespace" do
           namespace_path = mediaflux_metadata[:namespace]
-          namespace_metadata = Mediaflux::Http::NamespaceDescribeRequest.new(
+          namespace_metadata = Mediaflux::NamespaceDescribeRequest.new(
             session_token: current_user.mediaflux_session,
             path: namespace_path
           ).metadata
@@ -76,7 +76,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         end
 
         it "creates a parent collection" do
-          parent_collection_metadata = Mediaflux::Http::AssetMetadataRequest.new(
+          parent_collection_metadata = Mediaflux::AssetMetadataRequest.new(
                                         session_token: current_user.mediaflux_session,
                                         id: project_parent
                                       ).metadata
@@ -87,9 +87,9 @@ RSpec.describe ProjectMediaflux, type: :model do
     context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
       let(:incomplete_project) { FactoryBot.build(:project_with_dynamic_directory, project_id: "") }
       let(:project_metadata) { incomplete_project.metadata_model }
-      let(:namespace_request) { Mediaflux::Http::NamespaceCreateRequest }
+      let(:namespace_request) { Mediaflux::NamespaceCreateRequest }
       after do
-        Mediaflux::Http::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: incomplete_project.mediaflux_id, members: true).resolve
       end
       it "should raise a MetadataError if project is invalid" do
         mediaflux_id = 1001

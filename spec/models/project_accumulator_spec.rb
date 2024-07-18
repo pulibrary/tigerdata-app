@@ -11,7 +11,7 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
       project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       proj_accum = project_accumulators.create!
-      metadata = Mediaflux::Http::AssetMetadataRequest.new(session_token: session_id, id: project_id).metadata
+      metadata = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: project_id).metadata
 
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-count")
       expect(metadata[:accum_names].map(&:to_s)).to include("accum-size")

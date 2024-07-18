@@ -25,7 +25,7 @@ class MediafluxChannel < ApplicationCable::Channel
     end
 
     def version_request
-      Mediaflux::Http::VersionRequest.new(session_token: session_token)
+      Mediaflux::VersionRequest.new(session_token: session_token)
     end
 
     def mf_version

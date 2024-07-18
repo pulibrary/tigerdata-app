@@ -156,7 +156,7 @@ RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
       end
 
       after do
-        Mediaflux::Http::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
       end
 
       it "Contents page has collection summary data" do
