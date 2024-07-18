@@ -29,3 +29,40 @@ Server names:
 Per notes from Robert Knight, Mediaflux production is running Java 1.8.0.412.b08, release 2.el8.  
 
 `sudo dnf install java-1.8.0-openjdk`
+
+### 4. get the installer
+```unix
+$ sudo dnf install wget
+$ wget https://www.arcitecta.com/software/mf/4.16.047/mflux-dev_4.16.047_jvm_1.8.jar
+$ sudo java -jar mflux-dev_jvm_1.8.jar nogui
+-> accept
+-> /opt/mediaflux
+$ sudo cp licence-staging.xml /opt/mediaflux/config/licence.xml
+$ sudo dnf copr enable tkbcopr/fd
+$ sudo dnf install fd
+```
+
+We used default config for the  database.
+
+  In /opt/mediaflux/config/services/network.tcl
+  Make sure this line is uncommented:
+  network.start :type http :port 80 :maxc 100
+
+
+We copied Robert K's systemd file to /etc/systemd/system/mediaflux.service
+
+Francis added a user and a group called mediaflux  
+
+```
+$ sudo useradd -r mediaflux
+
+```
+
+```
+sudo systemctl daemon-reload
+sudo systemctl status mediaflux
+sudo systemctl enable mediaflux
+sudo systemctl start mediaflux
+```
+
+Next: open port 80 
