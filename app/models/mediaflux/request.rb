@@ -46,10 +46,11 @@ module Mediaflux
       # @param file [File] any upload file required for the POST request
       # @param session_token [String] the API token for the authenticated session
       # @param http_client [Net::HTTP::Persistent] HTTP client for transmitting requests to the Mediaflux server API
-      def initialize(file: nil, session_token: nil, http_client: nil)
+      def initialize(file: nil, session_token: nil, http_client: nil, session_user: nil)
         @http_client = http_client || self.class.find_or_create_http_client
         @file = file
         @session_token = session_token
+        @session_user = session_user
       end
 
       # Resolves the HTTP request against the Mediaflux API
@@ -134,7 +135,7 @@ module Mediaflux
 
         def build_http_request_body(name:)
           args = { name: name }
-                                                # must use @session_token here instead of session_token 
+                                                # must use @session_token here instead of session_token
                                                 #  for login to not go into an infinaite loop
           args[:session] = session_token unless @session_token.nil?
 
@@ -152,6 +153,8 @@ module Mediaflux
           request = self.class.build_post_request
 
           Rails.logger.debug(xml_payload)
+          set_authentication_headers(request)
+
           if form_file.nil?
             request["Content-Type"] = "text/xml; charset=utf-8"
             request.body = xml_payload(name:)
@@ -167,5 +170,15 @@ module Mediaflux
           request
         end
       # rubocop:enable Metrics/MethodLength
+
+      # Authentication code to push a few custom HTTP headers to Mediaflux
+      # Eventually the `session_user` will need to be an object that provides the timeout value.
+      def set_authentication_headers(request)
+        return if @session_user.nil?
+
+        request["TIGERDATA_NETID"] = @session_user.uid
+        request["TIGERDATA_DOMAIN"] = "princeton.edu"
+        request["TIGERDATA_TIMEOUT"] = "tbd"
+      end
     end
 end
