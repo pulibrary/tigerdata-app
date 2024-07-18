@@ -14,3 +14,14 @@ Note that when we re-build these boxes we need to keep the mac address the same,
 -- end of first meeting --
 
 
+### 3. Francis registered a lib-mflux service acccount
+This will be used to bind Mediaflux servers to active directory. 
+
+Server names:
+* mflux-staging
+* mflux-ci
+
+### 4. Install Java
+Per notes from Robert Knight, Mediaflux production is running Java 1.8.0.412.b08, release 2.el8.  
+
+`sudo dnf install java-1.8.0-openjdk`
