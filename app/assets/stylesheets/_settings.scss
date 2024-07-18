@@ -72,12 +72,13 @@
   #dashboard-projects {
     @include dashboard-component;
     min-width: 40em;
+    position: relative;
   
     .btn-dark {
       margin-left: 0.5em;
       margin-bottom: 0.5em;
-      position: relative;
-      bottom: 0
+      position: absolute;
+      bottom: 0px;
     }
   }
 
