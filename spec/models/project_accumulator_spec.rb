@@ -23,7 +23,6 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
       ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       project_accumulators.create!
-
       expect(project_accumulators.create!).to eq(false)
     end
   end

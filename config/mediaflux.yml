@@ -89,10 +89,11 @@ development:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
 test:
-  api_root_ns: '/td-test-001/tigerdataNS'
+  api_root_to_clean: '/td-test-001/test/'
+  api_root_ns: '/td-test-001/test/tigerdataNS'
   api_root_collection_name: 'tigerdata'
-  api_root_collection_namespace: '/td-test-001'
-  api_root_collection: 'path=/td-test-001/tigerdata'
+  api_root_collection_namespace: '/td-test-001/test'
+  api_root_collection: 'path=/td-test-001/test/tigerdata'
   api_transport: 'http'
   api_host: <%= ENV["TEST_MEDIAFLUX_HOST"] || 'mediaflux.example.com' %>
   api_port: <%= ENV["TEST_MEDIAFLUX_PORT"] || '8888' %>
