@@ -94,7 +94,7 @@ test:
   api_root_collection_namespace: '/td-test-001'
   api_root_collection: 'path=/td-test-001/tigerdata'
   api_transport: 'http'
-  api_host: <%= ENV["TEST_MEDIAFLUX_HOST"] || 'mediaflux.example.com' %>
+  api_host: <%= ENV["TEST_MEDIAFLUX_HOST"] || '0.0.0.0' %>
   api_port: <%= ENV["TEST_MEDIAFLUX_PORT"] || '8888' %>
 
   # Alternate to test is still a test location
@@ -110,4 +110,3 @@ test:
   api_user: 'manager'
   api_password: 'change_me'
   shared_files_location: './public/'
-

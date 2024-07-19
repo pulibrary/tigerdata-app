@@ -8,7 +8,7 @@ RSpec.describe WelcomeController do
     assert_not_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
   end
 
-  context "when a user is logged in", stub_mediaflux: true do
+  context "when a user is logged in", connect_to_mediaflux: true do
     # TODO: refactor the stub_mediaflux to connect to the real mediaflux
     #     1 Test: 19
     let(:user) { FactoryBot.create :user }

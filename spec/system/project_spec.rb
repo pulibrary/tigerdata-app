@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", type: :system, stub_mediaflux: true do
+RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
   # TODO: refactor the stub_mediaflux to connect to the real mediaflux
   #     3 Test: Under context 496, will be big.
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }

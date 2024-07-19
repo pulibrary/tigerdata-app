@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
+RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   # TODO: refactor the stub_mediaflux to connect to the real mediaflux
   #     visiting the welcome page "/" is posting to mediaflux
   context "unauthenticated user" do
