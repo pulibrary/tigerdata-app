@@ -9,6 +9,8 @@ RSpec.describe WelcomeController do
   end
 
   context "when a user is logged in", stub_mediaflux: true do
+    #TODO: refactor the stub_mediaflux to connect to the real mediaflux
+    #     1 Test: 19
     let(:user) { FactoryBot.create :user }
     before do
       sign_in user

@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Project Edit Page Roles Validation", type: :system, stub_mediaflux: true, js: true do
+  #TODO: refactor the stub_mediaflux to connect to the real mediaflux
+    #    visiting the welcome page "/" is posting to mediaflux
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
   let(:system_admin) { FactoryBot.create(:sysadmin, uid: "pul777") }

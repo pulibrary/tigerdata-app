@@ -2,6 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model, stub_mediaflux: true do
+  #TODO: refactor the stub_mediaflux to connect to the real mediaflux
+    #     1 Test: 151
   describe "#sponsored_projects" do
     let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
     before do
