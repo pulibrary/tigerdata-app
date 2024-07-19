@@ -1,5 +1,37 @@
 # frozen_string_literal: true
 
+  def reset_mediaflux_root
+
+      # Clean out the namespace before running tests to avoid collisions
+      user = User.new
+      destroy_request = Mediaflux::NamespaceDestroyRequest.new(
+        session_token: user.mediaflux_session,
+        namespace: Rails.configuration.mediaflux[:api_root_to_clean]
+      )
+      destroy_request.destroy
+      if destroy_request.error?
+        puts "Error destroying the mediaflux root namespace #{destroy_request.response_error}" # allow the message to show in CI output
+      end
+
+      # then create it and the project root collection and namespace so it exists for any tests
+      create_test_root_namespace(user)
+      ProjectMediaflux.create_root_ns(session_id: user.mediaflux_session)
+      project_parent = Mediaflux::Connection.root_collection
+      ProjectMediaflux.prepare_parent_collection(project_parent:, session_id: user.mediaflux_session)
+  end
+
+  def create_test_root_namespace(user)
+    create_request = Mediaflux::NamespaceCreateRequest.new(
+      session_token: user.mediaflux_session,
+      namespace: Rails.configuration.mediaflux[:api_root_to_clean]
+    )
+    create_request.resolve
+    if create_request.error?
+      puts "Error creating #{Rails.configuration.mediaflux[:api_root_to_clean]}: #{create_request.response_error}" # allow the message to show in CI output
+    end
+  end
+
+
 # Allow real connections to the Mediaflux server when a test is configured with
 # connect_to_mediaflux: true
 RSpec.configure do |config|
@@ -11,26 +43,7 @@ RSpec.configure do |config|
       require "rake"
       Rails.application.load_tasks
       Rake::Task["schema:create"].invoke
-      # Clean out the namespace before running tests to avoid collisions
-      user = User.new
-      destroy_request = Mediaflux::NamespaceDestroyRequest.new(
-        session_token: user.mediaflux_session,
-        namespace: Rails.configuration.mediaflux[:api_root_ns]
-      )
-      destroy_request.destroy
-      if destroy_request.error?
-        puts "Error destroying the mediaflux root namespace #{destroy_request.response_error}" # allow the message to show in CI output
-      end
-
-      # then create it so it exists for any tests
-      create_request = Mediaflux::NamespaceCreateRequest.new(
-        session_token: user.mediaflux_session,
-        namespace: Rails.configuration.mediaflux[:api_root_ns]
-      )
-      create_request.resolve
-      if create_request.error?
-        puts "Error creating the mediaflux root namespace #{create_request.response_error}" # allow the message to show in CI output
-      end
+      reset_mediaflux_root
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
@@ -42,5 +55,12 @@ RSpec.configure do |config|
     if ex.metadata[:connect_to_mediaflux]
       Rails.configuration.mediaflux["api_host"] = @original_api_host
     end
+  end
+
+  config.after(:suite)  do |ex|
+    original_api_host = Rails.configuration.mediaflux["api_host"]
+    Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+    reset_mediaflux_root
+    Rails.configuration.mediaflux["api_host"] = original_api_host
   end
 end
