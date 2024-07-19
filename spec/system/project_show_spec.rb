@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, stub_mediaflux: true, js: true do
-  #TODO: refactor the stub_mediaflux to connect to the real mediaflux
-    #     visiting the welcome page "/" is posting to mediaflux
+  # TODO: refactor the stub_mediaflux to connect to the real mediaflux
+  #     visiting the welcome page "/" is posting to mediaflux
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }

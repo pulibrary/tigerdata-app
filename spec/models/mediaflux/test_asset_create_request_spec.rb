@@ -10,7 +10,7 @@ RSpec.describe Mediaflux::TestAssetCreateRequest, type: :model do
   end
 
   describe "#resolve" do
-  #TODO: refactor the stub_mediaflux to connect to the real mediaflux
+    # TODO: refactor the stub_mediaflux to connect to the real mediaflux
     #     1 Test: 22
     before do
       stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
