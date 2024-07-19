@@ -65,7 +65,7 @@ RSpec.describe ProjectsController do
         "      </quota>\n" \
         "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
         "      <type>application/arc-asset-collection</type>\n" \
-        "      <pid>path=/td-test-001/tigerdata</pid>\n" \
+        "      <pid>path=/td-test-001/test/tigerdata</pid>\n" \
         "    </args>\n" \
         "  </service>\n" \
         "</request>\n"
