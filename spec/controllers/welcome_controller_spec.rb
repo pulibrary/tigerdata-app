@@ -5,7 +5,7 @@ RSpec.describe WelcomeController do
   it "renders the index page" do
     get :index
     expect(response).to render_template("index")
-    assert_not_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
+    assert_not_requested(:post, "http://0.0.0.0:8888/")
   end
 
   context "when a user is logged in", connect_to_mediaflux: true do
@@ -19,9 +19,6 @@ RSpec.describe WelcomeController do
     it "renders the index page" do
       get :index
       expect(response).to render_template("index")
-      # this requires a connection to mediaflux... for ease of development we do not want to require this
-      # assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
-      #                  body: /<service name="system.logon">/)
     end
 
     it "accepts a post to change the emulation role" do

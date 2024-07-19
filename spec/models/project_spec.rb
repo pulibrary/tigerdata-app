@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Project, type: :model, stub_mediaflux: true do
+RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   #TODO: refactor the stub_mediaflux to connect to the real mediaflux
     #     1 Test: 151
   describe "#sponsored_projects" do
@@ -97,65 +97,34 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
   describe "#file_list" do
     let(:manager) { FactoryBot.create(:user, uid: "hc1234") }
     let(:project) do
-      project = FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
-      project.mediaflux_id = "123"
+      project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
+      project.mediaflux_id = nil
       project
     end
 
     before do
-      # define query to fetch file list
-      # (returns iterator 456)
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query\" session=\"test-session-token\">\n    <args>\n      "\
-        "<where>asset in static collection or subcollection of 123</where>\n      <action>get-values</action>\n      "\
-        "<xpath ename=\"name\">name</xpath>\n      <xpath ename=\"path\">path</xpath>\n      <xpath ename=\"total-size\">content/@total-size</xpath>\n      "\
-        "<xpath ename=\"mtime\">mtime</xpath>\n      <xpath ename=\"collection\">@collection</xpath>\n      <as>iterator</as>\n    </args>\n  </service>\n</request>\n",
-              headers: {
-                "Accept" => "*/*",
-                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-                "Connection" => "keep-alive",
-                "Content-Type" => "text/xml; charset=utf-8",
-                "Keep-Alive" => "30",
-                "User-Agent" => "Ruby"
-              })
-        .to_return(status: 200, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<response><reply><result><iterator>456</iterator></result></reply></response>", headers: {})
+      # Save the project in mediaflux
+      project.save_in_mediaflux(session_id: manager.mediaflux_session)
 
-      # fetch file list using iterator 456
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-        .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.query.iterate\" session=\"test-session-token\">\n    "\
-        "<args>\n      <id>456</id>\n      <size>10</size>\n    </args>\n  </service>\n</request>\n",
-              headers: {
-                "Accept" => "*/*",
-                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-                "Connection" => "keep-alive",
-                "Content-Type" => "text/xml; charset=utf-8",
-                "Keep-Alive" => "30",
-                "User-Agent" => "Ruby"
-              })
-        .to_return(status: 200, body: fixture_file("files/iterator_response_get_values.xml"), headers: {})
+      # Create files for the project in mediaflux using test asset create request
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
+      7.times do
+        Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "#{FFaker::Book.title}.txt").resolve
+      end
+    end
 
-      # destroy the iterator
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-        .with(body: /asset.query.iterator.destroy/,
-              headers: {
-                "Accept" => "*/*",
-                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-                "Connection" => "keep-alive",
-                "Content-Type" => "text/xml; charset=utf-8",
-                "Keep-Alive" => "30",
-                "User-Agent" => "Ruby"
-              })
-        .to_return(status: 200, body: "", headers: {})
+    after do
+      Mediaflux::AssetDestroyRequest.new(session_token: manager.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
     end
 
     it "fetches the file list" do
-      file_list = project.file_list(session_id: "test-session-token", size: 10)
+      file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
-      expect(file_list[:files][0].name).to eq "file1.txt"
-      expect(file_list[:files][0].path).to eq "/td-demo-001/localbig-ns/localbig/file1.txt"
-      expect(file_list[:files][0].size).to be 141
+      expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
+      expect(file_list[:files][0].path).to eq "/td-test-001/tigerdata/big-data/Real_Among_Random.txt0"
+      expect(file_list[:files][0].size).to be 100
       expect(file_list[:files][0].collection).to be false
-      expect(file_list[:files][0].last_modified).to eq "2024-02-12T11:43:25-05:00"
+      expect(file_list[:files][0].last_modified).to_not be nil
     end
   end
 
@@ -170,7 +139,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
   end
 
-  describe "#save_in_mediaflux", connect_to_mediaflux: true do
+  describe "#save_in_mediaflux" do
     let(:user) { FactoryBot.create(:user) }
     let(:project) { FactoryBot.create(:project_with_doi) }
     it "calls ProjectMediaflux to create the project and save the id" do
@@ -330,7 +299,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     end
   end
 
-  describe "#activate!", connect_to_mediaflux: true do
+  describe "#activate!" do
   let(:project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
   let(:current_user) { FactoryBot.create(:user) }
   let(:project_metadata) {project.metadata_model}
