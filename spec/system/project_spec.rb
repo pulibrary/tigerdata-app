@@ -497,70 +497,16 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
     context "when authenticated" do
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
 
-      let(:mediaflux_asset_get_request) do
-        xml_path = Rails.root.join("spec", "fixtures", "files", "project_asset_get_request.xml")
-        xml = File.read(xml_path)
-        Nokogiri::XML.parse(xml)
-      end
-
       before do
-        stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-          body: mediaflux_asset_get_request.to_xml
-        ).to_return(status: 200, body: mediaflux_asset_get_response.to_xml)
-
         sign_in sponsor_user
       end
 
       context "when the Mediaflux assets have one or multiple files" do
-        let(:mediaflux_asset_get_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_get_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
+        # Create a project
 
-        before do
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
+        # Save the project to mediaflux
 
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
-
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
-        end
+        # Create a file for the project in mediaflux
 
         it "enqueues a Sidekiq job for asynchronously requesting project files" do
           visit project_contents_path(project_in_mediaflux)
@@ -596,56 +542,11 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
             project_purpose: "Research"
           }
         end
-        let(:mediaflux_asset_get_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_asset_get_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
 
-        before do
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
+        # Create a project
 
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
-
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
-        end
-
+        # Save the project to mediaflux
+        # override the quota
         it "renders the storage capacity in the show view" do
           pending "how will we really render the storage capacity"
           visit project_contents_path(project_in_mediaflux)
@@ -673,54 +574,12 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
             project_purpose: "Research"
           }
         end
-        let(:mediaflux_asset_get_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "collection_asset_get_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_query_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_query_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_iterate_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_iterate_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "iterator_response_get_values.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_request) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_request.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        let(:mediaflux_asset_collection_destroy_response) do
-          xml_path = Rails.root.join("spec", "fixtures", "files", "project_with_files_asset_destroy_response.xml")
-          xml = File.read(xml_path)
-          Nokogiri::XML.parse(xml)
-        end
-        before do
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_query_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_query_response.to_xml)
 
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_iterate_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_iterate_response.to_xml)
+        # Create a project
 
-          stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").with(
-            body: mediaflux_asset_collection_destroy_request.to_xml
-          ).to_return(status: 200, body: mediaflux_asset_collection_destroy_response.to_xml)
-        end
+        # Save the project to mediaflux
+
+        # Create a file for the project in mediaflux
 
         it "renders the storage capacity in the show view" do
           visit project_contents_path(project_in_mediaflux)
