@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::RootCollectionAsset, type: :model, connect_to_mediaflux: true do
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
-  let(:root_ns) { FFaker::InternetSE.company_name_single_word }
+  let(:root_ns) { "#{Mediaflux::Connection.root_namespace}/#{FFaker::InternetSE.company_name_single_word}" }
   let(:parent_collection) { FFaker::InternetSE.company_name_single_word }
 
   describe "#create" do
