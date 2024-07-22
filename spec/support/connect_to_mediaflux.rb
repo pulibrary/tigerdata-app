@@ -14,7 +14,7 @@ def reset_mediaflux_root
 
   # then create it and the project root collection and namespace so it exists for any tests
   create_test_root_namespace(user)
-  ProjectMediaflux.create_root_ns(session_id: user.mediaflux_session)
+  ProjectMediaflux.create_root_tree(session_id: user.mediaflux_session)
 end
 
 def create_test_root_namespace(user)
