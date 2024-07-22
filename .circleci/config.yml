@@ -28,6 +28,13 @@ commands:
           paths:
             - ~/.cache/yarn
 
+  restore_cache:
+    steps:
+      - restore_cache:
+          keys:
+            - *gem_key
+            - *yarn_key
+
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
