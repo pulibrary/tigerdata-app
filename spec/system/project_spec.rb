@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
-  # TODO: refactor the stub_mediaflux to connect to the real mediaflux
-  #     3 Test: Under context 496, will be big.
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
@@ -41,21 +39,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
   end
 
   before do
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(
-        body: /<service name="asset.namespace.create" session="test-session-token">/
-      ).to_return(status: 200, body: "<xml>something</xml>")
-
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(
-        body: /<service name="asset.create" session="test-session-token">/
-      ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
-
-    stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__")
-      .with(
-        body: /<service name="asset.set" session="test-session-token">/
-      ).to_return(status: 200, body: "<?xml version=\"1.0\" ?> <response> <reply type=\"result\"> <result> <id>999</id> </result> </reply> </response>")
-
     sign_in sponsor_user
   end
 
