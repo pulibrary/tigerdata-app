@@ -108,9 +108,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
       # Create files for the project in mediaflux using test asset create request
       Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
-      7.times do
-        Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "#{FFaker::Book.title}.txt").resolve
-      end
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
     end
 
     after do

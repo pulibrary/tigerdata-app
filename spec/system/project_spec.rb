@@ -496,20 +496,24 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
   context "GET /projects/:id/content" do
     context "when authenticated" do
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
+      let(:approved_project) do
+        project = FactoryBot.create(:approved_project, title: "project 111", data_sponsor: sponsor_user.uid)
+        project.mediaflux_id = nil
+        project
+      end
 
       before do
         sign_in sponsor_user
+        # Save the project in mediaflux
+        approved_project.save_in_mediaflux(session_id: sponsor_user.mediaflux_session)
+        # Create file(s) for the project in mediaflux using test asset create request
+        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
+        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
       end
 
       context "when the Mediaflux assets have one or multiple files" do
-        # Create a project
-
-        # Save the project to mediaflux
-
-        # Create a file for the project in mediaflux
-
         it "enqueues a Sidekiq job for asynchronously requesting project files" do
-          visit project_contents_path(project_in_mediaflux)
+          visit project_contents_path(approved_project)
 
           expect(page).to have_content("List All Files")
           click_on "List All Files"
@@ -517,7 +521,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
           expect(page).to have_content("Yes")
           sleep 1
           click_on "Yes"
-          expect(page).to have_content("File list for \"#{project_in_mediaflux.title}\" is being generated in the background.")
+          expect(page).to have_content("File list for \"#{approved_project.title}\" is being generated in the background.")
           expect(sponsor_user.user_requests.count).to eq(1)
           expect(sponsor_user.user_requests.first.job_id).not_to be nil
           expect(sponsor_user.user_requests.first.state).to eq FileInventoryRequest::PENDING
@@ -526,31 +530,11 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
       end
 
       context "when the storage capacity is requested, but no quota is allocated" do
-        let(:metadata) do
-          {
-            data_sponsor: sponsor_user.uid,
-            data_manager: data_manager.uid,
-            project_directory: "project-123",
-            title: "project 123",
-            departments: ["RDSS"],
-            description: "hello world",
-            data_user_read_only: [],
-            data_user_read_write: [],
-            project_id: "abc-123",
-            storage_capacity: { size: { requested: 100 }, unit: { requested: "TB" } },
-            storage_performance_expectations: { requested: "Standard" },
-            project_purpose: "Research"
-          }
-        end
-
-        # Create a project
-
-        # Save the project to mediaflux
-        # override the quota
         it "renders the storage capacity in the show view" do
           pending "how will we really render the storage capacity"
-          visit project_contents_path(project_in_mediaflux)
-          expect(page).to have_content "0 KB / 100 TB"
+          visit project_contents_path(approved_project)
+          # An empty strings are returned for a project with no quota allocation
+          expect(page).to have_content "0 KB / [Talk about what the default should be]"
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')
@@ -558,32 +542,9 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
       end
 
       context "when the quota is allocated" do
-        let(:metadata) do
-          {
-            data_sponsor: sponsor_user.uid,
-            data_manager: data_manager.uid,
-            project_directory: "project-123",
-            title: "project 123",
-            departments: ["RDSS"],
-            description: "hello world",
-            data_user_read_only: [],
-            data_user_read_write: [],
-            project_id: "abc-123",
-            storage_capacity: { size: { requested: 500 }, unit: { requested: "GB" } },
-            storage_performance_expectations: { requested: "Standard" },
-            project_purpose: "Research"
-          }
-        end
-
-        # Create a project
-
-        # Save the project to mediaflux
-
-        # Create a file for the project in mediaflux
-
         it "renders the storage capacity in the show view" do
-          visit project_contents_path(project_in_mediaflux)
-          expect(page).to have_content "6 KB / 300 GB" # should be 300 GB which is the quota, instead of 500GB which is the requested capacity
+          visit project_contents_path(approved_project)
+          expect(page).to have_content "400 bytes / 500 GB" # should be 300 GB which is the quota, instead of 500GB which is the requested capacity
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')
