@@ -2,8 +2,6 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
-  #TODO: refactor the stub_mediaflux to connect to the real mediaflux
-    #     1 Test: 151
   describe "#sponsored_projects" do
     let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
     before do
@@ -119,7 +117,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
-      expect(file_list[:files][0].path).to eq "/td-test-001/tigerdata/big-data/Real_Among_Random.txt0"
+      expect(file_list[:files][0].path).to eq "/td-test-001/test/tigerdata/big-data/Real_Among_Random.txt0"
       expect(file_list[:files][0].size).to be 100
       expect(file_list[:files][0].collection).to be false
       expect(file_list[:files][0].last_modified).to_not be nil
