@@ -1,7 +1,6 @@
 version: 2.1
 
 commands:
-
   install_dependencies:
     steps:
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
@@ -27,6 +26,13 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+  restore_cache:
+    steps:
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
 
   run_mediaflux:
     steps:
@@ -67,6 +73,7 @@ jobs:
         POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
+      - restore_cache
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
@@ -89,6 +96,7 @@ jobs:
         POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
+      - restore_cache
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
