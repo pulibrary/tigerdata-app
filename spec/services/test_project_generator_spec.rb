@@ -15,7 +15,7 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
         id: project.mediaflux_id
       )      
       metadata_query.resolve
-      expect(metadata_query.metadata[:path]).to eq "/td-test-001/tigerdata/test-project-00001"
+      expect(metadata_query.metadata[:path]).to eq "/td-test-001/test/tigerdata/test-project-00001"
       Mediaflux::AssetDestroyRequest.new(session_token: user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
     end
   end

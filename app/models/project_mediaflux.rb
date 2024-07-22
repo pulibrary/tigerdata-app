@@ -31,8 +31,8 @@ class ProjectMediaflux
   def self.create!(project:, session_id:, xml_namespace: nil)
     store_name = Store.default(session_id: session_id).name
 
-    # Make sure the root namespace exists
-    create_root_ns(session_id: session_id)
+    # Make sure the root namespace and the required nodes below it exist.
+    create_root_tree(session_id: session_id)
 
     # Create a namespace for the project
     # The namespace is directly under our root namespace'
@@ -44,7 +44,6 @@ class ProjectMediaflux
     end
     # Create a collection asset under the root namespace and set its metadata
     project_parent = Mediaflux::Connection.root_collection
-    prepare_parent_collection(project_parent:, session_id:)
     create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
     id = create_request.id
     if id.blank?
@@ -88,34 +87,10 @@ class ProjectMediaflux
     Nokogiri::XML.parse(xml_body)
   end
 
-  def self.create_root_ns(session_id:)
-    root_namespace = Mediaflux::Connection.root_namespace
-    namespace_request = Mediaflux::NamespaceDescribeRequest.new(path: root_namespace, session_token: session_id)
-    if namespace_request.exists?
-      Rails.logger.info "Root namespace #{root_namespace} already exists"
-    else
-      Rails.logger.info "Created root namespace #{root_namespace}"
-      namespace_request = Mediaflux::NamespaceCreateRequest.new(namespace: root_namespace, description: "TigerData client app root namespace",
-                                                                      store: Store.all(session_id: session_id).first.name,
-                                                                      session_token: session_id)
-      namespace_request.response_body
-    end
-  end
-
-  class << self
-
-    private
-      def prepare_parent_collection(project_parent:, session_id:)
-        get_parent = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: project_parent)
-        if get_parent.error?
-          if project_parent.include?("path=")
-            create_parent_request = Mediaflux::AssetCreateRequest.new(session_token: session_id, namespace: Mediaflux::Connection.root_collection_namespace,
-                                                                            name: Mediaflux::Connection.root_collection_name)
-            raise "Can not create parent collection: #{create_parent_request.response_error}" if create_parent_request.error?
-          else
-            raise "Error finding parent collection (#{project_parent}) #{get_parent.response_error}"
-          end
-        end
-      end
+  def self.create_root_tree(session_id:)
+    root_ns = Rails.configuration.mediaflux["api_root_collection_namespace"]
+    parent_collection = Rails.configuration.mediaflux["api_root_collection_name"]
+    req = Mediaflux::RootCollectionAsset.new(session_token: session_id, root_ns:, parent_collection:)
+    req.create
   end
 end
