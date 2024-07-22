@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::NamespaceCreateRequest, connect_to_mediaflux: true ,type: :model do
-  let(:mediaflux_url) { "#{Rails.configuration.mediaflux["api_host"].to_s}/#{Rails.configuration.mediaflux["api_port"].to_s}" }
-  let(:user) { FactoryBot.create(:user)}
+RSpec.describe Mediaflux::NamespaceCreateRequest, connect_to_mediaflux: true, type: :model do
+  let(:mediaflux_url) { "#{Rails.configuration.mediaflux['api_host']}/#{Rails.configuration.mediaflux['api_port']}" }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "#resolve" do
     it "disconnects the session" do
