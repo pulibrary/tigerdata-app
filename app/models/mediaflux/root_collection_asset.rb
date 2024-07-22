@@ -3,6 +3,24 @@ module Mediaflux
   class RootCollectionAsset
     attr_reader :error
 
+    # In the context of this class:
+    #
+    # root_ns:            The root namespace (e.g. /princeton) for everything in Mediaflux.
+    #
+    # parent_collection:  The collection that is the parent to all other collections (e.g. tigerdata)
+    #                     and this collection lives under root_ns (e.g. /princeton/tigerdata)
+    #
+    # parent_ns:          The namespace that is the parent to all namespaces for projects and
+    #                     and this namespace lives under root_ns  (e.g. /princeton/tigerdataNS)
+    #
+    # Notice that parent_ns is a sibling to parent_collection (i.e. they both live under root_ns)
+    #
+    # During development the root_ns is typicall "/td-demo-001" and parent_collection and parent_ns
+    # live under it (e.g. /td-demo-001/tigerdata and /td-demo-001/tigerdataNS).
+    #
+    # When running the test suite root_ns is typically "/td-test-001/test" and the parent_collection
+    # and parent_ns live under it (e.g. /td-test-001/test/tigerdata and /td-test-001/test/tigerdataNS).
+    #
     def initialize(session_token:, root_ns:, parent_collection:)
       @session_token = session_token
       @root_ns = root_ns || Rails.configuration.mediaflux["api_root_collection_namespace"]                  # /princeton or /td-demo-001

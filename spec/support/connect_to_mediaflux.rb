@@ -16,8 +16,6 @@
       # then create it and the project root collection and namespace so it exists for any tests
       create_test_root_namespace(user)
       ProjectMediaflux.create_root_ns(session_id: user.mediaflux_session)
-      project_parent = Mediaflux::Connection.root_collection
-      ProjectMediaflux.prepare_parent_collection(project_parent:, session_id: user.mediaflux_session)
   end
 
   def create_test_root_namespace(user)
