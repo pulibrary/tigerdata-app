@@ -95,7 +95,7 @@ bundle exec rake schema:create
 and re-exectute the Aterm command so that the Desktop shows collections properly:
 
 ```
-actor.grant :type user :name system:manager :role -type role desktop-experimental`
+actor.grant :type user :name system:manager :role -type role desktop-experimental
 ```
 
 and recreate any collections and namespaces that you need.
