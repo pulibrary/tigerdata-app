@@ -47,7 +47,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       context "when the parent colllection does not exist" do
-        let(:mediaflux_id) { described_class.create!(project: project,user: current_user) }
+        let(:mediaflux_id) { described_class.create!(project: project, user: current_user) }
         let(:mediaflux_metadata) do
           Mediaflux::AssetMetadataRequest.new(
                              session_token: current_user.mediaflux_session,
@@ -89,7 +89,6 @@ RSpec.describe ProjectMediaflux, type: :model do
       it "should raise a MetadataError if project is invalid" do
         mediaflux_id = 1001
         project.approve!(mediaflux_id: mediaflux_id, current_user: current_user)
-        session_token = current_user.mediaflux_session
 
         # raise a metadata error & log what specific required fields are missing when writing a project to mediaflux
         # rubocop:disable Style/MultilineBlockChain
@@ -109,7 +108,6 @@ RSpec.describe ProjectMediaflux, type: :model do
       it "should raise a error if any error occurs in mediaflux" do
         mediaflux_id = 1001
         incomplete_project.approve!(mediaflux_id: mediaflux_id, current_user: current_user)
-        session_token = current_user.mediaflux_session
 
         # raise an error & log what was returned from mediaflux
         # rubocop:disable Style/MultilineBlockChain
