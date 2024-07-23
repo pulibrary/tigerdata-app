@@ -1,44 +1,25 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::ServiceExecuteRequest, type: :model do
-  subject(:request) { described_class.new(session_token: session_token, service_name: "asset.namespace.list") }
+RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, type: :model do
+  subject(:request) { described_class.new(session_token: user.mediaflux_session, service_name: "asset.namespace.list") }
 
+  let(:user) { FactoryBot.create(:user) }
+  let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:session_token) { "test-session-token" }
   let(:identity_token) { "test-identity-token" }
-  let(:response_body) do
-    <<-XML
-<?xml version="1.0" encoding="UTF-8"?>
-<response>
-  <reply type="result">
-    <result>
-      <uuid>4892</uuid>
-      <reply service="asset.namespace.list">
-        <response>
-          <namespace path="/">
-            <namespace id="1080" leaf="true" acl="false">Princeton</namespace>
-            <namespace id="4" leaf="false" acl="false" restricted-visibility="true">mflux</namespace>
-            <namespace id="6" leaf="false" acl="false" restricted-visibility="true">system</namespace>
-            <namespace id="8" leaf="false" acl="false" restricted-visibility="true">www</namespace>
-          </namespace>
-        </response>
-      </reply>
-    </result>
-  </reply>
-</response>
-    XML
-  end
-
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+  let(:mediflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
 
   before do
-    stub_request(:post, mediflux_url).to_return(status: 200, body: response_body)
+    # create a real collection as an example of a service execution
+    approved_project.mediaflux_id = nil
+    @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
   end
 
   describe "#resolve" do
     it "sends the service execute" do
       request.resolve
-      assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+      assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
                        body: /service name="service.execute".*<service name="asset.namespace.list"\/>.*/m)
     end
 
@@ -47,7 +28,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, type: :model do
 
       it "sends the service execute" do
         request.resolve
-        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+        assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
                          body: /service name="service.execute".*<service name="asset.namespace.list">.*<id>1<\/id>.*<\/service>.*/m)
       end
     end
@@ -57,7 +38,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, type: :model do
 
       it "sends the service execute" do
         request.resolve
-        assert_requested(:post, "http://mediaflux.example.com:8888/__mflux_svc__",
+        assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
                          body: /service name="service.execute".*<token>tokentoken<\/token>.*<service name="asset.namespace.list"\/>.*/m)
       end
     end
