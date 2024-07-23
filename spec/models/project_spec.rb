@@ -173,17 +173,17 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     let(:project) { FactoryBot.create(:project_with_doi) }
     it "calls ProjectMediaflux to create the project and save the id" do
       expect(project.mediaflux_id).to be nil
-      project.save_in_mediaflux(session_id: user.mediaflux_session)
+      project.save_in_mediaflux(user: user)
       expect(project.mediaflux_id).not_to be nil
     end
 
     context "when the projects has already beed saved" do
       before do
-        project.save_in_mediaflux(session_id: user.mediaflux_session)
+        project.save_in_mediaflux(user: user)
       end
       it "calls out to mediuaflux with an update " do
         project.metadata_model.title = "New title"
-        expect { project.save_in_mediaflux(session_id: user.mediaflux_session) }.not_to raise_error
+        expect { project.save_in_mediaflux(user: user) }.not_to raise_error
       end
     end
   end
@@ -339,8 +339,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
     project.create!(initial_metadata: project.metadata_model, user: current_user)
 
     # create a project in mediaflux
-    session_token = current_user.mediaflux_session
-    collection_id = project.save_in_mediaflux(session_id: session_token)
+    collection_id = project.save_in_mediaflux(user: current_user)
     project.approve!(mediaflux_id: collection_id, current_user: current_user)
 
     #validate that the collection id exists in mediaflux
@@ -359,8 +358,7 @@ RSpec.describe Project, type: :model, stub_mediaflux: true do
       project.create!(initial_metadata: project.metadata_model, user: current_user)
 
       # create a project in mediaflux
-      session_token = current_user.mediaflux_session
-      collection_id = project.save_in_mediaflux(session_id: session_token)
+      collection_id = project.save_in_mediaflux(user: current_user)
       project.approve!(mediaflux_id: collection_id, current_user: current_user)
 
       # change the doi so it will not match up when activated

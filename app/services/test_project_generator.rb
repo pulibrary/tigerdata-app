@@ -11,8 +11,7 @@ class TestProjectGenerator
 
   def generate
     project = create_project
-    session_id = user.mediaflux_session
-    project.save_in_mediaflux(session_id:)
+    project.save_in_mediaflux(user: user)
     project.save!
     project
   end

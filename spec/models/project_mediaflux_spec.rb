@@ -9,7 +9,7 @@ RSpec.describe ProjectMediaflux, type: :model do
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id" do
-        mediaflux_id = described_class.create!(project: project, session_id: current_user.mediaflux_session)
+        mediaflux_id = described_class.create!(project: project, user: current_user)
         mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
                               session_token: current_user.mediaflux_session,
                               id: mediaflux_id
@@ -25,7 +25,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       describe "quota", connect_to_mediaflux: true do
         it "adds a quota when it creates a project in mediaflux" do
           project = FactoryBot.create(:project_with_doi)
-          described_class.create!(project: project, session_id: current_user.mediaflux_session)
+          described_class.create!(project: project, user: current_user)
           metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: current_user.mediaflux_session,
             id: project.mediaflux_id
@@ -38,21 +38,16 @@ RSpec.describe ProjectMediaflux, type: :model do
       context "when the name is already taken" do
         it "raises an error" do
           # Make the project once
-          described_class.create!(project: project, session_id: current_user.mediaflux_session)
+          described_class.create!(project: project, user: current_user)
           # It should raise a duplicate namespace error the second time
           expect do
-            described_class.create!(project: project, session_id: current_user.mediaflux_session)
+            described_class.create!(project: project, user: current_user)
           end.to raise_error(MediafluxDuplicateNamespaceError) # Raises custom error when a duplicate project already exists
         end
       end
 
       context "when the parent colllection does not exist" do
-        let(:mediaflux_id) do
-          described_class.create!(
-                              project: project,
-                              session_id: current_user.mediaflux_session
-                            )
-        end
+        let(:mediaflux_id) { described_class.create!(project: project,user: current_user) }
         let(:mediaflux_metadata) do
           Mediaflux::AssetMetadataRequest.new(
                              session_token: current_user.mediaflux_session,
@@ -100,7 +95,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         # rubocop:disable Style/MultilineBlockChain
         expect do
           incomplete_project.metadata_model.project_id = nil # we can no longer save the project without an id, so we have to reset it here to cause the error
-          ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+          ProjectMediaflux.create!(project: incomplete_project, user: current_user)
         end.to raise_error do |error|
           expect(error).to be_a(TigerData::MetadataError)
           expect(error.message).to include("Project creation failed with metadata schema version 0.6.1 due to the missing fields:")
@@ -119,7 +114,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         # raise an error & log what was returned from mediaflux
         # rubocop:disable Style/MultilineBlockChain
         expect do
-          ProjectMediaflux.create!(project: incomplete_project, session_id: session_token)
+          ProjectMediaflux.create!(project: incomplete_project, user: current_user)
         end.to raise_error do |error|
           expect(error).to be_a(StandardError)
           expect(error.message).to include("call to service 'asset.create' failed: XPath tigerdata:project/ProjectID is invalid: missing value")

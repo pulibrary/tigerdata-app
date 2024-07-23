@@ -63,7 +63,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, type: :model do
 
       before do
         # create a project in mediaflux
-        valid_project.mediaflux_id = ProjectMediaflux.create!(project: valid_project, session_id: session_token)
+        valid_project.mediaflux_id = ProjectMediaflux.create!(project: valid_project, user: current_user)
         ProjectAccumulator.new(project: valid_project, session_id: session_token).create!
       end
 
