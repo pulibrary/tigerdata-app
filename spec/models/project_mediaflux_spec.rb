@@ -123,4 +123,26 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
     end
   end
+
+  describe "#update", connect_to_mediaflux: true do
+    before do
+      described_class.create!(project: project, user: current_user)
+    end
+    it "defaults updated_on/by when not provided" do
+      project.metadata_model.updated_on = nil
+      project.metadata_model.updated_by = nil
+      described_class.update(project: project, user: current_user)
+      expect(project.metadata_model.updated_on).not_to be nil
+      expect(project.metadata_model.updated_by).not_to be nil
+    end
+
+    it "honors updated_on/by values when provided" do
+      updated_on = Time.current.in_time_zone("America/New_York").iso8601
+      project.metadata_model.updated_on = updated_on
+      project.metadata_model.updated_by = "user123"
+      described_class.update(project: project, user: current_user)
+      expect(project.metadata_model.updated_on).to eq updated_on
+      expect(project.metadata_model.updated_by).to eq "user123"
+    end
+  end
 end
