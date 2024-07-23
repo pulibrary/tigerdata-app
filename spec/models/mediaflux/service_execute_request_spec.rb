@@ -8,7 +8,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:session_token) { "test-session-token" }
   let(:identity_token) { "test-identity-token" }
-  let(:mediflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
 
   before do
     # create a real collection as an example of a service execution
