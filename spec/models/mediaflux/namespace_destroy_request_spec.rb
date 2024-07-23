@@ -8,7 +8,7 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
   let(:session_id) { sponsor_user.mediaflux_session }
   context "when a namespace exists" do
     it "deletes a namespace and everything inside of it" do
-      mediaflux_id = valid_project.save_in_mediaflux(session_id: session_id)
+      mediaflux_id = valid_project.save_in_mediaflux(user: sponsor_user)
       expect(mediaflux_id).not_to be_nil
       parent_namespace = Mediaflux::Connection.root_namespace
       namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces

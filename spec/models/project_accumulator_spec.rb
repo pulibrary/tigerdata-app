@@ -8,7 +8,7 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
 
   describe "#create!" do
     it "creates accumulators for the project" do
-      project_id = ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      project_id = ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       proj_accum = project_accumulators.create!
       metadata = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: project_id).metadata
@@ -20,7 +20,7 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
     end
 
     it "does not create accumulators if they already exist" do
-      ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       project_accumulators.create!
       expect(project_accumulators.create!).to eq(false)
@@ -29,14 +29,14 @@ RSpec.describe ProjectAccumulator, connect_to_mediaflux: true do
 
   describe "#validate" do
     it "returns true if the collection has the expected accumulators" do
-      ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
       project_accumulators = described_class.new(project: project_in_mediaflux, session_id: session_id)
       project_accumulators.create!
       expect(project_accumulators.validate).to eq(true)
     end
 
     it "returns an array of accumulators if the collection does not have all expected accumulators" do
-      ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+      ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
       expect(described_class.new(project: project_in_mediaflux, session_id: session_id).validate).to be_a(Array)
     end
   end

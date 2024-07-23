@@ -6,7 +6,7 @@ RSpec.describe ActivateProjectJob, connect_to_mediaflux: true, type: :job do
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi, status: Project::APPROVED_STATUS) }
 
   before do
-    ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+    ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
   end
 
   describe "#perform_now" do

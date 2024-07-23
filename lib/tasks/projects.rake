@@ -69,7 +69,7 @@ namespace :projects do
 
     project_id = args[:project_id]
     project = Project.find(project_id)
-    asset_id = project.save_in_mediaflux(session_id: user.mediaflux_session)
+    asset_id = project.save_in_mediaflux(user: user)
     puts "Mediaflux asset #{asset_id} updated"
   end
 

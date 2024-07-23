@@ -6,7 +6,7 @@ RSpec.describe Mediaflux::ProjectApproveRequest, type: :model, connect_to_mediaf
   let(:session_id) { approver.mediaflux_session }
   let(:approved_project) do
     project = FactoryBot.create :approved_project
-    mediaflux_id = project.save_in_mediaflux(session_id: )
+    mediaflux_id = project.save_in_mediaflux(user: approver)
     data_sponsor = User.find_by(uid: project.metadata_model.data_sponsor)
     ProvenanceEvent.generate_submission_events(project: project, user: data_sponsor)
     project.metadata_model.project_directory = "approved_project"

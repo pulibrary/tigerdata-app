@@ -9,16 +9,17 @@ class ProjectMediaflux
   # If the project hasn't yet been created in mediaflux, create it.
   # If it already exists, update it.
   # @return [String] the mediaflux id of the project
-  def self.save(project:, session_id:, xml_namespace: nil)
+  def self.save(project:, user:, xml_namespace: nil)
+    session_id = user.mediaflux_session
     if project.mediaflux_id.nil?
-      mediaflux_id = ProjectMediaflux.create!(project: project, session_id: session_id)
+      mediaflux_id = ProjectMediaflux.create!(project: project, user: user)
       ProjectAccumulator.new(project: project, session_id: session_id).create!()
-      project.reload
       Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
     else
-      ProjectMediaflux.update(project: project, session_id: session_id)
+      ProjectMediaflux.update(project: project, user: user)
       Rails.logger.debug "Project #{project.id} has been updated in MediaFlux (asset id #{project.mediaflux_id})"
     end
+    project.reload
     project.mediaflux_id
   end
 
@@ -28,7 +29,8 @@ class ProjectMediaflux
   # @param session_id [] the session id for the user who is currently authenticated to MediaFlux
   # @param xml_namespace []
   # @return [String] The id of the project that got created
-  def self.create!(project:, session_id:, xml_namespace: nil)
+  def self.create!(project:, user:, xml_namespace: nil)
+    session_id = user.mediaflux_session
     store_name = Store.default(session_id: session_id).name
 
     # Make sure the root namespace and the required nodes below it exist.
@@ -63,14 +65,24 @@ class ProjectMediaflux
         raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
       end
     end
+
+    # Save the ActiveRecord to make sure the mediaflux_id is recorded
     project.mediaflux_id = id
     project.save!
 
     id
   end
 
-  def self.update(project:, session_id:)
-    Mediaflux::ProjectUpdateRequest.new(session_token: session_id, project: project).resolve
+  def self.update(project:, user:)
+    session_id = user.mediaflux_session
+    project.metadata_model.updated_on ||= Time.current.in_time_zone("America/New_York").iso8601
+    project.metadata_model.updated_by ||= user.uid
+    update_request = Mediaflux::ProjectUpdateRequest.new(session_token: session_id, project: project)
+    update_request.resolve
+    raise update_request.response_error[:message] if update_request.error?
+
+    # Save the ActiveRecord to make sure the updated metadata is also saved in our PostgreSQL database
+    project.save!
   end
 
   def self.xml_payload(project:, xml_namespace: nil)

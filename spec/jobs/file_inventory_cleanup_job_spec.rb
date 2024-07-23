@@ -7,7 +7,7 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job d
   let(:eight_days_ago) { Time.current.in_time_zone("America/New_York") - 8.days }
 
   before do
-    ProjectMediaflux.create!(session_id: user.mediaflux_session, project: project_in_mediaflux)
+    ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
   end
 
   describe "#perform_now" do
