@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
       # this requires a connection to mediaflux... for ease of development we do not want to require this
       # current_user&.mediaflux_from_session(session)
       yield
-    rescue Mediaflux::Http::SessionExpired
+    rescue Mediaflux::SessionExpired
       @retry_count ||= 0
       @retry_count += 1
       current_user.clear_mediaflux_session(session)

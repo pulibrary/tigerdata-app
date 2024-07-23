@@ -28,7 +28,7 @@ class ProjectAccumulator
   # Validate that a project has the expected accumulators
   #
   def validate
-    collection_metadata = Mediaflux::Http::AssetMetadataRequest.new(session_token: @session_id, id: @collection_id).metadata
+    collection_metadata = Mediaflux::AssetMetadataRequest.new(session_token: @session_id, id: @collection_id).metadata
     accum_names = collection_metadata[:accum_names].to_a.map(&:to_s)
     accum_names.size == 3 ? true : accum_names
   end
@@ -36,7 +36,7 @@ class ProjectAccumulator
   private
 
     def create_accum_count(collection_id:, session_id:)
-      accum_count = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
+      accum_count = Mediaflux::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-count",
           collection: collection_id,
@@ -46,7 +46,7 @@ class ProjectAccumulator
     end
 
     def create_accum_size(collection_id:, session_id:)
-      accum_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
+      accum_size = Mediaflux::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-size",
           collection: collection_id,
@@ -56,7 +56,7 @@ class ProjectAccumulator
     end
 
     def create_accum_store_size(collection_id:, session_id:)
-      accum_store_size = Mediaflux::Http::AccumulatorCreateCollectionRequest.new(
+      accum_store_size = Mediaflux::AccumulatorCreateCollectionRequest.new(
           session_token: session_id,
           name: "accum-store-size",
           collection: collection_id,

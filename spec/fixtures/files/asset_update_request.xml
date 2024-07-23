@@ -5,7 +5,7 @@
       <id>1234</id>
       <meta>
         <tigerdata:project>
-          <ProjectDirectory>/td-test-001/tigerdataNS/big-data</ProjectDirectory>
+          <ProjectDirectory>/td-test-001/test/tigerdataNS/big-data</ProjectDirectory>
           <Title>Danger Cat</Title>
           <Description>a random description</Description>
           <Status>pending</Status>

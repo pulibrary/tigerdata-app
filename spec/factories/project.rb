@@ -14,8 +14,8 @@ FactoryBot.define do
       updated_by { FactoryBot.create(:user).uid }
       project_id { "" }
       status { "pending" }
-      storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } } }
-      storage_performance { { requested: "standard" } }
+      storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } }.with_indifferent_access }
+      storage_performance { { requested: "standard" }.with_indifferent_access }
       project_purpose { "research" }
       project_directory { "big-data" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
@@ -28,9 +28,8 @@ FactoryBot.define do
         }
       end
     end
-    mediaflux_id { nil }
-    metadata do
-      {
+    metadata_model do
+      hash = {
         data_sponsor: data_sponsor,
         data_manager: data_manager,
         data_user_read_only: data_user_read_only,
@@ -53,12 +52,16 @@ FactoryBot.define do
         approved_on: approved_on,
         submission: submission
       }
+      ProjectMetadata.new_from_hash(hash)
     end
+    mediaflux_id { nil }
+
     factory :project_with_doi, class: "Project" do
       sequence :project_id do |n|
         "doi:000000#{n}/00000000000#{n}"
       end
     end
+
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
@@ -69,8 +72,8 @@ FactoryBot.define do
 
     factory :approved_project, class: "Project" do
       transient do
-        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } } }
-        storage_performance { { requested: "standard", approved: "performant" } }
+        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } }.with_indifferent_access }
+        storage_performance { { requested: "standard", approved: "performant" }.with_indifferent_access }
         status { "approved" }
         approved_by { FactoryBot.create(:sysadmin).uid }
         approved_on { Time.current.in_time_zone("America/New_York").iso8601 }

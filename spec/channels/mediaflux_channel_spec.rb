@@ -45,11 +45,11 @@ RSpec.describe MediafluxChannel, type: :channel do
 
   describe "#update_state" do
     context "when the Mediaflux version cannot be retrieved" do
-      let(:version_request) { instance_double(Mediaflux::Http::VersionRequest) }
+      let(:version_request) { instance_double(Mediaflux::VersionRequest) }
       before do
         stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").to_return(status: 200, body: "", headers: {})
         allow(version_request).to receive(:version).and_return(nil)
-        allow(Mediaflux::Http::VersionRequest).to receive(:new).and_return(version_request)
+        allow(Mediaflux::VersionRequest).to receive(:new).and_return(version_request)
       end
 
       it "returns a value of 'false'" do

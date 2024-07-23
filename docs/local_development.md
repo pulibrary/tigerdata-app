@@ -95,7 +95,7 @@ bundle exec rake schema:create
 and re-exectute the Aterm command so that the Desktop shows collections properly:
 
 ```
-actor.grant :type user :name system:manager :role -type role desktop-experimental`
+actor.grant :type user :name system:manager :role -type role desktop-experimental
 ```
 
 and recreate any collections and namespaces that you need.
@@ -151,12 +151,12 @@ rails c
   gen.generate
 ```
 
-You can also utilize `Mediaflux::Http::TestAssetCreateRequest` to generate some assets in an existing collection under a project
+You can also utilize `Mediaflux::TestAssetCreateRequest` to generate some assets in an existing collection under a project
 
 ```
 rails c
   parent_id = 1234 # collection id from mediaflux
-  gen = Mediaflux::Http::TestAssetCreateRequest.new(session_token: User.first.mediaflux_session, parent_id:, count: 5, pattern: "test_asset_" )
+  gen = Mediaflux::TestAssetCreateRequest.new(session_token: User.first.mediaflux_session, parent_id:, count: 5, pattern: "test_asset_" )
   gen.resolve
 ```
 

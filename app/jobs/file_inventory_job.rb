@@ -41,7 +41,7 @@ class FileInventoryJob < ApplicationJob
   private
 
     def mediaflux_session
-      logon_request = Mediaflux::Http::LogonRequest.new
+      logon_request = Mediaflux::LogonRequest.new
       logon_request.session_token
     end
 

@@ -7,17 +7,17 @@
 
   <p>Data Sponsor:
 
-  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata[:data_sponsor] || current_user.uid %>">
-  <span id="non-editable-data-sponsor"><%= @project.metadata[:data_sponsor] || current_user.uid %></span></p>
+  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
+  <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span></p>
 
-  <p>Data Manager: 
-  
-    <% if !@project.persisted? || @project.metadata_json["data_sponsor"] == current_user.uid %> 
-      <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata[:data_manager] %>" /></input>
+  <p>Data Manager:
+
+    <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
+      <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata_model.data_manager %>" /></input>
     <% else %>
-      <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata[:data_manager] %>">
-      <span id="non-editable-data-manager"><%= @project.metadata[:data_manager] %></span>
-    <% end %> 
+      <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
+      <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
+    <% end %>
   </p>
 
   <p>Data User(s): </p>
@@ -25,7 +25,7 @@
     <div class="data-users">
       <p>Read Only:</p>
       <ul id="ro-users-list">
-        <% (@project.metadata[:data_user_read_only] || []).compact.each do |user| %>
+        <% (@project.metadata_model.ro_users || []).compact.each do |user| %>
           <span class="ro-user-item" data-uid="<%= user %>"></span>
         <% end %>
       </ul>
@@ -39,7 +39,7 @@
     <div class="data-users">
       <p>Read/Write:</p>
       <ul id = "rw-users-list">
-        <% (@project.metadata[:data_user_read_write] || []).compact.each do |user|%>
+        <% (@project.metadata_model.rw_users || []).compact.each do |user|%>
           <span class="rw-user-item" data-uid="<%= user %>"></span>
         <%end%>
       </ul>
@@ -79,10 +79,10 @@
       <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" /></p>
     <% end %>
 
-    <p>Title: <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata[:title] %>" /></p>
+    <p>Title: <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" /></p>
     <div>Description:</div>
     <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
-        rows="5" cols="120" placeholder=""><%= @project.metadata[:description] %></textarea>
+        rows="5" cols="120" placeholder=""><%= @project.metadata_model.description %></textarea>
     </div>
 </div>
 

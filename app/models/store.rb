@@ -11,7 +11,7 @@ class Store
 
   def self.all(session_id:)
     @all ||= begin
-      stores_request = Mediaflux::Http::StoreListRequest.new(session_token: session_id)
+      stores_request = Mediaflux::StoreListRequest.new(session_token: session_id)
       data = stores_request.stores
       stores = data.map do |mf_store|
         Store.new(mf_store[:id], mf_store[:type], mf_store[:name], mf_store[:tag])

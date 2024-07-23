@@ -6,14 +6,14 @@
     </server>
     <error>arc.mf.server.Services$ExServiceError</error>
     <sclass>java.lang.Throwable</sclass>
-    <message>call to service 'asset.create' failed: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'
+    <message>call to service 'asset.create' failed: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'
 Context:
-            08-Feb-2024 13:19:05.114 [0.009 sec(s) ago]: service: system:manager [sid=236]: asset.create :name  "big-data" :namespace  "/td-test-001/tigerdataNS/big-dataNS" :meta &lt; :tigerdata:project -xmlns:tigerdata "tigerdata" -id "2" &lt; :code  "******" :title  "******" :description  "******" :status  "******" :data_sponsor  "******" :data_manager  "******" :departments  "******" :departments  "******" :created_on  "******" :created_by  "******" :project_id  "******" :storage_capacity  "******" :storage_performance  "******" :project_purpose  "******" &gt; &gt; :collection -cascade-contained-asset-index "true" -contained-asset-index "true" -unique-name-index "true"  "true" :type  "application/arc-asset-collection" 
+            08-Feb-2024 13:19:05.114 [0.009 sec(s) ago]: service: system:manager [sid=236]: asset.create :name  "big-data" :namespace  "/td-test-001/test/tigerdataNS/big-dataNS" :meta &lt; :tigerdata:project -xmlns:tigerdata "tigerdata" -id "2" &lt; :code  "******" :title  "******" :description  "******" :status  "******" :data_sponsor  "******" :data_manager  "******" :departments  "******" :departments  "******" :created_on  "******" :created_by  "******" :project_id  "******" :storage_capacity  "******" :storage_performance  "******" :project_purpose  "******" &gt; &gt; :collection -cascade-contained-asset-index "true" -contained-asset-index "true" -unique-name-index "true"  "true" :type  "application/arc-asset-collection" 
   called by: 08-Feb-2024 13:19:05.112 [0.012 sec(s) ago]: http: from: /192.168.65.1, request: /__mflux_svc__ vars:  select headers: [User-Agent=Ruby, Connection=keep-alive, Host=0.0.0.0:8888]
   called by: 08-Feb-2024 13:19:05.112 [0.012 sec(s) ago]: network: ctime=08-Feb-2024 13:19:05.112, origin=/192.168.65.1, received=1463 [1.46 KB], sent=0 [0 bytes]</message>
-    <stack>arc.mf.server.Services$ExServiceError: call to service 'asset.create' failed: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'
+    <stack>arc.mf.server.Services$ExServiceError: call to service 'asset.create' failed: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'
 Context:
-            08-Feb-2024 13:19:05.114 [0.009 sec(s) ago]: service: system:manager [sid=236]: asset.create :name  "big-data" :namespace  "/td-test-001/tigerdataNS/big-dataNS" :meta &lt; :tigerdata:project -xmlns:tigerdata "tigerdata" -id "2" &lt; :code  "******" :title  "******" :description  "******" :status  "******" :data_sponsor  "******" :data_manager  "******" :departments  "******" :departments  "******" :created_on  "******" :created_by  "******" :project_id  "******" :storage_capacity  "******" :storage_performance  "******" :project_purpose  "******" &gt; &gt; :collection -cascade-contained-asset-index "true" -contained-asset-index "true" -unique-name-index "true"  "true" :type  "application/arc-asset-collection" 
+            08-Feb-2024 13:19:05.114 [0.009 sec(s) ago]: service: system:manager [sid=236]: asset.create :name  "big-data" :namespace  "/td-test-001/test/tigerdataNS/big-dataNS" :meta &lt; :tigerdata:project -xmlns:tigerdata "tigerdata" -id "2" &lt; :code  "******" :title  "******" :description  "******" :status  "******" :data_sponsor  "******" :data_manager  "******" :departments  "******" :departments  "******" :created_on  "******" :created_by  "******" :project_id  "******" :storage_capacity  "******" :storage_performance  "******" :project_purpose  "******" &gt; &gt; :collection -cascade-contained-asset-index "true" -contained-asset-index "true" -unique-name-index "true"  "true" :type  "application/arc-asset-collection" 
   called by: 08-Feb-2024 13:19:05.112 [0.012 sec(s) ago]: http: from: /192.168.65.1, request: /__mflux_svc__ vars:  select headers: [User-Agent=Ruby, Connection=keep-alive, Host=0.0.0.0:8888]
   called by: 08-Feb-2024 13:19:05.112 [0.012 sec(s) ago]: network: ctime=08-Feb-2024 13:19:05.112, origin=/192.168.65.1, received=1463 [1.46 KB], sent=0 [0 bytes]
 	at arc.mf.server.Services.a(SourceFile:1696)
@@ -44,7 +44,7 @@ Context:
 	at arc.dUk.a(SourceFile:530)
 	at arc.dUk.run(SourceFile:478)
 	at arc.dUj.run(SourceFile:321)
-Caused by: arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'
+Caused by: arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'
 	at arc.aMb.b(SourceFile:2499)
 	at arc.aMb.a(SourceFile:2393)
 	at arc.aPQ.a(SourceFile:1558)
@@ -56,9 +56,9 @@ Caused by: arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/t
 	... 27 more
 
 Cause:
-arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data': 
+arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data': 
 Stack:
-arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'
+arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'
 	at arc.aMb.b(SourceFile:2499)
 	at arc.aMb.a(SourceFile:2393)
 	at arc.aPQ.a(SourceFile:1558)
@@ -100,8 +100,8 @@ arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/tigerdataNS/
       <sclass>arc.mf.server.service.Service$Exception</sclass>
       <sclass>java.lang.Exception</sclass>
       <sclass>java.lang.Throwable</sclass>
-      <message>The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'</message>
-      <stack>arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/tigerdataNS/big-dataNS already contains an asset named 'big-data'
+      <message>The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'</message>
+      <stack>arc.mf.modules.asset.Asset$ExNameExists: The namespace /td-test-001/test/tigerdataNS/big-dataNS already contains an asset named 'big-data'
 	at arc.aMb.b(SourceFile:2499)
 	at arc.aMb.a(SourceFile:2393)
 	at arc.aPQ.a(SourceFile:1558)

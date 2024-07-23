@@ -13,8 +13,7 @@ RSpec.describe ActivateProjectJob, connect_to_mediaflux: true, type: :job do
     it "marks the state as active" do
       expect(project_in_mediaflux.status).to eq(Project::APPROVED_STATUS)
       described_class.perform_now(user: user, project_id: project_in_mediaflux.id)
-      project_in_mediaflux.reload
-      expect(project_in_mediaflux.status).to eq(Project::ACTIVE_STATUS)
+      expect(Project.find(project_in_mediaflux.id).status).to eq(Project::ACTIVE_STATUS)
     end
   end
 end

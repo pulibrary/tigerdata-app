@@ -14,7 +14,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.cc).to eq ["test_to@example.com"]
     expect(mail.from).to eq ["no-reply@princeton.edu"]
     html_body = mail.html_part.body.to_s
-    expect(html_body).to have_content(project.metadata[:title])
+    expect(html_body).to have_content(project.metadata_model.title)
     project.metadata.keys.each do |field|
       next if ["updated_on", "created_on", "created_by", "updated_by", "departments", "submission"].include?(field)
 
@@ -47,9 +47,8 @@ RSpec.describe TigerdataMailer, type: :mailer do
     mail = ActionMailer::Base.deliveries.last
 
     project.reload
-    expect(project.metadata).to include("submission")
-    expect(project.metadata["submission"]).to include("requested_by")
-    expect(project.metadata["submission"]).to include("request_date_time")
+    expect(project.metadata_model.submission).to include("requested_by")
+    expect(project.metadata_model.submission).to include("request_date_time")
 
     expect(mail.subject).to eq "New Project Request Ready for Review"
     expect(mail.to).to eq ["test@example.com"]
