@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AccumulatorCreateCollectionRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
@@ -18,7 +18,7 @@ RSpec.describe Mediaflux::AccumulatorCreateCollectionRequest, connect_to_mediafl
       create_request = described_class.new(session_token: user.mediaflux_session, name: "testasset", collection: @mediaflux_id, type: "collection.asset.count")
       response = create_request.resolve
       expect(response.code).to eq("200")
-      expect(a_request(:post, mediflux_url).with do |req|
+      expect(a_request(:post, mediaflux_url).with do |req|
         req.body.include?("<name>testasset</name>")
       end).to have_been_made
     end
