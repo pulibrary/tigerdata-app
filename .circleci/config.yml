@@ -40,45 +40,6 @@ commands:
 
 jobs:
 
-  build:
-    working_directory: ~/tiger_data
-    machine: # executor type
-      image: default
-      docker_layer_caching: true
-    environment:
-        POSTGRES_USER: tiger_data_user
-        POSTGRES_DB: test_db
-        POSTGRES_HOST_AUTH_METHOD: trust
-    steps:
-      - checkout
-      - install_dependencies
-      - persist_to_workspace:
-          root: &root '~/tiger_data'
-          paths: '*'
-
-  lint:
-    working_directory: ~/tiger_data
-    machine:
-      image: default
-      docker_layer_caching: true
-    environment:
-        POSTGRES_USER: tiger_data_user
-        POSTGRES_DB: test_db
-        POSTGRES_HOST_AUTH_METHOD: trust
-    steps:
-      - checkout
-      - install_dependencies
-      - persist_to_workspace:
-          root: &root '~/tiger_data'
-          paths: '*'
-      - run:
-          name: Run rubocop
-          command: bundle exec rubocop
-          paths: '*'
-      - run:
-          name: Run eslint
-          command: yarn run eslint 'app/javascript/**'
-
   test:
     working_directory: ~/tiger_data
     machine:
@@ -91,6 +52,13 @@ jobs:
     steps:
       - checkout
       - install_dependencies
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop
+          paths: '*'
+      - run:
+          name: Run eslint
+          command: yarn run eslint 'app/javascript/**'
       - persist_to_workspace:
           root: &root '~/tiger_data'
           paths: '*'
@@ -117,10 +85,4 @@ workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - build
-      - lint:
-          requires:
-          - build
-      - test:
-          requires:
-          - build
+      - test
