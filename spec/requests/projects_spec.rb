@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe "/projects", connecnt_to_mediaflux: true, type: :request do
+RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
   describe "POST /projects" do
     let(:data_manager) { FactoryBot.create(:user).uid }
     let(:data_sponsor) { FactoryBot.create(:user).uid }
@@ -35,10 +35,6 @@ RSpec.describe "/projects", connecnt_to_mediaflux: true, type: :request do
       let(:user) { FactoryBot.create(:user, uid: "pul123") }
       let(:title) { "a title" }
       let(:project_directory) { "/test-project" }
-      let(:response_body) do
-        filename = Rails.root.join("spec", "fixtures", "files", "version_response.xml")
-        File.new(filename).read
-      end
 
       before do
         sign_in user
@@ -124,103 +120,6 @@ RSpec.describe "/projects", connecnt_to_mediaflux: true, type: :request do
           get(project_path(new_project))
 
           expect(response.body).to include("Anonymous Foo (read only), Anonymous Qux (read only), Anonymous Zed")
-        end
-      end
-    end
-  end
-
-  describe "POST /projects/:id/approve" do
-    let(:user) { FactoryBot.create(:user, uid: "pul123") }
-    let(:data_manager) { FactoryBot.create(:user, uid: "test3") }
-    let(:data_sponsor) { FactoryBot.create(:user, uid: "test4") }
-
-    let(:project) do
-      FactoryBot.create(:project,
-                        metadata: {
-                          title: "foo",
-                          project_directory: "big-data",
-                          departments: ["RDSS"],
-                          description: "test2",
-                          data_manager: data_manager.uid,
-                          data_sponsor: data_sponsor.uid,
-                          created_by: "pul123",
-                          created_on: "07-Dec-2023 17:22:22"
-                        })
-    end
-    let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-    let(:mediaflux_login_fixture_path) do
-      Rails.root.join("spec", "fixtures", "files", "login_response.xml")
-    end
-    let(:mediaflux_login_body) do
-      File.read(mediaflux_login_fixture_path)
-    end
-    let(:mediaflux_create_fixture_path) do
-      Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
-    end
-    let(:mediaflux_create_body) do
-      File.read(mediaflux_create_fixture_path)
-    end
-    let(:store) { instance_double(Store) }
-
-    before do
-      allow(store).to receive(:name).and_return("test")
-      allow(Store).to receive(:all).and_return([store])
-
-      stub_request(:post, mediaflux_url).to_return(
-        {
-          status: 200,
-          body: mediaflux_login_body
-        },
-        {
-          status: 200,
-          body: mediaflux_create_body
-        }
-      )
-
-      project
-      sign_in(user)
-    end
-
-    context "when the client is authenticated" do
-      let(:create_project_body) do
-        <<-XML
-<?xml version="1.0"?>
-<request xmlns:tigerdata="http://tigerdata.princeton.edu">
-  <service name="asset.create" session="sessiontoken">
-    <args>
-      <name>big-data</name>
-      <namespace>/td-test-001/big-data-ns</namespace>
-      <meta>
-        <tigerdata:project>
-          <ProjectDirectory>big-data</ProjectDirectory>
-          <Title>foo</Title>
-          <Description>test2</Description>
-          <DataSponsor>test4</DataSponsor>
-          <DataManager>test3</DataManager>
-          <Department>RDSS</Department>
-          <CreatedOn>07-Dec-2023 17:22:22</CreatedOn>
-          <CreatedBy>pul123</CreatedBy>
-        </tigerdata:project>
-      </meta>
-      <collection cascade-contained-asset-index="true" contained-asset-index="true" unique-name-index="true">true</collection>
-      <type>application/arc-asset-collection</type>
-    </args>
-  </service>
-</request>
-XML
-      end
-
-      context "when a namespace is specified" do
-        let(:project) do
-          FactoryBot.create(:project,
-                            metadata: {
-                              title: "foo",
-                              project_directory: "big-data",
-                              departments: ["RDSS"],
-                              description: "test2",
-                              data_manager: data_manager.uid,
-                              data_sponsor: data_sponsor.uid
-                            })
         end
       end
     end
