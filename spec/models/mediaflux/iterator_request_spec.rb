@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::IteratorRequest, type: :model do
+RSpec.describe Mediaflux::IteratorRequest, connecnt_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
 
   describe "#result" do

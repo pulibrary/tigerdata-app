@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::ProjectUpdateRequest, type: :model do
+RSpec.describe Mediaflux::ProjectUpdateRequest, connecnt_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
   let(:metadata_model) do
     hash = {

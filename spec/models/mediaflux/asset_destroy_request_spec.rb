@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::AssetDestroyRequest, type: :model do
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-  let(:metdata_response) do
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n  <reply type=\"result\">\n    <result/>\n  </reply>\n</response>\n"
-  end
+RSpec.describe Mediaflux::AssetDestroyRequest, connecnt_to_mediaflux: true, type: :model do
+  let(:mediflux_url) { "let(:user) { FactoryBot.create(:user) }" }
+  # let(:metdata_response) do
+  #   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n  <reply type=\"result\">\n    <result/>\n  </reply>\n</response>\n"
+  # end
 
   describe "#result" do
     before do
