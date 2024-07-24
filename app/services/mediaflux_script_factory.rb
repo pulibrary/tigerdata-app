@@ -12,7 +12,7 @@ class MediafluxScriptFactory
 
   def aterm_script
     prolog = "# Run these steps from Aterm to create a project in Mediaflux with its related components"
-    [prolog, script_asset_create].join("\r\n\r\n")
+    [prolog, script_root_tree_create, script_asset_create, script_accumulators].join("\r\n\r\n")
   end
 
   def project_namespace
@@ -21,6 +21,10 @@ class MediafluxScriptFactory
 
   def project_parent_path
     Pathname.new(@root_info.path)
+  end
+
+  def project_path
+    Pathname.new(project_parent_path).join(@project.project_directory_short)
   end
 
   private
@@ -33,12 +37,11 @@ class MediafluxScriptFactory
       @metadata.departments.map { |department| ":Department \"#{department}\"" }
     end
 
+    # rubocop:disable Metrics/AbcSize
     def script_asset_create
       # Future enhancements:
       # * Include read-only and read-write users
-      # * Include quota as part of the project creation
       <<-ATERM
-
       # Create the namespace for the project
       asset.namespace.create :namespace #{project_namespace}
 
@@ -68,37 +71,54 @@ class MediafluxScriptFactory
             :SchemaVersion "#{@metadata.schema_version}"
           >
         >
+        :quota <
+          :allocation #{@metadata.storage_capacity['size']['requested']} #{@metadata.storage_capacity['unit']['requested']}
+          :description "Project Quota"
+        >
     ATERM
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def script_root_tree_create
+      # We should never attempt to create the root tree in production
+      return "" if Rails.env.production?
+
+      # Commands to create the root namespace and the two required nodes
+      <<-ATERM
+      # Create the root namespace (OPTIONAL)
+      asset.namespace.create :namespace #{@root_info.root_ns}
+
+      # Create the parent namespace (OPTIONAL)
+      asset.namespace.create :namespace #{@root_info.parent_ns}
+
+      # Create the parent collection (OPTIONAL)
+      asset.create
+        :namespace #{@root_info.root_ns}
+        :name #{@root_info.parent_collection}
+        :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+        :type "application/arc-asset-collection"
+      ATERM
     end
 
     def script_accumulators
       <<-ATERM
     # Define accumulator for file count
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_path}
       :cascade true
       :accumulator <
-        :name #{project_directory}-count
+        :name #{@project.project_directory_short}-count
         :type collection.asset.count
       >
 
     # Define accumulator for total file size
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_path}
       :cascade true
       :accumulator <
-      :name #{project_directory}-size
+      :name #{@project.project_directory_short}-size
         :type content.all.size
       >
-    ATERM
-    end
-
-    def script_quotas
-      <<-ATERM
-    # Define storage quota
-    asset.collection.quota.set
-      :id path=#{path_id}
-      :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
     ATERM
     end
 end
