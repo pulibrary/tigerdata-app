@@ -15,8 +15,6 @@ class MediafluxScriptFactory
     [prolog, script_asset_create].join("\r\n\r\n")
   end
 
-  private
-
   def project_namespace
     Pathname.new(@root_info.parent_ns).join(@project.project_directory_short + "NS")
   end
@@ -25,17 +23,21 @@ class MediafluxScriptFactory
     Pathname.new(@root_info.path)
   end
 
-  def created_on
-    Mediaflux::Time.format_date_for_mediaflux(@metadata.created_on)
-  end
+  private
 
-  def department_fields
-    @metadata.departments.map { |department| ":Department \"#{department}\"" }
-  end
+    def created_on
+      Mediaflux::Time.format_date_for_mediaflux(@metadata.created_on)
+    end
 
-  def script_asset_create
-    # TODO: handle read-only and read-write user
-    <<-ATERM
+    def department_fields
+      @metadata.departments.map { |department| ":Department \"#{department}\"" }
+    end
+
+    def script_asset_create
+      # Future enhancements:
+      # * Include read-only and read-write users
+      # * Include quota as part of the project creation
+      <<-ATERM
 
       # Create the namespace for the project
       asset.namespace.create :namespace #{project_namespace}
@@ -67,10 +69,10 @@ class MediafluxScriptFactory
           >
         >
     ATERM
-  end
+    end
 
-  def script_accumulators
-    <<-ATERM
+    def script_accumulators
+      <<-ATERM
     # Define accumulator for file count
     asset.collection.accumulator.add
       :id path=#{path_id}
@@ -89,14 +91,14 @@ class MediafluxScriptFactory
         :type content.all.size
       >
     ATERM
-  end
+    end
 
-  def script_quotas
-    <<-ATERM
+    def script_quotas
+      <<-ATERM
     # Define storage quota
     asset.collection.quota.set
       :id path=#{path_id}
       :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
     ATERM
-  end
+    end
 end
