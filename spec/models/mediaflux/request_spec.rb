@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Request, connect_to_mediaflux: true ,type: :model do
+RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
