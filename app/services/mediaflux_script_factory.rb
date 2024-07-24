@@ -37,6 +37,12 @@ class MediafluxScriptFactory
       @metadata.departments.map { |department| ":Department \"#{department}\"" }
     end
 
+    def data_users
+      users = @metadata.ro_users.map { |user| ":DataUser \"#{user}\"" }
+      users += @metadata.rw_users.map { |user| ":DataUser \"#{user}\" -ReadOnly true" }
+      users
+    end
+
     # rubocop:disable Metrics/AbcSize
     def script_asset_create
       # Future enhancements:
@@ -61,6 +67,7 @@ class MediafluxScriptFactory
             :DataSponsor "#{@metadata.data_sponsor}"
             :DataManager "#{@metadata.data_manager}"
             #{department_fields.join(' ')}
+            #{data_users.join(' ')}
             :CreatedOn "#{created_on}"
             :CreatedBy "#{@metadata.created_by}"
             :ProjectID "#{@metadata.project_id}"

@@ -26,6 +26,13 @@ describe MediafluxScriptFactory do
       expect(output).to include(":Performance \"#{project.metadata_model.storage_performance_expectations[:requested]}\"")
       expect(output).to include(":ProjectPurpose \"#{project.metadata_model.project_purpose}\"")
       expect(output).to include(":SchemaVersion \"#{project.metadata_model.schema_version}\"")
+      # Quota
+      expect(output).to include(":quota")
+      expect(output).to include(":description \"Project Quota\"")
+      # Accumulators
+      expect(output).to include("asset.collection.accumulator.add")
+      expect(output).to include(":name #{project.project_directory_short}-count")
+      expect(output).to include(":name #{project.project_directory_short}-size")
     end
   end
 end
