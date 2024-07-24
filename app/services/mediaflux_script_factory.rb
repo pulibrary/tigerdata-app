@@ -45,8 +45,6 @@ class MediafluxScriptFactory
 
     # rubocop:disable Metrics/AbcSize
     def script_asset_create
-      # Future enhancements:
-      # * Include read-only and read-write users
       <<-ATERM
       # Create the namespace for the project
       asset.namespace.create :namespace #{project_namespace}
