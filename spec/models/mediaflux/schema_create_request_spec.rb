@@ -13,7 +13,6 @@ RSpec.describe Mediaflux::SchemaCreateRequest, connect_to_mediaflux: true, type:
   end
 
   describe "#new" do
-
     it "creates a request with the indicated parameters" do
       schema_create_request = described_class.new(name: "tigerdata", description: "test schema", session_token: user.mediaflux_session)
       schema_create_request.resolve
