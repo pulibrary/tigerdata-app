@@ -1,56 +1,23 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::ProjectUpdateRequest, connecnt_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-  let(:metadata_model) do
-    hash = {
-       data_sponsor: "data_sponsor",
-       data_manager: "data_manager",
-       project_directory: "code",
-       title: "title",
-       departments: ["RDSS", "HPC"],
-       description: "hello world",
-       ro_users: [],
-       rw_users: [],
-       updated_by: "abc123",
-       updated_on: "now",
-       project_id: "abc-123",
-       storage_capacity: { size: { requested: "100" }, unit: { requested: "TB" } }.with_indifferent_access,
-       storage_performance_expectations: { requested: "Standard" },
-       project_purpose: "Research",
-       status: ::Project::PENDING_STATUS,
-       created_on: Time.current.in_time_zone("America/New_York").iso8601,
-       created_by: FactoryBot.create(:user).uid
-     }
-     ProjectMetadata.new_from_hash(hash)
-   end
-
-  let(:update_request) do
-    filename = Rails.root.join("spec", "fixtures", "files", "asset_update_request.xml")
-    File.new(filename).read
-  end
-
-  let(:update_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "asset_update_response.xml")
-    File.new(filename).read
-  end
+RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type: :model do
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:user) { FactoryBot.create(:user) }
+  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "metadata values" do
     before do
-      stub_request(:post, mediaflux_url)
-        .with(body: update_request)
-        .to_return(status: 200, body: update_response, headers: {})
+      approved_project.mediaflux_id = nil
+      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
     end
 
     it "passes the metadata values in the request" do
-      FactoryBot.create :user, uid: "dm1"
-      FactoryBot.create :user, uid: "ds1"
-      project = FactoryBot.create :project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
-                                            created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1"
-      update_request = described_class.new(session_token: "secretsecret/2/31", project: project)
+      update_request = described_class.new(session_token: user.mediaflux_session, project: approved_project)
       update_request.resolve
-      expect(WebMock).to have_requested(:post, mediaflux_url)
+      expect(update_request.error?).to be false
+      expect(update_request.response_body).to include(mediaflux_response)
     end
 
     context "an asset with metadata" do
