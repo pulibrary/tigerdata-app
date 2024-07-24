@@ -3,15 +3,15 @@ export function showCreateScript(url) {
   $('#create-script-btn').on('click', (el) => {
     $.ajax({
       type: 'GET',
-      url: url,
+      url,
       success(data) {
-        const lines = data.script.split("\n");
-        let atermScript = "";
-        for(var i=0; i < lines.length; i++) {
-          let line = lines[i];
-          let prefixSize = line.length - line.trimLeft().length;
-          let spaces = "&nbsp;".repeat(prefixSize)
-          atermScript += spaces + line + "<br/>";
+        const lines = data.script.split('\n');
+        let atermScript = '';
+        for (let i = 0; i < lines.length; i += 1) {
+          const line = lines[i];
+          const prefixSize = line.length - line.trimLeft().length;
+          const spaces = '&nbsp;'.repeat(prefixSize);
+          atermScript += `${spaces + line}<br/>`;
         }
         $('#create-script-text').html(atermScript);
       },
