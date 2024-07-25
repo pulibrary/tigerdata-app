@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::ProjectCreateRequest, type: :model do
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-
+RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type: :model do
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
     File.new(filename).read
@@ -11,7 +9,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, type: :model do
 
   describe "#id" do
 
-    it "sends the metadata to the server", connect_to_mediaflux: true do
+    it "sends the metadata to the server" do
       data_user_ro = FactoryBot.create :user
       data_user_rw = FactoryBot.create :user
       session_id =  data_user_ro.mediaflux_session
