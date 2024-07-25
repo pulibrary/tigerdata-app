@@ -15,6 +15,7 @@ import * as bootstrap from 'bootstrap';
 import { setTargetHtml } from './helper';
 import UserDatalist from './user_datalist';
 import { displayMediafluxVersion } from './mediafluxVersion';
+import { displayMediafluxStatus } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
 // ActionCable Channels
@@ -22,6 +23,7 @@ import '../channels';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
+window.displayMediafluxStatus = displayMediafluxStatus;
 window.showCreateScript = showCreateScript;
 
 function initDataUsers() {

@@ -32,3 +32,13 @@
   </div>
 </div>
 </footer>
+
+
+<% if !current_user.nil? %>
+<script type="module">
+  // Make the AJAX call for version information explicitly on this page
+  // (and for now only on this page) so that we don't make extra calls
+  // to Mediaflux for every page loaded.
+  displayMediafluxStatus('<%= mediaflux_info_index_path(format: "json") %>');
+</script>
+<% end %>

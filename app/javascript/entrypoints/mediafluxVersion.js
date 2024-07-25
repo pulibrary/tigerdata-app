@@ -14,3 +14,48 @@ export function displayMediafluxVersion(url, authenticated) {
     });
   }
 }
+
+// eslint-disable-next-line import/prefer-default-export
+export function displayMediafluxStatus(url, authenticated) {
+  const placeholderInPage = $('.mediaflux-status').length === 1;
+  if (placeholderInPage === false) {
+    return;
+  }
+
+  // Intervals in milliseconds
+  const TIME_SHORT = 2000;
+  const TIME_NORMAL = 10000;
+  const TIME_LONG = 30000;
+
+  var checkCount = 0;
+  var checkStatus = function() {
+    var waitTime;
+    checkCount += 1;
+    if (checkCount < 10) {
+      // page has just been loaded: check often
+      waitTime = TIME_SHORT;
+    } else if(checkCount < 20) {
+      // page has been loaded for a while: check less often
+      waitTime = TIME_NORMAL;
+    } else {
+      // page has been loaded for a long time: check even less often
+      waitTime = TIME_LONG;
+    }
+    $.ajax({
+      type: 'GET',
+      url,
+      success(data) {
+        $('.mediaflux-status').addClass('active');
+        $('.mediaflux-status').removeClass('inactive');
+        setTimeout(checkStatus, waitTime);
+      },
+      error(_jqXHR, _textStatus, errorThrown) {
+        $('.mediaflux-status').removeClass('active');
+        $('.mediaflux-status').addClass('inactive');
+        setTimeout(checkStatus, TIME_SHORT);
+      },
+    });
+  }
+
+  checkStatus();
+}
