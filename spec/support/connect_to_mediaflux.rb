@@ -3,6 +3,14 @@
 def reset_mediaflux_root
   # Clean out the namespace before running tests to avoid collisions
   user = User.new
+  destroy_root_namespace(user)
+
+  # then create it and the project root collection and namespace so it exists for any tests
+  create_test_root_namespace(user)
+  ProjectMediaflux.create_root_tree(session_id: user.mediaflux_session)
+end
+
+def destroy_root_namespace(user)
   destroy_request = Mediaflux::NamespaceDestroyRequest.new(
     session_token: user.mediaflux_session,
     namespace: Rails.configuration.mediaflux[:api_root_to_clean]
@@ -11,10 +19,12 @@ def reset_mediaflux_root
   if destroy_request.error?
     puts "Error destroying the mediaflux root namespace #{destroy_request.response_error}" # allow the message to show in CI output
   end
-
-  # then create it and the project root collection and namespace so it exists for any tests
-  create_test_root_namespace(user)
-  ProjectMediaflux.create_root_tree(session_id: user.mediaflux_session)
+rescue => ex
+  if ex.message.include?("does not exist")
+    # no biggie
+  else
+    raise
+  end
 end
 
 def create_test_root_namespace(user)

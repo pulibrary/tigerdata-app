@@ -64,7 +64,7 @@
   .emulation {
     display: inline-flex;
   }
-  
+
   #emulation_bar {
     margin-left: 5px
   }
@@ -73,7 +73,7 @@
     @include dashboard-component;
     min-width: 40em;
     position: relative;
-  
+
     .btn-dark {
       margin-left: 0.5em;
       margin-bottom: 0.5em;
@@ -222,7 +222,7 @@
   }
 }
 
-#approve{ 
+#approve{
   .details{
     margin-left: 2em;
   }
@@ -279,7 +279,7 @@
   }
   dd{
     margin-bottom: .5rem;
-    
+
 
   }
   p {
@@ -296,7 +296,7 @@
     }
     -webkit-outer-spin-button, -webkit-inner-spin-button {
       display: none;
-      margin: 0; 
+      margin: 0;
     }
     [type=number]{
       -moz-appearance:textfield;
@@ -321,4 +321,12 @@
 .login button {
   background-color: #ffc107;
   border-color: #ffc107;
+}
+
+#create-script-text {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f2f1f1;
+  margin-left: 35px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
