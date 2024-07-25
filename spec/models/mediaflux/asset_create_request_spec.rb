@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::AssetCreateRequest, type: :model do
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:root_ns) { Rails.configuration.mediaflux["api_root_collection_namespace"] }        # /td-test-001
   let(:parent_collection) { Rails.configuration.mediaflux["api_root_collection_name"] }   # tigerdata
+  let(:user) { FactoryBot.create(:user) }
+  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project2) { FactoryBot.create(:approved_project) }
 
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
@@ -13,7 +16,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, type: :model do
   end
 
   describe "#id" do
-    it "creates a collection on the server", connect_to_mediaflux: true do
+    it "creates a collection on the server" do
       Mediaflux::RootCollectionAsset.new(session_token: session_token, root_ns: root_ns, parent_collection: parent_collection).create
       session_id = User.new.mediaflux_session
 
@@ -27,19 +30,15 @@ RSpec.describe Mediaflux::AssetCreateRequest, type: :model do
 
     context "A collection within a collection" do
       before do
-        stub_request(:post, mediflux_url)
-          .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"asset.create\" session=\"secretsecret/2/31\">\n    "\
-                      "<args>\n      <name>testasset</name>\n      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n"\
-                      "      <type>application/arc-asset-collection</type>\n      <pid>5678</pid>\n" \
-                      "    </args>\n  </service>\n</request>\n")
-          .to_return(status: 200, body: create_response, headers: {})
+        approved_project.mediaflux_id = nil
+        @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
       end
 
       it "parses a metadata response" do
-        create_request = described_class.new(session_token: "secretsecret/2/31", name: "testasset", pid: "5678")
-        expect(create_request.id).to eq("1068")
-        expect(a_request(:post, mediflux_url).with do |req|
-                 req.body.include?("<name>testasset</name>") &&
+        create_request = described_class.new(session_token: user.mediaflux_session, name: "testasset", pid: @mediaflux_id)
+        expect(create_request.id).to_not be_blank
+        expect(a_request(:post, mediaflux_url).with do |req|
+                 req.body.include?("<name>tigerdata</name>") &&
                  req.body.include?("<type>application/arc-asset-collection</type>")
                end).to have_been_made
       end
