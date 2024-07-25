@@ -17,7 +17,7 @@ RSpec.describe Mediaflux::IteratorDestroyRequest, connect_to_mediaflux: true, ty
       destroy_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id)
       expect(destroy_request.result).to eq ""
       expect(a_request(:post, mediaflux_url).with do |req|
-        req.body.include?("service name=\"asset.query.iterator.destroy\"" )
+        req.body.include?("service name=\"asset.query.iterator.destroy\"")
       end).to have_been_made
     end
   end
