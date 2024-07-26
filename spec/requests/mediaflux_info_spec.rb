@@ -13,7 +13,7 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/mediaflux_info", type: :request do
+RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
   describe "GET /index" do
     it "renders a successful response" do
       get mediaflux_info_index_path
@@ -22,21 +22,16 @@ RSpec.describe "/mediaflux_info", type: :request do
 
     context "logged in user" do
       let(:user) { FactoryBot.create(:user, uid: "pul123") }
-      let(:response_body) do
-        filename = Rails.root.join("spec", "fixtures", "files", "version_response.xml")
-        File.new(filename).read
-      end
-      let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+      let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
 
       before do
-        stub_request(:post, mediflux_url).to_return(status: 200, body: response_body)
         sign_in user
       end
 
       it "renders a successful response" do
         get mediaflux_info_index_path
         expect(response).to be_successful
-        expect(response_body).to include("4.14.014")
+        expect(response.parsed_body).to include("4.16.032")
       end
     end
   end

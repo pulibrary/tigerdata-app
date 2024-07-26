@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe MediafluxChannel, type: :channel do
+RSpec.describe MediafluxChannel, type: :channel, connect_to_mediaflux: true do
   subject(:channel) { described_class.new(*args) }
 
   let(:connection) { double(ActionCable::Connection) }
@@ -23,10 +23,6 @@ RSpec.describe MediafluxChannel, type: :channel do
   end
 
   describe "#subscribed" do
-    before do
-      stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").to_return(status: 200, body: "", headers: {})
-    end
-
     it "updates the state based upon the Mediaflux version request" do
       channel.subscribed
 
@@ -47,7 +43,6 @@ RSpec.describe MediafluxChannel, type: :channel do
     context "when the Mediaflux version cannot be retrieved" do
       let(:version_request) { instance_double(Mediaflux::VersionRequest) }
       before do
-        stub_request(:post, "http://mediaflux.example.com:8888/__mflux_svc__").to_return(status: 200, body: "", headers: {})
         allow(version_request).to receive(:version).and_return(nil)
         allow(Mediaflux::VersionRequest).to receive(:new).and_return(version_request)
       end

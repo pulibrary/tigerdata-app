@@ -1,27 +1,18 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::LogoutRequest, type: :model do
+RSpec.describe Mediaflux::LogoutRequest, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new(session_token: session_token) }
-
-  let(:session_token) { "test-session-token" }
-  let(:metdata_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "generic_response.xml")
-    File.new(filename).read
-  end
-
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
-
-  before do
-    stub_request(:post, mediflux_url)
-      .with(body: "<?xml version=\"1.0\"?>\n<request>\n  <service name=\"system.logoff\" session=\"test-session-token\"/>\n</request>\n")
-      .to_return(status: 200, body: metdata_response, headers: {})
-  end
+  let(:user) { FactoryBot.create(:user) }
+  let(:session_token) { user.mediaflux_session }
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
 
   describe "#resolve" do
     it "disconnects the session" do
       request.resolve
-      expect(WebMock).to have_requested(:post, mediflux_url)
+      expect(a_request(:post, mediaflux_url).with do |req|
+        req.body.include?("<service name=\"system.logoff\"")
+      end).to have_been_made
     end
   end
 end

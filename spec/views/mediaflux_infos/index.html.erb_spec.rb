@@ -8,6 +8,6 @@ RSpec.describe "mediaflux_info/index", type: :view do
 
   it "renders a mediaflux information" do
     render
-    assert_select "p", "Connected to MediaFlux 1001 at mediaflux.example.com"
+    assert_select "p", "Connected to MediaFlux 1001 at 0.0.0.0"
   end
 end

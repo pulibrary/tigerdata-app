@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<request>
-  <service name="asset.query.iterate" session="test-session-token">
-    <args>
-      <id>1</id>
-      <size>100</size>
-    </args>
-  </service>
-</request>
