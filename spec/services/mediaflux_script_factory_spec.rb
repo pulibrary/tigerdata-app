@@ -2,73 +2,37 @@
 require "rails_helper"
 
 describe MediafluxScriptFactory do
-  subject(:mediaflux_service) { described_class.new(project_id) }
   let(:project) { FactoryBot.create(:approved_project) }
-  let(:project_id) { project.id }
+  subject(:mediaflux_service) { described_class.new(project: project) }
 
-  describe "#department_fields" do
-    let(:output) { mediaflux_service.department_fields }
-
-    it "concatenates the names of all department fields" do
-      expect(output).not_to be nil
-      expect(output).to include(":Department \"PRDS\"")
-      expect(output).to include(":Department \"RDSS\"")
-    end
-  end
-
-  describe "#created_on" do
-    let(:output) { mediaflux_service.created_on }
-
-    it "formats the date into a valid DateTime stamp" do
-      expect(output).not_to be nil
-      parsed = DateTime.parse(output)
-      expect(parsed).to be_a(DateTime)
-    end
-  end
-
-  describe "#requested_by" do
-    let(:output) { mediaflux_service.requested_by }
-
-    it "accesses the user ID of the requesting user" do
-      expect(output).not_to be nil
-      user = User.find_by(uid: output)
-      expect(user).not_to be nil
-      expect(user.uid).to eq(output)
-    end
-  end
-
-  describe "#requested_date" do
-    let(:output) { mediaflux_service.requested_date }
-
-    it "formats the date into a valid DateTime stamp" do
-      expect(output).not_to be nil
-      parsed = DateTime.parse(output)
-      expect(parsed).to be_a(DateTime)
-    end
-  end
-
-  describe "#build_create_script" do
-    let(:output) { mediaflux_service.build_create_script }
+  describe "#aterm_script" do
+    let(:output) { mediaflux_service.aterm_script }
 
     it "generates the Mediaflux API script for creating a project" do
-      expect(output).to be_a(String)
-      expect(output).to include(":pid path=#{project.project_directory_parent_path}")
-      expect(output).to include(":namespace #{project.project_directory_parent_path}")
-      expect(output).to include(":name #{project.project_directory_parent_path}")
+      expect(output).to include(":pid path=#{mediaflux_service.project_parent_path}")
+      expect(output).to include(":namespace #{mediaflux_service.project_namespace}")
+      expect(output).to include(":name #{project.project_directory_short}")
       # Metadata
-      expect(output).to include(":ProjectDirectory \"#{project.project_directory}\"")
-      expect(output).to include(":Title \"#{project.metadata[:title]}\"")
-      expect(output).to include(":Description \"#{project.metadata[:description]}\"")
-      expect(output).to include(":Status \"#{project.metadata[:status]}\"")
-      expect(output).to include(":DataSponsor \"#{project.metadata[:data_sponsor]}\"")
-      expect(output).to include(":DataManager \"#{project.metadata[:data_manager]}\"")
-      expect(output).to include(":CreatedBy \"#{project.metadata[:created_by]}\"")
-      expect(output).to include(":ProjectID \"#{project.metadata[:project_id]}\"")
-      expect(output).to include(":StorageCapacity < :Size \"#{project.metadata[:storage_capacity][:size][:requested]}>\"")
-      expect(output).to include(":Unit #{project.metadata[:storage_capacity][:unit][:requested]}\"")
-      expect(output).to include(":StoragePerformance \"#{project.metadata[:storage_performance_expectations][:requested]}\"")
-      expect(output).to include(":ProjectPurpose \"#{project.metadata[:project_purpose]}\"")
-      expect(output).to include(":SchemaVersion \"#{project.metadata[:schema_version]}\"")
+      expect(output).to include(":ProjectDirectory \"#{project.metadata_model.project_directory}\"")
+      expect(output).to include(":Title \"#{project.metadata_model.title}\"")
+      expect(output).to include(":Description \"#{project.metadata_model.description}\"")
+      expect(output).to include(":Status \"#{project.metadata_model.status}\"")
+      expect(output).to include(":DataSponsor \"#{project.metadata_model.data_sponsor}\"")
+      expect(output).to include(":DataManager \"#{project.metadata_model.data_manager}\"")
+      expect(output).to include(":CreatedBy \"#{project.metadata_model.created_by}\"")
+      expect(output).to include(":ProjectID \"#{project.metadata_model.project_id}\"")
+      expect(output).to include(":StorageCapacity < :Size #{project.metadata_model.storage_capacity[:size][:requested]}")
+      expect(output).to include(":Unit \"#{project.metadata_model.storage_capacity[:unit][:requested]}\"")
+      expect(output).to include(":Performance \"#{project.metadata_model.storage_performance_expectations[:requested]}\"")
+      expect(output).to include(":ProjectPurpose \"#{project.metadata_model.project_purpose}\"")
+      expect(output).to include(":SchemaVersion \"#{project.metadata_model.schema_version}\"")
+      # Quota
+      expect(output).to include(":quota")
+      expect(output).to include(":description \"Project Quota\"")
+      # Accumulators
+      expect(output).to include("asset.collection.accumulator.add")
+      expect(output).to include(":name #{project.project_directory_short}-count")
+      expect(output).to include(":name #{project.project_directory_short}-size")
     end
   end
 end

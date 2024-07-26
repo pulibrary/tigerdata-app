@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
+  get "projects/:id/create-script", to: "projects#create_script", as: :project_create_script
 
   namespace :api do
     namespace :v0 do

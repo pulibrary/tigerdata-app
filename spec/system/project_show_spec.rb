@@ -148,10 +148,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
 
       before do
-        session_id = sponsor_user.mediaflux_session
-
         # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
-        project.save_in_mediaflux(session_id: session_id)
+        project.save_in_mediaflux(user: sponsor_user)
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
       end
 

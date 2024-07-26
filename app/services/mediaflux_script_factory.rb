@@ -1,118 +1,129 @@
 # frozen_string_literal: true
 
 class MediafluxScriptFactory
-  def project
-    @project ||= Project.find(@project_id)
+  def initialize(project:)
+    @project = project
+    @metadata = project.metadata_model
+
+    root_ns = Rails.configuration.mediaflux["api_root_collection_namespace"]
+    parent_collection = Rails.configuration.mediaflux["api_root_collection_name"]
+    @root_info = Mediaflux::RootCollectionAsset.new(session_token: nil, root_ns: root_ns, parent_collection: parent_collection)
   end
-  delegate :project_directory, to: :project
-  def project_parent
-    project.project_directory_parent_path
+
+  def aterm_script
+    prolog = "# Run these steps from Aterm to create a project in Mediaflux with its related components"
+    [prolog, script_root_tree_create, script_asset_create, script_accumulators].join("\r\n\r\n")
   end
-  alias path_id project_parent
-  delegate :metadata, to: :project
 
   def project_namespace
-    @project_namespace ||= "#{project_directory}NS"
+    Pathname.new(@root_info.parent_ns).join(@project.project_directory_short + "NS")
   end
 
-  def departments
-    metadata["departments"]
+  def project_parent_path
+    Pathname.new(@root_info.path)
   end
 
-  def department_fields
-    departments.map { |department| ":Department \"#{department}\"" }
+  def project_path
+    Pathname.new(project_parent_path).join(@project.project_directory_short)
   end
 
-  def created_on_metadata
-    project.metadata_json["created_on"]
-  end
+  private
 
-  def created_on_time
-    Time.zone.parse(created_on_metadata)
-  end
+    def created_on
+      Mediaflux::Time.format_date_for_mediaflux(@metadata.created_on)
+    end
 
-  def created_on_formatted
-    created_on_time.strftime("%e-%b-%Y %H:%M:%S")
-  end
+    def department_fields
+      @metadata.departments.map { |department| ":Department \"#{department}\"" }
+    end
 
-  def created_on
-    created_on_formatted.upcase
-  end
+    def data_users
+      users = @metadata.ro_users.map { |user| ":DataUser \"#{user}\"" }
+      users += @metadata.rw_users.map { |user| ":DataUser \"#{user}\" -ReadOnly true" }
+      users
+    end
 
-  def requested_by
-    project.metadata_model.created_by
-  end
-
-  def request_date_time
-    project.metadata_model.created_on
-  end
-
-  def requested_date
-    Mediaflux::Time.format_date_for_mediaflux(request_date_time)
-  end
-
-  # rubocop:disable Metrics/AbcSize
-  def build_create_script
-    <<-ATERM
-      # Run these steps from Aterm to create a project in Mediaflux with its related components
-
+    # rubocop:disable Metrics/AbcSize
+    def script_asset_create
+      <<-ATERM
       # Create the namespace for the project
       asset.namespace.create :namespace #{project_namespace}
 
       # Create the collection asset for the project
       asset.create
-        :pid path=#{project_parent}
+        :pid path=#{project_parent_path}
         :namespace #{project_namespace}
-        :name #{project_directory}
+        :name #{@project.project_directory_short}
         :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
         :type "application/arc-asset-collection"
         :meta <
           :tigerdata:project <
-            :ProjectDirectory "#{project_directory}"
-            :Title "#{project.metadata_json['title']}"
-            :Description "#{project.metadata_json['description']}"
-            :Status "#{project.metadata_json['status']}"
-            :DataSponsor "#{project.metadata_json['data_sponsor']}"
-            :DataManager "#{project.metadata_json['data_manager']}"
+            :ProjectDirectory "#{@metadata.project_directory}"
+            :Title "#{@metadata.title}"
+            :Description "#{@metadata.description}"
+            :Status "#{@metadata.status}"
+            :DataSponsor "#{@metadata.data_sponsor}"
+            :DataManager "#{@metadata.data_manager}"
             #{department_fields.join(' ')}
+            #{data_users.join(' ')}
             :CreatedOn "#{created_on}"
-            :CreatedBy "#{project.metadata_json['created_by']}"
-            :ProjectID "#{project.metadata_json['project_id']}"
-            :StorageCapacity < :Size "#{project.metadata_json['storage_capacity']['size']['requested']}>" :Unit #{project.metadata_json['storage_capacity']['unit']['requested']}"
-            :StoragePerformance "#{project.metadata_json['storage_performance_expectations']['requested']}"
-            :ProjectPurpose "#{project.metadata_json['project_purpose']}"
-            :Submission < :RequestedBy "#{requested_by}" :RequestDateTime "#{requested_date}" >
-            :SchemaVersion "#{project.metadata['schema_version']}"
+            :CreatedBy "#{@metadata.created_by}"
+            :ProjectID "#{@metadata.project_id}"
+            :StorageCapacity < :Size #{@metadata.storage_capacity['size']['requested']} :Unit "#{@metadata.storage_capacity['unit']['requested']}" >
+            :Performance "#{@metadata.storage_performance_expectations['requested']}"
+            :ProjectPurpose "#{@metadata.project_purpose}"
+            :Submission < :RequestedBy "#{@metadata.created_by}" :RequestDateTime "#{created_on}" >
+            :SchemaVersion "#{@metadata.schema_version}"
           >
         >
+        :quota <
+          :allocation #{@metadata.storage_capacity['size']['requested']} #{@metadata.storage_capacity['unit']['requested']}
+          :description "Project Quota"
+        >
+    ATERM
+    end
+    # rubocop:enable Metrics/AbcSize
 
+    def script_root_tree_create
+      # We should never attempt to create the root tree in production
+      return "" if Rails.env.production?
+
+      # Commands to create the root namespace and the two required nodes
+      <<-ATERM
+      # Create the root namespace (OPTIONAL)
+      asset.namespace.create :namespace #{@root_info.root_ns}
+
+      # Create the parent namespace (OPTIONAL)
+      asset.namespace.create :namespace #{@root_info.parent_ns}
+
+      # Create the parent collection (OPTIONAL)
+      asset.create
+        :namespace #{@root_info.root_ns}
+        :name #{@root_info.parent_collection}
+        :collection -unique-name-index true -contained-asset-index true -cascade-contained-asset-index true true
+        :type "application/arc-asset-collection"
+      ATERM
+    end
+
+    def script_accumulators
+      <<-ATERM
     # Define accumulator for file count
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_path}
       :cascade true
       :accumulator <
-        :name #{project_directory}-count
+        :name #{@project.project_directory_short}-count
         :type collection.asset.count
       >
 
     # Define accumulator for total file size
     asset.collection.accumulator.add
-      :id path=#{path_id}
+      :id path=#{project_path}
       :cascade true
       :accumulator <
-      :name #{project_directory}-size
+      :name #{@project.project_directory_short}-size
         :type content.all.size
       >
-
-    # Define storage quota
-    asset.collection.quota.set
-      :id path=#{path_id}
-      :quota < :allocation 500 GB :on-overflow fail :description "500 GB quota for #{project_directory}>"
     ATERM
-  end
-  # rubocop:enable Metrics/AbcSize
-
-  def initialize(project_id)
-    @project_id = project_id
-  end
+    end
 end

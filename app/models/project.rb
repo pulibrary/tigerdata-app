@@ -163,8 +163,8 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
-  def save_in_mediaflux(session_id:)
-    ProjectMediaflux.save(project: self, session_id: session_id)
+  def save_in_mediaflux(user:)
+    ProjectMediaflux.save(project: self, user: user)
   end
 
   def created_by_user

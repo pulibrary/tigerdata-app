@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   class RootCollectionAsset
-    attr_reader :error
+    attr_reader :error, :root_ns, :parent_collection, :parent_ns, :path
 
     # In the context of this class:
     #
