@@ -15,7 +15,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
   describe "#metadata" do
     before do
       approved_project.mediaflux_id = nil
-      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: @mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]
       @asset_id = asset_response.split("<")[0].to_i

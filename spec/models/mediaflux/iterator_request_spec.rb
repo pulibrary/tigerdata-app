@@ -9,7 +9,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
   describe "#result" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]
@@ -37,7 +37,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
   describe "action get-names" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]
@@ -62,7 +62,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
   describe "#action get-meta" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]

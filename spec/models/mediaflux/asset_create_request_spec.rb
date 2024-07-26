@@ -31,7 +31,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
     context "A collection within a collection" do
       before do
         approved_project.mediaflux_id = nil
-        @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+        @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
       end
 
       it "parses a metadata response" do

@@ -488,7 +488,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
       before do
         sign_in sponsor_user
         # Save the project in mediaflux
-        approved_project.save_in_mediaflux(session_id: sponsor_user.mediaflux_session)
+        approved_project.save_in_mediaflux(user: sponsor_user)
         # Create file(s) for the project in mediaflux using test asset create request
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve

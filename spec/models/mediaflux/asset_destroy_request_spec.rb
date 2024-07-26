@@ -10,7 +10,7 @@ RSpec.describe Mediaflux::AssetDestroyRequest, connect_to_mediaflux: true, type:
     before do
       # create a real collection for the test to attempt to destroy
       approved_project.mediaflux_id = nil
-      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
     end
 
     it "parses the result" do

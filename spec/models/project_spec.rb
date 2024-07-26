@@ -102,7 +102,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     before do
       # Save the project in mediaflux
-      project.save_in_mediaflux(session_id: manager.mediaflux_session)
+      project.save_in_mediaflux(user: manager)
 
       # Create files for the project in mediaflux using test asset create request
       Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve

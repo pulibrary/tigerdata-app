@@ -10,7 +10,7 @@ RSpec.describe Mediaflux::RangeQueryRequest, connect_to_mediaflux: true, type: :
   before do
     # create a real collection for the test to create an accumulator for
     approved_project.mediaflux_id = nil
-    @mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+    @mediaflux_id = ProjectMediaflux.create!(project: approved_project,  user:)
     Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: @mediaflux_id, count: 70, pattern: "#{FFaker::Book.title}.txt").resolve
   end
 
