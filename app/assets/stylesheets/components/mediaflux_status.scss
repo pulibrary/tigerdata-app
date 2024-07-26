@@ -8,12 +8,19 @@
   &-status {
     display: inline-block;
 
+    // green circle
     &.active::before {
       content: "\1f7e2";
     }
 
+    // red circle
     &.inactive::before {
       content: "\1f534";
+    }
+
+    // brown circle
+    &.unknown::before {
+      content: "\1F7E4";
     }
   }
 }

@@ -6,12 +6,12 @@
   </a>
       <div class="mediaflux">
         Mediaflux Status
-        <div class="mediaflux-status inactive"></div>
+        <div class="mediaflux-status unknown"></div>
       </div>
     <div class="body">
     <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>
-        User: <%= current_user.uid%> 
+        User: <%= current_user.uid%>
       <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
     <% else %>
       <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>

@@ -50,6 +50,7 @@ export function displayMediafluxStatus(url) {
         console.log(`OK - count: ${checkCount} - ${date.toISOString()}`);
         $('.mediaflux-status').addClass('active');
         $('.mediaflux-status').removeClass('inactive');
+        $('.mediaflux-status').removeClass('unknown');
         setTimeout(checkStatus, waitTime);
       },
       error() {
@@ -58,6 +59,7 @@ export function displayMediafluxStatus(url) {
         console.log(`NOT OK - count: ${checkCount} - ${date.toISOString()}`);
         $('.mediaflux-status').removeClass('active');
         $('.mediaflux-status').addClass('inactive');
+        $('.mediaflux-status').removeClass('unknown');
         setTimeout(checkStatus, TIME_SHORT);
       },
     });

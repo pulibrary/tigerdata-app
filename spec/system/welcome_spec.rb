@@ -17,10 +17,10 @@ RSpec.describe "WelcomeController", stub_mediaflux: true, js: true do
       expect(page).to have_content "You need to sign in or sign up before continuing."
     end
 
-    it "defaults the Mediaflux status to inactive when not logged in" do
+    it "defaults the Mediaflux status to unknown when not logged in" do
       visit "/"
       expect(page).to have_content "Mediaflux Status"
-      expect(page).to have_css ".mediaflux-status.inactive"
+      expect(page).to have_css ".mediaflux-status.unknown"
     end
   end
 
