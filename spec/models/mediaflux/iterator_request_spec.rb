@@ -23,7 +23,6 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     it "returns asset information" do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
       result = query_request.result
-      byebug
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
       expect(result[:files][0].path).to eq "/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}"
       expect(result[:files][0].size).to eq 100
@@ -77,7 +76,6 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     it "returns asset information" do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
       result = query_request.result
-      byebug
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
       expect(result[:files][0].path).to eq "/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}"
       expect(result[:files].count).to eq 2
