@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<request>
-  <service name="asset.query.iterator.destroy" session="test-session-token">
-    <args>
-      <id>1</id>
-    </args>
-  </service>
-</request>
-

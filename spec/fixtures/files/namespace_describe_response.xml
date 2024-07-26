@@ -1,7 +1,0 @@
-<response>
-    <reply type="result">
-        <result>
-            <namespace id="1116" leaf="true"><path>/td-demo-001/pppl</path><name>pppl</name><ctime tz="Etc/UTC" gmt-offset="0.0" dst="false" millisec="1681224170099">11-Apr-2023 14:42:50</ctime><creator id="15"><domain>system</domain><user>manager</user></creator><description>Princeton Physics Plasma Lab</description><store inherited="false">db</store><acount>0</acount><inherit-acls>only-if-no-acls</inherit-acls><access><administer>true</administer><administer-children>true</administer-children><rename>true</rename><create>true</create><modify>true</modify><access>true</access><destroy>true</destroy><create-assets>true</create-assets><access-assets>true</access-assets><modify-assets>true</modify-assets><destroy-assets>true</destroy-assets><publish-assets>true</publish-assets><access-asset-content>true</access-asset-content><modify-asset-content>true</modify-asset-content></access></namespace>
-        </result>
-    </reply>
-</response>
