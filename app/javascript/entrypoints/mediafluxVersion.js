@@ -45,11 +45,17 @@ export function displayMediafluxStatus(url) {
       type: 'GET',
       url,
       success() {
+        const date = new Date();
+        // eslint-disable-next-line no-console
+        console.log(`OK - count: ${checkCount} - ${date.toISOString()}`);
         $('.mediaflux-status').addClass('active');
         $('.mediaflux-status').removeClass('inactive');
         setTimeout(checkStatus, waitTime);
       },
       error() {
+        const date = new Date();
+        // eslint-disable-next-line no-console
+        console.log(`NOT OK - count: ${checkCount} - ${date.toISOString()}`);
         $('.mediaflux-status').removeClass('active');
         $('.mediaflux-status').addClass('inactive');
         setTimeout(checkStatus, TIME_SHORT);
