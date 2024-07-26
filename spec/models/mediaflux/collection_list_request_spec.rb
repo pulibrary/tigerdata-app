@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::CollectionListRequest, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new(session_token: user.mediaflux_session) }
-  let(:user ) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "#resolve" do
     it "retrieves the listing of collections within the default namespace" do
