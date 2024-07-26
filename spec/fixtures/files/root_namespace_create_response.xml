@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<response><reply type="result"><result><store id="1"><type>database</type><name>db</name></store><store id="2"><type>file-system</type><name>data</name></store><store id="3"><type>s3</type><name>ibm-cos-1</name></store></result></reply></response>
