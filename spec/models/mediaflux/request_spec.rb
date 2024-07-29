@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::Request, type: :model do
+RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new }
-  let(:mediflux_url) { "http://mediaflux.example.com:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "#resolve" do
     it "raises an error" do
@@ -19,10 +20,6 @@ RSpec.describe Mediaflux::Request, type: :model do
             "custom.service"
           end
         end
-
-        stub_request(:post, mediflux_url).to_return(
-          status: 200
-        )
       end
 
       after do
@@ -38,7 +35,8 @@ RSpec.describe Mediaflux::Request, type: :model do
           end
 
           it "transmits the POST request as a file upload request" do
-            expect(a_request(:post, mediflux_url).with { |req| req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
+            expect(a_request(:post, mediaflux_url).with { |req| req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
+            expect(custom_request.response_body).to include(mediaflux_response)
           end
         end
       end
