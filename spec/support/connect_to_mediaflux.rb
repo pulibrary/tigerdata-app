@@ -63,7 +63,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.after(:suite)  do |_ex|
+  config.after(:suite) do |_ex|
     original_api_host = Rails.configuration.mediaflux["api_host"]
     Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
     reset_mediaflux_root
