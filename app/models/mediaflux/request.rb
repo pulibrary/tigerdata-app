@@ -176,9 +176,7 @@ module Mediaflux
       def set_authentication_headers(request)
         return if @session_user.nil?
 
-        request["TIGERDATA_NETID"] = @session_user.uid
-        request["TIGERDATA_DOMAIN"] = "princeton.edu"
-        request["TIGERDATA_TIMEOUT"] = "tbd"
+        request["mediaflux.sso.user"] = @session_user.uid
       end
     end
 end

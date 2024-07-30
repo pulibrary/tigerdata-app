@@ -41,32 +41,36 @@ end
 # Allow real connections to the Mediaflux server when a test is configured with
 # connect_to_mediaflux: true
 RSpec.configure do |config|
-  config.before(:each) do |ex|
-    if ex.metadata[:connect_to_mediaflux]
-      @original_api_host = Rails.configuration.mediaflux["api_host"]
-      Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-      # Ensure the latest mediaflux schema has been loaded before running the tests
-      require "rake"
-      Rails.application.load_tasks
-      Rake::Task["schema:create"].invoke
-      reset_mediaflux_root
-    end
-  rescue StandardError => namespace_error
-    message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
-    puts message # allow the message to show in CI output
-    Rails.logger.error(message)
-  end
+  # config.before(:each) do |ex|
+  #   puts "example eval"
+  #   if ex.metadata[:connect_to_mediaflux]
+  #     puts "  connecting to MF"
+  #     @original_api_host = Rails.configuration.mediaflux["api_host"]
+  #     Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+  #     # Ensure the latest mediaflux schema has been loaded before running the tests
+  #     require "rake"
+  #     Rails.application.load_tasks
+  #     Rake::Task["schema:create"].invoke
+  #     reset_mediaflux_root
+  #   else
+  #     puts "  NOT connecting to MF"
+  #   end
+  # rescue StandardError => namespace_error
+  #   message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
+  #   puts message # allow the message to show in CI output
+  #   Rails.logger.error(message)
+  # end
 
-  config.after(:each) do |ex|
-    if ex.metadata[:connect_to_mediaflux]
-      Rails.configuration.mediaflux["api_host"] = @original_api_host
-    end
-  end
+  # config.after(:each) do |ex|
+  #   if ex.metadata[:connect_to_mediaflux]
+  #     Rails.configuration.mediaflux["api_host"] = @original_api_host
+  #   end
+  # end
 
-  config.after(:suite)  do |_ex|
-    original_api_host = Rails.configuration.mediaflux["api_host"]
-    Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-    reset_mediaflux_root
-    Rails.configuration.mediaflux["api_host"] = original_api_host
-  end
+  # config.after(:suite)  do |_ex|
+  #   original_api_host = Rails.configuration.mediaflux["api_host"]
+  #   Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+  #   reset_mediaflux_root
+  #   Rails.configuration.mediaflux["api_host"] = original_api_host
+  # end
 end
