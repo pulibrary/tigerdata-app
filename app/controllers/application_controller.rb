@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
     new_user_session_path
   end
 
+  def after_sign_in_path_for(_resource)
+    mediaflux_passthru_path
+    # "/users/#{@user.id}"
+  end
+
   def require_admin_user
     head :forbidden unless current_user&.eligible_sysadmin?
   end
