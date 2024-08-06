@@ -90,6 +90,24 @@ class ProjectsController < ApplicationController
 
     @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?
 
+    @project_metadata = @project.metadata
+    @project_id = @project_metadata[:project_id]
+    @storage_capacity = @project_metadata[:storage_capacity]
+    @size = @storage_capacity[:size]
+    @unit = @storage_capacity[:unit]
+
+    @requested_size = @size[:requested]
+    @requested_unit = @unit[:requested]
+
+    @approved_size = @size[:approved]
+    @approved_unit = @unit[:approved]
+
+    @storage_expectations = @project_metadata[:storage_performance_expectations]
+    @requested_storage_expectations = @storage_expectations[:requested]
+    @approved_storage_expectations = @storage_expectations[:approved]
+
+    @project_purpose = @project_metadata[:project_purpose]
+
     respond_to do |format|
       format.html
       format.json do
@@ -195,7 +213,6 @@ class ProjectsController < ApplicationController
       @data_sponsor = User.find_by(uid: sponsor_uid)
       @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
 
-      @project_metadata = project.metadata
       @title = @project_metadata["title"]
     else redirect_to root_path
     end
