@@ -14,11 +14,7 @@ module Mediaflux
       end
 
       def self.uri
-        if Connection.host == "0.0.0.0"
-          URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}/#{request_path}")
-        else
-          URI("#{Connection.transport}://#{Connection.host}/#{request_path}")
-        end
+        URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}/#{request_path}")
       end
 
       # Constructs a new HTTP POST request for usage with the Mediaflux API
@@ -60,7 +56,6 @@ module Mediaflux
       # Resolves the HTTP request against the Mediaflux API
       # @return [Net::HTTP]
       def resolve
-        puts(Rails.configuration.mediaflux["api_host"])
         @http_response = @http_client.request self.class.uri, http_request
       end
 
