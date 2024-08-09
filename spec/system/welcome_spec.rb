@@ -119,6 +119,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       end
 
       it "allows for navigation back to user dashboard when clicking logo" do
+        #todo: this test is failing
         sign_in current_user
         visit "/projects"
         expect(page).to have_content "project 111"
