@@ -60,7 +60,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Log Out"
       end
 
-      it "shows the Mediflux version on the home page for a logged in user", connect_to_mediaflux: true do
+      it "shows the Mediflux version on the home page for a logged in user" do
         sign_in current_user
         visit "/"
         sleep(1)
