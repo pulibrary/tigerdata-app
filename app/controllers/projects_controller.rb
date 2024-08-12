@@ -91,7 +91,7 @@ class ProjectsController < ApplicationController
     @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?
 
     @project_metadata = @project.metadata
-    @project_id = @project_metadata[:project_id]
+    @project_id = @project_metadata[:project_id] || {}
     @storage_capacity = @project_metadata[:storage_capacity]
     @size = @storage_capacity[:size]
     @unit = @storage_capacity[:unit]
