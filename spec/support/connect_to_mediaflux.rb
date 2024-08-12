@@ -63,7 +63,6 @@ RSpec.configure do |config|
     if ex.metadata[:connect_to_mediaflux]
       # Rails.configuration.mediaflux["api_host"] = @original_api_host
 
-
       # "Disconnecting from Mediaflux after test"
     end
   end
@@ -73,7 +72,6 @@ RSpec.configure do |config|
     # Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
     # reset_mediaflux_root
     # Rails.configuration.mediaflux["api_host"] = original_api_host
-
 
     # "Resetting Mediaflux root namespace after test suite"
   end
