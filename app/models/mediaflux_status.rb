@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 class MediafluxStatus < HealthMonitor::Providers::Base
   def check!
+    # Notice that we check Mediaflux status using our TigerData account
+    # (rather than the "logged in" user since there is not always a logged
+    # in user for the health check)
     domain = Rails.configuration.mediaflux["api_domain"]
     user = Rails.configuration.mediaflux["api_user"]
     password = Rails.configuration.mediaflux["api_password"]
