@@ -43,13 +43,15 @@ end
 RSpec.configure do |config|
   config.before(:each) do |ex|
     if ex.metadata[:connect_to_mediaflux]
-      @original_api_host = Rails.configuration.mediaflux["api_host"]
-      Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-      # Ensure the latest mediaflux schema has been loaded before running the tests
-      require "rake"
-      Rails.application.load_tasks
-      Rake::Task["schema:create"].invoke
-      reset_mediaflux_root
+      # @original_api_host = Rails.configuration.mediaflux["api_host"]
+      # # Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+      # # Ensure the latest mediaflux schema has been loaded before running the tests
+      # require "rake"
+      # Rails.application.load_tasks
+      # Rake::Task["schema:create"].invoke
+      # reset_mediaflux_root
+
+      # "Connecting to Mediaflux before test"
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
@@ -59,14 +61,20 @@ RSpec.configure do |config|
 
   config.after(:each) do |ex|
     if ex.metadata[:connect_to_mediaflux]
-      Rails.configuration.mediaflux["api_host"] = @original_api_host
+      # Rails.configuration.mediaflux["api_host"] = @original_api_host
+
+
+      # "Disconnecting from Mediaflux after test"
     end
   end
 
   config.after(:suite) do |_ex|
-    original_api_host = Rails.configuration.mediaflux["api_host"]
-    Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
-    reset_mediaflux_root
-    Rails.configuration.mediaflux["api_host"] = original_api_host
+    # original_api_host = Rails.configuration.mediaflux["api_host"]
+    # Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+    # reset_mediaflux_root
+    # Rails.configuration.mediaflux["api_host"] = original_api_host
+
+
+    # "Resetting Mediaflux root namespace after test suite"
   end
 end
