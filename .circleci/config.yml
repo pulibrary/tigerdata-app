@@ -65,7 +65,7 @@ jobs:
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
-      - run_mediaflux
+      # - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
