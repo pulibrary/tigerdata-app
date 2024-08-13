@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
 

@@ -8,7 +8,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:session_token) { "test-session-token" }
   let(:identity_token) { "test-identity-token" }
-  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
 
   before do
     # create a real collection as an example of a service execution
@@ -19,7 +19,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
   describe "#resolve" do
     it "sends the service execute" do
       request.resolve
-      assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
+      assert_requested(:post, mediaflux_url,
                        body: /service name="service.execute".*<service name="asset.namespace.list"\/>.*/m)
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
 
       it "sends the service execute" do
         request.resolve
-        assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
+        assert_requested(:post, mediaflux_url,
                          body: /service name="service.execute".*<service name="asset.namespace.list">.*<id>1<\/id>.*<\/service>.*/m)
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
 
       it "sends the service execute" do
         request.resolve
-        assert_requested(:post, "http://0.0.0.0:8888/__mflux_svc__",
+        assert_requested(:post, mediaflux_url,
                          body: /service name="service.execute".*<token>tokentoken<\/token>.*<service name="asset.namespace.list"\/>.*/m)
       end
     end

@@ -64,7 +64,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit "/"
         sleep(1)
-        expect(page).to have_content "Mediaflux: 4.16.032"
+        expect(page).to have_content "Mediaflux: 4.16.047"
       end
 
       it "shows the projects based on the user's role" do
