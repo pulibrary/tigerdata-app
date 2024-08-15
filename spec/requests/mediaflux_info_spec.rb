@@ -22,7 +22,7 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
 
     context "logged in user" do
       let(:user) { FactoryBot.create(:user, uid: "pul123") }
-      let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+      let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
 
       before do
         sign_in user

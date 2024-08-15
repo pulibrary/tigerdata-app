@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }

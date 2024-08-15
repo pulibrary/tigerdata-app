@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::TokenCreateRequest, connect_to_mediaflux: true, type: 
   subject(:request) { described_class.new(session_token: session_token, domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user) }
   let(:user) { FactoryBot.create(:user) }
   let(:session_token) { user.mediaflux_session }
-  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
 
   describe "#identity" do
     it "creates an identity token for the user" do

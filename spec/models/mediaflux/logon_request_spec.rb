@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
   subject(:request) { described_class.new }
   let(:user) { FactoryBot.create(:user) }
   let(:session_token) { user.mediaflux_session }
-  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
 
   describe "#session_token" do
     it "authenticates and stores the session token" do
