@@ -28,11 +28,6 @@ commands:
           paths:
             - ~/.cache/yarn
 
-  # run_mediaflux:
-  #   steps:
-  #     - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-  #     - run: docker run -d --privileged --name mediaflux --publish 172.20.80.48  --mac-address 00:50:56:b4:5e:94 eosadler/mediaflux_dev:4
-
   run_postgres:
     steps:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
@@ -70,7 +65,7 @@ jobs:
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
-      # - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='mflux-ci1.lib.princeton.edu'
+      - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='mflux-ci.lib.princeton.edu'
       - run:
           name: Run Rspec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml

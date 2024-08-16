@@ -14,6 +14,7 @@ module Mediaflux
       end
 
       def self.uri
+        # This is the necessary URI for the Ansible build(s) of Mediaflux
           URI("#{Connection.transport}://#{Connection.host}/#{request_path}")
       end
 
