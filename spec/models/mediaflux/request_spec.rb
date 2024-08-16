@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new }
-  let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "#resolve" do

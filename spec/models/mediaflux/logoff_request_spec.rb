@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::LogoutRequest, connect_to_mediaflux: true, type: :mode
   subject(:request) { described_class.new(session_token: session_token) }
   let(:user) { FactoryBot.create(:user) }
   let(:session_token) { user.mediaflux_session }
-  let(:mediaflux_url) { "http://mflux-ci1.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
 
   describe "#resolve" do
     it "disconnects the session" do
