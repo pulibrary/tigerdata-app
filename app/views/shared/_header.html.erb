@@ -1,17 +1,11 @@
 <header>
 <div id="header">
   <nav>
-  <a href="/">
-  <%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %>
-  </a>
-      <div class="mediaflux">
-        Mediaflux Status
-        <div class="mediaflux-status inactive"></div>
-      </div>
+    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
     <div class="body">
     <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>
-        User: <%= current_user.uid%> 
+      User: <%= current_user.uid%>
       <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
     <% else %>
       <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>

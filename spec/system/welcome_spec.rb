@@ -16,27 +16,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       visit project_path(project)
       expect(page).to have_content "You need to sign in or sign up before continuing."
     end
-
-    it "binds the Mediaflux status component to the DOM" do
-      visit "/"
-      expect(page).to have_content "Mediaflux Status"
-      expect(page).to have_css ".mediaflux-status.inactive"
-    end
-
-    context "when the Mediaflux API returns a valid server response with a superuser account" do
-      let(:superuser) { FactoryBot.create(:superuser) }
-
-      before do
-        superuser
-        visit "/"
-      end
-
-      it "defaults to the inactive state for the Mediaflux status component" do
-        expect(page).to have_content "Mediaflux Status"
-        sleep(1)
-        expect(page).to have_css ".mediaflux-status.active"
-      end
-    end
   end
 
   context "authenticated user" do
@@ -60,7 +39,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Log Out"
       end
 
-      it "shows the Mediflux version on the home page for a logged in user" do
+      it "shows the Mediflux version on the home page for a logged in user", connect_to_mediaflux: true do
         sign_in current_user
         visit "/"
         sleep(1)
