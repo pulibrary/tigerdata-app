@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux: true do
+RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux: false do
   let(:user) { FactoryBot.create(:user) }
   let(:namespace_root) { Rails.configuration.mediaflux["api_root_collection_namespace"] }
 
