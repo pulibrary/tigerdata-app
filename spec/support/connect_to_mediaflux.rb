@@ -48,6 +48,13 @@ RSpec.configure do |config|
 
       require "rake"
       Rails.application.load_tasks
+
+      # change the api host for all tests to '0.0.0.0' if MFLUX_LOCAL is set
+      if ENV["MFLUX_LOCAL"]
+        @original_api_host = Rails.configuration.mediaflux["api_host"]
+        Rails.configuration.mediaflux["api_host"] = '0.0.0.0'
+      end
+
       Rake::Task["schema:create"].invoke
       reset_mediaflux_root
     end
@@ -55,6 +62,14 @@ RSpec.configure do |config|
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
     puts message # allow the message to show in CI output
     Rails.logger.error(message)
+  end
+
+  config.after(:each) do |ex|
+    if ex.metadata[:connect_to_mediaflux]
+      if ENV["MFLUX_LOCAL"]
+        Rails.configuration.mediaflux["api_host"] = @original_api_host
+      end
+    end
   end
 
   config.after(:suite) do |_ex|

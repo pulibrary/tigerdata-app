@@ -10,7 +10,7 @@ RSpec.describe MediafluxStatus, type: :model do
   end
 
   context "when we cannot connecto Mediaflux" do
-    let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+    let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
     let(:error_node) { "<response><reply><error>something went wrong</error></reply></response>" }
     before do
       stub_request(:post, mediaflux_url)
