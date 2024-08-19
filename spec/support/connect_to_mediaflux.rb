@@ -52,7 +52,7 @@ RSpec.configure do |config|
       # change the api host for all tests to '0.0.0.0' if MFLUX_LOCAL is set
       if ENV["MFLUX_LOCAL"]
         @original_api_host = Rails.configuration.mediaflux["api_host"]
-        Rails.configuration.mediaflux["api_host"] = '0.0.0.0'
+        Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
       end
 
       Rake::Task["schema:create"].invoke
