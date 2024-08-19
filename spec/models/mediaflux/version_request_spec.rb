@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::VersionRequest, connect_to_mediaflux: true, type: :mod
       request.resolve
 
       expect(request.version[:vendor]).to eq("Arcitecta Pty. Ltd.")
-      expect(request.version[:version]).to eq("4.16.032")
+      expect(request.version[:version]).to eq("4.16.047")
     end
   end
 end

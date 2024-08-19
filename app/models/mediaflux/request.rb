@@ -14,7 +14,8 @@ module Mediaflux
       end
 
       def self.uri
-        URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}/#{request_path}")
+        # This is the necessary URI for the Ansible build(s) of Mediaflux
+          URI("#{Connection.transport}://#{Connection.host}/#{request_path}")
       end
 
       # Constructs a new HTTP POST request for usage with the Mediaflux API

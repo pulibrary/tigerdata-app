@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
@@ -16,7 +16,7 @@ RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :m
     it "parses a metadata response" do
       stores_request = described_class.new(session_token: user.mediaflux_session)
       stores = stores_request.stores
-      expect(stores.count).to eq(5)
+      expect(stores.count).to eq(2)
       expect(stores.first).to eq({ id: "1", name: "db", tag: "", type: "database" })
     end
   end

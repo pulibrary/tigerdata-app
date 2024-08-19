@@ -9,7 +9,7 @@ RSpec.describe MediafluxInfoController do
 
   it "gets the mediaflux information", connect_to_mediaflux: true do
     expect { get :index, format: "json" }.not_to raise_error(Mediaflux::SessionExpired)
-    expect(response.body).to eq("{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.032\"}")
+    expect(response.body).to eq("{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.047\"}")
   end
 
   it "does not retry infinately", connect_to_mediaflux: true do
