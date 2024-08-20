@@ -45,13 +45,13 @@ RSpec.configure do |config|
     if ex.metadata[:connect_to_mediaflux]
       # Ensure the latest mediaflux schema has been loaded before running the tests
       # Since we are testing against the Ansbile-provisioned Mediaflux server, we do not need to change the host api here
+      @original_api_host = Rails.configuration.mediaflux["api_host"]
 
       require "rake"
       Rails.application.load_tasks
 
       # change the api host for all tests to '0.0.0.0' if MFLUX_LOCAL is set
       if ENV["MFLUX_LOCAL"]
-        @original_api_host = Rails.configuration.mediaflux["api_host"]
         Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
       end
 
@@ -66,14 +66,18 @@ RSpec.configure do |config|
 
   config.after(:each) do |ex|
     if ex.metadata[:connect_to_mediaflux]
-      if ENV["MFLUX_LOCAL"]
-        Rails.configuration.mediaflux["api_host"] = @original_api_host
-      end
+      Rails.configuration.mediaflux["api_host"] = @original_api_host
     end
   end
 
   config.after(:suite) do |_ex|
     # Clean up the root namespace after all tests have run
+    original_api_host = Rails.configuration.mediaflux["api_host"]
+    if ENV["MFLUX_LOCAL"]
+      Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+    end
+
     reset_mediaflux_root
+    Rails.configuration.mediaflux["api_host"] = original_api_host
   end
 end

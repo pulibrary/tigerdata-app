@@ -16,7 +16,6 @@ module Mediaflux
       def self.uri
         # Setting the URI to the Ansible build or Docker build of mediaflux depending on the environment
         if ENV["MFLUX_LOCAL"]
-          byebug
           URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}#{request_path}")
         else
           URI("#{Connection.transport}://#{Connection.host}#{request_path}")

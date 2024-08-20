@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe MediafluxStatus, type: :model do
+RSpec.describe MediafluxStatus, connect_to_mediaflux: true, type: :model do
   context "when Mediaflux is up and running" do
     it "reports status OK" do
       status = described_class.new
