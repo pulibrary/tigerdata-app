@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true do
+RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }

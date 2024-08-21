@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe Mediaflux::Time do
     let(:project) { FactoryBot.build :project_with_doi }
     let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
+    let(:docker_response) { "Etc/UTC" }
+    let(:ansible_response) { "America/Chicago" }
     subject(:instance) { described_class.new }
 
     describe "#convert", connect_to_mediaflux: true do
@@ -20,7 +22,7 @@ RSpec.describe Mediaflux::Time do
         xml_snip = metadata[:ctime]
         initial_tz = xml_snip.xpath("./@tz").text
         #change back to America/New_York after changing the mflux-ci server to eastern time
-        expect(initial_tz).to eq "America/Chicago"
+        expect(initial_tz).to eq(docker_response).or eq(ansible_response)
 
         final_tz = instance.convert(xml_snip:)
         expect(final_tz).to include("-04:00") or include("-05:00") #America/New_York changes based on daylights savings time

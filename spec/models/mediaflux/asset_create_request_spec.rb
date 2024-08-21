@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+  let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:root_ns) { Rails.configuration.mediaflux["api_root_collection_namespace"] }        # /td-test-001
   let(:parent_collection) { Rails.configuration.mediaflux["api_root_collection_name"] }   # tigerdata

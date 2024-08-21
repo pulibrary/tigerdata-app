@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe MediafluxStatus, type: :model do
+RSpec.describe MediafluxStatus, connect_to_mediaflux: true, type: :model do
   context "when Mediaflux is up and running" do
     it "reports status OK" do
       status = described_class.new
@@ -10,7 +10,7 @@ RSpec.describe MediafluxStatus, type: :model do
   end
 
   context "when we cannot connecto Mediaflux" do
-    let(:mediaflux_url) { "http://mflux-ci.lib.princeton.edu/__mflux_svc__" }
+    let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
     let(:error_node) { "<response><reply><error>something went wrong</error></reply></response>" }
     before do
       stub_request(:post, mediaflux_url)

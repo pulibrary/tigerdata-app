@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe MediafluxInfoController do
+RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user }
+  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.032\"}" }
+  let(:ansible_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.047\"}" }
   before do
     sign_in user
   end
 
-  it "gets the mediaflux information", connect_to_mediaflux: true do
+  it "gets the mediaflux information" do
     expect { get :index, format: "json" }.not_to raise_error(Mediaflux::SessionExpired)
-    expect(response.body).to eq("{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.047\"}")
+    expect(response.body).to eq(docker_response).or eq(ansible_response)
   end
 
-  it "does not retry infinately", connect_to_mediaflux: true do
+  it "does not retry infinately" do
     original_pass = Rails.configuration.mediaflux["api_password"]
     original_session = user.mediaflux_session
 
