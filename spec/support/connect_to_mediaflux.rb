@@ -46,6 +46,7 @@ RSpec.configure do |config|
       # Ensure the latest mediaflux schema has been loaded before running the tests
       # Since we are testing against the Ansbile-provisioned Mediaflux server, we do not need to change the host api here
       @original_api_host = Rails.configuration.mediaflux["api_host"]
+      @original_api_port = Rails.configuration.mediaflux["api_port"]
 
       require "rake"
       Rails.application.load_tasks
@@ -53,6 +54,7 @@ RSpec.configure do |config|
       # change the api host for all tests to '0.0.0.0' if MFLUX_LOCAL is set
       if ENV["MFLUX_LOCAL"]
         Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+        Rails.configuration.mediaflux["api_port"] = "8888"
       end
 
       Rake::Task["schema:create"].invoke
@@ -67,6 +69,7 @@ RSpec.configure do |config|
   config.after(:each) do |ex|
     if ex.metadata[:connect_to_mediaflux]
       Rails.configuration.mediaflux["api_host"] = @original_api_host
+      Rails.configuration.mediaflux["api_port"] = @original_api_port
     end
   end
 
@@ -75,9 +78,11 @@ RSpec.configure do |config|
     original_api_host = Rails.configuration.mediaflux["api_host"]
     if ENV["MFLUX_LOCAL"]
       Rails.configuration.mediaflux["api_host"] = "0.0.0.0"
+      Rails.configuration.mediaflux["api_port"] = "8888"
     end
 
     reset_mediaflux_root
     Rails.configuration.mediaflux["api_host"] = original_api_host
+    Rails.configuration.mediaflux["api_port"] = @original_api_port
   end
 end
