@@ -136,6 +136,7 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
+- Run connected to CI mediaflux instance: `MFLUX_CI=true bundle exec rspec spec`
 
 ### Starting the development server
 

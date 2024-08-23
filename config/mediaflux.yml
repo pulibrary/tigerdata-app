@@ -97,8 +97,8 @@ test:
   api_root_collection_namespace: '/td-test-001/test'
   api_root_collection: 'path=/td-test-001/test/tigerdata'
   api_transport: 'http'
-  api_host: <%= ENV["MFLUX_LOCAL"] ? "0.0.0.0" : 'mflux-ci.lib.princeton.edu' %>
-  api_port: <%= ENV["MFLUX_LOCAL"] ? "8888" : '80' %>
+  api_host: <%= ENV["MFLUX_CI"] ? "mflux-ci.lib.princeton.edu" : "0.0.0.0" %>
+  api_port: <%= ENV["MFLUX_CI"] ?  "80" : "8888"  %>
 
   # Alternate to test is still a test location
   api_alternate_root_ns:  '/td-test-002/tigerdataNS'
