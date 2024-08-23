@@ -22,10 +22,11 @@ production:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 qa:
-  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001/tigerdataNS' %>
+  api_root_to_clean: '/td-qa-001/qa'
+  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001/qa/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
-  api_root_collection_namespace: '/td-qa-001'
-  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_NS"] || 'path=/td-qa-001/tigerdata' %>
+  api_root_collection_namespace: '/td-qa-001/qa'
+  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_NS"] || 'path=/td-qa-001/qa/tigerdata' %>
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
@@ -66,10 +67,11 @@ staging:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 development:
-  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-demo-001/tigerdataNS' %>
+  api_root_to_clean: '/td-demo-001/dev/'
+  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-demo-001/dev/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
-  api_root_collection_namespace: '/td-demo-001'
-  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_NS"] || 'path=/td-demo-001/tigerdata' %>
+  api_root_collection_namespace: '/td-demo-001/dev'
+  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_NS"] || 'path=/td-demo-001/dev/tigerdata' %>
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'http' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] || '0.0.0.0' %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
