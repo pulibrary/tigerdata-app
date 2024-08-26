@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require "rake"
+Rails.application.load_tasks
 
 def reset_mediaflux_root
   # Clean out the namespace before running tests to avoid collisions
@@ -42,17 +44,18 @@ end
 RSpec.configure do |config|
   config.before(:each) do |ex|
     if ex.metadata[:connect_to_mediaflux]
-      require "rake"
-      Rails.application.load_tasks
-
-      # Ensure the latest mediaflux schema has been loaded before running the tests
-      Rake::Task["schema:create"].invoke
       reset_mediaflux_root
     end
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
     puts message # allow the message to show in CI output
     Rails.logger.error(message)
+  end
+
+  config.before(:suite) do |_ex|
+    # Ensure the latest mediaflux schema has been loaded before running the tests
+    Rake::Task["schema:create"].reenable
+    Rake::Task["schema:create"].invoke
   end
 
   config.after(:suite) do |_ex|
