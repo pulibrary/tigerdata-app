@@ -3,7 +3,7 @@
 #
 # To run this script, issue the following command from Aterm
 #
-# script.execute :in file://full/path/to/tiger-data-app/docs/schema_script.txt
+# script.execute :in file://full/path/to/tigerdata-app/docs/schema_script.txt
 #
 # Notice that if you copy and paste the (multi-line) asset.doc.type.update command
 # into Aterm you'll have to make it single line (i.e. remove the \)

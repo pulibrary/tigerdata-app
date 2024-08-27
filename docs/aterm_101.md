@@ -15,7 +15,7 @@ $ java -jar aterm.jar
 
 You'll need to enter your credentials for the server that you want to connect to.
 
-See the [local documents](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md) for starting your local server or connect to the development server.
+See the [local documents](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md) for starting your local server or connect to the development server.
 
 The credentials for the development server (td-meta1.princeton.edu) are your princeton credentials, utilizing the `princeton` Domain. Choose `HTTPS` as you transport. Note that you must be on the VPN to connect to the development server.
 

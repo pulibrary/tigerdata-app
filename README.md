@@ -1,17 +1,17 @@
-![TigerData logo](https://raw.githubusercontent.com/pulibrary/tiger-data-app/main/app/assets/images/logo-300-200.png)
+![TigerData logo](https://raw.githubusercontent.com/pulibrary/tigerdata-app/main/app/assets/images/logo-300-200.png)
 
-# tiger-data-app
+# tigerdata-app
 
 TigerData is a comprehensive set of data storage and management tools and services that provides storage capacity, reliability, functionality, and performance to meet the needs of a rapidly changing research landscape and to enable new opportunities for leveraging the power of institutional data.
 
 This application provides a front end for users to create and manage projects that live in the TigerData infrastructure.
 
-[![CircleCI](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main.svg?style=svg)](https://circleci.com/gh/pulibrary/tiger-data-app/tree/main)
-[![Coverage Status](https://coveralls.io/repos/github/pulibrary/tiger-data-app/badge.svg?branch=main)](https://coveralls.io/github/pulibrary/tiger-data-app?branch=main)
+[![CircleCI](https://circleci.com/gh/pulibrary/tigerdata-app/tree/main.svg?style=svg)](https://circleci.com/gh/pulibrary/tigerdata-app/tree/main)
+[![Coverage Status](https://coveralls.io/repos/github/pulibrary/tigerdata-app/badge.svg?branch=main)](https://coveralls.io/github/pulibrary/tigerdata-app?branch=main)
 
 ## Documentation
 
-- Auto-built code documentation is avalable at [https://pulibrary.github.io/tiger-data-app/}](https://pulibrary.github.io/tiger-data-app/)
+- Auto-built code documentation is available at [https://pulibrary.github.io/tigerdata-app/}](https://pulibrary.github.io/tigerdata-app/)
 - Design documents and meeting notes are in [Google Drive](https://drive.google.com/drive/u/1/folders/0AJ7rJ2akICY2Uk9PVA)
 - RDSS internal notes are in a [separate directory](https://drive.google.com/drive/u/1/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
 - A set of requirements derived from early sketches is [here](https://docs.google.com/document/d/1U06FBX0qR9iMNiWes5YhP0schcPiLTmFwjHurduSb3A/edit).
@@ -22,7 +22,7 @@ This application provides a front end for users to create and manage projects th
 The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework. 
 
 ### Roles
-The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tiger-data-app/blob/main/docs/roles.md) of the system roles
+The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tigerdata-app/blob/main/docs/roles.md) of the system roles
 
 ## Local development
 
@@ -84,7 +84,7 @@ If your name is not on the registration list see steps below under "User Registr
 
 #### MediaFlux Server
 
-Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tiger-data-app/blob/main/docs/local_development.md)
+Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
 
 1. Once mediaflux is running locally
   1. `bundle exec rake schema:create`

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 set :application, "tigerdata"
-set :repo_url, "https://github.com/pulibrary/tiger-data-app.git"
+set :repo_url, "https://github.com/pulibrary/tigerdata-app.git"
 
 set :deploy_to, "/opt/tigerdata"
 
