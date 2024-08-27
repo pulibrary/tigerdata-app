@@ -54,7 +54,7 @@ class TigerdataSchema
       script.write("# This file was automatically generated on #{Time.current.in_time_zone("America/New_York").iso8601}\n")
       script.write("# Create the \"tigerdata\" namespace schema and the \"project\" definition inside of it.\n#\n")
       script.write("# To run this script, issue the following command from Aterm\n#\n")
-      script.write("# script.execute :in file://full/path/to/tiger-data-app/docs/schema_script.txt\n#\n")
+      script.write("# script.execute :in file://full/path/to/tigerdata-app/docs/schema_script.txt\n#\n")
       script.write("# Notice that if you copy and paste the (multi-line) asset.doc.type.update command\n")
       script.write("# into Aterm you'll have to make it single line (i.e. remove the \\)\n")
 
