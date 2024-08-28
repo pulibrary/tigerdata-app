@@ -28,6 +28,11 @@ commands:
           paths:
             - ~/.cache/yarn
 
+  run_mediaflux:
+    steps:
+      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
+      - run: docker run -d --privileged --name mediaflux --publish 8888:80  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:latest
+
   run_postgres:
     steps:
       - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
@@ -60,7 +65,7 @@ jobs:
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
-      # - run_mediaflux
+      - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
