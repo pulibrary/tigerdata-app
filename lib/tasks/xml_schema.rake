@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+# :nocov:
+require "nokogiri"
+namespace :xml_schema do
+  desc "Validates the example XML provided by Matt against the TigerData XSD"
+  task validate_example: :environment do
+
+    # Files download as per https://github.com/pulibrary/tigerdata-app/issues/896
+    schema_file = "./lib/assets/TigerData_StandardMetadataSchema_v0.7_2024-08-27.xsd"
+    document_file="./lib/assets/TigerData_MetadataExample-Project_2024-08-27.xml"
+
+    # Read the TigerData schema and replace the reference to `xml.xsd` with a
+    # reference to our local copy of the file, otherwise the validation tends
+    # to fail because it cannot load the original `xml.xsd`` file from the W3C
+    # source. ¯\_(ツ)_/¯
+    # For more information see: https://stackoverflow.com/a/18527198/446681
+    local_xml_xsd_file_path = Pathname.new("./lib/assets/xml.xsd").realpath.to_s
+    xsd_content = File.read(schema_file)
+    xsd_content.sub!("{{xml.xsd}}", "file://#{local_xml_xsd_file_path}")
+
+    # Validate the sample XML file against the schema
+    # https://www.tutorialspoint.com/xsd/xsd_syntax.htm
+    # https://nokogiri.org/rdoc/Nokogiri/XML/Schema.html
+    xsd = Nokogiri::XML::Schema(xsd_content)
+    doc = Nokogiri::XML(File.read(document_file))
+    errors = xsd.validate(doc)
+    if errors.count == 0
+      puts "OK"
+    else
+      errors.each do |error|
+        puts error.message
+      end
+    end
+  end
+end
+# :nocov:
