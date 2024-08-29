@@ -31,7 +31,7 @@ commands:
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin 
-      - run: docker run -d --privileged --name mediaflux --publish 8888:80  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:latest
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:8888  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:4
 
   run_postgres:
     steps:
@@ -70,7 +70,7 @@ jobs:
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
-      - run: bundle exec rake schema:create RAILS_ENV=test
+      - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='0.0.0.0' TEST_MEDIAFLUX_PORT=8888
       - run:
           name: Run Rspec
           command: COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
