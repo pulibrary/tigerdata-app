@@ -1,8 +1,17 @@
+<!--
+Root node is a `resource` with class `Project`.
+The elements inside of this node are all part of xs:group `projectFields`
+-->
 <resource resourceClass="Project" resourceID="10.34770/az09-0001" resourceIDType="DOI">
     <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0001</projectID>
     <alternativeIDs discoverable="true" trackingLevel="ResourceRecord">
         <alternativeID alternativeIDType="Local accession number" inherited="false">abc123</alternativeID>
     </alternativeIDs>
+    <!--
+    I think `parentProject` this is a new concept.
+    Need to ask Matt.
+    Is this to handle labs with many projects vs normal/small projects?
+    -->
     <parentProject projectIDType="DOI" inherited="true" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0000</parentProject>
     <dataSponsor userID="abcd12" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord">
         <netID>abcd12</netID>
@@ -31,9 +40,17 @@
         <researchDomain inherited="true">Engineering</researchDomain>
     </researchDomains>
     <departments discoverable="true" trackingLevel="ResourceRecord">
+        <!--
+        Where are the departments inherited from? The parent project?
+        Or does this mean inherited from a project into the files of the project?
+        -->
         <department departmentCode="23500" departmentAbbreviation="CHM" inherited="true">Chemistry</department>
         <department departmentCode="25300" departmentAbbreviation="CBE" inherited="true">Chemical and Biological Engineering</department>
     </departments>
+    <!--
+    The protocol attribute in the `projectDirectoryPath` is new right?
+    Can there be more than one?
+    -->
     <projectDirectory inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
         <projectDirectoryPath protocol="NFS">/tigerdata/abc/123</projectDirectoryPath>
         <projectDirectoryPath protocol="SMB">\\tigerdata\abc\123</projectDirectoryPath>
@@ -63,10 +80,14 @@
         <approved>Standard</approved>
     </storagePerformance>
     <numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">Less than 10,000</numberOfFiles>
+    <!-- hpc can be yes, no, or not sure -->
     <hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">No</hpc>
     <projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
     <provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">false</provisionalProject>
     <grantFunded inherited="true" discoverable="false" trackingLevel="InternalUseOnly">true</grantFunded>
+    <!--
+    Notice that funding information mimics DataCite
+    -->
     <fundingReferences discoverable="true" trackingLevel="ResourceRecord">
         <fundingReference inherited="true">
             <funderName>Example Funder</funderName>
