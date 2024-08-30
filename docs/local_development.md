@@ -22,49 +22,26 @@ You can use `docker images` to find out the exact name of the image to delete.
 
 ## Load the new Docker image
 
-1. Download the latest MediaFlux Docker image from `td-meta.princeton.edu`. This is an internal server and you need to be on the VPN to access it, notice that you'll need to use your `netid` in the following command and *enter your password* when prompted:
+1. Log in to docker # See [Ansible Vault](https://github.com/pulibrary/princeton_ansible/blob/main/group_vars/mflux/vault.yml) for docker hub username and password
 
 ```
-scp your-net-id@td-meta1.princeton.edu:/home/common/princeton_dev_image_v4.tar.bz2 .
+export DOCKERHUB_PASSWORD="password_here"
+echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
 ```
 
-1. Unzip the downloaded file, this process takes a few minutes:
+2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
 
 ```
-bunzip2 princeton_dev_image_v4.tar.bz2
+docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 eosadler/mediaflux_dev:latest
 ```
 
-1. Load the tar file as a Docker image:
-
-```
-docker load -i princeton_dev_image_v4.tar
-```
-
-You can view the loaded image via `docker images`:
-
-```
-docker images
-
-  # REPOSITORY           TAG                    IMAGE ID       CREATED         SIZE
-  # princeton_dev_image  4                      4b651c21ca10   3 days ago      1.4GB
-  # ...other images...
-```
-
-1. Now that we have the loaded the image we can _create a container_ with it (notice we name it `mediaflux`)
-
-```
-docker create --name mediaflux --publish 0.0.0.0:8888:8888 princeton_dev_image:4
-```
-
-You may need to add ` --mac-address 02:42:ac:11:00:02` before mediaflux_dev if mediaflux does not start
-
-1. From now on when you need _start this container_ you can use:
+3. From now on when you need _start this container_ you can use:
 
 ```
 docker start mediaflux
 ```
 
-6. Once the container is running you can access it at the default endpoints:
+4. Once the container is running you can access it at the default endpoints:
 
   * The Desktop client - http://0.0.0.0:8888/desktop/
   * The Aterm client in the browser - http://0.0.0.0:8888/aterm/
@@ -72,7 +49,7 @@ docker start mediaflux
   * The thick client for aterm (see instructions below)
 
 
-8. You can stop the container in the Docker dashboard or via
+5. You can stop the container in the Docker dashboard or via
 
 ```
 docker stop mediaflux
