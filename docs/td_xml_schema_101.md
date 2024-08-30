@@ -2,7 +2,7 @@
 
 An opinionated summary of some of the most important parts of the TigerData XML schema referenced in [GitHub issue #186](https://github.com/pulibrary/tigerdata-app/issues/896): https://drive.google.com/file/d/1qrdPXwAt57uqPmHxh0Y86zac4RvtoJ2e/view
 
-This is a human created summary. The source of truth is the XML schema referenced above.
+This is a human created summary and it includes copied and pasted sections from the actual schema (e.g. the description text for the elements were taken and tweaked from the actual schema.) When in doubt, the source of truth is the XML schema referenced above.
 
 The schema defines both `primitives` (types, attributes, elements, groups) and the `payload` (i.e. the root element).
 
