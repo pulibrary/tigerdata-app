@@ -31,7 +31,7 @@ commands:
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 rockylinux:9
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 eosadler/mediaflux_dev:cac
 
   run_postgres:
     steps:
