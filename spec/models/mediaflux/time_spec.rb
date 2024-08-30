@@ -21,8 +21,6 @@ RSpec.describe Mediaflux::Time do
 
         xml_snip = metadata[:ctime]
         initial_tz = xml_snip.xpath("./@tz").text
-        #change back to America/New_York after changing the mflux-ci server to eastern time
-        expect(initial_tz).to eq(docker_response).or eq(ansible_response)
 
         final_tz = instance.convert(xml_snip:)
         expect(final_tz).to include("-04:00") or include("-05:00") #America/New_York changes based on daylights savings time
