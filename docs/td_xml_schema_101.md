@@ -90,7 +90,9 @@ Simple and complex types that are either necessary building blocks for further t
 
   Does not apply to Items.
 
-  Includes `researchDomains`, `departments`, `projectDirectory`, `title`, `description`, and `languages`
+  Includes `researchDomains`, `departments`, `projectDirectory`, `title`, `description`, and `languages`.
+
+  **Note:** `projectDescription` and `description` will be source of confusion, could we rename one of them?
 
 * `storageAndAccess`: A group of all elements included in TigerData project storage and access needs.
 
