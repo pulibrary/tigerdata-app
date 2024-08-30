@@ -32,7 +32,7 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
 2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
 
 ```
-docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 eosadler/mediaflux_dev:"docker_tag"
+docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 eosadler/mediaflux_dev:dev
 ```
 
 3. From now on when you need _start this container_ you can use:
