@@ -22,17 +22,18 @@ You can use `docker images` to find out the exact name of the image to delete.
 
 ## Load the new Docker image
 
-1. Log in to docker # See [Ansible Vault](https://github.com/pulibrary/princeton_ansible/blob/main/group_vars/mflux/vault.yml) for docker hub username and password
+1. Log in to docker # See [Ansible Vault](https://github.com/pulibrary/princeton_ansible/blob/main/group_vars/mflux/vault.yml) for docker hub username and password, or check lastpass under "RDSS Docker"
 
 ```
-export DOCKERHUB_PASSWORD="password_here"
+export DOCKERHUB_USERNAME="username here"
+export DOCKERHUB_PASSWORD="password here"
 echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
 ```
 
 2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
 
 ```
-docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 eosadler/mediaflux_dev:dev
+docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:latest
 ```
 
 3. From now on when you need _start this container_ you can use:
