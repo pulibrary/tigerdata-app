@@ -12,6 +12,7 @@ namespace :servers do
     system("lando start")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
+    system("rake load_users:from_registration_list")
   end
 
   desc "Stop development dependencies"
