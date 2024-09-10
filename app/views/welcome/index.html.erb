@@ -39,27 +39,7 @@
           <%end%>
         </div>
       </div>
-      <div id="dashboard-activity">
-          <h2>Recent Activity</h2>
-          <% if !@my_inventory_requests.empty? %>
-          <ul>
-            <% @my_inventory_requests.each do |req| %>
-              <li>
-                <%= "File Inventory For: #{req.request_details["project_title"]}"  %>
-                <% if req.complete? %>
-                  (<%= link_to("download", project_file_list_download_path(job_id: req.job_id, target: "_blank")) %>)
-                <% end %>
-                <ul>
-                  <li><%= "Requested: #{req.created_at.in_time_zone("America/New_York").iso8601}"%></li>
-                  <% if req.completion_time.present? %>
-                    <li><%= "Completed: #{req.completion_time.in_time_zone("America/New_York").iso8601}" %></li>
-                  <% end %>
-                </ul>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
+      <%= render partial: "recent_activity" %>
       <% end %>
     </div>
     <div style="display: inline-flex">
@@ -93,6 +73,9 @@
               <p> (none) </p>
             <% end %>
         </div>
+         <% unless current_user.superuser? %>
+          <%= render partial: "recent_activity" %>
+        <% end %>
       <%end%>
     </div>
     <% end %>
