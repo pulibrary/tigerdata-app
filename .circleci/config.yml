@@ -8,7 +8,7 @@ commands:
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
-          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
+          key: &gem_key tigerdata-cimg-{{ checksum "Gemfile.lock.bak" }}
       - run: bundle config set path './vendor/bundle'
       - run: bundle config set --local without production
       - run: bundle install --jobs=4 --retry=3
@@ -18,7 +18,7 @@ commands:
             - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
+          key: &yarn_key tigerdata-yarn-cimg-{{ checksum "yarn.lock" }}
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --frozen-lockfile
@@ -42,9 +42,9 @@ commands:
 jobs:
 
   test:
-    working_directory: ~/tiger_data
+    working_directory: ~/tigerdata
     machine:
-      image: ubuntu-2404:2024.05.1
+      image: ubuntu-2004:2024.04.4
       docker_layer_caching: true
     environment:
         POSTGRES_USER: tiger_data_user
@@ -57,12 +57,11 @@ jobs:
       - run:
           name: Run rubocop
           command: bundle exec rubocop
-          paths: '*'
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
       - persist_to_workspace:
-          root: &root '~/tiger_data'
+          root: &root '~/tigerdata'
           paths: '*'
       - run:
           name: Run vitest
@@ -70,7 +69,7 @@ jobs:
       - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
-      - run: sleep 10
+      - run: sleep 5
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='0.0.0.0' TEST_MEDIAFLUX_PORT=8888
       - run:
@@ -81,7 +80,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - store_artifacts:
-          path: /home/circleci/tiger_data/tmp/capybara
+          path: /home/circleci/tigerdata/tmp/capybara
 
 workflows:
   version: 2
