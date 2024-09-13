@@ -25,6 +25,12 @@
       Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
     -->
 
+    <% if Rails.env.development? || Rails.env.staging? %>
+      <%= render 'shared/plausible_dev_staging' %>
+    <% elsif Rails.env.production? %> 
+      <%= render 'shared/plausible' %>
+    <% end %>
+
   </head>
 
   <body>
