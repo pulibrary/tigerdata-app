@@ -26,9 +26,9 @@
     -->
 
     <% if Rails.env.development? || Rails.env.staging? %>
-      <%= render 'shared/plausible_dev_staging' %>
+      <%= render 'shared/_plausible_dev_staging' %>
     <% elsif Rails.env.production? %> 
-      <%= render 'shared/plausible' %>
+      <%= render 'shared/_plausible' %>
     <% end %>
 
   </head>
