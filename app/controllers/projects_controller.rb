@@ -92,9 +92,12 @@ class ProjectsController < ApplicationController
 
     @project_metadata = @project.metadata
     @project_id = @project_metadata[:project_id] || {}
-    @storage_capacity = @project_metadata[:storage_capacity]
-    @size = @storage_capacity && @storage_capacity.dig(:size) # TODO: What should happen if @storage_capacity is nil? 
-    @unit = @storage_capacity && @storage_capacity.dig(:unit) # TODO: What should happen if @storage_capacity is nil?
+
+    # @storage_capacity should never be nil because if it is we set it to the default in the ProjectMetadata#set_defaults method.
+    # However, the staging server has old projects from before this was true, and we need to be able to render those pages.
+    @storage_capacity = @project_metadata[:storage_capacity] || { size: 0, unit: "" } 
+    @size = @storage_capacity[:size] 
+    @unit = @storage_capacity[:unit] 
 
     @requested_size = @size[:requested]
     @requested_unit = @unit[:requested]

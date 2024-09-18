@@ -217,5 +217,33 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
     end
+
+    context "storage capacity is missing" do
+      let(:metadata_model) do
+        hash = {
+          data_sponsor: sponsor_user.uid,
+          data_manager: data_manager.uid,
+          project_directory: "project-123",
+          title: "project 123",
+          departments: ["RDSS"],
+          description: "hello world",
+          data_user_read_only: [read_only.uid],
+          data_user_read_write: [read_write.uid],
+          status: ::Project::PENDING_STATUS,
+          storage_capacity: nil,
+          storage_performance_expectations: { "requested" => "standard" },
+          created_on: Time.current.in_time_zone("America/New_York").iso8601,
+          created_by: FactoryBot.create(:user).uid,
+          project_id: ""
+        }
+        ProjectMetadata.new_from_hash(hash)
+      end
+
+      it "still renders the page, and sets storage capacity to the default value" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}"
+        expect(page.find("dd#storage_capacity").text).to eq "500 GB"
+      end
+    end
   end
 end
