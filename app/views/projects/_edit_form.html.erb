@@ -7,8 +7,12 @@
 
   <p>Data Sponsor:
 
-  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
-  <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span></p>
+  <% if current_user.superuser? %>
+    <input type="text" list="sponsor-users" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required value="<%= @project.metadata_model.data_sponsor %>" /></input>
+  <% else %>
+    <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
+    <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span></p>
+  <% end %>
 
   <p>Data Manager:
 
