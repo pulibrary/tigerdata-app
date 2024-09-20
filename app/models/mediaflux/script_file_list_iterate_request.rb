@@ -27,7 +27,7 @@ module Mediaflux
       nested_response = response_xml.xpath("/response/reply/result").text
       nested_xml = Nokogiri::XML.parse(nested_response)
       nested_xml.xpath("/result/name").map do |file|
-        {id: file["id"], name: file.text}
+        { id: file["id"], name: file.text }
       end
     end
 
