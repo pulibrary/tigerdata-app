@@ -133,6 +133,25 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       expect(page.find("#non-editable-data-sponsor").text).to eq data_sponsor.uid
     end
   end
+
+  context "Super Users can input a data sponsor" do
+    let(:superuser) { FactoryBot.create(:superuser) }
+    let(:sponsor_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
+    let(:project) { FactoryBot.create(:project) }
+    it "only allows the super user to set the Data Sponsor" do
+      sponsor_user # make sure the user is available to the form
+      project.metadata_model.status = Project::APPROVED_STATUS
+      project.save!
+      sign_in superuser
+      visit "/projects/#{project.id}/edit"
+      fill_in "data_sponsor", with: sponsor_user.uid
+      page.find("body").click
+      click_on "Submit"
+      visit "/projects/#{project.id}"
+      expect(page.find(:css, "#data_sponsor").text).to eq sponsor_user.display_name
+    end
+  end
+
   context "Data Sponsors are the only people who can assign Data Managers" do
     let(:project) { FactoryBot.create(:project) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
