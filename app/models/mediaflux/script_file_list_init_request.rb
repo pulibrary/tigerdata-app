@@ -26,14 +26,11 @@ module Mediaflux
     private
 
       # NOTE: This code is hard-coded to a very specific TCL script that must have been
-      # installed in Mediaflux ahead of time.
+      # installed in Mediaflux ahead of time (via ScriptUploadRequest).
       #
       # We could make the script name configurable but the complication is that
       # different scripts will have different parameters and return entirely different
       # kind of results.
-      #
-      # TODO: document the steps to install the script.
-      # (for now see ./app/lib/fileList.tcl)
       def build_http_request_body(name:)
         super do |xml|
           # asset.script.execute :id path="/system/scripts/fileList.tcl" :arg -name path "/path/to/collection"
