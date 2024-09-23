@@ -7,8 +7,13 @@
 
   <p>Data Sponsor:
 
-  <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
-  <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span></p>
+  <% if current_user.superuser? %>
+    <input type="text" list="sponsor-users" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required value="<%= @project.metadata_model.data_sponsor %>" /></input>
+  <% else %>
+    <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
+    <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span></p>
+  <% end %>
+
 
   <p>Data Manager:
 
@@ -54,6 +59,12 @@
 <div>
     <h2>Project Description</h2>
     <div class="description-container">
+    <% if current_user.superuser? %>
+      <div>Project ID:<br/>
+        <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
+      </div>
+    <% end %>
+  
     <div>Departments:<br/>
       <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>

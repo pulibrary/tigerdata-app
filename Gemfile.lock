@@ -209,12 +209,12 @@ GEM
       terminal-table (>= 1.8)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.3)
-    google-protobuf (3.25.3-aarch64-linux)
-    google-protobuf (3.25.3-arm64-darwin)
-    google-protobuf (3.25.3-x86-linux)
-    google-protobuf (3.25.3-x86_64-darwin)
-    google-protobuf (3.25.3-x86_64-linux)
+    google-protobuf (3.25.5)
+    google-protobuf (3.25.5-aarch64-linux)
+    google-protobuf (3.25.5-arm64-darwin)
+    google-protobuf (3.25.5-x86-linux)
+    google-protobuf (3.25.5-x86_64-darwin)
+    google-protobuf (3.25.5-x86_64-linux)
     hashdiff (1.1.0)
     hashie (5.0.0)
     health-monitor-rails (12.1.0)
@@ -558,7 +558,7 @@ DEPENDENCIES
   factory_bot_rails
   ffaker
   flipflop
-  google-protobuf (~> 3.0)
+  google-protobuf (~> 3.25)
   health-monitor-rails
   honeybadger
   importmap-rails
