@@ -65,8 +65,8 @@ Project Details:
     <dt>Departments</dt>
     <% if @departments.empty? %>
       <dd><strong class="px-0">None</strong></dd>
-    <% else %>
-      <dd><%= @departments %></dd>
+    <% else %> 
+      <dd><%= Affiliation.all.select{|hash| hash[:code]==@departments}[0][:name]%></dd>
     <% end %>
     <dt>Project Directory</dt>
     <dd><%= @project.project_directory %></dd>
