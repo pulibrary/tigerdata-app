@@ -1,6 +1,6 @@
 # DESCRIPTION:
 #
-# ReturnS a list of files (assets) for a given path.
+# Returns a list of files (assets) for a given path.
 #
 # This script uses iterators to handle cases where there are many files
 # in the given path. Therefore the first time you call it you give it a
