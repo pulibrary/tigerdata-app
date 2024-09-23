@@ -61,10 +61,10 @@
     <div>Departments:<br/>
       <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>
-          <% if @project.departments.include?(affiliation[:code]) %>
-            <option selected><%= affiliation[:code] %></option>
+          <% if @project.departments.include?(affiliation[:name]) %>
+            <option selected><%= affiliation[:name] %></option>
           <% else %>
-            <option><%= affiliation[:code] %></option>
+            <option><%= affiliation[:name] %></option>
           <% end %>
         <% end %>
       </select>
