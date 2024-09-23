@@ -4,6 +4,7 @@ Coveralls.wear!("rails")
 require "simplecov"
 SimpleCov.start "rails" do
   add_filter "/app/channels/application_cable/"
+  add_filter "/lib/tasks/projects.rake"
 
   formatter SimpleCov::Formatter::MultiFormatter.new([
                                                        SimpleCov::Formatter::SimpleFormatter,
