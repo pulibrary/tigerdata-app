@@ -134,7 +134,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     end
   end
 
-  context "Super Users can input a data sponsor" do
+  context "Super Users can input a data sponsor and project id" do
     let(:superuser) { FactoryBot.create(:superuser) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
     let(:project) { FactoryBot.create(:project) }
@@ -145,10 +145,12 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       sign_in superuser
       visit "/projects/#{project.id}/edit"
       fill_in "data_sponsor", with: sponsor_user.uid
+      fill_in "project_id", with: "999-abc"
       page.find("body").click
       click_on "Submit"
       visit "/projects/#{project.id}"
       expect(page.find(:css, "#data_sponsor").text).to eq sponsor_user.display_name
+      expect(page.find(:css, "#project_id").text).to eq "999-abc"
     end
   end
 
