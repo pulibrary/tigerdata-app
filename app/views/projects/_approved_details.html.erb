@@ -13,10 +13,10 @@
   </dl></dd>
   <dt>Project Purpose</dt>&nbsp;<dd><%= @project_purpose %></dd>
 </dl>
-<% if @project.in_mediaflux? %>
+<% if @project.in_mediaflux? && (current_user.superuser? || current_user.eligible_sysadmin?) %>
   <dl>
     <dt>Mediaflux id:</dt>&nbsp;<dd><%= @project.mediaflux_id %></dd>
   </dl>
-<% else %>
+<% elsif !@project.in_mediaflux? %>
   <p>This project has not been saved to Mediaflux</p>
 <% end %>
