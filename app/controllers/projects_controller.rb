@@ -109,7 +109,9 @@ class ProjectsController < ApplicationController
     @project_purpose = @project_metadata[:project_purpose]
 
     respond_to do |format|
-      format.html
+      format.html do
+        @project = ProjectShowPresenter.new(project)
+      end
       format.json do
         render json: project.to_json
       end
