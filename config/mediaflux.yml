@@ -1,18 +1,18 @@
 ---
 production:
-  api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-prod-001/tigerdataNS' %>
-  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'path=/td-prod-001/tigerdata' %>
+  api_root_ns:   <%= ENV["MEDIAFLUX_ROOT_NS"] || '/princeton/tigerdataNS' %>
+  api_root_collection: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'path=/princeton/tigerdata' %>
   api_root_collection_name: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'tigerdata' %>
-  api_root_collection_namespace: '/td-prod-001'
+  api_root_collection_namespace: <%= ENV["MEDIAFLUX_ROOT_COLLECTION_NAMESPACE"] || '/princeton' %>
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'https' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
 
   # Alternate to production is real production
-  api_alternate_root_ns:  '/princeton/tigerdataNS'
-  api_alternate_root_collection: 'path=/princeton/tigerdata'
-  api_alternate_root_collection_name:  'tigerdata'
-  api_alternate_root_collection_namespace: '/princeton'
+  api_alternate_root_ns: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_NS"] || '/td-prod-001/tigerdataNS' %>
+  api_alternate_root_collection: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_COLLECTION"] || 'path=/td-prod-001/tigerdata' %>
+  api_alternate_root_collection_name: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_COLLECTION"] || 'tigerdata' %>
+  api_alternate_root_collection_namespace: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_COLLECTION_NAMESPACE"] || '/td-prod-001' %>
   api_alternate_transport: <%= ENV["MEDIAFLUX_ALTERNATE_TRANSPORT"] || 'https' %>
   api_alternate_host: <%= ENV["MEDIAFLUX_ALTERNATE_HOST"] %>
   api_alternate_port: <%= ENV["MEDIAFLUX_ALTERNATE_PORT"] || 443 %>
