@@ -106,6 +106,50 @@ namespace :projects do
     puts "File list downloaded for project #{project_id}"
   end
 
+  desc "Uploads the fileList TCL script to Mediaflux and makes it executable"
+  task :script_file_list_create, [:netid] => [:environment] do |_, args|
+    netid = args[:netid]
+    user = User.where(uid: netid).first
+    raise "User #{netid} not found" if user.nil?
+    namespace = "/system/scripts"
+    name = "fileList.tcl"
+    full_path = "#{namespace}/#{name}"
+
+    # Once this code has been merged into main, we should be able to change the URL to point to the
+    # Tigerdata GitHub repo rather than a gist under my account.
+    content_url = "https://gist.githubusercontent.com/hectorcorrea/e60cc638ce9e88c2f6723768fc1dfcbf/raw/4f734ee41ba2c911535564bb55bdcf4ac62d121c/fileList.tcl"
+    upload_request = Mediaflux::ScriptUploadRequest.new(session_token: user.mediaflux_session, namespace: namespace, name: name, url: content_url)
+    upload_request.resolve
+    if upload_request.error?
+      puts "Error creating script: #{upload_request.response_error[:message]}"
+    else
+      puts "Created asset: #{upload_request.result} at #{full_path}"
+      make_executable_request = Mediaflux::ScriptMakeExecutableRequest.new(session_token: user.mediaflux_session, path: full_path)
+      make_executable_request.resolve
+    end
+  end
+
+  desc "Runs the installed Mediaflux script to get the list of files under a given path"
+  task :script_file_list, [:netid, :path] => [:environment] do |_, args|
+    netid = args[:netid]
+    path = args[:path]
+    user = User.where(uid: netid).first
+    raise "User #{netid} not found" if user.nil?
+
+    init_request = Mediaflux::ScriptFileListInitRequest.new(session_token: user.mediaflux_session, path: path)
+    init_request.resolve
+    iterator = init_request.result
+
+    puts "Path: #{path}"
+    loop do
+      iterate_request = Mediaflux::ScriptFileListIterateRequest.new(session_token: user.mediaflux_session, iterator: iterator)
+      iterate_request.resolve
+      files = iterate_request.result
+      puts files
+      break if iterate_request.complete?
+    end
+  end
+
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)
     counts = []
