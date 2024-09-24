@@ -175,6 +175,17 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_content("Project Details: #{project.title}")
       end
 
+      it "displays the caveat message" do
+        # sign in and be able to view the file count for the collection
+        sign_in sponsor_user
+        visit "/projects/#{project.id}"
+        expect(page).to have_selector(:link_or_button, "Review Contents")
+        click_on("Review Contents")
+
+        # Caveat message is displayed
+        expect(page).to have_content("Please note that the contents preview feature is still under development and currently only displays world-readable files")
+      end
+
       it "displays the file list" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
