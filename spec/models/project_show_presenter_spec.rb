@@ -5,6 +5,12 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   let(:project) { FactoryBot.create :project }
   subject(:presenter) { ProjectShowPresenter.new(project) }
 
+  describe "#description" do
+    it "delegates to project metdata_model" do
+      expect(presenter.description).to eq(project.metadata_model.description)
+    end
+  end
+
   describe "#id" do
     it "delegates to project" do
       expect(presenter.id).to eq(project.id)
@@ -23,12 +29,6 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
     end
   end
 
-  describe "#metadata" do
-    it "delegates to project" do
-      expect(presenter.metadata).to eq(project.metadata)
-    end
-  end
-
   describe "#pending?" do
     it "delegates to project" do
       expect(presenter.pending?).to eq(project.pending?)
@@ -36,14 +36,38 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   end
 
   describe "#project_directory" do
-    it "delegates to project" do
-      expect(presenter.project_directory).to eq(project.project_directory)
+    it "hides the root project" do
+      expect(presenter.project_directory).to eq("/test/tigerdataNS/big-data")
+    end
+  end
+
+  describe "#project_id" do
+    it "delegates to project metdata_model" do
+      expect(presenter.project_id).to eq(project.metadata_model.project_id)
+    end
+  end
+
+  describe "#project_purpose" do
+    it "delegates to project metdata_model" do
+      expect(presenter.project_purpose).to eq(project.metadata_model.project_purpose)
     end
   end
 
   describe "#status" do
     it "delegates to project" do
       expect(presenter.status).to eq(project.status)
+    end
+  end
+
+  describe "#storage_capacity" do
+    it "delegates to project metadata_model" do
+      expect(presenter.storage_capacity).to eq(project.metadata_model.storage_capacity)
+    end
+  end
+
+  describe "#storage_performance_expectations" do
+    it "delegates to project metadata_model" do
+      expect(presenter.storage_performance_expectations).to eq(project.metadata_model.storage_performance_expectations)
     end
   end
 

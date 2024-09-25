@@ -1,5 +1,6 @@
 ---
 production:
+  api_hidden_root: <%= ENV["MEDIAFLUX_HIDDEN_ROOT"] || '/princeton' %> 
   api_root_ns:   <%= ENV["MEDIAFLUX_ROOT_NS"] || '/princeton/tigerdataNS' %>
   api_root_collection: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'path=/princeton/tigerdata' %>
   api_root_collection_name: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'tigerdata' %>
@@ -9,6 +10,7 @@ production:
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
 
   # Alternate to production is real production
+  api_alternate_hidden_root: <%= ENV["MEDIAFLUX_ALTERNATE_HIDDEN_ROOT"] || '/td-prod-001' %> 
   api_alternate_root_ns: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_NS"] || '/td-prod-001/tigerdataNS' %>
   api_alternate_root_collection: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_COLLECTION"] || 'path=/td-prod-001/tigerdata' %>
   api_alternate_root_collection_name: <%= ENV["MEDIAFLUX_ALTERNATE_ROOT_COLLECTION"] || 'tigerdata' %>
@@ -22,6 +24,7 @@ production:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 qa:
+  api_hidden_root: '/td-qa-001'
   api_root_to_clean: '/td-qa-001/qa'
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001/qa/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
@@ -32,6 +35,7 @@ qa:
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
 
   # Alternate to qa is staging
+  api_alternate_hidden_root: '/td-staging-001'
   api_alternate_root_ns:  '/td-staging-001/tigerdataNS'
   api_alternate_root_collection: 'path=/td-staging-001/tigerdata'
   api_alternate_root_collection_name:  'tigerdata'
@@ -45,6 +49,7 @@ qa:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 staging:
+  api_hidden_root: '/td-staging-001'
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-staging-001/tigerdataNS'  %>
   api_root_to_clean: '/td-staging-001/'
   api_root_collection_name: 'tigerdata'
@@ -55,6 +60,7 @@ staging:
   api_port: <%= ENV["MEDIAFLUX_PORT"] || 443 %>
 
   # Alternate to staging is qa
+  api_alternate_hidden_root: '/td-qa-001'
   api_alternate_root_ns:  '/td-qa-001/tigerdataNS'
   api_alternate_root_collection: 'path=/td-qa-001/tigerdata'
   api_alternate_root_collection_name:  'tigerdata'
@@ -68,6 +74,7 @@ staging:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 development:
+  api_hidden_root: '/td-demo-001'
   api_root_to_clean: '/td-demo-001/dev/'
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-demo-001/dev/tigerdataNS' %>
   api_root_collection_name: 'tigerdata'
@@ -78,6 +85,7 @@ development:
   api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
 
   # Alternate to development is an alternate location in docker
+  api_alternate_hidden_root: '/td-alternate-001'
   api_alternate_root_ns:  '/td-alternate-001/tigerdataNS'
   api_alternate_root_collection: 'path=/td-alternate-001/tigerdata'
   api_alternate_root_collection_name:  'tigerdata-alternate'
@@ -92,6 +100,7 @@ development:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
 test:
+  api_hidden_root: '/td-test-001'
   api_root_to_clean: '/td-test-001/test/'
   api_root_ns: '/td-test-001/test/tigerdataNS'
   api_root_collection_name: 'tigerdata'
@@ -102,6 +111,7 @@ test:
   api_port: "<%= ENV['MFLUX_CI'] ?  '80' : '8888' %>"
 
   # Alternate to test is still a test location
+  api_alternate_hidden_root: '/td-test-002'
   api_alternate_root_ns:  '/td-test-002/tigerdataNS'
   api_alternate_root_collection: 'path=/td-test-002/tigerdata-alt'
   api_alternate_root_collection_name:  'tigerdata-alt'
