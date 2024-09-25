@@ -36,8 +36,8 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   end
 
   describe "#project_directory" do
-    it "delegates to project" do
-      expect(presenter.project_directory).to eq(project.project_directory)
+    it "hides the root project" do
+      expect(presenter.project_directory).to eq("/test/tigerdataNS/big-data")
     end
   end
 

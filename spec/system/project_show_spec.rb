@@ -45,6 +45,11 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             visit "/projects/#{project_in_mediaflux.id}"
 
             expect(page).to have_content(project_in_mediaflux.title)
+
+            # shows the project directory without the hidden root
+            expect(page).to have_content(project_in_mediaflux.project_directory.gsub("/td-test-001", ""))
+            expect(page).not_to have_content(project_in_mediaflux.project_directory)
+
             expect(page).not_to have_content(pending_text)
             expect(page).to have_css ".alert-success"
             expect(page).to have_selector(:link_or_button, "Edit") # button next to role and description heading
@@ -210,6 +215,11 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "shows the sysadmin buttons for an approved project" do
         sign_in sysadmin_user
         visit "/projects/#{project_in_mediaflux.id}"
+
+        # shows the project directory without the hidden root
+        expect(page).to have_content(project_in_mediaflux.project_directory.gsub("/td-test-001", ""))
+        expect(page).not_to have_content(project_in_mediaflux.project_directory)
+
         expect(page).to have_content "project 123"
         expect(page).to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
