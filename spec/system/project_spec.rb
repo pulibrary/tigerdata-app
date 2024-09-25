@@ -148,6 +148,20 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content "Sponsored by Me"
       end
     end
+
+    context "upon cancelation" do
+      before do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/edit"
+      end
+
+      it "redirects the user back to the project show page" do
+        click_on "Cancel"
+        expect(page).to have_content "Project Details: #{project_in_mediaflux.title}"
+      end
+    end
   end
 
   context "Create page" do
