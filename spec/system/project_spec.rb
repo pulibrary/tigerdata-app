@@ -452,12 +452,15 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
+      fill_in "project_directory_prefix", with: "/new_project/dir"
+      fill_in "project_directory", with: "example_project"
       click_on "Approve"
       expect(page).to have_content("Project Approval Received")
 
       project.reload
       expect(project.mediaflux_id).to eq(mediaflux_id)
       expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+      expect(project.project_directory).to eq("/new_project/dir/example_project")
     end
 
     it "redirects the user to the project approval confirmation page upon submission" do
