@@ -77,7 +77,7 @@
       </select>
     </div>
 
-    <% if @project.in_mediaflux? %>
+    <% if @project.in_mediaflux? && (current_user.superuser? || current_user.eligible_sysadmin?) %>
       <!--
         Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
         send back to the controller (we don't want to lose this value)
