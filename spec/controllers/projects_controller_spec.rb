@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectsController do
+RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { FactoryBot.create :project }
   describe "#show" do
     it "renders an error when requesting json" do
@@ -88,6 +88,34 @@ RSpec.describe ProjectsController do
         }
         project = Project.last
         expect(project.provenance_events.count).to eq 2
+      end
+      it "shows affiliation name/title instead of code on project show page" do
+        get :show, params: { id: Project.last.id }
+        save_and_open_page
+        # visit("/projects/" + project.id.to_s)
+        expect(page).to have_content("Astrophysical Sciences")
+                    .or(have_content("High Performance Computing"))
+          .or(have_content("Research Data and Scholarly Services"))
+          .or(have_content("Princeton Research Data Service"))
+          .or(have_content("Princeton Plasma Physics Laboratory"))
+      end
+      it "shows affiliation code as being saved to the project" do
+        get :show, params: { id: project.id }
+        puts(response.body)
+        body = JSON.parse(response.body)
+        expect(body).to include("23100")
+                    .or(include("HPC"))
+          .or(include("RDSS"))
+          .or(include("PRDS"))
+          .or(include("PPPL"))
+      end
+      it "shows affiliation name/title instead of code on project edit page" do
+        visit("/projects/" + project.id.to_s + "/edit")
+        expect(page).to have_content("Astrophysical Sciences")
+                    .or(have_content("High Performance Computing"))
+          .or(have_content("Research Data and Scholarly Services"))
+          .or(have_content("Princeton Research Data Service"))
+          .or(have_content("Princeton Plasma Physics Laboratory"))
       end
     end
   end

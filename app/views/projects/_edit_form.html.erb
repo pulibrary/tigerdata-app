@@ -66,6 +66,7 @@
       <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>
           <% if @project.departments.include?(affiliation[:name]) %>
+          <!-- # in form need default to be what's already selected -->
             <option value=<%= affiliation[:code] %> selected><%= affiliation[:name] %></option>
           <% else %>
             <option value=<%= affiliation[:code] %> ><%= affiliation[:name] %></option>
@@ -145,6 +146,7 @@
          <% end %>
       <% end %>
 
+<<<<<<< HEAD
       <div class="row ">
          <div class="col-md-3">
            <label for="project_directory">Directory Path</label>
@@ -324,3 +326,11 @@
       registerAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
    });
 </script>
+<div class="actions">
+  <button type=submit value="Submit" class="btn btn-primary">Submit</button>
+  <% if params[:action] == 'edit' %>
+    <%= link_to "Cancel", @project, class: "btn btn-secondary" %>
+  <% else %>
+    <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+  <% end %>
+</div>
