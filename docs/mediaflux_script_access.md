@@ -1,8 +1,11 @@
 # Access Permissions for Mediaflux script
 
-This page documents how access permissions work for scripts in Mediaflux.
+In Mediaflux the fact that a user has rights to execute scripts (e.g. `asset.script.execute`) does not grant the user the right to execute all the commands within the script. For example if the script calls `asset.query` the user must also have access to `asset.query` for the script to execute sucessfully.
 
-The *script* in this page is assumed to be a TCL script already loaded in Mediaflux and marked for execution. You setup this script on your local copy of Mediaflu with the following Rake task:
+## Setting up the example
+This page provides a working example to validate confirm this and can be used a as starting point for futher experiments with user rights, for example when we test with "custom service" calls which are similar in concept to the example on this page.
+
+The *script* used in this page as an example is assumed to be a TCL script already loaded in Mediaflux and marked for execution. You setup this script on your local copy of Mediaflu with the following Rake task:
 
 ```
 bundle exec rake projects:script_upload[your-netid]
@@ -28,8 +31,6 @@ authorization.role.namespace.create :ifexists ignore :namespace pu-lib :descript
 authorization.role.create :ifexists ignore :role pu-lib:scripter :description "Script runner"
 authorization.role.list
 ```
-
-
 
 Then you can run the following steps to give this new role minimal access:
 
@@ -108,6 +109,12 @@ $ cat /usr/local/mediaflux/volatile/logs/filelist.1.log
 # 20:34:44.081:INFO:[user, id=157] system:scripter_user: File list for /path/to/collection
 ```
 
+If we were to grant access to our user rights to `asset.query` then the script runs:
+
+```
+actor.grant :type role :name pu-lib:scripter :perm < :resource -type service asset.query :access ACCESS >
+```
+
 
 ## Destroying our test user and role
 
@@ -117,4 +124,3 @@ If you want to start from scratch and test with different permissions you might 
 authentication.user.destroy :domain system :user scripter_user
 authorization.role.destroy :role pu-lib:scripter
 ```
-
