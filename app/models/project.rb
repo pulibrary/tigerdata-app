@@ -43,6 +43,12 @@ class Project < ApplicationRecord
 
   end
 
+  def reload
+    super
+    @metadata_model = ProjectMetadata.new_from_hash(self.metadata)
+    self
+  end
+
   def activate!(collection_id:, current_user:)
     response = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
     mediaflux_metadata = response.metadata # get the metadata of the collection from mediaflux

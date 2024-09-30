@@ -28,12 +28,12 @@ class ProjectMetadata
   def initialize_from_hash(metadata_hash)
     @title = metadata_hash[:title]
     @description = metadata_hash[:description]
-    @status = metadata_hash[:status]
+    @status = metadata_hash[:status] if metadata_hash[:status]
     @data_sponsor = metadata_hash[:data_sponsor]
     @data_manager = metadata_hash[:data_manager]
     @departments = metadata_hash[:departments]
-    @data_user_read_only = metadata_hash[:data_user_read_only]
-    @data_user_read_write = metadata_hash[:data_user_read_write]
+    @data_user_read_only = metadata_hash[:data_user_read_only] if metadata_hash[:data_user_read_only]
+    @data_user_read_write = metadata_hash[:data_user_read_write] if metadata_hash[:data_user_read_write]
 
     @project_id = metadata_hash[:project_id] || ProjectMetadata::DOI_NOT_MINTED
     @project_purpose = metadata_hash[:project_purpose]
@@ -41,40 +41,21 @@ class ProjectMetadata
 
     @storage_capacity = metadata_hash[:storage_capacity]
     @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
-    @created_on = metadata_hash[:created_on]
-    @created_by = metadata_hash[:created_by]
-    @updated_by = metadata_hash[:updated_by]
-    @updated_on = metadata_hash[:updated_on]
+
+    @created_by = metadata_hash[:created_by] if metadata_hash[:created_by]
+    @created_on = metadata_hash[:created_on] if metadata_hash[:created_on]
+    @updated_by = metadata_hash[:updated_by] if metadata_hash[:updated_by]
+    @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
     set_defaults
   end
   # rubocop:enable Metrics/MethodLength
 
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
-  # rubocop:disable Metrics/MethodLength
   def initialize_from_params(params)
-    @title = params[:title]
-    @description = params[:description]
-    @status = params[:status] if params[:status]
-    @data_sponsor = params[:data_sponsor]
-    @data_manager = params[:data_manager]
-    @departments = params[:departments]
     @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_")
     @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_")
-
-    @project_id = params[:project_id] || ProjectMetadata::DOI_NOT_MINTED
-    @project_purpose = params[:project_purpose]
-    @project_directory = params[:project_directory]
-
-    @storage_capacity = params[:storage_capacity]
-    @storage_performance_expectations = params[:storage_performance_expectations]
-
-    @created_by = params[:created_by] if params[:created_by]
-    @created_on = params[:created_on] if params[:created_on]
-    @updated_by = params[:updated_by] if params[:updated_by]
-    @updated_on = params[:updated_on] if params[:updated_on]
-    set_defaults
+    initialize_from_hash(params)
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Updates the object with the values in the params (which is an ActionController::Parameters)
   # Notice how we only update values that come in the params and don't change the values that
@@ -89,7 +70,7 @@ class ProjectMetadata
     set_value(params, "departments")
     set_value(params, "project_id")
     set_value(params, "project_purpose")
-    set_value(params, "project_directory")
+    calculate_project_directory(params)
 
     @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
     @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
@@ -194,6 +175,15 @@ class ProjectMetadata
             event_type: params[:event_note],
             message: params[:event_note_message]
           }
+        end
+      end
+
+      def calculate_project_directory(params)
+        if params["project_directory_prefix"].present?
+          current_directory = params["project_directory"]
+          @project_directory = Pathname.new(params["project_directory_prefix"]).join(current_directory)
+        else
+          set_value(params, "project_directory")
         end
       end
 end
