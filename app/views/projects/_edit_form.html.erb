@@ -77,13 +77,15 @@
       </select>
     </div>
 
-    <% if @project.in_mediaflux? && (current_user.superuser? || current_user.eligible_sysadmin?) %>
+    <% if @project.in_mediaflux? %>
       <!--
         Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
         send back to the controller (we don't want to lose this value)
       -->
       <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
+      <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
         (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
+      <% end %>
         This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
     <% else %>
       <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
