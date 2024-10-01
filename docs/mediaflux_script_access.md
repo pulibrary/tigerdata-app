@@ -2,6 +2,8 @@
 
 In Mediaflux the fact that a user has rights to execute scripts (e.g. `asset.script.execute`) does not grant the user the right to execute all the commands within the script. For example if the script calls `asset.query` the user must also have access to `asset.query` for the script to execute sucessfully.
 
+See also [mediaflux_services.md](https://github.com/pulibrary/tigerdata-app/blob/main/docs/mediaflux_services.md) for an example executing a custom service rather than a script.
+
 ## Setting up the example
 This page provides a working example to validate confirm this and can be used a as starting point for futher experiments with user rights, for example when we test with "custom service" calls which are similar in concept to the example on this page.
 
