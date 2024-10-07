@@ -117,6 +117,17 @@
     margin-right: 23em;
     margin-left: 23.5em;
   }
+  .approved-details{
+    dt {
+      float: left;
+      min-width: calc(25% + 55px);
+      /* adjust the width; make sure the total of both is 100% */
+      padding: 0;
+      margin: 0;
+      margin-left: 1em;
+      clear: both
+    }
+  }
   h2 {// Heading for the details div
     margin-left: 0.2em;
     text-decoration: underline;
@@ -136,7 +147,7 @@
   }
   dt {
     float: left;
-    min-width: calc(25% + 5em);
+    min-width: calc(25% + 80px);
     /* adjust the width; make sure the total of both is 100% */
     padding: 0;
     margin: 0;
@@ -154,6 +165,18 @@
 }
 
 #content{
+
+  #file-list {
+    width:90%;
+    border: 1px solid gray;
+  }
+
+  #file-list > tbody > tr > th {
+    background-color: #dddcdc;
+  }
+  label{
+    padding-bottom: .5em;
+  }
   dt {
     float: left;
     min-width: calc(25% + 5em);
@@ -163,6 +186,7 @@
     margin-left: 1em;
     clear: both
   }
+
   dd{
     margin-bottom: .5rem;
     margin-left: 0;
@@ -175,6 +199,18 @@
     &__summary {
       display: inline;
     }
+  }
+
+  .numeric_column {
+    text-align: right;
+  }
+
+  .visible-row {
+    visibility: unset;
+  }
+
+  .invisible-row {
+    visibility: collapse;
   }
 }
 

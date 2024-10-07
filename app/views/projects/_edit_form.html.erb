@@ -64,7 +64,7 @@
         <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
       </div>
     <% end %>
-  
+
     <div>Departments:<br/>
       <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
         <% Affiliation.all.each do |affiliation| %>
@@ -83,7 +83,9 @@
         send back to the controller (we don't want to lose this value)
       -->
       <p>Project Directory: <%= @project.project_directory_parent_path %>/<input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
+      <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
         (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
+      <% end %>
         This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
     <% else %>
       <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
@@ -103,6 +105,10 @@
 
 <div class="actions">
   <button type=submit value="Submit" class="btn btn-primary">Submit</button>
-  <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+  <% if params[:action] == 'edit' %>
+    <%= link_to "Cancel", @project, class: "btn btn-secondary" %>
+  <% else %>
+    <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+  <% end %>
 </div>
 </div>

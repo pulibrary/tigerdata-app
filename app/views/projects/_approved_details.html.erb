@@ -1,22 +1,27 @@
+
 <h2>Project Settings</h2>
 <dl>
-  <dt>Project ID</dt>&nbsp;<dd id="project_id"><%= @project_id %></dd>
+  <dt>Project ID</dt><dd id="project_id"><%= @project_id %></dd>
   <dt>Storage Capacity</dt>
     <dd><dl>
-      <dt>Requested</dt><dd><%= "#{@requested_size} #{@requested_unit}" %></dd>
-      <dt>Approved</dt><dd><%= "#{@approved_size} #{@approved_unit}" %></dd>
+      <div class="approved-details">
+        <dt>Requested</dt><dd><%= "#{@requested_size} #{@requested_unit}" %></dd>
+        <dt>Approved</dt><dd><%= "#{@approved_size} #{@approved_unit}" %></dd>
+      </div>
     </dl></dd>
   <dt>Storage Performance Expectations</dt>
   <dd><dl>
-    <dt>Requested</dt><dd><%= @requested_storage_expectations %></dd>
-    <dt>Approved</dt><dd><%= @approved_storage_expectations %></dd>
+    <div class="approved-details">
+      <dt>Requested</dt><dd><%= @requested_storage_expectations %></dd>
+      <dt>Approved</dt><dd><%= @approved_storage_expectations %></dd>
+    </div>
   </dl></dd>
-  <dt>Project Purpose</dt>&nbsp;<dd><%= @project_purpose %></dd>
+  <dt>Project Purpose</dt><dd><%= @project_purpose %></dd>
 </dl>
-<% if @project.in_mediaflux? %>
+<% if @project.in_mediaflux? && (current_user.superuser? || current_user.eligible_sysadmin?) %>
   <dl>
-    <dt>Mediaflux id:</dt>&nbsp;<dd><%= @project.mediaflux_id %></dd>
+    <dt>Mediaflux id:</dt><dd><%= @project.mediaflux_id %></dd>
   </dl>
-<% else %>
+<% elsif !@project.in_mediaflux? %>
   <p>This project has not been saved to Mediaflux</p>
 <% end %>

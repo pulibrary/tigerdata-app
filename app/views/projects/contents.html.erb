@@ -1,25 +1,3 @@
-<style>
-  #file-list {
-    width:90%;
-    border: 1px solid gray;
-  }
-
-  #file-list > tbody > tr > th {
-    background-color: #dddcdc;
-  }
-
-  .numeric_column {
-    text-align: right;
-  }
-
-  .visible-row {
-    visibility: unset;
-  }
-
-  .invisible-row {
-    visibility: collapse;
-  }
-</style>
 <content id= "content">
   <h1>Project Contents</h1>
   <h2>Contents Summary</h2>
@@ -35,6 +13,8 @@
     <section class="container-fluid px-1 mx-2 my-4 project-contents__preview">
       <div>
         <h2>Contents Preview</h2>
+        <p class="text-muted"> Please note that the contents preview feature is still under development and currently only displays world-readable files (not those with more limited permissions).
+        You can still find all of the contents you have access to through the project's mount point.</p>
         <table id="file-list">
           <tr>
             <th>Path</th>

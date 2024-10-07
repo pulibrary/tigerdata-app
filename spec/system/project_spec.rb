@@ -148,6 +148,20 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content "Sponsored by Me"
       end
     end
+
+    context "upon cancelation" do
+      before do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/edit"
+      end
+
+      it "redirects the user back to the project show page" do
+        click_on "Cancel"
+        expect(page).to have_content "Project Details: #{project_in_mediaflux.title}"
+      end
+    end
   end
 
   context "Create page" do
@@ -438,12 +452,15 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
+      fill_in "project_directory_prefix", with: "/new_project/dir"
+      fill_in "project_directory", with: "example_project"
       click_on "Approve"
       expect(page).to have_content("Project Approval Received")
 
       project.reload
       expect(project.mediaflux_id).to eq(mediaflux_id)
       expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
+      expect(project.project_directory).to eq("/new_project/dir/example_project")
     end
 
     it "redirects the user to the project approval confirmation page upon submission" do

@@ -62,5 +62,13 @@ module Mediaflux
         Rails.configuration.mediaflux["api_root_ns"]
       end
     end
+
+    def self.hidden_root
+      if Flipflop.alternate_mediaflux?
+        Rails.configuration.mediaflux["api_alternate_hidden_root"]
+      else
+        Rails.configuration.mediaflux["api_hidden_root"]
+      end
+    end
   end
 end
