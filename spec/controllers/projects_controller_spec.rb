@@ -34,7 +34,6 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       it "renders the project metadata as xml" do
         project = FactoryBot.create :project, project_id: "abc-123"
         get :show, params: { id: project.id, format: :xml }
-        save_and_open_page
         expect(response.content_type).to eq("application/xml; charset=utf-8")
         expect(response.body).to eq(
         "<?xml version=\"1.0\"?>\n" \
