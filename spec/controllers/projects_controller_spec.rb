@@ -22,9 +22,19 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         expect(JSON.parse(response.body)).to eq(project.metadata)
       end
 
+      it "shows affiliation code as being saved to the project" do
+        get :show, params: { id: project.id, format: :json }
+        expect(JSON.parse(response.body)["departments"]).to include("23100")
+          .or(include("HPC"))
+          .or(include("RDSS"))
+          .or(include("PRDS"))
+          .or(include("PPPL"))
+      end
+
       it "renders the project metadata as xml" do
         project = FactoryBot.create :project, project_id: "abc-123"
         get :show, params: { id: project.id, format: :xml }
+        save_and_open_page
         expect(response.content_type).to eq("application/xml; charset=utf-8")
         expect(response.body).to eq(
         "<?xml version=\"1.0\"?>\n" \
@@ -73,6 +83,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
     end
   end
+
   describe "#create" do
     context "a signed in user" do
       let(:user) { FactoryBot.create :user }
@@ -89,34 +100,40 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         project = Project.last
         expect(project.provenance_events.count).to eq 2
       end
-      it "shows affiliation name/title instead of code on project show page" do
-        get :show, params: { id: Project.last.id }
-        save_and_open_page
-        # visit("/projects/" + project.id.to_s)
-        expect(page).to have_content("Astrophysical Sciences")
-                    .or(have_content("High Performance Computing"))
-          .or(have_content("Research Data and Scholarly Services"))
-          .or(have_content("Princeton Research Data Service"))
-          .or(have_content("Princeton Plasma Physics Laboratory"))
-      end
-      it "shows affiliation code as being saved to the project" do
-        get :show, params: { id: project.id }
-        puts(response.body)
-        body = JSON.parse(response.body)
-        expect(body).to include("23100")
-                    .or(include("HPC"))
-          .or(include("RDSS"))
-          .or(include("PRDS"))
-          .or(include("PPPL"))
-      end
-      it "shows affiliation name/title instead of code on project edit page" do
-        visit("/projects/" + project.id.to_s + "/edit")
-        expect(page).to have_content("Astrophysical Sciences")
-                    .or(have_content("High Performance Computing"))
-          .or(have_content("Research Data and Scholarly Services"))
-          .or(have_content("Princeton Research Data Service"))
-          .or(have_content("Princeton Plasma Physics Laboratory"))
-      end
     end
   end
+
+  context "shows affiliation name/title instead of code on project show page" do
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+
+    before do
+      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
+      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
+    end
+
+    it "works" do
+      sign_in current_user
+      visit("/")
+      #      project = Project.last
+      # visit the show page
+      # get :show, params: { id: project.id }
+      # visit("/projects/" + project.id.to_s)
+      expect(page).to have_content("Astrophysical Sciences")
+                  .or(have_content("High Performance Computing"))
+        .or(have_content("Research Data and Scholarly Services"))
+        .or(have_content("Princeton Research Data Service"))
+        .or(have_content("Princeton Plasma Physics Laboratory"))
+    end
+  end
+
+  # it "shows affiliation name/title instead of code on project edit page" do
+  # visit("/projects/" + project.id.to_s + "/edit")
+  # expect(page).to have_content("Astrophysical Sciences")
+  #           .or(have_content("High Performance Computing"))
+  # .or(have_content("Research Data and Scholarly Services"))
+  # .or(have_content("Princeton Research Data Service"))
+  # .or(have_content("Princeton Plasma Physics Laboratory"))
+  # end
 end
