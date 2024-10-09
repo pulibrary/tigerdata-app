@@ -1,3 +1,4 @@
+<!-- Allows us to utilize Nokogiri for the validation.  For some reason utilizing the copy at  https://www.w3.org/2001/xml.xsd causes issues.  See xml_schema rake task for more information -->
 <?xml version='1.0'?>
 <?xml-stylesheet href="../2008/09/xsd.xsl" type="text/xsl"?>
 <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" 
