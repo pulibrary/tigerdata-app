@@ -106,19 +106,16 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
 
     before do
-      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
-      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
-      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
-      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
+      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111")
     end
 
-    it "works" do
+    it "shows affiliation name/title instead of code on project show page" do
       sign_in current_user
-      visit("/")
-      #      project = Project.last
+
+      project = Project.last
       # visit the show page
-      # get :show, params: { id: project.id }
-      # visit("/projects/" + project.id.to_s)
+      get :show, params: { id: project.id }
+      visit("/projects/" + project.id.to_s)
       expect(page).to have_content("Astrophysical Sciences")
                   .or(have_content("High Performance Computing"))
         .or(have_content("Research Data and Scholarly Services"))
