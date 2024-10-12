@@ -179,7 +179,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
       fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
       # select a department
-      select "RDSS", from: "departments"
+      select "Research Data and Scholarly Services", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("/td-test-001/")
