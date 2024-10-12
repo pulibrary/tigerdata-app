@@ -187,7 +187,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       page.find("body").click
       click_on "btn-add-rw-user"
       # select a department
-      select "RDSS", from: "departments"
+      select "Research Data and Scholarly Services", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("Project Directory: /td-test-001/")
@@ -346,7 +346,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         click_on "btn-add-rw-user"
-        select "RDSS", from: "departments"
+        select "Research Data and Scholarly Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")
@@ -399,7 +399,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         click_on "btn-add-rw-user"
-        select "RDSS", from: "departments"
+        select "Research Data and Scholarly Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("Project Directory: /td-test-001/")

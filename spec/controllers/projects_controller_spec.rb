@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectsController do
+RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { FactoryBot.create :project }
   describe "#show" do
     it "renders an error when requesting json" do
@@ -20,6 +20,15 @@ RSpec.describe ProjectsController do
         get :show, params: { id: project.id, format: :json }
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(JSON.parse(response.body)).to eq(project.metadata)
+      end
+
+      it "shows affiliation code as being saved to the project" do
+        get :show, params: { id: project.id, format: :json }
+        expect(JSON.parse(response.body)["departments"]).to include("23100")
+          .or(include("HPC"))
+          .or(include("RDSS"))
+          .or(include("PRDS"))
+          .or(include("PPPL"))
       end
 
       it "renders the project metadata as xml" do
@@ -73,6 +82,7 @@ RSpec.describe ProjectsController do
       end
     end
   end
+
   describe "#create" do
     context "a signed in user" do
       let(:user) { FactoryBot.create :user }
@@ -91,4 +101,35 @@ RSpec.describe ProjectsController do
       end
     end
   end
+
+  context "shows affiliation name/title instead of code on project show page" do
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+
+    before do
+      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111")
+    end
+
+    it "shows affiliation name/title instead of code on project show page" do
+      sign_in current_user
+
+      project = Project.last
+      # visit the show page
+      get :show, params: { id: project.id }
+      visit("/projects/" + project.id.to_s)
+      expect(page).to have_content("Astrophysical Sciences")
+                  .or(have_content("High Performance Computing"))
+        .or(have_content("Research Data and Scholarly Services"))
+        .or(have_content("Princeton Research Data Service"))
+        .or(have_content("Princeton Plasma Physics Laboratory"))
+    end
+  end
+
+  # it "shows affiliation name/title instead of code on project edit page" do
+  # visit("/projects/" + project.id.to_s + "/edit")
+  # expect(page).to have_content("Astrophysical Sciences")
+  #           .or(have_content("High Performance Computing"))
+  # .or(have_content("Research Data and Scholarly Services"))
+  # .or(have_content("Princeton Research Data Service"))
+  # .or(have_content("Princeton Plasma Physics Laboratory"))
+  # end
 end
