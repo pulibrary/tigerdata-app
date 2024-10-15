@@ -15,7 +15,7 @@ Date: 2024-10-15
 - Schema Fields to Mediaflux asset data:
     - project_directory => asset/meta/tigerdata:project/ProjectDirectory (note this could also be asset/path)
     - title => asset/meta/tigerdata:project/Title
-    - status => "published"
+    - status => "active"
     - data_sponsor => asset/meta/tigerdata:project/DataSponsor
     - data_manager => asset/meta/tigerdata:project/DataManager
     - data_users => asset/meta/tigerdata:project/DataUser [list] Assume all data users are read/write
