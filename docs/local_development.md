@@ -18,6 +18,7 @@ docker rmi princeton_dev:latest  (or the version you had previously like mediafl
 ```
 
 You can use `docker images` to find out the exact name of the image to delete.
+You can also use the docker desktop to delete the image and container.
 
 
 ## Load the new Docker image
@@ -33,7 +34,7 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
 2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
 
 ```
-docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:latest
+docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
 ```
 
 3. From now on when you need _start this container_ you can use:
