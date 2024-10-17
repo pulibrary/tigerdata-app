@@ -33,6 +33,8 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
 
 2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
 
+    You can get the list of tag numbers from [Docker Hub](https://hub.docker.com/repository/docker/pulibraryrdss/mediaflux_dev/general)
+
 ```
 docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
 ```
