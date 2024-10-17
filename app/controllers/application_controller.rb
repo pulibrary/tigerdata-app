@@ -5,8 +5,9 @@ class ApplicationController < ActionController::Base
   around_action :mediaflux_session
   before_action :emulate_user
 
-  def new_session_path(_scope)
-    new_user_session_path
+  def after_sign_in_path_for(_resource)
+    mediaflux_passthru_path
+    # "/users/#{@user.id}"
   end
 
   def require_admin_user

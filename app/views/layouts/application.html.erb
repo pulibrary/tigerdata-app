@@ -49,7 +49,7 @@
       <% if flash[:notice] %>
         <div class="row">
           <div class="col">
-            <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
+            <div class="alert alert-primary" role="alert" ><%= flash[:notice].html_safe %></div>
           </div>
         </div>
       <% end %>
