@@ -19,7 +19,7 @@ RSpec.describe MediafluxStatus, connect_to_mediaflux: true, type: :model do
 
     it "reports that the status is not OK" do
       status = described_class.new
-      expect { status.check! }.to raise_error
+      expect { status.check! }.to raise_error(StandardError)
     end
   end
 end

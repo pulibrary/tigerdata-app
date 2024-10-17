@@ -10,7 +10,7 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   end
 
   it "gets the mediaflux information" do
-    expect { get :index, format: "json" }.not_to raise_error(Mediaflux::SessionExpired)
+    expect { get :index, format: "json" }.not_to raise_error
     expect(response.body).to eq(docker_response).or eq(ansible_response)
   end
 
