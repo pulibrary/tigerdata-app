@@ -38,8 +38,17 @@
     <%= render partial: 'shared/banner' %>
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/emulator' %>
-    <div class="container">
-      <% if flash[:alert] %>
+
+
+    <div class="container-fluid">
+  <div class="row ">
+
+    <div class="gutter col-xl-1">
+
+    </div>
+
+    <div class="center-column col-xl-10">
+    <% if flash[:alert] %>
         <div class="row">
           <div class="col">
             <div class="alert alert-warning" role="alert" ><%= flash[:alert] %></div>
@@ -53,12 +62,18 @@
           </div>
         </div>
       <% end %>
-      <div class="row">
-        <div class="col">
-          <%= yield %>
-        </div>
-      </div>
+
+      <%= yield %>
+
     </div>
+
+    <div class="gutter col-xl-1">
+
+    </div>
+
+  </div>
+</div>
+
     <%= render partial: 'shared/footer' %>
   </body>
 </html>
