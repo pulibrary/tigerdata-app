@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::VersionRequest, connect_to_mediaflux: true, type: :mod
   subject(:request) { described_class.new(session_token: session_token) }
   let(:session_token) { user.mediaflux_session }
   let(:user) { FactoryBot.create(:user) }
-  let(:docker_response) { "4.16.032" }
+  let(:docker_response) { "4.16.071" }
   let(:ansible_response) { "4.16.047" }
 
   describe "#resolve" do
