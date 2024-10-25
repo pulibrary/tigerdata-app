@@ -24,7 +24,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { "Mediaflux: 4.16.071" }
-    let(:ansible_response) { "Mediaflux: 4.16.071" }
+    let(:ansible_response) { "Mediaflux: 4.16.047" }
 
     before do
       FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")

@@ -6,7 +6,7 @@ RSpec.describe Mediaflux::VersionRequest, connect_to_mediaflux: true, type: :mod
   let(:session_token) { user.mediaflux_session }
   let(:user) { FactoryBot.create(:user) }
   let(:docker_response) { "4.16.071" }
-  let(:ansible_response) { "4.16.071" }
+  let(:ansible_response) { "4.16.047" }
 
   describe "#resolve" do
     it "authenticates and stores the session token" do
