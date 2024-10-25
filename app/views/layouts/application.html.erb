@@ -45,9 +45,10 @@
     <div class="col-xl-1 col-lg-2 col-md-3 col-sm-4 col-xs-12 gutter"></div>
 
     <div class="col-xl-10 col-lg-8 col-md-6 col-sm-4 col-xs-12 center-column">
-      <% if flash[:alert] %>
+      <% if flash[:notice] %>
         <div class="row">
           <div class="col">
+            <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
             <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
           </div>
         </div>
