@@ -5,7 +5,7 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user }
   let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.071\"}" }
   let(:ansible_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.047\"}" }
-  
+
   before do
     sign_in user
   end
