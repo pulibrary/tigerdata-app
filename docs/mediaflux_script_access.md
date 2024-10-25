@@ -107,7 +107,7 @@ Because the user has has access to `server.log` we can even look at the log on t
 $ cat /usr/local/mediaflux/volatile/logs/filelist.1.log
 
 # output will include something along the lines of
-# [281 76649: Network Connection: http [port=8888]],version=4.16.032,filelist,30-Sep-2024
+# [281 76649: Network Connection: http [port=8888]],version=4.16.071,filelist,30-Sep-2024
 # 20:34:44.081:INFO:[user, id=157] system:scripter_user: File list for /path/to/collection
 ```
 
