@@ -27,7 +27,7 @@
 
     <% if Rails.env.development? || Rails.env.staging? %>
       <%= render 'shared/plausible_dev_staging' %>
-    <% elsif Rails.env.production? %> 
+    <% elsif Rails.env.production? %>
       <%= render 'shared/plausible' %>
     <% end %>
 
@@ -40,37 +40,26 @@
     <%= render partial: 'shared/emulator' %>
 
 
-    <div class="container-fluid">
-  <div class="row ">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-1 col-lg-2 col-md-3 col-sm-4 col-xs-12 gutter"></div>
 
-    <div class="gutter col-xl-1">
-
-    </div>
-
-    <div class="center-column col-xl-10">
-    <% if flash[:alert] %>
+    <div class="col-xl-10 col-lg-8 col-md-6 col-sm-4 col-xs-12 center-column">
+      <% if flash[:alert] %>
         <div class="row">
           <div class="col">
-            <div class="alert alert-warning" role="alert" ><%= flash[:alert] %></div>
+            <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
           </div>
         </div>
       <% end %>
-      <% if flash[:notice] %>
-        <div class="row">
-          <div class="col">
-            <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
-          </div>
+      <div class="row">
+        <div class="col">
+          <%= yield %>
         </div>
-      <% end %>
-
-      <%= yield %>
-
+      </div>
     </div>
 
-    <div class="gutter col-xl-1">
-
-    </div>
-
+    <div class="col-xl-1 col-lg-2 col-md-3 col-sm-4 col-xs-12 gutter"></div>
   </div>
 </div>
 
