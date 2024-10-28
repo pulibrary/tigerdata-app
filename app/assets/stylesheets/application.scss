@@ -11,15 +11,21 @@
  * It is generally better to create a new file per style scope.
  */
 
-@import "settings";
-@import "banner";
-@import "emulator";
-@import "alternate_mediaflux";
-@import "header";
-@import "footer";
-@import "components/mediaflux_status";
-@import "variables";
-@import "styles_preview";
-
 @import "bootstrap";
+
+@import "alternate_mediaflux";
+@import "banner";
+@import "components/mediaflux_status";
+@import "emulator";
+@import "footer";
+@import "header";
+@import "settings";
+@import "styles_preview";
+@import "typography";
+@import "variables";
+
+body {
+    font-family: $libre-franklin;
+    color: $black;
+}
 
