@@ -56,6 +56,7 @@ gem "vite_rails"
 gem "devise"
 gem "omniauth-cas", "~> 3.0"
 
+gem "breadcrumbs_on_rails"
 gem "csv"
 gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"
 gem "dogstatsd-ruby"

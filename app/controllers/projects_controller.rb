@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
   def new
+    add_breadcrumb "New Project", :new_project_path
     return build_new_project if current_user.eligible_sponsor?
+
 
     redirect_to root_path
   end

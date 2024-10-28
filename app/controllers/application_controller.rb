@@ -5,6 +5,9 @@ class ApplicationController < ActionController::Base
   around_action :mediaflux_session
   before_action :emulate_user
 
+  add_breadcrumb "Home", :root_path
+
+
   def new_session_path(_scope)
     new_user_session_path
   end
