@@ -38,7 +38,6 @@ namespace :import do
       mediaflux_projects = CSV.read(project_file, headers: true)
       mediaflux_projects.each do |project_metadata|
         project_id = project_metadata["projectID"]
-        byebug
         existing_project = Project.where("metadata_json @> ?", JSON.dump(project_id:))
         if existing_project.count > 0
           puts "Skipping project #{project_id}.  There are already #{existing_project.count} version of that project in the system"
@@ -60,13 +59,14 @@ namespace :import do
             data_user_read_only: data_user,
             project_directory: project_metadata["path"],
             storage_capacity: {size: { approved: storage_size_gb, requested: storage_size_gb}, unit: {approved: "GB", requested: "GB"}},
+            storage_performance_expectations: { requested: "Standard", approved: "Standard" },
             created_by: project_metadata["creatorUser"],
             created_on: project_metadata["createdOn"]
           })
           if test_run
             puts metadata.to_json
           else
-            project = Project.create!(metadata:)
+            project = Project.create!(metadata:, mediaflux_id: project_metadata["asset"])
             puts "Created project for #{project_id}"
           end
         end
