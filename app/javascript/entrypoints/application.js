@@ -12,13 +12,29 @@ import 'bootstrap/js/src/scrollspy';
 
 import * as bootstrap from 'bootstrap';
 
+// ActionCable Channels
+import '../channels';
+
 import { setTargetHtml } from './helper';
 import UserDatalist from './user_datalist';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
-// ActionCable Channels
-import '../channels';
+import { createApp } from 'vue';
+import 'lux-design-system/dist/style.css';
+import lux from "lux-design-system";
+
+const app = createApp({});
+const createMyApp = () => createApp(app);
+
+document.addEventListener('DOMContentLoaded', () => {
+  const elements = document.getElementsByClassName('lux')
+  for (let i = 0; i < elements.length; i++) {
+      createMyApp()
+          .use(lux)
+          .mount(elements[i]);
+  }
+})
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;

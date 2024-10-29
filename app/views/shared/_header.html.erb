@@ -5,8 +5,14 @@
     <div class="body">
     <%= link_to "Home", root_path, class: "navbar-brand"%>
     <% if current_user %>
-      User: <%= current_user.uid%>
-      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
+    <lux-library-header app-name="ORCID@Princeton" abbr-name="LTR" theme="dark">
+      <lux-menu-bar type="main-menu" :menu-items="[
+        {name: 'Home', component: 'Home', href: '/'},
+            {name: 'Logout', component: 'Logout', href: '<%= main_app.destroy_user_session_path %> '}
+          ]}
+        ]"
+      ></lux-menu-bar>
+    </lux-library-header>
     <% else %>
       <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
     <% end %>

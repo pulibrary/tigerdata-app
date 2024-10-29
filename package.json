@@ -24,7 +24,8 @@
     "jquery": "^3.6.3",
     "vite-plugin-rails": "^0.5.0",
     "yarn": "^1.22.22",
-    "yarn.lock": "^0.0.1-security"
+    "yarn.lock": "^0.0.1-security",
+    "lux-design-system": "^5.2.14"
   },
   "scripts": {
     "lint": "eslint 'app/javascript/**/*.js'",
