@@ -72,6 +72,7 @@ class ProjectsController < ApplicationController
 
   def show
     add_breadcrumb(project.title, project_path)
+    add_breadcrumb("Details")
     project
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
