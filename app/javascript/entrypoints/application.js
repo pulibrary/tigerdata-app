@@ -23,6 +23,7 @@ import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
 import 'lux-design-system/dist/style.css';
+import './application.scss';
 
 const app = createApp({});
 const createMyApp = () => createApp(app);

@@ -23,9 +23,10 @@
 @import "styles_preview";
 @import "typography";
 @import "variables";
+/* Import the LUX styles */
+@import "lux-design-system/dist/style.css";
 
 body {
     font-family: $libre-franklin;
     color: $black;
 }
-
