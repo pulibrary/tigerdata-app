@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
     breadcrumbs << Breadcrumb.new(name, path)
   end
 
-
   private
 
     def mediaflux_session
@@ -92,5 +91,4 @@ class ApplicationController < ActionController::Base
       current_user.eligible_manager = false
       current_user.sysadmin = false
     end
-
 end
