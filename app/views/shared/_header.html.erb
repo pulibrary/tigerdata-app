@@ -8,6 +8,8 @@
     <lux-library-header app-name="ORCID@Princeton" abbr-name="LTR" theme="dark">
       <lux-menu-bar type="main-menu" :menu-items="[
         {name: 'Home', component: 'Home', href: '/'},
+           {name: '<%= current_user.display_name %>', component: 'Account', href: '/account/', children: [
+            {name: 'Profile', component: 'Feedback', href: '/account/'},
             {name: 'Logout', component: 'Logout', href: '<%= main_app.destroy_user_session_path %> '}
           ]}
         ]"
