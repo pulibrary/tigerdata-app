@@ -22,10 +22,10 @@
     "bootstrap": "^5.2.3",
     "browserslist": "^4.21.5",
     "jquery": "^3.6.3",
+    "lux-design-system": "^5.2.14",
     "vite-plugin-rails": "^0.5.0",
     "yarn": "^1.22.22",
-    "yarn.lock": "^0.0.1-security",
-    "lux-design-system": "^5.2.14"
+    "yarn.lock": "^0.0.1-security"
   },
   "scripts": {
     "lint": "eslint 'app/javascript/**/*.js'",
