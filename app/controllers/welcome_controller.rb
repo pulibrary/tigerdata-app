@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class WelcomeController < ApplicationController
-  skip_before_action :authenticate_user!
+  skip_before_action :authenticate_user!, except: [:styles_preview]
   def index
     return if current_user.nil?
     @sponsored_projects = Project.sponsored_projects(@current_user.uid)

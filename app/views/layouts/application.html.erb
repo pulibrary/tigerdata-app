@@ -27,7 +27,7 @@
 
     <% if Rails.env.development? || Rails.env.staging? %>
       <%= render 'shared/plausible_dev_staging' %>
-    <% elsif Rails.env.production? %> 
+    <% elsif Rails.env.production? %>
       <%= render 'shared/plausible' %>
     <% end %>
 
@@ -38,27 +38,33 @@
     <%= render partial: 'shared/banner' %>
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/emulator' %>
-    <div class="container">
-      <% if flash[:alert] %>
-        <div class="row">
-          <div class="col">
-            <div class="alert alert-warning" role="alert" ><%= flash[:alert] %></div>
-          </div>
-        </div>
-      <% end %>
-      <% if flash[:notice] %>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-1 gutter"></div>
+
+    <div class="col-10 center-column">
+      <% if flash[:notice] or flash[:alert] %>
         <div class="row">
           <div class="col">
             <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
+            <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
           </div>
         </div>
       <% end %>
       <div class="row">
         <div class="col">
+        <%= render partial: 'shared/breadcrumbs' %>
           <%= yield %>
         </div>
       </div>
     </div>
+
+    <div class="col-1 gutter"></div>
+  </div>
+</div>
+
     <%= render partial: 'shared/footer' %>
   </body>
 </html>
