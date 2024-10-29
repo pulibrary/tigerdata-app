@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
 
   helper_method :breadcrumbs
 
-  before_action :set_breadcrumbs
-
   def new_session_path(_scope)
     new_user_session_path
   end
@@ -95,7 +93,4 @@ class ApplicationController < ActionController::Base
       current_user.sysadmin = false
     end
 
-    def set_breadcrumbs
-      add_breadcrumb("TigerData","/")
-    end
 end
