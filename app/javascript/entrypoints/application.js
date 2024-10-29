@@ -23,7 +23,17 @@ import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
 import 'lux-design-system/dist/style.css';
-import './application.scss';
+import '../../assets/stylesheets/application.scss';
+
+console.warn('Vite ⚡️ Rails');
+
+// If using a TypeScript entrypoint file:
+//     <%= vite_typescript_tag 'application' %>
+//
+// If you want to use .jsx or .tsx, add the extension:
+//     <%= vite_javascript_tag 'application.jsx' %>
+
+console.warn('Visit the guide for more information: ', 'https://vite-ruby.netlify.app/guide/rails');
 
 const app = createApp({});
 const createMyApp = () => createApp(app);
