@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
+  
+  before_action :set_breadcrumbs
+
   def new
+    add_breadcrumb("New Project Request")
     return build_new_project if current_user.eligible_sponsor?
 
     redirect_to root_path
@@ -67,6 +71,8 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    add_breadcrumb(project.title, project_path)
+    add_breadcrumb("Details")
     project
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
@@ -122,6 +128,8 @@ class ProjectsController < ApplicationController
   end
 
   def edit
+    add_breadcrumb(project.title, project_path)
+    add_breadcrumb("Edit")
     project
     if project.metadata_model.status != Project::APPROVED_STATUS
       flash[:notice] = "Pending projects can not be edited."
@@ -164,6 +172,8 @@ class ProjectsController < ApplicationController
   def revision_confirmation; end
 
   def contents
+    add_breadcrumb(project.title, project_path)
+    add_breadcrumb("Contents", project_contents_path)
     project
 
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
@@ -208,6 +218,9 @@ class ProjectsController < ApplicationController
 
   def approve
     if current_user.eligible_sysadmin?
+      add_breadcrumb(project.title, project_path)
+      add_breadcrumb("Approval Settings", project_approve_path)
+      add_breadcrumb("Edit")
       project
       @departments = project.departments.join(", ")
       @project_metadata = project.metadata
@@ -247,5 +260,9 @@ class ProjectsController < ApplicationController
       raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
       location = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
       location.join(filename).to_s
+    end
+
+    def set_breadcrumbs
+      add_breadcrumb("Dashboard","/")
     end
 end
