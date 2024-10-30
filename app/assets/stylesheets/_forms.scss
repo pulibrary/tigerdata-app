@@ -35,4 +35,19 @@
     border-radius: 8px;
     border: 1px solid $gray-60;
   }
+
+  .actions {
+    text-align: right;
+    #submit-btn {
+      background-color: $black;
+      color: $white;
+      border: none;
+    }
+
+    #cancel-btn {
+      background-color: $white;
+      border: $black solid 1px;
+      color: $black;
+    }
+  }
 }

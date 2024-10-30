@@ -2,6 +2,7 @@
 <%= render 'data_list' %>
 <div>
    <h2>Project Roles</h2>
+
    <div class="row ">
       <div class="col-md-3">
          <label for="data_sponsor">Data Sponsor</label>
@@ -15,6 +16,7 @@
          <% end %>
       </div>
    </div>
+
    <div class="row ">
       <div class="col-md-3">
          <label for="data_manager">Data Manager</label>
@@ -28,6 +30,7 @@
          <% end %>
       </div>
    </div>
+
    <label>Data User(s)</label>
    <div class="row ">
       <div class="col-md-3">
@@ -48,6 +51,7 @@
          </div>
       </div>
    </div>
+
    <div class="row ">
       <div class="col-md-3">
          <label for="rw-user-uid-to-add">Read/Write</label>
@@ -67,9 +71,8 @@
          </div>
       </div>
    </div>
-   <div>
-      <h2>Project Description</h2>
-      <div class="description-container">
+
+   <h2>Project Description</h2>
          <% if current_user.superuser? %>
          <div class="row ">
            <div class="col-md-3">
@@ -80,8 +83,6 @@
            </div>
          </div>
          <% end %>
-
-
          <div class="row ">
            <div class="col-md-3">
            <label for="title">Title</label>
@@ -96,14 +97,10 @@
          </div>
 
          <% if @project.in_mediaflux? %>
-
          <!--
             Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
             send back to the controller (we don't want to lose this value)
             -->
-
-
-
             <div class="row ">
            <div class="col-md-3">
            <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
@@ -120,44 +117,20 @@
          <input readonly value="<%= @project.mediaflux_id %>" />
          <p>This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
          <% end %>
-
-
-
-
-
          <% end %>
 
-
-
-
-
-
-
-
-
-
-         
-
-         
-
-
-         
-
          <div class="row ">
-           <div class="col-md-3">
-           <label for="project_directory">Directory Path</label>
-         
-           </div>
-           <div class="col-md-9">
-           <span class="path-info"><%= @project.project_directory_parent_path %>/ </span><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
-           </div>
+         <div class="col-md-3">
+         <label for="project_directory">Directory Path</label>
+       
          </div>
+         <div class="col-md-9">
+         <span class="path-info"><%= @project.project_directory_parent_path %>/ </span><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+         </div>
+       </div>
 
 
-
-
-
-         <div class="row ">
+       <div class="row ">
   <div class="col-md-3">
 
   <label for="departments">Departments</label>
@@ -196,16 +169,18 @@
 </div>
 
 
-   <!-- Keeps track of added read-only and read-write users -->
-   <input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
-   <input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
-   <div class="actions">
-      <button type=submit value="Submit" class="btn btn-primary">Submit</button>
-      <% if params[:action] == 'edit' %>
-      <%= link_to "Cancel", @project, class: "btn btn-secondary" %>
-      <% else %>
-      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
-      <% end %>
-   </div>
+<!-- Keeps track of added read-only and read-write users -->
+<input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
+<input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
+<div class="actions">
+   <button type=submit value="Submit" class="btn btn-primary" id="submit-btn">Submit</button>
+   <% if params[:action] == 'edit' %>
+   <%= link_to "Cancel", @project, class: "btn btn-secondary", id: "cancel-btn" %>
+   <% else %>
+   <%= link_to "Cancel", root_path, class: "btn btn-secondary", id: "cancel-btn" %>
+   <% end %>
 </div>
+
+
+   
 </div>
