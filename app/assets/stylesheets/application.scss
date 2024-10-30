@@ -12,6 +12,7 @@
  */
 
 @import "bootstrap";
+@import "variables";
 
 @import "alternate_mediaflux";
 @import "banner";
@@ -24,10 +25,15 @@
 @import "settings";
 @import "styles_preview";
 @import "typography";
-@import "variables";
+
 
 body {
     font-family: $libre-franklin;
     color: $black;
+
+    .main-content {
+      min-height:100vh;
+    }
 }
+
 
