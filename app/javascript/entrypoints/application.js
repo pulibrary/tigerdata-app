@@ -30,7 +30,7 @@ const createMyApp = () => createApp(app);
 
 document.addEventListener('DOMContentLoaded', () => {
   const elements = document.getElementsByClassName('lux');
-  for (let i = 0; i < elements.length; i++) {
+  for (let i = 0; i < elements.length; i += 1) {
     createMyApp()
       .use(lux)
       .mount(elements[i]);
