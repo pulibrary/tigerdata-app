@@ -112,11 +112,23 @@
          </div>
 
          <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
+         <div class="row ">
+  <div class="col-md-3">
+  <label>MediaFlux ID</label> 
 
-         <label>MediaFlux ID</label> 
-         <input readonly value="<%= @project.mediaflux_id %>" />
-         <p>This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
+
+  </div>
+  <div class="col-md-9">
+  <input readonly value="<%= @project.mediaflux_id %>" />
+         <p class="mediaflux-tooltip">This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
+
+  </div>
+</div>
          <% end %>
+
+         
+
+
          <% end %>
 
          <div class="row ">

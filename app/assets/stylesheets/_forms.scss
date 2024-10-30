@@ -36,6 +36,13 @@
     border: 1px solid $gray-60;
   }
 
+  .mediaflux-tooltip {
+    font-family: "Libre Franklin";
+    font-size: 14px;
+    font-style: normal;
+    color: $gray-60;
+  }
+
   .actions {
     text-align: right;
     #submit-btn {
