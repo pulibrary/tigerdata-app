@@ -1,8 +1,11 @@
 <nav>
   <div class="lux">
-    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
+    <%
+=begin%>
+ <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
+<%
+=end%>
     <% if current_user %>
-      TEST
       <lux-library-header app-name="TigerData" abbr-name="TD" theme="dark">
         <lux-menu-bar type="main-menu" :menu-items="[
           {name: 'Home', component: 'Home', href: '/'},
