@@ -1,0 +1,38 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#project-form {
+  .heading-decoration {
+    background-color: $princeton-orange;
+    width: 100px;
+    height: 8px;
+    margin-bottom: 12px;
+  }
+
+  .row {
+    padding-bottom: 40px;
+  }
+
+  h2 {
+    margin-top: 80px;
+    margin-bottom: 40px;
+  }
+
+  label {
+    font-family: "Libre Franklin";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 27px;
+  }
+
+  input {
+    width: 285px;
+  }
+
+  input, select, textarea {
+    border-radius: 8px;
+    border: 1px solid $gray-60;
+  }
+}
