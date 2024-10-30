@@ -5,12 +5,22 @@ class ApplicationController < ActionController::Base
   around_action :mediaflux_session
   before_action :emulate_user
 
+  helper_method :breadcrumbs
+
   def new_session_path(_scope)
     new_user_session_path
   end
 
   def require_admin_user
     head :forbidden unless current_user&.eligible_sysadmin?
+  end
+
+  def breadcrumbs
+    @breadcrumbs ||= []
+  end
+
+  def add_breadcrumb(name, path = nil)
+    breadcrumbs << Breadcrumb.new(name, path)
   end
 
   private
