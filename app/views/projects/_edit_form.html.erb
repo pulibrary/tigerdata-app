@@ -29,88 +29,183 @@
       </div>
    </div>
    <label>Data User(s)</label>
-   <div class="data-users">
-      <label for="ro-user-uid-to-add">Read Only</label>
-      <ul id="ro-users-list">
-         <% (@project.metadata_model.ro_users || []).compact.each do |user| %>
-         <span class="ro-user-item" data-uid="<%= user %>"></span>
+   <div class="row ">
+      <div class="col-md-3">
+         <label for="ro-user-uid-to-add">Read Only</label>
+      </div>
+      <div class="col-md-9">
+         <div class="data-users">
+            <ul id="ro-users-list">
+               <% (@project.metadata_model.ro_users || []).compact.each do |user| %>
+               <span class="ro-user-item" data-uid="<%= user %>"></span>
+               <% end %>
+            </ul>
+            <div class="add_new_uer_div">
+               <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
+               <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
+               <span id="add-ro-user-message"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row ">
+      <div class="col-md-3">
+         <label for="rw-user-uid-to-add">Read/Write</label>
+      </div>
+      <div class="col-md-9">
+         <div class="data-users">
+            <ul id = "rw-users-list">
+               <% (@project.metadata_model.rw_users || []).compact.each do |user|%>
+               <span class="rw-user-item" data-uid="<%= user %>"></span>
+               <%end%>
+            </ul>
+            <div class="add_new_user_div">
+               <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
+               <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
+               <span id = "add-rw-user-message"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <h2>Project Description</h2>
+      <div class="description-container">
+         <% if current_user.superuser? %>
+         <div class="row ">
+           <div class="col-md-3">
+           <label for="project_id">Project ID</label>
+           </div>
+           <div class="col-md-9">
+           <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
+           </div>
+         </div>
          <% end %>
-      </ul>
-      <div class="add_new_uer_div">
-         <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
-         <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
-         <span id="add-ro-user-message"></span>
-      </div>
-   </div>
-   <div class="data-users">
-      <label for="rw-user-uid-to-add">Read/Write</label>
-      <ul id = "rw-users-list">
-         <% (@project.metadata_model.rw_users || []).compact.each do |user|%>
-         <span class="rw-user-item" data-uid="<%= user %>"></span>
-         <%end%>
-      </ul>
-      <div class="add_new_user_div">
-         <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
-         <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
-         <span id = "add-rw-user-message"></span>
-      </div>
-   </div>
+
+
+         <div class="row ">
+           <div class="col-md-3">
+           <label for="title">Title</label>
+
+
+           </div>
+           <div class="col-md-9">
+
+           <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" />
+
+           </div>
+         </div>
+
+         <% if @project.in_mediaflux? %>
+
+         <!--
+            Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
+            send back to the controller (we don't want to lose this value)
+            -->
+
+
+
+            <div class="row ">
+           <div class="col-md-3">
+           <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
+         
+           </div>
+           <div class="col-md-9">
+           <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
+           </div>
+         </div>
+
+         <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
+
+         <label>MediaFlux ID</label> 
+         <input readonly value="<%= @project.mediaflux_id %>" />
+         <p>This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
+         <% end %>
+
+
+
+
+
+         <% end %>
+
+
+
+
+
+
+
+
+
+
+         
+
+         
+
+
+         
+
+         <div class="row ">
+           <div class="col-md-3">
+           <label for="project_directory">Directory Path</label>
+         
+           </div>
+           <div class="col-md-9">
+           <span class="path-info"><%= @project.project_directory_parent_path %>/ </span><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+           </div>
+         </div>
+
+
+
+
+
+         <div class="row ">
+  <div class="col-md-3">
+
+  <label for="departments">Departments</label>
+
+
+  </div>
+  <div class="col-md-9">
+
+  <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
+               <% Affiliation.all.each do |affiliation| %>
+               <% if @project.departments.include?(affiliation[:code]) %>
+               <option selected><%= affiliation[:code] %></option>
+               <% else %>
+               <option><%= affiliation[:code] %></option>
+               <% end %>
+                <% end %>
+               
+            </select>
+
+  </div>
 </div>
-<div>
-   <h2>Project Description</h2>
 
-   <div class="description-container">
-      <% if current_user.superuser? %>
-      <div>
-         <label for="project_id">Project ID</label>
-         <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
-      </div>
-      <% end %>
-      
-      <label for="title">Title</label> <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" /></p>
 
-      <% if @project.in_mediaflux? %>
-      <!--
-         Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
-         send back to the controller (we don't want to lose this value)
-         -->
-      <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label><input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
-      <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
-      (MediaFlux id: <%= @project.mediaflux_id %>)<br/>
-      <% end %>
-      This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
+<div class="row ">
+  <div class="col-md-3">
+  <label for="description">Description</label>
+
+
+  </div>
+  <div class="col-md-9">
+
+  <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
+            rows="5" cols="72" placeholder=""><%= @project.metadata_model.description %></textarea>
+
+  </div>
+</div>
+
+
+   <!-- Keeps track of added read-only and read-write users -->
+   <input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
+   <input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
+   <div class="actions">
+      <button type=submit value="Submit" class="btn btn-primary">Submit</button>
+      <% if params[:action] == 'edit' %>
+      <%= link_to "Cancel", @project, class: "btn btn-secondary" %>
       <% else %>
-      <!-- Unicode alphanumeric, minus-dash, and/or underscore characters -->
-      <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" /></p>
+      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
       <% end %>
-
-      <div>
-         <label for="departments">Departments</label>
-         <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
-            <% Affiliation.all.each do |affiliation| %>
-            <% if @project.departments.include?(affiliation[:code]) %>
-            <option selected><%= affiliation[:code] %></option>
-            <% else %>
-            <option><%= affiliation[:code] %></option>
-            <% end %>
-            <% end %>
-         </select>
-      </div>
-      
-      <label for="description">Description:</label>
-      <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
-         rows="5" cols="120" placeholder=""><%= @project.metadata_model.description %></textarea>
    </div>
-</div>
-<!-- Keeps track of added read-only and read-write users -->
-<input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
-<input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
-<div class="actions">
-   <button type=submit value="Submit" class="btn btn-primary">Submit</button>
-   <% if params[:action] == 'edit' %>
-   <%= link_to "Cancel", @project, class: "btn btn-secondary" %>
-   <% else %>
-   <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
-   <% end %>
 </div>
 </div>
