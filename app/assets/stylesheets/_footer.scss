@@ -1,10 +1,36 @@
+@import "variables";
+@import "bootstrap";
+
 #footer {
   background-color: $black !important;
   color: $white;
+  border-top: $princeton-orange 8px solid;
+  margin-top: 2em;
 
   .logos {
     text-align: center;
-    padding: 80px 0px;
+    padding: 60px 0px;
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 45%;
+      min-width: 120px;
+    }
+
+    #dean-research-logo {
+      margin: auto;
+      padding: 10px;
+    }
+  }
+
+  .princeton-logo {
+    text-align: right;
+    img {
+      width: 45%;
+      min-width: 120px;
+    }
   }
 
   .version-info {
@@ -18,10 +44,6 @@
   .footer-bottom {
     padding: 24px 20px;
     border-top: 1px solid $white;
-  }
-
-  .princeton-logo {
-    margin: 10px;
   }
 
   #copyright {
