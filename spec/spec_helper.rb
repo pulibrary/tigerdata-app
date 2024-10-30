@@ -35,6 +35,9 @@ FactoryBot.find_definitions
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # store a list of failed examples so we can exclusively re-run them if needed
+  config.example_status_persistence_file_path = "spec/fixtures/failed_tests.txt"
+
   # FactoryBot
   config.include FactoryBot::Syntax::Methods
 
