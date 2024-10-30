@@ -29,5 +29,10 @@
 body {
     font-family: $libre-franklin;
     color: $black;
+
+    .main-content {
+      min-height:100vh;
+    }
 }
+
 
