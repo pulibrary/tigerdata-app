@@ -1,13 +1,8 @@
 <nav>
   <div class="lux">
-    <%
-=begin%>
- <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
-<%
-=end%>
     <% if current_user %>
       <lux-library-header abbr-name="TD" theme="dark">
-        <template v-slot:logo> <a href="/"> <img src="https://raw.githubusercontent.com/pulibrary/tigerdata-app/refs/heads/main/app/assets/images/TigerData-LOGO-KO_wide2.svg" height="100"> </template>
+        <template v-slot:logo> <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
         <lux-menu-bar type="main-menu" :menu-items="[
           {name: 'Contact US', component: 'Home', href: 'mailto:tigerdata@princeton.edu'},
           {name: 'FAQ', component: 'Home', href: 'https://tigerdata.princeton.edu/frequently-asked-questions'},
@@ -20,7 +15,7 @@
       </lux-library-header>
     <% else %>
       <lux-library-header abbr-name="TD" theme="dark">
-        <template v-slot:logo> <a href="/"> <img src="https://raw.githubusercontent.com/pulibrary/tigerdata-app/refs/heads/main/app/assets/images/TigerData-LOGO-KO_wide2.svg" height="100"> </template>
+        <template v-slot:logo><a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
         <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
       </lux-library-header>
     <% end %>

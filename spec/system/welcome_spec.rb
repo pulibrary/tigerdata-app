@@ -37,9 +37,10 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the 'Log Out' button" do
         sign_in current_user
         visit "/"
+
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
-        expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Log Out"
+        click_button current_user.given_name.to_s
+        expect(page).to have_content "Logout"
       end
 
       it "shows the Mediflux version on the home page for a logged in user" do
@@ -116,8 +117,9 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the 'Log Out' button" do
         sign_in no_projects_user
         visit "/"
-        expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Log Out"
+        expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
+        click_button no_projects_user.given_name.to_s
+        expect(page).to have_content "Logout"
       end
 
       context "if the user is not a sponsor" do
