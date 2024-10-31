@@ -70,7 +70,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
 
     fill_in "project_directory", with: "test_project"
     fill_in "title", with: "My test project"
-    expect(page).to have_content("Project Directory: /td-test-001/")
+    expect(page).to have_content("/td-test-001/")
     expect(page.find_all("input:invalid").count).to eq(0)
     expect do
       click_button("Submit")

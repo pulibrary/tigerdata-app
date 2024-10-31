@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
+
     <%= action_cable_meta_tag %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
@@ -39,7 +40,7 @@
     <%= render partial: 'shared/emulator' %>
 
 
-<div class="container-fluid">
+<div class="container-fluid main-content">
   <div class="row">
     <div class="col-1 gutter"></div>
 
@@ -64,6 +65,7 @@
   </div>
 </div>
 
-    <%= render partial: 'shared/footer' %>
+<%= render partial: 'shared/footer' %>
+
   </body>
 </html>
