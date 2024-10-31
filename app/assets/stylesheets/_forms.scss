@@ -43,6 +43,14 @@
     color: $gray-60;
   }
 
+  .required-field {
+    font-family: "Libre Franklin";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 21px;
+    color: $gray-60;
+  }
+
   .actions {
     text-align: right;
     #submit-btn {

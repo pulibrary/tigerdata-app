@@ -6,6 +6,7 @@
    <div class="row ">
       <div class="col-md-3">
          <label for="data_sponsor">Data Sponsor</label>
+         <div class="required-field">Required</div>
       </div>
       <div class="col-md-9">
          <% if current_user.superuser? %>
@@ -20,6 +21,7 @@
    <div class="row ">
       <div class="col-md-3">
          <label for="data_manager">Data Manager</label>
+         <div class="required-field">Required</div>
       </div>
       <div class="col-md-9">
          <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
@@ -86,13 +88,10 @@
          <div class="row ">
            <div class="col-md-3">
            <label for="title">Title</label>
-
-
+           <div class="required-field">Required</div>
            </div>
            <div class="col-md-9">
-
            <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" />
-
            </div>
          </div>
 
@@ -126,15 +125,12 @@
 </div>
          <% end %>
 
-         
-
-
          <% end %>
 
          <div class="row ">
          <div class="col-md-3">
          <label for="project_directory">Directory Path</label>
-       
+         <div class="required-field">Required</div>       
          </div>
          <div class="col-md-9">
          <span class="path-info"><%= @project.project_directory_parent_path %>/ </span><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
@@ -146,8 +142,7 @@
   <div class="col-md-3">
 
   <label for="departments">Departments</label>
-
-
+  <div class="required-field">Required</div>
   </div>
   <div class="col-md-9">
 
@@ -159,9 +154,7 @@
                <option><%= affiliation[:code] %></option>
                <% end %>
                 <% end %>
-               
             </select>
-
   </div>
 </div>
 
