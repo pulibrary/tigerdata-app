@@ -1,0 +1,68 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#project-form {
+  .heading-decoration {
+    background-color: $princeton-orange;
+    width: 100px;
+    height: 8px;
+    margin-bottom: 12px;
+  }
+
+  .row {
+    padding-bottom: 40px;
+  }
+
+  h2 {
+    margin-top: 80px;
+    margin-bottom: 40px;
+  }
+
+  label {
+    font-family: "Libre Franklin";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 27px;
+  }
+
+  input {
+    width: 285px;
+  }
+
+  input, select, textarea {
+    border-radius: 8px;
+    border: 1px solid $gray-60;
+  }
+
+  .mediaflux-tooltip {
+    font-family: "Libre Franklin";
+    font-size: 14px;
+    font-style: normal;
+    color: $gray-60;
+  }
+
+  .required-field {
+    font-family: "Libre Franklin";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 21px;
+    color: $gray-60;
+  }
+
+  .actions {
+    text-align: right;
+    #submit-btn {
+      background-color: $black;
+      color: $white;
+      border: none;
+    }
+
+    #cancel-btn {
+      background-color: $white;
+      border: $black solid 1px;
+      color: $black;
+    }
+  }
+}
