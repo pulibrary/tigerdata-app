@@ -1,16 +1,23 @@
-<header>
-<div id="header">
-  <nav>
-    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
-    <div class="body">
-    <%= link_to "Home", root_path, class: "navbar-brand"%>
+<nav>
+  <div class="lux">
     <% if current_user %>
-      User: <%= current_user.uid%>
-      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
+      <lux-library-header abbr-name="TD" theme="dark">
+        <template v-slot:logo> <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
+        <lux-menu-bar type="main-menu" :menu-items="[
+          {name: 'Contact US', component: 'Home', href: 'mailto:tigerdata@princeton.edu'},
+          {name: 'FAQ', component: 'Home', href: 'https://tigerdata.princeton.edu/frequently-asked-questions'},
+          {name: '<%= current_user.display_name %>', component: 'Account', href: '/account/', children: [
+            {name: 'Account Settings', component: 'Account', href: '/'},
+            {name: 'Logout', component: 'Logout', href: '<%= main_app.destroy_user_session_path %> '}
+            ]}
+          ]"
+        ></lux-menu-bar>
+      </lux-library-header>
     <% else %>
-      <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
+      <lux-library-header abbr-name="TD" theme="dark">
+        <template v-slot:logo><a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
+        <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
+      </lux-library-header>
     <% end %>
-    </div>
-  </nav>
-</div>
-</header>
+  </div>
+</nav>

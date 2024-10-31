@@ -10,7 +10,8 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  */
-
+/* Import the LUX styles */
+@import "lux-design-system/dist/style.css";
 @import "bootstrap";
 @import "variables";
 
@@ -35,5 +36,4 @@ body {
       min-height:100vh;
     }
 }
-
 
