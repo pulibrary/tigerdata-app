@@ -13,6 +13,7 @@
 /* Import the LUX styles */
 @import "lux-design-system/dist/style.css";
 @import "bootstrap";
+@import "variables";
 
 @import "alternate_mediaflux";
 @import "banner";
@@ -20,13 +21,19 @@
 @import "components/mediaflux_status";
 @import "emulator";
 @import "footer";
+@import "forms";
 @import "header";
 @import "settings";
 @import "styles_preview";
 @import "typography";
-@import "variables";
+
 
 body {
     font-family: $libre-franklin;
     color: $black;
+
+    .main-content {
+      min-height:100vh;
+    }
 }
+
