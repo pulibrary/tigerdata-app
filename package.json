@@ -24,7 +24,7 @@
     "bootstrap": "^5.2.3",
     "browserslist": "^4.21.5",
     "jquery": "^3.6.3",
-    "lux-design-system": "^5.2.14",
+    "lux-design-system": "^5.10.0",
     "vite-plugin-rails": "^0.5.0",
     "vue": "^3.4.31",
     "yarn": "^1.22.22",

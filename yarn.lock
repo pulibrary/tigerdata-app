@@ -3199,9 +3199,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lux-design-system@npm:^5.2.14":
-  version: 5.9.1
-  resolution: "lux-design-system@npm:5.9.1"
+"lux-design-system@npm:^5.10.0":
+  version: 5.10.0
+  resolution: "lux-design-system@npm:5.10.0"
   dependencies:
     core-js: "npm:^3.8.3"
     register-service-worker: "npm:^1.7.2"
@@ -3210,7 +3210,7 @@ __metadata:
     vue-multiselect: "npm:^3.0.0-beta.3"
     vue3-cookies: "npm:^1.0.6"
     vuex: "npm:^4.0.0"
-  checksum: 10c0/532fb5012b565b442e3cf2f19aa09275306c3deb534bb4324a0f7e909164fde13bd2ed0eddcdb18ff76c7559d5ee3c20e831942f9cc2135c4ae5cdfed1e013db
+  checksum: 10c0/10b16fc02ffb980ce7e198a4bf197d080424de2c485b9353098df9b2ce023bf792023f91de7d1c98c141ed28de32dcf45f8e2ccd4c62d90126618d2e2ebdd44a
   languageName: node
   linkType: hard
 
@@ -4648,7 +4648,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.27.5"
     jquery: "npm:^3.6.3"
     jsdom: "npm:^21.1.0"
-    lux-design-system: "npm:^5.2.14"
+    lux-design-system: "npm:^5.10.0"
     rollup: "npm:^4.24.0"
     sass-embedded: "npm:^1.80.4"
     vite: "npm:^5.4.8"
