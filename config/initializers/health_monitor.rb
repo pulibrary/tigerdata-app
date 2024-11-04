@@ -3,6 +3,9 @@ Rails.application.config.after_initialize do
   HealthMonitor.configure do |config|
     config.cache
 
+    # Intentionally break it so we can test the load balancer config
+    config.add_custom_provider(CustomProvider)
+
     # Mediaflux check
     config.add_custom_provider(MediafluxStatus)
 
