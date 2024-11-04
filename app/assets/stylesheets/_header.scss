@@ -4,17 +4,20 @@
 
 #header {
     padding: 0px;
-    background-color: #000000;
+    background-color: $black;
 
     .navbar-brand {
-        color: #ffffff;
+        color: $white;
         margin: auto;
         padding: 10px;
     }
     .btn.btn-warning.btn-sm {
-        --bs-btn-bg: #ffc107;
+        --bs-btn-bg: #FBC129;
         padding-left: 10px;
         margin-left: 10px;
+        font-family: "Libre Franklin";
+        font-size: 16px;
+        color: $black;
     }
 }
 .container-fluid {
@@ -38,6 +41,10 @@
 
   .header-row {
     width: 100% !important;
+  }
+
+  .header-logo {
+    padding-left: 20px;
   }
 
   #header-navigation {
