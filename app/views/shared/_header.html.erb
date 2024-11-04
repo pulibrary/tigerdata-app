@@ -1,16 +1,41 @@
 <header>
 <div id="header">
-  <nav>
-    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
-    <div class="body">
-    <%= link_to "Home", root_path, class: "navbar-brand"%>
-    <% if current_user %>
-      User: <%= current_user.uid%>
-      <%= link_to "Log Out", main_app.destroy_user_session_path, class: "btn btn-warning btn-sm" %>
-    <% else %>
-      <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
-    <% end %>
-    </div>
+  <nav class="navbar navbar-expand-lg">
+
+<div class="row header-row">
+
+  <div class="col-lg-3">
+  <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
+
+  </div>
+
+  <div class="col-lg-9">
+  <div id="header-navigation">
+  <ul class="navbar-nav">
+  <li class="navbar-item"><%= link_to "Contact Us", "mailto:tigerdata@princeton.edu", class: "navbar-contact-us" %></li>
+  <li class="navbar-item"><%= link_to "FAQ", "https://tigerdata.princeton.edu/frequently-asked-questions", class: "navbar-faq" %></li>
+  <% if current_user %>
+    <li class="navbar-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= current_user.uid%>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action</a>
+          <%= link_to "Log Out", main_app.destroy_user_session_path, class: "dropdown-item" %>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+  <% else %>
+    <li class="navbar-item"><%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %></li>
+  <% end %>
+  </ul>
+  </div>
+  </div>
+
+
+</div>
+   
   </nav>
 </div>
 </header>

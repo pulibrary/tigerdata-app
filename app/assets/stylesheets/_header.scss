@@ -1,13 +1,11 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
 #header {
     padding: 0px;
     background-color: #000000;
-    .body{
-        color: #ffffff;
-        margin: auto;
-        padding: 50px 25px 25px 25px;
-        float: right;
-        display: -webkit-inline-box;
-    }
+
     .navbar-brand {
         color: #ffffff;
         margin: auto;
@@ -36,4 +34,41 @@
   .gutter {
     width: 20px;
     // border: 1px solid #00FF00;
+  }
+
+  .header-row {
+    width: 100% !important;
+  }
+
+  #header-navigation {
+    color: $white;
+    margin: auto;
+    padding: 50px 25px 25px 25px;
+    float: right;
+    display: -webkit-inline-box;
+    font-family: "Libre Franklin";
+    .navbar-item { 
+      color: $white;
+      font-family: "Libre Franklin";
+      font-size: 16px;
+      font-style: normal;
+      line-height: 24px;
+      font-weight: 600;
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+    .navbar-item a {
+      color: $white;
+      font-family: "Libre Franklin";
+      font-size: 16px;
+      font-style: normal;
+      line-height: 24px;
+      font-weight: 600;
+      margin-left: 12px;
+      margin-right: 12px;
+      text-decoration: none;
+    }
+    .navbar-item a:hover {
+      text-decoration: underline;
+    }
   }
