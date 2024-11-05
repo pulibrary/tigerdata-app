@@ -15,10 +15,10 @@
   <li class="navbar-item"><%= link_to "FAQ", "https://tigerdata.princeton.edu/frequently-asked-questions", class: "navbar-faq" %></li>
   <% if current_user %>
     <li class="navbar-item dropdown">
-        <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <%= current_user.uid%>
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <%= link_to "Log out", main_app.destroy_user_session_path, class: "dropdown-item" %>
         </div>
       </li>

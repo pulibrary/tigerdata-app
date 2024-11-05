@@ -78,4 +78,12 @@
     .navbar-item a:hover {
       text-decoration: underline;
     }
+    .dropdown-menu { 
+      left: -45px;
+    }
+
+    .dropdown-menu a {
+      color: $black;
+      font-weight: 400;
+    }
   }
