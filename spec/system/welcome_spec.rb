@@ -37,6 +37,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the 'Welcome' message and the 'Log out' button" do
         sign_in current_user
         visit "/"
+
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         click_link current_user.uid

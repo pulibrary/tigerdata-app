@@ -11,6 +11,7 @@
  * It is generally better to create a new file per style scope.
  */
 
+@import "bootstrap";
 @import "variables";
 
 @import "alternate_mediaflux";
@@ -34,5 +35,4 @@ body {
       min-height:100vh;
     }
 }
-
 
