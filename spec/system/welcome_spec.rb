@@ -4,10 +4,10 @@ require "rails_helper"
 
 RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
-    it "shows the 'Log In' button" do
+    it "shows the 'Log in' button" do
       visit "/"
       expect(page).to have_content "Welcome to TigerData"
-      expect(page).to have_content "Log In"
+      expect(page).to have_content "Log in"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
 
@@ -34,12 +34,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     end
 
     context "current user dashboard" do
-      it "shows the 'Log Out' button" do
+      it "shows the 'Welcome' message and the 'Log out' button" do
         sign_in current_user
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Log Out"
+        click_link current_user.uid
+        expect(page).to have_content "Log out"
       end
 
       it "shows the Mediflux version on the home page for a logged in user" do
@@ -113,11 +114,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     end
 
     context "for a user without any projects" do
-      it "shows the 'Log Out' button" do
+      it "shows the 'Log out' button" do
         sign_in no_projects_user
         visit "/"
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Log Out"
+        click_link no_projects_user.uid
+        expect(page).to have_content "Log out"
       end
 
       context "if the user is not a sponsor" do
