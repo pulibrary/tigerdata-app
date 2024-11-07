@@ -16,15 +16,8 @@
     <%= vite_javascript_tag 'application' %>
     <script src="//code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
+    <!-- Load our local Autocomplete plug-in which is a copy of https://github.com/devbridge/jQuery-Autocomplete -->
+    <script src="<%= root_path + 'jquery.autocomplete.js' %>"></script>
 
     <% if Rails.env.development? || Rails.env.staging? %>
       <%= render 'shared/plausible_dev_staging' %>

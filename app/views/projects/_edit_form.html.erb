@@ -1,5 +1,4 @@
 <%= render 'form_errors' %>
-<%= render 'data_list' %>
 <div id="edit">
    <h2>Project Roles</h2>
 
@@ -10,12 +9,13 @@
       </div>
       <div class="col-md-9">
          <% if current_user.superuser? %>
-            <input type="text" list="sponsor-users" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required oninvalid="this.setCustomValidity('')"
+            <input type="text" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required oninvalid="this.setCustomValidity('')"
                oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor %>" /></input>
             <div class="custom_error" id="sponsor_error" aria-live="polite">
                <%= image_tag("custom_error.svg", alt: "This field is required") %>
                <div class="error_message">This field is required. </div>
             </div>
+         <span class="autocomplete-arrow"></span>
          <% else %>
             <input type="hidden" id="data_sponsor" name="data_sponsor" oninvalid="this.setCustomValidity('')"
                oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
@@ -31,13 +31,14 @@
       </div>
       <div class="col-md-9">
          <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
-         <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required oninvalid="this.setCustomValidity('')"
+         <input type="text" id="data_manager" aria-label="data manager" name="data_manager" required oninvalid="this.setCustomValidity('')"
                oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_manager %>" /></input>
          <div class="custom_error" id="manager_error" aria-live="polite">
             <%= image_tag("custom_error.svg", alt: "This field is required") %>
             <div class="error_message">This field is required. </div>
          </div>
       </div>
+         <span class="autocomplete-arrow"></span>
          <% else %>
          <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
          <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
@@ -59,6 +60,7 @@
             </ul>
             <div class="add_new_uer_div">
                <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
+               <span class="autocomplete-arrow"></span>
                <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
                <span id="add-ro-user-message"></span>
             </div>
@@ -79,6 +81,7 @@
             </ul>
             <div class="add_new_user_div">
                <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
+               <span class="autocomplete-arrow"></span>
                <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
                <span id = "add-rw-user-message"></span>
             </div>
@@ -122,6 +125,7 @@
            <div class="col-md-3">
            <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
 
+
            </div>
            <div class="col-md-9">
            <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
@@ -132,6 +136,8 @@
          <div class="row ">
    <div class="col-md-3">
    <label>MediaFlux ID</label>
+  <div class="col-md-3">
+  <label>MediaFlux ID</label>
 
 
   </div>
@@ -147,6 +153,7 @@
          <div class="row ">
          <div class="col-md-3">
          <label for="project_directory">Directory Path</label>
+         <div class="required-field">Required</div>
          <div class="required-field">Required</div>
          </div>
          <div class="col-md-9">
@@ -212,3 +219,33 @@
 
 
 </div>
+
+<script>
+   $(function() {
+      // Setup the autocomplete for a given `elementId` with the `data` provided.
+      // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
+      var setupAutocomplete = function(elementId, data) {
+         $(elementId).autocomplete({
+            minChars: 0,
+            autoSelectFirst: true,
+            lookup: data,
+            onSelect: function (suggestion) {
+               $(elementId).val(suggestion.data);
+            }
+         });
+      }
+
+      // Give focus to the autocomplete textbox when the arrow is clicked
+      $(".autocomplete-arrow").on("click", function (event) {
+         $(event.currentTarget).prev().focus();
+         return false;
+      })
+
+      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ]);
+      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ]);
+      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ]);
+      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ]);
+   });
+</script>
+
+</div></div>
