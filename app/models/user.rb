@@ -50,11 +50,21 @@ class User < ApplicationRecord
     end
   end
 
+  def medaiflux_login(token)
+    logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
+    @mediaflux_session = logon_request.session_token
+    @cas_user = true
+  end
+
   def mediaflux_session
-    @mediaflux_session ||= begin
-                            logon_request = Mediaflux::LogonRequest.new
-                            logon_request.session_token
-                          end
+    if @mediaflux_session.nil? && @cas_user # the user's session has timed out.  Now what?
+      raise "Invalid mediflux session!"
+    elsif @mediaflux_session.nil? # utilize the service account
+      logon_request = Mediaflux::LogonRequest.new
+      @mediaflux_session = logon_request.session_token
+    end
+
+    @mediaflux_session
   end
 
   def terminate_mediaflux_session
