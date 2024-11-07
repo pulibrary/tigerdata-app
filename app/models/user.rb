@@ -19,12 +19,8 @@ class User < ApplicationRecord
     user
   end
 
-  def self.all_users
-    User.all.map(&:uid)
-  end
-
   # Users that can be project sponsors
-  def self.sponsor_users_list
+  def self.sponsor_users
     if Rails.env.development? || Rails.env.staging?
       User.where(eligible_sponsor: true).or(User.where(superuser: true))
     else
@@ -33,22 +29,12 @@ class User < ApplicationRecord
   end
 
   # Users that can be data managers
-  def self.manager_users_list
+  def self.manager_users
     if Rails.env.development? || Rails.env.staging?
       User.where(eligible_manager: true).or(User.where(superuser: true))
     else
       User.where(eligible_manager: true)
     end
-  end
-
-  # UIDs of users that can be project sponsors
-  def self.sponsor_users
-    self.sponsor_users_list.map(&:uid)
-  end
-
-  # UIDs of users that can data managers
-  def self.manager_users
-    self.manager_users_list.map(&:uid)
   end
 
   def clear_mediaflux_session(session)

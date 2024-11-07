@@ -13,6 +13,7 @@ module ProjectHelper
 
   # Returns a string with JSON representation of a list of users
   # The JSON can be used to feed the jQuery Autocomplete plug-in
+  # rubocop:disable Rails/OutputSafety
   def user_list_json(users)
     json_elements = users.map do |user|
       "{ data: '#{user.uid}', value: '#{user.display_name_safe} (#{user.uid})' }"
@@ -20,6 +21,7 @@ module ProjectHelper
 
     json_elements.join(",").html_safe
   end
+  # rubocop:enable Rails/OutputSafety
 
   def sponsor_list_json
     user_list_json(User.sponsor_users_list)

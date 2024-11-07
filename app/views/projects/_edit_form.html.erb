@@ -221,6 +221,9 @@
 </div>
 
 <script>
+   // Notice that we are keeping this JavaScript on the page rather than on application.js
+   // because otherwise we don't have access to $(elementId).autocomplete()
+   // This is due to the way we are loading the autocomplete outside of application.js
    $(function() {
       // Setup the autocomplete for a given `elementId` with the `data` provided.
       // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
@@ -247,5 +250,3 @@
       setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ]);
    });
 </script>
-
-</div></div>

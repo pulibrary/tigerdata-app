@@ -189,7 +189,7 @@ RSpec.describe User, type: :model do
       FactoryBot.create(:superuser)
       project_sponsor = FactoryBot.create(:project_sponsor)
       FactoryBot.create(:user)
-      expect(User.sponsor_users).to eq([project_sponsor.uid])
+      expect(User.sponsor_users.map(&:uid)).to eq([project_sponsor.uid])
     end
 
     context "in development" do
@@ -198,7 +198,7 @@ RSpec.describe User, type: :model do
         project_sponsor = FactoryBot.create(:project_sponsor)
         FactoryBot.create(:user)
         allow(Rails.env).to receive(:development?).and_return true
-        expect(User.sponsor_users).to eq([superuser.uid, project_sponsor.uid])
+        expect(User.sponsor_users.map(&:uid).sort).to eq([superuser.uid, project_sponsor.uid].sort)
       end
     end
   end
