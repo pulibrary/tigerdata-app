@@ -233,8 +233,7 @@
   }
 
   .custom_error{
-    display: -webkit-inline-box;
-    // display: none;
+    display: none;
 
     .error_message{
       color: var(--Secondary-Red-Dark, #B00002);

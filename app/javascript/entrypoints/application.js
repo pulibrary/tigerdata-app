@@ -219,18 +219,12 @@ function emulate() {
 
 function showValidationError() {
   const errorDiv = document.getElementById('custom_error');
-  const myInput = document.getElementById('data_sponsor');
+  const fieldInput = document.getElementById('data_sponsor');
 
-  //show the hidden custom error div if the data sponsor input is invalid
-  myInput.addEventListener('input', () => {
-    if (!myInput.validity.valid) {
-      myInput.classList.add('invalid');
-      if (errorDiv) {
-        errorDiv.classList.toggle('show-error'); // Add/remove 'show-error' class
-      }
-    } else {
-      myInput.classList.remove('invalid');
-    }
+  $('#data_sponsor').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    errorDiv.style.display += "-webkit-inline-box" , "block";
   });
 }
 
