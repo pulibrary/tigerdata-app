@@ -24,11 +24,11 @@ module ProjectHelper
   # rubocop:enable Rails/OutputSafety
 
   def sponsor_list_json
-    user_list_json(User.sponsor_users_list)
+    user_list_json(User.sponsor_users)
   end
 
   def manager_list_json
-    user_list_json(User.manager_users_list)
+    user_list_json(User.manager_users)
   end
 
   def all_users_list_json
