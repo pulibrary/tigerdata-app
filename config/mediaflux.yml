@@ -83,6 +83,15 @@ development:
   api_transport: <%= ENV["MEDIAFLUX_TRANSPORT"] || 'http' %>
   api_host: <%= ENV["MEDIAFLUX_HOST"] || '0.0.0.0' %>
   api_port: <%= ENV["MEDIAFLUX_PORT"] || '8888' %>
+  # api_hidden_root: '/cac01'
+  # api_root_to_clean: '/cac01/castest'
+  # api_root_ns: '/cac01/castest/tigerdataNS'
+  # api_root_collection_name: 'tigerdata'
+  # api_root_collection_namespace: '/cac01/castest'
+  # api_root_collection: 'path=/cac01/castest/tigerdata'
+  # api_transport: 'http'
+  # api_host: 'td-meta1.princeton.edu'
+  # api_port: '8080'
 
   # Alternate to development is an alternate location in docker
   api_alternate_hidden_root: '/td-alternate-001'
