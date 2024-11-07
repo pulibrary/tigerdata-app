@@ -16,6 +16,7 @@
                <div class="error_message">This field is required. </div>
             </div>
          <span class="autocomplete-arrow"></span>
+         <span id="data_sponsor_error" class="autocomplete-error"></span>
          <% else %>
             <input type="hidden" id="data_sponsor" name="data_sponsor" oninvalid="this.setCustomValidity('')"
                oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
@@ -39,6 +40,7 @@
          </div>
       </div>
          <span class="autocomplete-arrow"></span>
+         <span id="data_manager_error" class="autocomplete-error"></span>
          <% else %>
          <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
          <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
@@ -61,6 +63,7 @@
             <div class="add_new_uer_div">
                <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
                <span class="autocomplete-arrow"></span>
+               <span id="ro-user-uid-to-ad_error" class="autocomplete-error"></span>
                <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
                <span id="add-ro-user-message"></span>
             </div>
@@ -82,6 +85,7 @@
             <div class="add_new_user_div">
                <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
                <span class="autocomplete-arrow"></span>
+               <span id="rw-user-uid-to-ad_error" class="autocomplete-error"></span>
                <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
                <span id = "add-rw-user-message"></span>
             </div>
@@ -229,12 +233,32 @@
       // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
       var setupAutocomplete = function(elementId, data) {
          $(elementId).autocomplete({
-            minChars: 0,
+            minChars: 1,
             autoSelectFirst: true,
+            showNoSuggestionNotice: true,
+            noSuggestionNotice: "No results found",
             lookup: data,
             onSelect: function (suggestion) {
                $(elementId).val(suggestion.data);
             }
+         });
+
+         $(elementId).on("focusout", function(event) {
+            const errorId = elementId + "_error";
+            const value = event.target.value.trim();
+            if (value === "") {
+               // TODO: only some fields are required
+               $(errorId).text("This field is required");
+               return;
+            }
+            $(errorId).text("");
+            for(let i = 0; i < data.length; i++) {
+               if (value === data[i].data) {
+                  // we got a match
+                  return;
+               }
+            }
+            $(errorId).text("Invalid value entered");
          });
       }
 
