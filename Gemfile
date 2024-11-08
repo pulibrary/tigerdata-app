@@ -112,5 +112,6 @@ group :test do
   gem "selenium-webdriver"
   gem "simplecov", require: false
   gem "webmock"
-  gem "yard"
 end
+
+gem "yard", "~> 0.9.36", group: :development
