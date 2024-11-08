@@ -16,6 +16,7 @@
                <div class="error_message">This field is required. </div>
             </div>
          <span class="autocomplete-arrow"></span>
+         <i id="data_sponsor_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
          <span id="data_sponsor_error" class="autocomplete-error"></span>
          <% else %>
             <input type="hidden" id="data_sponsor" name="data_sponsor" oninvalid="this.setCustomValidity('')"
@@ -40,6 +41,7 @@
          </div>
       </div>
          <span class="autocomplete-arrow"></span>
+         <i id="data_manager_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
          <span id="data_manager_error" class="autocomplete-error"></span>
          <% else %>
          <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
@@ -63,7 +65,8 @@
             <div class="add_new_uer_div">
                <input id="ro-user-uid-to-add"  list="all-users"  placeholder="netid" class="add_new_user_textbox"></input>
                <span class="autocomplete-arrow"></span>
-               <span id="ro-user-uid-to-ad_error" class="autocomplete-error"></span>
+               <i id="ro-user-uid-to-add_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
+               <span id="ro-user-uid-to-add_error" class="autocomplete-error"></span>
                <input type="submit" value="Add User" id="btn-add-ro-user" class="btn btn-secondary"  title="Adds a read only user"/>
                <span id="add-ro-user-message"></span>
             </div>
@@ -85,7 +88,8 @@
             <div class="add_new_user_div">
                <input id = "rw-user-uid-to-add"  list="all-users"  placeholder = "netid" class="add_new_user_textbox"> </input>
                <span class="autocomplete-arrow"></span>
-               <span id="rw-user-uid-to-ad_error" class="autocomplete-error"></span>
+               <i id="rw-user-uid-to-add_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
+               <span id="rw-user-uid-to-add_error" class="autocomplete-error"></span>
                <input type="submit" value="Add User" id="btn-add-rw-user" class="btn btn-secondary" title="Adds a read write user"/>
                <span id = "add-rw-user-message"></span>
             </div>
@@ -229,9 +233,35 @@
    // because otherwise we don't have access to $(elementId).autocomplete()
    // This is due to the way we are loading the autocomplete outside of application.js
    $(function() {
+
+      var validateSelection = function(value, elementId, data, required) {
+         const errorId = elementId + "_error";
+         var matchFound = false;
+
+         $(errorId).text("");
+         $(errorId).addClass("hidden-element");
+         if (value === "") {
+            if(required === true) {
+               $(errorId).removeClass("hidden-element");
+               $(errorId).text("This field is required");
+            }
+         } else {
+            for(let i = 0; i < data.length; i++) {
+               if (value === data[i].data) {
+                  matchFound = true;
+                  break;
+               }
+            }
+            if (!matchFound) {
+               $(errorId).removeClass("hidden-element");
+               $(errorId).text("Invalid value entered");
+            }
+         }
+      }
+
       // Setup the autocomplete for a given `elementId` with the `data` provided.
       // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
-      var setupAutocomplete = function(elementId, data) {
+      var setupAutocomplete = function(elementId, data, required) {
          $(elementId).autocomplete({
             minChars: 1,
             autoSelectFirst: true,
@@ -244,21 +274,8 @@
          });
 
          $(elementId).on("focusout", function(event) {
-            const errorId = elementId + "_error";
             const value = event.target.value.trim();
-            if (value === "") {
-               // TODO: only some fields are required
-               $(errorId).text("This field is required");
-               return;
-            }
-            $(errorId).text("");
-            for(let i = 0; i < data.length; i++) {
-               if (value === data[i].data) {
-                  // we got a match
-                  return;
-               }
-            }
-            $(errorId).text("Invalid value entered");
+            validateSelection(value, elementId, data, required);
          });
       }
 
@@ -268,9 +285,9 @@
          return false;
       })
 
-      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ]);
-      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ]);
-      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ]);
-      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ]);
+      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true);
+      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ], true);
+      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false);
+      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false);
    });
 </script>

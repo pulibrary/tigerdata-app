@@ -35,6 +35,10 @@ body {
     }
 }
 
+.hidden-element {
+  display: none;
+}
+
 /* These are the styles used by the jQuery autocomplete plug-in */
 .autocomplete-suggestions {
   border: 1px solid #999;
