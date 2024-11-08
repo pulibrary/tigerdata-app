@@ -114,4 +114,4 @@ group :test do
   gem "webmock"
 end
 
-gem "yard", "~> 0.9.36", :group => :development
+gem "yard", "~> 0.9.36", group: :development
