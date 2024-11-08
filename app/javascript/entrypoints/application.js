@@ -225,6 +225,10 @@ function showValidationError() {
     const element = inv;
     element.preventDefault();
     errorDiv.style.display += "-webkit-inline-box" , "block";
+
+    // TODO
+    // 1. REMOVE THE DISPLAY BLOCK WHEN THE FIELD IS VALID
+    // 2. ADD THE VALIDATION ERROR JS TO THE OTHER FIELDS: DATA MANAGER, TITLES, DIRECTORY PATHS, AND, DEPARTMENTS
   });
 }
 

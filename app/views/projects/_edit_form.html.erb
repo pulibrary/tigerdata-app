@@ -33,7 +33,8 @@
       </div>
       <div class="col-md-9">
          <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
-         <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata_model.data_manager %>" /></input>
+         <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required oninvalid="this.setCustomValidity('')"
+               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_manager %>" /></input>
          <% else %>
          <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
          <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
@@ -99,7 +100,8 @@
            <div class="required-field">Required</div>
            </div>
            <div class="col-md-9">
-           <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" />
+           <input type="text" id="title" name="title"  aria-label="project title" required oninvalid="this.setCustomValidity('')"
+               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.title %>" />
            </div>
          </div>
 
