@@ -1,23 +1,37 @@
-<nav>
-  <div class="lux">
-    <% if current_user %>
-      <lux-library-header abbr-name="TD" theme="dark">
-        <template v-slot:logo> <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
-        <lux-menu-bar type="main-menu" :menu-items="[
-          {name: 'Contact US', component: 'Home', href: 'mailto:tigerdata@princeton.edu'},
-          {name: 'FAQ', component: 'Home', href: 'https://tigerdata.princeton.edu/frequently-asked-questions'},
-          {name: '<%= current_user.display_name %>', component: 'Account', href: '/account/', children: [
-            {name: 'Account Settings', component: 'Account', href: '/'},
-            {name: 'Logout', component: 'Logout', href: '<%= main_app.destroy_user_session_path %> '}
-            ]}
-          ]"
-        ></lux-menu-bar>
-      </lux-library-header>
-    <% else %>
-      <lux-library-header abbr-name="TD" theme="dark">
-        <template v-slot:logo><a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a> </template>
-        <%= button_to "Log In", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %>
-      </lux-library-header>
-    <% end %>
+<header>
+<div id="header">
+  <nav class="navbar navbar-expand-lg">
+
+<div class="row header-row">
+
+  <div class="col-lg-3 header-logo">
+    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
   </div>
-</nav>
+
+  <div class="col-lg-9">
+  <div id="header-navigation">
+  <ul class="navbar-nav">
+  <li class="navbar-item"><%= link_to "Contact Us", "mailto:tigerdata@princeton.edu", class: "navbar-contact-us" %></li>
+  <li class="navbar-item"><%= link_to "FAQ", "https://tigerdata.princeton.edu/frequently-asked-questions", class: "navbar-faq" %></li>
+  <% if current_user %>
+    <li class="navbar-item dropdown">
+        <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= current_user.uid%>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <%= link_to "Log out", main_app.destroy_user_session_path, class: "dropdown-item" %>
+        </div>
+      </li>
+  <% else %>
+    <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %></li>
+  <% end %>
+  </ul>
+  </div>
+  </div>
+
+
+</div>
+   
+  </nav>
+</div>
+</header>

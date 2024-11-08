@@ -7,7 +7,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "shows the 'Log In' button" do
       visit "/"
       expect(page).to have_content "Welcome to TigerData"
-      expect(page).to have_content "Log In"
+      expect(page).to have_content "Log in"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
 
@@ -34,13 +34,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     end
 
     context "current user dashboard" do
-      it "shows the 'Log Out' button" do
+      it "shows the welcome message and 'Log out' button" do
         sign_in current_user
         visit "/"
 
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
-        click_button current_user.given_name.to_s
-        expect(page).to have_content "Logout"
+        click_link current_user.uid.to_s
+        expect(page).to have_content "Log out"
       end
 
       it "shows the Mediflux version on the home page for a logged in user" do
@@ -114,12 +114,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     end
 
     context "for a user without any projects" do
-      it "shows the 'Log Out' button" do
+      it "shows the 'Log out' button" do
         sign_in no_projects_user
         visit "/"
         expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
-        click_button no_projects_user.given_name.to_s
-        expect(page).to have_content "Logout"
+        click_link no_projects_user.uid.to_s
+        expect(page).to have_content "Log out"
       end
 
       context "if the user is not a sponsor" do

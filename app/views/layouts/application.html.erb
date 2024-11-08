@@ -66,6 +66,12 @@
 </div>
 
 <%= render partial: 'shared/footer' %>
-
+<script>
+  $(document).ready(function (){
+    $('#dropdownMenuButton').click(function () {
+      $('.dropdown-toggle').dropdown('toggle');
+    });
+  });
+</script>
   </body>
 </html>
