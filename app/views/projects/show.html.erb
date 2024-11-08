@@ -10,7 +10,7 @@ Project Details:
   </div>
 <% end %>
 
-<% alert_class = if @project.pending?
+<% alert_class = if @project_not_in_mediaflux?
                    "alert-warning"
                  else
                    "alert-success"
