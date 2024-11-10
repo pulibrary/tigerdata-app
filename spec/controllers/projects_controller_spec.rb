@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectsController, type: ["controller", "feature"] do
+RSpec.describe ProjectsController, type: ["controller", "feature"], connect_to_mediaflux: true do
   let(:project) { FactoryBot.create :project }
   describe "#show" do
     it "renders an error when requesting json" do
@@ -85,51 +85,28 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
   describe "#create" do
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:data_manager) { User.find_by(uid: project.metadata_json["data_manager"]) }
+      let(:project) { FactoryBot.create(:project, status: Project::APPROVED_STATUS) }
+
       before do
-        sign_in user
+        sign_in data_manager
       end
       it "creates one provenance event only" do
         post :create, params: {
-          "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
+          "data_sponsor" => data_manager.uid, "data_manager" => data_manager.uid, "departments" => ["RDSS"],
           "project_directory" => "testparams", "title" => "Params",
           "description" => "testing controller params", "ro_user_counter" => "0",
           "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
         }
         project = Project.last
         expect(project.provenance_events.count).to eq 2
+        visit "/projects/#{project.id}"
+        expect(page).to have_content("Astrophysical Sciences")
+                    .or(have_content("High Performance Computing"))
+          .or(have_content("Research Data and Scholarly Services"))
+          .or(have_content("Princeton Research Data Service"))
+          .or(have_content("Princeton Plasma Physics Laboratory"))
       end
     end
   end
-
-  context "shows affiliation name/title instead of code on project show page" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-
-    before do
-      FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111")
-    end
-
-    it "shows affiliation name/title instead of code on project show page" do
-      sign_in current_user
-
-      project = Project.last
-      # visit the show page
-      get :show, params: { id: project.id }
-      visit("/projects/" + project.id.to_s)
-      expect(page).to have_content("Astrophysical Sciences")
-                  .or(have_content("High Performance Computing"))
-        .or(have_content("Research Data and Scholarly Services"))
-        .or(have_content("Princeton Research Data Service"))
-        .or(have_content("Princeton Plasma Physics Laboratory"))
-    end
-  end
-
-  # it "shows affiliation name/title instead of code on project edit page" do
-  # visit("/projects/" + project.id.to_s + "/edit")
-  # expect(page).to have_content("Astrophysical Sciences")
-  #           .or(have_content("High Performance Computing"))
-  # .or(have_content("Research Data and Scholarly Services"))
-  # .or(have_content("Princeton Research Data Service"))
-  # .or(have_content("Princeton Plasma Physics Laboratory"))
-  # end
 end
