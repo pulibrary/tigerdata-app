@@ -43,7 +43,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   end
 
   context "Show page" do
-
     context "when the data user is empty" do
       let(:metadata_model) do
         hash = {
