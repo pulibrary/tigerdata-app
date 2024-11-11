@@ -239,10 +239,13 @@ function showValidationError() {
     manager.style.display += "-webkit-inline-box" , "block";
   });
 
-  $('#title').on('invalid', (inv) => {
+  $('#title').on('change', (inv) => {
     const element = inv;
     element.preventDefault();
-    title.style.display += "block";
+    // title.style.display += "block";
+    if (element.target.value === '') {
+      title.style.display += "-webkit-inline-box" , "block";
+    }
   });
 
   $('#project_directory').on('invalid', (inv) => {
