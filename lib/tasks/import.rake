@@ -23,7 +23,7 @@ require 'csv'
 #     set quota [xvalue asset/collection/quota/allocation $asset]
 #     puts $id "," $path "," $creatorDomain "," $creatorUser "," $createdOn "," \
 #         $quota "," $store "," $projectDirectory "," \"$title\" "," \"$description\" "," \
-#         $dataSponsor "," $dataManager "," $dataUser "," $department "," $projectID 
+#         $dataSponsor "," $dataManager ",\"" $dataUser "\"," $department "," $projectID 
 # }
 #
 #
@@ -45,7 +45,7 @@ namespace :import do
           data_user = if project_metadata["dataUser"].blank?
                         []
                       else
-                        [project_metadata["dataUser"]]
+                        project_metadata["dataUser"].split(",").map(&:strip)
                       end
           storage_size_gb = project_metadata["quota"].to_i/1000000000.0
           metadata = ProjectMetadata.new_from_hash({
