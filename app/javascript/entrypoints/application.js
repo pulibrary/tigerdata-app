@@ -219,16 +219,36 @@ function emulate() {
 
 function showValidationError() {
   const errorDiv = document.getElementById('custom_error');
-  const fieldInput = document.getElementById('data_sponsor');
+  const sponsor = document.getElementById('sponsor_error');
+  const manager = document.getElementById('manager_error');
+  const title = document.getElementById('title_error');
+  const directory = document.getElementById('directory_error');
 
   $('#data_sponsor').on('invalid', (inv) => {
     const element = inv;
     element.preventDefault();
-    errorDiv.style.display += "-webkit-inline-box" , "block";
+    sponsor.style.display += "-webkit-inline-box" , "block";
 
     // TODO
     // 1. REMOVE THE DISPLAY BLOCK WHEN THE FIELD IS VALID
-    // 2. ADD THE VALIDATION ERROR JS TO THE OTHER FIELDS: DATA MANAGER, TITLES, DIRECTORY PATHS, AND, DEPARTMENTS
+  });
+
+  $('#data_manager').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    manager.style.display += "-webkit-inline-box" , "block";
+  });
+
+  $('#title').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    title.style.display += "block";
+  });
+
+  $('#project_directory').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    directory.style.display += "-webkit-inline-box" , "block";
   });
 }
 
