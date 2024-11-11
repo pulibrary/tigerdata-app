@@ -226,20 +226,25 @@ function showValidationError() {
   $('#data_sponsor').on('invalid', (inv) => {
     const element = inv;
     element.preventDefault();
-    sponsor.style.display += "-webkit-inline-box" , "block";
+    // sponsor.style.display += '-webkit-inline-box', 'block';
+    // add webkit inline box and block to the sponsor style display in two separate lines
+    sponsor.style.display += '-webkit-inline-box';
+    sponsor.style.display += 'block';
   });
 
   $('#data_manager').on('invalid', (inv) => {
     const element = inv;
     element.preventDefault();
-    manager.style.display += "-webkit-inline-box" , "block";
+    manager.style.display += '-webkit-inline-box';
+    manager.style.display += 'block';
   });
 
   $('#title').on('change', (inv) => {
     const element = inv;
     element.preventDefault();
     if (element.target.value === '') {
-      title.style.display += "-webkit-inline-box" , "block";
+      title.style.display += '-webkit-inline-box';
+      title.style.display += 'block';
     }
   });
 
@@ -247,7 +252,8 @@ function showValidationError() {
     const element = inv;
     element.preventDefault();
     if (element.target.value === '') {
-      directory.style.display += "-webkit-inline-box" , "block";
+      directory.style.display += '-webkit-inline-box';
+      directory.style.display += 'block';
     }
   });
 }
