@@ -250,7 +250,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "New Project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: "xxx"
-        expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
+        expect(page.find("button[value=Submit]")).to be_disabled
         fill_in "ro-user-uid-to-add", with: read_only.uid
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
