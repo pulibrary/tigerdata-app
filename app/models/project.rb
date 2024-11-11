@@ -95,12 +95,6 @@ class Project < ApplicationRecord
   end
 
   def title
-    trailer = if in_mediaflux?
-                ""
-              else
-                " (#{::Project::PENDING_STATUS})"
-              end
-    self.metadata_model.title + trailer
   end
 
   def departments
