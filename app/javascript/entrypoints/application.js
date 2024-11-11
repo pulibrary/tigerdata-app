@@ -218,7 +218,6 @@ function emulate() {
 }
 
 function showValidationError() {
-  const errorDiv = document.getElementById('custom_error');
   const sponsor = document.getElementById('sponsor_error');
   const manager = document.getElementById('manager_error');
   const title = document.getElementById('title_error');
@@ -228,9 +227,6 @@ function showValidationError() {
     const element = inv;
     element.preventDefault();
     sponsor.style.display += "-webkit-inline-box" , "block";
-
-    // TODO
-    // 1. REMOVE THE DISPLAY BLOCK WHEN THE FIELD IS VALID
   });
 
   $('#data_manager').on('invalid', (inv) => {
