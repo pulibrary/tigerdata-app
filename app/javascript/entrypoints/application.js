@@ -242,16 +242,17 @@ function showValidationError() {
   $('#title').on('change', (inv) => {
     const element = inv;
     element.preventDefault();
-    // title.style.display += "block";
     if (element.target.value === '') {
       title.style.display += "-webkit-inline-box" , "block";
     }
   });
 
-  $('#project_directory').on('invalid', (inv) => {
+  $('#project_directory').on('change', (inv) => {
     const element = inv;
     element.preventDefault();
-    directory.style.display += "-webkit-inline-box" , "block";
+    if (element.target.value === '') {
+      directory.style.display += "-webkit-inline-box" , "block";
+    }
   });
 }
 
