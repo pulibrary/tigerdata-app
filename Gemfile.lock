@@ -584,7 +584,7 @@ DEPENDENCIES
   web-console
   webmock
   whenever
-  yard
+  yard (~> 0.9.36)
 
 RUBY VERSION
    ruby 3.3.0p0
