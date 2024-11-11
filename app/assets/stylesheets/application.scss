@@ -10,13 +10,30 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  */
-
-@import "settings";
-@import "banner";
-@import "emulator";
-@import "alternate_mediaflux";
-@import "header";
-@import "footer";
-@import "components/mediaflux_status";
-
+/* Import the LUX styles */
+@import "lux-design-system/dist/style.css";
 @import "bootstrap";
+@import "variables";
+
+@import "alternate_mediaflux";
+@import "banner";
+@import "components/breadcrumbs";
+@import "components/mediaflux_status";
+@import "emulator";
+@import "footer";
+@import "forms";
+@import "header";
+@import "settings";
+@import "styles_preview";
+@import "typography";
+
+
+body {
+    font-family: $libre-franklin;
+    color: $black;
+
+    .main-content {
+      min-height:100vh;
+    }
+}
+

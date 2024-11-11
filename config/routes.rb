@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   root to: "welcome#index"
   get "help", to: "welcome#help", as: :help
   post "emulate", to: "welcome#emulate", as: :emulate
+  get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
 
   resources :organizations
   resources :projects

@@ -1,5 +1,8 @@
-<h1>Editing Project</h1>
+<div id="project-form">
+  <h1>Editing Project</h1>
+  <div class="heading-decoration"></div>
 
-<%= form_with url: project_path(@project), method: :put do |form| %>
-  <%= render "edit_form" %>
-<% end %>
+  <%= form_with url: project_path(@project), method: :put do |form| %>
+    <%= render "edit_form" %>
+  <% end %>
+</div>

@@ -185,7 +185,17 @@ To save updates and make changes to appointed users for early testing of the Tig
 
 ## Sidekiq
 
-Sidekiq is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
+[Sidekiq](https://sidekiq.org/) is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
+
+You can go to the following urls to see the sidekiq dashboard, but because these environments are load balanced, that view will switch back and forth between hosts.
+ - https://tigerdata-staging.lib.princeton.edu/sidekiq
+ - https://tigerdata-qa.princeton.edu/sidekiq
+ - https://tigerdata-app.princeton.edu/sidekiq
+ 
+Instead, use the capistrano task, which will open an ssh tunnel to all nodes in a tigerdata environment (staging, qa or production), with a tab in your browser for each one.
+ - `cap staging sidekiq:console`
+ - `cap qa sidekiq:console`
+ - `cap production sidekiq:console` 
 
 ### Workers
 

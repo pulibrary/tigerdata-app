@@ -1,21 +1,92 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
 #header {
     padding: 0px;
-    background-color: #000000;
-    .body{
-        color: #ffffff;
-        margin: auto;
-        padding: 50px 25px 25px 25px;
-        float: right;
-        display: -webkit-inline-box;
-    }
+    background-color: $black;
+
     .navbar-brand {
-        color: #ffffff;
+        color: $white;
         margin: auto;
         padding: 10px;
     }
     .btn.btn-warning.btn-sm {
-        --bs-btn-bg: #ffc107;
+        --bs-btn-bg: #FBC129;
         padding-left: 10px;
         margin-left: 10px;
+        font-family: "Libre Franklin";
+        font-size: 16px;
+        color: $black;
     }
 }
+.container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    // border: 1px solid #FF0000;
+  }
+
+  .row {
+    margin-bottom: 4px;
+  }
+
+  .col {
+    width: 82px;
+  }
+
+  .gutter {
+    width: 20px;
+    // border: 1px solid #00FF00;
+  }
+
+  .header-row {
+    width: 100% !important;
+  }
+
+  .header-logo {
+    padding-left: 20px;
+  }
+
+  #header-navigation {
+    color: $white;
+    margin: auto;
+    padding: 50px 25px 25px 25px;
+    float: right;
+    display: -webkit-inline-box;
+    font-family: "Libre Franklin";
+    .navbar-item { 
+      color: $white;
+      font-family: "Libre Franklin";
+      font-size: 16px;
+      font-style: normal;
+      line-height: 24px;
+      font-weight: 600;
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+    .navbar-item a {
+      color: $white;
+      font-family: "Libre Franklin";
+      font-size: 16px;
+      font-style: normal;
+      line-height: 24px;
+      font-weight: 600;
+      margin-left: 12px;
+      margin-right: 12px;
+      text-decoration: none;
+    }
+    .navbar-item a:hover {
+      text-decoration: underline;
+    }
+    .dropdown-menu { 
+      left: -45px;
+    }
+
+    .dropdown-menu a {
+      color: $black;
+      font-weight: 400;
+    }
+    .dropdown-menu a:hover {
+      width: 85%;
+    }
+  }

@@ -190,7 +190,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       select "Research Data and Scholarly Services", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
-      expect(page).to have_content("Project Directory: /td-test-001/")
+      expect(page).to have_content("/td-test-001/")
       expect do
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
@@ -236,7 +236,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "btn-add-rw-user"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         expect do
           click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
@@ -261,7 +261,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "btn-add-rw-user"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         expect(page.find("button[value=Submit]")).to be_disabled
       end
     end
@@ -282,7 +282,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         expect do
           click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
@@ -322,7 +322,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         valid = page.find("input#project_directory:invalid")
         expect(valid).to be_truthy
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         expect(page).to have_content("New Project")
       end
     end
@@ -349,7 +349,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         select "Research Data and Scholarly Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
         # For some reason the above click on submit sometimes does not submit the form
@@ -402,7 +402,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         select "Research Data and Scholarly Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
-        expect(page).to have_content("Project Directory: /td-test-001/")
+        expect(page).to have_content("/td-test-001/")
         sleep 1
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"

@@ -1,28 +1,25 @@
+@import "variables";
+@import "bootstrap";
+
 #footer {
-  padding: 0px;
-  margin-top: auto;
-  position: relative;
-  bottom: 0;
-  // border-top: #cecece solid 15px;
-  border-bottom: #cecece solid 3px;
-  width: 100%; //for non-chromium based browers
-  width: -webkit-fill-available; // for chromium browsers i.e chrome & edge
-  width: -moz-available; // for moz based browsers i.e firefox & opera
-  .deployment-version{
-    position: absolute;
-    bottom: 0;
-  }
-  .content {
-    background-color: #000000;
-    padding: 5px 0px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  background-color: $black !important;
+  color: $white;
+  border-top: $princeton-orange 8px solid;
+  margin-top: 2em;
+
+  .logos {
+    text-align: center;
+    padding: 60px 0px;
 
     img {
       display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 45%;
+      min-width: 120px;
+    }
+
+    #dean-research-logo {
       margin: auto;
       width: 100%;
       max-width: 200px;
@@ -85,14 +82,52 @@
           width: 12px;
         }
       }
+      padding: 10px;
     }
   }
-}
 
-#copyright {
-  background-color: #cecece;
-  width: 100%;
-  padding-right: 10px;
-  text-align: right;
-  font-size: 10px;
-}
+  .princeton-logo {
+    text-align: right;
+    img {
+      width: 45%;
+      min-width: 120px;
+    }
+  }
+
+  .version-info {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px; 
+    text-align: center;
+  }
+
+  .footer-bottom {
+    padding: 24px 20px;
+    border-top: 1px solid $white;
+  }
+
+  #copyright {
+    width: 100%;
+    line-height: 24px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .pul-accessible a {
+    color: rgb(255, 255, 255);
+    &::after {
+      background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE4IDEzdjZhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOGEyIDIgMCAwIDEgMi0yaDYiLz48cG9seWxpbmUgcG9pbnRzPSIxNSAzIDIxIDMgMjEgOSIvPjxsaW5lIHgxPSIxMCIgeDI9IjIxIiB5MT0iMTQiIHkyPSIzIi8+PC9zdmc+");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      content: "";
+      display: inline-block;
+      height: 12px;
+      margin-left: 8px;
+      position: relative;
+      width: 12px;
+    }
+  }
+
+} 
