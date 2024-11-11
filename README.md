@@ -201,3 +201,9 @@ Instead, use the capistrano task, which will open an ssh tunnel to all nodes in 
 
 Workers must be running on each server in order for mail to be sent and background jobs to be run.
  The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`.
+
+ ## Website Styles Preview Page
+
+ To demonstrate the look and feel of elements defined as part of the style guide, this application includes a "styles preview" page, visible at the path `/styles_preview`.  It is intended as a place to make CSS and HTML attributes available for review by users either before they are implemented in the UI, or are difficult to access within the UI of the rest of the application, but the look and feel must be reviewed.  See [this ticket](https://github.com/pulibrary/tigerdata-app/issues/1000) as an example of CSS that is also added to the Styles Preview page as part of development.
+
+ All elements on the Styles Preview page are added manually during feature development, and only need to be added if they match the criteria described above (either not yet in the UI or difficult to access otherwise within the UI).  It can be edited at [`app/views/welcome/styles_preview.html.erb`](https://github.com/pulibrary/tigerdata-app/blob/main/app/views/welcome/styles_preview.html.erb).
