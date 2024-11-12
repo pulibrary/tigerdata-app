@@ -1,6 +1,6 @@
 <%= render 'form_errors' %>
 <%= render 'data_list' %>
-<div>
+<div id="edit">
    <h2>Project Roles</h2>
 
    <div class="row ">
@@ -10,10 +10,16 @@
       </div>
       <div class="col-md-9">
          <% if current_user.superuser? %>
-         <input type="text" list="sponsor-users" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required value="<%= @project.metadata_model.data_sponsor %>" /></input>
+            <input type="text" list="sponsor-users" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required oninvalid="this.setCustomValidity('')"
+               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor %>" /></input>
+            <div class="custom_error" id="sponsor_error" aria-live="polite">
+               <%= image_tag("custom_error.svg", alt: "This field is required") %>
+               <div class="error_message">This field is required. </div>
+            </div>
          <% else %>
-         <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
-         <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span>
+            <input type="hidden" id="data_sponsor" name="data_sponsor" oninvalid="this.setCustomValidity('')"
+               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
+            <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span>
          <% end %>
       </div>
    </div>
@@ -25,7 +31,13 @@
       </div>
       <div class="col-md-9">
          <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
-         <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata_model.data_manager %>" /></input>
+         <input type="text" list="manager-users" id="data_manager" aria-label="data manager" name="data_manager" required oninvalid="this.setCustomValidity('')"
+               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_manager %>" /></input>
+         <div class="custom_error" id="manager_error" aria-live="polite">
+            <%= image_tag("custom_error.svg", alt: "This field is required") %>
+            <div class="error_message">This field is required. </div>
+         </div>
+      </div>
          <% else %>
          <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
          <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
@@ -75,25 +87,31 @@
    </div>
 
    <h2>Project Description</h2>
-         <% if current_user.superuser? %>
+      <% if current_user.superuser? %>
          <div class="row ">
-           <div class="col-md-3">
-           <label for="project_id">Project ID</label>
-           </div>
-           <div class="col-md-9">
-           <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
-           </div>
+            <div class="col-md-3">
+               <label for="project_id">Project ID</label>
+            </div>
+            <div class="col-md-9">
+               <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
+            </div>
          </div>
-         <% end %>
-         <div class="row ">
-           <div class="col-md-3">
-           <label for="title">Title</label>
-           <div class="required-field">Required</div>
-           </div>
-           <div class="col-md-9">
-           <input type="text" id="title" name="title"  aria-label="project title" required value="<%= @project.metadata_model.title %>" />
-           </div>
+      <% end %>
+      <div class="row ">
+         <div class="col-md-3">
+            <label for="title">Title</label>
+            <div class="required-field">Required</div>
          </div>
+         <div class="col-md-9">
+            <div id="edit">
+            <input type="text" id="title" name="title"  aria-label="project title" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.title %>" />
+            <div class="custom_error" id="title_error" aria-live="polite">
+               <%= image_tag("custom_error.svg", alt: "This field is required") %>
+               <div class="error_message">This field is required. </div>
+            </div>
+         </div>
+         </div>
+      </div>
 
          <% if @project.in_mediaflux? %>
          <!--
@@ -103,7 +121,7 @@
             <div class="row ">
            <div class="col-md-3">
            <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
-         
+
            </div>
            <div class="col-md-9">
            <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
@@ -112,17 +130,16 @@
 
          <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
          <div class="row ">
-  <div class="col-md-3">
-  <label>MediaFlux ID</label> 
+   <div class="col-md-3">
+   <label>MediaFlux ID</label>
 
 
   </div>
   <div class="col-md-9">
   <input readonly value="<%= @project.mediaflux_id %>" />
          <p class="mediaflux-tooltip">This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
-
   </div>
-</div>
+
          <% end %>
 
          <% end %>
@@ -130,10 +147,16 @@
          <div class="row ">
          <div class="col-md-3">
          <label for="project_directory">Directory Path</label>
-         <div class="required-field">Required</div>       
+         <div class="required-field">Required</div>
          </div>
          <div class="col-md-9">
-         <span class="path-info"><%= @project.project_directory_parent_path %>/ </span><input type="text" aria-label="project directory" id="project_directory" name="project_directory" required value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+         <div id="edit">
+         <span class="path-info"><%= @project.project_directory_parent_path %>/ </span>
+         <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+            <div class="custom_error" id="directory_error" aria-live="polite">
+               <%= image_tag("custom_error.svg", alt: "This field is required") %>
+               <div class="error_message">This field is required. </div>
+            </div>
          </div>
        </div>
 
@@ -157,7 +180,7 @@
             </select>
   </div>
 </div>
-
+</div>
 
 <div class="row ">
   <div class="col-md-3">
@@ -187,5 +210,5 @@
 </div>
 
 
-   
+
 </div>

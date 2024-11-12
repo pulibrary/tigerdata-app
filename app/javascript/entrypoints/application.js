@@ -200,6 +200,47 @@ function emulate() {
   });
 }
 
+function showValidationError() {
+  const sponsor = document.getElementById('sponsor_error');
+  const manager = document.getElementById('manager_error');
+  const title = document.getElementById('title_error');
+  const directory = document.getElementById('directory_error');
+
+  $('#data_sponsor').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    // sponsor.style.display += '-webkit-inline-box', 'block';
+    // add webkit inline box and block to the sponsor style display in two separate lines
+    sponsor.style.display += '-webkit-inline-box';
+    sponsor.style.display += 'block';
+  });
+
+  $('#data_manager').on('invalid', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    manager.style.display += '-webkit-inline-box';
+    manager.style.display += 'block';
+  });
+
+  $('#title').on('change', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    if (element.target.value === '') {
+      title.style.display += '-webkit-inline-box';
+      title.style.display += 'block';
+    }
+  });
+
+  $('#project_directory').on('change', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    if (element.target.value === '') {
+      directory.style.display += '-webkit-inline-box';
+      directory.style.display += 'block';
+    }
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -211,6 +252,7 @@ function initPage() {
   showMoreLessContent();
   showMoreLessSysAdmin();
   emulate();
+  showValidationError();
 }
 
 window.addEventListener('load', () => initPage());

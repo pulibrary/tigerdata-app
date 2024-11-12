@@ -29,10 +29,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     fill_in "data_manager", with: "xxx"
     page.find("body").click
     expect(page.find("button[value=Submit]")).to be_disabled
-    expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
-    expect(page.find("#data_manager").native.attribute("validationMessage")).to eq "Please select a valid value."
     fill_in "data_manager", with: data_manager.uid
     page.find("body").click
     click_on "Submit"
