@@ -22,7 +22,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   it "allows the user fill in only valid users for roles" do
     sign_in sponsor_user
     visit "/"
-    click_on "New Project"
+    click_on "Create new project"
 
     # Data Sponsor is not editable. It can only be the user who is initiating this request.
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
@@ -93,19 +93,19 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows Data Sponsors to request a new project" do
       sign_in sponsor_user
       visit "/"
-      click_on "New Project"
+      click_on "Create new project"
       expect(page).to have_content "New Project Request"
     end
     it "allows superusers to request a new project" do
       sign_in superuser
       visit "/"
-      click_on "New Project"
+      click_on "Create new project"
       expect(page).to have_content "New Project Request"
     end
     it "does not give the data manager the New Project button" do
       sign_in data_manager
       visit "/"
-      expect(page).not_to have_content "New Project"
+      expect(page).not_to have_content "Create new project"
     end
     it "only allows the Data Sponsor to load the New Projects page" do
       sign_in data_manager
@@ -115,7 +115,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "does not give the sytem admin New Project button" do
       sign_in system_admin
       visit "/"
-      expect(page).not_to have_content "New Project"
+      expect(page).not_to have_content "Create new project"
     end
     it "does not allow the system administrato to load New Projects page" do
       sign_in system_admin
