@@ -22,19 +22,39 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   it "allows the user fill in only valid users for roles" do
     sign_in sponsor_user
     visit "/"
+<<<<<<< HEAD
     click_on "Create new project"
+=======
+    click_on "New Project"
+    byebug
+>>>>>>> fee52f0 (Found the magic incantation to trigger focusout and the validation. Still need to fix a few more broken test)
 
     # Data Sponsor is not editable. It can only be the user who is initiating this request.
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
     fill_in "data_manager", with: "xxx"
+    element = find("#data_manager")
+    # https://www.grepper.com/answers/723997/focusout+event+in+capybara
+    element.native.send_keys :tab
+    # element.trigger("focusout")
+    # page.focusout("#data_manager")
     page.find("body").click
+    sleep(1.5)
     expect(page.find("button[value=Submit]")).to be_disabled
+<<<<<<< HEAD
     fill_in "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
+=======
+    expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
+    fill_in "data_manager", with: ""
+    expect(page.find("button[value=Submit]")).to be_disabled
+    expect(page.find("#data_manager_error").text).to eq "This field is required"
+>>>>>>> fee52f0 (Found the magic incantation to trigger focusout and the validation. Still need to fix a few more broken test)
     fill_in "data_manager", with: data_manager.uid
+    element.native.send_keys :tab
     page.find("body").click
+    sleep(1.5)
+    expect(page.find("#data_manager_error", visible: false).text).to eq ""
     click_on "Submit"
-    expect(page.find("#data_manager").native.attribute("validationMessage")).to eq ""
 
     # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
     fill_in "ro-user-uid-to-add", with: "xxx"
