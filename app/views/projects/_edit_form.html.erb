@@ -236,7 +236,7 @@
 
       var validateSelection = function(value, elementId, data, required) {
          const errorId = elementId + "_error";
-         var matchFound = false;
+         var validSelection = false;
 
          $(errorId).text("");
          $(errorId).addClass("hidden-element");
@@ -244,19 +244,22 @@
             if(required === true) {
                $(errorId).removeClass("hidden-element");
                $(errorId).text("This field is required");
+            } else {
+               validSelection = true;
             }
          } else {
             for(let i = 0; i < data.length; i++) {
                if (value === data[i].data) {
-                  matchFound = true;
+                  validSelection = true;
                   break;
                }
             }
-            if (!matchFound) {
+            if (!validSelection) {
                $(errorId).removeClass("hidden-element");
                $(errorId).text("Invalid value entered");
             }
          }
+         return validSelection;
       }
 
       // Setup the autocomplete for a given `elementId` with the `data` provided.
@@ -275,15 +278,39 @@
 
          $(elementId).on("focusout", function(event) {
             const value = event.target.value.trim();
-            validateSelection(value, elementId, data, required);
+            if (validateSelection(value, elementId, data, required) === false) {
+               // If this field is not valid, the form is not valid
+               invalidateForm();
+            } else {
+               // Checks all fields in the form just to be sure
+               validateForm();
+            }
          });
       }
 
       // Give focus to the autocomplete textbox when the arrow is clicked
+      // This is needed because the arrow itself is not part of the textbox,
+      // it just _looks_ like it is, but it is a separate HTML element.
       $(".autocomplete-arrow").on("click", function (event) {
          $(event.currentTarget).prev().focus();
          return false;
       })
+
+      var invalidateForm = function() {
+         console.log("Marking form as not valid");
+         $("#submit-btn").prop("disabled", true);
+      }
+
+      var validateForm = function() {
+         console.log("Checking if the form is valid");
+         var v1 = validateSelection($("#data_sponsor").val(), "#data_sponsor", [ <%= sponsor_list_json %> ], true);
+         var v2 = validateSelection($("#data_manager").val(), "#data_manager", [ <%= manager_list_json %> ], true);
+         var v3 = validateSelection($("#ro-user-uid-to-add").val(), "#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false);
+         var v4 = validateSelection($("#rw-user-uid-to-add").val(), "#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false);
+         var valid = (v1 && v2 && v3 && v4);
+         console.log(`Valid to submit: ${valid} (${v1}, ${v2}, ${v3}, ${v4})` );
+         $("#submit-btn").prop("disabled", !valid);
+      }
 
       setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true);
       setupAutocomplete("#data_manager", [ <%= manager_list_json %> ], true);
