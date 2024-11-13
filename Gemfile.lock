@@ -217,7 +217,7 @@ GEM
     google-protobuf (3.25.5-x86_64-linux)
     hashdiff (1.1.0)
     hashie (5.0.0)
-    health-monitor-rails (12.1.0)
+    health-monitor-rails (12.4.0)
       railties (>= 6.1)
     honeybadger (5.10.2)
     i18n (1.14.6)
@@ -557,7 +557,7 @@ DEPENDENCIES
   ffaker
   flipflop
   google-protobuf (~> 3.25)
-  health-monitor-rails
+  health-monitor-rails (= 12.4.0)
   honeybadger
   importmap-rails
   jbuilder
