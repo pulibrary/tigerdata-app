@@ -1,5 +1,5 @@
-
-.container{ //Main body of every page
+.container {
+  //Main body of every page
   background-color: rgb(255, 255, 255);
   padding-top: 2em;
   min-height: 81vh;
@@ -56,7 +56,7 @@
     visibility: collapse;
   }
 
-  #show-more-sysadmin{
+  #show-more-sysadmin {
     margin-top: 0.5em;
   }
 }
@@ -66,8 +66,17 @@
     display: inline-flex;
   }
 
+  .welcome-pane {
+    display: inline-flex;
+  }
+
+  .project-button {
+    margin-top: 11px;
+    margin-left: 22em;
+  }
+
   #emulation_bar {
-    margin-left: 5px
+    margin-left: 5px;
   }
 
   #dashboard-projects {
@@ -83,42 +92,40 @@
     }
   }
 
-  #dashboard-activity{
+  #dashboard-activity {
     @include dashboard-component;
     min-height: 15em;
   }
 
-  #dashboard-pending{
+  #dashboard-pending {
     @include dashboard-component;
     margin-top: 1em;
     min-width: 30em;
   }
-
 }
 
-
-#show{
+#show {
   .pending-project {
     margin-left: 5em;
     padding-bottom: 2em;
-}
-  .details{
+  }
+  .details {
     margin-left: 2em;
   }
-  .btn.btn-return.btn-sm{
+  .btn.btn-return.btn-sm {
     background-color: white;
-    border-color: #0D6EFD;
+    border-color: #0d6efd;
     border-width: 2px;
   }
-  .provenance-header{
+  .provenance-header {
     font-weight: bold;
   }
-  .provenance{
+  .provenance {
     display: inline-block;
     margin-right: 23em;
     margin-left: 23.5em;
   }
-  .approved-details{
+  .approved-details {
     dt {
       float: left;
       min-width: calc(25% + 55px);
@@ -126,12 +133,13 @@
       padding: 0;
       margin: 0;
       margin-left: 1em;
-      clear: both
+      clear: both;
     }
   }
-  h2 {// Heading for the details div
+  h2 {
+    // Heading for the details div
     margin-left: 0.2em;
-    .btn.btn-primary.btn-sm{
+    .btn.btn-primary.btn-sm {
       margin-left: 1.5em;
     }
   }
@@ -139,7 +147,7 @@
     width: 100%;
     overflow: hidden;
     padding: 0;
-    margin: 0
+    margin: 0;
   }
   dl dl {
     padding-left: 2rem;
@@ -151,30 +159,28 @@
     padding: 0;
     margin: 0;
     margin-left: 1em;
-    clear: both
+    clear: both;
   }
-  dd{
-    margin-bottom: .5rem;
+  dd {
+    margin-bottom: 0.5rem;
     margin-left: 0;
-
   }
   p {
     margin-left: 1em;
   }
 }
 
-#content{
-
+#content {
   #file-list {
-    width:90%;
+    width: 90%;
     border: 1px solid gray;
   }
 
   #file-list > tbody > tr > th {
     background-color: #dddcdc;
   }
-  label{
-    padding-bottom: .5em;
+  label {
+    padding-bottom: 0.5em;
   }
   dt {
     float: left;
@@ -183,14 +189,14 @@
     padding: 0;
     margin: 0;
     margin-left: 1em;
-    clear: both
+    clear: both;
   }
 
-  dd{
-    margin-bottom: .5rem;
+  dd {
+    margin-bottom: 0.5rem;
     margin-left: 0;
   }
-  .btn.btn-primary.btn-sm{
+  .btn.btn-primary.btn-sm {
     margin-left: 1em;
   }
 
@@ -213,7 +219,7 @@
   }
 }
 
-#edit{
+#edit {
   .added_user_textbox {
     background-color: #f4f2f2;
     margin-bottom: 2px;
@@ -232,11 +238,11 @@
     margin-bottom: 10px;
   }
 
-  .custom_error{
+  .custom_error {
     display: none;
 
-    .error_message{
-      color: var(--Secondary-Red-Dark, #B00002);
+    .error_message {
+      color: var(--Secondary-Red-Dark, #b00002);
       margin-top: 2px;
 
       /* Body XS */
@@ -263,61 +269,63 @@
     margin-left: 10px;
   }
 
-  h2 {// Headings for roles and description
+  h2 {
+    // Headings for roles and description
     text-decoration: underline;
     text-decoration-thickness: 3px;
   }
-  .roles-container{
+  .roles-container {
     margin-left: 2em;
   }
-  .description-container{
+  .description-container {
     margin-left: 2em;
   }
-  .data-users{
+  .data-users {
     margin-left: 3em;
   }
-  .actions{
+  .actions {
     margin-top: 1em;
   }
 }
 
-#approve{
-  .details{
+#approve {
+  .details {
     margin-left: 2em;
   }
-  .provenance{
+  .provenance {
     display: inline-block;
     margin-right: 23em;
     margin-left: 23.5em;
   }
-  .field{
+  .field {
     display: inline-flex;
     margin-bottom: 2em;
   }
-  .form-directory{
+  .form-directory {
     min-width: 13em;
   }
-  .form-directory-confirm{
+  .form-directory-confirm {
     margin-left: 1em;
     min-width: fit-content;
   }
-  .form-message{
+  .form-message {
     min-width: 15em;
     min-height: 3em;
     margin-left: 5px;
   }
-  .form-date{
+  .form-date {
     min-width: 14em;
   }
-  .form-dropdown{
+  .form-dropdown {
     max-width: fit-content;
     margin-right: 1em;
   }
-  h2 {// Heading for the details div
+  h2 {
+    // Heading for the details div
     margin-left: 0.2em;
     text-decoration: underline;
     text-decoration-thickness: 3px;
-    .btn.btn-primary.btn-sm{
+    .btn.btn-primary.btn-sm {
       margin-left: 1.5em;
     }
   }
@@ -325,7 +333,7 @@
     width: 100%;
     overflow: hidden;
     padding: 0;
-    margin: 0
+    margin: 0;
   }
   dt {
     float: left;
@@ -334,44 +342,43 @@
     padding: 0;
     margin: 0;
     margin-left: 1em;
-    clear: both
+    clear: both;
   }
-  dd{
-    margin-bottom: .5rem;
-
-
+  dd {
+    margin-bottom: 0.5rem;
   }
   p {
     margin-left: 1em;
   }
-  label{
+  label {
     margin-right: 5em;
     max-width: 8em;
     font-weight: bold;
   }
-  input{
-    .placeholder{
+  input {
+    .placeholder {
       opacity: 1;
     }
-    -webkit-outer-spin-button, -webkit-inner-spin-button {
+    -webkit-outer-spin-button,
+    -webkit-inner-spin-button {
       display: none;
       margin: 0;
     }
-    [type=number]{
-      -moz-appearance:textfield;
+    [type="number"] {
+      -moz-appearance: textfield;
     }
     width: 10em;
     max-height: 38px;
     margin-right: 5px;
   }
-  select{
+  select {
     max-height: 38px;
   }
-  button{
+  button {
     min-width: 160px;
     min-height: 38px;
   }
-  a{
+  a {
     min-width: 160px;
     min-height: 38px;
   }
@@ -383,7 +390,7 @@
 }
 
 #create-script-text {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   background-color: #f2f1f1;
   margin-left: 35px;
   margin-top: 15px;

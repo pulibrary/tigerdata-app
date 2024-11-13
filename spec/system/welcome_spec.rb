@@ -138,7 +138,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           visit "/"
           expect(page).to have_content("Sponsored by Me")
           expect(page).to have_content("Recent Activity")
-          expect(page).to have_selector(:link_or_button, "New Project")
+          expect(page).to have_selector(:link_or_button, "Create new project")
         end
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "New Project"
+        expect(page).to have_content "Create new project"
       end
 
       it "shows the system administrator dashboard" do
@@ -206,7 +206,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).not_to have_content "New Project"
+        expect(page).not_to have_content "Create new project"
       end
 
       it "shows the system administrator dashboard" do

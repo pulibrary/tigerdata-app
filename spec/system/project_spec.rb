@@ -175,7 +175,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     it "allows the user to create a project" do
       sign_in sponsor_user
       visit "/"
-      click_on "New Project"
+      click_on "Create new project"
       expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       fill_in "data_manager", with: data_manager.uid
       fill_in "ro-user-uid-to-add", with: read_only.uid
@@ -223,7 +223,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid
@@ -247,7 +247,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
 
         fill_in "data_manager", with: "xxx"
@@ -275,7 +275,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: "xxx"
@@ -297,7 +297,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "redirects the user back to the dashboard" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page).to have_content("New Project Request")
         click_on "Cancel"
 
@@ -314,7 +314,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "allows the user to create a project" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         # Data Sponsor is automatically populated.
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid
@@ -340,7 +340,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "allows the projects to be created" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "data_manager", with: data_manager.uid
         fill_in "ro-user-uid-to-add", with: read_only.uid
@@ -389,7 +389,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "logs the error message, flashes a notification to the end-user, and renders the New Project View" do
         sign_in sponsor_user
         visit "/"
-        click_on "New Project"
+        click_on "Create new project"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
