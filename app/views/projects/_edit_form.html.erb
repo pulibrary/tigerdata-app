@@ -9,22 +9,16 @@
       </div>
       <div class="col-md-9">
          <% if current_user.superuser? %>
-            <input type="text" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required oninvalid="this.setCustomValidity('')"
-               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor %>" /></input>
-            <div class="custom_error" id="sponsor_error" aria-live="polite">
-               <%= image_tag("custom_error.svg", alt: "This field is required") %>
-               <div class="error_message">This field is required. </div>
-            </div>
-         <span class="autocomplete-arrow"></span>
-         <i id="data_sponsor_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
-         <span id="data_sponsor_error" class="autocomplete-error"></span>
+            <input type="text" id="data_sponsor" aria-label="data sponsor" name="data_sponsor" required value="<%= @project.metadata_model.data_sponsor %>" /></input>
+            <span class="autocomplete-arrow"></span>
+            <i id="data_sponsor_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
+            <span id="data_sponsor_error" class="autocomplete-error"></span>
          <% else %>
-            <input type="hidden" id="data_sponsor" name="data_sponsor" oninvalid="this.setCustomValidity('')"
-               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
+            <input type="hidden" id="data_sponsor" name="data_sponsor" value="<%= @project.metadata_model.data_sponsor || current_user.uid %>">
             <span id="non-editable-data-sponsor"><%= @project.metadata_model.data_sponsor || current_user.uid %></span>
          <% end %>
       </div>
-   </div>
+   </div> <!-- row -->
 
    <div class="row ">
       <div class="col-md-3">
@@ -33,22 +27,16 @@
       </div>
       <div class="col-md-9">
          <% if !@project.persisted? || @project.metadata_model.data_sponsor == current_user.uid %>
-         <input type="text" id="data_manager" aria-label="data manager" name="data_manager" required oninvalid="this.setCustomValidity('')"
-               oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.data_manager %>" /></input>
-         <div class="custom_error" id="manager_error" aria-live="polite">
-            <%= image_tag("custom_error.svg", alt: "This field is required") %>
-            <div class="error_message">This field is required. </div>
-         </div>
-      </div>
-         <span class="autocomplete-arrow"></span>
-         <i id="data_manager_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
-         <span id="data_manager_error" class="autocomplete-error"></span>
+            <input type="text" id="data_manager" aria-label="data manager" name="data_manager" required value="<%= @project.metadata_model.data_manager %>" /></input>
+            <span class="autocomplete-arrow"></span>
+            <i id="data_manager_error_icon" class="bi bi-exclamation-circle-fill autocomplete-error hidden-element"></i>
+            <span id="data_manager_error" class="autocomplete-error"></span>
          <% else %>
-         <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
-         <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
+            <input type="hidden" id="data_manager" aria-label="data manager"  name="data_manager" value="<%= @project.metadata_model.data_manager %>">
+            <span id="non-editable-data-manager"><%= @project.metadata_model.data_manager %></span>
          <% end %>
       </div>
-   </div>
+   </div> <!-- row -->
 
    <label>Data User(s)</label>
    <div class="row ">
@@ -72,7 +60,7 @@
             </div>
          </div>
       </div>
-   </div>
+   </div> <!-- row -->
 
    <div class="row ">
       <div class="col-md-3">
@@ -95,7 +83,7 @@
             </div>
          </div>
       </div>
-   </div>
+   </div> <!-- row -->
 
    <h2>Project Description</h2>
       <% if current_user.superuser? %>
@@ -106,7 +94,7 @@
             <div class="col-md-9">
                <input type="text" id="project_id" aria-label="project id" name="project_id" value="<%= @project.metadata_model.project_id %>" /></input>
             </div>
-         </div>
+         </div> <!-- row -->
       <% end %>
       <div class="row ">
          <div class="col-md-3">
@@ -114,136 +102,114 @@
             <div class="required-field">Required</div>
          </div>
          <div class="col-md-9">
-            <div id="edit">
             <input type="text" id="title" name="title"  aria-label="project title" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.metadata_model.title %>" />
-            <div class="custom_error" id="title_error" aria-live="polite">
-               <%= image_tag("custom_error.svg", alt: "This field is required") %>
-               <div class="error_message">This field is required. </div>
-            </div>
          </div>
-         </div>
-      </div>
+      </div> <!-- row -->
 
-         <% if @project.in_mediaflux? %>
+      <% if @project.in_mediaflux? %>
          <!--
-            Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
-            send back to the controller (we don't want to lose this value)
-            -->
-            <div class="row ">
+           Make the field readonly so the user cannot change it, but leave it as an HTML INPUT so that it is
+           send back to the controller (we don't want to lose this value)
+         -->
+         <div class="row ">
            <div class="col-md-3">
-           <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
-
-
+             <label for="project_directory">Project Directory <%= @project.project_directory_parent_path %>/</label>
            </div>
            <div class="col-md-9">
-           <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
+              <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
            </div>
-         </div>
+         </div> <!-- row -->
 
          <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
-         <div class="row ">
-   <div class="col-md-3">
-   <label>MediaFlux ID</label>
-  <div class="col-md-3">
-  <label>MediaFlux ID</label>
-
-
-  </div>
-  <div class="col-md-9">
-  <input readonly value="<%= @project.mediaflux_id %>" />
-         <p class="mediaflux-tooltip">This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
-  </div>
-
+            <div class="row ">
+               <div class="col-md-3">
+                  <label>MediaFlux ID</label>
+               </div>
+               <div class="col-md-9">
+                  <input readonly value="<%= @project.mediaflux_id %>" />
+                  <p class="mediaflux-tooltip">This project has already been saved to Mediaflux and the project_directory cannot be changed</p>
+               </div>
+            </div>  <!-- row -->
          <% end %>
+      <% end %>
 
-         <% end %>
-
-         <div class="row ">
+      <div class="row ">
          <div class="col-md-3">
-         <label for="project_directory">Directory Path</label>
-         <div class="required-field">Required</div>
-         <div class="required-field">Required</div>
+           <label for="project_directory">Directory Path</label>
+           <div class="required-field">Required</div>
          </div>
          <div class="col-md-9">
-         <div id="edit">
-         <span class="path-info"><%= @project.project_directory_parent_path %>/ </span>
-         <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
-            <div class="custom_error" id="directory_error" aria-live="polite">
-               <%= image_tag("custom_error.svg", alt: "This field is required") %>
-               <div class="error_message">This field is required. </div>
+           <span class="path-info"><%= @project.project_directory_parent_path %>/ </span>
+           <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+         </div>
+       </div>  <!-- row -->
+
+      <div class="row ">
+         <div class="col-md-3">
+            <label for="departments">Departments</label>
+            <div class="required-field">Required</div>
+         </div>
+         <div class="col-md-9">
+            <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
+                           <% Affiliation.all.each do |affiliation| %>
+                           <% if @project.departments.include?(affiliation[:code]) %>
+                           <option selected><%= affiliation[:code] %></option>
+                           <% else %>
+                           <option><%= affiliation[:code] %></option>
+                           <% end %>
+                           <% end %>
+                        </select>
             </div>
          </div>
-       </div>
+      </div> <!-- row -->
 
+      <div class="row ">
+         <div class="col-md-3">
+            <label for="description">Description</label>
+         </div>
+         <div class="col-md-9">
+            <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
+                        rows="5" cols="72" placeholder=""><%= @project.metadata_model.description %></textarea>
+         </div>
+      </div> <!-- row -->
 
-       <div class="row ">
-  <div class="col-md-3">
+      <!-- Keeps track of added read-only and read-write users -->
+      <input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
+      <input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
 
-  <label for="departments">Departments</label>
-  <div class="required-field">Required</div>
-  </div>
-  <div class="col-md-9">
+      <div class="actions">
+         <button type=submit value="Submit" class="btn btn-primary" id="submit-btn">Submit</button>
+         <% if params[:action] == 'edit' %>
+         <%= link_to "Cancel", @project, class: "btn btn-secondary", id: "cancel-btn" %>
+         <% else %>
+         <%= link_to "Cancel", root_path, class: "btn btn-secondary", id: "cancel-btn" %>
+         <% end %>
+      </div>
 
-  <select id="departments" name="departments[]"  aria-label="project department" required value class="form-select" multiple >
-               <% Affiliation.all.each do |affiliation| %>
-               <% if @project.departments.include?(affiliation[:code]) %>
-               <option selected><%= affiliation[:code] %></option>
-               <% else %>
-               <option><%= affiliation[:code] %></option>
-               <% end %>
-                <% end %>
-            </select>
-  </div>
-</div>
-</div>
-
-<div class="row ">
-  <div class="col-md-3">
-  <label for="description">Description</label>
-
-
-  </div>
-  <div class="col-md-9">
-
-  <textarea type="text" id="description"  aria-label="project description" name="description" class="input-text-long"
-            rows="5" cols="72" placeholder=""><%= @project.metadata_model.description %></textarea>
-
-  </div>
-</div>
-
-
-<!-- Keeps track of added read-only and read-write users -->
-<input type="text" id="ro_user_counter" name="ro_user_counter" value="0" style="display:none;"/>
-<input type="text" id="rw_user_counter" name="rw_user_counter" value="0" style="display:none;"/>
-<div class="actions">
-   <button type=submit value="Submit" class="btn btn-primary" id="submit-btn">Submit</button>
-   <% if params[:action] == 'edit' %>
-   <%= link_to "Cancel", @project, class: "btn btn-secondary", id: "cancel-btn" %>
-   <% else %>
-   <%= link_to "Cancel", root_path, class: "btn btn-secondary", id: "cancel-btn" %>
-   <% end %>
-</div>
-
-
-
-</div>
+</div> <!-- id=edit -->
 
 <script>
    // Notice that we are keeping this JavaScript on the page rather than on application.js
    // because otherwise we don't have access to $(elementId).autocomplete()
    // This is due to the way we are loading the autocomplete plug-in outside of application.js
    $(function() {
+      var autoCompleteElements = [];
 
+      // Validates the current value in a text element against the data supplied.
       var validateSelection = function(value, elementId, data, required, addButtonId) {
          const errorId = elementId + "_error";
+         const errorIconId = errorId + "_icon";
          var validSelection = false;
 
          $(errorId).text("");
          $(errorId).addClass("hidden-element");
+         $(errorIconId).addClass("hidden-element");
+
          if (value === "") {
             if(required === true) {
                $(errorId).removeClass("hidden-element");
                $(errorId).text("This field is required");
+               $(errorIconId).removeClass("hidden-element");
             } else {
                validSelection = true;
             }
@@ -257,6 +223,7 @@
             if (!validSelection) {
                $(errorId).removeClass("hidden-element");
                $(errorId).text("Invalid value entered");
+               $(errorIconId).removeClass("hidden-element");
             }
          }
 
@@ -291,7 +258,10 @@
                // If this field is not valid, the form is not valid
                invalidateForm();
             } else {
-               // Checks all fields in the form just to be sure
+               if (addButtonId != null) {
+                  $(addButtonId).click(); // Automatically add the value since it is valid
+               }
+               // Checks that all other fields are valid
                validateForm();
             }
          });
@@ -305,25 +275,36 @@
          return false;
       })
 
+      // Disables the Submit button on the form
       var invalidateForm = function() {
          console.log("Marking form as not valid");
          $("#submit-btn").prop("disabled", true);
       }
 
+      // Enable the Submit button only if all validations pass
       var validateForm = function() {
-         console.log("Checking if the form is valid");
-         var v1 = validateSelection($("#data_sponsor").val(), "#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
-         var v2 = validateSelection($("#data_manager").val(), "#data_manager", [ <%= manager_list_json %> ], true, null);
-         var v3 = validateSelection($("#ro-user-uid-to-add").val(), "#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-ro-user");
-         var v4 = validateSelection($("#rw-user-uid-to-add").val(), "#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
-         var valid = (v1 && v2 && v3 && v4);
-         console.log(`Valid to submit: ${valid} (${v1}, ${v2}, ${v3}, ${v4})` );
-         $("#submit-btn").prop("disabled", !valid);
+         for(let i = 0; i < autoCompleteElements.length; i += 1) {
+            let element = autoCompleteElements[i];
+            let valid = validateSelection($(element.elementId).val(), element.elementId, element.data, element.required, element.addButtonId);
+            if (valid == false) {
+               $("#submit-btn").prop("disabled", true);
+               return;
+            }
+         }
+         $("#submit-btn").prop("disabled", false);
       }
 
-      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
-      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ], true, null);
-      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-ro-user");
-      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
+      // Register an autocomplete element for validation
+      var registerAutocomplete = function(elementId, data, required, addButtonId) {
+         var elementConfig = {elementId: elementId, data: data, required: required, addButtonId: addButtonId};
+         autoCompleteElements.push(elementConfig);
+         setupAutocomplete(elementId, data, required, addButtonId);
+      }
+
+      // Register all the autocomplete elements on the form
+      registerAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
+      registerAutocomplete("#data_manager", [ <%= manager_list_json %> ], true, null);
+      registerAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-ro-user");
+      registerAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
    });
 </script>
