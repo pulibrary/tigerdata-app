@@ -23,11 +23,7 @@ RSpec.describe Mediaflux::Time do
         initial_tz = xml_snip.xpath("./@tz").text
 
         final_tz = instance.convert(xml_snip:)
-<<<<<<< HEAD
         expect(["-04:00", "-05:00"].any? { |tz| final_tz.include?(tz) }).to be_truthy #America/New_York changes based on daylights savings time
-=======
-        expect(final_tz.include?("-04:00") || final_tz.include?("-05:00")).to be true #America/New_York changes based on daylights savings time
->>>>>>> 267e2dc (Fixed test logic)
       end
     end
     describe "date formatting" do
