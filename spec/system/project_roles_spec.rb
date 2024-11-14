@@ -23,31 +23,16 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     sign_in sponsor_user
     visit "/"
     click_on "Create new project"
-    click_on "New Project"
 
     # Check data manager validations (invalid value, empty value, valid value)
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-    fill_in "data_manager", with: "xxx"
-    element = find("#data_manager")
-    # https://www.grepper.com/answers/723997/focusout+event+in+capybara
-    element.native.send_keys :tab
-    # element.trigger("focusout")
-    # page.focusout("#data_manager")
-    page.find("body").click
-    sleep(1.5)
-    expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in "data_manager", with: ""
-    expect(page.find("button[value=Submit]")).to be_disabled
     fill_in_and_out "data_manager", with: "xxx"
     expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
     expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in "data_manager", with: ""
-    expect(page.find("#data_manager_error").text).to eq "This field is required"
-    fill_in "data_manager", with: data_manager.uid
-    element.native.send_keys :tab
-    page.find("body").click
-    sleep(1.5)
+    fill_in_and_out "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
+    fill_in_and_out "data_manager", with: ""
+    expect(page.find("#data_manager_error").text).to eq "This field is required"
     fill_in_and_out "data_manager", with: data_manager.uid
     expect(page.find("#data_manager_error", visible: false).text).to eq ""
     expect(page.find("button[value=Submit]").disabled?).to be false
@@ -60,7 +45,6 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     expect(page.find("#btn-add-ro-user")).to be_disabled
     expect(page.find("#ro-user-uid-to-add_error", visible: false).text).to eq ""
     fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-    click_on "btn-add-ro-user"
     expect(page.find("#ro-user-uid-to-add", visible: false).text).to eq ""
 
     # Check read-write user validations (invalid value, empty value, valid value)
@@ -72,7 +56,6 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     expect(page.find("#rw-user-uid-to-add_error", visible: false).text).to eq ""
     fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
     expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq ""
-    click_on "btn-add-rw-user"
 
     page.find("#departments").find(:xpath, "option[3]").select_option
 
