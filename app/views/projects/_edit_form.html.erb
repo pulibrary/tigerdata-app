@@ -231,10 +231,10 @@
 <script>
    // Notice that we are keeping this JavaScript on the page rather than on application.js
    // because otherwise we don't have access to $(elementId).autocomplete()
-   // This is due to the way we are loading the autocomplete outside of application.js
+   // This is due to the way we are loading the autocomplete plug-in outside of application.js
    $(function() {
 
-      var validateSelection = function(value, elementId, data, required) {
+      var validateSelection = function(value, elementId, data, required, addButtonId) {
          const errorId = elementId + "_error";
          var validSelection = false;
 
@@ -259,12 +259,21 @@
                $(errorId).text("Invalid value entered");
             }
          }
+
+         if (addButtonId !== null) {
+            if (value === "" || validSelection === false) {
+               $(addButtonId).prop("disabled", true);
+            } else {
+               $(addButtonId).prop("disabled", false);
+            }
+         }
+
          return validSelection;
       }
 
       // Setup the autocomplete for a given `elementId` with the `data` provided.
       // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
-      var setupAutocomplete = function(elementId, data, required) {
+      var setupAutocomplete = function(elementId, data, required, addButtonId) {
          $(elementId).autocomplete({
             minChars: 1,
             autoSelectFirst: true,
@@ -278,7 +287,7 @@
 
          $(elementId).on("focusout", function(event) {
             const value = event.target.value.trim();
-            if (validateSelection(value, elementId, data, required) === false) {
+            if (validateSelection(value, elementId, data, required, addButtonId) === false) {
                // If this field is not valid, the form is not valid
                invalidateForm();
             } else {
@@ -303,18 +312,18 @@
 
       var validateForm = function() {
          console.log("Checking if the form is valid");
-         var v1 = validateSelection($("#data_sponsor").val(), "#data_sponsor", [ <%= sponsor_list_json %> ], true);
-         var v2 = validateSelection($("#data_manager").val(), "#data_manager", [ <%= manager_list_json %> ], true);
-         var v3 = validateSelection($("#ro-user-uid-to-add").val(), "#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false);
-         var v4 = validateSelection($("#rw-user-uid-to-add").val(), "#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false);
+         var v1 = validateSelection($("#data_sponsor").val(), "#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
+         var v2 = validateSelection($("#data_manager").val(), "#data_manager", [ <%= manager_list_json %> ], true, null);
+         var v3 = validateSelection($("#ro-user-uid-to-add").val(), "#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-ro-user");
+         var v4 = validateSelection($("#rw-user-uid-to-add").val(), "#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
          var valid = (v1 && v2 && v3 && v4);
          console.log(`Valid to submit: ${valid} (${v1}, ${v2}, ${v3}, ${v4})` );
          $("#submit-btn").prop("disabled", !valid);
       }
 
-      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true);
-      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ], true);
-      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false);
-      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false);
+      setupAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
+      setupAutocomplete("#data_manager", [ <%= manager_list_json %> ], true, null);
+      setupAutocomplete("#ro-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-ro-user");
+      setupAutocomplete("#rw-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-rw-user");
    });
 </script>

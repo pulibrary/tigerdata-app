@@ -22,14 +22,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   it "allows the user fill in only valid users for roles" do
     sign_in sponsor_user
     visit "/"
-<<<<<<< HEAD
     click_on "Create new project"
-=======
     click_on "New Project"
-    byebug
->>>>>>> fee52f0 (Found the magic incantation to trigger focusout and the validation. Still need to fix a few more broken test)
 
-    # Data Sponsor is not editable. It can only be the user who is initiating this request.
+    # Check data manager validations (invalid value, empty value, valid value)
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
     fill_in "data_manager", with: "xxx"
     element = find("#data_manager")
@@ -40,49 +36,43 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     page.find("body").click
     sleep(1.5)
     expect(page.find("button[value=Submit]")).to be_disabled
-<<<<<<< HEAD
     fill_in "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
-=======
+    fill_in_and_out "data_manager", with: "xxx"
     expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
-    fill_in "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
+    fill_in "data_manager", with: ""
     expect(page.find("#data_manager_error").text).to eq "This field is required"
->>>>>>> fee52f0 (Found the magic incantation to trigger focusout and the validation. Still need to fix a few more broken test)
     fill_in "data_manager", with: data_manager.uid
     element.native.send_keys :tab
     page.find("body").click
     sleep(1.5)
+    expect(page.find("button[value=Submit]")).to be_disabled
+    fill_in_and_out "data_manager", with: data_manager.uid
     expect(page.find("#data_manager_error", visible: false).text).to eq ""
-    click_on "Submit"
+    expect(page.find("button[value=Submit]").disabled?).to be false
 
-    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
-    fill_in "ro-user-uid-to-add", with: "xxx"
-    page.find("body").click
+    # Check read-only user validations (invalid value, empty value, valid value)
+    fill_in_and_out "ro-user-uid-to-add", with: "xxx"
+    expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
     expect(page.find("#btn-add-ro-user")).to be_disabled
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "ro-user-uid-to-add", with: ""
-    page.find("body").click
+    fill_in_and_out "ro-user-uid-to-add", with: ""
     expect(page.find("#btn-add-ro-user")).to be_disabled
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "ro-user-uid-to-add", with: read_only.uid
-    page.find("body").click
+    expect(page.find("#ro-user-uid-to-add_error", visible: false).text).to eq ""
+    fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
     click_on "btn-add-ro-user"
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq ""
+    expect(page.find("#ro-user-uid-to-add", visible: false).text).to eq ""
 
-    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
-    fill_in "rw-user-uid-to-add", with: "xxx"
-    page.find("body").click
+    # Check read-write user validations (invalid value, empty value, valid value)
+    fill_in_and_out "rw-user-uid-to-add", with: "xxx"
     expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "rw-user-uid-to-add", with: ""
-    page.find("body").click
+    expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
+    fill_in_and_out "rw-user-uid-to-add", with: ""
     expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "rw-user-uid-to-add", with: read_write.uid
-    click_on "Submit"
-    click_on "btn-add-rw-user"
+    expect(page.find("#rw-user-uid-to-add_error", visible: false).text).to eq ""
+    fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
     expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq ""
+    click_on "btn-add-rw-user"
 
     page.find("#departments").find(:xpath, "option[3]").select_option
 

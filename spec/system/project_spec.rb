@@ -249,26 +249,22 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         visit "/"
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-
         fill_in "data_manager", with: "xxx"
-<<<<<<< HEAD
         # expect page to have the custom validation error message
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
         expect(page).to have_content("This field is required.")
 
         fill_in "ro-user-uid-to-add", with: read_only.uid
-=======
         page.find("body").click
         sleep(0.5) # give time to the validation to kick-in
         expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
->>>>>>> cf5a639 (Fix errors in project_spec validation)
         # Without removing the focus from the form field, the "change" event is not propagated for the DOM
         page.find("body").click
+        fill_in_and_out "data_manager", with: "xxx"
+        expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
         click_on "btn-add-ro-user"
-        fill_in "rw-user-uid-to-add", with: read_write.uid
-        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
-        page.find("body").click
+        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         click_on "btn-add-rw-user"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
@@ -283,15 +279,11 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         visit "/"
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-        fill_in "data_manager", with: data_manager.uid
-        fill_in "ro-user-uid-to-add", with: "xxx"
-        page.find("body").click
-        sleep(0.5) # give time to the validation to kick-in
+        fill_in_and_out "data_manager", with: data_manager.uid
+        fill_in_and_out "ro-user-uid-to-add", with: "xxx"
         expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
 
-        fill_in "rw-user-uid-to-add", with: "zzz"
-        page.find("body").click
-        sleep(0.5) # give time to the validation to kick-in
+        fill_in_and_out "rw-user-uid-to-add", with: "zzz"
         expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
