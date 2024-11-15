@@ -193,14 +193,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Sponsor to assign a Data User" do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
-      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-ro-user").click
-      page.find("body").click
-      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-rw-user").click
-      page.find("body").click
+      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
+      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
       visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
@@ -209,14 +203,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Manager to assign a Data User" do
       sign_in data_manager
       visit "/projects/#{project.id}/edit"
-      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-ro-user").click
-      page.find("body").click
-      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-rw-user").click
-      page.find("body").click
+      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
+      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
       visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
