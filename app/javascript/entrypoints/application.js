@@ -16,7 +16,6 @@ import * as bootstrap from 'bootstrap';
 import '../channels';
 
 import { setTargetHtml } from './helper';
-import UserDatalist from './user_datalist';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
@@ -278,8 +277,6 @@ function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
   });
-  const datalist = new UserDatalist();
-  datalist.setupDatalistValidity();
   initDataUsers();
   initListContentsModal();
   showMoreLessContent();

@@ -88,3 +88,11 @@ RSpec.configure do |config|
     end
   end
 end
+
+# Mimics Capybara `fill_in` but issues a "tab" keystroke at the end
+# so that validations on the textbox (if any) kick-in.
+def fill_in_and_out(element_id, with:)
+  fill_in element_id, with: with
+  # Tab out of the textbox (https://www.grepper.com/answers/723997/focusout+event+in+capybara)
+  find("#" + element_id).native.send_keys :tab
+end
