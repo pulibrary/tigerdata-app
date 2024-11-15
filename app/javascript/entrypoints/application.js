@@ -271,6 +271,7 @@ function tabNav() {
     // change background color to red
     tab.style.borderBottom = 'solid';
     tab.style.borderColor = '#E77500';
+    tab.classList.add('active');
   });
 
 }
