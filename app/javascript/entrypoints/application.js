@@ -241,35 +241,40 @@ function showValidationError() {
 }
 
 function tabNav() {
-  $('#tab-nav').on('mouseenter', (el) => {
+  const classic = document.getElementById('tab-classic');
+  const project = document.getElementById('tab-project');
+  const activity = document.getElementById('tab-activity');
+  const administration = document.getElementById('tab-administration');
+
+  $('#tab-classic').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
-    const tab = document.getElementById('tab-nav');
+    // const tab = document.getElementById('tab-nav');
 
-    if (!tab.classList.contains('active')) {
-      tab.style.borderBottom = 'solid';
-      tab.style.borderColor = '#121212';
+    if (!classic.classList.contains('active')) {
+      classic.style.borderBottom = 'solid';
+      classic.style.borderColor = '#121212';
     }
   });
 
-  $('#tab-nav').on('mouseleave', (el) => {
+  $('#tab-classic').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
-    const tab = document.getElementById('tab-nav');
+    // const tab = document.getElementById('tab-nav');
 
-    if (!tab.classList.contains('active')) {
-      tab.style.border = 'none';
+    if (!classic.classList.contains('active')) {
+      classic.style.border = 'none';
     }
   });
 
-  $('#tab-nav').on('click', (el) => {
+  $('#tab-classic').on('click', (el) => {
     const element = el;
     element.preventDefault();
-    const tab = document.getElementById('tab-nav');
+    // const tab = document.getElementById('tab-nav');
     // change background color to red
-    tab.style.borderBottom = 'solid';
-    tab.style.borderColor = '#E77500';
-    tab.classList.add('active');
+    classic.style.borderBottom = 'solid';
+    classic.style.borderColor = '#E77500';
+    classic.classList.add('active');
   });
 }
 

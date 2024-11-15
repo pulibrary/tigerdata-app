@@ -11,6 +11,12 @@
             <%end%>
         </div>
     </div>
+    <div id="dashboard-nav">
+        <button id="tab-classic" class="tab-nav"> Classic </button>
+        <button id="tab-nav" class="tab-nav"> Project </button>
+        <button id="tab-nav" class="tab-nav"> Activity </button>
+        <button id="tab-nav" class="tab-nav"> Administration </button>
+    </div>
     <div style="display: inline-flex">
         <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
         <div id="dashboard-projects">
