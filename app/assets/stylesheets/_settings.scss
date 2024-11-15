@@ -238,35 +238,12 @@
     margin-bottom: 10px;
   }
 
-  .custom_error {
-    display: none;
-
-    .error_message {
-      color: var(--Secondary-Red-Dark, #b00002);
-      margin-top: 2px;
-
-      /* Body XS */
-      font-family: "Libre Franklin";
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 21px; /* 150% */
-    }
-  }
-
-  input:valid {
+  input[type=text]:valid {
     background-color: rgb(255, 255, 255);
   }
 
-  input:invalid {
+  input[type=text]:invalid {
     outline-color: red;
-  }
-
-  // write css so that the text displayed on invalid input is red and appears to the right of the div instead of below it
-  span {
-    color: red;
-    display: inline;
-    margin-left: 10px;
   }
 
   h2 {

@@ -24,44 +24,37 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     visit "/"
     click_on "Create new project"
 
-    # Data Sponsor is not editable. It can only be the user who is initiating this request.
+    # Check data manager validations (invalid value, empty value, valid value)
     expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-    fill_in "data_manager", with: "xxx"
-    page.find("body").click
+    fill_in_and_out "data_manager", with: "xxx"
+    expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
     expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in "data_manager", with: ""
+    fill_in_and_out "data_manager", with: ""
     expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in "data_manager", with: data_manager.uid
-    page.find("body").click
-    click_on "Submit"
-    expect(page.find("#data_manager").native.attribute("validationMessage")).to eq ""
+    fill_in_and_out "data_manager", with: ""
+    expect(page.find("#data_manager_error").text).to eq "This field is required"
+    fill_in_and_out "data_manager", with: data_manager.uid
+    expect(page.find("#data_manager_error", visible: false).text).to eq ""
+    expect(page.find("button[value=Submit]").disabled?).to be false
 
-    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
-    fill_in "ro-user-uid-to-add", with: "xxx"
-    page.find("body").click
+    # Check read-only user validations (invalid value, empty value, valid value)
+    fill_in_and_out "ro-user-uid-to-add", with: "xxx"
+    expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
     expect(page.find("#btn-add-ro-user")).to be_disabled
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "ro-user-uid-to-add", with: ""
-    page.find("body").click
+    fill_in_and_out "ro-user-uid-to-add", with: ""
     expect(page.find("#btn-add-ro-user")).to be_disabled
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "ro-user-uid-to-add", with: read_only.uid
-    page.find("body").click
-    click_on "btn-add-ro-user"
-    expect(page.find("#ro-user-uid-to-add").native.attribute("validationMessage")).to eq ""
+    expect(page.find("#ro-user-uid-to-add_error", visible: false).text).to eq ""
+    fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
+    expect(page.find("#ro-user-uid-to-add", visible: false).text).to eq ""
 
-    # clicking on Save because once the button is disabled it does not get reenabled until after the user clicks out of the text box
-    fill_in "rw-user-uid-to-add", with: "xxx"
-    page.find("body").click
+    # Check read-write user validations (invalid value, empty value, valid value)
+    fill_in_and_out "rw-user-uid-to-add", with: "xxx"
     expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "rw-user-uid-to-add", with: ""
-    page.find("body").click
+    expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
+    fill_in_and_out "rw-user-uid-to-add", with: ""
     expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq "Please select a valid value."
-    fill_in "rw-user-uid-to-add", with: read_write.uid
-    click_on "Submit"
-    click_on "btn-add-rw-user"
+    expect(page.find("#rw-user-uid-to-add_error", visible: false).text).to eq ""
+    fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
     expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq ""
 
     page.find("#departments").find(:xpath, "option[3]").select_option
@@ -200,14 +193,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Sponsor to assign a Data User" do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
-      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-ro-user").click
-      page.find("body").click
-      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-rw-user").click
-      page.find("body").click
+      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
+      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
       visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
@@ -216,14 +203,8 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Manager to assign a Data User" do
       sign_in data_manager
       visit "/projects/#{project.id}/edit"
-      fill_in "ro-user-uid-to-add", with: ro_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-ro-user").click
-      page.find("body").click
-      fill_in "rw-user-uid-to-add", with: rw_data_user.uid
-      page.find("body").click
-      find(:css, "#btn-add-rw-user").click
-      page.find("body").click
+      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
+      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
       visit "/projects/#{project.id}"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"

@@ -35,3 +35,51 @@ body {
     }
 }
 
+.hidden-element {
+  display: none;
+}
+
+/* These are the styles used by the jQuery autocomplete plug-in */
+.autocomplete-suggestions {
+  border: 1px solid #999;
+  background: #FFF;
+  overflow: auto;
+}
+
+.autocomplete-suggestion {
+  padding: 2px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.autocomplete-selected {
+  background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+  font-weight: normal;
+  color: #3399FF;
+}
+
+.autocomplete-group {
+  padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+  display: block;
+  border-bottom: 1px solid #000;
+}
+
+/*
+ * Adds the arrow to the autocomplete textbox.
+ * Notice that since CSS does not allow ::after on HTML <input> we apply this style to an HTML <span>.
+ * See https://stackoverflow.com/questions/2587669/can-i-use-a-before-or-after-pseudo-element-on-an-input-field
+ */
+.autocomplete-arrow::after {
+  content: "▾";
+  margin-left: -20px;
+}
+
+.autocomplete-error {
+  color: var(--Secondary-Red-Dark, #b00002);
+}
