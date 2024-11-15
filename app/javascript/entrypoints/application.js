@@ -242,9 +242,9 @@ function showValidationError() {
 
 function tabNav() {
   const classic = document.getElementById('tab-classic');
-  const project = document.getElementById('tab-project');
-  const activity = document.getElementById('tab-activity');
-  const administration = document.getElementById('tab-administration');
+  // const project = document.getElementById('tab-project');
+  // const activity = document.getElementById('tab-activity');
+  // const administration = document.getElementById('tab-administration');
 
   $('#tab-classic').on('mouseenter', (el) => {
     const element = el;
