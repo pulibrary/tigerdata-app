@@ -65,7 +65,7 @@ node_modules
 # Do not check aterm.jar into the repo
 aterm.jar
 
-public 
+public
 doc
 
 # Ignore test created to not get accidentally added to commit
@@ -73,3 +73,6 @@ project_create_8.txt
 
 # Ignore .yardoc
 .yardoc/
+
+# Ignore rspec report
+/spec/fixtures/failed_tests.txt

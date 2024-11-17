@@ -16,7 +16,6 @@ import * as bootstrap from 'bootstrap';
 import '../channels';
 
 import { setTargetHtml } from './helper';
-import UserDatalist from './user_datalist';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 
@@ -241,18 +240,50 @@ function showValidationError() {
   });
 }
 
+function tabNav() {
+  $('#tab-nav').on('mouseenter', (el) => {
+    const element = el;
+    element.preventDefault();
+    const tab = document.getElementById('tab-nav');
+
+    if (!tab.classList.contains('active')) {
+      tab.style.borderBottom = 'solid';
+      tab.style.borderColor = '#121212';
+    }
+  });
+
+  $('#tab-nav').on('mouseleave', (el) => {
+    const element = el;
+    element.preventDefault();
+    const tab = document.getElementById('tab-nav');
+
+    if (!tab.classList.contains('active')) {
+      tab.style.border = 'none';
+    }
+  });
+
+  $('#tab-nav').on('click', (el) => {
+    const element = el;
+    element.preventDefault();
+    const tab = document.getElementById('tab-nav');
+    // change background color to red
+    tab.style.borderBottom = 'solid';
+    tab.style.borderColor = '#E77500';
+    tab.classList.add('active');
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
   });
-  const datalist = new UserDatalist();
-  datalist.setupDatalistValidity();
   initDataUsers();
   initListContentsModal();
   showMoreLessContent();
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
+  tabNav();
 }
 
 window.addEventListener('load', () => initPage());

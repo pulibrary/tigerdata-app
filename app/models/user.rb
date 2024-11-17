@@ -19,27 +19,22 @@ class User < ApplicationRecord
     user
   end
 
-  def self.all_users
-    User.all.map(&:uid)
-  end
-
+  # Users that can be project sponsors
   def self.sponsor_users
-    users = if Rails.env.development? || Rails.env.staging?
-              User.where(eligible_sponsor: true).or(User.where(superuser: true))
-            else
-              User.where(eligible_sponsor: true)
-            end
-    users.map(&:uid)
+    if Rails.env.development? || Rails.env.staging?
+      User.where(eligible_sponsor: true).or(User.where(superuser: true))
+    else
+      User.where(eligible_sponsor: true)
+    end
   end
 
-  # All users who are eligible to be Data Managers
+  # Users that can be data managers
   def self.manager_users
-    users = if Rails.env.development? || Rails.env.staging?
-              User.where(eligible_manager: true).or(User.where(superuser: true))
-            else
-              User.where(eligible_manager: true)
-            end
-    users.map(&:uid)
+    if Rails.env.development? || Rails.env.staging?
+      User.where(eligible_manager: true).or(User.where(superuser: true))
+    else
+      User.where(eligible_manager: true)
+    end
   end
 
   def clear_mediaflux_session(session)
