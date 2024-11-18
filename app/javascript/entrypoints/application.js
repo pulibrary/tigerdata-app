@@ -279,25 +279,25 @@ function tabNav() {
 }
 
 function NavClick() {
- const url = window.location.href;
- $('#dash-classic').on('click', (inv) => {
-  const element = inv;
-  element.preventDefault();
-  $.ajax({
-    type: 'POST',
-    url: url + 'tab_classic',
-    success() { // on success..
-      window.location = url // update the DIV
-    },
-  });
-});
-
- $('#dash-project').on('click', (inv) => {
+  const url = window.location.href;
+  $('#dash-classic').on('click', (inv) => {
     const element = inv;
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: url + 'tab_project',
+      url: `${url}tab_classic`,
+      success() { // on success..
+        window.location = url; // update the DIV
+      },
+    });
+  });
+
+  $('#dash-project').on('click', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: `${url}tab_project`,
       data: $('#tab-project'),
       success() { // on success..
         window.location.reload(); // update the DIV
@@ -310,7 +310,7 @@ function NavClick() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: url + 'tab_activity',
+      url: `${url}tab_activity`,
       data: $('#tab-activity'),
       success() { // on success..
         window.location.reload(); // update the DIV
@@ -323,7 +323,7 @@ function NavClick() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: url + 'tab_admin',
+      url: `${url}tab_admin`,
       data: $('#tab-admin'),
       success() { // on success..
         window.location.reload(); // update the DIV
