@@ -241,12 +241,12 @@ function showValidationError() {
 }
 
 function tabNav() {
-  const classic = document.getElementById('tab-classic');
+  const classic = document.getElementById('dash-classic');
   // const project = document.getElementById('tab-project');
   // const activity = document.getElementById('tab-activity');
   // const administration = document.getElementById('tab-administration');
 
-  $('#tab-classic').on('mouseenter', (el) => {
+  $('#dash-classic').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -257,7 +257,7 @@ function tabNav() {
     }
   });
 
-  $('#tab-classic').on('mouseleave', (el) => {
+  $('#dash-classic').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -267,7 +267,7 @@ function tabNav() {
     }
   });
 
-  $('#tab-classic').on('click', (el) => {
+  $('#dash-classic').on('click', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -275,6 +275,60 @@ function tabNav() {
     classic.style.borderBottom = 'solid';
     classic.style.borderColor = '#E77500';
     classic.classList.add('active');
+  });
+}
+
+function NavClick() {
+ const url = window.location.href;
+ $('#dash-classic').on('click', (inv) => {
+  const element = inv;
+  element.preventDefault();
+  $.ajax({
+    type: 'POST',
+    url: url + 'tab_classic',
+    success() { // on success..
+      window.location = url // update the DIV
+    },
+  });
+});
+
+ $('#dash-project').on('click', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: url + 'tab_project',
+      data: $('#tab-project'),
+      success() { // on success..
+        window.location.reload(); // update the DIV
+      },
+    });
+  });
+
+  $('#dash-activity').on('click', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: url + 'tab_activity',
+      data: $('#tab-activity'),
+      success() { // on success..
+        window.location.reload(); // update the DIV
+      },
+    });
+  });
+
+  $('#dash-admin').on('click', (inv) => {
+    const element = inv;
+    element.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: url + 'tab_admin',
+      data: $('#tab-admin'),
+      success() { // on success..
+        window.location.reload(); // update the DIV
+      },
+    });
   });
 }
 
@@ -289,6 +343,7 @@ function initPage() {
   emulate();
   showValidationError();
   tabNav();
+  NavClick();
 }
 
 window.addEventListener('load', () => initPage());

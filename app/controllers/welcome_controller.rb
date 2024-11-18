@@ -26,6 +26,16 @@ class WelcomeController < ApplicationController
     end
   end
 
+  def tab_project
+    return if Rails.env.production?
+    return if current_user.nil? || current_user.id.nil?
+
+    console.log("AAAAAAAAAAAFDSKFAISDFIUERWHFIOUAWDHIUFHSDIUFHASDILHFLIDSHKF")
+  end
+
+  def tab_activity; end
+  def tab_admin; end
+
   def help
     # Piggybacking on this page to pass custom HTTP headers to Mediaflux
     # in a very controlled scenario.
