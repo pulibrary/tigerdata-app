@@ -397,7 +397,7 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_project`,
-      data: {"dashtab": "project"},
+      data: { dashtab: 'project' },
       success() { // on success..
         // window.location.reload(); // update the DIV
       },
@@ -410,7 +410,7 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_activity`,
-      data: {"dashtab": "activity"},
+      data: { dashtab: 'activity' },
       success() { // on success..
         // window.location.reload(); // update the DIV
       },
@@ -423,7 +423,7 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_admin`,
-      data: {"dashtab": "admin"},
+      data: { dashtab: 'admin' },
       success() { // on success..
         // window.location.reload(); // update the DIV
       },
