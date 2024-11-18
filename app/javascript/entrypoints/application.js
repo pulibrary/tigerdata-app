@@ -242,9 +242,15 @@ function showValidationError() {
 
 function tabNav() {
   const classic = document.getElementById('dash-classic');
-  // const project = document.getElementById('tab-project');
-  // const activity = document.getElementById('tab-activity');
-  // const administration = document.getElementById('tab-administration');
+  const project = document.getElementById('dash-project');
+  const activity = document.getElementById('dash-activity');
+  const admin = document.getElementById('dash-admin');
+  // if the current page is the index page, then the classic tab should be active
+  if (window.location.pathname === '/') {
+    classic.style.borderBottom = 'solid';
+    classic.style.borderColor = '#E77500';
+    classic.classList.add('active');
+  }
 
   $('#dash-classic').on('mouseenter', (el) => {
     const element = el;
@@ -276,6 +282,99 @@ function tabNav() {
     classic.style.borderColor = '#E77500';
     classic.classList.add('active');
   });
+
+  $('#dash-project').on('mouseenter', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!project.classList.contains('active')) {
+      project.style.borderBottom = 'solid';
+      project.style.borderColor = '#121212';
+    }
+  });
+
+  $('#dash-project').on('mouseleave', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!project.classList.contains('active')) {
+      project.style.border = 'none';
+    }
+  });
+
+  $('#dash-project').on('click', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+    // change background color to red
+    project.style.borderBottom = 'solid';
+    project.style.borderColor = '#E77500';
+    project.classList.add('active');
+  });
+
+  $('#dash-activity').on('mouseenter', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!activity.classList.contains('active')) {
+      activity.style.borderBottom = 'solid';
+      activity.style.borderColor = '#121212';
+    }
+  });
+
+  $('#dash-activity').on('mouseleave', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!activity.classList.contains('active')) {
+      activity.style.border = 'none';
+    }
+  });
+
+  $('#dash-activity').on('click', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+    // change background color to red
+    activity.style.borderBottom = 'solid';
+    activity.style.borderColor = '#E77500';
+    activity.classList.add('active');
+  });
+
+  $('#dash-admin').on('mouseenter', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!admin.classList.contains('active')) {
+      admin.style.borderBottom = 'solid';
+      admin.style.borderColor = '#121212';
+    }
+  });
+
+  $('#dash-admin').on('mouseleave', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+
+    if (!admin.classList.contains('active')) {
+      admin.style.border = 'none';
+    }
+  });
+
+  $('#dash-admin').on('click', (el) => {
+    const element = el;
+    element.preventDefault();
+    // const tab = document.getElementById('tab-nav');
+    // change background color to red
+    admin.style.borderBottom = 'solid';
+    admin.style.borderColor = '#E77500';
+    admin.classList.add('active');
+  });
 }
 
 function NavClick() {
@@ -298,9 +397,9 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_project`,
-      data: $('#tab-project'),
+      data: {"dashtab": "project"},
       success() { // on success..
-        window.location.reload(); // update the DIV
+        // window.location.reload(); // update the DIV
       },
     });
   });
@@ -311,9 +410,9 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_activity`,
-      data: $('#tab-activity'),
+      data: {"dashtab": "activity"},
       success() { // on success..
-        window.location.reload(); // update the DIV
+        // window.location.reload(); // update the DIV
       },
     });
   });
@@ -324,9 +423,9 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_admin`,
-      data: $('#tab-admin'),
+      data: {"dashtab": "admin"},
       success() { // on success..
-        window.location.reload(); // update the DIV
+        // window.location.reload(); // update the DIV
       },
     });
   });

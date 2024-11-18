@@ -17,74 +17,82 @@
         <button id="dash-activity" class="tab-nav"> Activity </button>
         <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
-    <div style="display: inline-flex">
-        <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
-        <div id="dashboard-projects">
-            <h1>My Projects</h1>
-            <%if current_user.eligible_sponsor?%>
-            <h2>Sponsored by Me</h2>
-            <ul class="project-list">
-                <% @sponsored_projects.each do |project| %>
-                <li><%= link_to(project.title, project) %> </li>
-                <%end%>
-            </ul>
-            <% end %>
-            <% if current_user.eligible_manager? %>
-            <h2>Managed by Me</h2>
-            <ul class="project-list">
-                <% @managed_projects.each do |project| %>
-                <li><%= link_to(project.title, project) %> </li>
-                <%end%>
-            </ul>
-            <% end %>
-            <% if @data_user_projects.size > 0 %>
-            <h2>Shared with Me</h2>
-            <ul class="project-list">
-                <% @data_user_projects.each do |project| %>
-                <li><%= link_to(project.title, project) %> </li>
-                <%end%>
-            </ul>
-            <% end %>
-        </div>
-        <%= render partial: "recent_activity" %>
-        <% end %>
-    </div>
-    <div style="display: inline-flex">
-        <% if current_user.eligible_sysadmin?%>
-        <div id="dashboard-pending">
-            <h1>Project Administration</h1>
-            <h4>Pending Projects</h4>
-            <% if !@pending_projects.empty? %>
-            <ul class="project-list">
-                <% @pending_projects.each do |project| %>
-                <li>
-                    <%= link_to(project.title, project) %>
-                </li>
+        <% if @dashtab == "classic"%>
+            <div style="display: inline-flex">
+                <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
+                <div id="dashboard-projects">
+                    <h1>My Projects</h1>
+                    <%if current_user.eligible_sponsor?%>
+                    <h2>Sponsored by Me</h2>
+                    <ul class="project-list">
+                        <% @sponsored_projects.each do |project| %>
+                        <li><%= link_to(project.title, project) %> </li>
+                        <%end%>
+                    </ul>
+                    <% end %>
+                    <% if current_user.eligible_manager? %>
+                    <h2>Managed by Me</h2>
+                    <ul class="project-list">
+                        <% @managed_projects.each do |project| %>
+                        <li><%= link_to(project.title, project) %> </li>
+                        <%end%>
+                    </ul>
+                    <% end %>
+                    <% if @data_user_projects.size > 0 %>
+                    <h2>Shared with Me</h2>
+                    <ul class="project-list">
+                        <% @data_user_projects.each do |project| %>
+                        <li><%= link_to(project.title, project) %> </li>
+                        <%end%>
+                    </ul>
+                    <% end %>
+                </div>
+                <%= render partial: "recent_activity" %>
                 <% end %>
-            </ul>
-            <% else %>
-            <p> (none) </p>
-            <% end %>
-            <h4>Recently Approved Projects</h4>
-            <% if !@approved_projects.empty? %>
-            <table class="sysadmin-list">
-                <% @approved_projects.each_with_index do |project, index| %>
-                <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
-                <tr class="<%=@row_css%>">
-                    <td><%= link_to(project.title, project) %> </td>
-                </tr>
+            </div>
+            <div style="display: inline-flex">
+                <% if current_user.eligible_sysadmin?%>
+                <div id="dashboard-pending">
+                    <h1>Project Administration</h1>
+                    <h4>Pending Projects</h4>
+                    <% if !@pending_projects.empty? %>
+                    <ul class="project-list">
+                        <% @pending_projects.each do |project| %>
+                        <li>
+                            <%= link_to(project.title, project) %>
+                        </li>
+                        <% end %>
+                    </ul>
+                    <% else %>
+                    <p> (none) </p>
+                    <% end %>
+                    <h4>Recently Approved Projects</h4>
+                    <% if !@approved_projects.empty? %>
+                    <table class="sysadmin-list">
+                        <% @approved_projects.each_with_index do |project, index| %>
+                        <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
+                        <tr class="<%=@row_css%>">
+                            <td><%= link_to(project.title, project) %> </td>
+                        </tr>
+                        <% end %>
+                    </table>
+                    <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
+                    <% else %>
+                    <p> (none) </p>
+                    <% end %>
+                </div>
+                <% unless current_user.superuser? %>
+                <%= render partial: "recent_activity" %>
                 <% end %>
-            </table>
-            <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
-            <% else %>
-            <p> (none) </p>
-            <% end %>
-        </div>
-        <% unless current_user.superuser? %>
-        <%= render partial: "recent_activity" %>
+                <%end%>
+            </div>
+            <% elsif @dashtab == "project" %>
+                <div> COMING SOON</div>
+            <% elsif @dashtab == "activity" %>
+                <div> COMING SOON</div>
+            <% elsif @dashtab == "admin" %>
+                <div> COMING SOON</div>
         <% end %>
-        <%end%>
-    </div>
     <% end %>
 </div>
 

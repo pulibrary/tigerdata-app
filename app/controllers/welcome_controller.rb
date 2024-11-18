@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!, except: [:styles_preview]
+  skip_before_action :verify_authenticity_token
+
   def index
     return if current_user.nil?
     @sponsored_projects = Project.sponsored_projects(@current_user.uid)
@@ -12,6 +14,8 @@ class WelcomeController < ApplicationController
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
+    @dashtab = "classic"
+    session[:dashtab] ||= @dashtab
   end
 
   def emulate
@@ -27,14 +31,25 @@ class WelcomeController < ApplicationController
   end
 
   def tab_project
-    return if Rails.env.production?
     return if current_user.nil? || current_user.id.nil?
-
-    console.log("Test")
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
   end
 
-  def tab_activity; end
-  def tab_admin; end
+  def tab_activity
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
+  def tab_admin
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
 
   def help
     # Piggybacking on this page to pass custom HTTP headers to Mediaflux
