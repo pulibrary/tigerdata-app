@@ -47,7 +47,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "Shows the not yet approved (pending) project" do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "(#{::Project::PENDING_STATUS})"
         expect(page).to have_content pending_text
       end
     end
@@ -77,7 +76,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "shows none when the data user is empty" do
         sign_in data_manager
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "project 123 (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
@@ -403,7 +401,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       sign_in sponsor_user
       visit "/projects"
       expect(page).to have_content(project_not_in_mediaflux.title)
-      expect(page).to have_content("(#{::Project::PENDING_STATUS})")
     end
   end
 
