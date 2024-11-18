@@ -30,7 +30,7 @@ class WelcomeController < ApplicationController
     return if Rails.env.production?
     return if current_user.nil? || current_user.id.nil?
 
-    console.log("AAAAAAAAAAAFDSKFAISDFIUERWHFIOUAWDHIUFHSDIUFHASDILHFLIDSHKF")
+    console.log("Test")
   end
 
   def tab_activity; end
