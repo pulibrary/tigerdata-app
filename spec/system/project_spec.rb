@@ -103,6 +103,13 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     end
 
     context "a project is active" do
+      before do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/edit"
+      end
+
       it "redirects the user to the project details page if the user is not a sponsor or manager" do
         sign_in read_only
         # project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
@@ -111,13 +118,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
         expect(page).to have_content("Only data sponsors and data managers can revise this project.")
-      end
-
-      before do
-        sign_in sponsor_user
-        project_in_mediaflux.metadata_json["status"] = Project::APPROVED_STATUS
-        project_in_mediaflux.save!
-        visit "/projects/#{project_in_mediaflux.id}/edit"
       end
 
       it "preserves the readonly directory field" do
@@ -131,7 +131,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       end
 
       it "redirects the user to the revision request confirmation page upon submission" do
+        page.save_screenshot
         click_on "Submit"
+        page.save_screenshot
         project_in_mediaflux.reload
         expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
 
@@ -179,7 +181,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
       fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
       # select a department
-      select "Research Data and Scholarly Services", from: "departments"
+      select "Research Data and Scholarship Services", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
       expect(page).to have_content("/td-test-001/")
@@ -320,7 +322,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         fill_in_and_out "data_manager", with: data_manager.uid
         fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
         fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
-        select "RDSS", from: "departments"
+        select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
@@ -367,11 +369,15 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         fill_in_and_out "data_manager", with: data_manager.uid
         fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
         fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
-        select "RDSS", from: "departments"
+        select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
-        expect(page.find_all("input:invalid").count).to eq(0)
+        invalid_fields = page.find_all("input:invalid").count
+        # There seemed to be some cases where this might fail when run with a headless Chrome browser
+        # Inserting a delay ensured that this did not occur at all
+        sleep(0.1)
+        expect(invalid_fields).to eq(0)
         click_on "Submit"
         # For some reason the above click on submit sometimes does not submit the form
         #  even though the inputs are all valid, so try it again...
