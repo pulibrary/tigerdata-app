@@ -238,6 +238,19 @@
          return validSelection;
       }
 
+      var validateAutocomplete = function(value, elementId, data, required, addButtonId) {
+         if (validateSelection(value, elementId, data, required, addButtonId) === false) {
+            // If this field is not valid, the form is not valid
+            invalidateForm();
+         } else {
+            if (addButtonId != null) {
+               $(addButtonId).click(); // Automatically add the value since it is valid
+            }
+            // Checks that all other fields are valid
+            validateForm();
+         }
+      }
+
       // Setup the autocomplete for a given `elementId` with the `data` provided.
       // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
       var setupAutocomplete = function(elementId, data, required, addButtonId) {
@@ -249,21 +262,13 @@
             lookup: data,
             onSelect: function (suggestion) {
                $(elementId).val(suggestion.data);
+               validateAutocomplete(suggestion.data, elementId, data, required, addButtonId);
             }
          });
 
          $(elementId).on("focusout", function(event) {
             const value = event.target.value.trim();
-            if (validateSelection(value, elementId, data, required, addButtonId) === false) {
-               // If this field is not valid, the form is not valid
-               invalidateForm();
-            } else {
-               if (addButtonId != null) {
-                  $(addButtonId).click(); // Automatically add the value since it is valid
-               }
-               // Checks that all other fields are valid
-               validateForm();
-            }
+            validateAutocomplete(value, elementId, data, required, addButtonId);
          });
       }
 
@@ -277,7 +282,6 @@
 
       // Disables the Submit button on the form
       var invalidateForm = function() {
-         console.log("Marking form as not valid");
          $("#submit-btn").prop("disabled", true);
       }
 
