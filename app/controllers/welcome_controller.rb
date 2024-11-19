@@ -31,28 +31,28 @@ class WelcomeController < ApplicationController
     end
   end
 
-  def tab_classic
+  def dash_classic
     return if current_user.nil? || current_user.id.nil?
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]
     end
   end
 
-  def tab_project
+  def dash_project
     return if current_user.nil? || current_user.id.nil?
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]
     end
   end
 
-  def tab_activity
+  def dash_activity
     return if current_user.nil? || current_user.id.nil?
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]
     end
   end
 
-  def tab_admin
+  def dash_admin
     return if current_user.nil? || current_user.id.nil?
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]

@@ -240,7 +240,7 @@ function showValidationError() {
   });
 }
 
-function tabNav() {
+function dashStyle() {
   const classic = document.getElementById('dash-classic');
   const project = document.getElementById('dash-project');
   const activity = document.getElementById('dash-activity');
@@ -401,14 +401,14 @@ function tabNav() {
   });
 }
 
-function NavClick() {
+function dashTab() {
   const url = window.location.href;
   $('#dash-classic').on('click', (inv) => {
     const element = inv;
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}tab_classic`,
+      url: `${url}dash_classic`,
       data: { dashtab: 'classic' },
       success() { // on success..
         window.location = url; // update the DIV
@@ -422,7 +422,7 @@ function NavClick() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}tab_project`,
+      url: `${url}dash_project`,
       data: { dashtab: 'project' },
       success() { // on success..
         sessionStorage.setItem('dashtab', 'project');
@@ -436,7 +436,7 @@ function NavClick() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}tab_activity`,
+      url: `${url}dash_activity`,
       data: { dashtab: 'activity' },
       success() { // on success..
         sessionStorage.setItem('dashtab', 'activity');
@@ -450,7 +450,7 @@ function NavClick() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}tab_admin`,
+      url: `${url}dash_admin`,
       data: { dashtab: 'admin' },
       success() { // on success..
         sessionStorage.setItem('dashtab', 'admin');
@@ -470,8 +470,8 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
-  tabNav();
-  NavClick();
+  dashStyle();
+  dashTab();
 }
 
 window.addEventListener('load', () => initPage());
