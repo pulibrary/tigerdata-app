@@ -3,6 +3,7 @@
     <h1>Welcome to TigerData</h1>
     Please log in.
     <% else %>
+   
     <div class="welcome-pane">
         <h1>Welcome, <%= current_user.given_name %>!</h1>
         <div class="project-button">
@@ -12,45 +13,16 @@
         </div>
     </div>
     <div id="dashboard-nav">
-        <button id="dash-classic" class="tab-nav"> Classic </button>
-        <button id="dash-project" class="tab-nav"> Project </button>
-        <button id="dash-activity" class="tab-nav"> Activity </button>
+    <button id="dash-classic" class="tab-nav"> Projects </button>
+    <button id="dash-activity" class="tab-nav"> Activity </button>
         <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
         <% if @dashtab == "classic"%>
-            <div style="display: inline-flex">
-                <% if !current_user.eligible_sysadmin? or current_user.superuser? %>
-                <div id="dashboard-projects">
-                    <h1>My Projects</h1>
-                    <%if current_user.eligible_sponsor?%>
-                    <h2>Sponsored by Me</h2>
-                    <ul class="project-list">
-                        <% @sponsored_projects.each do |project| %>
-                        <li><%= link_to(project.title, project) %> </li>
-                        <%end%>
-                    </ul>
-                    <% end %>
-                    <% if current_user.eligible_manager? %>
-                    <h2>Managed by Me</h2>
-                    <ul class="project-list">
-                        <% @managed_projects.each do |project| %>
-                        <li><%= link_to(project.title, project) %> </li>
-                        <%end%>
-                    </ul>
-                    <% end %>
-                    <% if @data_user_projects.size > 0 %>
-                    <h2>Shared with Me</h2>
-                    <ul class="project-list">
-                        <% @data_user_projects.each do |project| %>
-                        <li><%= link_to(project.title, project) %> </li>
-                        <%end%>
-                    </ul>
-                    <% end %>
-                </div>
+          <%= render partial: "projects_listing" %>
+            <% elsif @dashtab == "activity" %>
                 <%= render partial: "recent_activity" %>
-                <% end %>
-            </div>
-            <div style="display: inline-flex">
+            <% elsif @dashtab == "admin" %>
+                <div style="display: inline-flex">
                 <% if current_user.eligible_sysadmin?%>
                 <div id="dashboard-pending">
                     <h1>Project Administration</h1>
@@ -86,12 +58,6 @@
                 <% end %>
                 <%end%>
             </div>
-            <% elsif @dashtab == "project" %>
-                <div> COMING SOON</div>
-            <% elsif @dashtab == "activity" %>
-                <div> COMING SOON</div>
-            <% elsif @dashtab == "admin" %>
-                <div> COMING SOON</div>
         <% end %>
     <% end %>
 </div>

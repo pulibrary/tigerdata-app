@@ -1,0 +1,18 @@
+
+
+<div id="projects-listing">
+<% @dashboard_projects.each do |project| %> 
+  <div class="project">
+      <h2><%= project.title %></h2>
+      <div class="details">
+         <ul>
+            <li class="status <%= project.status.downcase %>"><%= project.status %></li>
+            <li class="project-type"><%= project.metadata["storage_performance_expectations"]["approved"] %></li>
+            <li class="user-role">Data user</li>
+            <li class="last-download">Prepared 1 day ago</li>
+            <li class="last-activity"><%= time_ago_in_words(project.metadata["updated_on"]) %></li>
+         </ul>
+      </div>
+   </div>
+  <% end %> 
+</div>

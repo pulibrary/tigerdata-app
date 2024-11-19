@@ -13,11 +13,15 @@ class WelcomeController < ApplicationController
     @approved_projects = Project.approved_projects
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
+    @dashboard_projects = @sponsored_projects | @managed_projects | @data_user_projects
+
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
-    @dashtab = "classic"
+    @dashtab = "project"
     session[:dashtab] ||= @dashtab
     @dashtab = session[:dashtab]
   end
+
+
 
   def emulate
     return if Rails.env.production?
