@@ -245,28 +245,35 @@ function tabNav() {
   const project = document.getElementById('dash-project');
   const activity = document.getElementById('dash-activity');
   const admin = document.getElementById('dash-admin');
-  const session = sessionStorage.getItem("dashtab");
+  const session = sessionStorage.getItem('dashtab');
 
   // Check the session to see which tab should start as active be active
-  if (session === 'classic' || session === null) {
-    classic.style.borderBottom = 'solid';
-    classic.style.borderColor = '#E77500';
-    classic.classList.add('active');
-  }
-  else if (session === 'project') {
-    project.style.borderBottom = 'solid';
-    project.style.borderColor = '#E77500';
-    project.classList.add('active');
-  }
-  else if (session === 'activity') {
-    activity.style.borderBottom = 'solid';
-    activity.style.borderColor = '#E77500';
-    activity.classList.add('active');
-  }
-  else if (session === 'admin') {
-    admin.style.borderBottom = 'solid';
-    admin.style.borderColor = '#E77500';
-    admin.classList.add('active');
+  switch (session) {
+    case 'classic':
+      classic.style.borderBottom = 'solid';
+      classic.style.borderColor = '#E77500';
+      classic.classList.add('active');
+      break;
+    case 'project':
+      project.style.borderBottom = 'solid';
+      project.style.borderColor = '#E77500';
+      project.classList.add('active');
+      break;
+    case 'activity':
+      activity.style.borderBottom = 'solid';
+      activity.style.borderColor = '#E77500';
+      activity.classList.add('active');
+      break;
+    case 'admin':
+      admin.style.borderBottom = 'solid';
+      admin.style.borderColor = '#E77500';
+      admin.classList.add('active');
+      break;
+    default:
+      classic.style.borderBottom = 'solid';
+      classic.style.borderColor = '#E77500';
+      classic.classList.add('active');
+      break;
   }
 
   $('#dash-classic').on('mouseenter', (el) => {
@@ -405,7 +412,7 @@ function NavClick() {
       data: { dashtab: 'classic' },
       success() { // on success..
         window.location = url; // update the DIV
-        sessionStorage.setItem("dashtab", "classic");
+        sessionStorage.setItem('dashtab', 'classic');
       },
     });
   });
@@ -418,7 +425,7 @@ function NavClick() {
       url: `${url}tab_project`,
       data: { dashtab: 'project' },
       success() { // on success..
-        sessionStorage.setItem("dashtab", "project");
+        sessionStorage.setItem('dashtab', 'project');
         window.location.reload(); // update the DIV
       },
     });
@@ -432,7 +439,7 @@ function NavClick() {
       url: `${url}tab_activity`,
       data: { dashtab: 'activity' },
       success() { // on success..
-        sessionStorage.setItem("dashtab", "activity");
+        sessionStorage.setItem('dashtab', 'activity');
         window.location.reload(); // update the DIV
       },
     });
@@ -446,7 +453,7 @@ function NavClick() {
       url: `${url}tab_admin`,
       data: { dashtab: 'admin' },
       success() { // on success..
-        sessionStorage.setItem("dashtab", "admin");
+        sessionStorage.setItem('dashtab', 'admin');
         window.location.reload(); // update the DIV
       },
     });
