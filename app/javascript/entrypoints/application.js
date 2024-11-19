@@ -245,11 +245,28 @@ function tabNav() {
   const project = document.getElementById('dash-project');
   const activity = document.getElementById('dash-activity');
   const admin = document.getElementById('dash-admin');
-  // if the current page is the index page, then the classic tab should be active
-  if (window.location.pathname === '/') {
+  const session = sessionStorage.getItem("dashtab");
+
+  // Check the session to see which tab should start as active be active
+  if (session === 'classic' || session === null) {
     classic.style.borderBottom = 'solid';
     classic.style.borderColor = '#E77500';
     classic.classList.add('active');
+  }
+  else if (session === 'project') {
+    project.style.borderBottom = 'solid';
+    project.style.borderColor = '#E77500';
+    project.classList.add('active');
+  }
+  else if (session === 'activity') {
+    activity.style.borderBottom = 'solid';
+    activity.style.borderColor = '#E77500';
+    activity.classList.add('active');
+  }
+  else if (session === 'admin') {
+    admin.style.borderBottom = 'solid';
+    admin.style.borderColor = '#E77500';
+    admin.classList.add('active');
   }
 
   $('#dash-classic').on('mouseenter', (el) => {
@@ -385,8 +402,10 @@ function NavClick() {
     $.ajax({
       type: 'POST',
       url: `${url}tab_classic`,
+      data: { dashtab: 'classic' },
       success() { // on success..
         window.location = url; // update the DIV
+        sessionStorage.setItem("dashtab", "classic");
       },
     });
   });
@@ -399,7 +418,8 @@ function NavClick() {
       url: `${url}tab_project`,
       data: { dashtab: 'project' },
       success() { // on success..
-        // window.location.reload(); // update the DIV
+        sessionStorage.setItem("dashtab", "project");
+        window.location.reload(); // update the DIV
       },
     });
   });
@@ -412,7 +432,8 @@ function NavClick() {
       url: `${url}tab_activity`,
       data: { dashtab: 'activity' },
       success() { // on success..
-        // window.location.reload(); // update the DIV
+        sessionStorage.setItem("dashtab", "activity");
+        window.location.reload(); // update the DIV
       },
     });
   });
@@ -425,7 +446,8 @@ function NavClick() {
       url: `${url}tab_admin`,
       data: { dashtab: 'admin' },
       success() { // on success..
-        // window.location.reload(); // update the DIV
+        sessionStorage.setItem("dashtab", "admin");
+        window.location.reload(); // update the DIV
       },
     });
   });

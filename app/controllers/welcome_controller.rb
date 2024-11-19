@@ -16,6 +16,7 @@ class WelcomeController < ApplicationController
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
     @dashtab = "classic"
     session[:dashtab] ||= @dashtab
+    @dashtab = session[:dashtab]
   end
 
   def emulate
@@ -27,6 +28,13 @@ class WelcomeController < ApplicationController
 
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
+    end
+  end
+
+  def tab_classic
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
     end
   end
 

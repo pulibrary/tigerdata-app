@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get "help", to: "welcome#help", as: :help
   post "emulate", to: "welcome#emulate", as: :emulate
   get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
-  # post "tab_classic", to: "welcome#tab_classic", as: :tab_classic
+  post "tab_classic", to: "welcome#tab_classic", as: :tab_classic
   post "tab_project", to: "welcome#tab_project", as: :tab_project
   post "tab_activity", to: "welcome#tab_activity", as: :tab_activity
   post "tab_admin", to: "welcome#tab_admin", as: :tab_admin
