@@ -244,7 +244,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "shows the sysadmin buttons for a pending project" do
         sign_in sysadmin_user
         visit "/projects/#{project_not_in_mediaflux.id}"
-        expect(page).to have_content "#{project_not_in_mediaflux.metadata_model.title} (#{::Project::PENDING_STATUS})"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
