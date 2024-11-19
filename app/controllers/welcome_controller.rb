@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!, except: [:styles_preview]
+  skip_before_action :verify_authenticity_token
+
   def index
     return if current_user.nil?
     @sponsored_projects = Project.sponsored_projects(@current_user.uid)
@@ -12,6 +14,9 @@ class WelcomeController < ApplicationController
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
+    @dashtab = "classic"
+    session[:dashtab] ||= @dashtab
+    @dashtab = session[:dashtab]
   end
 
   def emulate
@@ -23,6 +28,34 @@ class WelcomeController < ApplicationController
 
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
+    end
+  end
+
+  def dash_classic
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
+  def dash_project
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
+  def dash_activity
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
+  def dash_admin
+    return if current_user.nil? || current_user.id.nil?
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
     end
   end
 

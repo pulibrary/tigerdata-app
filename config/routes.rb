@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   get "help", to: "welcome#help", as: :help
   post "emulate", to: "welcome#emulate", as: :emulate
   get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
+  post "dash_classic", to: "welcome#dash_classic", as: :dash_classic
+  post "dash_project", to: "welcome#dash_project", as: :dash_project
+  post "dash_activity", to: "welcome#dash_activity", as: :dash_activity
+  post "dash_admin", to: "welcome#dash_admin", as: :dash_admin
 
   resources :organizations
   resources :projects
