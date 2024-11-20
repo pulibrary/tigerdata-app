@@ -1,17 +1,21 @@
 
 <div id="projects-listing">
-<% @dashboard_projects.each do |project| %> 
+<% @dashboard_projects.each do |project| %>
+  <a href="<%= project_path(project.id) %>"> 
+  <section>
   <div class="project">
-      <h2><%= link_to(project.title, project) %></h2>
+      <h2><%= project.title %></h2>
       <div class="details">
          <ul>
             <li class="status <%= project.status.downcase %>"><%= project.status %></li>
             <li class="project-type"><%= project_type(project) %></li>
-            <li class="user-role">Data user</li>
+            <li class="user-role"><%= user_roles(current_user, project) %></li>
             <li class="last-download"><%= latest_file_list_time(project) %></li>
             <li class="last-activity"><%= last_activity_on_project(project) %></li>
          </ul>
       </div>
    </div>
+   </section>
+   </a>
   <% end %> 
 </div>

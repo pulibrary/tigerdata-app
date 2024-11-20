@@ -7,6 +7,10 @@
     border: 1px solid $gray-20;
     border-radius: 3px;
 
+    a {
+        text-decoration: none !important;
+    }
+
     .project {
         font-family: $libre-franklin;
         border-bottom: 1px solid $gray-20;
@@ -15,7 +19,7 @@
         align-items: center;
         gap: 8px;
         align-self: stretch;
-        h2 a {
+        h2 {
           overflow: hidden;
           text-overflow: ellipsis;
           text-wrap: nowrap;
@@ -26,9 +30,6 @@
           font-weight: 600;
           line-height: 24px;
           text-decoration: none;
-        }
-        h2 a:hover {
-          text-decoration: underline;
         }
         .details {
             display: flex;
