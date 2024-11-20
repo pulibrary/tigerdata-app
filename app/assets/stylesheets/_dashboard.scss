@@ -15,7 +15,7 @@
         align-items: center;
         gap: 8px;
         align-self: stretch;
-        h2 {
+        h2 a {
           overflow: hidden;
           text-overflow: ellipsis;
           text-wrap: nowrap;
@@ -25,6 +25,10 @@
           font-style: normal;
           font-weight: 600;
           line-height: 24px;
+          text-decoration: none;
+        }
+        h2 a:hover {
+          text-decoration: underline;
         }
         .details {
             display: flex;
@@ -61,6 +65,10 @@
     }
 
     .active { 
+        background: url("status_active.svg") no-repeat;
+    }
+
+    .pending { 
         background: url("status_active.svg") no-repeat;
     }
 
