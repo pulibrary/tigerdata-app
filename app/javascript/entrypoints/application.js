@@ -154,6 +154,7 @@ function initListContentsModal() {
   }
 }
 
+// delete these two functions when new dashboard is fully implemented
 function showMoreLessContent() {
   $('#show-more').on('click', (el) => {
     const element = el;
