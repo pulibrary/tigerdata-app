@@ -246,34 +246,37 @@ function dashStyle() {
   const activity = document.getElementById('dash-activity');
   const admin = document.getElementById('dash-admin');
   const session = sessionStorage.getItem('dashtab');
+  const home = document.getElementById('welcome');
 
   // Check the session to see which tab should start as active be active
-  switch (session) {
-    case 'classic':
-      classic.style.borderBottom = 'solid';
-      classic.style.borderColor = '#E77500';
-      classic.classList.add('active');
-      break;
-    case 'project':
-      project.style.borderBottom = 'solid';
-      project.style.borderColor = '#E77500';
-      project.classList.add('active');
-      break;
-    case 'activity':
-      activity.style.borderBottom = 'solid';
-      activity.style.borderColor = '#E77500';
-      activity.classList.add('active');
-      break;
-    case 'admin':
-      admin.style.borderBottom = 'solid';
-      admin.style.borderColor = '#E77500';
-      admin.classList.add('active');
-      break;
-    default:
-      classic.style.borderBottom = 'solid';
-      classic.style.borderColor = '#E77500';
-      classic.classList.add('active');
-      break;
+  if (home) {
+    switch (session) {
+      case 'classic':
+        classic.style.borderBottom = 'solid';
+        classic.style.borderColor = '#E77500';
+        classic.classList.add('active');
+        break;
+      case 'project':
+        project.style.borderBottom = 'solid';
+        project.style.borderColor = '#E77500';
+        project.classList.add('active');
+        break;
+      case 'activity':
+        activity.style.borderBottom = 'solid';
+        activity.style.borderColor = '#E77500';
+        activity.classList.add('active');
+        break;
+      case 'admin':
+        admin.style.borderBottom = 'solid';
+        admin.style.borderColor = '#E77500';
+        admin.classList.add('active');
+        break;
+      default:
+        classic.style.borderBottom = 'solid';
+        classic.style.borderColor = '#E77500';
+        classic.classList.add('active');
+        break;
+    }
   }
 
   $('#dash-classic').on('mouseenter', (el) => {
