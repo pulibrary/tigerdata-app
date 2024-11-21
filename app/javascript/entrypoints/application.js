@@ -22,6 +22,8 @@ import { showCreateScript } from './atermScripts';
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
 window.showCreateScript = showCreateScript;
+window.dashStyle = dashStyle;
+window.dashTab = dashTab;
 
 function initDataUsers() {
   function counterIncrement(counterId) {
@@ -240,12 +242,12 @@ function showValidationError() {
   });
 }
 
-function dashStyle() {
+export function dashStyle(railsSession) {
   const classic = document.getElementById('dash-classic');
   const project = document.getElementById('dash-project');
   const activity = document.getElementById('dash-activity');
   const admin = document.getElementById('dash-admin');
-  const session = sessionStorage.getItem('dashtab');
+  const session = railsSession;
   const home = document.getElementById('welcome');
 
   // Check the session to see which tab should start as active be active
@@ -404,7 +406,7 @@ function dashStyle() {
   });
 }
 
-function dashTab() {
+export function dashTab() {
   const url = window.location.href;
   $('#dash-classic').on('click', (inv) => {
     const element = inv;
@@ -415,7 +417,6 @@ function dashTab() {
       data: { dashtab: 'classic' },
       success() { // on success..
         window.location = url; // update the DIV
-        sessionStorage.setItem('dashtab', 'classic');
       },
     });
   });
@@ -428,7 +429,6 @@ function dashTab() {
       url: `${url}dash_project`,
       data: { dashtab: 'project' },
       success() { // on success..
-        sessionStorage.setItem('dashtab', 'project');
         window.location.reload(); // update the DIV
       },
     });
@@ -442,7 +442,6 @@ function dashTab() {
       url: `${url}dash_activity`,
       data: { dashtab: 'activity' },
       success() { // on success..
-        sessionStorage.setItem('dashtab', 'activity');
         window.location.reload(); // update the DIV
       },
     });
@@ -456,7 +455,6 @@ function dashTab() {
       url: `${url}dash_admin`,
       data: { dashtab: 'admin' },
       success() { // on success..
-        sessionStorage.setItem('dashtab', 'admin');
         window.location.reload(); // update the DIV
       },
     });
@@ -473,8 +471,6 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
-  dashStyle();
-  dashTab();
 }
 
 window.addEventListener('load', () => initPage());
