@@ -13,52 +13,52 @@
         </div>
     </div>
     <div id="dashboard-nav">
-    <button id="dash-classic" class="tab-nav"> Projects </button>
+    <button id="dash-projects" class="tab-nav"> Projects </button>
     <button id="dash-activity" class="tab-nav"> Activity </button>
-        <button id="dash-admin" class="tab-nav"> Administration </button>
+    <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
-        <% if @dashtab == "classic"%>
+        <% if @dashtab == "project"%>
           <%= render partial: "projects_listing" %>
-            <% elsif @dashtab == "activity" %>
-                <%= render partial: "recent_activity" %>
-            <% elsif @dashtab == "admin" %>
-                <div style="display: inline-flex">
-                <% if current_user.eligible_sysadmin?%>
-                <div id="dashboard-pending">
-                    <h1>Project Administration</h1>
-                    <h4>Pending Projects</h4>
-                    <% if !@pending_projects.empty? %>
-                    <ul class="project-list">
-                        <% @pending_projects.each do |project| %>
-                        <li>
-                            <%= link_to(project.title, project) %>
-                        </li>
-                        <% end %>
-                    </ul>
-                    <% else %>
-                    <p> (none) </p>
+        <% elsif @dashtab == "activity" %>
+          <%= render partial: "recent_activity" %>
+        <% elsif @dashtab == "admin" %>
+            <div style="display: inline-flex">
+            <% if current_user.eligible_sysadmin?%>
+            <div id="dashboard-pending">
+                <h1>Project Administration</h1>
+                <h4>Pending Projects</h4>
+                <% if !@pending_projects.empty? %>
+                <ul class="project-list">
+                    <% @pending_projects.each do |project| %>
+                    <li>
+                        <%= link_to(project.title, project) %>
+                    </li>
                     <% end %>
-                    <h4>Recently Approved Projects</h4>
-                    <% if !@approved_projects.empty? %>
-                    <table class="sysadmin-list">
-                        <% @approved_projects.each_with_index do |project, index| %>
-                        <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
-                        <tr class="<%=@row_css%>">
-                            <td><%= link_to(project.title, project) %> </td>
-                        </tr>
-                        <% end %>
-                    </table>
-                    <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
-                    <% else %>
-                    <p> (none) </p>
-                    <% end %>
-                </div>
-                <% unless current_user.superuser? %>
-                <%= render partial: "recent_activity" %>
+                </ul>
+                <% else %>
+                <p> (none) </p>
                 <% end %>
-                <%end%>
+                <h4>Recently Approved Projects</h4>
+                <% if !@approved_projects.empty? %>
+                <table class="sysadmin-list">
+                    <% @approved_projects.each_with_index do |project, index| %>
+                    <% @row_css = index < 5 ? "visible-row top-section" : "invisible-row bottom-section" %>
+                    <tr class="<%=@row_css%>">
+                        <td><%= link_to(project.title, project) %> </td>
+                    </tr>
+                    <% end %>
+                </table>
+                <button id="show-more-sysadmin" type="button" class="btn btn-dark">Show More</button>
+                <% else %>
+                <p> (none) </p>
+                <% end %>
             </div>
-        <% end %>
+            <% unless current_user.superuser? %>
+            <%= render partial: "recent_activity" %>
+            <% end %>
+            <%end%>
+        </div>
+    <% end %>
     <% end %>
 </div>
 

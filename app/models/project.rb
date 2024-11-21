@@ -140,6 +140,25 @@ class Project < ApplicationRecord
     mediaflux_id.present?
   end
 
+  def self.users_projects(user)
+    # See https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
+    # for information on the @> operator
+    uid = user.uid
+    query_ro = '{"data_user_read_only":["' + uid + '"]}'
+    query_rw = '{"data_user_read_write":["' + uid + '"]}'
+    query = "(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)"
+    args = [query_ro, query_rw]
+    if user.eligible_sponsor?
+      query += "OR (metadata_json->>'data_sponsor' = ?)"
+      args << uid
+    end
+    if user.eligible_manager?
+      query += "OR (metadata_json->>'data_manager' = ?)"
+      args << uid
+    end
+    Project.where( query, *args)
+  end
+
   def self.sponsored_projects(sponsor)
     Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
   end

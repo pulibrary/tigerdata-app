@@ -58,7 +58,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_selector(:link_or_button, "Return to Dashboard")
             click_on("Return to Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-            click_on(project_in_mediaflux.title)
+            find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
           end
         end
         context "SysAdmin" do
@@ -91,7 +91,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_selector(:link_or_button, "Review Contents")
             click_on("Return to Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-            click_on(project_not_in_mediaflux.title)
+            find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
             expect(page).to have_link("Withdraw Project Request")
           end
         end
@@ -176,7 +176,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-        click_on(project.title)
+        find(:xpath, "//h2[text()='#{project.title}']").click
         expect(page).to have_content("Project Details: #{project.title}")
       end
 

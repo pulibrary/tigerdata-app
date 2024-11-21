@@ -5,23 +5,17 @@ class WelcomeController < ApplicationController
 
   def index
     return if current_user.nil?
-    @sponsored_projects = Project.sponsored_projects(@current_user.uid)
-    @managed_projects = Project.managed_projects(@current_user.uid)
-    @data_user_projects = Project.data_user_projects(@current_user.uid)
-    @my_projects_count = @sponsored_projects.count + @managed_projects.count + @data_user_projects.count
     @pending_projects = Project.pending_projects
     @approved_projects = Project.approved_projects
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
-    @dashboard_projects = @sponsored_projects | @managed_projects | @data_user_projects
+    @dashboard_projects = Project.users_projects(@current_user).map { |project| ProjectDashboardPresenter.new(project) }
 
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
     @dashtab = "project"
     session[:dashtab] ||= @dashtab
     @dashtab = session[:dashtab]
   end
-
-
 
   def emulate
     return if Rails.env.production?

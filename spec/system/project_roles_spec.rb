@@ -69,7 +69,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     expect(page).to have_content "New Project Request Received"
     click_on "Return to Dashboard"
     expect(page).to have_content("Welcome")
-    click_on("My test project")
+    find(:xpath, "//h2[text()='My test project']").click
     expect(page).to have_content("This project has not been saved to Mediaflux")
     expect(page).to have_content(read_only.given_name)
     expect(page).to have_content(read_only.display_name)

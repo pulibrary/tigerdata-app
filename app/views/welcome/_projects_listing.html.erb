@@ -8,10 +8,10 @@
       <div class="details">
          <ul>
             <li class="status <%= project.status.downcase %>"><%= project.status %></li>
-            <li class="project-type"><%= project_type(project) %></li>
-            <li class="user-role"><%= user_roles(current_user, project) %></li>
-            <li class="last-download"><%= latest_file_list_time(project) %></li>
-            <li class="last-activity"><%= last_activity_on_project(project) %></li>
+            <li class="project-type"><%= project.type %></li>
+            <li class="user-role"><%= project.role(current_user) %></li>
+            <li class="last-download"><%= project.latest_file_list_time %></li>
+            <li class="last-activity"><%= project.last_activity %></li>
          </ul>
       </div>
    </div>
