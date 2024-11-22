@@ -137,9 +137,11 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the system administrator dashboard" do
         sign_in current_user
         visit "/"
+        visit "/"
         click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
+        expect(page).to have_content("Activity")
       end
     end
 

@@ -458,7 +458,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
       click_on "Return to Dashboard"
       click_on "Administration"
-      expect(page).to have_content "Project Administration"
+      expect(page).to have_content "Pending Projects"
     end
   end
 
