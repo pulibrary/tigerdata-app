@@ -72,6 +72,21 @@ function initDataUsers() {
     return false;
   });
 
+  // Adds a user
+  $('#btn-add-xx-user').on('click', () => {
+    debugger;
+    const netIdToAdd = $('#xx-user-uid-to-add').val();
+    if (netIdToAdd.trim() === '') {
+      // nothing to do
+      return false;
+    }
+
+    const counter = counterIncrement('xx_user_counter');
+    const roUserId = `xx_user_${counter}`;
+    addUserHtml(netIdToAdd, roUserId, 'xx-users-list', 'xx-user-uid-to-add');
+    return false;
+  });
+
   // Wire up the delete button for all read-only users.
   //
   // Notice the use of $(document).on("click", selector, ...) instead of the
@@ -470,7 +485,7 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
-  dashStyle();
+  // dashStyle();
   dashTab();
 }
 
