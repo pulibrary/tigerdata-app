@@ -194,6 +194,7 @@ export function dashTab() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
+
       url: '/dash_activity',
       data: { dashtab: 'activity' },
       success() { // on success..
@@ -207,6 +208,7 @@ export function dashTab() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
+
       url: '/dash_admin',
       data: { dashtab: 'admin' },
       success() { // on success..
