@@ -163,16 +163,15 @@ export function dashStyle(railsSession) {
 }
 
 export function dashTab() {
-  const url = window.location.href;
   $('#dash-classic').on('click', (inv) => {
     const element = inv;
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}dash_classic`,
+      url: '/dash_classic',
       data: { dashtab: 'classic' },
       success() { // on success..
-        window.location = url; // update the DIV
+        window.location.reload(); // update the DIV
       },
     });
   });
@@ -182,7 +181,7 @@ export function dashTab() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}dash_project`,
+      url: '/dash_project',
       data: { dashtab: 'project' },
       success() { // on success..
         window.location.reload(); // update the DIV
@@ -195,7 +194,8 @@ export function dashTab() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}dash_activity`,
+
+      url: '/dash_activity',
       data: { dashtab: 'activity' },
       success() { // on success..
         window.location.reload(); // update the DIV
@@ -208,7 +208,8 @@ export function dashTab() {
     element.preventDefault();
     $.ajax({
       type: 'POST',
-      url: `${url}dash_admin`,
+
+      url: '/dash_admin',
       data: { dashtab: 'admin' },
       success() { // on success..
         window.location.reload(); // update the DIV
