@@ -1,6 +1,5 @@
 export function dashStyle(railsSession) {
-  const classic = document.getElementById('dash-classic');
-  const project = document.getElementById('dash-project');
+  const project = document.getElementById('dash-projects');
   const activity = document.getElementById('dash-activity');
   const admin = document.getElementById('dash-admin');
   const session = railsSession;
@@ -9,11 +8,6 @@ export function dashStyle(railsSession) {
   // Check the session to see which tab should start as active be active
   if (home) {
     switch (session) {
-      case 'classic':
-        classic.style.borderBottom = 'solid';
-        classic.style.borderColor = '#E77500';
-        classic.classList.add('active');
-        break;
       case 'project':
         project.style.borderBottom = 'solid';
         project.style.borderColor = '#E77500';
@@ -30,45 +24,14 @@ export function dashStyle(railsSession) {
         admin.classList.add('active');
         break;
       default:
-        classic.style.borderBottom = 'solid';
-        classic.style.borderColor = '#E77500';
-        classic.classList.add('active');
+        project.style.borderBottom = 'solid';
+        project.style.borderColor = '#E77500';
+        project.classList.add('active');
         break;
     }
   }
 
-  $('#dash-classic').on('mouseenter', (el) => {
-    const element = el;
-    element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
-    if (!classic.classList.contains('active')) {
-      classic.style.borderBottom = 'solid';
-      classic.style.borderColor = '#121212';
-    }
-  });
-
-  $('#dash-classic').on('mouseleave', (el) => {
-    const element = el;
-    element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
-    if (!classic.classList.contains('active')) {
-      classic.style.border = 'none';
-    }
-  });
-
-  $('#dash-classic').on('click', (el) => {
-    const element = el;
-    element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-    // change background color to red
-    classic.style.borderBottom = 'solid';
-    classic.style.borderColor = '#E77500';
-    classic.classList.add('active');
-  });
-
-  $('#dash-project').on('mouseenter', (el) => {
+  $('#dash-projects').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -79,7 +42,7 @@ export function dashStyle(railsSession) {
     }
   });
 
-  $('#dash-project').on('mouseleave', (el) => {
+  $('#dash-projects').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -89,7 +52,7 @@ export function dashStyle(railsSession) {
     }
   });
 
-  $('#dash-project').on('click', (el) => {
+  $('#dash-projects').on('click', (el) => {
     const element = el;
     element.preventDefault();
     // const tab = document.getElementById('tab-nav');
@@ -176,7 +139,7 @@ export function dashTab() {
     });
   });
 
-  $('#dash-project').on('click', (inv) => {
+  $('#dash-projects').on('click', (inv) => {
     const element = inv;
     element.preventDefault();
     $.ajax({

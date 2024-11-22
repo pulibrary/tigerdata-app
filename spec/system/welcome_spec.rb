@@ -53,13 +53,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the projects based on the user's role" do
         sign_in current_user
         visit "/"
-        expect(page).not_to have_content "Sponsored by Me"
+        expect(page).not_to have_content "Sponsor"
         expect(page).not_to have_content "project 111"
-        expect(page).not_to have_content "Managed by Me"
+        expect(page).not_to have_content "Data Manager"
         expect(page).not_to have_content "project 222"
-        expect(page).to have_content "Shared with Me"
+        expect(page).to have_content "Data User"
         expect(page).to have_content "project 333"
-        expect(page).to have_content("Recent Activity")
+        expect(page).to have_content "Activity"
         # The current user has no access to this project so we don't expect to see it
         expect(page).not_to have_content "project 444"
       end
@@ -70,12 +70,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
           sign_in current_user
           visit "/"
-          expect(page).to have_content "Sponsored by Me"
+          expect(page).to have_content "Sponsor"
           expect(page).to have_content "project 111"
-          expect(page).to have_content("Recent Activity")
-          expect(page).not_to have_content "Managed by Me"
+          expect(page).to have_content "Activity"
+          expect(page).not_to have_content "Data Manager"
           expect(page).not_to have_content "project 222"
-          expect(page).to have_content "Shared with Me"
+          expect(page).to have_content "Data User"
           expect(page).to have_content "project 333"
           # The current user has no access to this project so we don't expect to see it
           expect(page).not_to have_content "project 444"
@@ -92,13 +92,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
           sign_in current_user
           visit "/"
-          expect(page).not_to have_content "Sponsored by Me"
+          expect(page).not_to have_content "Sponsor"
           expect(page).not_to have_content "project 111"
-          expect(page).to have_content "Managed by Me"
+          expect(page).to have_content "Data Manager"
           expect(page).to have_content "project 222"
-          expect(page).to have_content "Shared with Me"
+          expect(page).to have_content "Data User"
           expect(page).to have_content "project 333"
-          expect(page).to have_content("Recent Activity")
+          expect(page).to have_content "Activity"
           # The current user has no access to this project so we don't expect to see it
           expect(page).not_to have_content "project 444"
         end
@@ -121,26 +121,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         click_link no_projects_user.uid.to_s
         expect(page).to have_content "Log out"
       end
-
-      context "if the user is not a sponsor" do
-        it "does not show any projects" do
-          sign_in no_projects_user
-          visit "/"
-          expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
-          expect(page).not_to have_content("Sponsored by Me")
-          expect(page).to have_content("Recent Activity")
-        end
-      end
-
-      context "if the user is a sponsor" do
-        it "shows the New Project button and shows the Sponsored by Me heading" do
-          sign_in no_projects_sponsor
-          visit "/"
-          expect(page).to have_content("Sponsored by Me")
-          expect(page).to have_content("Recent Activity")
-          expect(page).to have_selector(:link_or_button, "Create new project")
-        end
-      end
     end
 
     context "with the superuser role" do
@@ -157,6 +137,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the system administrator dashboard" do
         sign_in current_user
         visit "/"
+        click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
       end
@@ -176,10 +157,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         current_user.save!
         visit "/"
         select "Data Sponsor", from: "emulation_menu"
-        expect(page).to have_content("Sponsored by Me")
-        expect(page).not_to have_content("Managed by Me")
-        expect(page).to have_content("Shared with Me")
-        expect(page).to have_content("Recent Activity")
+        within("#projects-listing") do
+          expect(page).to have_content("Sponsor")
+          expect(page).not_to have_content("Data Manager")
+          expect(page).to have_content("Data User")
+        end
+        expect(page).to have_content("Activity")
       end
       it "displays sponsored projects when emulating a data manager" do
         sign_in current_user
@@ -187,10 +170,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         current_user.save!
         visit "/"
         select "Data Manager", from: "emulation_menu"
-        expect(page).not_to have_content("Sponsored by Me")
-        expect(page).to have_content("Managed by Me")
-        expect(page).to have_content("Shared with Me")
-        expect(page).to have_content("Recent Activity")
+        within("#projects-listing") do
+          expect(page).not_to have_content("Sponsor")
+          expect(page).to have_content("Data Manager")
+          expect(page).to have_content("Data User")
+        end
+        expect(page).to have_content("Activity")
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast') # false positives
@@ -212,9 +197,10 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "shows the system administrator dashboard" do
         sign_in current_user
         visit "/"
+        click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
-        expect(page).to have_content("Recent Activity")
+        expect(page).to have_content("Activity")
       end
     end
   end

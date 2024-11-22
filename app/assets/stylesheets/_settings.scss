@@ -7,60 +7,6 @@
   flex-direction: column;
 }
 
-@mixin dashboard-component {
-  background-color: rgb(168, 167, 167);
-  border-radius: 0.1em;
-  padding: 1em;
-  max-width: 70%;
-  max-height: fit-content;
-  border-style: solid;
-  border-color: rgb(0, 0, 0);
-  border-radius: 50px;
-  margin-right: 2em;
-  max-height: fit-content;
-  border-style: solid;
-  border-color: rgb(0, 0, 0);
-  border-radius: 50px;
-
-  h2 {
-    margin-left: 0.2em;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-  }
-
-  h4 {
-    margin-left: 0.2em;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-  }
-
-  .project-list {
-    list-style-type: none;
-    a {
-      color: black;
-    }
-  }
-  .sysadmin-list {
-    list-style-type: none;
-    margin-left: 1.5em;
-    a {
-      color: black;
-    }
-  }
-
-  .visible-row {
-    visibility: unset;
-  }
-
-  .invisible-row {
-    visibility: collapse;
-  }
-
-  #show-more-sysadmin {
-    margin-top: 0.5em;
-  }
-}
-
 @mixin tab-nav {
   .tab-nav {
     border: none;
@@ -116,30 +62,6 @@
   }
   #emulation_bar {
     margin-left: 5px;
-  }
-
-  #dashboard-projects {
-    @include dashboard-component;
-    min-width: 40em;
-    position: relative;
-
-    .btn-dark {
-      margin-left: 0.5em;
-      margin-bottom: 0.5em;
-      position: absolute;
-      bottom: 0px;
-    }
-  }
-
-  #dashboard-activity {
-    @include dashboard-component;
-    min-height: 15em;
-  }
-
-  #dashboard-pending {
-    @include dashboard-component;
-    margin-top: 1em;
-    min-width: 30em;
   }
 
 

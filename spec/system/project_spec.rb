@@ -143,7 +143,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
         click_on "Return to Dashboard"
-        expect(page).to have_content "Sponsored by Me"
+        expect(page).to have_content "Sponsor"
       end
     end
 
@@ -201,8 +201,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
         .skipping(:'color-contrast')
       click_on "Return to Dashboard"
-      expect(page).to have_content "Sponsored by Me"
-      click_on("My test project")
+      expect(page).to have_content "Sponsor"
+      find(:xpath, "//h2[text()='My test project']").click
       # defaults have been applied
       expect(page).to have_content "Storage Capacity (Requested)\n500 GB"
       expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
@@ -429,7 +429,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       expect(project.project_directory).to eq("/new_project/dir/example_project")
     end
 
-    it "redirects the user to the project approval confirmation page upon submission" do
+    it "redirects the user to the project approval confirmation page upon submission", js: true do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
@@ -451,11 +451,14 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       # and it needs to be_axe_clean.
       expect(page).to have_content "Project Approval Received"
       expect(page).to have_button "Return to Dashboard"
+
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
         .skipping(:'color-contrast')
+
       click_on "Return to Dashboard"
-      expect(page).to have_content "Approved Projects"
+      click_on "Administration"
+      expect(page).to have_content "Project Administration"
     end
   end
 
