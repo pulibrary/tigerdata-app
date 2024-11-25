@@ -138,7 +138,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         # This is the confirmation page. It needs a button to return to the dashboard
         # and it needs to be_axe_clean.
         expect(page).to have_content "Project Revision Request Received"
-        expect(page).to have_button "Return to Dashboard"
+        expect(page).to have_link "Return to Dashboard"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
@@ -196,7 +196,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       # This is the confirmation page. It needs a button to return to the dashboard
       # and it needs to be_axe_clean.
       expect(page).to have_content "New Project Request Received"
-      expect(page).to have_button "Return to Dashboard"
+      expect(page).to have_link "Return to Dashboard"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
         .skipping(:'color-contrast')
@@ -450,7 +450,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       # This is the confirmation page. It needs a button to return to the dashboard
       # and it needs to be_axe_clean.
       expect(page).to have_content "Project Approval Received"
-      expect(page).to have_button "Return to Dashboard"
+      expect(page).to have_link "Return to Dashboard"
 
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
