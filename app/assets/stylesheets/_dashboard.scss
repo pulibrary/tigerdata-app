@@ -3,9 +3,22 @@
 @import "typography";
 @import "bootstrap";
 
+table {
+    table-layout: fixed;
+}
+
 #projects-listing {
     border: 1px solid $gray-20;
     border-radius: 3px;
+    display: flex;
+            padding: 5px 0px;
+            align-items: center;
+            gap: 16px;
+            color: $gray-60;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 18px;
 
     a {
         text-decoration: none !important;
@@ -31,10 +44,9 @@
         } 
 
         h2 {
-        display: block;
+          display: block;
           overflow: hidden;
           text-overflow: ellipsis;
-          text-wrap: nowrap;
           color: $black;
           font-family: $libre-franklin;
           font-size: 16px !important;
