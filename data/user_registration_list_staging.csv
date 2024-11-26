@@ -8,7 +8,6 @@ kl37,,Kate,Lynch,Kate Lynch,TRUE,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData 
 hc8719,,Hector,Correa,Hector Correa,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
 bs3097,,Bess,Sadler,Bess Sadler,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
 cac9,,Carolyn,Cole,Carolyn Cole,,TRUE,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
-lm4677,,Lauren Malek,Lauren Malek,,,TRUE,,,2024-07-08,Matt Chandler,TigerData Staff
 jrg5,,James,Griffin,James Griffin,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
 rl3667,,Robert,Lee-Faison,Robert Lee-Faison,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
 jh6441,,Jaymee,Hyppolite,Jaymee Hyppolite,,,TRUE,,,2023-12-05,Matt Chandler,TigerData Staff
@@ -31,7 +30,7 @@ zatkins,,Zach,Atkins,Zach Atkins,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopte
 lboustan,,Leah,Boustan,Leah Boustan,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
 aegreen,,Allison,Green,Allison Green,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Leah Boustan"
 mm4,,Meredith,Martin,Meredith Martin,TRUE,,,,,2024-02-05,Matt Chandler,Early Adopter
-mnaydan,,Mary,Neyden,Mary Neyden,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
+mnaydan,,Mary,Naydan,Mary Naydan,,TRUE,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
 rkoeser,,Rebecca,Koeser,Rebecca Koeser,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
 rh6841,,Ryan,Heuser,Ryan Heuser,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
 wh4213,,Wouter,Haverals,Wouter Haverals,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
@@ -39,5 +38,56 @@ lauret,,Laure,Thompson,Laure Thompson,,,,,,2024-02-05,Matt Chandler,"Early Adopt
 huston,,Steve,Huston,Steve Huston,,,,TRUE,,2024-03-12,Matt Chandler,TigerData Staff
 ka1125,,Kayt,Ahnberg,Kayt Ahnberg,,TRUE,,,TRUE,2024-05-23,Matt Chandler,Tester
 bg1162,,Beth,German,Beth German,,TRUE,,,TRUE,2024-05-23,Matt Chandler,Tester
-cx1671,Cassie,Xu,Cassie Xu,,TRUE,,,TRUE,2024-10-04,Matt Chandler,Tester
+cx1671,,Cassie,Xu,Cassie Xu,,TRUE,,,TRUE,2024-10-04,Matt Chandler,Tester
 gn2508,,Gaurav,Nemade,Gaurav Nemade,,TRUE,,,TRUE,2024-10-04,Matt Chandler,Tester
+jl8316,,Jason,Lohrey,Jason Lohrey,,,,,TRUE,2024-11-01,Matt Chandler,External tester
+aburrows,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+aguess,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+bk5523,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+cbrangwy,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+cpena,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+curt,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+dgraves,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ekolemen,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+jakey,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+jasonf,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+jns,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+quataert,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+reedmm,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+sayers,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+sc8211,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+shs566,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+sseung,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+stf,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ad9465,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ag5805,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+bc3469,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+cs7101,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ericpaul,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+gpmenos,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ip8725,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+is3929,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+islam,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+kc7752,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+kg2082,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+lh0534,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ps9551,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+rb3242,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+rfedon,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+rm3395,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+rm5876,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+siena,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+tg5941,,,,,,TRUE,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+aj17,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+aminerva,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+axel,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+cb4836,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ee2591,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+fr1510,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+ik8,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+mc5076,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+md6347,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+mfh2,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+mg9443,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+nc1514,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
+sa3275,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
