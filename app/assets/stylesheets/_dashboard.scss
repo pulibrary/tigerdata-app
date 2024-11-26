@@ -3,23 +3,31 @@
 @import "typography";
 @import "bootstrap";
 
-table {
+.fixed-table {
+    width: 100%;
     table-layout: fixed;
 }
 
+.fixed-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #projects-listing {
+    table-layout: fixed;
     border: 1px solid $gray-20;
     border-radius: 3px;
     display: flex;
-            padding: 5px 0px;
-            align-items: center;
-            gap: 16px;
-            color: $gray-60;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 18px;
-
+    padding: 5px 0px;
+    align-items: center;
+    gap: 16px;
+    color: $gray-60;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    width: 100%;
     a {
         text-decoration: none !important;
     }
@@ -40,7 +48,7 @@ table {
         align-self: stretch;
 
         td:first-child, th:first-child{
-            flex-basis: 100%;
+            width: 100%;
         } 
 
         h2 {
