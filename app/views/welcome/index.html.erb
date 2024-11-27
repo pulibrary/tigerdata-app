@@ -18,7 +18,7 @@
     <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
         <% if @dashtab == "project"%>
-          <%= render partial: "projects_listing" %>
+          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects} %>
         <% elsif @dashtab == "activity" %>
           <%= render partial: "recent_activity" %>
         <% elsif @dashtab == "admin" %>
