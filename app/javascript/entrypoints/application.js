@@ -19,9 +19,11 @@ import { setTargetHtml } from './helper';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 import { dashStyle, dashTab } from './dashboardTabs';
+import { displayProjectQuota } from './projectQuota';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
+window.displayProjectQuota = displayProjectQuota;
 window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
 window.dashTab = dashTab;

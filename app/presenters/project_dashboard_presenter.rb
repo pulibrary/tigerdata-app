@@ -40,4 +40,14 @@ class ProjectDashboardPresenter < ProjectShowPresenter
       "Data User"
     end
   end
+
+  def storage_usage(session_id:)
+    storage_usage = "#{project.storage_usage(session_id:)} out of"
+    storage_usage
+  end
+
+  def storage_capacity(session_id:)
+    storage_capacity = project.storage_capacity(session_id:)
+    storage_capacity
+  end
 end

@@ -15,6 +15,7 @@ class WelcomeController < ApplicationController
     @dashtab = "project"
     session[:dashtab] ||= @dashtab
     @dashtab = session[:dashtab]
+    @session_id = current_user.mediaflux_session
   end
 
   def emulate
