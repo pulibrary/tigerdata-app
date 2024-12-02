@@ -12,9 +12,9 @@ class WelcomeController < ApplicationController
     @dashboard_projects = Project.users_projects(@current_user).map { |project| ProjectDashboardPresenter.new(project) }
 
     @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
-    @dashtab = "project"
-    session[:dashtab] ||= @dashtab
-    @dashtab = session[:dashtab]
+    @dash_session = "project"
+    session[:dashtab] ||= @dash_session
+    @dash_session = session[:dashtab]
     @session_id = current_user.mediaflux_session
   end
 
