@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectsController do
+RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { FactoryBot.create :project }
   describe "#show" do
     it "renders an error when requesting json" do
@@ -20,6 +20,15 @@ RSpec.describe ProjectsController do
         get :show, params: { id: project.id, format: :json }
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(JSON.parse(response.body)).to eq(project.metadata)
+      end
+
+      it "shows affiliation code as being saved to the project" do
+        get :show, params: { id: project.id, format: :json }
+        expect(JSON.parse(response.body)["departments"]).to include("23100")
+          .or(include("HPC"))
+          .or(include("RDSS"))
+          .or(include("PRDS"))
+          .or(include("PPPL"))
       end
 
       it "renders the project metadata as xml" do
@@ -89,6 +98,56 @@ RSpec.describe ProjectsController do
         project = Project.last
         expect(project.provenance_events.count).to eq 2
       end
+    end
+  end
+
+  context "when the project show views are rendered for an existing project" do
+    # Views are stubbed by default for rspec-rails
+    # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
+    render_views
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
+
+    before do
+      project
+      sign_in(current_user)
+    end
+
+    it "shows the affiliation name (instead the internal code) on the project show views" do
+      get :show, params: { id: project.id }
+      expect(response).to render_template("show")
+      expect(response.body).to have_content("Astrophysical Sciences")
+        .or(have_content("High Performance Computing"))
+        .or(have_content("Research Data and Scholarship Services"))
+        .or(have_content("Princeton Research Data Service"))
+        .or(have_content("Princeton Plasma Physics Laboratory"))
+    end
+  end
+
+  context "when the project edit views are rendered for an existing project" do
+    # Views are stubbed by default for rspec-rails
+    # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
+    render_views
+    let(:current_user) { FactoryBot.create(:superuser, uid: "pul123") }
+    let(:approved_project) do
+      project = FactoryBot.create(:approved_project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111")
+      project.mediaflux_id = nil
+      project
+    end
+
+    before do
+      approved_project
+      sign_in(current_user)
+    end
+
+    it "shows the affiliation name (instead the internal code) on the project edit views" do
+      get :edit, params: { id: approved_project.id }
+      expect(response).to render_template("edit")
+      expect(response.body).to have_content("Astrophysical Sciences")
+        .or(have_content("High Performance Computing"))
+        .or(have_content("Research Data and Scholarship Services"))
+        .or(have_content("Princeton Research Data Service"))
+        .or(have_content("Princeton Plasma Physics Laboratory"))
     end
   end
 end
