@@ -49,6 +49,11 @@
     margin-left: 22em;
   }
 
+  .quota-usage {
+    margin-left: auto;
+    padding-right: 2em;
+  }
+
   #dashboard-nav{
     @include tab-nav;
     margin-top: 3em;

@@ -15,6 +15,5 @@
     <td class="user-role details"><%= project.role(current_user) %></td>
     <td class="last-download details"><%= project.latest_file_list_time %></td>
     <td class="last-activity details"><%= project.last_activity %></td>
-    <td class="storage-usage"><%= project.storage_usage(session_id: current_user.mediaflux_session) %></td>
-    <td class="storage-capacity"><%= project.storage_capacity(session_id: current_user.mediaflux_session) %></td>
+    <td class="quota-usage"><%= project.quota_usage(session_id: current_user.mediaflux_session) %></td>
 </tr>

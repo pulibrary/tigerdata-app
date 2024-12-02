@@ -41,13 +41,8 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     end
   end
 
-  def storage_usage(session_id:)
-    storage_usage = "#{project.storage_usage(session_id:)} out of"
-    storage_usage
-  end
-
-  def storage_capacity(session_id:)
-    storage_capacity = project.storage_capacity(session_id:)
-    storage_capacity
+  def quota_usage(session_id:)
+    quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)}"
+    quota_usage
   end
 end
