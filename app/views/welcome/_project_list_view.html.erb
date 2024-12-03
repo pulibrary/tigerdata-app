@@ -15,8 +15,8 @@
     <td class="user-role details"><%= project.role(current_user) %></td>
     <td class="last-download details"><%= project.latest_file_list_time %></td>
     <td class="last-activity details"><%= project.last_activity %></td>
-    <td class="w3-light-grey">
-        <div class="w3-container w3-green w3-center" style="width:25%">25%</div>
+    <td class="w3-dark-grey w3-round-large">
+        <td class="w3-orange w3-round-large" style="height:6px;width:25%"></td>
     </td>
     <td class="quota-usage"><%= project.quota_usage(session_id: current_user.mediaflux_session) %></td>
 </tr>
