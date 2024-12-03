@@ -33,7 +33,7 @@ Per notes from Robert Knight, Mediaflux production is running Java 1.8.0.412.b08
 ### 4. get the installer
 ```unix
 $ sudo dnf install wget
-$ wget https://www.arcitecta.com/software/mf/4.16.071/mflux-dev_4.16.071_jvm_1.8.jar
+$ wget https://www.arcitecta.com/software/mf/4.16.082/mflux-dev_4.16.082_jvm_1.8.jar
 $ sudo java -jar mflux-dev_jvm_1.8.jar nogui
 -> accept
 -> /opt/mediaflux

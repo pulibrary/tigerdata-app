@@ -25,11 +25,12 @@ module Mediaflux
       mediaflux["api_password"]
     end
 
-    def initialize(domain: self.class.mediaflux_domain, user: self.class.mediaflux_user, password: self.class.mediaflux_password, identity_token: nil)
+    def initialize(domain: self.class.mediaflux_domain, user: self.class.mediaflux_user, password: self.class.mediaflux_password, identity_token: nil, token_type: nil)
       @domain = domain
       @user = user
       @password = password
       @identity_token = identity_token
+      @token_type = token_type
       super()
     end
 
@@ -67,7 +68,10 @@ module Mediaflux
               xml.user @user
               xml.password @password
             else
-              xml.token @identity_token
+              xml.token do
+                xml.parent.set_attribute("type", @token_type) if @token_type
+                xml.text(@identity_token)
+              end
             end
           end
         end

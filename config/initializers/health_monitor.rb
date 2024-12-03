@@ -9,6 +9,9 @@ Rails.application.config.after_initialize do
     # Mediaflux check
     config.add_custom_provider(MediafluxStatus)
 
+    # allow the UI to load eve if mediaflux is down
+    config.providers.last.configuration.critical = false
+
     # Make this health check available at /health
     config.path = :health
 
