@@ -1362,6 +1362,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"datatables@npm:^1.10.18":
+  version: 1.10.18
+  resolution: "datatables@npm:1.10.18"
+  dependencies:
+    jquery: "npm:>=1.7"
+  checksum: 10c0/c7080486afe35016bc220ef5833c9134e1923975f621c3387892720d999e0c928751330eb8bdfb4e8cff70a6772b9b3631d07fb824aadc55a672700890739371
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.3, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4":
   version: 4.3.7
   resolution: "debug@npm:4.3.7"
@@ -2803,7 +2812,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.6.3":
+"jquery@npm:>=1.7, jquery@npm:^3.6.3":
   version: 3.7.1
   resolution: "jquery@npm:3.7.1"
   checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
@@ -4137,6 +4146,7 @@ __metadata:
     "@vitest/coverage-c8": "npm:^0.29.1"
     bootstrap: "npm:^5.2.3"
     browserslist: "npm:^4.21.5"
+    datatables: "npm:^1.10.18"
     eslint: "npm:^8.33.0"
     eslint-config-airbnb-base: "npm:^15.0.0"
     eslint-plugin-import: "npm:^2.27.5"
