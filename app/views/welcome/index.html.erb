@@ -19,6 +19,9 @@
     </div>
         <% if @dash_session == "project"%>
           <%= render partial: "projects_listing", locals: { projects: @dashboard_projects} %>
+          <div class="w3-light-grey w3-round">
+            <div class="w3-container w3-round w3-blue" style="width:25%">25%</div>
+          </div>
         <% elsif @dash_session == "activity" %>
           <%= render partial: "recent_activity" %>
         <% elsif @dash_session == "admin" %>
