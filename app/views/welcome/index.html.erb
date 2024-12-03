@@ -18,7 +18,7 @@
     <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
         <% if @dashtab == "project"%>
-          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects} %>
+          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects,  table_id: "projects-listing" } %>
         <% elsif @dashtab == "activity" %>
           <%= render partial: "recent_activity" %>
         <% elsif @dashtab == "admin" %>
@@ -34,4 +34,9 @@
     dashStyle('<%= @dashtab %>');
     dashTab();
     displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
+
+    // Setup the DataTables
+    setupTable('#projects-listing');
+    setupTable('#projects-listing-pending');
+    setupTable('#projects-listing-approved');
 </script>

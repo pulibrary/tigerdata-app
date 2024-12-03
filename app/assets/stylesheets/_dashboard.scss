@@ -14,11 +14,32 @@
     text-overflow: ellipsis;
 }
 
-#projects-listing {
+// hide pagination menu
+.dataTables_length {
+    display: none;
+}
+
+// put pages and totals on the same line
+.dataTables_info {
+     float: left;
+}
+
+// Put pagination on the far right
+.dataTables_paginate {
+    float: right;
+    .paginate_button {
+        padding: 0.25em;
+        color: $gray-60;
+    }
+    .paginate_button.current, .paginate_button.disabled {
+        text-decoration: none;
+    }
+}
+
+#projects-listing,  #projects-listing-pending, #projects-listing-approved {
     table-layout: fixed;
     border: 1px solid $gray-20;
     border-radius: 3px;
-    display: flex;
     padding: 5px 0px;
     align-items: center;
     gap: 16px;
@@ -32,8 +53,8 @@
         text-decoration: none !important;
     }
 
-    .project.heading {
-        display: none
+    thead .project th, tbody .project td {
+        border: none;
     }
     
     .project {
@@ -47,9 +68,13 @@
         gap: 8px;
         align-self: stretch;
 
-        td:first-child, th:first-child{
+        td:first-child {
             width: 100%;
         } 
+
+        td: {
+            border: none;
+        }
 
         h2 {
           display: block;

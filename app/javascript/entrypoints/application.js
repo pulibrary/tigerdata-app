@@ -19,12 +19,14 @@ import { setTargetHtml } from './helper';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 import { dashStyle, dashTab } from './dashboardTabs';
+import { setupTable } from './pulDataTables';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
 window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
 window.dashTab = dashTab;
+window.setupTable = setupTable;
 
 function initDataUsers() {
   function counterIncrement(counterId) {
