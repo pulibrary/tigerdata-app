@@ -49,6 +49,18 @@
     margin-left: 22em;
   }
 
+  .percentage:after {
+    content: "";
+    display: block;
+    background-color: #3d9970;
+  }
+  .percentage-20:after {
+    width: 20%;
+  }
+  .percentage-30:after {
+    width: 30%;
+  }
+
   .quota-usage {
     margin-left: auto;
     padding-right: 2em;
