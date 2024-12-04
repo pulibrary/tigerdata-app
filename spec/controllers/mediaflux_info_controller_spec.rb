@@ -15,7 +15,7 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
     expect(response.body).to eq(docker_response).or eq(ansible_response)
   end
 
-  it "does not retry infinately" do
+  it "does not retry infinitely" do
     original_pass = Rails.configuration.mediaflux["api_password"]
     original_session = user.mediaflux_session
 

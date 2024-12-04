@@ -35,13 +35,10 @@ Metrics/BlockLength:
 
 Metrics/ClassLength:
   Max: 150 # default: 100
-  Exclude:
-    - app/models/media_flux_client.rb
 
 Metrics/MethodLength:
   Max: 15 # default: 10
   Exclude:
-    - app/models/media_flux_client.rb
     - "app/mailers/tigerdata_mailer.rb"
 
 Metrics/ParameterLists:

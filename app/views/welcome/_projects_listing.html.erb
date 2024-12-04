@@ -1,5 +1,6 @@
 <div class="table">
-   <table id="projects-listing">
+   <table id="<%= table_id %>" >
+   <thead>
       <tr class="project heading">
          <th>title</th>
          <th>status</th>
@@ -11,6 +12,9 @@
          <th>quota_progress</th>
          <th>quota_usage</th>
       </tr>
+   </thead>
+   <tbody>
       <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
+   </tbody>
    </table>
 </div>

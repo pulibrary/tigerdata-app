@@ -21,6 +21,7 @@
     "@rollup/plugin-inject": "^5.0.3",
     "bootstrap": "^5.2.3",
     "browserslist": "^4.21.5",
+    "datatables": "^1.10.18",
     "jquery": "^3.6.3",
     "vite-plugin-rails": "^0.5.0",
     "yarn": "^1.22.22",
