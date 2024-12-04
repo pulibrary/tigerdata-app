@@ -9,14 +9,14 @@
             </tr>
         </table>
         </a>
+        <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-orange w3-round-xlarge" style="height:6px;width:5%"></div>
+        </div>
     </td>
     <td class="status details <%= project.status.downcase %>"><%= project.status %></td>
     <td class="project-type details"><%= project.type %></td>
     <td class="user-role details"><%= project.role(current_user) %></td>
     <td class="last-download details"><%= project.latest_file_list_time %></td>
     <td class="last-activity details"><%= project.last_activity %></td>
-    <td class="w3-dark-grey w3-round-large">
-        <td class="w3-orange w3-round-large" style="height:6px;width:25%"></td>
-    </td>
     <td class="quota-usage"><%= project.quota_usage(session_id: current_user.mediaflux_session) %></td>
 </tr>
