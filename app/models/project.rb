@@ -234,15 +234,21 @@ class Project < ApplicationRecord
     "0 GB"
   end
 
+  def storage_capacity_xml
+
+    mediaflux_document.at_xpath("/request/service/args/meta/tigerdata:project/StorageCapacity/text()", tigerdata: "http://tigerdata.princeton.edu")
+  end
+
   def storage_capacity(session_id:)
+    requested_capacity = storage_capacity_xml
+
     values = mediaflux_metadata(session_id:)
     quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
 
-    if quota_value.blank?
-      return self.class.default_storage_capacity
-    else
-      return quota_value
-    end
+    backup_value = requested_capacity || self.class.default_storage_capacity #return the default storage capacity, if the requested capacity is nil
+
+    return backup_value if quota_value.blank?
+    quota_value #return the requested storage capacity if a quota has not been set for a project, if storage has not been requested return "0 GB"
   end
 
   # Fetches the first n files

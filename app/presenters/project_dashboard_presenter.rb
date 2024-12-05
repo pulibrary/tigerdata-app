@@ -40,13 +40,4 @@ class ProjectDashboardPresenter < ProjectShowPresenter
       "Data User"
     end
   end
-
-  def quota_usage(session_id:)
-    quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
-    quota_usage
-  end
-
-  def quota_percentage(session_id:)
-    # figure out how to calculate percentage of storage used with different and unpredictable units
-  end
 end
