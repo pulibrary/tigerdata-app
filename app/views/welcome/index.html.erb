@@ -19,7 +19,7 @@
     <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
         <% if @dash_session == "project"%>
-          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects,  table_id: "projects-listing" } %>
+          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing" } %>
         <% elsif @dash_session == "activity" %>
           <%= render partial: "recent_activity" %>
         <% elsif @dash_session == "admin" %>

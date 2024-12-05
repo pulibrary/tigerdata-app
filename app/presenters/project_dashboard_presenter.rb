@@ -31,6 +31,10 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     end
   end
 
+  def updated_at
+    project.updated_at
+  end 
+
   def role(user)
     if data_sponsor == user.uid
       "Sponsor"
