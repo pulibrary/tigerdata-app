@@ -112,3 +112,14 @@ body {
 .autocomplete-error {
   color: var(--Secondary-Red-Dark, #b00002);
 }
+
+
+/* Used for the delete button when adding users */
+.transparent-button {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}

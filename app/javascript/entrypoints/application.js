@@ -33,119 +33,6 @@ window.showMoreLess = showMoreLess;
 window.projectStyle = projectStyle;
 window.projectTab = projectTab;
 
-function initDataUsers() {
-  function counterIncrement(counterId) {
-    let counter = parseInt($(`#${counterId}`).val(), 10);
-    counter += 1;
-    $(`#${counterId}`).val(counter);
-    return counter;
-  }
-
-  function addUserHtml(netIdToAdd, elementId, listElementId, textElementId) {
-    const html = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="added_user_textbox" />
-      <span id="${elementId}_delete_icon">
-        <a class="delete-ro-user" data-el-id="${elementId}" data-uid="${netIdToAdd}" href="#" title="Revoke user ability to read">
-            <i class="bi bi-trash delete_icon" data-el-id="${elementId}" data-uid="${netIdToAdd}"></i>
-        </a>
-        <br/>
-      </span>`;
-    $(`#${listElementId}`).append(html);
-    $(`#${textElementId}`).val('');
-    $(`#${textElementId}`).focus();
-  }
-
-  // Adds a read-only user
-  $('#btn-add-ro-user').on('click', () => {
-    const netIdToAdd = $('#ro-user-uid-to-add').val();
-    if (netIdToAdd.trim() === '') {
-      // nothing to do
-      return false;
-    }
-
-    const counter = counterIncrement('ro_user_counter');
-    const roUserId = `ro_user_${counter}`;
-    addUserHtml(netIdToAdd, roUserId, 'ro-users-list', 'ro-user-uid-to-add');
-    return false;
-  });
-
-  // Adds a read-write user
-  $('#btn-add-rw-user').on('click', () => {
-    const netIdToAdd = $('#rw-user-uid-to-add').val();
-    if (netIdToAdd.trim() === '') {
-      // nothing to do
-      return false;
-    }
-
-    const counter = counterIncrement('rw_user_counter');
-    const rwUserId = `rw_user_${counter}`;
-    addUserHtml(netIdToAdd, rwUserId, 'rw-users-list', 'rw-user-uid-to-add');
-    return false;
-  });
-
-  // Adds a user
-  $('#btn-add-xx-user').on('click', () => {
-    debugger;
-    const netIdToAdd = $('#xx-user-uid-to-add').val();
-    if (netIdToAdd.trim() === '') {
-      // nothing to do
-      return false;
-    }
-
-    const counter = counterIncrement('xx_user_counter');
-    const roUserId = `xx_user_${counter}`;
-    addUserHtml(netIdToAdd, roUserId, 'xx-users-list', 'xx-user-uid-to-add');
-    return false;
-  });
-
-  // Wire up the delete button for all read-only users.
-  //
-  // Notice the use of $(document).on("click", selector, ...) instead of the
-  // typical $(selector).on("click", ...). This syntax is required so that
-  // we can detect the click even on HTML elements _added on the fly_ which
-  // is the case when a user adds a new submitter or admin to the group.
-  // Reference: https://stackoverflow.com/a/17086311/446681
-  $(document).on('click', '.delete-ro-user', (el) => {
-    const uid = $(el.target).data('uid');
-    const roUserId = $(el.target).data('el-id');
-    const roUserDeleteIcon = `${roUserId}_delete_icon`;
-    const message = `Revoke read-only access to user ${uid}`;
-    if (window.confirm(message)) {
-      $(`#${roUserId}`).remove();
-      $(`#${roUserDeleteIcon}`).remove();
-    }
-    return false;
-  });
-
-  // Wire up the delete button for all read-write users.
-  $(document).on('click', '.delete-rw-user', (el) => {
-    const uid = $(el.target).data('uid');
-    const rwUserId = $(el.target).data('el-id');
-    const rwUserDeleteIcon = `${rwUserId}_delete_icon`;
-    const message = `Revoke read-write access to user ${uid}`;
-    if (window.confirm(message)) {
-      $(`#${rwUserId}`).remove();
-      $(`#${rwUserDeleteIcon}`).remove();
-    }
-    return false;
-  });
-
-  // Render the pre-existing read-only users on the record
-  $('.ro-user-item').each((ix, el) => {
-    const counter = counterIncrement('ro_user_counter');
-    const roUserId = `ro_user_${counter}`;
-    const netIdToAdd = $(el).data('uid');
-    addUserHtml(netIdToAdd, roUserId, 'ro-users-list', 'ro-user-uid-to-add');
-  });
-
-  // Render the pre-existing read-write users on the record
-  $('.rw-user-item').each((ix, el) => {
-    const counter = counterIncrement('rw_user_counter');
-    const rwUserId = `rw_user_${counter}`;
-    const netIdToAdd = $(el).data('uid');
-    addUserHtml(netIdToAdd, rwUserId, 'rw-users-list', 'rw-user-uid-to-add');
-  });
-}
-
 async function fetchListContents(listContentsPath) {
   const response = await fetch(listContentsPath);
 
@@ -270,7 +157,6 @@ function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
   });
-  initDataUsers();
   initListContentsModal();
   showMoreLessContent();
   showMoreLessSysAdmin();
