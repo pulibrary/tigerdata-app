@@ -1,26 +1,40 @@
+<% alert_class = if @project.pending?
+  "alert-warning"
+else
+  "alert-success"
+end %>
+
 <show id="show">
-<h1>
-Project Details:
-<%= @project.title %>
-</h1>
+<div class="header-block">
+<div class="title-block">
+<h1><%= @project.title %></h1>
+</div>
+<div class="alert <%= alert_class %> status" role="alert">
+  <%= @project.status %>
+</div>
+</div>
+
+<div class="heading-decoration"></div>
+
+<div class="project-description">
+  <%= @project.description %>
+</div>
+
+<div id="project-header-details">
+
+  <div class="date-info">
+    <span class="label">Date Created:</span> <%= @project.created %> | <span class="label">Last updated:</span> <%= @project.updated %>
+  </div>
+  <div class="data-roles-info">
+    <span class="label">Data Sponsor:</span> <%= @data_sponsor.display_name_safe %> | <span class="label">Data Manager:</span> <%= @data_manager.display_name_safe %>
+  </div>
+</div>
 
 <% unless @project.in_mediaflux? %>
   <div class="pending-project">
     Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
   </div>
 <% end %>
-
-<% alert_class = if @project.pending?
-                   "alert-warning"
-                 else
-                   "alert-success"
-                 end %>
-
-<div class="alert <%= alert_class %>" role="alert">
-  <dl>
-  <dt>Status</dt> <dd><%= @project.status %></dd>
-  </dl>
-</div>
 
 <div class="details">
   <h2>Roles

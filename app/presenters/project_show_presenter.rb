@@ -10,6 +10,18 @@ class ProjectShowPresenter
     @project_metadata = @project.metadata_model
   end
 
+  def created
+    @project.created_at.strftime("%b %e, %Y %l:%M %p")
+  end 
+
+  def updated 
+    @project.updated_at.strftime("%b %e, %Y %l:%M %p")
+  end 
+
+  def description
+    @project.description
+  end 
+
   # used to hide the project root that is not visible to the end user
   def project_directory
     project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")

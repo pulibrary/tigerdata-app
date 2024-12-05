@@ -1,0 +1,36 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+.header-block {
+  display: flow-root;
+}
+
+.status {
+    float: right;
+    width: 100px;
+}
+
+.title-block {
+    float: left;
+}
+
+.project-description {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; 
+    color: $black;
+    font-family: "Libre Franklin";
+    font-size: 1em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+#project-header-details {
+    .label {
+        font-weight: bold;
+    }
+}
