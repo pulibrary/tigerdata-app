@@ -40,8 +40,10 @@ function initDataUsers() {
         <br/>
       </span>`;
     $(`#${listElementId}`).append(html);
-    $(`#${textElementId}`).val('');
-    $(`#${textElementId}`).focus();
+    if (textElementId != null) {
+      $(`#${textElementId}`).val('');
+      $(`#${textElementId}`).focus();
+    }
   }
 
   // Adds a read-only user
@@ -72,20 +74,18 @@ function initDataUsers() {
     return false;
   });
 
-  // Adds a user
-  $('#btn-add-xx-user').on('click', () => {
-    debugger;
-    const netIdToAdd = $('#xx-user-uid-to-add').val();
-    if (netIdToAdd.trim() === '') {
-      // nothing to do
-      return false;
-    }
-
-    const counter = counterIncrement('xx_user_counter');
-    const roUserId = `xx_user_${counter}`;
-    addUserHtml(netIdToAdd, roUserId, 'xx-users-list', 'xx-user-uid-to-add');
-    return false;
-  });
+  // // Adds a users from the modal to the HTML FORM
+  // $('#btn-add-xx-users').on('click', () => {
+  //   debugger;
+  //   const users = $(".xx_user_added_modal");
+  //   for(var i = 0; i < users.length; i += 1) {
+  //     var counter = counterIncrement('xx_user_counter');
+  //     var xxUserId = `xx_user_${counter}`;
+  //     var netIdToAdd = users[i].firstChild.textContent;
+  //     addUserHtml(netIdToAdd, xxUserId, 'xx-users-list', null);
+  //   }
+  //   return false;
+  // });
 
   // Wire up the delete button for all read-only users.
   //
