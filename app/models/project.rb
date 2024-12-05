@@ -234,11 +234,6 @@ class Project < ApplicationRecord
     "0 GB"
   end
 
-  def storage_capacity_xml
-
-    mediaflux_document.at_xpath("/request/service/args/meta/tigerdata:project/StorageCapacity/text()", tigerdata: "http://tigerdata.princeton.edu")
-  end
-
   def storage_capacity(session_id:)
     values = mediaflux_metadata(session_id:)
     quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
