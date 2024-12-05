@@ -49,6 +49,17 @@
     margin-left: 22em;
   }
 
+  .w3-light-grey{
+   width: 10em;
+   margin-left: auto;
+   margin-right: 2em;
+  }
+
+  .quota-usage {
+    margin-left: auto;
+    padding-right: 2em;
+  }
+
   #dashboard-nav{
     @include tab-nav;
     margin-top: 3em;

@@ -111,6 +111,21 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         page.find(:css, "#logo").click
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
       end
+
+      it "paginates the projects; 8 per page" do
+        projects = (1..17).map { FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid]) }
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content("8 out of 18 shown")
+        find("a.paginate_button", text: 2).click
+        expect(page).to have_content(projects.sort_by(&:updated_at).reverse[8].title)
+        find("a.paginate_button", text: 3).click
+        expect(page).to have_content(projects.sort_by(&:updated_at).reverse.last.title)
+        find("a.paginate_button", text: "<").click
+        expect(page).to have_content(projects.sort_by(&:updated_at).reverse[14].title)
+        find("a.paginate_button", text: "<").click
+        expect(page).to have_content(projects.sort_by(&:updated_at).reverse.first.title)
+      end
     end
 
     context "for a user without any projects" do

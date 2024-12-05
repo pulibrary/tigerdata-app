@@ -3,7 +3,7 @@
    <div class="section">
       <h2>Pending Projects</h2>
       <% if !@pending_projects.empty? %>
-         <%= render partial: "projects_listing", locals: { projects: @pending_projects} %>
+         <%= render partial: "projects_listing", locals: { projects: @pending_projects.sort_by(&:updated_at),  table_id: "projects-listing-pending" } %>
       <% else %>
          <p> (none) </p>
       <% end %>
@@ -11,7 +11,7 @@
       <div class="section">
       <h2>Recently Approved Projects</h2>
       <% if !@approved_projects.empty? %>
-       <%= render partial: "projects_listing", locals: { projects: @approved_projects} %>
+       <%= render partial: "projects_listing", locals: { projects: @approved_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing-approved"} %>
       <% else %>
         <p> (none) </p>
       <% end %>

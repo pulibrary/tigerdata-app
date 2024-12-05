@@ -3,7 +3,8 @@
     <h1>Welcome to TigerData</h1>
     Please log in.
     <% else %>
-   
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <div class="welcome-pane">
         <h1>Welcome, <%= current_user.given_name %>!</h1>
         <div class="project-button">
@@ -17,11 +18,11 @@
     <button id="dash-activity" class="tab-nav"> Activity </button>
     <button id="dash-admin" class="tab-nav"> Administration </button>
     </div>
-        <% if @dashtab == "project"%>
-          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects} %>
-        <% elsif @dashtab == "activity" %>
+        <% if @dash_session == "project"%>
+          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing" } %>
+        <% elsif @dash_session == "activity" %>
           <%= render partial: "recent_activity" %>
-        <% elsif @dashtab == "admin" %>
+        <% elsif @dash_session == "admin" %>
           <%= render partial: "admin_listing" %>
     <% end %>
     <% end %>
@@ -31,7 +32,12 @@
     // Make the AJAX call for version information explicitly on this page
     // (and for now only on this page) so that we don't make extra calls
     // to Mediaflux for every page loaded.
-    dashStyle('<%= @dashtab %>');
+    dashStyle('<%= @dash_session %>');
     dashTab();
     displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
+
+    // Setup the DataTables
+    setupTable('#projects-listing');
+    setupTable('#projects-listing-pending');
+    setupTable('#projects-listing-approved');
 </script>
