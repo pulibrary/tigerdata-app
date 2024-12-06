@@ -217,10 +217,7 @@ class Project < ApplicationRecord
   end
 
   def storage_usage(session_id:)
-    return unless in_mediaflux?
-
     values = mediaflux_metadata(session_id:)
-    #value = values.fetch(:size, 0)
     quota_value = values.fetch(:quota_used, '')
 
     if quota_value.blank?

@@ -33,7 +33,7 @@ class ProjectDashboardPresenter < ProjectShowPresenter
 
   def updated_at
     project.updated_at
-  end 
+  end
 
   def role(user)
     if data_sponsor == user.uid
@@ -46,11 +46,20 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def quota_usage(session_id:)
-    quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
+    if project.pending?
+      quota_usage = "0 KB out of 0 GB used"
+    else
+      quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
+    end
     quota_usage
   end
 
-  def quota_percentage(session_id:)
+  def quota_percentage
     # figure out how to calculate percentage of storage used with different and unpredictable units
+    if project.pending?
+      return 0
+    else
+      return 5
+    end
   end
 end
