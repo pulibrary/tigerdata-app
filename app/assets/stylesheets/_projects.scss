@@ -2,35 +2,43 @@
 @import "typography";
 @import "bootstrap";
 
-.header-block {
-  display: flow-root;
-}
-
-.status {
-    float: right;
-    width: 100px;
-}
-
-.title-block {
-    float: left;
-}
-
-.project-description {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; 
-    color: $black;
-    font-family: "Libre Franklin";
-    font-size: 1em;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.5em;
+#project-details-heading {
     margin-bottom: 1.5em;
-}
-
-#project-header-details {
-    .label {
-        font-weight: bold;
+    
+    .status {
+        float: right;
     }
+    
+    .project-description {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; 
+        color: $black;
+        font-family: "Libre Franklin";
+        font-size: 1em;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5em;
+    }
+    
+    .label {
+      font-weight: bold;
+    } 
+    
+    .date-and-data-info ul {
+        padding: 0;
+    }
+    
+    .date-and-data-info li {
+        float: left;
+        list-style-type: none;
+        line-height: 1em;
+    }
+
+    .date-and-data-info li:first-child:after { 
+        content: "|"; 
+        padding: 0 .5em; 
+    }
+
 }

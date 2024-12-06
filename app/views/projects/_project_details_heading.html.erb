@@ -1,17 +1,48 @@
+<div id="project-details-heading">
+
 <% alert_class = if @project.pending?
     "alert-warning"
   else
     "alert-success"
   end %>
-  
-  <show id="show">
-  <div class="header-block">
-  <div class="title-block">
+
+  <div class="row">
+  <div class="col-12 col-md-8"> 
   <h1><%= @project.title %></h1>
   </div>
-  <div class="alert <%= alert_class %> status" role="alert">
-    <%= @project.status %>
-  </div>
-  </div>
+  <div class="col-6 col-md-4">  <div class="alert <%= alert_class %> status" role="alert">
+  <%= @project.status %>
+</div></div>
+</div>
+  
   
   <div class="heading-decoration"></div>
+
+  <div class="project-description">
+  <%= @project.description %>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="date-and-data-info">
+      <ul> 
+        <li><span class="label">Date Created:</span> <%= @project.created %></li>
+        <li><span class="label">Last updated:</span> <%= @project.updated %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="date-and-data-info">
+      <ul> 
+        <li><span class="label">Data Sponsor:</span> <%= @project.data_sponsor %></li>
+        <li><span class="label">Data Manager:</span> <%= @project.data_manager %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>

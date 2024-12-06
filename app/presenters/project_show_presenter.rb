@@ -18,6 +18,14 @@ class ProjectShowPresenter
     @project.updated_at.strftime("%b %e, %Y %l:%M %p")
   end 
 
+  def data_sponsor 
+    User.find_by(uid: @project.metadata["data_sponsor"]).display_name_safe
+  end 
+
+  def data_manager 
+    User.find_by(uid: @project.metadata["data_manager"]).display_name_safe
+  end 
+
   # used to hide the project root that is not visible to the end user
   def project_directory
     project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")

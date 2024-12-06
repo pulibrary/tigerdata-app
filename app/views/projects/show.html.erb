@@ -1,19 +1,6 @@
 <%= render partial: "project_details_heading" %>
 
-<div class="project-description">
-  <%= @project.description %>
-</div>
-
-<div id="project-header-details">
-
-  <div class="date-info">
-    <span class="label">Date Created:</span> <%= @project.created %> | <span class="label">Last updated:</span> <%= @project.updated %>
-  </div>
-  <div class="data-roles-info">
-    <span class="label">Data Sponsor:</span> <%= @data_sponsor.display_name_safe %> | <span class="label">Data Manager:</span> <%= @data_manager.display_name_safe %>
-  </div>
-</div>
-
+<show id="show">
 <% unless @project.in_mediaflux? %>
   <div class="pending-project">
     Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
