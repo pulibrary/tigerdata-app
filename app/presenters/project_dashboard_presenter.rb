@@ -54,12 +54,13 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     quota_usage
   end
 
-  def quota_percentage
-    # figure out how to calculate percentage of storage used with different and unpredictable units
+  def quota_percentage(session_id:)
+    q_percent = project.storage_capacity_raw(session_id:).zero? ? 0 : (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
+
     if project.pending?
-      return 0
+      0
     else
-      return 5
+      q_percent
     end
   end
 end

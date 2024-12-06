@@ -10,7 +10,7 @@
         </table>
         </a>
         <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage %>%"></div>
+            <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
         </div>
     </td>
     <td class="status details <%= project.status.downcase %>"><%= project.status %></td>
