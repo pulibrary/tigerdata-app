@@ -1,0 +1,17 @@
+<% alert_class = if @project.pending?
+    "alert-warning"
+  else
+    "alert-success"
+  end %>
+  
+  <show id="show">
+  <div class="header-block">
+  <div class="title-block">
+  <h1><%= @project.title %></h1>
+  </div>
+  <div class="alert <%= alert_class %> status" role="alert">
+    <%= @project.status %>
+  </div>
+  </div>
+  
+  <div class="heading-decoration"></div>
