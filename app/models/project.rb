@@ -217,10 +217,7 @@ class Project < ApplicationRecord
   end
 
   def storage_usage(session_id:)
-    return unless in_mediaflux?
-
     values = mediaflux_metadata(session_id:)
-    #value = values.fetch(:size, 0)
     quota_value = values.fetch(:quota_used, '')
 
     if quota_value.blank?
@@ -230,6 +227,12 @@ class Project < ApplicationRecord
     end
   end
 
+  def storage_usage_raw(session_id:)
+    values = mediaflux_metadata(session_id:)
+    quota_value = values.fetch(:quota_used_raw, 0)
+    quota_value
+  end
+
   def self.default_storage_capacity
     "0 GB"
   end
@@ -237,12 +240,17 @@ class Project < ApplicationRecord
   def storage_capacity(session_id:)
     values = mediaflux_metadata(session_id:)
     quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
-
     if quota_value.blank?
       return self.class.default_storage_capacity
     else
       return quota_value
     end
+  end
+
+  def storage_capacity_raw(session_id:)
+    values = mediaflux_metadata(session_id:)
+    quota_value = values.fetch(:quota_allocation_raw, 0) #if quota does not exist, set value to 0
+    quota_value
   end
 
   # Fetches the first n files
