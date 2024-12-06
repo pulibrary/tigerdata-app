@@ -19,11 +19,11 @@ class ProjectShowPresenter
   end 
 
   def data_sponsor 
-    User.find_by(uid: @project.metadata["data_sponsor"]).display_name_safe
+    User.find_by(uid: @project.metadata["data_sponsor"]).uid
   end 
 
   def data_manager 
-    User.find_by(uid: @project.metadata["data_manager"]).display_name_safe
+    User.find_by(uid: @project.metadata["data_manager"]).uid
   end 
 
   # used to hide the project root that is not visible to the end user

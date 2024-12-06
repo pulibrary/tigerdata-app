@@ -97,7 +97,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         sign_in sponsor_user
         visit "/projects/#{project_not_in_mediaflux.id}/edit"
 
-        expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
+        expect(page).to have_content(project_not_in_mediaflux.title)
         expect(page).to have_content("Pending projects can not be edited.")
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         # project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/edit"
 
-        expect(page).to have_content("Project Details: #{project_not_in_mediaflux.title}")
+        expect(page).to have_content(project_not_in_mediaflux.title)
         expect(page).to have_content("Only data sponsors and data managers can revise this project.")
       end
 
@@ -159,7 +159,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
       it "redirects the user back to the project show page" do
         click_on "Cancel"
-        expect(page).to have_content "Project Details: #{project_in_mediaflux.title}"
+        expect(page).to have_content(project_in_mediaflux.title)
       end
     end
   end

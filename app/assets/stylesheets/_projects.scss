@@ -4,22 +4,25 @@
 
 #project-details-heading {
     margin-bottom: 1.5em;
-    
+
     .status {
         float: right;
     }
     
-    .project-description {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2; 
+    #project-description {
         color: $black;
         font-family: "Libre Franklin";
         font-size: 1em;
         font-style: normal;
         font-weight: 400;
         line-height: 1.5em;
+    }
+
+    .truncate {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; 
     }
     
     .label {

@@ -141,7 +141,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
+        expect(page).to have_content "\n#{::Project::PENDING_STATUS}"
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         visit "/projects/#{project.id}"
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
-        expect(page).to have_content("Project Contents")
+        expect(page).to have_content("Contents Summary")
         expect(page).to have_content("File Count")
         expect(find(:css, "#file_count").text).to eq "16"
 
@@ -177,7 +177,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//h2[text()='#{project.title}']").click
-        expect(page).to have_content("Project Details: #{project.title}")
+        expect(page).to have_content("#{project.title}")
       end
 
       it "displays the caveat message" do

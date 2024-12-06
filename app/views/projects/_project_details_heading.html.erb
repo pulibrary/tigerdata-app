@@ -16,12 +16,17 @@
 </div>
   
   
-  <div class="heading-decoration"></div>
+<div class="heading-decoration"></div>
 
-  <div class="project-description">
-  <%= @project.description %>
-</div>
+  <div id="project-description">
+    <div class="description-text truncate">
+      <%= @project.description %>
+    </div>
+    <a id="show-more-less-link" href="#"><span>more...</span></a>
 
+    
+    <a href="#" style="display: none" class="show-less" onclick="document.querySelector('.description-text').classList.add('truncate')">less...</a>
+  </div>
 
 <div class="row">
   <div class="col-12">
