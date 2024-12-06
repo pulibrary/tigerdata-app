@@ -22,6 +22,7 @@
 @import "footer";
 @import "forms";
 @import "header";
+@import "projects";
 @import "settings";
 @import "styles_preview";
 @import "typography";
@@ -39,6 +40,13 @@ body {
     .row {
       --bs-gutter-x: 0 !important;
     }
+}
+
+.heading-decoration {
+  background-color: $princeton-orange;
+  width: 100px;
+  height: 8px;
+  margin-bottom: 12px;
 }
 
 .hidden-element {

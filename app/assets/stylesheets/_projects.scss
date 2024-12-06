@@ -1,0 +1,47 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#project-details-heading {
+    margin-bottom: 1.5em;
+
+    .status {
+        float: right;
+    }
+    
+    #project-description {
+        color: $black;
+        font-family: "Libre Franklin";
+        font-size: 1em;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5em;
+    }
+
+    .truncate {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; 
+    }
+    
+    .label {
+      font-weight: bold;
+    } 
+    
+    .date-and-data-info ul {
+        padding: 0;
+    }
+    
+    .date-and-data-info li {
+        float: left;
+        list-style-type: none;
+        line-height: 1em;
+    }
+
+    .date-and-data-info li:first-child:after { 
+        content: "|"; 
+        padding: 0 .5em; 
+    }
+
+}
