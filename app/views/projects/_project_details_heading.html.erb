@@ -51,49 +51,13 @@
 
 <script>
 
-
-/* Let's Build: With JavaScript - Web-Crunch.com
-   Subscribe on YouTube - https://youtube.com/c/webcrunch
-   
-   Let's Build: Show More and Show Less - With a dash of Object Oriented Programming
-*/
-
-const Utils = {
-  
-  addClass: function(element, theClass) {
-    element.classList.add(theClass);
-  },
-  
-  removeClass: function(element, theClass) {
-    element.classList.remove(theClass);
-  },
-  
-  showMore: function(element, excerpt) {
-    element.addEventListener("click", event => {
-      const linkText = event.target.textContent.toLowerCase();
-      event.preventDefault();
-      
-      console.log(this);
-      if (linkText == "more...") {
-        element.textContent = "less...";
-        this.removeClass(excerpt, "truncate");
-        this.addClass(excerpt, "excerpt-visible");
-      } else {
-        element.textContent = "more...";
-        this.removeClass(excerpt, "excerpt-visible");
-        this.addClass(excerpt, "truncate");
-      }
-    });
-  } 
-};
-
 const ExcerptWidget = {
   showMore: function(showMoreLinksTarget, excerptTarget) {
    const showMoreLinks = document.querySelectorAll(showMoreLinksTarget);
     
    showMoreLinks.forEach(function(link) {
      const excerpt = document.querySelector(excerptTarget);
-     Utils.showMore(link, excerpt);
+     showMoreLess.showMore(link, excerpt);
    });
   }
 };
