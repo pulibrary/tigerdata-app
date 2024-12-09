@@ -1,0 +1,75 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#project-contents {
+    // table-layout: fixed;
+    border: 1px solid $gray-20;
+    border-radius: 3px;
+    padding: 0rem 0.75rem;
+    align-items: center;
+    gap: 16px;
+    color: $gray-100;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    width: 100%;
+    
+    thead {
+        background-color: $gray-10;
+        overflow: hidden;
+        color: $gray-100;
+        text-overflow: ellipsis;
+
+        /* Body S Bold */
+        font-family: "Libre Franklin";
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1.5rem; /* 150% */
+    }
+
+    tr {
+        border: 1px solid $gray-20; 
+        overflow: hidden;
+        color: $gray-100;
+        text-overflow: ellipsis;
+    }
+
+    td, th {
+        padding: 0.5em 1em;
+    }
+}
+
+.contents-summary {
+    margin: 1rem 0px;
+    padding: 0.75rem 1.5rem;
+    background-color: $gray-10;
+
+    .file-inventory {
+        color: $gray-100;
+        font-weight: 600;
+    }
+
+    // Note, this can not be a variable
+    --bs-border-color: #717171;
+}
+
+.content-info {
+    color: $gray-100;
+    background-color: $status-info;
+    padding: 0.5em 1em;
+
+    .bi-info-circle {
+        padding-right: 1em;
+    }
+}
+
+#project-contents {
+    margin-bottom: 0.75rem;
+    
+    .sorting:hover {
+        cursor: pointer;
+    }
+}

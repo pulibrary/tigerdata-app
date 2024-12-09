@@ -490,8 +490,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         it "enqueues a Sidekiq job for asynchronously requesting project files" do
           visit project_contents_path(approved_project)
 
-          expect(page).to have_content("List All Files")
-          click_on "List All Files"
+          expect(page).to have_content("Download Complete List")
+          click_on "Download Complete List"
           expect(page).to have_content("This will generate a list of 4 files and their attributes in a downloadable CSV. Do you wish to continue?")
           expect(page).to have_content("Yes")
           sleep 1
@@ -518,6 +518,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
       context "when the quota is allocated" do
         it "renders the storage capacity in the show view" do
+          pending "this should not be on the project view page"
           visit project_contents_path(approved_project)
           expect(page).to have_content "400 bytes / 500 GB" # should be 300 GB which is the quota, instead of 500GB which is the requested capacity
           expect(page).to be_axe_clean

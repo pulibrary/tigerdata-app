@@ -19,7 +19,7 @@ RSpec.describe "Mediaflux Sessions", type: :system do
     Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
     expect { visit project_contents_path(project) }.not_to raise_error
-    expect(page).to have_content("File Count\n0")
+    expect(page).to have_content("Total Files: 0")
 
     # a new session got automatically connected for the user in the application controller
     expect(sponsor_user.mediaflux_session).not_to eq(original_session)
