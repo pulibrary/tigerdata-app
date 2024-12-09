@@ -55,12 +55,8 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def quota_percentage(session_id:)
-    q_percent = project.storage_capacity_raw(session_id:).zero? ? 0 : (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
-
-    if project.pending?
-      0
-    else
-      q_percent
-    end
+    return 0 if project.pending? || project.storage_capacity_raw(session_id:).zero?
+    
+   (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
   end
 end
