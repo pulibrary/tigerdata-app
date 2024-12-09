@@ -1,26 +1,11 @@
-<show id="show">
-<h1>
-Project Details:
-<%= @project.title %>
-</h1>
+<%= render partial: "project_details_heading" %>
 
+<show id="show">
 <% unless @project.in_mediaflux? %>
   <div class="pending-project">
     Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
   </div>
 <% end %>
-
-<% alert_class = if @project.pending?
-                   "alert-warning"
-                 else
-                   "alert-success"
-                 end %>
-
-<div class="alert <%= alert_class %>" role="alert">
-  <dl>
-  <dt>Status</dt> <dd><%= @project.status %></dd>
-  </dl>
-</div>
 
 <div class="details">
   <h2>Roles

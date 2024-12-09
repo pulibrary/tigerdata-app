@@ -20,6 +20,7 @@ import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 import { dashStyle, dashTab } from './dashboardTabs';
 import { setupTable } from './pulDataTables';
+import { showMoreLess } from './showMoreLess';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -27,6 +28,7 @@ window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
 window.dashTab = dashTab;
 window.setupTable = setupTable;
+window.showMoreLess = showMoreLess;
 
 function initDataUsers() {
   function counterIncrement(counterId) {
