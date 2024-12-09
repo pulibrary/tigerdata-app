@@ -92,7 +92,9 @@
 <div class="details">
   <% if !current_user.eligible_sysadmin? %>
     <%= link_to "Review Contents", project_contents_path(@project.id), class: "btn btn-primary btn-sm" %>
-    <%= link_to "Withdraw Project Request", "", class: "btn btn-secondary btn-sm" %>
+    <% if !Rails.env.production? %>
+      <%= link_to "Withdraw Project Request", "", class: "btn btn-secondary btn-sm" %>
+    <% end %>
     <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
   <% end %>
 </div>
@@ -101,7 +103,9 @@
   <% if current_user.eligible_sysadmin? %>
     <% if @project.pending? %>
       <%= link_to "Approve Project", project_approve_path(@project.id), class: "btn btn-primary btn-sm" %>
-      <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
+      <% if !Rails.env.production? %>
+        <%= link_to "Deny Project", "", class: "btn btn-secondary btn-sm" %>
+      <% end %>
       <%= link_to " View Create Script", "#", class: "bi bi-code btn btn-secondary btn-sm", id: "create-script-btn" %>
     <% end %>
     <%= link_to "Review Contents", project_contents_path(@project.id), class: "btn btn-primary btn-sm" %>

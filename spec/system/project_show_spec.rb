@@ -61,7 +61,33 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
             find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
           end
+
+          context "when in the production environment" do
+            let(:rails_env) { double }
+
+            before do
+              allow(rails_env).to receive(:production?).and_return(true)
+              allow(rails_env).to receive(:staging?).and_return(false)
+              allow(rails_env).to receive(:test?).and_return(false)
+              allow(rails_env).to receive(:development?).and_return(false)
+              allow(Rails).to receive(:env).and_return(rails_env)
+            end
+
+            after do
+              allow(Rails).to receive(:env).and_call_original
+            end
+
+            it "hides the 'Withdraw Project Request' button" do
+              sign_in sponsor_user
+              project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+              project_in_mediaflux.save!
+              visit "/projects/#{project_in_mediaflux.id}"
+
+              expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
+            end
+          end
         end
+
         context "SysAdmin" do
           it "Shows the correct nav buttons" do
             sign_in sysadmin_user
@@ -107,6 +133,27 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_selector(:link_or_button, "Approve Project")
             expect(page).to have_selector(:link_or_button, "Deny Project")
             expect(page).to have_selector(:link_or_button, "Review Contents")
+          end
+          context "when in the production environment" do
+            let(:rails_env) { double }
+
+            before do
+              allow(rails_env).to receive(:production?).and_return(true)
+              allow(rails_env).to receive(:staging?).and_return(false)
+              allow(rails_env).to receive(:test?).and_return(false)
+              allow(rails_env).to receive(:development?).and_return(false)
+              allow(Rails).to receive(:env).and_return(rails_env)
+            end
+
+            after do
+              allow(Rails).to receive(:env).and_call_original
+            end
+
+            it "hides the 'Deny Project' button" do
+              sign_in sysadmin_user
+              visit "/projects/#{project_not_in_mediaflux.id}"
+              expect(page).not_to have_selector(:link_or_button, "Deny Project")
+            end
           end
         end
       end
