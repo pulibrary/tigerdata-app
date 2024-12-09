@@ -177,7 +177,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//h2[text()='#{project.title}']").click
-        expect(page).to have_content("#{project.title}")
+        expect(page).to have_content(project.title)
       end
 
       it "displays the caveat message" do

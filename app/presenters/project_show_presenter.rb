@@ -12,19 +12,19 @@ class ProjectShowPresenter
 
   def created
     @project.created_at.strftime("%b %e, %Y %l:%M %p")
-  end 
+  end
 
-  def updated 
+  def updated
     @project.updated_at.strftime("%b %e, %Y %l:%M %p")
-  end 
+  end
 
-  def data_sponsor 
+  def data_sponsor
     User.find_by(uid: @project.metadata["data_sponsor"]).uid
-  end 
+  end
 
-  def data_manager 
+  def data_manager
     User.find_by(uid: @project.metadata["data_manager"]).uid
-  end 
+  end
 
   # used to hide the project root that is not visible to the end user
   def project_directory
