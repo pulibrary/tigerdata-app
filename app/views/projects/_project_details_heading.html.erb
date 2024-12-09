@@ -1,18 +1,14 @@
 <div id="project-details-heading">
 
-<% alert_class = if @project.pending?
-    "alert-warning"
-  else
-    "alert-success"
-  end %>
-
   <div class="row">
   <div class="col-12 col-md-8"> 
   <h1><%= @project.title %></h1>
   </div>
-  <div class="col-6 col-md-4">  <div class="alert <%= alert_class %> status" role="alert">
-  <%= @project.status %>
-</div></div>
+  <div class="col-6 col-md-4">  
+    <div class="status <%= @project.status.downcase %>">
+      <%= @project.status %>
+    </div>
+  </div>
 </div>
   
   

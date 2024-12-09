@@ -7,6 +7,49 @@
 
     .status {
         float: right;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+        text-transform: capitalize;
+        font-weight: bold;
+    }
+
+    .status::before {
+        content: "";
+        width: 20px;
+        height: 20px;
+    }
+
+    .active { 
+        background: url("status_info.svg") no-repeat;
+        background-color: $status-info;
+        background-position: left;
+        padding-left: 20px;
+        color: $green-dark;
+    }
+
+    .pending { 
+        background: url("status_pending.svg") no-repeat;
+        background-color: $status-warning;
+        background-position: left;
+        padding-left: 20px;
+        color: $yellow-dark;
+
+    }
+
+    .approved {
+        background: url("status_approved.svg") no-repeat;
+        background-color: $status-success;
+        background-position: left;
+        padding-left: 20px;
+        color: $green-dark;
+    }
+
+    .rejected {
+        background: url("status_rejected.svg") no-repeat;
+        background-color: $status-error;
+        background-position: left;
+        padding-left: 20px;
+        color: $green-dark;
     }
     
     #project-description {
