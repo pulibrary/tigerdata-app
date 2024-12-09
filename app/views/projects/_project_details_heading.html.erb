@@ -7,15 +7,15 @@
   end %>
 
   <div class="row">
-  <div class="col-12 col-md-8"> 
+  <div class="col-12 col-md-8">
   <h1><%= @project.title %></h1>
   </div>
   <div class="col-6 col-md-4">  <div class="alert <%= alert_class %> status" role="alert">
   <%= @project.status %>
 </div></div>
 </div>
-  
-  
+
+
 <div class="heading-decoration"></div>
 
   <div id="project-description">
@@ -28,7 +28,7 @@
 <div class="row">
   <div class="col-12">
     <div class="date-and-data-info">
-      <ul> 
+      <ul>
         <li><span class="label">Date Created:</span> <%= @project.created %></li>
         <li><span class="label">Last updated:</span> <%= @project.updated %></li>
       </ul>
@@ -40,7 +40,7 @@
 <div class="row">
   <div class="col-12">
     <div class="date-and-data-info">
-      <ul> 
+      <ul>
         <li><span class="label">Data Sponsor:</span> <%= @project.data_sponsor %></li>
         <li><span class="label">Data Manager:</span> <%= @project.data_manager %></li>
       </ul>
@@ -49,19 +49,19 @@
 </div>
 </div>
 
-<script>
+<script type="module">
 
 const ExcerptWidget = {
   showMore: function(showMoreLinksTarget, excerptTarget) {
    const showMoreLinks = document.querySelectorAll(showMoreLinksTarget);
-    
+
    showMoreLinks.forEach(function(link) {
      const excerpt = document.querySelector(excerptTarget);
      showMoreLess.showMore(link, excerpt);
    });
   }
 };
- 
+
 ExcerptWidget.showMore('.show-more', '#description-text');
 
 </script>
