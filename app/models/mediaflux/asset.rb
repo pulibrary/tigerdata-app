@@ -23,15 +23,15 @@ module Mediaflux
       end
     end
 
-    # Returns the path to the asset but without the root namespace as part of it.
+    # Returns the path to the asset but without the root collection namespace as part of it.
     #
     # Example:
     #   path        -> "/tigerdata/projectg/folder1/file-abc.txt"
     #   path_short  -> "/projectg/folder1/file-abc.txt"
     def path_short
       return nil if path.nil?
-      if path.starts_with?(Mediaflux::Connection.root_namespace)
-        path[Mediaflux::Connection.root_namespace.length..-1]
+      if path.starts_with?(Mediaflux::Connection.root_collection_namespace)
+        path[Mediaflux::Connection.root_collection_namespace.length..-1]
       else
         path
       end
