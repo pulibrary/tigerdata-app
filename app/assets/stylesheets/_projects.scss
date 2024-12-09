@@ -7,8 +7,8 @@
 
     .status {
         float: right;
-        border-radius: 0.5rem;
-        padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+        border-radius: 0.5em;
+        padding: 0.5em 0.75em 0.5em 0.5em;
         text-transform: capitalize;
         font-weight: bold;
     }
@@ -20,11 +20,11 @@
     }
 
     .active { 
-        background: url("status_info.svg") no-repeat;
+        background: url("status_active.svg") no-repeat;
         background-color: $status-info;
         background-position: left;
         padding-left: 20px;
-        color: $green-dark;
+        color: $blue-dark;
     }
 
     .pending { 
@@ -49,7 +49,7 @@
         background-color: $status-error;
         background-position: left;
         padding-left: 20px;
-        color: $green-dark;
+        color: $red-darker;
     }
     
     #project-description {

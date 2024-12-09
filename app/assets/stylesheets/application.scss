@@ -53,6 +53,15 @@ body {
   display: none;
 }
 
+.netid-large {
+  border-radius: 0.625em;
+  background-color: $gray-10;
+  padding: 0rem 0.375em;
+  justify-content: center;
+  align-items: center; 
+}
+
+
 /* These are the styles used by the jQuery autocomplete plug-in */
 .autocomplete-suggestions {
   border: 1px solid #999;
