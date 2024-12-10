@@ -184,6 +184,8 @@ class ProjectsController < ApplicationController
     @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 100)
     @files = @file_list[:files]
     @files.sort_by!(&:path)
+    @project = ProjectShowPresenter.new(project)
+
   end
 
   def project_job_service

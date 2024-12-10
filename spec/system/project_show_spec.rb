@@ -51,7 +51,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).not_to have_content(project_in_mediaflux.project_directory)
 
             expect(page).not_to have_content(pending_text)
-            expect(page).to have_css ".alert-success"
+            expect(page).to have_css ".approved"
             expect(page).to have_selector(:link_or_button, "Edit") # button next to role and description heading
             expect(page).to have_selector(:link_or_button, "Review Contents")
             expect(page).to have_selector(:link_or_button, "Withdraw Project Request")
@@ -86,7 +86,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             visit "/projects/#{project_not_in_mediaflux.id}"
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
-            expect(page).to have_css ".alert-warning"
+            expect(page).to have_css ".pending"
             expect(page).not_to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Review Contents")
             click_on("Return to Dashboard")
@@ -101,7 +101,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             visit "/projects/#{project_not_in_mediaflux.id}"
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
-            expect(page).to have_css ".alert-warning"
+            expect(page).to have_css ".pending"
             expect(page).not_to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Approve Project")
             expect(page).to have_selector(:link_or_button, "Deny Project")
@@ -141,7 +141,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_content "Status\n#{::Project::PENDING_STATUS}"
+        expect(page).to have_css ".pending"
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         visit "/projects/#{project.id}"
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
-        expect(page).to have_content("Project Contents")
+        expect(page).to have_content("Contents Summary")
         expect(page).to have_content("File Count")
         expect(find(:css, "#file_count").text).to eq "16"
 
@@ -177,7 +177,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         click_on("Return to Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//h2[text()='#{project.title}']").click
-        expect(page).to have_content("Project Details: #{project.title}")
+        expect(page).to have_content(project.title)
       end
 
       it "displays the caveat message" do

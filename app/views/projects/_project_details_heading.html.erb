@@ -1,0 +1,71 @@
+<div id="project-details-heading">
+
+  <div class="row">
+  <div class="col-12 col-md-8"> 
+  <h1><%= @project.title %></h1>
+  </div>
+  <div class="col-6 col-md-4">  
+    <div class="status <%= @project.status.downcase %>">
+      <%= @project.status %>
+    </div>
+  </div>
+</div>
+  
+  
+<div class="heading-decoration"></div>
+
+  <div id="project-description">
+    <div id="description-text" class="truncate">
+      <%= @project.description %>
+    </div>
+    <a id="show-more-less-link" class="show-more" href="#"><span>more...</span></a>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="date-and-data-info">
+      <ul> 
+        <li><span class="label">Date Created:</span> <%= @project.created %></li>
+        <li><span class="label">Last updated:</span> <%= @project.updated %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="date-and-data-info">
+      <ul> 
+        <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @project.data_sponsor %></span></li>
+        <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @project.data_manager %></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<script type="module">
+
+var $element = $('#description-text');
+var $c = $element
+           .clone()
+           .css({display: 'inline', width: 'auto', visibility: 'hidden'})
+           .appendTo('body');
+if( $c.width() > $element.width() ) { 
+const ExcerptWidget = {
+ showMore: function(showMoreLinksTarget, excerptTarget) {
+  const showMoreLinks = document.querySelectorAll(showMoreLinksTarget);
+   
+   showMoreLinks.forEach(function(link) {
+      const excerpt = document.querySelector(excerptTarget);
+      showMoreLess.showMore(link, excerpt);
+    });
+   }
+  };
+  ExcerptWidget.showMore('.show-more', '#description-text');
+} else {
+  document.getElementById('show-more-less-link').style.display = 'none';
+}
+$c.remove();
+</script>

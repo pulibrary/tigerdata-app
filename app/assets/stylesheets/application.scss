@@ -22,6 +22,7 @@
 @import "footer";
 @import "forms";
 @import "header";
+@import "projects";
 @import "settings";
 @import "styles_preview";
 @import "typography";
@@ -41,9 +42,25 @@ body {
     }
 }
 
+.heading-decoration {
+  background-color: $princeton-orange;
+  width: 100px;
+  height: 8px;
+  margin-bottom: 12px;
+}
+
 .hidden-element {
   display: none;
 }
+
+.netid-large {
+  border-radius: 0.625em;
+  background-color: $gray-10;
+  padding: 0rem 0.375em;
+  justify-content: center;
+  align-items: center; 
+}
+
 
 /* These are the styles used by the jQuery autocomplete plug-in */
 .autocomplete-suggestions {
