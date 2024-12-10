@@ -162,8 +162,6 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
-  // dashStyle();
-  dashTab();
 }
 
 window.addEventListener('load', () => initPage());
