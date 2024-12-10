@@ -1,357 +1,392 @@
-
 @import "variables";
 @import "typography";
 @import "bootstrap";
 
 .fixed-table {
-    width: 100%;
-    table-layout: fixed;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .fixed-table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // hide pagination menu
 .dataTables_length {
-    display: none;
+  display: none;
 }
 
 // put pages and totals on the same line
 .dataTables_info {
-     float: left;
+  float: left;
 }
 
 // Put pagination on the far right
 .dataTables_paginate {
-    float: right;
-    .paginate_button {
-        padding: 0.25em;
-        color: $gray-60;
-    }
-    .paginate_button.current, .paginate_button.disabled {
-        text-decoration: none;
-    }
+  float: right;
+  .paginate_button {
+    padding: 0.25em;
+    color: $gray-60;
+  }
+  .paginate_button.current,
+  .paginate_button.disabled {
+    text-decoration: none;
+  }
 }
 
-#projects-listing,  #projects-listing-pending, #projects-listing-approved {
-    table-layout: fixed;
-    border: 1px solid $gray-20;
-    border-radius: 3px;
-    padding: 5px 0px;
+.projects {
+  &-tabs {
+    align-content: center;
+  }
+
+  &-filter {
+    text-align: center;
+
+    &-btn {
+      height: 100%;
+    }
+  }
+}
+
+#projects-listing,
+#projects-listing-pending,
+#projects-listing-approved {
+  table-layout: fixed;
+  border: 1px solid $gray-20;
+  border-radius: 3px;
+  padding: 5px 0px;
+  align-items: center;
+  gap: 16px;
+  color: $gray-60;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  width: 100%;
+
+  a {
+    text-decoration: none !important;
+  }
+
+  thead .project th,
+  tbody .project td {
+    border: none;
+  }
+
+  .project {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: $libre-franklin;
+    border-bottom: 1px solid $gray-20;
+    background: $white;
+    padding: 12px;
     align-items: center;
-    gap: 16px;
-    color: $gray-60;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-    width: 100%;
-    a {
-        text-decoration: none !important;
+    gap: 8px;
+    align-self: stretch;
+
+    td:first-child {
+      width: 100%;
     }
 
-    thead .project th, tbody .project td {
-        border: none;
+    td: {
+      border: none;
     }
 
     .project {
-        display: flex;
-        flex-wrap: wrap;
-        font-family: $libre-franklin;
-        border-bottom: 1px solid $gray-20;
-        background: $white;
-        padding: 12px;
-        align-items: center;
-        gap: 8px;
-        align-self: stretch;
+      display: flex;
+      flex-wrap: wrap;
+      font-family: $libre-franklin;
+      border-bottom: 1px solid $gray-20;
+      background: $white;
+      padding: 12px;
+      align-items: center;
+      gap: 8px;
+      align-self: stretch;
 
-        td:first-child {
-            width: 100%;
-        }
+      td:first-child {
+        width: 100%;
+      }
+    }
 
-        td: {
-            border: none;
-        }
+    h2 {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $black;
+      font-family: $libre-franklin;
+      font-size: 16px !important;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+      text-decoration: none;
+    }
 
-        h2 {
-          display: block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: $black;
-          font-family: $libre-franklin;
-          font-size: 16px !important;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 24px;
-          text-decoration: none;
-        }
-        .details {
-            display: flex;
-            padding: 5px 0px;
-            align-items: center;
-            gap: 16px;
-            color: $gray-60;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 18px;
-            li {
-                float: left;
-                list-style: none;
-                padding: 0em .2em 0em 2em;
-            }
-        }
+    .details {
+      display: flex;
+      padding: 5px 0px;
+      align-items: center;
+      gap: 16px;
+      color: $gray-60;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
+
+      li {
+        float: left;
+        list-style: none;
+        padding: 0em 0.2em 0em 2em;
+      }
     }
 
     .last {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .status {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .status::before {
-        content: "";
-        display: inline-flex;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .active {
-        background: url("status_active.svg") no-repeat;
+      background: url("status_active.svg") no-repeat;
     }
 
     .pending {
-        background: url("status_pending.svg") no-repeat;
+      background: url("status_pending.svg") no-repeat;
     }
 
     .approved {
-        background: url("status_approved.svg") no-repeat;
+      background: url("status_approved.svg") no-repeat;
     }
 
     .rejected {
-        background: url("status_rejected.svg") no-repeat;
+      background: url("status_rejected.svg") no-repeat;
     }
 
     .project-type {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .project-type::before {
-        content: "";
-        display: inline-flex;
-        background: url("project_type.svg") no-repeat;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      background: url("project_type.svg") no-repeat;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .user-role {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .user-role::before {
-        content: "";
-        display: inline-flex;
-        background: url("user_role.svg") no-repeat;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      background: url("user_role.svg") no-repeat;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .last-download::before {
-        content: "";
-        display: inline-flex;
-        background: url("last_download.svg") no-repeat;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      background: url("last_download.svg") no-repeat;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .last-activity::before {
-        content: "";
-        display: inline-flex;
-        background: url("last_activity.svg") no-repeat;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      background: url("last_activity.svg") no-repeat;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
-
+  }
 }
 
 #admin-listing {
-    .section {
-        margin-top: 2em;
-    }
+  .section {
+    margin-top: 2em;
+  }
 }
 
 .welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3.75rem;
+  align-self: stretch;
+
+  .welcome-pane {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3.75rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .detail-pane {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
     align-self: stretch;
 
-    .welcome-pane {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        align-self: stretch;
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
     }
 
-    .detail-pane {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        align-self: stretch;
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      align-self: stretch;
 
-        .main {
+      .downloads {
+        display: flex;
+        width: 17.8125rem;
+        flex-direction: column;
+        align-items: center;
+
+        border-radius: 0.75rem;
+        background: $gray-10;
+
+        .header {
+          display: flex;
+          padding: 0.75rem 0.75rem 0rem 0.75rem;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+        }
+        .details {
+          display: flex;
+          align-items: center;
+          align-self: stretch;
+
+          .content {
             display: flex;
+            padding: 0.5rem 0rem 0.5rem 0.5rem;
             flex-direction: column;
             align-items: flex-start;
-            gap: 1.25rem;
-        }
+            flex: 1 0 0;
+            overflow: hidden;
 
-        .sidebar {
+            .container1 {
+              display: flex;
+              padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+              flex-direction: column;
+              align-self: stretch;
+              align-items: flex-start;
+              flex: 1 0 0;
+
+              .container2 {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                align-self: stretch;
+                border-radius: 0.5rem;
+
+                .container3 {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  align-self: stretch;
+
+                  .download-item {
+                    display: flex;
+                    padding: 0.75rem;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 0.125rem;
+                    align-self: stretch;
+                    border-bottom: 1px solid $gray-10;
+                    background: $white;
+
+                    .title {
+                      height: 1.3125rem;
+                      align-self: stretch;
+                      overflow: hidden;
+                      color: $black;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      /* Body XXS Bold */
+                      font-family: "Libre Franklin";
+                      font-size: 0.75rem;
+                      font-style: normal;
+                      font-weight: 600;
+                      line-height: 1.125rem; /* 150% */
+
+                      a {
+                        text-decoration: none;
+                        color: $black;
+                      }
+                    }
+
+                    .details {
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      align-self: stretch;
+
+                      .expiration {
+                        color: $gray-60;
+                        /* Body XXS */
+                        font-family: "Libre Franklin";
+                        font-size: 0.75rem;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 1.125rem; /* 150% */
+                      }
+
+                      .size {
+                        color: $gray-60;
+                        /* Body XXS */
+                        font-family: "Libre Franklin";
+                        font-size: 0.75rem;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 1.125rem; /* 150% */
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .scrollbar {
             display: flex;
+            padding: 1rem 0.125rem 0.25rem 0.125rem;
             flex-direction: column;
             align-items: center;
-            gap: 1.25rem;
             align-self: stretch;
 
-            .downloads {
-                display: flex;
-                width: 17.8125rem;
-                flex-direction: column;
-                align-items: center;
-
-                border-radius: 0.75rem;
-                background: $gray-10;
-
-                .header {
-                    display: flex;
-                    padding: 0.75rem 0.75rem 0rem 0.75rem;
-                    justify-content: space-between;
-                    align-items: center;
-                    align-self: stretch;
-                }
-                .details {
-                    display: flex;
-                    align-items: center;
-                    align-self: stretch;
-
-                    .content {
-                        display: flex;
-                        padding: 0.5rem 0rem 0.5rem 0.5rem;
-                        flex-direction: column;
-                        align-items: flex-start;
-                        flex: 1 0 0;
-                        overflow: hidden;
-
-                        .container1 {
-                            display: flex;
-                            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-                            flex-direction: column;
-                            align-self: stretch;
-                            align-items: flex-start;
-                            flex: 1 0 0;
-
-                            .container2 {
-                                display: flex;
-                                flex-direction: column;
-                                align-items: flex-start;
-                                align-self: stretch;
-                                border-radius: 0.5rem;
-
-                                .container3 {
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: flex-start;
-                                    align-self: stretch;
-
-                                    .download-item {
-                                        display: flex;
-                                        padding: 0.75rem;
-                                        flex-direction: column;
-                                        align-items: flex-start;
-                                        gap: 0.125rem;
-                                        align-self: stretch;
-                                        border-bottom: 1px solid $gray-10;
-                                        background: $white;
-
-                                        .title {
-                                            height: 1.3125rem;
-                                            align-self: stretch;
-                                            overflow: hidden;
-                                            color: $black;
-                                            text-overflow: ellipsis;
-                                            white-space: nowrap;
-                                            /* Body XXS Bold */
-                                            font-family: "Libre Franklin";
-                                            font-size: 0.75rem;
-                                            font-style: normal;
-                                            font-weight: 600;
-                                            line-height: 1.125rem; /* 150% */
-
-                                            a {
-                                                text-decoration: none;
-                                                color: $black;
-                                            }
-                                        }
-
-                                        .details {
-                                            display: flex;
-                                            justify-content: space-between;
-                                            align-items: center;
-                                            align-self: stretch;
-
-                                            .expiration {
-                                                color: $gray-60;
-                                                /* Body XXS */
-                                                font-family: "Libre Franklin";
-                                                font-size: 0.75rem;
-                                                font-style: normal;
-                                                font-weight: 400;
-                                                line-height: 1.125rem; /* 150% */
-                                            }
-
-                                            .size {
-                                                color: $gray-60;
-                                                /* Body XXS */
-                                                font-family: "Libre Franklin";
-                                                font-size: 0.75rem;
-                                                font-style: normal;
-                                                font-weight: 400;
-                                                line-height: 1.125rem; /* 150% */
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    .scrollbar {
-                        display: flex;
-                        padding: 1rem 0.125rem 0.25rem 0.125rem;
-                        flex-direction: column;
-                        align-items: center;
-                        align-self: stretch;
-
-                        .indicator {
-                            width: 0.25rem;
-                            height: 3.125rem;
-                            border-radius: 0.5rem;
-                            background: $gray-10;
-                        }
-                    }
-                }
+            .indicator {
+              width: 0.25rem;
+              height: 3.125rem;
+              border-radius: 0.5rem;
+              background: $gray-10;
             }
+          }
         }
+      }
     }
+  }
 }
