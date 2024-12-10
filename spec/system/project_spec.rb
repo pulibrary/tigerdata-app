@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
+  let(:superuser) { FactoryBot.create(:superuser, uid: "root") }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
@@ -323,7 +324,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
         fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         select "Research Data and Scholarship Services", from: "departments"
-        fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
+        project_directory = FFaker::Name.name.tr(" ", "_")
+        fill_in "project_directory", with: project_directory
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
         expect(page.find_all("input:invalid").count).to eq(0)
