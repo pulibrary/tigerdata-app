@@ -5,14 +5,14 @@ RSpec.describe Mediaflux::Asset, type: :model do
   let(:file_asset) do
     Mediaflux::Asset.new(
       id: 123, name: "file.txt",
-      path: "#{Rails.configuration.mediaflux['api_root_ns']}/project-1/photos/sunset.jpg",
+      path: "#{Rails.configuration.mediaflux['api_root_collection_namespace']}/project-1/photos/sunset.jpg",
       collection: false,
       last_modified_mf: "08-Feb-2024 16:08:54"
     )
   end
 
   let(:folder_asset) do
-    Mediaflux::Asset.new(id: 123, name: "photos", path: "#{Rails.configuration.mediaflux['api_root_ns']}/project-1/photos", collection: true)
+    Mediaflux::Asset.new(id: 123, name: "photos", path: "#{Rails.configuration.mediaflux['api_root_collection_namespace']}/project-1/photos", collection: true)
   end
 
   describe "#path" do

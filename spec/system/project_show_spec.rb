@@ -169,8 +169,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
         expect(page).to have_content("Contents Summary")
-        expect(page).to have_content("File Count")
-        expect(find(:css, "#file_count").text).to eq "16"
+        expect(page).to have_content("8 out of 22 shown")
+        # expect(find(:css, "#file_count").text).to eq "16"
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
@@ -188,7 +188,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         click_on("Review Contents")
 
         # Caveat message is displayed
-        expect(page).to have_content("Please note that the contents preview feature is still under development and currently only displays world-readable files")
+        expect(page).to have_content("Showing the first 100 files due to preview limit.")
       end
 
       it "displays the file list" do
@@ -203,8 +203,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_content(second_file.name)
         expect(page).not_to have_content(last_file.name)
 
-        # More files are displayed
-        click_on("Show More")
+        # files are paginated
+        find("a.paginate_button", text: 3).click
         expect(page).to have_content(last_file.name)
       end
     end

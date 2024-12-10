@@ -1,0 +1,16 @@
+<div class="content-info"><i class="bi bi-info-circle"></i>Showing the first 100 files due to preview limit.</div>
+<div class="table project-files">
+   <table id="project-contents" >
+   <thead>
+      <tr class="content heading">
+         <th class="sorting">name</th>
+         <th>relative path</th>
+         <th>size</th>
+         <th>last updated</th>
+      </tr>
+   </thead>
+   <tbody>
+      <%= render :partial => "content_view", :collection => @files, :as => :file %>
+   </tbody>
+   </table>
+</div>
