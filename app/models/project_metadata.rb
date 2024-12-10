@@ -52,7 +52,6 @@ class ProjectMetadata
 
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
   def initialize_from_params(params)
-    byebug
     @data_user_read_only = ro_users_from_params(params)
     @data_user_read_write = rw_users_from_params(params)
     initialize_from_hash(params)

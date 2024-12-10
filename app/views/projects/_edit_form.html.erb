@@ -217,10 +217,10 @@
    $(function() {
       var autoCompleteElements = [];
 
-      var rwUsers = [<%= @project.metadata_model.rw_users.map {|user| '"' + user + '"'}.join(",").html_safe %>];
+      // Initial set of read-only and read-write users in the Rails database
       var roUsers = [<%= @project.metadata_model.ro_users.map {|user| '"' + user + '"'}.join(",").html_safe %>];
+      var rwUsers = [<%= @project.metadata_model.rw_users.map {|user| '"' + user + '"'}.join(",").html_safe %>];
 
-      // TODO: This is a copy of what's on application, we should not have two
       function counterIncrement(counterId) {
          let counter = parseInt($(`#${counterId}`).val(), 10);
          counter += 1;
@@ -228,6 +228,7 @@
          return counter;
       }
 
+      // Adds the HTML row for a given user
       function addUserHtml(netIdToAdd, elementId, access) {
          const netIdHtml = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="added-user-textbox" />`;
          var roHtml = `<input type="radio" id="${elementId}_ro" name="${elementId}_read_access" value="read-only"`;
@@ -247,13 +248,15 @@
       // Returns the netids of the users already in the HTML FORM
       function usersInForm() {
          var netIds = [];
-         var userRows = $("#data-users-table>* .added-user-textbox");  // all children with the given class name
+         var userRows = $("#data-users-table>* .added-user-textbox"); // all children with the given class name
          for(var i = 0; i < userRows.length; i +=1 ) {
             netIds.push(userRows[i].value);
          }
          return netIds;
       }
 
+      // Adds the initial users from to the form
+      // rw_users and ro_users are initialized above.
       function addInitialUsersToForm() {
          var i, counter, userId, netIdToAdd;
          for(i = 0; i < rwUsers.length; i += 1) {
@@ -333,10 +336,11 @@
       $('#btn-add-data-user-modal').on('click', () => {
          const netIdToAdd = $('#data-user-uid-to-add').val();
          if (netIdToAdd.trim() === '') {
-            // nothing to do
-            return false;
+            return false; // nothing to do
          }
 
+         // HTML for the user within the modal form
+         // (it includes the netid of the user plus the "X" to delete it)
          const deleteHtml = `<button class="transparent-button delete-user-button" title="Delete this user"><i class="bi bi-x-circle"></i></button>`;
          const liHtml = `<li class="data_user_added_modal">${netIdToAdd}`
          const html = liHtml + deleteHtml;
@@ -354,7 +358,7 @@
          $(el.target.parentElement.parentElement).remove();
       });
 
-      // Delete a `<tr> that represents a user.
+      // Delete a `<tr>` that represents a user.
       $(document).on("click", ".delete-user-row", (el) => {
          $(el.target.parentElement.parentElement).remove();
          return false;
