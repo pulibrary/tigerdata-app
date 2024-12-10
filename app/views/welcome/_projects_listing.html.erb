@@ -1,17 +1,35 @@
 <div class="table">
   <table id="<%= table_id %>" >
   <caption style="caption-side: top;">
-    <ul class="nav nav-pills nav-fill">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">All</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link">Active</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link">Pending</a>
-      </li>
-    </ul>
+
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-6" style="align-content:center;">
+          <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">All</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">Active</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">Pending</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-6">
+          <div class="input-group">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Search by project titles, roles, project types">
+              <label for="floatingInputGroup1">Search by project titles, roles, project types</label>
+            </div>
+            <span class="input-group-text">@</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </caption>
   <thead>
     <tr class="project heading">
