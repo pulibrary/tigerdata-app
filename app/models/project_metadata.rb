@@ -52,8 +52,9 @@ class ProjectMetadata
 
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
   def initialize_from_params(params)
-    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_")
-    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_")
+    byebug
+    @data_user_read_only = ro_users_from_params(params)
+    @data_user_read_write = rw_users_from_params(params)
     initialize_from_hash(params)
   end
 
@@ -72,8 +73,10 @@ class ProjectMetadata
     set_value(params, "project_purpose")
     calculate_project_directory(params)
 
-    @data_user_read_only = user_list_params(params, read_only_counter(params), "ro_user_") if params["ro_user_counter"].present?
-    @data_user_read_write = user_list_params(params, read_write_counter(params), "rw_user_") if params["rw_user_counter"].present?
+    if params["data_user_counter"].present?
+      @data_user_read_only = ro_users_from_params(params)
+      @data_user_read_write = rw_users_from_params(params)
+    end
 
     update_storage_capacity(params)
     update_storage_performance_expectations
@@ -98,25 +101,26 @@ class ProjectMetadata
 
     private
 
-      def read_only_counter(params)
-        return if params.nil?
-        params[:ro_user_counter].to_i
-      end
-
-      def read_write_counter(params)
-        return if params.nil?
-        params[:rw_user_counter].to_i
-      end
-
-      def user_list_params(params, counter, key_prefix)
-        return if params.nil?
-
+      def data_users_from_params(params, access)
+        return [] if params.nil?
         users = []
+        counter = params[:data_user_counter].to_i
         (1..counter).each do |i|
-          key = "#{key_prefix}#{i}"
-          users << params[key]
+          key = "data_user_#{i}"
+          access_key = key + "_read_access"
+          if params[access_key] == access
+            users << params[key]
+          end
         end
         users.compact.uniq
+      end
+
+      def ro_users_from_params(params)
+        data_users_from_params(params, "read-only")
+      end
+
+      def rw_users_from_params(params)
+        data_users_from_params(params, "read-write")
       end
 
       # Initializes values that we have defaults for.
