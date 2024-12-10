@@ -43,14 +43,13 @@
     width: 100% !important;
   }
 
-  .header-logo {
-    padding-left: 20px;
+  #header .navbar .header-logo {
+    padding-left: 1em;
   }
 
   #header-navigation {
     color: $white;
     margin: auto;
-    padding: 50px 25px 25px 25px;
     float: right;
     display: -webkit-inline-box;
     font-family: "Libre Franklin";
@@ -61,8 +60,7 @@
       font-style: normal;
       line-height: 24px;
       font-weight: 600;
-      margin-left: 12px;
-      margin-right: 12px;
+      margin-right: 1em;
     }
     .navbar-item a {
       color: $white;
@@ -79,7 +77,9 @@
       text-decoration: underline;
     }
     .dropdown-menu { 
-      left: -45px;
+      left: -5em;
+      --bs-dropdown-spacer: 1em;
+      --bs-dropdown-min-width: 10em;
     }
 
     .dropdown-menu a {

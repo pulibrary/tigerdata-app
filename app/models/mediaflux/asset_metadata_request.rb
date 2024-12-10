@@ -30,17 +30,15 @@ module Mediaflux
       if metadata[:collection]
         metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
         metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
-        metadata[:quota_allocation] = asset.xpath("./collection/quota/allocation/@h").text
         metadata[:accum_names] = asset.xpath("./collection/accumulator/@name")
-        metadata[:quota_used] = asset.xpath("./collection/quota/used/@h").text
         metadata[:ctime] = asset.xpath("./ctime")
-
       end
 
       parse_image(asset.xpath("./meta/mf-image"), metadata) # this does not do anything because mf-image is not a part of the meta xpath
 
       parse_note(asset.xpath("./meta/mf-note"), metadata) # this does not do anything because mf-note is not a part of the meta xpath
 
+      parse_quota(asset.xpath("./collection/quota"), metadata)
       metadata
     end
 
@@ -64,6 +62,13 @@ module Mediaflux
         if image.count > 0
           metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
         end
+      end
+
+      def parse_quota(quota, metadata)
+        metadata[:quota_allocation] = quota.xpath("./allocation/@h").text
+        metadata[:quota_allocation_raw] = quota.xpath("./allocation").text.to_i
+        metadata[:quota_used] = quota.xpath("./used/@h").text
+        metadata[:quota_used_raw] = quota.xpath("./used").text.to_i
       end
 
       # Update this to match full 0.6.1 schema
