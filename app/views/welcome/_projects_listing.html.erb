@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row">
 
-        <div class="col-6" style="align-content:center;">
+        <div class="col-6" style="align-content: center;">
           <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">All</a>
@@ -20,13 +20,24 @@
         </div>
 
         <div class="col-6">
-          <div class="input-group">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Search by project titles, roles, project types">
-              <label for="floatingInputGroup1">Search by project titles, roles, project types</label>
+          <form class="container-fluid" role="search">
+            <div class="row">
+              <div class="col-10">
+
+                <div class="input-group">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="filter-input-text" placeholder="Search by project titles, roles, project types">
+                    <label for="filter-input-text">Search by project titles, roles, project types</label>
+                  </div>
+                  <span class="input-group-text">@</span>
+                </div>
+              </div>
+
+              <div class="col-2">
+                <button class="btn btn-primary" type="submit" style="height:100%;">Sort</button>
+              </div>
             </div>
-            <span class="input-group-text">@</span>
-          </div>
+          </form>
         </div>
       </div>
     </div>
