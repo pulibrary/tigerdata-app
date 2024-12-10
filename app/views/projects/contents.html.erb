@@ -58,7 +58,9 @@
       <form name="project-contents-preview">
         <button id="show-more" type="button" class="btn btn-primary">Show More</button>
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#list-contents-modal">List All Files</button>
-        <button type="button" class="btn btn-dark">Custom Query</button>
+        <% if !Rails.env.production? %>
+          <button type="button" class="btn btn-dark">Custom Query</button>
+        <% end %>
       </form>
     </section>
   <% end %>
