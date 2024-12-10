@@ -217,7 +217,8 @@
    $(function() {
       var autoCompleteElements = [];
 
-      // TODO: Make sure we create for table rows for data users already in the record
+      var rwUsers = [<%= @project.metadata_model.rw_users.map {|user| '"' + user + '"'}.join(",").html_safe %>];
+      var roUsers = [<%= @project.metadata_model.ro_users.map {|user| '"' + user + '"'}.join(",").html_safe %>];
 
       // TODO: This is a copy of what's on application, we should not have two
       function counterIncrement(counterId) {
@@ -227,10 +228,17 @@
          return counter;
       }
 
-      function addUserHtml(netIdToAdd, elementId) {
+      function addUserHtml(netIdToAdd, elementId, access) {
          const netIdHtml = `<input id="${elementId}" name="${elementId}" value="${netIdToAdd}" readonly class="added-user-textbox" />`;
-         const roHtml = `<input type="radio" id="${elementId}_ro" name="${elementId}_read_access" value="read-only" checked>`;
-         const rwHtml = `<input type="radio" id="${elementId}_rw" name="${elementId}_read_access" value="read-write">`;
+         var roHtml = `<input type="radio" id="${elementId}_ro" name="${elementId}_read_access" value="read-only"`;
+         var rwHtml = `<input type="radio" id="${elementId}_rw" name="${elementId}_read_access" value="read-write"`;
+         if (access == "read-only") {
+            roHtml += " checked>"
+            rwHtml += " >"
+         } else {
+            roHtml += " >";
+            rwHtml += " checked>"
+         }
          const actionHtml = `<a href="#" class="delete-user-row">Remove</a>`;
          const rowHtml = `<tr><td>${netIdHtml}</td><td>${roHtml}</td><td>${rwHtml}</td><td>${actionHtml}</td></tr>`;
          $(`#data-users-table>tbody`).append(rowHtml);
@@ -246,6 +254,25 @@
          return netIds;
       }
 
+      function addInitialUsersToForm() {
+         var i, counter, userId, netIdToAdd;
+         for(i = 0; i < rwUsers.length; i += 1) {
+            counter = counterIncrement('data_user_counter');
+            userId = `data_user_${counter}`;
+            netIdToAdd = rwUsers[i];
+            addUserHtml(netIdToAdd, userId, "read-write");
+         }
+
+         for(i = 0; i < roUsers.length; i += 1) {
+            counter = counterIncrement('data_user_counter');
+            userId = `data_user_${counter}`;
+            netIdToAdd = roUsers[i];
+            addUserHtml(netIdToAdd, userId, "read-only");
+         }
+
+         toggleNoUsersMessage(rwUsers.length + roUsers.length);
+      }
+
       // Adds a users from the modal to the HTML FORM
       function addUsersToForm() {
          const userAlreadyAdded = usersInForm();
@@ -257,7 +284,7 @@
                var counter = counterIncrement('data_user_counter');
                var userId = `data_user_${counter}`;
                totalUserCount += 1;
-               addUserHtml(netIdToAdd, userId);
+               addUserHtml(netIdToAdd, userId, "read-only");
             }
          }
 
@@ -265,8 +292,12 @@
          // (since we have not added them to the HTML FORM)
          $("#data-users-list-modal>li").remove();
 
-         // Show the "no users added" only when needed
-         if (totalUserCount == 0) {
+         toggleNoUsersMessage(totalUserCount);
+      }
+
+      // Show the "no users added" only when needed
+      function toggleNoUsersMessage(userCount) {
+         if (userCount == 0) {
             $("#row-no-users").removeClass("hidden-element");
          } else {
             $("#row-no-users").addClass("hidden-element");
@@ -443,5 +474,7 @@
       registerAutocomplete("#data_sponsor", [ <%= sponsor_list_json %> ], true, null);
       registerAutocomplete("#data_manager", [ <%= manager_list_json %> ], true, null);
       registerAutocomplete("#data-user-uid-to-add", [ <%= all_users_list_json %> ], false, "#btn-add-data-user-modal");
+
+      addInitialUsersToForm();
    });
 </script>
