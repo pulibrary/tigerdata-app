@@ -37,122 +37,125 @@
 }
 
 #projects-listing,  #projects-listing-pending, #projects-listing-approved {
-    table-layout: fixed;
-    border: 1px solid $gray-20;
-    border-radius: 3px;
-    padding: 5px 0px;
+
+  table-layout: fixed;
+  border: 1px solid $gray-20;
+  border-radius: 3px;
+  padding: 5px 0px;
+  align-items: center;
+  gap: 16px;
+  color: $gray-60;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  width: 100%;
+
+  a {
+    text-decoration: none !important;
+  }
+
+  thead .project th, tbody .project td {
+    border: none;
+  }
+
+  .project {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: $libre-franklin;
+    border-bottom: 1px solid $gray-20;
+    background: $white;
+    padding: 12px;
     align-items: center;
-    gap: 16px;
-    color: $gray-60;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-    width: 100%;
-    a {
-        text-decoration: none !important;
+    gap: 8px;
+    align-self: stretch;
+
+    td:first-child {
+      width: 100%;
     }
 
-    thead .project th, tbody .project td {
-        border: none;
+    td: {
+      border: none;
     }
-    
-    .project {
-        display: flex;
-        flex-wrap: wrap;       
-        font-family: $libre-franklin;
-        border-bottom: 1px solid $gray-20;
-        background: $white;
-        padding: 12px;
-        align-items: center;
-        gap: 8px;
-        align-self: stretch;
 
-        td:first-child {
-            width: 100%;
-        } 
+    h2 {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $black;
+      font-family: $libre-franklin;
+      font-size: 16px !important;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+      text-decoration: none;
+    }
 
-        td: {
-            border: none;
-        }
+    .details {
+      display: flex;
+      padding: 5px 0px;
+      align-items: center;
+      gap: 16px;
+      color: $gray-60;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
 
-        h2 {
-          display: block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: $black;
-          font-family: $libre-franklin;
-          font-size: 16px !important;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 24px;
-          text-decoration: none;
-        }
-        .details {
-            display: flex;
-            padding: 5px 0px;
-            align-items: center;
-            gap: 16px;
-            color: $gray-60;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 18px;
-            li {
-                float: left;
-                list-style: none;
-                padding: 0em .2em 0em 2em;
-            }
-        }
+      li {
+        float: left;
+        list-style: none;
+        padding: 0em .2em 0em 2em;
+      }
     }
 
     .last {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .status {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .status::before {
-        content: "";
-        display: inline-flex;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .active { 
-        background: url("status_active.svg") no-repeat;
+      background: url("status_active.svg") no-repeat;
     }
 
     .pending { 
-        background: url("status_active.svg") no-repeat;
+      background: url("status_active.svg") no-repeat;
     }
 
     .approved {
-        background: url("status_approved.svg") no-repeat;
+      background: url("status_approved.svg") no-repeat;
     }
 
     .rejected {
-        background: url("status_rejected.svg") no-repeat;
+      background: url("status_rejected.svg") no-repeat;
     }
 
     .project-type {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .project-type::before {
-        content: "";
-        display: inline-flex;
-        background: url("project_type.svg") no-repeat;
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
+      content: "";
+      display: inline-flex;
+      background: url("project_type.svg") no-repeat;
+      width: 20px;
+      height: 20px;
+      vertical-align: top;
     }
 
     .user-role {
-        text-transform: capitalize;
+      text-transform: capitalize;
     }
 
     .user-role::before {
@@ -181,7 +184,7 @@
         height: 20px;
         vertical-align: top;
     }
-
+  }
 }
 
 #admin-listing {
