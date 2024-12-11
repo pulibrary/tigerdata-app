@@ -1,18 +1,34 @@
-<div class="table">
-   <table id="<%= table_id %>" >
-   <thead>
-      <tr class="project heading">
-         <th>title</th>
-         <th>status</th>
-         <th>type</td>
-         <th>role</th>
-         <th>download</th>
-         <th>activity</th>
-         <th>quota_usage</th>
-      </tr>
-   </thead>
-   <tbody>
-      <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
-   </tbody>
-   </table>
-</div>
+<div class="row">
+   <div class="col-10">
+      <div class="table">
+         <table id="<%= table_id %>" >
+         <thead>
+            <tr class="project heading">
+               <th>title</th>
+               <th>status</th>
+               <th>type</td>
+               <th>role</th>
+               <th>download</th>
+               <th>activity</th>
+               <th>quota_usage</th>
+            </tr>
+         </thead>
+         <tbody>
+            <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
+         </tbody>
+         </table>
+      </div>
+   </div> <!-- col -->
+   <div class="col-2">
+      <p style="background-color: gray;">Latest Downloads</p>
+      <div>
+         <ul>
+            <li>item 1</li>
+            <li>item 2</li>
+            <li>item 3</li>
+            <li>item 4</li>
+            <li>item 5</li>
+         </ul>
+      </div>
+   </div> <!-- col -->
+</div> <!-- row -->
