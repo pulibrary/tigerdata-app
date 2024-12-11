@@ -2,25 +2,50 @@
 @import "typography";
 @import "bootstrap";
 
-#header {
-    padding: 0px;
-    background-color: $black;
-    margin-bottom: 1em;
+.header-row {
+  display: flex;
+  width: 90rem;
+  height: 6.25rem;
+  padding: 1.5rem 1.25rem;
+  justify-content: space-between;
+  align-items: center;
+  background: #121212;
 
-    .navbar-brand {
+  .header-image {
+    width: 9.25rem;
+    height: 4.05475rem;
+    flex-shrink: 0;
+    // background: url('logo-image');
+  }
+
+  .header-details {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0px;
+    padding-left: 0px;
+
+    .navbar-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.625rem;
+
+      a {
         color: $white;
-        margin: auto;
-        padding: 10px;
-    }
-    .btn.btn-warning.btn-sm {
-        --bs-btn-bg: #FBC129;
-        padding-left: 10px;
-        margin-left: 10px;
-        font-family: "Libre Franklin";
-        font-size: 16px;
-        color: $black;
-    }
+        text-decoration: none;
+      }
+    }  
+  }
+  .btn.btn-warning.btn-sm {
+    --bs-btn-bg: white;
+    padding: 0.5rem 2rem;
+    font-family: "Libre Franklin";
+    font-size: 16px;
+    color: $princeton-orange;
+  }
 }
+
 .container-fluid {
     max-width: 1200px;
     margin: 0 auto;
