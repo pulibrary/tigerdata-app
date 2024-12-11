@@ -12,7 +12,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash.alert = "You are not a recognized CAS user."
     else
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
-      flash.notice = "Welcome, #{@user.given_name}"
     end
   end
 end

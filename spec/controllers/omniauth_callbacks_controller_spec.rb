@@ -10,7 +10,6 @@ RSpec.describe Users::OmniauthCallbacksController do
       allow(User).to receive(:from_cas) { project_sponsor }
       get :cas
       expect(response).to redirect_to(root_path)
-      expect(flash.notice).to eq("Welcome, #{project_sponsor.given_name}")
     end
   end
 
