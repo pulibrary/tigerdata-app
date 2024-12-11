@@ -154,6 +154,14 @@
 }
 
 #content {
+  #project-nav{
+    @include tab-nav;
+    margin-bottom: 1em;
+
+    border-bottom: solid;
+    border-color: #D0D0D0;
+  }
+
   #file-list {
     width: 90%;
     border: 1px solid gray;
