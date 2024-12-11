@@ -13,7 +13,7 @@ namespace :downloads do
       projects.each do |project|
         puts "Project #{project.title} (#{project.id})"
         request = UserRequest.new(user_id: user.id, project_id: project.id, state: "completed")
-        request.request_details = {"output_file"=>"data.txt", "project_title"=>project.title}
+        request.request_details = { "output_file" => "data.txt", "project_title" => project.title }
         request.save!
       end
     end
