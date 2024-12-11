@@ -43,8 +43,12 @@
       <% if flash[:notice] or flash[:alert] %>
         <div class="row">
           <div class="col">
+          <% if flash[:notice]%>
             <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
+          <% end %>
+          <% if flash[:alert]%> 
             <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
+          <% end %> 
           </div>
         </div>
       <% end %>
