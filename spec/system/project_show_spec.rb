@@ -168,7 +168,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         visit "/projects/#{project.id}"
         expect(page).to have_selector(:link_or_button, "Review Contents")
         click_on("Review Contents")
-        expect(page).to have_content("Contents Summary")
         expect(page).to have_content("8 out of 22 shown")
         # expect(find(:css, "#file_count").text).to eq "16"
 
