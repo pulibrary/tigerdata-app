@@ -127,6 +127,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
       end
 
+      it "prevents sponsor users from editing the directory field" do
+        expect(page.find_all("#project_directory[readonly]").count).to eq(1)
+      end
+
       it "loads existing Data Sponsor" do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       end
@@ -161,6 +165,44 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "redirects the user back to the project show page" do
         click_on "Cancel"
         expect(page).to have_content(project_in_mediaflux.title)
+      end
+    end
+
+    context "when authenticated as a superuser" do
+      context "when the project is not persisted within Mediaflux" do
+        before do
+          project_not_in_mediaflux
+          project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+          project_not_in_mediaflux.save!
+          project_not_in_mediaflux.reload
+
+          sign_in superuser
+
+          visit "/projects/#{project_not_in_mediaflux.id}/edit"
+        end
+
+        it "permits superusers to edit the directory field" do
+          expect(page.find_all("#project_directory[readonly]").count).to eq(0)
+        end
+      end
+    end
+
+    context "when authenticated as a sysadmin user" do
+      context "when the project is not persisted within Mediaflux" do
+        before do
+          project_not_in_mediaflux
+          project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+          project_not_in_mediaflux.save!
+          project_not_in_mediaflux.reload
+
+          sign_in sysadmin_user
+
+          visit "/projects/#{project_not_in_mediaflux.id}/edit"
+        end
+
+        it "permits sysadmin users to edit the directory field" do
+          expect(page.find_all("#project_directory[readonly]").count).to eq(0)
+        end
       end
     end
   end
