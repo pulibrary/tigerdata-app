@@ -188,6 +188,7 @@ class ProjectsController < ApplicationController
     @files.sort_by!(&:path)
     @project = ProjectShowPresenter.new(project)
 
+    @project_session = "content"
   end
 
   def project_job_service

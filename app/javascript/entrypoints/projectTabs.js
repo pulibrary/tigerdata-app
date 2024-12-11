@@ -4,10 +4,10 @@ export function projectStyle(railsSession) {
     const script = document.getElementById('project-script');
     const approval = document.getElementById('project-approval');
     const session = railsSession;
-    const show = document.getElementById('show');
+    const project = document.getElementById('show') || document.getElementById('content');
 
     // Check the session to see which tab should start as active be active
-    if (show) {
+    if (project) {
       switch (session) {
         case 'content':
           content.style.borderBottom = 'solid';
@@ -167,13 +167,13 @@ export function projectStyle(railsSession) {
     $('#project-content').on('click', (inv) => {
       const element = inv;
       element.preventDefault();
-      const detail_location = window.location + '/contents';
+      const content_location = window.location + '/contents';
 
       $.ajax({
         type: 'GET',
-        url: detail_location,
+        url: content_location,
         success() { // on success..
-          window.location.href = detail_location; // update the DIV
+          window.location.href = content_location; // update the DIV
         },
       });
     });
@@ -181,12 +181,14 @@ export function projectStyle(railsSession) {
     $('#project-details').on('click', (inv) => {
       const element = inv;
       element.preventDefault();
+      const base_url = window.location.href;
+      const content = "/contents"
+      const detail_location = base_url.replace(content, "");
       $.ajax({
-        type: 'POST',
-        url: '/dash_project',
-        data: { dashtab: 'project' },
+        type: 'GET',
+        url: detail_location,
         success() { // on success..
-          window.location.reload(); // update the DIV
+            window.location.href = detail_location; // update the DIV
         },
       });
     });
