@@ -21,6 +21,7 @@ import { showCreateScript } from './atermScripts';
 import { dashStyle, dashTab } from './dashboardTabs';
 import { setupTable } from './pulDataTables';
 import { showMoreLess } from './showMoreLess';
+import { projectStyle, projectTab } from './projectTabs';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -29,6 +30,8 @@ window.dashStyle = dashStyle;
 window.dashTab = dashTab;
 window.setupTable = setupTable;
 window.showMoreLess = showMoreLess;
+window.projectStyle = projectStyle;
+window.projectTab = projectTab;
 
 function initDataUsers() {
   function counterIncrement(counterId) {
