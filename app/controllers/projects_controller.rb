@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  
+
   before_action :set_breadcrumbs
 
   def new
@@ -113,6 +113,8 @@ class ProjectsController < ApplicationController
     @approved_storage_expectations = @storage_expectations[:approved]
 
     @project_purpose = @project_metadata[:project_purpose]
+
+    @project_session = "details"
 
     respond_to do |format|
       format.html do
