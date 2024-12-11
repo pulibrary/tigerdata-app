@@ -20,15 +20,14 @@
       </div>
    </div> <!-- col -->
    <div class="col-2">
-      <p style="background-color: gray;">Latest Downloads</p>
-      <div>
-         <ul>
-            <li>item 1</li>
-            <li>item 2</li>
-            <li>item 3</li>
-            <li>item 4</li>
-            <li>item 5</li>
-         </ul>
+      <div style="margin-left: 0.5rem;">
+         <p style="background-color: rgb(203, 201, 201);">Latest Downloads</p>
+         <% current_user.latest_downloads.each do |download| %>
+            <div style="border: 1px solid gray;">
+               <p style="margin-bottom: 0px;"><b><%= download.request_details["project_title"] %> </b></p>
+               <p style="color: lightgray;">Expires in 30 days | 900 MB</p>
+            </div>
+         <% end %>
       </div>
    </div> <!-- col -->
 </div> <!-- row -->
