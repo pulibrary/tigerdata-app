@@ -16,7 +16,8 @@
 
 <div class="details">
   <h2>Roles
-    <% if @project_eligible_to_edit && current_user.eligible_sponsor? %>
+    <%# Per ticket #1114 only superusers have edit access %>
+    <% if @project_eligible_to_edit && current_user.superuser %>
       <%= link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
     <% end %>
   </h2>
@@ -49,7 +50,8 @@
 
 <div class="details">
   <h2>Project Description
-    <% if @project_eligible_to_edit && current_user.eligible_sponsor? %>
+    <%# Per ticket #1114 only superusers have edit access %>
+    <% if @project_eligible_to_edit && current_user.superuser %>
       <%= link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
     <% end %>
   </h2>
