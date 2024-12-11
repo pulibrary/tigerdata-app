@@ -51,6 +51,26 @@
   line-height: 18px;
   width: 100%;
 
+  .projects {
+
+    &-caption {
+      caption-side: top;
+    }
+
+    &-tabs {
+      align-content: center;
+    }
+
+    &-filter {
+      text-align: center;
+
+      &-btn {
+        height: 100%;
+      }
+    }
+
+  }
+
   a {
     text-decoration: none !important;
   }
