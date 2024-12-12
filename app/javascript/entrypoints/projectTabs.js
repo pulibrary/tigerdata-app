@@ -9,11 +9,6 @@ export function projectStyle(railsSession) {
   // Check the session to see which tab should start as active be active
   if (project) {
     switch (session) {
-      case 'content':
-        content.style.borderBottom = 'solid';
-        content.style.borderColor = '#E77500';
-        content.classList.add('active');
-        break;
       case 'details':
         details.style.borderBottom = 'solid';
         details.style.borderColor = '#E77500';
