@@ -19,10 +19,6 @@
     </div>
 
     <%= render partial: "contents", locals: { files: @files } %>
-    <section class="container-fluid px-1 mx-0 my-1 project-contents__navigate">
-      <a href="<%= project_path(@project) %>" class="btn btn-primary">Review Metadata</a>
-      <a href="<%= root_path %>" class="btn btn-secondary">Return to Dashboard</a>
-    </section>
     <section class="project-alerts my-4">
       <div class="row">
         <div class="col">
