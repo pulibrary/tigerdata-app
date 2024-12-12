@@ -32,15 +32,13 @@
                         <div class="container1">
                         <div class="container2">
                         <div class="container3">
-                            <% current_user.latest_downloads.each do |download| %>
-                                <div class="download-item" >
-                                    <p><b><%= download.request_details["project_title"] %> </b></p>
-                                    <p>Expires in 30 days | 900 MB</p>
-                                </div>
-                            <% end %>
+                            <%= render partial: "download_item", collection: current_user.latest_downloads, as: "download" %>
                         </div>
                         </div>
                         </div>
+                    </div>
+                    <div class="scrollbar">
+                        <div class="indicator">&nbsp;</div>
                     </div>
                 </div>
             </div>

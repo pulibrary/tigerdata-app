@@ -56,10 +56,10 @@
     thead .project th, tbody .project td {
         border: none;
     }
-    
+
     .project {
         display: flex;
-        flex-wrap: wrap;       
+        flex-wrap: wrap;
         font-family: $libre-franklin;
         border-bottom: 1px solid $gray-20;
         background: $white;
@@ -70,7 +70,7 @@
 
         td:first-child {
             width: 100%;
-        } 
+        }
 
         td: {
             border: none;
@@ -122,11 +122,11 @@
         vertical-align: top;
     }
 
-    .active { 
+    .active {
         background: url("status_active.svg") no-repeat;
     }
 
-    .pending { 
+    .pending {
         background: url("status_pending.svg") no-repeat;
     }
 
@@ -245,7 +245,6 @@
                     display: flex;
                     align-items: center;
                     align-self: stretch;
-                    border-bottom: 1px solid $gray-10;
 
                     .content {
                         display: flex;
@@ -261,7 +260,7 @@
                             align-self: stretch;
                             align-items: flex-start;
                             flex: 1 0 0;
-                            
+
                             .container2 {
                                 display: flex;
                                 flex-direction: column;
@@ -274,7 +273,7 @@
                                     flex-direction: column;
                                     align-items: flex-start;
                                     align-self: stretch;
-                                    
+
                                     .download-item {
                                         display: flex;
                                         padding: 0.75rem;
@@ -284,14 +283,70 @@
                                         align-self: stretch;
                                         border-bottom: 1px solid $gray-10;
                                         background: $white;
+
+                                        .title {
+                                            height: 1.3125rem;
+                                            align-self: stretch;
+                                            overflow: hidden;
+                                            color: $black;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            /* Body XXS Bold */
+                                            font-family: "Libre Franklin";
+                                            font-size: 0.75rem;
+                                            font-style: normal;
+                                            font-weight: 600;
+                                            line-height: 1.125rem; /* 150% */
+                                        }
+
+                                        .details {
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            align-self: stretch;
+
+                                            .expiration {
+                                                color: $gray-60;
+                                                /* Body XXS */
+                                                font-family: "Libre Franklin";
+                                                font-size: 0.75rem;
+                                                font-style: normal;
+                                                font-weight: 400;
+                                                line-height: 1.125rem; /* 150% */
+                                            }
+
+                                            .size {
+                                                color: $gray-60;
+                                                /* Body XXS */
+                                                font-family: "Libre Franklin";
+                                                font-size: 0.75rem;
+                                                font-style: normal;
+                                                font-weight: 400;
+                                                line-height: 1.125rem; /* 150% */
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
+                    .scrollbar {
+                        display: flex;
+                        padding: 1rem 0.125rem 0.25rem 0.125rem;
+                        flex-direction: column;
+                        align-items: center;
+                        align-self: stretch;
+
+                        .indicator {
+                            width: 0.25rem;
+                            height: 3.125rem;
+                            border-radius: 0.5rem;
+                            background: $gray-10;
+                        }
+                    }
                 }
             }
         }
-
     }
 }
