@@ -1,37 +1,21 @@
 <header>
-<div id="header">
-  <nav class="navbar navbar-expand-lg">
-
-<div class="row header-row align-items-center">
-
-  <div class="col-lg-3 header-logo">
-    <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", size: "150x100", id: "logo") %></a>
-  </div>
-
-  <div class="col-lg-9">
-  <div id="header-navigation">
-  <ul class="navbar-nav">
-  <li class="navbar-item"><%= link_to "Contact Us", "mailto:tigerdata@princeton.edu", class: "navbar-contact-us" %></li>
-  <li class="navbar-item"><%= link_to "FAQ", "https://tigerdata.princeton.edu/frequently-asked-questions", class: "navbar-faq" %></li>
-  <% if current_user %>
-    <li class="navbar-item dropdown">
-        <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <%= current_user.uid%>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <%= link_to "Log out", main_app.destroy_user_session_path, class: "dropdown-item" %>
-        </div>
-      </li>
-  <% else %>
-    <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm" %></li>
-  <% end %>
+<div class="header-row">
+  <a href="/"><%= image_tag("TigerData-LOGO-KO_wide2.svg", alt: "TigerData logo", id: "logo", class: "header-image") %></a>
+  <ul class="header-details">
+    <li class="navbar-item"><%= link_to "Contact Us", "mailto:tigerdata@princeton.edu", class: "navbar-contact-us" %></li>
+    <li class="navbar-item"><%= link_to "FAQ", "https://tigerdata.princeton.edu/frequently-asked-questions", class: "navbar-faq" %></li>
+    <% if current_user %>
+      <li class="navbar-item dropdown">
+          <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%= current_user.uid%>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to "Log out", main_app.destroy_user_session_path, class: "dropdown-item" %>
+          </div>
+        </li>
+    <% else %>
+      <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
+    <% end %>
   </ul>
-  </div>
-  </div>
-
-
-</div>
-   
-  </nav>
-</div>
+</div> 
 </header>
