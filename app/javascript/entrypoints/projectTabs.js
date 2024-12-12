@@ -40,8 +40,6 @@ export function projectStyle(railsSession) {
   $('#project-content').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!content.classList.contains('active')) {
       content.style.borderBottom = 'solid';
       content.style.borderColor = '#121212';
@@ -51,8 +49,6 @@ export function projectStyle(railsSession) {
   $('#project-content').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!content.classList.contains('active')) {
       content.style.border = 'none';
     }
@@ -61,8 +57,6 @@ export function projectStyle(railsSession) {
   $('#project-content').on('click', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-    // change background color to red
     content.style.borderBottom = 'solid';
     content.style.borderColor = '#E77500';
     content.classList.add('active');
@@ -71,8 +65,6 @@ export function projectStyle(railsSession) {
   $('#project-details').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!details.classList.contains('active')) {
       details.style.borderBottom = 'solid';
       details.style.borderColor = '#121212';
@@ -82,8 +74,6 @@ export function projectStyle(railsSession) {
   $('#project-details').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!details.classList.contains('active')) {
       details.style.border = 'none';
     }
@@ -92,8 +82,6 @@ export function projectStyle(railsSession) {
   $('#project-details').on('click', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-    // change background color to red
     details.style.borderBottom = 'solid';
     details.style.borderColor = '#E77500';
     details.classList.add('active');
@@ -102,8 +90,6 @@ export function projectStyle(railsSession) {
   $('#project-script').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!script.classList.contains('active')) {
       script.style.borderBottom = 'solid';
       script.style.borderColor = '#121212';
@@ -113,27 +99,22 @@ export function projectStyle(railsSession) {
   $('#project-script').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-
     if (!script.classList.contains('active')) {
       script.style.border = 'none';
     }
   });
 
-  $('#project-script').on('click', (el) => {
-    const element = el;
-    element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-    // change background color to red
-    script.style.borderBottom = 'solid';
-    script.style.borderColor = '#E77500';
-    script.classList.add('active');
-  });
+//   $('#project-script').on('click', (el) => {
+//     const element = el;
+//     element.preventDefault();
+//     script.style.borderBottom = 'solid';
+//     script.style.borderColor = '#E77500';
+//     script.classList.add('active');
+//   });
 
   $('#project-approval').on('mouseenter', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
 
     if (!approval.classList.contains('active')) {
       approval.style.borderBottom = 'solid';
@@ -144,22 +125,19 @@ export function projectStyle(railsSession) {
   $('#project-approval').on('mouseleave', (el) => {
     const element = el;
     element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
 
     if (!approval.classList.contains('active')) {
       approval.style.border = 'none';
     }
   });
 
-  $('#project-approval').on('click', (el) => {
-    const element = el;
-    element.preventDefault();
-    // const tab = document.getElementById('tab-nav');
-    // change background color to red
-    approval.style.borderBottom = 'solid';
-    approval.style.borderColor = '#E77500';
-    approval.classList.add('active');
-  });
+//   $('#project-approval').on('click', (el) => {
+//     const element = el;
+//     element.preventDefault();
+//     approval.style.borderBottom = 'solid';
+//     approval.style.borderColor = '#E77500';
+//     approval.classList.add('active');
+//   });
 }
 
 export function projectTab() {
