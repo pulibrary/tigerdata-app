@@ -98,7 +98,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
             expect(page).to have_css ".pending"
-            expect(page).not_to have_link("Edit")
+            expect(page).to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Approve Project")
           end
         end
