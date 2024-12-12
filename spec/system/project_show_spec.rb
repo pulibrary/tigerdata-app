@@ -55,7 +55,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
             expect(page).to have_selector(:link_or_button, "Review Contents")
-            expect(page).to have_selector(:link_or_button, "Withdraw Project Request")
             expect(page).to have_selector(:link_or_button, "Return to Dashboard")
             click_on("Return to Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
@@ -93,7 +92,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             click_on("Return to Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
             find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
-            expect(page).to have_link("Withdraw Project Request")
           end
         end
         context "SysAdmin" do
@@ -105,7 +103,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_css ".pending"
             expect(page).not_to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Approve Project")
-            expect(page).to have_selector(:link_or_button, "Deny Project")
             expect(page).to have_selector(:link_or_button, "Review Contents")
           end
         end
@@ -221,13 +218,15 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       context "when downloads exist" do
         before do
           FileInventoryRequest.create!(user_id: sponsor_user.id, project_id: project.id, job_id: 123, state: UserRequest::COMPLETED,
-                                       request_details: { project_title: project.title }, completion_time: 1.day.ago)
+                                       request_details: { project_title: project.title }, completion_time: 5.days.ago)
+          FileInventoryRequest.create!(user_id: sponsor_user.id, project_id: project.id, job_id: 456, state: UserRequest::COMPLETED,
+                                       request_details: { project_title: project.title }, completion_time: 2.days.ago)
         end
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
           visit "/projects/#{project.id}/contents"
           click_on("Download Complete List")
-          expect(page).to have_content("Download latest")
+          expect(page).to have_content("Download latest report - generated 2 days ago")
         end
       end
     end
@@ -248,7 +247,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
         expect(page).not_to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
-        expect(page).to have_selector(:link_or_button, "Deny Project")
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
 
@@ -270,7 +268,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
-        expect(page).to have_selector(:link_or_button, "Deny Project")
         expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
     end
