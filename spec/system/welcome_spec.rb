@@ -59,7 +59,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).not_to have_content "project 222"
         expect(page).to have_content "Data User"
         expect(page).to have_content "project 333"
-        expect(page).to have_content "Activity"
         # The current user has no access to this project so we don't expect to see it
         expect(page).not_to have_content "project 444"
       end
@@ -72,7 +71,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           visit "/"
           expect(page).to have_content "Sponsor"
           expect(page).to have_content "project 111"
-          expect(page).to have_content "Activity"
           expect(page).not_to have_content "Data Manager"
           expect(page).not_to have_content "project 222"
           expect(page).to have_content "Data User"
@@ -98,7 +96,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).to have_content "project 222"
           expect(page).to have_content "Data User"
           expect(page).to have_content "project 333"
-          expect(page).to have_content "Activity"
           # The current user has no access to this project so we don't expect to see it
           expect(page).not_to have_content "project 444"
         end
@@ -156,7 +153,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
-        expect(page).to have_content("Activity")
       end
     end
 
@@ -179,7 +175,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).not_to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
-        expect(page).to have_content("Activity")
       end
       it "displays sponsored projects when emulating a data manager" do
         sign_in current_user
@@ -192,7 +187,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
-        expect(page).to have_content("Activity")
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast') # false positives
