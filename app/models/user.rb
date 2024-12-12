@@ -38,28 +38,41 @@ class User < ApplicationRecord
   end
 
   def clear_mediaflux_session(session)
+    Rails.logger.debug("!!!!!!! Clearing Mediaflux session !!!!!!!!")
     @mediaflux_session = nil
     session[:mediaflux_session] = nil
   end
 
   def mediaflux_from_session(session)
+    logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:cas_user]}  user: #{uid}"
     if session[:mediaflux_session].blank?
+      logger.debug("!!!! Creating a new session !!! #{uid}")
       session[:mediaflux_session] = mediaflux_session
-    else
-      @mediaflux_session = session[:mediaflux_session]
-    end
+      session[:cas_user] = false
+    end                     
+    @cas_user = session[:cas_user]
+    @mediaflux_session = session[:mediaflux_session]                    
   end
 
-  def medaiflux_login(token)
+  def medaiflux_login(token, session)
+    logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
+    if (logon_request.error?)
+      raise "Invalid Logon #{logon_request.response_error}"
+    end
     @mediaflux_session = logon_request.session_token
     @cas_user = true
+    session[:mediaflux_session] = @mediaflux_session
+    session[:cas_user] = @cas_user
+    logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:cas_user]}  user: #{uid}"
   end
 
   def mediaflux_session
+    logger.debug "Class session get #{@mediaflux_session} cas: #{@cas_user} user: #{uid}"
     if @mediaflux_session.nil? && @cas_user # the user's session has timed out.  Now what?
       raise "Invalid mediflux session!"
     elsif @mediaflux_session.nil? # utilize the service account
+      logger.debug("mediaflux login for #{uid} not using token")      
       logon_request = Mediaflux::LogonRequest.new
       @mediaflux_session = logon_request.session_token
     end
@@ -69,6 +82,7 @@ class User < ApplicationRecord
 
   def terminate_mediaflux_session
     return if @mediaflux_session.nil? # nothing to terminate
+    logger.debug "!!!! Terminating mediaflux session"
 
     Mediaflux::LogoutRequest.new(session_token: @mediaflux_session).response_body
     @mediaflux_session = nil

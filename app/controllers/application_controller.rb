@@ -31,12 +31,15 @@ class ApplicationController < ActionController::Base
   private
 
     def mediaflux_session
-      # this requires a connection to mediaflux... for ease of development we do not want to require this
-      # current_user&.mediaflux_from_session(session)
+      logger.debug "Application Session #{session[:mediaflux_session]} cas: #{session[:cas_user]}"
+      unless ["passthru", "cas"].include?(action_name)
+        current_user&.mediaflux_from_session(session)
+      end
       yield
     rescue Mediaflux::SessionExpired
       @retry_count ||= 0
       @retry_count += 1
+
       current_user.clear_mediaflux_session(session)
       current_user.mediaflux_from_session(session)
       if @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
