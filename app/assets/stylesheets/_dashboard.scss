@@ -236,7 +236,7 @@
 
                 .header {
                     display: flex;
-                    padding: 0.75rem;
+                    padding: 0.75rem 0.75rem 0rem 0.75rem;
                     justify-content: space-between;
                     align-items: center;
                     align-self: stretch;
@@ -298,6 +298,11 @@
                                             font-style: normal;
                                             font-weight: 600;
                                             line-height: 1.125rem; /* 150% */
+
+                                            a {
+                                                text-decoration: none;
+                                                color: $black;
+                                            }
                                         }
 
                                         .details {
