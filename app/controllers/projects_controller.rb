@@ -114,7 +114,9 @@ class ProjectsController < ApplicationController
 
     @project_purpose = @project_metadata[:project_purpose]
 
+
     @project_session = "details"
+
 
     respond_to do |format|
       format.html do
@@ -178,6 +180,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb("Contents", project_contents_path)
     project
 
+    @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
     @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
 

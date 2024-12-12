@@ -42,6 +42,8 @@
         </div>
         <div class="modal-body">
           This will generate a list of <%= @num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
+
+          <span class="latest-download-link"><%= render partial: "latest_download_link", locals: { project: @project } if @latest_completed_download %></span>
         </div>
         <div class="modal-footer">
           <button type="button" id="request-list-contents" class="btn btn-success" data-list-contents-path="<%= project_list_contents_path %>" >Yes</button>
