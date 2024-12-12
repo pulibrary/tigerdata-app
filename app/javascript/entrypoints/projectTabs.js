@@ -104,13 +104,13 @@ export function projectStyle(railsSession) {
     }
   });
 
-//   $('#project-script').on('click', (el) => {
-//     const element = el;
-//     element.preventDefault();
-//     script.style.borderBottom = 'solid';
-//     script.style.borderColor = '#E77500';
-//     script.classList.add('active');
-//   });
+  //   $('#project-script').on('click', (el) => {
+  //     const element = el;
+  //     element.preventDefault();
+  //     script.style.borderBottom = 'solid';
+  //     script.style.borderColor = '#E77500';
+  //     script.classList.add('active');
+  //   });
 
   $('#project-approval').on('mouseenter', (el) => {
     const element = el;
