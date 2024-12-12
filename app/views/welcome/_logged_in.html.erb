@@ -31,7 +31,11 @@
                         <div class="container1">
                         <div class="container2">
                         <div class="container3">
-                            <%= render partial: "download_item", collection: current_user.latest_downloads, as: "download" %>
+                            <% if current_user.latest_downloads.count == 0 %>
+                                <div class="download-item">No downloads available</div>
+                            <% else %>
+                                <%= render partial: "download_item", collection: current_user.latest_downloads, as: "download" %>
+                            <% end %>
                         </div>
                         </div>
                         </div>
