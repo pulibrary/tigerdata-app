@@ -217,13 +217,15 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       context "when downloads exist" do
         before do
           FileInventoryRequest.create!(user_id: sponsor_user.id, project_id: project.id, job_id: 123, state: UserRequest::COMPLETED,
-                                       request_details: { project_title: project.title }, completion_time: 1.day.ago)
+                                       request_details: { project_title: project.title }, completion_time: 5.days.ago)
+          FileInventoryRequest.create!(user_id: sponsor_user.id, project_id: project.id, job_id: 456, state: UserRequest::COMPLETED,
+                                       request_details: { project_title: project.title }, completion_time: 2.days.ago)
         end
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
           visit "/projects/#{project.id}/contents"
           click_on("Download Complete List")
-          expect(page).to have_content("Download latest")
+          expect(page).to have_content("Download latest report - generated 2 days ago")
         end
       end
     end
