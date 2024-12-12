@@ -155,4 +155,9 @@ class User < ApplicationRecord
   def self.serialize_from_session(key, _salt, _opts = {})
     User.where(uid: key)&.first
   end
+
+  # Fetches the most recent download jobs for the user
+  def latest_downloads(limit: 10)
+    @latest_downloads ||= UserRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
+  end
 end

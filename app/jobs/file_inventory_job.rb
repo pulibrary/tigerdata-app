@@ -7,8 +7,8 @@ class FileInventoryJob < ApplicationJob
                                 request_details: { project_title: project.title })
   end
 
-  # This is required becuase the before_enqueue does not get called when perform_now is run on a job
-  #  We include both before_perform and before_enqueue so perfrom_now and perform_later will work as desired
+  # This is required because the before_enqueue does not get called when perform_now is run on a job
+  # We include both before_perform and before_enqueue so perform_now and perform_later will work as desired
   before_perform do |job|
     project = Project.find(job.arguments.first[:project_id])
     inventory_request = FileInventoryRequest.find_by(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id)
