@@ -3,7 +3,7 @@
     <%= download.request_details["project_title"] %>
   </div>
   <div class="details">
-    <div class="expiration">Expires in 30 days</div>
-    <div class="size">900 MB</div>
+    <div class="expiration">Expires in <%= time_ago_in_words(download.completion_time + 7.days)%></div>
+    <div class="size"><!-- TODO: Need size later --></div>
   </div>
 </div>
