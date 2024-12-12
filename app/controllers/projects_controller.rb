@@ -70,7 +70,7 @@ class ProjectsController < ApplicationController
     render :new
   end
 
-  def show
+  def details
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Details")
     project
@@ -175,9 +175,9 @@ class ProjectsController < ApplicationController
   def confirmation; end
   def revision_confirmation; end
 
-  def contents
+  def show
     add_breadcrumb(project.title, project_path)
-    add_breadcrumb("Contents", project_contents_path)
+    add_breadcrumb("Contents")
     project
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last

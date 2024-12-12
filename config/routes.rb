@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   resources :projects
   get "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
-  get "projects/:id/contents", to: "projects#contents", as: :project_contents
+  get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
