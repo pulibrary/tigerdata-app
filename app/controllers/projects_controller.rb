@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  
+
   before_action :set_breadcrumbs
 
   def new
@@ -115,6 +115,9 @@ class ProjectsController < ApplicationController
     @project_purpose = @project_metadata[:project_purpose]
 
 
+    @project_session = "details"
+
+
     respond_to do |format|
       format.html do
         @project = ProjectShowPresenter.new(project)
@@ -188,6 +191,7 @@ class ProjectsController < ApplicationController
     @files.sort_by!(&:path)
     @project = ProjectShowPresenter.new(project)
 
+    @project_session = "content"
   end
 
   def project_job_service

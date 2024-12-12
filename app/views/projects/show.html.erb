@@ -7,6 +7,13 @@
   </div>
 <% end %>
 
+<div id="project-nav">
+  <button id="project-content" class="tab-nav"> Content Preview </button>
+  <button id="project-details" class="tab-nav"> Details </button>
+  <button id="project-script" class="tab-nav"> View Create Script </button>
+  <button id="project-approval" class="tab-nav"> Approval Setting </button>
+</div>
+
 <div class="details">
   <h2>Roles
     <%# Per ticket #1114 only superusers have edit access %>
@@ -58,7 +65,7 @@
           <% Affiliation.all.each do |hash| %>
             <% if hash[:code] == department_code %>
             <%= hash[:name] %>
-            <% end %>      
+            <% end %>
           <% end %>
         <% end %>
       </dd>
@@ -90,20 +97,11 @@
 </div>
 
 <div class="details">
-  <% if !current_user.eligible_sysadmin? %>
-    <%= link_to "Review Contents", project_contents_path(@project.id), class: "btn btn-primary btn-sm" %>
-    <%= link_to "Return to Dashboard", root_path, class: "btn btn-primary btn-sm" %>
-  <% end %>
-</div>
-
-<div class="details">
   <% if current_user.eligible_sysadmin? %>
     <% if @project.pending? %>
       <%= link_to "Approve Project", project_approve_path(@project.id), class: "btn btn-primary btn-sm" %>
       <%= link_to " View Create Script", "#", class: "bi bi-code btn btn-secondary btn-sm", id: "create-script-btn" %>
     <% end %>
-    <%= link_to "Review Contents", project_contents_path(@project.id), class: "btn btn-primary btn-sm" %>
-    <%= link_to "Return to Dashboard", root_path, class: "btn btn-return btn-sm" %>
   <% end %>
 </div>
 
@@ -114,4 +112,6 @@
 <script type="module">
   // Make the AJAX call to fetch the aterm script
   showCreateScript('<%= project_create_script_path(format: "json") %>');
+  projectStyle('<%= @project_session %>');
+  projectTab();
 </script>

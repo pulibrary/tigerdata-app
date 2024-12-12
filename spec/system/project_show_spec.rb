@@ -54,9 +54,9 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_css ".approved"
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
-            expect(page).to have_selector(:link_or_button, "Review Contents")
-            expect(page).to have_selector(:link_or_button, "Return to Dashboard")
-            click_on("Return to Dashboard")
+            expect(page).to have_selector(:link_or_button, "Content Preview")
+            expect(page).to have_selector(:link_or_button, "Dashboard")
+            click_on("Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
             find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
           end
@@ -69,12 +69,9 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             visit "/projects/#{project_in_mediaflux.id}"
 
             expect(page).to have_selector(:link_or_button, "Edit") # button next to project settings
-            expect(page).to have_selector(:link_or_button, "Review Contents")
             expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
-            expect(page).to have_selector(:link_or_button, "Return to Dashboard")
             # The project has already been approved
             expect(page).not_to have_selector(:link_or_button, "Approve Project")
-            expect(page).not_to have_selector(:link_or_button, "Deny Project")
           end
         end
       end
@@ -88,8 +85,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_content(pending_text)
             expect(page).to have_css ".pending"
             expect(page).not_to have_link("Edit")
-            expect(page).to have_selector(:link_or_button, "Review Contents")
-            click_on("Return to Dashboard")
+            expect(page).to have_selector(:link_or_button, "Content Preview")
+            click_on("Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
             find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
           end
@@ -103,7 +100,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             expect(page).to have_css ".pending"
             expect(page).not_to have_link("Edit")
             expect(page).to have_selector(:link_or_button, "Approve Project")
-            expect(page).to have_selector(:link_or_button, "Review Contents")
           end
         end
       end
@@ -164,15 +160,14 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_selector(:link_or_button, "Review Contents")
-        click_on("Review Contents")
-        expect(page).to have_content("Contents Summary")
+        expect(page).to have_selector(:link_or_button, "Content Preview")
+        click_on("Content Preview")
         expect(page).to have_content("8 out of 22 shown")
         # expect(find(:css, "#file_count").text).to eq "16"
 
         # Be able to return to the dashboard
-        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
-        click_on("Return to Dashboard")
+        expect(page).to have_selector(:link_or_button, "Dashboard")
+        click_on("Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//h2[text()='#{project.title}']").click
         expect(page).to have_content(project.title)
@@ -182,8 +177,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_selector(:link_or_button, "Review Contents")
-        click_on("Review Contents")
+        expect(page).to have_selector(:link_or_button, "Content Preview")
+        click_on("Content Preview")
 
         # Caveat message is displayed
         expect(page).to have_content("Showing the first 100 files due to preview limit.")
@@ -193,8 +188,8 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_selector(:link_or_button, "Review Contents")
-        click_on("Review Contents")
+        expect(page).to have_selector(:link_or_button, "Content Preview")
+        click_on("Content Preview")
 
         # Files are displayed
         expect(page).to have_content(first_file.name)
@@ -247,7 +242,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
         expect(page).not_to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
-        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
 
       it "does not show the mediaflux id to the sponsor" do
@@ -259,7 +253,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).not_to have_content pending_text
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")
-        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
 
       it "shows the sysadmin buttons for a pending project" do
@@ -268,7 +261,6 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
-        expect(page).to have_selector(:link_or_button, "Return to Dashboard")
       end
     end
   end
