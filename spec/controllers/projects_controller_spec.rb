@@ -3,9 +3,9 @@ require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { FactoryBot.create :project }
-  describe "#show" do
+  describe "#details" do
     it "renders an error when requesting json" do
-      get :show, params: { id: project.id, format: :json }
+      get :details, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
       expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
     end
@@ -17,13 +17,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       it "renders the project metadata as json" do
-        get :show, params: { id: project.id, format: :json }
+        get :details, params: { id: project.id, format: :json }
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(JSON.parse(response.body)).to eq(project.metadata)
       end
 
       it "shows affiliation code as being saved to the project" do
-        get :show, params: { id: project.id, format: :json }
+        get :details, params: { id: project.id, format: :json }
         expect(JSON.parse(response.body)["departments"]).to include("23100")
           .or(include("HPC"))
           .or(include("RDSS"))
@@ -33,7 +33,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
       it "renders the project metadata as xml" do
         project = FactoryBot.create :project, project_id: "abc-123"
-        get :show, params: { id: project.id, format: :xml }
+        get :details, params: { id: project.id, format: :xml }
         expect(response.content_type).to eq("application/xml; charset=utf-8")
         expect(response.body).to eq(
         "<?xml version=\"1.0\"?>\n" \
@@ -114,8 +114,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     it "shows the affiliation name (instead the internal code) on the project show views" do
-      get :show, params: { id: project.id }
-      expect(response).to render_template("show")
+      get :details, params: { id: project.id }
+      expect(response).to render_template("details")
       expect(response.body).to have_content("Astrophysical Sciences")
         .or(have_content("High Performance Computing"))
         .or(have_content("Research Data and Scholarship Services"))

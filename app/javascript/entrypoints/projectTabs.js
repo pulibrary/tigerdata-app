@@ -135,43 +135,26 @@ export function projectStyle(railsSession) {
 //   });
 }
 
-export function projectTab() {
-  $('#project-content').on('click', (inv) => {
-    const element = inv;
+export function projectTab(contentUrl, detailsUrl) {
+  $('#project-content').on('click', (element) => {
     element.preventDefault();
-    const contentLocation = `${window.location}/contents`;
-
     $.ajax({
       type: 'GET',
-      url: contentLocation,
-      success() { // on success..
-        window.location.href = contentLocation; // update the DIV
+      url: contentUrl,
+      success() {
+        window.location.href = contentUrl; // update the browser's URL
       },
     });
   });
 
-  $('#project-details').on('click', (inv) => {
-    const element = inv;
+  $('#project-details').on('click', (element) => {
     element.preventDefault();
-    const baseURL = window.location.href;
-    const content = '/contents';
-    const detailLocation = baseURL.replace(content, '');
     $.ajax({
       type: 'GET',
-      url: detailLocation,
-      success() { // on success..
-        window.location.href = detailLocation; // update the DIV
+      url: detailsUrl,
+      success() {
+        window.location.href = detailsUrl; // update the browser's URL
       },
     });
   });
-
-  // $('#project-script').on('click', (inv) => {
-  //   const element = inv;
-  //   element.preventDefault();
-  // });
-
-  // $('#project-approval').on('click', (inv) => {
-  //   const element = inv;
-  //   element.preventDefault();
-  // });
 }
