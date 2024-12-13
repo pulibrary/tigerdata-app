@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: true do
+RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
   let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
@@ -34,7 +34,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
 
   let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata_model: metadata_model) }
   let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
-  context "Show page" do
+  context "Details page" do
     context "Navigation Buttons" do
       context "Approved projects" do
         context "Sponsor user" do
@@ -42,7 +42,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             sign_in sponsor_user
             project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
-            visit "/projects/#{project_in_mediaflux.id}"
+            visit "/projects/#{project_in_mediaflux.id}/details"
 
             expect(page).to have_content(project_in_mediaflux.title)
 
@@ -66,7 +66,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
             sign_in sysadmin_user
             project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
-            visit "/projects/#{project_in_mediaflux.id}"
+            visit "/projects/#{project_in_mediaflux.id}/details"
 
             expect(page).to have_selector(:link_or_button, "Edit") # button next to project settings
             expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
@@ -80,7 +80,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         context "Sponsor user" do
           it "Shows the correct nav buttons for a pending project" do
             sign_in sponsor_user
-            visit "/projects/#{project_not_in_mediaflux.id}"
+            visit "/projects/#{project_not_in_mediaflux.id}/details"
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
             expect(page).to have_css ".pending"
@@ -94,7 +94,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         context "SysAdmin" do
           it "Shows the correct nav buttons for a pending project" do
             sign_in sysadmin_user
-            visit "/projects/#{project_not_in_mediaflux.id}"
+            visit "/projects/#{project_not_in_mediaflux.id}/details"
             expect(page).to have_content(project_not_in_mediaflux.title)
             expect(page).to have_content(pending_text)
             expect(page).to have_css ".pending"
@@ -113,7 +113,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
         project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
-        visit "/projects/#{project_in_mediaflux.id}"
+        visit "/projects/#{project_in_mediaflux.id}/details"
 
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).to have_content("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
@@ -128,7 +128,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "shows provenance events" do
         submission_event
         sign_in sponsor_user
-        visit "/projects/#{project.id}"
+        visit "/projects/#{project.id}/details"
         expect(page).to have_content "#{submission_event.event_details}, #{submission_event.created_at.to_time.in_time_zone('America/New_York').iso8601}"
       end
       it "shows the project status under the provenance section" do
@@ -159,7 +159,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "Contents page has collection summary data" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
-        visit "/projects/#{project.id}"
+        visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
         expect(page).to have_content("8 out of 22 shown")
@@ -176,7 +176,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "displays the caveat message" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
-        visit "/projects/#{project.id}"
+        visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
 
@@ -187,7 +187,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       it "displays the file list" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
-        visit "/projects/#{project.id}"
+        visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
 
@@ -204,7 +204,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       context "when downloads do not exist" do
         it "does not include a link to the latest download in the download modal" do
           sign_in sponsor_user
-          visit "/projects/#{project.id}/contents"
+          visit "/projects/#{project.id}"
           click_on("Download Complete List")
           expect(page).not_to have_content("Download latest")
         end
@@ -219,7 +219,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
         end
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
-          visit "/projects/#{project.id}/contents"
+          visit "/projects/#{project.id}"
           click_on("Download Complete List")
           expect(page).to have_content("Download latest report - generated 2 days ago")
         end
@@ -231,7 +231,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
       let(:project_not_in_mediaflux) { FactoryBot.create(:project) }
       it "shows the sysadmin buttons for an approved project" do
         sign_in sysadmin_user
-        visit "/projects/#{project_in_mediaflux.id}"
+        visit "/projects/#{project_in_mediaflux.id}/details"
 
         # shows the project directory without the hidden root
         expect(page).to have_content(project_in_mediaflux.project_directory.gsub("/td-test-001", ""))
@@ -246,7 +246,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
 
       it "does not show the mediaflux id to the sponsor" do
         sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}"
+        visit "/projects/#{project_in_mediaflux.id}/details"
         expect(page).to have_content "project 123"
         expect(page).not_to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
@@ -257,7 +257,7 @@ RSpec.describe "Project Page", type: :system, connect_to_mediaflux: true, js: tr
 
       it "shows the sysadmin buttons for a pending project" do
         sign_in sysadmin_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_in_mediaflux.id}/details"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).to have_selector(:link_or_button, "Approve Project")
