@@ -46,7 +46,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     context "Before it is in MediaFlux" do
       it "Shows the not yet approved (pending) project" do
         sign_in sponsor_user
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_in_mediaflux.id}/details"
         expect(page).to have_content pending_text
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
       it "shows none when the data user is empty" do
         sign_in data_manager
-        visit "/projects/#{project_not_in_mediaflux.id}"
+        visit "/projects/#{project_not_in_mediaflux.id}/details"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
@@ -205,6 +205,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       click_on "Return to Dashboard"
       expect(page).to have_content "Sponsor"
       find(:xpath, "//h2[text()='My test project']").click
+      click_on "Details"
       # defaults have been applied
       expect(page).to have_content "Storage Capacity (Requested)\n500 GB"
       expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
@@ -468,7 +469,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     end
   end
 
-  context "GET /projects/:id/content" do
+  context "GET /projects/:id" do
     context "when authenticated" do
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
       let(:approved_project) do
@@ -488,7 +489,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
       context "when the Mediaflux assets have one or multiple files" do
         it "enqueues a Sidekiq job for asynchronously requesting project files" do
-          visit project_contents_path(approved_project)
+          visit project_path(approved_project)
 
           expect(page).to have_content("Download Complete List")
           click_on "Download Complete List"
