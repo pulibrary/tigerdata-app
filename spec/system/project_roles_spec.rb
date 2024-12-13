@@ -70,6 +70,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     click_on "Return to Dashboard"
     expect(page).to have_content("Welcome")
     find(:xpath, "//h2[text()='My test project']").click
+    click_on "Details"
     expect(page).to have_content("This project has not been saved to Mediaflux")
     expect(page).to have_content(read_only.given_name)
     expect(page).to have_content(read_only.display_name)
@@ -137,7 +138,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       fill_in "project_id", with: "999-abc"
       page.find("body").click
       click_on "Submit"
-      visit "/projects/#{project.id}"
+      visit "/projects/#{project.id}/details"
       expect(page.find(:css, "#data_sponsor").text).to eq sponsor_user.display_name
       expect(page.find(:css, "#project_id").text).to eq "999-abc"
     end
@@ -158,7 +159,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       fill_in "data_manager", with: new_data_manager.uid
       page.find("body").click
       click_on "Submit"
-      visit "/projects/#{project.id}"
+      visit "/projects/#{project.id}/details"
       expect(page.find(:css, "#data_manager").text).to eq new_data_manager.display_name
     end
     it "does not allow anyone else to assign a Data Manager" do
@@ -194,7 +195,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
       fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
-      visit "/projects/#{project.id}"
+      visit "/projects/#{project.id}/details"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
     end
@@ -204,7 +205,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
       fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
       click_on "Submit"
-      visit "/projects/#{project.id}"
+      visit "/projects/#{project.id}/details"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
       expect(page).to have_content rw_data_user.display_name
     end
