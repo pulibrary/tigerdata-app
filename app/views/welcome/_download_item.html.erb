@@ -1,0 +1,13 @@
+<div class="download-item" >
+  <div class="title">
+    <%= link_to(download.request_details["project_title"], project_file_list_download_path(job_id: download.job_id, target: "_blank")) %>
+  </div>
+  <div class="details">
+    <div class="expiration">Expires in <%= time_ago_in_words(download.completion_time + 7.days)%></div>
+    <div class="size">
+      <!--
+        TODO: Need size later, see https://github.com/pulibrary/tigerdata-app/issues/1124
+      -->
+    </div>
+  </div>
+</div>
