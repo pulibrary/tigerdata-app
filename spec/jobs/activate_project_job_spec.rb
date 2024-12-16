@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ActivateProjectJob, connect_to_mediaflux: true, type: :job do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi, status: Project::APPROVED_STATUS) }
 
   before do

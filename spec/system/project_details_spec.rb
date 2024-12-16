@@ -3,9 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
-  let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
-  let(:data_manager) { FactoryBot.create(:user, uid: "pul987") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:data_manager) { FactoryBot.create(:user, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:pending_text) do

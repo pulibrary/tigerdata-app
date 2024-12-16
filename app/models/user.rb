@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 
+  attr_accessor :mediaflux_session
+
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
@@ -38,27 +40,38 @@ class User < ApplicationRecord
   end
 
   def clear_mediaflux_session(session)
+    Rails.logger.debug("!!!!!!! Clearing Mediaflux session !!!!!!!!")
     @mediaflux_session = nil
     session[:mediaflux_session] = nil
   end
 
   def mediaflux_from_session(session)
+    logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
     if session[:mediaflux_session].blank?
-      session[:mediaflux_session] = mediaflux_session
-    else
-      @mediaflux_session = session[:mediaflux_session]
+      logger.debug("!!!! Creating a new session !!! #{uid}")
+      session[:mediaflux_session] = SystemUser.mediaflux_session
+      session[:active_web_user] = false
     end
+    @active_web_user = session[:active_web_user]
+    @mediaflux_session = session[:mediaflux_session]
   end
 
-  def mediaflux_session
-    @mediaflux_session ||= begin
-                            logon_request = Mediaflux::LogonRequest.new
-                            logon_request.session_token
-                          end
+  def medaiflux_login(token, session)
+    logger.debug("mediaflux session created for #{uid}")
+    logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
+    if logon_request.error?
+      raise "Invalid Logon #{logon_request.response_error}"
+    end
+    @mediaflux_session = logon_request.session_token
+    @active_web_user = true
+    session[:mediaflux_session] = @mediaflux_session
+    session[:active_web_user] = @active_web_user
+    logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
   end
 
   def terminate_mediaflux_session
     return if @mediaflux_session.nil? # nothing to terminate
+    logger.debug "!!!! Terminating mediaflux session"
 
     Mediaflux::LogoutRequest.new(session_token: @mediaflux_session).response_body
     @mediaflux_session = nil

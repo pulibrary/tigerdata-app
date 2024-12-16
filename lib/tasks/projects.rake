@@ -30,6 +30,7 @@ namespace :projects do
     raise "User id must be specified" if uid.blank?
     user = User.find_by(uid:)
     raise "User #{uid} not found" if user.nil?
+    user.mediaflux_from_session({}) # make sure we have the system login
     project_prefix = args[:prefix]
     raise "Project prefix must be specified" if project_prefix.nil?
     number = rand(10_000)
