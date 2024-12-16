@@ -18,8 +18,10 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     requests = FileInventoryRequest.where(project_id: project.id).order(completion_time: :desc)
     if requests.empty?
       "No Downloads"
-    else
+    elsif requests.first.completion_time
       "Prepared #{time_ago_in_words(requests.first.completion_time)} ago"
+    else
+      "Preparing now"
     end
   end
 
