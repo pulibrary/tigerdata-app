@@ -26,10 +26,4 @@ class ActivateProjectJob < ApplicationJob
     }
     Honeybadger.notify(activation_failure_msg, context: honeybadger_context)
   end
-
-  private
-    def mediaflux_session
-      logon_request = Mediaflux::LogonRequest.new
-      logon_request.session_token
-    end
 end

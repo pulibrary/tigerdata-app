@@ -410,7 +410,7 @@ For example:
   
   **Note 2** Our version of mediaflux in docker does not have this command. The xtoshell command does exist on td-meta1
   ```
-  session_id = User.first.mediaflux_session
+  session_id = SystemUser.mediaflux_session
   project = Project.first
   project_name = project.project_directory
   project_namespace = "#{project_name}NS"

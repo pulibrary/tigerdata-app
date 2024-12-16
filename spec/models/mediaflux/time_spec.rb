@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Time do
     let(:project) { FactoryBot.build :project_with_doi }
-    let(:current_user) { FactoryBot.create(:user, uid: "jh1234") }
+    let(:current_user) { FactoryBot.create(:user, uid: "jh1234", mediaflux_session: SystemUser.mediaflux_session) }
     let(:docker_response) { "Etc/UTC" }
     let(:ansible_response) { "America/Chicago" }
     subject(:instance) { described_class.new }

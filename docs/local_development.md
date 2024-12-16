@@ -127,7 +127,7 @@ You can also utilize the TestAssetGenerator in the rails console to add assets t
 rails c
   user = User.first
   project = Project.last
-  project.save_in_mediaflux(session_id: user.mediaflux_session)
+  project.save_in_mediaflux(session_id: SystemUser.mediaflux_session)
   gen = TestAssetGenerator.new(project_id: project.id,user:, levels: 2, directory_per_level: 2,file_count_per_directory: 20)
   gen.generate
 ```
@@ -137,7 +137,7 @@ You can also utilize `Mediaflux::TestAssetCreateRequest` to generate some assets
 ```
 rails c
   parent_id = 1234 # collection id from mediaflux
-  gen = Mediaflux::TestAssetCreateRequest.new(session_token: User.first.mediaflux_session, parent_id:, count: 5, pattern: "test_asset_" )
+  gen = Mediaflux::TestAssetCreateRequest.new(session_token: SystemUser.mediaflux_session, parent_id:, count: 5, pattern: "test_asset_" )
   gen.resolve
 ```
 

@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create(:user, uid: "abc123") }
+  let(:user) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#sponsored_projects" do
     let(:sponsor) { FactoryBot.create(:user, uid: "hc1234") }
@@ -166,7 +166,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#file_list" do
-    let(:manager) { FactoryBot.create(:user, uid: "hc1234") }
+    let(:manager) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) do
       project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
       project.mediaflux_id = nil
@@ -209,7 +209,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#save_in_mediaflux" do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) { FactoryBot.create(:project_with_doi) }
     it "calls ProjectMediaflux to create the project and save the id" do
       expect(project.mediaflux_id).to be nil
@@ -282,7 +282,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#create!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
-    let(:current_user) { FactoryBot.create(:user) }
+    let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) { FactoryBot.create(:project) }
 
     before do
@@ -331,7 +331,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#approve!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
-    let(:current_user) { FactoryBot.create(:user) }
+    let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) { FactoryBot.create(:project) }
 
     before do
@@ -370,7 +370,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#activate!" do
   let(:project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
-  let(:current_user) { FactoryBot.create(:user) }
+  let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_metadata) {project.metadata_model}
   after do
     Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve

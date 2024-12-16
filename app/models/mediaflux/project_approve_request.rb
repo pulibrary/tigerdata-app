@@ -4,8 +4,8 @@ module Mediaflux
   #
   # @example
   #  project = Project.first
-  #  project.save_in_mediaflux(session_id: User.first.mediaflux_session)
-  #  approve_req = Mediaflux::ProjectApproveRequest.new(session_token: User.first.mediaflux_session, project:)
+  #  project.save_in_mediaflux(session_id: SystemUser.mediaflux_session)
+  #  approve_req = Mediaflux::ProjectApproveRequest.new(session_token: SystemUser.mediaflux_session, project:)
   #  approve_req.resolve
   #
   class ProjectApproveRequest < Request

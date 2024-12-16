@@ -32,7 +32,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
     end
 
     context "when the client is authenticated" do
-      let(:user) { FactoryBot.create(:user, uid: "pul123") }
+      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:title) { "a title" }
       let(:project_directory) { "/test-project" }
 
