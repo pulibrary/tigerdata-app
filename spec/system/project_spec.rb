@@ -228,7 +228,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content("/td-test-001/")
         click_on "Submit"
         click_on "Return to Dashboard"
-        byebug
         find(:xpath, "//h2[text()='My test project']").click
         expect(page).to have_content "My test project"
         click_on "Details"
