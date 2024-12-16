@@ -73,27 +73,29 @@ RSpec.describe ProjectMetadata, type: :model do
     end
 
     it "parses the read only users" do
-      hash[:ro_user_1] = "abc"
-      hash[:ro_user_counter] = "1"
+      hash[:data_user_1] = "abc"
+      hash[:data_user_1_read_access] = "read-only"
+      hash[:data_user_counter] = "1"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.ro_users).to eq(["abc"])
     end
 
     it "parses empty read only users" do
-      hash[:ro_user_counter] = "0"
+      hash[:data_user_counter] = "0"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.ro_users).to eq([])
     end
 
     it "parses the read/write users" do
-      hash[:rw_user_1] = "rwx"
-      hash[:rw_user_counter] = "1"
+      hash[:data_user_1] = "rwx"
+      hash[:data_user_1_read_access] = "read-write"
+      hash[:data_user_counter] = "1"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.rw_users).to eq(["rwx"])
     end
 
     it "parses empty read/write users" do
-      hash[:rw_user_counter] = "0"
+      hash[:data_user_counter] = "0"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.rw_users).to eq([])
     end
