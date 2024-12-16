@@ -16,12 +16,8 @@ class MediafluxChannel < ApplicationCable::Channel
 
   private
 
-    def superuser
-      User.find_by(superuser: true)
-    end
-
     def session_token
-      superuser.mediaflux_session
+      SystemUser.mediaflux_session
     end
 
     def version_request

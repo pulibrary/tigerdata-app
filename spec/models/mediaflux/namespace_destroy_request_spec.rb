@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
   let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd") }
   let(:namespace) { "#{valid_project.project_directory_short}NS".strip.gsub(/[^A-Za-z\d]/, "-") }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor) }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_id) { sponsor_user.mediaflux_session }
   context "when a namespace exists" do
     it "deletes a namespace and everything inside of it" do

@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
-  let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin") }
-  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:pending_text) do
@@ -126,6 +127,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
       end
 
+      it "prevents sponsor users from editing the directory field" do
+        expect(page.find_all("#project_directory[readonly]").count).to eq(1)
+      end
+
       it "loads existing Data Sponsor" do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       end
@@ -160,6 +165,44 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "redirects the user back to the project show page" do
         click_on "Cancel"
         expect(page).to have_content(project_in_mediaflux.title)
+      end
+    end
+
+    context "when authenticated as a superuser" do
+      context "when the project is not persisted within Mediaflux" do
+        before do
+          project_not_in_mediaflux
+          project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+          project_not_in_mediaflux.save!
+          project_not_in_mediaflux.reload
+
+          sign_in superuser
+
+          visit "/projects/#{project_not_in_mediaflux.id}/edit"
+        end
+
+        it "permits superusers to edit the directory field" do
+          expect(page.find_all("#project_directory[readonly]").count).to eq(0)
+        end
+      end
+    end
+
+    context "when authenticated as a sysadmin user" do
+      context "when the project is not persisted within Mediaflux" do
+        before do
+          project_not_in_mediaflux
+          project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+          project_not_in_mediaflux.save!
+          project_not_in_mediaflux.reload
+
+          sign_in sysadmin_user
+
+          visit "/projects/#{project_not_in_mediaflux.id}/edit"
+        end
+
+        it "permits sysadmin users to edit the directory field" do
+          expect(page.find_all("#project_directory[readonly]").count).to eq(0)
+        end
       end
     end
   end
@@ -324,7 +367,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
         fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         select "Research Data and Scholarship Services", from: "departments"
-        fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
+        project_directory = FFaker::Name.name.tr(" ", "_")
+        fill_in "project_directory", with: project_directory
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
         expect(page.find_all("input:invalid").count).to eq(0)

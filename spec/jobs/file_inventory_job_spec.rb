@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
   include ActiveJob::TestHelper
 
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
 
   before do

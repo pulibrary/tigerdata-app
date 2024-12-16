@@ -9,7 +9,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     it "redirects to home page with notice" do
       allow(User).to receive(:from_cas) { project_sponsor }
       get :cas
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(mediaflux_passthru_path)
     end
   end
 

@@ -34,6 +34,17 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
         expect(presenter.latest_file_list_time).to eq("Prepared 1 day ago")
       end
     end
+
+    context "when download in progress exist" do
+      before do
+        FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: UserRequest::PENDING,
+                                     request_details: { project_title: project.title }, completion_time: nil)
+      end
+
+      it "returns the time ago" do
+        expect(presenter.latest_file_list_time).to eq("Preparing now")
+      end
+    end
   end
 
   describe "#last_activity" do

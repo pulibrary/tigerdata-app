@@ -10,8 +10,8 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
   describe "#id" do
 
     it "sends the metadata to the server" do
-      data_user_ro = FactoryBot.create :user
-      data_user_rw = FactoryBot.create :user
+      data_user_ro = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
+      data_user_rw = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
       session_id =  data_user_ro.mediaflux_session
 
       created_on = Time.current.in_time_zone("America/New_York").iso8601

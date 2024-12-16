@@ -6,7 +6,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:root_ns) { Rails.configuration.mediaflux["api_root_collection_namespace"] }        # /td-test-001
   let(:parent_collection) { Rails.configuration.mediaflux["api_root_collection_name"] }   # tigerdata
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:approved_project2) { FactoryBot.create(:approved_project) }
 
@@ -18,12 +18,11 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   describe "#id" do
     it "creates a collection on the server" do
       Mediaflux::RootCollectionAsset.new(session_token: session_token, root_ns: root_ns, parent_collection: parent_collection).create
-      session_id = User.new.mediaflux_session
 
-      create_request = described_class.new(session_token: session_id, name: "testasset", namespace: Rails.configuration.mediaflux[:api_root_ns])
+      create_request = described_class.new(session_token: session_token, name: "testasset", namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
-      req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
+      req = Mediaflux::AssetMetadataRequest.new(session_token: session_token, id: create_request.id)
       metadata = req.metadata
       expect(metadata[:name]).to eq("testasset")
     end

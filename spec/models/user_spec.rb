@@ -214,4 +214,20 @@ RSpec.describe User, type: :model do
       expect(user).to be_eligible_sysadmin
     end
   end
+
+  describe "#mediaflux_from_session" do
+    let(:user) { described_class.new }
+    before do
+      allow(SystemUser).to receive(:mediaflux_session).and_return("111system")
+    end
+    it "loads the mediaflux session from the system user" do
+      expect(user.mediaflux_from_session({})).to eq("111system")
+      expect(user.mediaflux_session).to eq("111system")
+    end
+
+    it "loads the mediaflux session from the session when present" do
+      expect(user.mediaflux_from_session({ mediaflux_session: "222session" })).to eq("222session")
+      expect(user.mediaflux_session).to eq("222session")
+    end
+  end
 end

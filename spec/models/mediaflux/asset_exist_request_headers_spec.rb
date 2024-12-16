@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:namespace_root) { Rails.configuration.mediaflux["api_root_collection_namespace"] }
 
   context "when we give a user to the class" do
