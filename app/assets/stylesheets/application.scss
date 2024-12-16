@@ -64,7 +64,7 @@ body {
   background-color: $gray-10;
   padding: 0rem 0.375em;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
 }
 
 
@@ -111,4 +111,35 @@ body {
 
 .autocomplete-error {
   color: var(--Secondary-Red-Dark, #b00002);
+}
+
+
+/* Used for the delete button when adding users */
+.transparent-button {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+/* Data users in the Edit form */
+#data-users-table {
+  border-color: gray;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#data-users-table > thead {
+  background-color: lightgray;
+}
+
+.added-user-textbox {
+  border: none !important;
+  background-color: white !important;
+}
+
+.delete-user-row {
+  color: red;
 }
