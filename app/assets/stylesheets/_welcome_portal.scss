@@ -6,7 +6,7 @@
     display: inline-flex;
     width: 95vw;
     margin-top: -5em;
-    height: 900px;
+    margin-bottom: -5em;
 }
 
 .welcome-text {
@@ -14,7 +14,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    min-width: 20em;
+    min-width: 30em;
+    padding-right: 7.5em;
   }
 
   .LO-h1 {
