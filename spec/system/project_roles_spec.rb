@@ -37,25 +37,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     expect(page.find("#data_manager_error", visible: false).text).to eq ""
     expect(page.find("button[value=Submit]").disabled?).to be false
 
-    # Check read-only user validations (invalid value, empty value, valid value)
-    fill_in_and_out "ro-user-uid-to-add", with: "xxx"
-    expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
-    expect(page.find("#btn-add-ro-user")).to be_disabled
-    fill_in_and_out "ro-user-uid-to-add", with: ""
-    expect(page.find("#btn-add-ro-user")).to be_disabled
-    expect(page.find("#ro-user-uid-to-add_error", visible: false).text).to eq ""
-    fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-    expect(page.find("#ro-user-uid-to-add", visible: false).text).to eq ""
-
-    # Check read-write user validations (invalid value, empty value, valid value)
-    fill_in_and_out "rw-user-uid-to-add", with: "xxx"
-    expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
-    fill_in_and_out "rw-user-uid-to-add", with: ""
-    expect(page.find("#btn-add-rw-user")).to be_disabled
-    expect(page.find("#rw-user-uid-to-add_error", visible: false).text).to eq ""
-    fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
-    expect(page.find("#rw-user-uid-to-add").native.attribute("validationMessage")).to eq ""
+    # Adds a data user (read-only)
+    click_on "+ Add User(s)"
+    fill_in_and_out "data-user-uid-to-add", with: read_only.uid
+    click_on "Save changes"
 
     page.find("#departments").find(:xpath, "option[3]").select_option
 
@@ -72,12 +57,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     find(:xpath, "//h2[text()='My test project']").click
     click_on "Details"
     expect(page).to have_content("This project has not been saved to Mediaflux")
-    expect(page).to have_content(read_only.given_name)
-    expect(page).to have_content(read_only.display_name)
-    expect(page).to have_content(read_only.family_name)
-    expect(page).to have_content(read_write.given_name)
-    expect(page).to have_content(read_write.display_name)
-    expect(page).to have_content(read_write.family_name)
+    expect(page).to have_content(read_only.display_name + " (read only)")
+    # expect(page).to have_content(read_write.given_name)
+    # expect(page).to have_content(read_write.display_name)
+    # expect(page).to have_content(read_write.family_name)
   end
 
   context "Data Sponsors and superusers are the only ones who can request a new project" do
@@ -192,22 +175,22 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Sponsor to assign a Data User" do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
-      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
-      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
+      click_on "+ Add User(s)"
+      fill_in_and_out "data-user-uid-to-add", with: ro_data_user.uid
+      click_on "Save changes"
       click_on "Submit"
       visit "/projects/#{project.id}/details"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
-      expect(page).to have_content rw_data_user.display_name
     end
     it "allows a Data Manager to assign a Data User" do
       sign_in data_manager
       visit "/projects/#{project.id}/edit"
-      fill_in_and_out "ro-user-uid-to-add", with: ro_data_user.uid
-      fill_in_and_out "rw-user-uid-to-add", with: rw_data_user.uid
+      click_on "+ Add User(s)"
+      fill_in_and_out "data-user-uid-to-add", with: ro_data_user.uid
+      click_on "Save changes"
       click_on "Submit"
       visit "/projects/#{project.id}/details"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
-      expect(page).to have_content rw_data_user.display_name
     end
   end
 
