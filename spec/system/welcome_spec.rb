@@ -19,12 +19,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
-    let(:docker_response) { "Mediaflux: 4.16.071" }
-    let(:ansible_response) { "Mediaflux: 4.16.047" }
+    let(:docker_response) { "Mediaflux: 4.16.082" }
+    let(:ansible_response) { "Mediaflux: 4.16.071" }
 
     before do
       FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
@@ -59,9 +59,17 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).not_to have_content "project 222"
         expect(page).to have_content "Data User"
         expect(page).to have_content "project 333"
-        expect(page).to have_content "Activity"
         # The current user has no access to this project so we don't expect to see it
         expect(page).not_to have_content "project 444"
+      end
+
+      it "shows the latests downloads available" do
+        approved_project = Project.users_projects(current_user).first
+        FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id).perform_now
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content "Latest Downloads"
+        expect(page).to have_content "Expires in 7 days"
       end
 
       context "the user signed in is an eligible sponsor" do
@@ -72,7 +80,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           visit "/"
           expect(page).to have_content "Sponsor"
           expect(page).to have_content "project 111"
-          expect(page).to have_content "Activity"
           expect(page).not_to have_content "Data Manager"
           expect(page).not_to have_content "project 222"
           expect(page).to have_content "Data User"
@@ -98,7 +105,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).to have_content "project 222"
           expect(page).to have_content "Data User"
           expect(page).to have_content "project 333"
-          expect(page).to have_content "Activity"
           # The current user has no access to this project so we don't expect to see it
           expect(page).not_to have_content "project 444"
         end
@@ -136,6 +142,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         click_link no_projects_user.uid.to_s
         expect(page).to have_content "Log out"
       end
+
+      it "shows no downloads available" do
+        sign_in no_projects_user
+        visit "/"
+        expect(page).to have_content("No downloads available")
+      end
     end
 
     context "with the superuser role" do
@@ -156,7 +168,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
-        expect(page).to have_content("Activity")
       end
     end
 
@@ -179,7 +190,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).not_to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
-        expect(page).to have_content("Activity")
       end
       it "displays sponsored projects when emulating a data manager" do
         sign_in current_user
@@ -192,7 +202,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           expect(page).to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
-        expect(page).to have_content("Activity")
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast') # false positives

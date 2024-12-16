@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectApproveRequest, type: :model, connect_to_mediaflux: true do
-  let(:approver) { FactoryBot.create :sysadmin }
+  let(:approver) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
   let(:session_id) { approver.mediaflux_session }
   let(:approved_project) do
     project = FactoryBot.create :approved_project

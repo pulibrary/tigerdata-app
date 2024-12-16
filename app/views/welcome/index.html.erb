@@ -4,26 +4,7 @@
     Please log in.
     <% else %>
 
-    <div class="welcome-pane">
-        <h1>Welcome, <%= current_user.given_name %>!</h1>
-        <div class="project-button">
-            <%if current_user.eligible_sponsor?%>
-            <%= link_to "Create new project", new_project_path(), class: "btn btn-dark btn-sm" %>
-            <%end%>
-        </div>
-    </div>
-    <div id="dashboard-nav">
-    <button id="dash-projects" class="tab-nav"> Projects </button>
-    <button id="dash-activity" class="tab-nav"> Activity </button>
-    <button id="dash-admin" class="tab-nav"> Administration </button>
-    </div>
-        <% if @dash_session == "project"%>
-          <%= render partial: "projects_listing", locals: { projects: @dashboard_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing" } %>
-        <% elsif @dash_session == "activity" %>
-          <%= render partial: "recent_activity" %>
-        <% elsif @dash_session == "admin" %>
-          <%= render partial: "admin_listing" %>
-    <% end %>
+      <%= render partial: "logged_in" %>
     <% end %>
 </div>
 

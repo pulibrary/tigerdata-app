@@ -44,13 +44,6 @@ class WelcomeController < ApplicationController
     end
   end
 
-  def dash_activity
-    return if current_user.nil? || current_user.id.nil?
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
-  end
-
   def dash_admin
     return if current_user.nil? || current_user.id.nil?
     if params.key?("dashtab")

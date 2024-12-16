@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   let(:subject) { described_class.new(user:, number: 1, project_prefix: 'test-project') }
-  let(:user) { FactoryBot.create :user }
+  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session}
 
   describe "#generate" do
     it "creates a project in mediaflux" do

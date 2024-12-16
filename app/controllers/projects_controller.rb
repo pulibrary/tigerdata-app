@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  
+
   before_action :set_breadcrumbs
 
   def new
@@ -70,7 +70,7 @@ class ProjectsController < ApplicationController
     render :new
   end
 
-  def show
+  def details
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Details")
     project
@@ -113,6 +113,9 @@ class ProjectsController < ApplicationController
     @approved_storage_expectations = @storage_expectations[:approved]
 
     @project_purpose = @project_metadata[:project_purpose]
+
+
+    @project_session = "details"
 
 
     respond_to do |format|
@@ -172,9 +175,9 @@ class ProjectsController < ApplicationController
   def confirmation; end
   def revision_confirmation; end
 
-  def contents
+  def show
     add_breadcrumb(project.title, project_path)
-    add_breadcrumb("Contents", project_contents_path)
+    add_breadcrumb("Contents")
     project
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
@@ -188,6 +191,7 @@ class ProjectsController < ApplicationController
     @files.sort_by!(&:path)
     @project = ProjectShowPresenter.new(project)
 
+    @project_session = "content"
   end
 
   def project_job_service

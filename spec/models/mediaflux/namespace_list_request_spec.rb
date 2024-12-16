@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceListRequest, connect_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "#metadata" do

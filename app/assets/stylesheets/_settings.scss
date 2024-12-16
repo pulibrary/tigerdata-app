@@ -62,12 +62,10 @@
 
   #dashboard-nav{
     @include tab-nav;
-    margin-top: 3em;
-    margin-left: 1em;
-    margin-bottom: 1em;
-
-    border-bottom: solid;
-    border-color: #D0D0D0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
   }
 
   }
@@ -77,13 +75,19 @@
 
 
 #show {
+
+  #project-nav{
+    @include tab-nav;
+    margin-bottom: 1em;
+    border-bottom: solid;
+    border-color: #D0D0D0;
+  }
+
   .pending-project {
     margin-left: 5em;
     padding-bottom: 2em;
   }
-  .details {
-    margin-left: 2em;
-  }
+  
   .btn.btn-return.btn-sm {
     background-color: white;
     border-color: #0d6efd;
@@ -143,6 +147,12 @@
 }
 
 #content {
+  #project-nav{
+    @include tab-nav;
+    border-bottom: solid;
+    border-color: #D0D0D0;
+  }
+
   #file-list {
     width: 90%;
     border: 1px solid gray;

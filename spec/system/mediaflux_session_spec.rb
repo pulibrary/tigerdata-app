@@ -8,20 +8,25 @@ RSpec.describe "Mediaflux Sessions", type: :system do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:project) { FactoryBot.create(:project, mediaflux_id: "abc123") }
 
-  before do
-    sign_in sponsor_user
-  end
+  context "user is signed in" do
+    let(:original_session) { SystemUser.mediaflux_session }
+    let(:new_session) { SystemUser.mediaflux_session }
+    let(:mediaflux_logon) { instance_double Mediaflux::LogonRequest, error?: false, session_token: new_session }
 
-  it "reconnects to mediaflux after the session ends", connect_to_mediaflux: true do
-    original_session = sponsor_user.mediaflux_session
+    before do
+      sign_in sponsor_user
+      allow_any_instance_of(ActionDispatch::Request::Session).to receive(:[]).and_call_original
+      allow_any_instance_of(ActionDispatch::Request::Session).to receive(:[]).with(:mediaflux_session).and_return(original_session)
+      allow_any_instance_of(ActionDispatch::Request::Session).to receive(:[]).with(:active_web_user).and_return(true)
+    end
 
-    # logout the session so we get an error and need to reset the session
-    Mediaflux::LogoutRequest.new(session_token: original_session).resolve
+    it "connects to mediaflux once", connect_to_mediaflux: true do
+      visit root_path
 
-    expect { visit project_contents_path(project) }.not_to raise_error
-    expect(page).to have_content("Total Files: 0")
+      expect { visit project_path(project) }.not_to raise_error
+      expect(page).to have_content("Total Files: 0")
 
-    # a new session got automatically connected for the user in the application controller
-    expect(sponsor_user.mediaflux_session).not_to eq(original_session)
+      expect(sponsor_user.mediaflux_session).to eq(original_session)
+    end
   end
 end

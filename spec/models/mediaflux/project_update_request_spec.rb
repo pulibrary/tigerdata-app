@@ -3,7 +3,8 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
-  let(:user) { FactoryBot.create(:user) }
+  let(:session_token) { SystemUser.mediaflux_session }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: session_token) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
@@ -14,7 +15,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
     end
 
     it "passes the metadata values in the request" do
-      update_request = described_class.new(session_token: user.mediaflux_session, project: approved_project)
+      update_request = described_class.new(session_token: session_token, project: approved_project)
       update_request.resolve
       expect(update_request.error?).to be false
       expect(update_request.response_body).to include(mediaflux_response)
@@ -24,7 +25,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
       it "sends the metadata to the server", connect_to_mediaflux: true do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user
-        session_id = data_user_ro.mediaflux_session
+        session_id = session_token
         updated_on = Time.current.in_time_zone("America/New_York").iso8601.to_s
         created_on = Time.current.in_time_zone("America/New_York").advance(days: -1).iso8601.to_s
         project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,

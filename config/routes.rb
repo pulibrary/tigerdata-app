@@ -23,14 +23,13 @@ Rails.application.routes.draw do
   get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
   post "dash_classic", to: "welcome#dash_classic", as: :dash_classic
   post "dash_project", to: "welcome#dash_project", as: :dash_project
-  post "dash_activity", to: "welcome#dash_activity", as: :dash_activity
   post "dash_admin", to: "welcome#dash_admin", as: :dash_admin
 
   resources :organizations
   resources :projects
   get "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
-  get "projects/:id/contents", to: "projects#contents", as: :project_contents
+  get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
@@ -44,4 +43,6 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => "/cable"
+  get "mediaflux_extra", to: "users/mediaflux_callbacks#cas", as: :mediaflux_extra
+  get "mediaflux_passthru", to: "users/mediaflux_callbacks#passthru", as: :mediaflux_passthru
 end

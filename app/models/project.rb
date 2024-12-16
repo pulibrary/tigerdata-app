@@ -287,7 +287,7 @@ class Project < ApplicationRecord
         iterator_resp = iterator_req.result
         lines = files_from_iterator(iterator_resp)
         file.write(lines.join("\r\n") + "\r\n")
-        break if iterator_resp[:complete]
+        break if iterator_resp[:complete] || iterator_req.error?
       end
     end
 

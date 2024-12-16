@@ -32,7 +32,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
     end
 
     context "when the client is authenticated" do
-      let(:user) { FactoryBot.create(:user, uid: "pul123") }
+      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:title) { "a title" }
       let(:project_directory) { "/test-project" }
 
@@ -117,7 +117,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
           expect(response).to be_redirect
           expect(Project.all).not_to be_empty
           new_project = Project.last
-          get(project_path(new_project))
+          get(project_details_path(new_project))
 
           expect(response.body).to include("Anonymous Foo (read only), Anonymous Qux (read only), Anonymous Zed")
         end
