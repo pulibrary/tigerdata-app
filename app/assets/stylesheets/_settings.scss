@@ -78,10 +78,7 @@
 
   #project-nav{
     @include tab-nav;
-    margin-top: 3em;
-    margin-left: 1em;
     margin-bottom: 1em;
-
     border-bottom: solid;
     border-color: #D0D0D0;
   }
@@ -90,9 +87,7 @@
     margin-left: 5em;
     padding-bottom: 2em;
   }
-  .details {
-    margin-left: 2em;
-  }
+  
   .btn.btn-return.btn-sm {
     background-color: white;
     border-color: #0d6efd;
@@ -154,8 +149,6 @@
 #content {
   #project-nav{
     @include tab-nav;
-    margin-bottom: 1em;
-
     border-bottom: solid;
     border-color: #D0D0D0;
   }

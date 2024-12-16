@@ -36,6 +36,11 @@ body {
 
     .main-content {
       min-height:100vh;
+      display: flex;
+      padding: 3rem 7.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.625rem;
     }
 
     /* removes horizontal scroll */
