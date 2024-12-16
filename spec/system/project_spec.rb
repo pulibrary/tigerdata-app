@@ -255,6 +255,21 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Details"
         expect(page).to have_content read_write.display_name
       end
+
+      it "validates that the user entered is valid" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "Create new project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in_and_out "data_manager", with: data_manager.uid
+        click_on "+ Add User(s)"
+        fill_in_and_out "data-user-uid-to-add", with: "notuser"
+        # shows the error
+        expect(page.find("#data-user-uid-to-add_error").text).to eq "Invalid value entered"
+        # gets rid of the error
+        fill_in_and_out "data-user-uid-to-add", with: read_only.uid
+        expect(page.find("#data-user-uid-to-add_error", visible: false).text).to eq ""
+      end
     end
 
     context "when a department has not been selected" do
@@ -289,27 +304,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       end
     end
 
-    context "with an invalid data users" do
-      it "does not allow the user to create a project" do
-        sign_in sponsor_user
-        visit "/"
-        click_on "Create new project"
-        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-        fill_in_and_out "data_manager", with: data_manager.uid
-        #
-        # TODO: We need to make sure we have a test for this
-        #
-        # fill_in_and_out "ro-user-uid-to-add", with: "xxx"         KEEP THIS
-        # expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
-
-        # fill_in_and_out "rw-user-uid-to-add", with: "zzz"         KEEP THIS
-        # expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
-        fill_in "project_directory", with: "test_project"
-        fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
-        # expect(page.find("button[value=Submit]")).to be_disabled
-      end
-    end
     context "upon cancelation" do
       it "redirects the user back to the dashboard" do
         sign_in sponsor_user
