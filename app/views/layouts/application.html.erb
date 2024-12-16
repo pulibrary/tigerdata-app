@@ -35,11 +35,9 @@
     <%= render partial: 'shared/emulator' %>
 
 
-<div class="container-fluid main-content">
-  <div class="row">
-    <div class="col-1 gutter"></div>
-
-    <div class="col-10 center-column">
+<div class="container-fluid">
+  <div class="row main-content">
+    <div class="col-12 center-column">
       <% if flash[:notice] or flash[:alert] %>
         <div class="row">
           <div class="col">
@@ -59,8 +57,6 @@
         </div>
       </div>
     </div>
-
-    <div class="col-1 gutter"></div>
   </div>
 </div>
 
