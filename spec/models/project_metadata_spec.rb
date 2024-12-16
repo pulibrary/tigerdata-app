@@ -86,8 +86,9 @@ RSpec.describe ProjectMetadata, type: :model do
     end
 
     it "parses the read/write users" do
-      hash[:rw_user_1] = "rwx"
-      hash[:rw_user_counter] = "1"
+      hash[:data_user_1] = "rwx"
+      hash[:data_user_1_read_access] = "read-write"
+      hash[:data_user_counter] = "1"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.rw_users).to eq(["rwx"])
     end
