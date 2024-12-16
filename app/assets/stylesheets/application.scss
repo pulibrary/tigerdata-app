@@ -27,6 +27,7 @@
 @import "settings";
 @import "styles_preview";
 @import "typography";
+@import "welcome_portal";
 
 
 body {
@@ -59,7 +60,7 @@ body {
   background-color: $gray-10;
   padding: 0rem 0.375em;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
 }
 
 

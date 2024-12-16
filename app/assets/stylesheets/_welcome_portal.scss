@@ -1,0 +1,123 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+.welcome-portal {
+    display: inline-flex;
+    width: 90rem;
+    height: 56.25rem;
+}
+
+.welcome-text {
+    display: flex;
+    width: 30.5rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .LO-h1 {
+    margin-bottom: 0.75rem;
+
+    align-self: stretch;
+    color: var(--Neutral-Black, #121212);
+
+    /* Heading 1 */
+    font-family: "Libre Franklin";
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 3rem; /* 120% */
+  }
+
+  .LO-h2 {
+    margin-bottom: 0.5rem;
+
+    align-self: stretch;
+    color: var(--Neutral-Dark-Gray, #717171);
+
+    /* Heading 3 */
+    font-family: "Libre Franklin";
+    font-size: 1.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 2rem; /* 114.286% */
+  }
+
+  .LO-p {
+    color: #000;
+
+    /* Body */
+    font-family: "Libre Franklin";
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.6875rem; /* 150% */
+  }
+
+  .LO-b {
+    color: var(--Neutral-White, #FFF);
+    text-align: center;
+
+    /* Body S Bold */
+    font-family: "Libre Franklin";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.5rem; /* 150% */
+
+    display: flex;
+    padding: 0.5rem 1.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 0.25rem;
+    background: var(--Neutral-Black, #121212);
+  }
+
+  .LO-c {
+    margin-top: 2rem;
+    color: var(--Neutral-Dark-Gray, #717171);
+
+    /* Body XXS */
+    font-family: "Libre Franklin";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.125rem; /* 150% */
+
+    /* Body XXS */
+    font-family: "Libre Franklin";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.125rem;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+  }
+
+  .welcome-contact-us{
+    color: var(--Neutral-Dark-Gray, #717171);
+
+    /* Body XXS */
+    font-family: "Libre Franklin";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.125rem; /* 150% */
+
+    text-decoration: underline;
+  }
+
+  .welcome-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1 0 0;
+    align-self: stretch;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.28) 100%), url(<path-to-image>) lightgray 50% / cover no-repeat;
+  }
