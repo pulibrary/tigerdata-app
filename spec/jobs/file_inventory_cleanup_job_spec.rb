@@ -12,7 +12,7 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job d
 
   describe "#perform_now" do
     it "deletes any files older than 7 days" do
-      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
       req.completion_time = eight_days_ago
       req.save
 
@@ -22,7 +22,7 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job d
     end
 
     it "marks the file inventory request stale" do
-      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id)
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
       req.completion_time = eight_days_ago
       req.save
 
