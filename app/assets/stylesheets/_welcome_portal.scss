@@ -4,16 +4,17 @@
 
 .welcome-portal {
     display: inline-flex;
-    width: 90rem;
-    height: 56.25rem;
+    width: 95vw;
+    margin-top: -5em;
+    height: 900px;
 }
 
 .welcome-text {
     display: flex;
-    width: 30.5rem;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    min-width: 20em;
   }
 
   .LO-h1 {
@@ -119,5 +120,4 @@
     align-items: center;
     flex: 1 0 0;
     align-self: stretch;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.28) 100%), url(<path-to-image>) lightgray 50% / cover no-repeat;
   }
