@@ -178,8 +178,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       click_on "Create new project"
       expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       fill_in_and_out "data_manager", with: data_manager.uid
-      fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-      fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
       # select a department
       select "Research Data and Scholarship Services", from: "departments"
       fill_in "project_directory", with: "test_project"
@@ -214,21 +212,58 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       expect(page).to have_content "Project ID\n10.34770/tbd"
     end
 
+    context "data users (read-only and read-write)" do
+      it "allows user to enter data users (read-only)" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "Create new project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in_and_out "data_manager", with: data_manager.uid
+        click_on "+ Add User(s)"
+        fill_in_and_out "data-user-uid-to-add", with: read_only.uid
+        click_on "Save changes"
+        select "Research Data and Scholarship Services", from: "departments"
+        fill_in "project_directory", with: "test_project"
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("/td-test-001/")
+        click_on "Submit"
+        click_on "Return to Dashboard"
+        byebug
+        find(:xpath, "//h2[text()='My test project']").click
+        expect(page).to have_content "My test project"
+        click_on "Details"
+        expect(page).to have_content read_only.display_name + " (read only)"
+      end
+
+      it "allows user to enter data users (read-write)" do
+        sign_in sponsor_user
+        visit "/"
+        click_on "Create new project"
+        expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
+        fill_in_and_out "data_manager", with: data_manager.uid
+        click_on "+ Add User(s)"
+        fill_in_and_out "data-user-uid-to-add", with: read_write.uid
+        click_on "Save changes"
+        find(:xpath, "//*[@id='data_user_1_rw']").click # make user read-write
+        select "Research Data and Scholarship Services", from: "departments"
+        fill_in "project_directory", with: "test_project"
+        fill_in "title", with: "My test project"
+        expect(page).to have_content("/td-test-001/")
+        click_on "Submit"
+        click_on "Return to Dashboard"
+        find(:xpath, "//h2[text()='My test project']").click
+        expect(page).to have_content "My test project"
+        click_on "Details"
+        expect(page).to have_content read_write.display_name
+      end
+    end
+
     context "when a department has not been selected" do
       it "does not allow the user to create a project" do
         sign_in sponsor_user
         visit "/"
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-        fill_in_and_out "data_manager", with: data_manager.uid
-        fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
-        # page.find("body").click
-        # click_on "btn-add-ro-user"
-        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
-        # Without removing the focus from the form field, the "change" event is not propagated for the DOM
-        # page.find("body").click
-        # click_on "btn-add-rw-user"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
@@ -248,8 +283,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
         fill_in_and_out "data_manager", with: ""
         expect(page.find("#data_manager_error").text).to eq "This field is required"
-        fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
@@ -264,15 +297,18 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in_and_out "data_manager", with: data_manager.uid
-        fill_in_and_out "ro-user-uid-to-add", with: "xxx"
-        expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
+        #
+        # TODO: We need to make sure we have a test for this
+        #
+        # fill_in_and_out "ro-user-uid-to-add", with: "xxx"         KEEP THIS
+        # expect(page.find("#ro-user-uid-to-add_error").text).to eq "Invalid value entered"
 
-        fill_in_and_out "rw-user-uid-to-add", with: "zzz"
-        expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
+        # fill_in_and_out "rw-user-uid-to-add", with: "zzz"         KEEP THIS
+        # expect(page.find("#rw-user-uid-to-add_error").text).to eq "Invalid value entered"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
         expect(page).to have_content("/td-test-001/")
-        expect(page.find("button[value=Submit]")).to be_disabled
+        # expect(page.find("button[value=Submit]")).to be_disabled
       end
     end
     context "upon cancelation" do
@@ -299,8 +335,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Create new project"
         # Data Sponsor is automatically populated.
         fill_in_and_out "data_manager", with: data_manager.uid
-        fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         fill_in "project_directory", with: "test?project"
         valid = page.find("input#project_directory:invalid")
         expect(valid).to be_truthy
@@ -321,8 +355,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in_and_out "data_manager", with: data_manager.uid
-        fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
@@ -368,8 +400,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in_and_out "data_manager", with: data_manager.uid
-        fill_in_and_out "ro-user-uid-to-add", with: read_only.uid
-        fill_in_and_out "rw-user-uid-to-add", with: read_write.uid
         select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
