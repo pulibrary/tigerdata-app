@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 
+  attr_accessor :mediaflux_session
+
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
@@ -44,40 +46,27 @@ class User < ApplicationRecord
   end
 
   def mediaflux_from_session(session)
-    logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:cas_user]}  user: #{uid}"
+    logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
     if session[:mediaflux_session].blank?
       logger.debug("!!!! Creating a new session !!! #{uid}")
-      session[:mediaflux_session] = mediaflux_session
-      session[:cas_user] = false
-    end                     
-    @cas_user = session[:cas_user]
-    @mediaflux_session = session[:mediaflux_session]                    
+      session[:mediaflux_session] = SystemUser.mediaflux_session
+      session[:active_web_user] = false
+    end
+    @active_web_user = session[:active_web_user]
+    @mediaflux_session = session[:mediaflux_session]
   end
 
   def medaiflux_login(token, session)
     logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
-    if (logon_request.error?)
+    if logon_request.error?
       raise "Invalid Logon #{logon_request.response_error}"
     end
     @mediaflux_session = logon_request.session_token
-    @cas_user = true
+    @active_web_user = true
     session[:mediaflux_session] = @mediaflux_session
-    session[:cas_user] = @cas_user
-    logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:cas_user]}  user: #{uid}"
-  end
-
-  def mediaflux_session
-    logger.debug "Class session get #{@mediaflux_session} cas: #{@cas_user} user: #{uid}"
-    if @mediaflux_session.nil? && @cas_user # the user's session has timed out.  Now what?
-      raise "Invalid mediflux session!"
-    elsif @mediaflux_session.nil? # utilize the service account
-      logger.debug("mediaflux login for #{uid} not using token")      
-      logon_request = Mediaflux::LogonRequest.new
-      @mediaflux_session = logon_request.session_token
-    end
-
-    @mediaflux_session
+    session[:active_web_user] = @active_web_user
+    logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
   end
 
   def terminate_mediaflux_session

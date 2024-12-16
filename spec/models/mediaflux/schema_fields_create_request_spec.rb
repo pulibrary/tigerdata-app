@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::SchemaFieldsCreateRequest, type: :model, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create :user }
+  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
   let(:required_indexed_field) { { name: "code", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:required_not_indexed_field) { { name: "title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "desc" } }
   let(:optional_field) do

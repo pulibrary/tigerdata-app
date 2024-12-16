@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::TokenCreateRequest, connect_to_mediaflux: true, type: :model do
   subject(:request) { described_class.new(session_token: session_token, domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user) }
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_token) { user.mediaflux_session }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
 

@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
   let(:eight_days_ago) { Time.current.in_time_zone("America/New_York") - 8.days }
 

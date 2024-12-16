@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Users::MediafluxCallbacksController < ApplicationController
   def passthru
+    session[:original_path] = params["path"]
     redirect_to session[:cas_login_url], allow_other_host: true
   end
 
@@ -9,6 +10,6 @@ class Users::MediafluxCallbacksController < ApplicationController
     uri = URI.parse(session[:cas_validation_url])
     token = "#{uri.query}#{ticket}"
     current_user.medaiflux_login(token, session)
-    redirect_to(root_path)
+    redirect_to(session["original_path"] || root_path)
   end
 end

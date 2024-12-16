@@ -7,9 +7,9 @@ Rails.application.config.after_initialize do
       file_config.filename = "public/remove-from-nginx"
     end
     # Mediaflux check
-    # config.add_custom_provider(MediafluxStatus)
+    config.add_custom_provider(MediafluxStatus)
 
-    # allow the UI to load eve if mediaflux is down
+    # allow the UI to load evn if mediaflux is down
     config.providers.last.configuration.critical = false
 
     # Make this health check available at /health

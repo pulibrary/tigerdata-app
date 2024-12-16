@@ -101,6 +101,93 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
+  describe "#content" do
+    it "renders an error when requesting json" do
+      get :show, params: { id: project.id, format: :json }
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
+    end
+
+    context "a signed in user" do
+      let(:user) { FactoryBot.create :user }
+      before do
+        sign_in user
+      end
+
+      it "does not contact mediaflux" do
+        allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
+
+        get :show, params: { id: project.id }
+
+        expect(Mediaflux::QueryRequest).not_to have_received(:new)
+        expect(response.body).to eq("")
+      end
+
+      context "the project is saved to mediaflux", connect_to_mediaflux: true do
+        let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+        let(:project) { FactoryBot.create :project_with_doi }
+        before do
+          project.save_in_mediaflux(user: user)
+        end
+        it "runs a query" do
+          allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
+
+          get :show, params: { id: project.id }
+
+          expect(Mediaflux::QueryRequest).to have_received(:new)
+        end
+        context "the session expires for an active web user" do
+          let(:original_session) { SystemUser.mediaflux_session }
+
+          before do
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(true)
+          end
+          it "gets a new session if the session expires" do
+            Mediaflux::LogoutRequest.new(session_token: original_session).resolve
+
+            get :show, params: { id: project.id }
+
+            expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Fprojects%2F#{project.id}"
+          end
+        end
+
+        context "the session expires for the system user" do
+          let(:original_session) { SystemUser.mediaflux_session }
+
+          before do
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
+            allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(false)
+          end
+          it "gets a new session if the session expires" do
+            Mediaflux::LogoutRequest.new(session_token: original_session).resolve
+
+            expect { get :show, params: { id: project.id } }.to raise_error(Mediaflux::SessionExpired)
+          end
+        end
+
+        context "the system user password is bad" do
+          before do
+            @original_pass = Rails.configuration.mediaflux["api_password"]
+          end
+
+          after do
+            Rails.configuration.mediaflux["api_password"] = @original_pass
+          end
+
+          it "gets a new session if the session expires" do
+            Rails.configuration.mediaflux["api_password"] = "badpass"
+            expect do
+              get :show, params: { id: project.id }
+            end.to raise_error(Mediaflux::SessionError)
+          end
+        end
+      end
+    end
+  end
+
   context "when the project show views are rendered for an existing project" do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/

@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create :user }
+  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
   let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.071\"}" }
   let(:ansible_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.082\"}" }
 
@@ -24,7 +24,7 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
 
     Rails.configuration.mediaflux["api_password"] = "badpass"
 
-    expect { get :index }.to raise_error(Mediaflux::SessionExpired)
+    expect { get :index }.to raise_error(Mediaflux::SessionError)
 
     Rails.configuration.mediaflux["api_password"] = original_pass
   end

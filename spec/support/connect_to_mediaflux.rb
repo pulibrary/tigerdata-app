@@ -4,12 +4,15 @@ Rails.application.load_tasks
 
 def reset_mediaflux_root
   # Clean out the namespace before running tests to avoid collisions
-  user = User.new
+  user = SystemUser
   destroy_root_namespace(user)
 
   # then create it and the project root collection and namespace so it exists for any tests
   create_test_root_namespace(user)
   ProjectMediaflux.create_root_tree(session_id: user.mediaflux_session)
+
+  # Clear the login cache
+  Rails.cache.clear
 end
 
 def destroy_root_namespace(user)

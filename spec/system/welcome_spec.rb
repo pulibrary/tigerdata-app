@@ -19,7 +19,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }

@@ -2,7 +2,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_user!
-  around_action :mediaflux_session
+  before_action :mediaflux_session
+  around_action :mediaflux_session_errors
+  around_action :mediaflux_login_errors
   before_action :emulate_user
 
   helper_method :breadcrumbs
@@ -31,12 +33,34 @@ class ApplicationController < ActionController::Base
   private
 
     def mediaflux_session
-      logger.debug "Application Session #{session[:mediaflux_session]} cas: #{session[:cas_user]}"
+      logger.debug "Application Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}"
       unless ["passthru", "cas"].include?(action_name)
         current_user&.mediaflux_from_session(session)
       end
+    end
+
+    def mediaflux_session_errors
       yield
-    rescue Mediaflux::SessionExpired
+    rescue ActionView::Template::Error, Mediaflux::SessionExpired => e
+      raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired)
+      if session[:active_web_user]
+        redirect_to mediaflux_passthru_path(path: request.path)
+      else
+        @retry_count ||= 0
+        @retry_count += 1
+
+        current_user.mediaflux_from_session(session)
+        if @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
+          retry
+        else
+          raise
+        end
+      end
+    end
+
+    def mediaflux_login_errors
+      yield
+    rescue Mediaflux::SessionError
       @retry_count ||= 0
       @retry_count += 1
 

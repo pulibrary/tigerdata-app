@@ -14,6 +14,9 @@ FactoryBot.define do
     superuser { false }
     trainer { false }
 
+    trait :with_mediaflux_session do
+      mediaflux_session { SystemUser.mediaflux_session }
+    end
     ##
     # A user who is allowed to sponsor a project
     factory :project_sponsor do

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "mediaflux_info", type: :system, js: true, connect_to_mediaflux: true do
-  let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mflux_port) { Rails.configuration.mediaflux["api_port"] }
 
   it "shows the mediaflux version" do
