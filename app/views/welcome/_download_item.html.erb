@@ -5,9 +5,7 @@
   <div class="details">
     <div class="expiration">Expires in <%= time_ago_in_words(download.completion_time + 7.days)%></div>
     <div class="size">
-      <!--
-        TODO: Need size later, see https://github.com/pulibrary/tigerdata-app/issues/1124
-      -->
+      <%= number_to_human_size(download.request_details["file_size"]) %>
     </div>
   </div>
 </div>

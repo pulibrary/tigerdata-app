@@ -31,6 +31,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
+      allow(File).to receive(:size) { 1_234_567 }
     end
 
     context "current user dashboard" do
@@ -70,6 +71,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         visit "/"
         expect(page).to have_content "Latest Downloads"
         expect(page).to have_content "Expires in 7 days"
+        expect(page).to have_content "1.18 MB"
       end
 
       context "the user signed in is an eligible sponsor" do
