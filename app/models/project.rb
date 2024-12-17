@@ -212,8 +212,12 @@ class Project < ApplicationRecord
     values.fetch(:total_file_count, 0)
   end
 
+  def self.default_storage_unit
+    "KB"
+  end
+
   def self.default_storage_usage
-    "0 KB"
+    "0 {default_storage_unit}"
   end
 
   def storage_usage(session_id:)

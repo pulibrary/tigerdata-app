@@ -26,7 +26,9 @@ export function setupTable(tableId) {
 
   // If we have a table initialize it with DataTables
   if (table) {
-    table.dataTable(datasetOptions);
+    if (table.dataTable) {
+      table.dataTable(datasetOptions);
+    }
   }
 }
 

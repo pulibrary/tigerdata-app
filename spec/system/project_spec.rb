@@ -581,23 +581,58 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
       end
 
-      context "when the storage capacity is requested, but no quota is allocated" do
-        it "renders the storage capacity in the show view" do
-          pending "how will we really render the storage capacity"
-          visit project_contents_path(approved_project)
-          # An empty strings are returned for a project with no quota allocation
-          expect(page).to have_content "0 KB / [Talk about what the default should be]"
-          expect(page).to be_axe_clean
-            .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-            .skipping(:'color-contrast')
-        end
-      end
-
       context "when the quota is allocated" do
+        let(:storage_capacity) do
+          {
+            size: { requested: 500, approved: 500 },
+            unit: { requested: "GB", approved: "GB" }
+          }.with_indifferent_access
+        end
+        let(:storage_performance_expectations) do
+          {
+            requested: "Standard",
+            approved: "performant"
+          }.with_indifferent_access
+        end
+        let(:metadata_model) do
+          hash = {
+            data_sponsor: sponsor_user.uid,
+            data_manager: data_manager.uid,
+            project_directory: "project-123",
+            title: "project 123",
+            departments: ["RDSS"],
+            description: "hello world",
+            data_user_read_only: [read_only.uid],
+            data_user_read_write: [read_write.uid],
+            status: ::Project::PENDING_STATUS,
+            created_on: Time.current.in_time_zone("America/New_York").iso8601,
+            created_by: FactoryBot.create(:user).uid,
+            project_id: "abc-123",
+            storage_capacity: storage_capacity,
+            storage_performance_expectations: storage_performance_expectations,
+            project_purpose: "Research"
+          }
+          ProjectMetadata.new_from_hash(hash)
+        end
+
+        let(:approved_project) do
+          persisted = FactoryBot.create(:approved_project, metadata_model: metadata_model)
+          persisted.mediaflux_id = nil
+          persisted
+        end
+
+        before do
+          sign_in sponsor_user
+          # Save the project in mediaflux
+          approved_project.save_in_mediaflux(user: sponsor_user)
+        end
+
         it "renders the storage capacity in the show view" do
-          pending "this should not be on the project view page"
-          visit project_contents_path(approved_project)
-          expect(page).to have_content "400 bytes / 500 GB" # should be 300 GB which is the quota, instead of 500GB which is the requested capacity
+          visit project_path(approved_project)
+
+          expect(page).to have_content "Storage (465.661 GB)"
+          expect(page).to have_content "0.391 KB Used"
+          expect(page).to have_content "465.271 GB Free"
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')
