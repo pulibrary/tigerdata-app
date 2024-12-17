@@ -156,6 +156,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
       end
 
+      it "renders the storage quota usage component" do
+        sign_in sponsor_user
+
+        visit "/projects/#{project.id}/details"
+        expect(page).to have_selector(:link_or_button, "Content Preview")
+        click_on("Content Preview")
+      end
+
       it "Contents page has collection summary data" do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
