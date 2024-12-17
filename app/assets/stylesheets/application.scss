@@ -27,6 +27,7 @@
 @import "settings";
 @import "styles_preview";
 @import "typography";
+@import "welcome_portal";
 
 
 body {
@@ -34,7 +35,6 @@ body {
     color: $black;
 
     .main-content {
-      min-height:100vh;
       display: flex;
       padding: 3rem 7.5rem;
       flex-direction: column;
@@ -46,6 +46,11 @@ body {
     .row {
       --bs-gutter-x: 0 !important;
     }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $libre-franklin !important;
+  font-weight: 600;
 }
 
 .heading-decoration {
@@ -113,7 +118,6 @@ body {
   color: var(--Secondary-Red-Dark, #b00002);
 }
 
-
 /* Used for the delete button when adding users */
 .transparent-button {
   background-color: transparent;
@@ -143,3 +147,8 @@ body {
 .delete-user-row {
   color: red;
 }
+
+.alert-primary {
+  position: absolute;
+}
+
