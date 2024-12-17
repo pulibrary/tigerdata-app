@@ -72,6 +72,16 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Expires in 7 days"
       end
 
+      # it "calculates the total download size" do
+      #   approved_project = Project.users_projects(current_user).first
+      #   FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id).perform_now
+      #   sign_in current_user
+      #   visit "/"
+      #   expect(page).to have_content "Latest Downloads"
+      #   expect(page).to have_content "Expires in 7 days"
+      #   expect(page).to have_content "Total size of download: #{FileInventoryJob.total_size}"
+      # end
+
       context "the user signed in is an eligible sponsor" do
         it "shows the projects based on the user's role" do
           current_user.update(eligible_sponsor: true)

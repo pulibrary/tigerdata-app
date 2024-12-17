@@ -30,13 +30,14 @@ class FileInventoryJob < ApplicationJob
     Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
     project.file_list_to_file(session_id: mediaflux_session, filename: filename)
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
-
     # Make the FileInventoryRequest object
     inventory_request = FileInventoryRequest.find_by(user_id: user.id, project_id: project.id, job_id: @job_id)
-    inventory_request.update(state: UserRequest::COMPLETED, request_details: { output_file: filename, project_title: project.title },
+    request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
+    inventory_request.update(state: UserRequest::COMPLETED, request_details: request_details,
                              completion_time: Time.current.in_time_zone("America/New_York"))
     inventory_request
   end
+
 
   private
 
