@@ -38,7 +38,6 @@ class FileInventoryJob < ApplicationJob
     inventory_request
   end
 
-
   private
 
     def mediaflux_session

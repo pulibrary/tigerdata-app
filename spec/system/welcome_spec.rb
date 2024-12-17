@@ -31,7 +31,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
-      allow(File).to receive(:size) { 1234567 }
+      allow(File).to receive(:size) { 1_234_567 }
     end
 
     context "current user dashboard" do
