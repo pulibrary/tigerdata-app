@@ -270,7 +270,7 @@
       function addUsersToForm() {
          const userAlreadyAdded = usersInForm();
          const users = $(".data_user_added_modal");
-         var totalUserCount = users.length;
+         var totalUserCount = userAlreadyAdded.length;
          for(var i = 0; i < users.length; i += 1) {
             var netIdToAdd = users[i].firstChild.textContent;
             if (userAlreadyAdded.includes(netIdToAdd) === false) {

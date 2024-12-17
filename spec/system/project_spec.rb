@@ -305,13 +305,21 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Create new project"
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in_and_out "data_manager", with: data_manager.uid
+        expect(page).to have_content "No Data User(s) added"
+
+        # Launch the modal, trigger the validation, and then add a valid user
         click_on "+ Add User(s)"
         fill_in_and_out "data-user-uid-to-add", with: "notuser"
-        # shows the error
         expect(page.find("#data-user-uid-to-add_error").text).to eq "Invalid value entered"
-        # gets rid of the error
         fill_in_and_out "data-user-uid-to-add", with: read_only.uid
         expect(page.find("#data-user-uid-to-add_error", visible: false).text).to eq ""
+        click_on "Save changes"
+
+        # Launch the modal again and this time don't add any users
+        # (but we already had added some so we don't expect the "no data users" message)
+        click_on "+ Add User(s)"
+        click_on "Save changes"
+        expect(page).not_to have_content "No Data User(s) added"
       end
     end
 
