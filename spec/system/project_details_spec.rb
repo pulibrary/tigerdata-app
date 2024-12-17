@@ -212,7 +212,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       context "when downloads exist" do
         before do
-          FileInventoryJob.new(user_id: sponsor_user.id, project_id: project.id).perform_now
+          FileInventoryJob.new(user_id: sponsor_user.id, project_id: project.id, mediaflux_session: sponsor_user.mediaflux_session).perform_now
         end
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
