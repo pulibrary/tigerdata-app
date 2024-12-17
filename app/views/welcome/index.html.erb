@@ -1,7 +1,6 @@
 <div id="welcome">
     <% unless current_user %>
-    <h1>Welcome to TigerData</h1>
-    Please log in.
+    <%= render partial: "logged_out" %>
     <% else %>
 
       <%= render partial: "logged_in" %>

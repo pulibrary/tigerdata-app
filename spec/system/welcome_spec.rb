@@ -6,7 +6,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
-      expect(page).to have_content "Welcome to TigerData"
+      expect(page).to have_content "TigerData Web Portal"
       expect(page).to have_content "Log in"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
