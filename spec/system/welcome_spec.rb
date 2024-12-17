@@ -6,7 +6,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
-      expect(page).to have_content "Welcome to TigerData"
+      expect(page).to have_content "TigerData Web Portal"
       expect(page).to have_content "Log in"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
@@ -66,7 +66,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "shows the latests downloads available" do
         approved_project = Project.users_projects(current_user).first
-        FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id).perform_now
+        FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         sign_in current_user
         visit "/"
         expect(page).to have_content "Latest Downloads"

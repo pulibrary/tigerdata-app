@@ -1,0 +1,14 @@
+<div class="welcome-portal">
+    <div class="welcome-text">
+        <h2 class="LO-h2">Welcome to</h2>
+        <h1 class="LO-h1">TigerData Web Portal</h1>
+        <p class="LO-p">TigerData is a data management service for the Princeton research community that includes a suite of software tools and scalable, tiered storage to enable the organization, description, storage, sharing, and long-term sustainability of research and administrative data. </p>
+        <p class="LO-p">It enables the things you want to do (with your data), and makes it easier to do the things you have to do.</p>
+        <%= button_to "Learn More", user_cas_omniauth_authorize_path, class: "LO-b" %>
+        <p class="LO-c">Log in is currently limited to early adopters. <%= link_to "Contact us", "mailto:tigerdata@princeton.edu", class: "welcome-contact-us" %> for more information.</p>
+
+    </div>
+    <div class="welcome-image">
+        <%= image_tag("welcome_portal.png", alt: "Welcome to the Tigerdata Portal") %>
+    </div>
+</div>

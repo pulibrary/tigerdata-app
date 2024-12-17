@@ -42,7 +42,8 @@
     padding: 0.5rem 2rem;
     font-family: "Libre Franklin";
     font-size: 16px;
-    color: $princeton-orange;
+    color: $black;
+    border: none;
   }
 }
 
@@ -83,6 +84,7 @@
     .navbar-item a:hover {
       text-decoration: underline;
     }
+
     .dropdown-menu { 
       left: -5em;
       --bs-dropdown-spacer: 1em;
@@ -96,4 +98,8 @@
     .dropdown-menu a:hover {
       width: 85%;
     }
+  }
+
+  a.dropdown-item {
+    color: #000000 !important;
   }
