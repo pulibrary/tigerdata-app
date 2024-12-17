@@ -18,12 +18,15 @@ class FileInventoryJob < ApplicationJob
     end
   end
 
-  def perform(user_id:, project_id:)
+  def perform(user_id:, project_id:, mediaflux_session:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
     user = User.find(user_id)
     raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
     Rails.logger.debug inspect
+
+    # set the mediaflux session to the one the user created, do not just utilize the system one
+    user.mediaflux_from_session({ mediaflux_session: })
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
     filename = filename_for_export
