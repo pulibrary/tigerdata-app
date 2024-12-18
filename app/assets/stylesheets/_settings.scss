@@ -63,7 +63,6 @@
   #dashboard-nav{
     @include tab-nav;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     align-self: stretch;
   }
