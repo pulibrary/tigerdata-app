@@ -10,8 +10,12 @@
 <div id="project-nav">
   <button id="project-content" class="tab-nav"> Content Preview </button>
   <button id="project-details" class="tab-nav"> Details </button>
-  <button id="project-script" class="tab-nav"> View Create Script </button>
-  <button id="project-approval" class="tab-nav"> Approval Setting </button>
+  <% if current_user.eligible_sysadmin? %>
+    <% if @project.pending? %>
+      <button id="project-script" class="tab-nav"> View Create Script </button>
+      <button id="project-approval" class="tab-nav"> Approval Setting </button>
+    <% end %>
+  <% end %>
 </div>
 
 <div class="details">
@@ -113,5 +117,5 @@
   // Make the AJAX call to fetch the aterm script
   showCreateScript('<%= project_create_script_path(format: "json") %>');
   projectStyle('<%= @project_session %>');
-  projectTab("<%= project_path %>", "<%= project_details_path %>");
+  projectTab("<%= project_path %>", "<%= project_details_path %>", "<%= project_approve_path %>");
 </script>
