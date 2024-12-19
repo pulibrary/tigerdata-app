@@ -177,6 +177,10 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       # Save the project in mediaflux
       project.save_in_mediaflux(user: manager)
 
+      # create a collection so it can be filtered
+      Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
+
+
       # Create files for the project in mediaflux using test asset create request
       Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
       Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
