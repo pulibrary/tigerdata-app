@@ -15,7 +15,7 @@
     font-weight: 400;
     line-height: 18px;
     width: 100%;
-    
+
     thead {
         background-color: $gray-10;
         overflow: hidden;
@@ -31,7 +31,7 @@
     }
 
     tr {
-        border: 1px solid $gray-20; 
+        border: 1px solid $gray-20;
         overflow: hidden;
         color: $gray-100;
         text-overflow: ellipsis;
@@ -68,8 +68,83 @@
 
 #project-contents {
     margin-bottom: 0.75rem;
-    
+
     .sorting:hover {
         cursor: pointer;
     }
 }
+
+.frame-218 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6.75rem;
+
+    .title {
+       color: $black;
+       /* Body L Bold */
+       font-family: "Libre Franklin";
+       font-size: 1.25rem;
+       font-style: normal;
+       font-weight: 600;
+       line-height: 1.875rem; /* 150% */
+    }
+
+    .frame-187 {
+       display: flex;
+       width: 55.9375rem;
+       flex-direction: column;
+       align-items: flex-start;
+       gap: 0.5rem;
+
+       .table-5 {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          align-self: stretch;
+          border-radius: 0.5rem;
+
+          .table {
+             display: flex;
+             width: 55.9375rem;
+             flex-direction: column;
+             align-items: flex-start;
+             border-radius: 0.25rem;
+             border: 1px solid $gray-20;
+
+             .thead {
+                display: flex;
+                height: 2.9375rem;
+                align-items: flex-start;
+                align-self: stretch;
+                background: $gray-10;
+
+                .cell {
+                   display: flex;
+                   flex-direction: column;
+                   justify-content: center;
+                   align-items: flex-start;
+                   flex: 1 0 0;
+                   align-self: stretch;
+                   background: rgba(255, 255, 255, 0.05);
+
+                   .content {
+                    display: flex;
+                    padding: 0.25rem 0.75rem;
+                    align-items: flex-start;
+                    align-self: stretch;
+                   }
+                }
+             }
+
+             .tbody {
+                display: flex;
+                height: 2.25rem;
+                align-items: flex-start;
+                align-self: stretch;
+                background: #FFF;
+             }
+          }
+
+       }
+    }
+ }
