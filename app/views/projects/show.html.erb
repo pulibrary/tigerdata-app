@@ -5,8 +5,12 @@
     <div id="project-nav">
       <button id="project-content" class="tab-nav"> Content Preview </button>
       <button id="project-details" class="tab-nav"> Details </button>
-      <button id="project-script" class="tab-nav"> View Create Script </button>
-      <button id="project-approval" class="tab-nav"> Approval Setting </button>
+      <% if current_user.eligible_sysadmin? %>
+        <% if @project.pending? %>
+          <button id="project-script" class="tab-nav"> View Create Script </button>
+          <button id="project-approval" class="tab-nav"> Approval Setting </button>
+          <% end %>
+      <% end %>
     </div>
     <div class="row align-items-center contents-summary">
       <div class="col-sm-2 file-inventory">File Inventory:</div>
@@ -51,6 +55,6 @@
 </div>
 <script type="module">
     projectStyle('<%= @project_session %>');
-    projectTab("<%= project_path %>", "<%= project_details_path %>");
+    projectTab("<%= project_path %>", "<%= project_details_path %>", "<%= project_approve_path %>");
     setupTable('#project-contents');
 </script>
