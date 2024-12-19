@@ -103,7 +103,6 @@
 <div class="details">
   <% if current_user.eligible_sysadmin? %>
     <% if @project.pending? %>
-      <%= link_to "Approve Project", project_approve_path(@project.id), class: "btn btn-primary btn-sm" %>
       <%= link_to " View Create Script", "#", class: "bi bi-code btn btn-secondary btn-sm", id: "create-script-btn" %>
     <% end %>
   <% end %>
