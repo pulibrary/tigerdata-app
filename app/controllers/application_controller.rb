@@ -45,32 +45,30 @@ class ApplicationController < ActionController::Base
       raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired)
       if session[:active_web_user]
         redirect_to mediaflux_passthru_path(path: request.path)
+      elsif session_error_handler
+        retry
       else
-        @retry_count ||= 0
-        @retry_count += 1
-
-        current_user.mediaflux_from_session(session)
-        if @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
-          retry
-        else
-          raise
-        end
+        raise
       end
     end
 
     def mediaflux_login_errors
       yield
     rescue Mediaflux::SessionError
+      if session_error_handler
+        retry
+      else
+        raise
+      end
+    end
+
+    def session_error_handler
       @retry_count ||= 0
       @retry_count += 1
 
       current_user.clear_mediaflux_session(session)
       current_user.mediaflux_from_session(session)
-      if @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
-        retry
-      else
-        raise
-      end
+      @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
     end
 
     def emulate_user
