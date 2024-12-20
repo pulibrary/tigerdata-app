@@ -245,7 +245,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         .skipping(:'color-contrast')
       click_on "Return to Dashboard"
       expect(page).to have_content "Sponsor"
-      find(:xpath, "//h2[text()='My test project']").click
+      find(:xpath, "//a[text()='My test project']").click
       click_on "Details"
       # defaults have been applied
       expect(page).to have_content "Storage Capacity (Requested)\n500 GB"
@@ -271,7 +271,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content("/td-test-001/")
         click_on "Submit"
         click_on "Return to Dashboard"
-        find(:xpath, "//h2[text()='My test project']").click
+        find(:xpath, "//a[text()='My test project']").click
         expect(page).to have_content "My test project"
         click_on "Details"
         expect(page).to have_content read_only.display_name + " (read only)"
@@ -293,7 +293,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content("/td-test-001/")
         click_on "Submit"
         click_on "Return to Dashboard"
-        find(:xpath, "//h2[text()='My test project']").click
+        find(:xpath, "//a[text()='My test project']").click
         expect(page).to have_content "My test project"
         click_on "Details"
         expect(page).to have_content read_write.display_name

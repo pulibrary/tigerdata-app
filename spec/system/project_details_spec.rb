@@ -58,7 +58,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_selector(:link_or_button, "Dashboard")
             click_on("Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-            find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
+            find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
           end
         end
         context "SysAdmin" do
@@ -88,7 +88,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_selector(:link_or_button, "Content Preview")
             click_on("Dashboard")
             expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-            find(:xpath, "//h2[text()='#{project_in_mediaflux.title}']").click
+            find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
           end
         end
         context "SysAdmin" do
@@ -169,7 +169,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_selector(:link_or_button, "Dashboard")
         click_on("Dashboard")
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-        find(:xpath, "//h2[text()='#{project.title}']").click
+        find(:xpath, "//a[text()='#{project.title}']").click
         expect(page).to have_content(project.title)
       end
 
