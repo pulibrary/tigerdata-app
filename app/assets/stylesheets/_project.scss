@@ -104,19 +104,19 @@
     outline: none;
 }
 
-.frame-218 {
+.data-users-section { /* frame-218 in Figma */
     display: inline-flex;
     align-items: flex-start;
     gap: 6.75rem;
 
-    .frame-187 {
+    .data-users-container { /* frame-187 in Figma */
         display: flex;
         width: 55.9375rem;
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
 
-        .table-5 {
+        .data-users-table { /* table-5 in Figma */
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -237,5 +237,5 @@
                 }
             }
         }
-    }
-}
+    } /* data-users-container */
+} /* data-users-section */
