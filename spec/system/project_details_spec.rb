@@ -99,7 +99,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_content(pending_text)
             expect(page).to have_css ".pending"
             expect(page).to have_link("Edit")
-            expect(page).to have_selector(:link_or_button, "Approve Project")
+            expect(page).to have_selector(:link_or_button, "Approval Setting")
           end
         end
       end
@@ -162,7 +162,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
-        expect(page).to have_content("8 out of 22 shown")
+        expect(page).to have_content("8 out of 16 shown")
         # expect(find(:css, "#file_count").text).to eq "16"
 
         # Be able to return to the dashboard
@@ -197,7 +197,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).not_to have_content(last_file.name)
 
         # files are paginated
-        find("a.paginate_button", text: 3).click
+        find("a.paginate_button", text: 2).click
         expect(page).to have_content(last_file.name)
       end
 
@@ -238,7 +238,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
         expect(page).not_to have_content pending_text
-        expect(page).to have_selector(:link_or_button, "Approve Project")
+        expect(page).to have_selector(:link_or_button, "Approval Setting")
       end
 
       it "does not show the mediaflux id to the sponsor" do
@@ -257,7 +257,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project_not_in_mediaflux.id}/details"
         expect(page).to have_content "This project has not been saved to Mediaflux"
         expect(page).to have_content pending_text
-        expect(page).to have_selector(:link_or_button, "Approve Project")
+        expect(page).to have_selector(:link_or_button, "Approval Setting")
       end
     end
   end

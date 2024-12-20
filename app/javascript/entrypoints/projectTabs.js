@@ -126,16 +126,16 @@ export function projectStyle(railsSession) {
     }
   });
 
-//   $('#project-approval').on('click', (el) => {
-//     const element = el;
-//     element.preventDefault();
-//     approval.style.borderBottom = 'solid';
-//     approval.style.borderColor = '#E77500';
-//     approval.classList.add('active');
-//   });
+  $('#project-approval').on('click', (el) => {
+    const element = el;
+    element.preventDefault();
+    approval.style.borderBottom = 'solid';
+    approval.style.borderColor = '#E77500';
+    approval.classList.add('active');
+  });
 }
 
-export function projectTab(contentUrl, detailsUrl) {
+export function projectTab(contentUrl, detailsUrl, approveUrl) {
   $('#project-content').on('click', (element) => {
     element.preventDefault();
     $.ajax({
@@ -154,6 +154,17 @@ export function projectTab(contentUrl, detailsUrl) {
       url: detailsUrl,
       success() {
         window.location.href = detailsUrl; // update the browser's URL
+      },
+    });
+  });
+
+  $('#project-approval').on('click', (element) => {
+    element.preventDefault();
+    $.ajax({
+      type: 'GET',
+      url: approveUrl,
+      success() {
+        window.location.href = approveUrl; // update the browser's URL
       },
     });
   });

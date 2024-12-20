@@ -257,7 +257,7 @@ class Project < ApplicationRecord
   def file_list(session_id:, size: 10)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true, aql_query: "type!='application/arc-asset-collection'")
     iterator_id = query_req.result
 
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
@@ -275,7 +275,7 @@ class Project < ApplicationRecord
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true)
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true,  aql_query: "type!='application/arc-asset-collection'")
     iterator_id = query_req.result
 
 

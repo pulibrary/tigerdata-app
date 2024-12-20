@@ -14,7 +14,7 @@ Stop the current Docker container and remove both the container and the image us
 ```
 docker stop mediaflux
 docker rm mediaflux
-docker rmi princeton_dev:latest  (or the version you had previously like mediaflux_dev:latest )
+docker rmi pulibraryrdss/mediaflux_dev:latest
 ```
 
 You can use `docker images` to find out the exact name of the image to delete.
@@ -38,6 +38,8 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
 ```
 docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
 ```
+
+NOTE: You might need to tweak the platform parameter to `--platform linux/arm64` depending on the architecture of your machine.
 
 3. From now on when you need _start this container_ you can use:
 
