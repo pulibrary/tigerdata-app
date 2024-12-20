@@ -150,10 +150,10 @@
                         font-weight: 600; /* not in Figma */
 
                         .content {
-                        display: flex;
-                        padding: 0.25rem 0.75rem;
-                        align-items: flex-start;
-                        align-self: stretch;
+                            display: flex;
+                            padding: 0.25rem 0.75rem;
+                            align-items: flex-start;
+                            align-self: stretch;
                         }
                     }
                 } /* thead */
@@ -178,8 +178,10 @@
                             display: flex;
                             padding: 0.25rem 0.75rem;
                             align-items: flex-start;
-                            align-self: stretch;
-                            width: 100%; /* not in Figma */
+                            /* align-self: stretch; */
+                            input {
+                                width: 100% !important;
+                            }
                         }
                     }
                 } /* table-row */
