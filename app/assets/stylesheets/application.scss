@@ -61,7 +61,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hidden-element {
-  display: none;
+  display: none !important;
 }
 
 .netid-large {
@@ -116,36 +116,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .autocomplete-error {
   color: var(--Secondary-Red-Dark, #b00002);
-}
-
-/* Used for the delete button when adding users */
-.transparent-button {
-  background-color: transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-}
-
-/* Data users in the Edit form */
-#data-users-table {
-  border-color: gray;
-  border-style: solid;
-  border-width: 1px;
-}
-
-#data-users-table > thead {
-  background-color: lightgray;
-}
-
-.added-user-textbox {
-  border: none !important;
-  background-color: white !important;
-}
-
-.delete-user-row {
-  color: red;
 }
 
 .alert-primary {
