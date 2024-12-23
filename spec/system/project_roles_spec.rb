@@ -38,7 +38,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     expect(page.find("button[value=Submit]").disabled?).to be false
 
     # Adds a data user (read-only)
-    click_on "+ Add User(s)"
+    click_on "Add User(s)"
     fill_in_and_out "data-user-uid-to-add", with: read_only.uid
     click_on "Save changes"
 
@@ -172,7 +172,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Sponsor to assign a Data User" do
       sign_in sponsor_user
       visit "/projects/#{project.id}/edit"
-      click_on "+ Add User(s)"
+      click_on "Add User(s)"
       fill_in_and_out "data-user-uid-to-add", with: ro_data_user.uid
       click_on "Save changes"
       click_on "Submit"
@@ -182,7 +182,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "allows a Data Manager to assign a Data User" do
       sign_in data_manager
       visit "/projects/#{project.id}/edit"
-      click_on "+ Add User(s)"
+      click_on "Add User(s)"
       fill_in_and_out "data-user-uid-to-add", with: ro_data_user.uid
       click_on "Save changes"
       click_on "Submit"

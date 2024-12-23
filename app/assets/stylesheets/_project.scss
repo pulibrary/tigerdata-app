@@ -15,7 +15,7 @@
     font-weight: 400;
     line-height: 18px;
     width: 100%;
-    
+
     thead {
         background-color: $gray-10;
         overflow: hidden;
@@ -31,7 +31,7 @@
     }
 
     tr {
-        border: 1px solid $gray-20; 
+        border: 1px solid $gray-20;
         overflow: hidden;
         color: $gray-100;
         text-overflow: ellipsis;
@@ -68,8 +68,174 @@
 
 #project-contents {
     margin-bottom: 0.75rem;
-    
+
     .sorting:hover {
         cursor: pointer;
     }
 }
+
+.data-users-title {
+    color: $black;
+    /* Body L Bold */
+    font-family: "Libre Franklin";
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.875rem; /* 150% */
+ }
+
+.added-user-textbox {
+    border: none !important;
+    background-color: white !important;
+    width: 100% !important;
+}
+
+.delete-user-row {
+    color: $red-dark;
+}
+
+/* Used for the delete button when adding users within the modal */
+.transparent-button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.data-users-section { /* frame-218 in Figma */
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6.75rem;
+
+    .data-users-container { /* frame-187 in Figma */
+        display: flex;
+        width: 55.9375rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        .data-users-table { /* table-5 in Figma */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            align-self: stretch;
+            border-radius: 0.5rem;
+            margin-bottom: -10px; /* not in Figma */
+
+            .table {
+                display: flex;
+                width: 55.9375rem;
+                flex-direction: column;
+                align-items: flex-start;
+                border-radius: 0.25rem;
+                border: 1px solid $gray-20;
+
+                .thead {
+                    display: flex;
+                    height: 2.9375rem;
+                    align-items: flex-start;
+                    align-self: stretch;
+                    background: $gray-10;
+
+                    .cell {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: flex-start;
+                        flex: 1 0 0;
+                        align-self: stretch;
+                        background: rgba(255, 255, 255, 0.05);
+                        font-weight: 600; /* not in Figma */
+
+                        .content {
+                            display: flex;
+                            padding: 0.25rem 0.75rem;
+                            align-items: flex-start;
+                            align-self: stretch;
+                        }
+                    }
+                } /* thead */
+
+                .table-row {
+                    display: flex;
+                    height: 2.25rem;
+                    align-items: flex-start;
+                    align-self: stretch;
+                    background: #FFF;
+
+                    .table-col {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: flex-start;
+                        flex: 1 0 0;
+                        align-self: stretch;
+                        background: rgba(255, 255, 255, 0.05);
+
+                        .content {
+                            display: flex;
+                            padding: 0.25rem 0.75rem;
+                            align-items: flex-start;
+                            /* align-self: stretch; */
+                            input {
+                                width: 100% !important;
+                            }
+                        }
+                    }
+                } /* table-row */
+
+                .table-row-no-data {
+                    display: flex;
+                    height: 2.25rem;
+                    align-items: flex-start;
+                    align-self: stretch;
+                    background: #FFF;
+                    width: 100%; /* not in Figma */
+
+                    #text-no-users {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        flex: 1 0 0;
+                        align-self: stretch;
+                        background: rgba(255, 255, 255, 0.00);
+                        color: var(--Neutral-Dark-Gray, #717171);
+
+                        /* Body XS */
+                        font-family: "Libre Franklin";
+                        font-size: 0.875rem;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 1.3125rem; /* 150% */
+                    }
+                } /* table-row-no-data */
+            } /* table */
+        } /* table-5 */
+
+        .frame-106 {
+            display: flex;
+            width: 55.9375rem;
+            justify-content: space-between;
+            align-items: center;
+
+            .frame-252 {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+
+                a {
+                    color: var(--Neutral-Black, #121212);
+                    /* Body S Bold */
+                    font-family: "Libre Franklin";
+                    font-size: 1rem;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 1.5rem; /* 150% */
+                }
+            }
+        }
+    } /* data-users-container */
+} /* data-users-section */
