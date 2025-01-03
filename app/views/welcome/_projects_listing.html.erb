@@ -1,18 +1,73 @@
 <div class="table">
-   <table id="<%= table_id %>" >
-   <thead>
+
+  <div class="container-fluid">
+
+    <div class="row">
+
+      <div class="col-12 col-lg-3 projects-tabs">
+        <ul class="nav nav-pills nav-fill">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page">All</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= root_path %>">Active</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= root_path %>">Pending</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-lg-9 projects-filter">
+        <form class="container-fluid">
+          <div class="row">
+
+            <div class="col-12 col-lg-9 my-2">
+              <div class="input-group">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="filter-input-text" placeholder="Search by project titles, roles, project types">
+                  <label for="filter-input-text">Search by project titles, roles, project types</label>
+                </div>
+                <span class="input-group-text">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-2 my-2">
+              <button class="btn btn-primary projects-filter-btn" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/></svg>
+              Sort</button>
+            </div>
+
+            <div class="col-12 col-lg-1 my-2 ">
+              <div class="container-fluid" style="height:100%; align-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/></svg>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <table id="<%= table_id %>">
+
+    <thead>
       <tr class="project heading">
-         <th>title</th>
-         <th>status</th>
-         <th>type</td>
-         <th>role</th>
-         <th>download</th>
-         <th>activity</th>
-         <th>quota_usage</th>
+          <th>title</th>
+          <th>status</th>
+          <th>type</td>
+          <th>role</th>
+          <th>download</th>
+          <th>activity</th>
+          <th>quota_usage</th>
       </tr>
-   </thead>
-   <tbody>
+    </thead>
+
+    <tbody>
       <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
-   </tbody>
+    </tbody>
    </table>
 </div>
