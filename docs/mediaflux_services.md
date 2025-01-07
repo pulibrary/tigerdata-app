@@ -60,7 +60,6 @@ service.execute :service -name hello-service
 
 After this the log file (/usr/local/mediaflux/volatile/logs/hello-service.1.log) will include a new entry with the text "hello-from-service".
 
-
 ## Executing the service from a different user
 
 Before we test that we can run this service while logged in as a different user we will give access to the `hello-service` script to the scripter role `pu-lib:scripter` that we defined in [mediaflux_script_access.md](https://github.com/pulibrary/tigerdata-app/blob/main/docs/mediaflux_script_access.md).

@@ -1,4 +1,5 @@
 # Aterm
+
 Aterm is the MediaFlux's command line. This is a Java application that you run from your terminal and it allows you to execute commands against a MediaFlux server. You can query for information about assets, create new assets, and update their metadata and content.
 
 In a standard MediaFlux installation you can download Aterm directly as follows:
@@ -19,8 +20,8 @@ See the [local documents](https://github.com/pulibrary/tigerdata-app/blob/main/d
 
 The credentials for the development server (td-meta1.princeton.edu) are your princeton credentials, utilizing the `princeton` Domain. Choose `HTTPS` as you transport. Note that you must be on the VPN to connect to the development server.
 
-
 ## Basic commands
+
 Once connected to a server, you can get the version of MediaFlux that is running on the server with a command like this:
 
 ```
@@ -37,6 +38,7 @@ Once connected to a server, you can get the version of MediaFlux that is running
 ```
 
 You can get a list of files (assets in MediaFlux lingo) in your current namespace with the following command:
+
 ```
 > asset.query
     :id -version "1" "1"
@@ -64,6 +66,7 @@ By default Aterm will only return the ids of the assets, but you can request mor
 ```
 
 ### Auto-complete
+
 Aterm supports auto-complete as you type commands, this is userful to figure our what commands are available to you and what parameters you can pass to each command. To trigger auto-complete use the `TAB` in your keyboard.
 
 For example, to view the list of command under the `asset` category you could type:
@@ -89,8 +92,8 @@ and then to view the parameters that you could pass to the `asset.query` command
          ...
 ```
 
-
 ### Changing your prompt
+
 The default prompt in Aterm is the `>` character, you can change it via the `display` command:
 
 ```
@@ -99,8 +102,8 @@ The default prompt in Aterm is the `>` character, you can change it via the `dis
 > display save
 ```
 
-
 ### Bash-like commands
+
 Aterm supports a few Bash-like commands that you can use as shortcuts, for example:
 
 ```
@@ -109,9 +112,9 @@ Aterm supports a few Bash-like commands that you can use as shortcuts, for examp
 > cd /name-of-namespace
 ```
 
-
 ### Fixing the display of collections in the Desktop
-By default Collection Assets are *not* displayed as "folders" in the Mediaflux desktop, but you can fix this by turning on the `desktop-experimental` role via aTerm:
+
+By default Collection Assets are _not_ displayed as "folders" in the Mediaflux desktop, but you can fix this by turning on the `desktop-experimental` role via aTerm:
 
 ```
 actor.grant :type domain :name system :role -type role desktop-experimental
@@ -119,8 +122,8 @@ actor.grant :type domain :name system :role -type role desktop-experimental
 
 You'll need to close the "Asset Finder" in the Desktop and reopen it for the change to kick in.
 
-
 ## Assets
+
 MediaFlux stores files as assets. An asset contains metadata and _optionally_ content. The metadata and the content are versioned independently.
 
 Internally, assets are records in the database that MediaFlux uses store metadata and run queries against.
@@ -177,8 +180,8 @@ We can _update the metadata_ of the files with the `asset.set` command, for exam
         ...
 ```
 
-
 ### Asset content
+
 It is possible to _set the content_ of an asset via Aterm and this can be useful for testing purposes.
 
 For example to upload the content of a local file on our machine to an existing asset (with id `1082`) we could use the following command:
@@ -199,15 +202,17 @@ Please note the format below only works if connecting to your local mediaflux.
 ```
 
 ### Labels and tags
+
 Tags and Labels are a kind of metadata that we can easily add to assets in MediaFlux. Tags apply to all versions of a given asset whereas labels apply to a specific version. See the help for `asset.tag.add` and `asset.label.type.create` for more information.
 
 TODO: Add examples once we have access to `dictionary.create`, `dictionary.add`, and `asset.tag.add`
 
-
 ## Namespaces and Collection Assets
+
 MediaFlux uses the concept of _namespaces_ and _collection assets_ to organize the entire list of assets stored on a server. Each of these concepts provides different features and you need both to properly organize your data.
 
 ### Namespaces
+
 Namespaces allows you to segment the list of assets on your server at a very basic level. All assets in MediaFlux belong to one (and only one) namespace. Assets names _must be unique_ within a namespace. You can apply Access Control Lists (ACL) to namespaces.
 
 To create a namespace you can use a command as follows:
@@ -242,6 +247,7 @@ Below is an example on how to perform a search and limit to only the assets with
 **Warning:** Namespaces are labeled "collections" in the Media Flux desktop, but keep in mind that "collection assets" are a completelly different concept.
 
 ### Collection Assets
+
 Collection Assets are assets that have particular properties to organize other assets, i.e. they act as "collections of assets". Collection assets allow you to have more than one file with the same name. You can index the content of a collection asset which makes them a great option to narrow down scope during searches (particularly since you cannot create indexes on namespaces). You can also apply metadata to collection assets.
 
 Whereas an asset must belong to one and only one namespace, an asset can belong to more than one collection asset.
@@ -279,6 +285,7 @@ Like with namespaces, it is possible to use collection assets to reduce the scop
 ```
 
 ## Asset Metadata
+
 MediaFlux allows you to declare custom metadata fields for your assets. The definition for this kind of metadata is stored in what MediaFlux calls "namespace for documents" and they are managed via the `asset.doc.namespace` commands (notice that these namespaces are _not_ the same as the asset namespaces that we saw before with the `asset.namespace` commands).
 
 Namespaces for documents (`asset.doc`) contain "document types" and these document types in turn contain "elements" (aka field definitions).
@@ -297,10 +304,10 @@ The syntax to create an empty document type is as follows:
 
 To create a document type with specific elements you need to pass the definition for each of the elements in the command. The following command will create a new document type called `sandbox_meta:project` with three fields inside of it:
 
-* name (string)
-* sponsor (string)
-* max_gb (integer)
-* created_on (date)
+- name (string)
+- sponsor (string)
+- max_gb (integer)
+- created_on (date)
 
 ```
 > asset.doc.type.update :create true :description "sandbox metadata" :type sandbox_meta:project :definition < :element -name name -type string :element -name sponsor -type string :element -name max_gb -type integer :element -name created_on -type date >
@@ -332,7 +339,6 @@ and we can review this information via the `asset.get` command:
                 :max_gb "100"
                 :created_on "31-Aug-2023 00:00:00"
 ```
-
 
 ## Stores
 
@@ -380,7 +386,7 @@ Once stores are defined it is possible to reference them in Aterm commands. For 
 
 ## Collection Asset Accumulators
 
-Accumulators allow for mediaflux to generate statistics about Collection Assets as the items in the collection change.  Currently there are two accumulators being added to each collection as they are created in production `collection.asset.count` & `content.all.size`.  The aterm command for creating an example accumulator is below:
+Accumulators allow for mediaflux to generate statistics about Collection Assets as the items in the collection change. Currently there are two accumulators being added to each collection as they are created in production `collection.asset.count` & `content.all.size`. The aterm command for creating an example accumulator is below:
 
 ```
 asset.collection.accumulator.add \
@@ -404,18 +410,20 @@ asset.collection.accumulator.add \
 The xtoshell command can be used to convert our API xml to the arguments to a `service.execute` command.
 
 For example:
-  In the rails console run something like:
-  
-  **Note** The gsubs at the end are to remove all spaces and `<arg></arg>` and the session_id attribute
-  
-  **Note 2** Our version of mediaflux in docker does not have this command. The xtoshell command does exist on td-meta1
-  ```
-  session_id = SystemUser.mediaflux_session
-  project = Project.first
-  project_name = project.project_directory
-  project_namespace = "#{project_name}NS"
-  store_name = Store.default(session_id: session_id).name
-  namespace = Mediaflux::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id) 
- puts "\n\n #{namespace.xtoshell_xml}\n\n"
+In the rails console run something like:
+
+**Note** The gsubs at the end are to remove all spaces and `<arg></arg>` and the session_id attribute
+
+**Note 2** Our version of mediaflux in docker does not have this command. The xtoshell command does exist on td-meta1
+
 ```
+session_id = SystemUser.mediaflux_session
+project = Project.first
+project_name = project.project_directory
+project_namespace = "#{project_name}NS"
+store_name = Store.default(session_id: session_id).name
+namespace = Mediaflux::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
+puts "\n\n #{namespace.xtoshell_xml}\n\n"
+```
+
 Copy the output and in aterm run `service.execute` and paste the output
