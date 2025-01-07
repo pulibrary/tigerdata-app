@@ -1,14 +1,14 @@
-import { defineConfig } from 'vite'
-import ViteRails from 'vite-plugin-rails'
-import inject from "@rollup/plugin-inject";
+import { defineConfig } from "vite"
+import ViteRails from "vite-plugin-rails"
+import inject from "@rollup/plugin-inject"
 
 export default defineConfig({
   plugins: [
-      inject({
-        $: 'jquery',
-        jQuery: 'jquery',
-      }),
-      ViteRails(),
+    inject({
+      $: "jquery",
+      jQuery: "jquery",
+    }),
+    ViteRails(),
   ],
-  include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)']
+  include: ["**/*.{test,spec}.?(c|m)[jt]s?(x)"],
 })
