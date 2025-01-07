@@ -4,7 +4,6 @@ orbs:
   coveralls: coveralls/coveralls@2.2.1
 
 commands:
-
   install_dependencies:
     steps:
       - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
@@ -43,30 +42,29 @@ commands:
       - run: docker start postgres
 
 jobs:
-
   test:
     working_directory: ~/tiger_data
     machine:
       image: ubuntu-2404:2024.05.1
       docker_layer_caching: true
     environment:
-        POSTGRES_USER: tiger_data_user
-        POSTGRES_DB: test_db
-        POSTGRES_HOST_AUTH_METHOD: trust
-        ARCH: linux
+      POSTGRES_USER: tiger_data_user
+      POSTGRES_DB: test_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+      ARCH: linux
     steps:
       - checkout
       - install_dependencies
       - run:
           name: Run rubocop
           command: bundle exec rubocop
-          paths: '*'
+          paths: "*"
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
       - persist_to_workspace:
-          root: &root '~/tiger_data'
-          paths: '*'
+          root: &root "~/tiger_data"
+          paths: "*"
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
