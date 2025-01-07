@@ -23,11 +23,18 @@ require 'csv'
 #     set quota [xvalue asset/collection/quota/allocation $asset]
 #     puts $id "," $path "," $creatorDomain "," $creatorUser "," $createdOn "," \
 #         $quota "," $store "," $projectDirectory "," \"$title\" "," \"$description\" "," \
-#         $dataSponsor "," $dataManager ",\"" $dataUser "\"," $department "," $projectID 
+#         $dataSponsor "," $dataManager ",\"" $dataUser "\",\"" $department "\""," $projectID 
 # }
 #
 #
 
+def parse_multiple(project_metadata, key)
+  if project_metadata[key].blank?
+    []
+  else
+    project_metadata[key].split(",").map(&:strip)
+  end
+end
 
 namespace :import do
     # command line syntax: bundle exec rake metadata:update_pppl_subcommunities\["netid"\]
@@ -42,11 +49,9 @@ namespace :import do
         if existing_project.count > 0
           puts "Skipping project #{project_id}.  There are already #{existing_project.count} version of that project in the system"
         else
-          data_user = if project_metadata["dataUser"].blank?
-                        []
-                      else
-                        project_metadata["dataUser"].split(",").map(&:strip)
-                      end
+          data_user = parse_multiple(project_metadata, "dataUser")
+          departments = parse_multiple(project_metadata,"department")
+          
           storage_size_gb = project_metadata["quota"].to_i/1000000000.0
           metadata = ProjectMetadata.new_from_hash({
             project_id:,
@@ -55,7 +60,7 @@ namespace :import do
             status: Project::ACTIVE_STATUS,
             data_sponsor: project_metadata["dataSponsor"],
             data_manager: project_metadata["dataManager"],
-            departments: [project_metadata["department"]],
+            departments: departments,
             data_user_read_only: data_user,
             project_directory: project_metadata["path"],
             storage_capacity: {size: { approved: storage_size_gb, requested: storage_size_gb}, unit: {approved: "GB", requested: "GB"}},
