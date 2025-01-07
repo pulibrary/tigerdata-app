@@ -35,7 +35,7 @@
         color: $white;
         text-decoration: none;
       }
-    }  
+    }
   }
   .btn.btn-warning.btn-sm {
     --bs-btn-bg: white;
@@ -47,59 +47,59 @@
   }
 }
 
-  .header-row {
-    width: 100% !important;
-  }
+.header-row {
+  width: 100% !important;
+}
 
-  #header .navbar .header-logo {
-    padding-left: 1em;
-  }
+#header .navbar .header-logo {
+  padding-left: 1em;
+}
 
-  #header-navigation {
+#header-navigation {
+  color: $white;
+  margin: auto;
+  float: right;
+  display: -webkit-inline-box;
+  font-family: "Libre Franklin";
+  .navbar-item {
     color: $white;
-    margin: auto;
-    float: right;
-    display: -webkit-inline-box;
     font-family: "Libre Franklin";
-    .navbar-item { 
-      color: $white;
-      font-family: "Libre Franklin";
-      font-size: 16px;
-      font-style: normal;
-      line-height: 24px;
-      font-weight: 600;
-      margin-right: 1em;
-    }
-    .navbar-item a {
-      color: $white;
-      font-family: "Libre Franklin";
-      font-size: 16px;
-      font-style: normal;
-      line-height: 24px;
-      font-weight: 600;
-      margin-left: 12px;
-      margin-right: 12px;
-      text-decoration: none;
-    }
-    .navbar-item a:hover {
-      text-decoration: underline;
-    }
-
-    .dropdown-menu { 
-      left: -5em;
-      --bs-dropdown-spacer: 1em;
-      --bs-dropdown-min-width: 10em;
-    }
-
-    .dropdown-menu a {
-      color: $black;
-      font-weight: 400;
-    }
-    .dropdown-menu a:hover {
-      width: 85%;
-    }
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+    font-weight: 600;
+    margin-right: 1em;
+  }
+  .navbar-item a {
+    color: $white;
+    font-family: "Libre Franklin";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+    font-weight: 600;
+    margin-left: 12px;
+    margin-right: 12px;
+    text-decoration: none;
+  }
+  .navbar-item a:hover {
+    text-decoration: underline;
   }
 
-  a.dropdown-item {
-    color: #000000 !important;
+  .dropdown-menu {
+    left: -5em;
+    --bs-dropdown-spacer: 1em;
+    --bs-dropdown-min-width: 10em;
   }
+
+  .dropdown-menu a {
+    color: $black;
+    font-weight: 400;
+  }
+  .dropdown-menu a:hover {
+    width: 85%;
+  }
+}
+
+a.dropdown-item {
+  color: #000000 !important;
+}

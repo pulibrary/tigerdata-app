@@ -3,97 +3,95 @@
 @import "bootstrap";
 
 #project-details-heading {
-    margin-bottom: 1.5em;
+  margin-bottom: 1.5em;
 
-    .status {
-        float: right;
-        border-radius: 0.5em;
-        padding: 0.5em 0.75em 0.5em 0.5em;
-        text-transform: capitalize;
-        font-weight: bold;
-    }
+  .status {
+    float: right;
+    border-radius: 0.5em;
+    padding: 0.5em 0.75em 0.5em 0.5em;
+    text-transform: capitalize;
+    font-weight: bold;
+  }
 
-    .status::before {
-        content: "";
-        width: 20px;
-        height: 20px;
-    }
+  .status::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+  }
 
-    .active { 
-        background: url("status_active.svg") no-repeat;
-        background-color: $status-info;
-        background-position: left;
-        padding-left: 20px;
-        color: $blue-dark;
-    }
+  .active {
+    background: url("status_active.svg") no-repeat;
+    background-color: $status-info;
+    background-position: left;
+    padding-left: 20px;
+    color: $blue-dark;
+  }
 
-    .pending { 
-        background: url("status_pending.svg") no-repeat;
-        background-color: $status-warning;
-        background-position: left;
-        padding-left: 20px;
-        color: $yellow-dark;
+  .pending {
+    background: url("status_pending.svg") no-repeat;
+    background-color: $status-warning;
+    background-position: left;
+    padding-left: 20px;
+    color: $yellow-dark;
+  }
 
-    }
+  .approved {
+    background: url("status_approved.svg") no-repeat;
+    background-color: $status-success;
+    background-position: left;
+    padding-left: 20px;
+    color: $green-dark;
+  }
 
-    .approved {
-        background: url("status_approved.svg") no-repeat;
-        background-color: $status-success;
-        background-position: left;
-        padding-left: 20px;
-        color: $green-dark;
-    }
+  .rejected {
+    background: url("status_rejected.svg") no-repeat;
+    background-color: $status-error;
+    background-position: left;
+    padding-left: 20px;
+    color: $red-darker;
+  }
 
-    .rejected {
-        background: url("status_rejected.svg") no-repeat;
-        background-color: $status-error;
-        background-position: left;
-        padding-left: 20px;
-        color: $red-darker;
-    }
-    
-    #project-description {
-        color: $black;
-        font-family: "Libre Franklin";
-        font-size: 1em;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1.5em;
-    }
+  #project-description {
+    color: $black;
+    font-family: "Libre Franklin";
+    font-size: 1em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5em;
+  }
 
-    .truncate {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2; 
-    }
+  .truncate {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
 
-    a#show-more-less-link {
-        color: $gray-60;
-    }
+  a#show-more-less-link {
+    color: $gray-60;
+  }
 
-    .label {
-      font-weight: bold;
-    } 
-    
-    .date-and-data-info ul {
-        padding: 0;
-    }
-    
-    .date-and-data-info li {
-        float: left;
-        list-style-type: none;
-        line-height: 1em;
-    }
+  .label {
+    font-weight: bold;
+  }
 
-    .date-and-data-info li:first-child:after { 
-        content: "|"; 
-        padding: 0 .5em; 
-    }
+  .date-and-data-info ul {
+    padding: 0;
+  }
 
+  .date-and-data-info li {
+    float: left;
+    list-style-type: none;
+    line-height: 1em;
+  }
+
+  .date-and-data-info li:first-child:after {
+    content: "|";
+    padding: 0 0.5em;
+  }
 }
 
 .latest-download-link {
-    margin: 1em 0em 1em 0em;
-    display: block;
+  margin: 1em 0em 1em 0em;
+  display: block;
 }

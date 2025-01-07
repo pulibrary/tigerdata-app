@@ -49,10 +49,10 @@
     margin-left: 22em;
   }
 
-  .w3-light-grey{
-   width: 10em;
-   margin-left: auto;
-   margin-right: 2em;
+  .w3-light-grey {
+    width: 10em;
+    margin-left: auto;
+    margin-right: 2em;
   }
 
   .quota-usage {
@@ -60,33 +60,30 @@
     padding-right: 2em;
   }
 
-  #dashboard-nav{
+  #dashboard-nav {
     @include tab-nav;
     display: flex;
     align-items: center;
     align-self: stretch;
   }
-
-  }
-  #emulation_bar {
-    margin-left: 5px;
-  }
-
+}
+#emulation_bar {
+  margin-left: 5px;
+}
 
 #show {
-
-  #project-nav{
+  #project-nav {
     @include tab-nav;
     margin-bottom: 1em;
     border-bottom: solid;
-    border-color: #D0D0D0;
+    border-color: #d0d0d0;
   }
 
   .pending-project {
     margin-left: 5em;
     padding-bottom: 2em;
   }
-  
+
   .btn.btn-return.btn-sm {
     background-color: white;
     border-color: #0d6efd;
@@ -146,10 +143,10 @@
 }
 
 #content {
-  #project-nav{
+  #project-nav {
     @include tab-nav;
     border-bottom: solid;
-    border-color: #D0D0D0;
+    border-color: #d0d0d0;
   }
 
   #file-list {
@@ -219,11 +216,11 @@
     margin-bottom: 10px;
   }
 
-  input[type=text]:valid {
+  input[type="text"]:valid {
     background-color: rgb(255, 255, 255);
   }
 
-  input[type=text]:invalid {
+  input[type="text"]:invalid {
     outline-color: red;
   }
 

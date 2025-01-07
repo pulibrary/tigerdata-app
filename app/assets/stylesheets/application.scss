@@ -29,26 +29,30 @@
 @import "typography";
 @import "welcome_portal";
 
-
 body {
-    font-family: $libre-franklin;
-    color: $black;
+  font-family: $libre-franklin;
+  color: $black;
 
-    .main-content {
-      display: flex;
-      padding: 3rem 7.5rem;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.625rem;
-    }
+  .main-content {
+    display: flex;
+    padding: 3rem 7.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.625rem;
+  }
 
-    /* removes horizontal scroll */
-    .row {
-      --bs-gutter-x: 0 !important;
-    }
+  /* removes horizontal scroll */
+  .row {
+    --bs-gutter-x: 0 !important;
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $libre-franklin !important;
   font-weight: 600;
 }
@@ -72,11 +76,10 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
 }
 
-
 /* These are the styles used by the jQuery autocomplete plug-in */
 .autocomplete-suggestions {
   border: 1px solid #999;
-  background: #FFF;
+  background: #fff;
   overflow: auto;
 }
 
@@ -87,12 +90,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .autocomplete-selected {
-  background: #F0F0F0;
+  background: #f0f0f0;
 }
 
 .autocomplete-suggestions strong {
   font-weight: normal;
-  color: #3399FF;
+  color: #3399ff;
 }
 
 .autocomplete-group {
@@ -121,4 +124,3 @@ h1, h2, h3, h4, h5, h6 {
 .alert-primary {
   position: absolute;
 }
-
