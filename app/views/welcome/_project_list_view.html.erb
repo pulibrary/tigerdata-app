@@ -1,22 +1,32 @@
-<tr class="project">
-    <td>
-        <a class="click-row" href="<%= project_path(project.id) %>" >
-        <table class="fixed-table">
-            <tr>
-                <td>
-                    <h2><%= project.title %></h2>
-                </td>
-            </tr>
-        </table>
-        </a>
-        <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
+<tr class="project" >
+    <td class="project-row">
+        <div class="project-details">
+            <div class="title">
+                <a class="click-row" href="<%= project_path(project.id) %>" ><%= project.title %></a>
+            </div>
+            <div class="summary">
+               <div class="status <%= project.status.downcase %>"><%= project.status %></div>
+               <div class="type"><%= project.type %></div>
+               <div class="role"><%= project.role(current_user) %></div>
+               <div class="download"><%= project.latest_file_list_time %></div>
+               <div class="activity"><%= project.last_activity %></div>
+            </div>
+        </div>
+        <div class="storage-details">
+          <div class="storage">
+            <div class="w3-light-grey w3-round-xlarge">
+                <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
+            </div>
+            <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
+          </div>
         </div>
     </td>
-    <td class="status details <%= project.status.downcase %>"><%= project.status %></td>
-    <td class="project-type details"><%= project.type %></td>
-    <td class="user-role details"><%= project.role(current_user) %></td>
-    <td class="last-download details"><%= project.latest_file_list_time %></td>
-    <td class="last-activity details"><%= project.last_activity %></td>
-    <td class="quota-usage"><%= project.quota_usage(session_id: current_user.mediaflux_session) %></td>
+    <!-- table columns being kept, but not shown for DataTables sorting and search -->
+    <td style="display: none"><%= project.title %></td>
+    <td style="display: none"><%= project.status %></td>
+    <td style="display: none"><%= project.type %></td>
+    <td style="display: none"><%= project.role(current_user) %></td>
+    <td style="display: none"><%= project.latest_file_list_time %></td>
+    <td style="display: none"><%= project.last_activity %></td>
+    <td style="display: none"><%= project.quota_usage(session_id: current_user.mediaflux_session) %></td>
 </tr>
