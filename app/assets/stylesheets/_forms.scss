@@ -3,7 +3,6 @@
 @import "bootstrap";
 
 #project-form {
-
   .row {
     padding-bottom: 40px;
   }
@@ -25,7 +24,9 @@
     width: 285px;
   }
 
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     border-radius: 8px;
     border: 1px solid $gray-60;
   }
