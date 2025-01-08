@@ -1,9 +1,0 @@
-semi: false
-overrides:
-  - files:
-      - "*.md"
-      - "architecture-decisions/*.md"
-      - "config/**/*.yml"
-      - "docs/*.md"
-      - "app/javascript/**/*.js"
-      - "app/javascript/**/*.css"

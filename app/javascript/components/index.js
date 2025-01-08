@@ -1,3 +1,3 @@
-import MediafluxComponent from "./mediaflux"
+import MediafluxComponent from './mediaflux';
 
-export default MediafluxComponent
+export default MediafluxComponent;
