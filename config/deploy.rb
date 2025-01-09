@@ -77,6 +77,7 @@ namespace :load_users do
     on roles(:rake) do
       within release_path do
         execute("cd #{release_path} && bundle exec rake load_users:from_registration_list")
+        execute("cd #{release_path} && bundle exec rake load_affiliations:from_file[#{deploy_to}/shared/departments.csv]")
       end
     end
   end

@@ -82,8 +82,8 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
     "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
     "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
-    "          <Department>RDSS</Department>\n" \
-    "          <Department>PRDS</Department>\n" \
+    "          <Department>77777</Department>\n" \
+    "          <Department>88888</Department>\n" \
     "          <CreatedBy>uid1</CreatedBy>\n" \
     "          <CreatedOn>17-JUN-2024 20:32:37</CreatedOn>\n" \
     "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \

@@ -54,8 +54,8 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
       "          <Status>#{project.metadata[:status]}</Status>\n" \
       "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
       "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
-      "          <Department>RDSS</Department>\n" \
-      "          <Department>PRDS</Department>\n" \
+      "          <Department>77777</Department>\n" \
+      "          <Department>88888</Department>\n" \
       "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
       "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
       "          <ProjectID>abc-123</ProjectID>\n" \
@@ -93,7 +93,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
                      "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
                      "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
                      "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
-                     "<Department>RDSS</Department><Department>PRDS</Department><CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
+                     "<Department>77777</Department><Department>88888</Department><CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
                      "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
                      "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
                      "<RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \

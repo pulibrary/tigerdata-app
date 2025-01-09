@@ -18,7 +18,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       data_manager: data_manager.uid,
       project_directory: "project-123",
       title: "project 123",
-      departments: ["RDSS"],
+      departments: ["77777"], # RDSS test code in fixture data
       description: "hello world",
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
@@ -41,6 +41,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   before do
     sign_in sponsor_user
+    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
   end
 
   context "Show page" do

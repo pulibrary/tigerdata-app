@@ -5,6 +5,10 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   let(:subject) { described_class.new(user:, number: 1, project_prefix: 'test-project') }
   let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session}
 
+  before do
+    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+  end
+
   describe "#generate" do
     it "creates a project in mediaflux" do
       subject.generate
