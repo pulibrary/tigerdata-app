@@ -10,6 +10,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
     "jsdom": "^21.1.0",
+    "nanoid": ">=3.3.8",
     "rollup": "^4.24.0",
     "vite": "^5.4.8",
     "vite-plugin-ruby": "^5.0.0",
@@ -23,6 +24,7 @@
     "browserslist": "^4.21.5",
     "datatables": "^1.10.18",
     "jquery": "^3.6.3",
+    "nanoid": ">=3.3.8",
     "vite-plugin-rails": "^0.5.0",
     "yarn": "^1.22.22",
     "yarn.lock": "^0.0.1-security"

@@ -3174,6 +3174,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:>=3.3.8":
+  version: 5.0.9
+  resolution: "nanoid@npm:5.0.9"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 10c0/a2d9710525d4998a8a1610bbe6eb9a92c254ebab7c567c1ab429046fe7eed9c4df3508b59fb44c58ffdc98edb28dd6f953715c14b64ea0a3a2ce37420cdfeefd
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^3.3.7":
   version: 3.3.8
   resolution: "nanoid@npm:3.3.8"
@@ -4152,6 +4161,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.27.5"
     jquery: "npm:^3.6.3"
     jsdom: "npm:^21.1.0"
+    nanoid: "npm:>=3.3.8"
     rollup: "npm:^4.24.0"
     vite: "npm:^5.4.8"
     vite-plugin-rails: "npm:^0.5.0"
