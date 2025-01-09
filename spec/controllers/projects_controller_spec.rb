@@ -3,6 +3,11 @@ require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { FactoryBot.create :project }
+
+  before do
+    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+  end
+
   describe "#details" do
     it "renders an error when requesting json" do
       get :details, params: { id: project.id, format: :json }
@@ -24,11 +29,11 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
       it "shows affiliation code as being saved to the project" do
         get :details, params: { id: project.id, format: :json }
-        expect(JSON.parse(response.body)["departments"]).to include("23100")
-          .or(include("HPC"))
-          .or(include("RDSS"))
-          .or(include("PRDS"))
-          .or(include("PPPL"))
+        expect(JSON.parse(response.body)["departments"]).to include("55555")
+          .or(include("66666"))
+          .or(include("77777"))
+          .or(include("88888"))
+          .or(include("99999"))
       end
 
       it "renders the project metadata as xml" do
@@ -50,8 +55,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         "          <Status>#{project.metadata[:status]}</Status>\n" \
         "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
         "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
-        "          <Department>RDSS</Department>\n" \
-        "          <Department>PRDS</Department>\n" \
+        "          <Department>77777</Department>\n" \
+        "          <Department>88888</Department>\n" \
         "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
         "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
         "          <ProjectID>abc-123</ProjectID>\n" \

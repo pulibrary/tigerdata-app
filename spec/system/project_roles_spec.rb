@@ -11,6 +11,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   let(:read_write) { FactoryBot.create :user }
   before do
     sign_in sponsor_user
+    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
     # make sure the users exist before the page loads
     data_manager

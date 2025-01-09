@@ -1,0 +1,7 @@
+JT_CF_DEPT_TBL,2573,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Dept,Eff Date,Status,Department Descr,SetID,Short Desc,Descr,Co,Location SetID,Location,Tax Loc,MgrID,Mgr Posn,Yr End Dt,Budget Lvl,GL-Expense,EEO4 Fcn,Ind Sector,Accnt_ins,SI_accdnt#,Hazard,Estab ID,RSK CD,Descr,Sub-Agency,PAR Line 2,PAR Line 3,PAR Line 4,PAR Line 5,PAR2 Descr,PAR3 Descr,PAR4 Descr,PAR5 Descr,Class Unit,Org. Unit,Work Sector,Agency Code,Indus Committee,NACE,FTE Edit,Can Grant,Use TL Distrib?,Use Budgets?,Use Encumb?,Use Distrib?,Budget Dept,Dist Optn,Stats Can Dept,Faculty Code,Manager,Acct Owner,Country Group,Bud. Only,RTBL Data,Sync ID,Sync Date Time
+55555,1/1/01,A,AST-Astrophysical Sciences,XXXX,55555,,,,,,,,0,A,,,,,,,,,,,,,,,,,,,,,,0,,,B,C,D,E,F,G,,H,,,,,,I,,9999,1/1/01 12:01
+66666,1/1/01,A,HPC-High Performance Computing,XXXX,66666,,,,,,,,0,A,,,,,,,,,,,,,,,,,,,,,,0,,,B,C,D,E,F,G,,H,,,,,,I,,9999,1/1/01 12:01
+77777,1/1/01,A,RDSS-Research Data and Scholarship Services,XXXX,77777,,,,,,,,0,A,,,,,,,,,,,,,,,,,,,,,,0,,,B,C,D,E,F,G,,H,,,,,,I,,9999,1/1/01 12:01
+88888,1/1/01,A,PRDS-Princeton Research Data Service,XXXX,88888,,,,,,,,0,A,,,,,,,,,,,,,,,,,,,,,,0,,,B,C,D,E,F,G,,H,,,,,,I,,9999,1/1/01 12:01
+99999,1/1/01,A,PPPL-Princeton Plasma Physics Laboratory,XXXX,99999,,,,,,,,0,A,,,,,,,,,,,,,,,,,,,,,,0,,,B,C,D,E,F,G,,H,,,,,,I,,9999,1/1/01 12:01

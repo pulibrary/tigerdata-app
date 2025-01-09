@@ -34,7 +34,7 @@ FactoryBot.define do
         data_manager: data_manager,
         data_user_read_only: data_user_read_only,
         data_user_read_write: data_user_read_write,
-        departments: ["RDSS", "PRDS"],
+        departments: ["77777", "88888"],
         project_directory: project_directory,
         title: title,
         description: "a random description",

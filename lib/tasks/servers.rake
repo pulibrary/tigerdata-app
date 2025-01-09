@@ -13,6 +13,7 @@ namespace :servers do
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
+    system("rake load_affiliations:from_file[spec/fixtures/departments.csv]")
   end
 
   desc "Stop development dependencies"
