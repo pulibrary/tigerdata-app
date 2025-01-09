@@ -1,8 +1,6 @@
 // @vitest-environment jsdom
 
-import {
-  describe, it, expect,
-} from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import { JSDOM } from 'jsdom';
 import Mediaflux from '../components/mediaflux';

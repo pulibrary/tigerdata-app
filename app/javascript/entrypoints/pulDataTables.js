@@ -15,11 +15,12 @@ export function setupTable(tableId) {
       info: '_START_ - _END_ out of _TOTAL_ shown',
       paginate: { next: '>', previous: '<' },
     },
-    columnDefs: [{
-      targets: 0,
-      searchable: false,
-      orderable: false,
-    },
+    columnDefs: [
+      {
+        targets: 0,
+        searchable: false,
+        orderable: false,
+      },
     ],
   };
 

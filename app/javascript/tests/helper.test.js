@@ -2,7 +2,9 @@
 
 import {
   // assert,
-  describe, expect, it,
+  describe,
+  expect,
+  it,
 } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { setTargetHtml } from '../entrypoints/helper';

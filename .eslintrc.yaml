@@ -1,7 +1,9 @@
 env:
   browser: true
   es2021: true
-extends: 'airbnb-base'
+extends:
+  - "airbnb-base"
+  - "prettier"
 overrides: []
 parserOptions:
   ecmaVersion: latest
@@ -11,6 +13,6 @@ globals:
 
 rules:
   no-alert: off # OK: A lot easier than coding up new UI.
-  no-console:   # OK: console.log is fine for debugging, but we don't want to keep it around indefinitely.
-    - error     # Also make sure that warnings and errors are marked as such.
+  no-console: # OK: console.log is fine for debugging, but we don't want to keep it around indefinitely.
+    - error # Also make sure that warnings and errors are marked as such.
     - { allow: ["warn", "error"] }

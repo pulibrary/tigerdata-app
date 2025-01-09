@@ -104,7 +104,8 @@ function emulate() {
         type: 'POST',
         url: $('#emulation-form').attr('action'),
         data: $('#emulation-form').serialize(),
-        success() { // on success..
+        success() {
+          // on success..
           window.location.reload(); // update the DIV
         },
       });

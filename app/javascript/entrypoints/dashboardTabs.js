@@ -96,7 +96,8 @@ export function dashTab() {
       type: 'POST',
       url: '/dash_classic',
       data: { dashtab: 'classic' },
-      success() { // on success..
+      success() {
+        // on success..
         window.location.reload(); // update the DIV
       },
     });
@@ -109,7 +110,8 @@ export function dashTab() {
       type: 'POST',
       url: '/dash_project',
       data: { dashtab: 'project' },
-      success() { // on success..
+      success() {
+        // on success..
         window.location.reload(); // update the DIV
       },
     });
@@ -123,7 +125,8 @@ export function dashTab() {
 
       url: '/dash_admin',
       data: { dashtab: 'admin' },
-      success() { // on success..
+      success() {
+        // on success..
         window.location.reload(); // update the DIV
       },
     });

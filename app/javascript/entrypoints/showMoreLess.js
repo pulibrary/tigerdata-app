@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
 export const showMoreLess = {
-// eslint-disable-next-line object-shorthand, func-names
+  // eslint-disable-next-line object-shorthand, func-names
   showMore: function (element, excerpt) {
     const textElement = element;
 
