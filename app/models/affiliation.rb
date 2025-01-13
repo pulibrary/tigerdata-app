@@ -10,4 +10,8 @@ class Affiliation < ApplicationRecord
       end
     end  
   end
+
+  def self.find_fuzzy_by_name(name)
+    find_by(name: name) || Affiliation.where("name like '%#{name}%'").order(:code).first
+  end
 end

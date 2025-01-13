@@ -50,7 +50,8 @@ namespace :import do
           puts "Skipping project #{project_id}.  There are already #{existing_project.count} version of that project in the system"
         else
           data_user = parse_multiple(project_metadata, "dataUser")
-          departments = parse_multiple(project_metadata,"department")
+          department_names = parse_multiple(project_metadata,"department")
+          departments = department_names.map {|name| Affiliation.find_fuzzy_by_name(name)&.code || name }
           
           storage_size_gb = project_metadata["quota"].to_i/1000000000.0
           metadata = ProjectMetadata.new_from_hash({
