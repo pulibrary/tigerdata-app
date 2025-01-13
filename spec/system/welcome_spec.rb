@@ -11,6 +11,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
 
+    it "shows the 'Learn More' button, which goes to the TigerData service page" do
+      visit "/"
+      expect(page).to have_button "Learn More"
+      click_button "Learn More"
+      assert_current_path("https://tigerdata.princeton.edu")
+    end
+
     it "forwards to login page" do
       project = FactoryBot.create(:project)
       visit project_path(project)
