@@ -180,8 +180,9 @@ To save updates and make changes to appointed users for early testing of the Tig
 2. Save those updated changes
 3. Download the file as a .CSV file
 4. Copy the downloaded .CSV file to `data` > `user_registration_list.csv`
-5. Open a PR to check the updated file into version control
-6. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.
+5. run SED to remove the ^M from the file `sed -e "s/\r//g" user_registration_list.csv > user_registration_list_production.csv`
+6. Open a PR to check the updated file into version control
+7. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.
 
 ## Sidekiq
 
