@@ -18,9 +18,11 @@ export function dashStyle(railsSession) {
         admin.classList.add('active');
         break;
       default:
-        project.style.borderBottom = 'solid';
-        project.style.borderColor = '#E77500';
-        project.classList.add('active');
+        if (project !== null) {
+          project.style.borderBottom = 'solid';
+          project.style.borderColor = '#E77500';
+          project.classList.add('active');
+        }
         break;
     }
   }
