@@ -13,7 +13,19 @@
       </tr>
    </thead>
    <tbody>
-      <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
+      <% if projects.count == 0 %>
+         <tr class="project" >
+            <td class="project-row">
+               <div class="project-details">
+                  <div class="title">
+                     No pending projects
+                  </div>
+               </div>
+            </td>
+         </tr>
+      <% else %>
+         <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
+      <% end %>
    </tbody>
    </table>
 </div>
