@@ -31,14 +31,13 @@ class ProjectShowPresenter
     project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
   end
 
-  # Usage is in MB
   def default_usage_divisor
-    1.0/(1024.0**1)
+    1.0/(1000.0**1)
   end
 
   # Capacity is in bytes
   def default_capacity_divisor
-    1.0/(1024.0**3)
+    1.0/(1000.0**3)
   end
 
   # This assumed that the storage usage is recorded in the same units as the units specified in the StorageCapacity metadata
