@@ -31,10 +31,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and deploy YARD
     steps:
-      - uses: kachick/deploy-yard-to-pages@v1.3.0
-        id: deployment
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
-          # default `doc` as default of `.yardopts`
-          # output-dir: 'doc'
-          # default version is 3.2
-          ruby-version: "3.3.0"
+          ruby-version: 3.3.0
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - run: bundle exec yard
+        shell: bash
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          # By default, upload the docs directory
+          path: ${{ inputs.output-dir }}
+      - id: deployment
+        uses: actions/deploy-pages@v4
