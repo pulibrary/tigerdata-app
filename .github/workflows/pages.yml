@@ -42,7 +42,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-artifact@v4
         with:
-          # By default, upload the docs directory
-          path: 'docs'
+          # Yard puts everything into a folder called 'doc' by default
+          path: "doc"
       - id: deployment
         uses: actions/deploy-pages@v4
