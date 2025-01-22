@@ -43,6 +43,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           # By default, upload the docs directory
-          path: ${{ inputs.output-dir }}
+          path: 'docs'
       - id: deployment
         uses: actions/deploy-pages@v4
