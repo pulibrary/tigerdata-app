@@ -16,7 +16,7 @@ module ProjectHelper
   # rubocop:disable Rails/OutputSafety
   def user_list_json(users)
     json_elements = users.map do |user|
-      "{ data: '#{user.uid}', value: '#{user.display_name_safe} (#{user.uid})' }"
+      { data: user.uid, value: "#{user.display_name_safe} (#{user.uid})" }.to_json
     end
 
     json_elements.join(",").html_safe
