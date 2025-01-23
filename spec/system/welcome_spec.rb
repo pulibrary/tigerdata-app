@@ -23,6 +23,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       visit project_path(project)
       expect(page).to have_content "You need to sign in or sign up before continuing."
     end
+
+    it "hides the 'Administration' tab" do
+      visit "/"
+      expect(page).to have_content "TigerData Web Portal"
+      expect(page).not_to have_content "Administration"
+    end
   end
 
   context "authenticated user" do
@@ -79,6 +85,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Latest Downloads"
         expect(page).to have_content "Expires in 7 days"
         expect(page).to have_content "1.18 MB"
+      end
+
+      it "hides the 'Administration' tab" do
+        visit "/"
+        expect(page).to have_content "TigerData Web Portal"
+        expect(page).not_to have_content "Administration"
       end
 
       context "the user signed in is an eligible sponsor" do
@@ -179,6 +191,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
       end
+
+      it "renders the 'Administration' tab" do
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content "Administration"
+      end
     end
 
     context "for tester-trainers" do
@@ -217,6 +235,15 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           .skipping(:'color-contrast') # false positives
           .excluding(".tt-hint") # Issue is in typeahead.js library
       end
+
+      it "hides the 'Administration' tab" do
+        sign_in current_user
+        current_user.trainer = true
+        current_user.save!
+
+        visit "/"
+        expect(page).not_to have_content "Administration"
+      end
     end
 
     context "with the sysadmin role" do
@@ -237,6 +264,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
         expect(page).to have_content("Activity")
+      end
+
+      it "renders the 'Administration' tab" do
+        sign_in current_user
+        visit "/"
+        expect(page).to have_content "Administration"
       end
     end
   end

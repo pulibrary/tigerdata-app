@@ -11,7 +11,13 @@
         <div class="main">
             <div id="dashboard-nav">
                 <button id="dash-projects" class="tab-nav"> Projects </button>
-                <button id="dash-admin" class="tab-nav"> Administration </button>
+                <% if current_user.eligible_sysadmin? %>
+                    <button id="dash-admin" class="tab-nav"> Administration </button>
+                <% elsif current_user.trainer? %>
+                    <% if session[:emulation_role] == "System Administrator" %>
+                        <button id="dash-admin" class="tab-nav"> Administration </button>
+                    <% end %>
+                <% end %>
             </div>
             <% if @dash_session == "project"%>
                 <%= render partial: "projects_listing", locals: { projects: @dashboard_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing" } %>
