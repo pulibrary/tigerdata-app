@@ -36,10 +36,10 @@ rh6841,,Ryan,Heuser,Ryan Heuser,,,,,,2024-02-05,Matt Chandler,"Early Adopter, un
 wh4213,,Wouter,Haverals,Wouter Haverals,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
 lauret,,Laure,Thompson,Laure Thompson,,,,,,2024-02-05,Matt Chandler,"Early Adopter, under Meredith Martin"
 huston,,Steve,Huston,Steve Huston,,,,TRUE,,2024-03-12,Matt Chandler,TigerData Staff
-ka1125,,Kayt,Ahnberg,Kayt Ahnberg,,TRUE,,,TRUE,2024-05-23,Matt Chandler,Tester
-bg1162,,Beth,German,Beth German,,TRUE,,,TRUE,2024-05-23,Matt Chandler,Tester
-cx1671,,Cassie,Xu,Cassie Xu,,TRUE,,,TRUE,2024-10-04,Matt Chandler,Tester
-gn2508,,Gaurav,Nemade,Gaurav Nemade,,TRUE,,,TRUE,2024-10-04,Matt Chandler,Tester
+ka1125,,Kayt,Ahnberg,Kayt Ahnberg,TRUE,TRUE,,,TRUE,2024-05-23,Matt Chandler,TigerData Staff
+bg1162,,Beth,German,Beth German,TRUE,TRUE,,,TRUE,2024-05-23,Matt Chandler,TigerData Staff
+cx1671,,Cassie,Xu,Cassie Xu,TRUE,TRUE,,,TRUE,2024-10-04,Matt Chandler,TigerData Staff
+gn2508,,Gaurav,Nemade,Gaurav Nemade,TRUE,TRUE,,,TRUE,2024-10-04,Matt Chandler,TigerData Staff
 jl8316,,Jason,Lohrey,Jason Lohrey,,,,,TRUE,2024-11-01,Matt Chandler,External tester
 aburrows,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
 aguess,,,,,TRUE,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
@@ -93,3 +93,16 @@ sa3275,,,,,,,,,,2024-11-26,Matt Chandler,Capacity Early Adopter
 dd7,,Dominique,Davis,Dominique Davis,,,,,TRUE,2024-12-10,Matt Chandler,TigerData Staff
 hwcowles,,Wind,Cowles,Wind Cowles,TRUE,TRUE,,,TRUE,2024-12-19,Matt Chandler,TigerData Staff
 curt,,Curt,Hillegas,Curt Hillegas,TRUE,,,TRUE,TRUE,2024-12-19,Matt Chandler,TigerData Staff
+cwulfman,,Clifford,Wulfman,Clifford Wulfman,,,,,,2025-01-09,Matt Chandler,Library Early Adopter
+ls7355,,Logan,Smith,Logan Smith,,,,,,2025-01-09,Matt Chandler,Capacity Early Adopter
+meghant,,Meghan,Testerman,Meghan Testerman,TRUE,TRUE,,,TRUE,2025-01-14,Matt Chandler,TigerData Staff
+neggink,,Neggin,Keshavarzian,Neggin Keshavarzian,,TRUE,,,TRUE,2025-01-21,Matt Chandler,Tester
+sr7276,,Sarah,Reiff Conell,Sarah Reiff Conell,,TRUE,,,TRUE,2025-01-21,Matt Chandler,Tester
+sm1064,,,,,,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+aa1198,,,,,,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+aa4712,,,,,,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+lm4604,,Lucas,Mandacaru Guerra,Lucas Mandacaru Guerra,,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+sr39,,Roy,Sandip,Roy Sandip,,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+so4044,,Stephanie,O'Neil,Stephanie O'Neil,,TRUE,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+mlisanti,,Mariangela,Lisanti,Mariangela Lisanti,TRUE,,,,,2025-01-21,Matt Chandler,Capacity Early Adopter
+ais-vi021,,,,,,,,TRUE,,2025-01-22,Matt Chandler,Chuck Bentler's VI account
