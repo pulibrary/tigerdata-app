@@ -1,49 +1,79 @@
 <div id="project-details-heading">
 
   <div class="row">
-  <div class="col-12 col-md-8"> 
-  <h1><%= @project.title %></h1>
-  </div>
-  <div class="col-6 col-md-4">  
-    <div class="status <%= @project.status.downcase %>">
-      <%= @project.status %>
+    <div class="col-6 col-md-8"> 
+      <h1><%= @project.title %></h1>
+    <div class="heading-decoration"></div>
     </div>
-  </div>
-</div>
-  
-  
-<div class="heading-decoration"></div>
-
-  <div id="project-description">
-    <div id="description-text" class="truncate">
-      <%= @project.description %>
+    <div class="col-6 col-md-4">
+      <div class="status <%= @project.status.downcase %>">
+        <%= @project.status %>
+      </div>
     </div>
-    <a id="show-more-less-link" class="show-more" href="#"><span>more...</span></a>
-</div>
+  </div><!-- .row -->
 
-<div class="row">
-  <div class="col-12">
-    <div class="date-and-data-info">
-      <ul> 
-        <li><span class="label">Date Created:</span> <%= @project.created %></li>
-        <li><span class="label">Last updated:</span> <%= @project.updated %></li>
-      </ul>
-    </div>
-  </div>
-</div>
+  <div class="row">
+    <div class="col-lg-6"><!-- .col -->
 
+      <div id="project-description">
+        <div id="description-text" class="truncate">
+          <%= @project.description %>
+        </div>
+        <a id="show-more-less-link" class="show-more" href="#"><span>more...</span></a>
+      </div><!-- #project-description -->
 
-<div class="row">
-  <div class="col-12">
-    <div class="date-and-data-info">
-      <ul> 
-        <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @project.data_sponsor %></span></li>
-        <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @project.data_manager %></span></li>
-      </ul>
-    </div>
-  </div>
-</div>
-</div>
+      <div class="row">
+        <div class="col-12">
+          <div class="date-and-data-info">
+            <ul> 
+              <li><span class="label">Date Created:</span> <%= @project.created %></li>
+              <li><span class="label">Last updated:</span> <%= @project.updated %></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- .row -->
+
+      <div class="row">
+        <div class="col-12">
+          <div class="date-and-data-info">
+            <ul> 
+              <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @project.data_sponsor %></span></li>
+              <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @project.data_manager %></span></li>
+            </ul>
+          </div>
+        </div><!-- .col-12 -->
+      </div><!-- .row -->
+    </div><!-- .col -->
+
+    <div class="col-lg-6">
+      <div class="row mt-4">
+        <div class="storage-quota container-fluid px-3 py-2 border border-secondary me-0">
+          <div class="row mt-2 mb-4">
+            <div class="col-6">
+              <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @project.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
+            </div>
+            <div class="col-6 text-end">
+              <%= link_to "Request More", "mailto:tigerdata@princeton.edu" %>
+            </div>
+          </div>
+          <div class="row my-2">
+            <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @project.storage_usage_percent(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: <%= @project.storage_usage_percent(session_id: current_user.mediaflux_session) %>%"></div>
+            </div>
+          </div>
+          <div class="row my-2">
+            <div class="col-6">
+              <%= @project.formatted_storage_usage(session_id: current_user.mediaflux_session) %> KB Used
+            </div>
+            <div class="col-6 text-secondary text-end">
+              <%= @project.formatted_storage_remaining(session_id: current_user.mediaflux_session) %> GB Free
+            </div>
+          </div>
+        </div>
+      </div><!-- .row -->
+    </div><!-- .col -->
+  </div><!-- .row -->
+</div><!-- #project-details-heading -->
 
 <script type="module">
 
