@@ -31,15 +31,6 @@ class ProjectShowPresenter
     project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
   end
 
-  def default_usage_divisor
-    1.0/(1000.0**1)
-  end
-
-  # Capacity is in bytes
-  def default_capacity_divisor
-    1.0/(1000.0**3)
-  end
-
   # This assumed that the storage usage is recorded in the same units as the units specified in the StorageCapacity metadata
   def storage_usage(session_id:)
     persisted = project.storage_usage_raw(session_id: session_id)
@@ -67,15 +58,6 @@ class ProjectShowPresenter
     format("%.3f", value)
   end
 
-  def storage_remaining(session_id:)
-    capacity = storage_capacity(session_id: session_id)
-    return 0.0 if capacity.zero?
-
-    usage = storage_usage(session_id: session_id)
-
-    capacity - usage
-  end
-
   def formatted_storage_remaining(session_id:)
     value = storage_remaining(session_id:)
     format("%.3f", value)
@@ -87,7 +69,28 @@ class ProjectShowPresenter
 
     usage = storage_usage(session_id: session_id)
 
-    value = (usage/capacity)*100.0
+    value = (usage/(capacity/default_capacity_divisor))*100.0
     format("%.1f", value)
   end
+
+  private
+
+    def default_usage_divisor
+      1.0/(1000.0**1)
+    end
+
+    # Capacity is in bytes
+    def default_capacity_divisor
+      1.0/(1000.0**3)
+    end
+
+    def storage_remaining(session_id:)
+      capacity = storage_capacity(session_id: session_id)
+      return 0.0 if capacity.zero?
+
+      usage = storage_usage(session_id: session_id)
+
+      remaining = (capacity/default_capacity_divisor) - usage
+      remaining*default_capacity_divisor
+    end
 end
