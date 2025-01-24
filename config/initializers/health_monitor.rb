@@ -4,7 +4,7 @@ Rails.application.config.after_initialize do
     config.cache
 
     config.file_absence.configure do |file_config|
-      file_config.filename = "public/remove-from-nginx"
+      file_config.filename = "/opt/tigerdata/shared/remove-from-nginx"
     end
     # Mediaflux check
     config.add_custom_provider(MediafluxStatus)
