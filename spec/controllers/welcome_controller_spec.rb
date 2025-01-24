@@ -40,6 +40,18 @@ RSpec.describe WelcomeController do
         expect(assigns(:current_user).eligible_sponsor).to be_falsey
         expect(assigns(:current_user).eligible_manager).to be_falsey
       end
+
+      context "when emulating the role of System Administrator" do
+        render_views
+
+        it "shows the admin tab" do
+          user.trainer = true
+          user.save!
+          get :index, session: { emulation_role: "System Administrator" }
+          expect(response).to render_template("index")
+          expect(response.body).to include("Administration")
+        end
+      end
     end
     context "when a trainer is emulating eligible_sponsor" do
       it "renders the index page" do
@@ -92,6 +104,26 @@ RSpec.describe WelcomeController do
     it "renders the styles preview page" do
       get :styles_preview
       expect(response).to render_template("styles_preview")
+    end
+
+    context "and the user is a sysadmin" do
+      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
+      render_views
+
+      it "shows the admin tab" do
+        get :index
+        expect(response.body).to include("Administration")
+      end
+    end
+
+    context "and the user is a superuser" do
+      let(:user) { FactoryBot.create :superuser, mediaflux_session: SystemUser.mediaflux_session }
+      render_views
+
+      it "shows the admin tab" do
+        get :index
+        expect(response.body).to include("Administration")
+      end
     end
   end
 end
