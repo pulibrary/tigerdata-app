@@ -217,7 +217,7 @@ class Project < ApplicationRecord
   end
 
   def self.default_storage_usage
-    "0 {default_storage_unit}"
+    "0 #{default_storage_unit}"
   end
 
   def storage_usage(session_id:)
