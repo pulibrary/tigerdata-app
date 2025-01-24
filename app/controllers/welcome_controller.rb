@@ -4,7 +4,11 @@ class WelcomeController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    return if current_user.nil?
+    if current_user.nil?
+      render layout: "welcome"
+      return
+    end
+
     @pending_projects = Project.pending_projects.map { |project| ProjectDashboardPresenter.new(project) }
     @approved_projects = Project.approved_projects.map { |project| ProjectDashboardPresenter.new(project) }
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?

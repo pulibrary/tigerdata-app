@@ -103,3 +103,14 @@
 a.dropdown-item {
   color: #000000 !important;
 }
+
+/* Do not put a h1 in the banner as it is not show always.  Make the only h1 be part of the page*/
+#banner {
+  h2 {
+    font-family: "Libre Franklin";
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 3rem; /* 120% */
+  }
+}
