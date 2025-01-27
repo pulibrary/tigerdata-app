@@ -222,19 +222,12 @@ class Project < ApplicationRecord
 
   def storage_usage(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_used, '')
-
-    if quota_value.blank?
-      return self.class.default_storage_usage
-    else
-      return quota_value
-    end
+    values.fetch(:quota_used, self.class.default_storage_usage) # if the storage is empty use the default
   end
 
   def storage_usage_raw(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_used_raw, 0)
-    quota_value
+    values.fetch(:quota_used_raw, 0) # if the storage raw is empty use zero
   end
 
   def self.default_storage_capacity

@@ -604,7 +604,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             description: "hello world",
             data_user_read_only: [read_only.uid],
             data_user_read_write: [read_write.uid],
-            status: ::Project::PENDING_STATUS,
+            status: ::Project::APPROVED_STATUS,
             created_on: Time.current.in_time_zone("America/New_York").iso8601,
             created_by: FactoryBot.create(:user).uid,
             project_id: "abc-123",
@@ -631,8 +631,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(approved_project)
 
           expect(page).to have_content "Storage (500.000 GB)"
-          expect(page).to have_content "0.400 KB Used"
-          expect(page).to have_content "500.000 GB Free"
+          expect(page).to have_content "400 bytes out of 500 GB used"
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')

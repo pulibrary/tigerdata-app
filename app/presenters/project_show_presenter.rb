@@ -39,11 +39,6 @@ class ProjectShowPresenter
     value*default_usage_divisor
   end
 
-  def formatted_storage_usage(session_id:)
-    value = storage_usage(session_id: session_id)
-    format("%.3f", value)
-  end
-
   def storage_capacity(session_id: nil)
     return project_metadata.storage_capacity if session_id.nil?
 
@@ -58,20 +53,25 @@ class ProjectShowPresenter
     format("%.3f", value)
   end
 
-  def formatted_storage_remaining(session_id:)
-    value = storage_remaining(session_id:)
+  def formatted_quota_percentage(session_id:)
+    value = quota_percentage(session_id:)
     format("%.3f", value)
   end
 
-  def storage_usage_percent(session_id:)
-    capacity = storage_capacity(session_id: session_id)
-    return 0.0 if capacity.zero?
-
-    usage = storage_usage(session_id: session_id)
-
-    value = (usage/(capacity/default_capacity_divisor))*100.0
-    format("%.1f", value)
+  def quota_usage(session_id:)
+    if project.pending?
+      quota_usage = "0 KB out of 0 GB used"
+    else
+      quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
+    end
+    quota_usage
   end
+
+  def quota_percentage(session_id:)
+    return 0 if project.pending? || project.storage_capacity_raw(session_id:).zero?
+    
+   (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
+  end  
 
   private
 
