@@ -2,6 +2,12 @@
 @import "typography";
 @import "bootstrap";
 
+.project-details {
+  .summary {
+    text-transform: capitalize;
+  }
+}
+
 #project-details-heading {
   margin-bottom: 1.5em;
 
