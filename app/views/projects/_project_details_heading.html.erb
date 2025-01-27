@@ -57,17 +57,12 @@
             </div>
           </div>
           <div class="row my-2">
-            <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @project.storage_usage_percent(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: <%= @project.storage_usage_percent(session_id: current_user.mediaflux_session) %>%"></div>
+            <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @project.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: <%= @project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
             </div>
           </div>
           <div class="row my-2">
-            <div class="col-6">
-              <%= @project.formatted_storage_usage(session_id: current_user.mediaflux_session) %> KB Used
-            </div>
-            <div class="col-6 text-secondary text-end">
-              <%= @project.formatted_storage_remaining(session_id: current_user.mediaflux_session) %> GB Free
-            </div>
+            <%= @project.quota_usage(session_id: current_user.mediaflux_session) %>
           </div>
         </div>
       </div><!-- .row -->
