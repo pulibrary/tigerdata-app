@@ -5,7 +5,6 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
   let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.088\"}" }
 
-
   before do
     sign_in user
   end
