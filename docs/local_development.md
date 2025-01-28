@@ -37,7 +37,6 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
 docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
 ```
 
-
 3. From now on when you need _start this container_ you can use:
 
 ```
