@@ -23,8 +23,7 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
     context "logged in user" do
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
-      let(:docker_response) { "4.16.082" }
-      let(:ansible_response) { "4.16.071" }
+      let(:docker_response) { "4.16.088" }
 
       before do
         sign_in user
@@ -33,7 +32,7 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
       it "renders a successful response" do
         get mediaflux_info_index_path
         expect(response).to be_successful
-        expect(response.parsed_body).to include(docker_response).or include(ansible_response)
+        expect(response.parsed_body).to include(docker_response)
       end
     end
   end
