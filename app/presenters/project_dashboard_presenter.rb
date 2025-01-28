@@ -29,7 +29,7 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     if project_metadata.updated_on.nil?
       "Not yet active"
     else
-      "#{time_ago_in_words(project_metadata.updated_on)} ago"
+      "#{remove_about time_ago_in_words(project_metadata.updated_on)} ago"
     end
   end
 
@@ -41,5 +41,10 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     else
       "Data User"
     end
+  end
+
+  # Removes "about" (as in "about 1 month ago") from time_ago_in_words
+  def remove_about(time_ago)
+    time_ago.gsub("about ", "")
   end
 end
