@@ -25,11 +25,11 @@
          <% end %>
          <span title="<%= @version[:sha] %>">
          <% if @version[:tagged_release] %>
-         <a href="https://github.com/pulibrary/tigerdata-app/releases/tag/<%= @version[:branch] %>" target="_blank"><%= @version[:branch] %></a>
+         <a class="version-link" href="https://github.com/pulibrary/tigerdata-app/releases/tag/<%= @version[:branch] %>" target="_blank"><%= @version[:branch] %></a>
          <% else %>
-         <%= @version[:branch] %>,
+         <a class="version-link" href="#"><%= @version[:branch] %></a>
          <% end %>
-         last updated: <%= @version[:version] %>
+         <span class="version-info-divider">|</span>Last Updated: <%= @version[:version] %>
          </span>
          <!-- Placeholder for us to display the version via AJAX (see mediafluxVersion.js)-->
          <span id="mediaflux_version"></span>
