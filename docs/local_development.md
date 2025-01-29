@@ -34,10 +34,8 @@ echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --passw
    You can get the list of tag numbers from [Docker Hub](https://hub.docker.com/repository/docker/pulibraryrdss/mediaflux_dev/general)
 
 ```
-docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
+docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
 ```
-
-NOTE: You might need to tweak the platform parameter to `--platform linux/arm64` depending on the architecture of your machine.
 
 3. From now on when you need _start this container_ you can use:
 
