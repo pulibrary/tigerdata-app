@@ -3,8 +3,7 @@ require "rails_helper"
 
 RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
-  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.071\"}" }
-  let(:ansible_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.082\"}" }
+  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.088\"}" }
 
   before do
     sign_in user
@@ -12,7 +11,7 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
 
   it "gets the mediaflux information" do
     expect { get :index, format: "json" }.not_to raise_error
-    expect(response.body).to eq(docker_response).or eq(ansible_response)
+    expect(response.body).to eq(docker_response)
   end
 
   it "does not retry infinitely" do

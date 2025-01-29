@@ -36,8 +36,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
-    let(:docker_response) { "Mediaflux: 4.16.082" }
-    let(:ansible_response) { "Mediaflux: 4.16.071" }
+    let(:docker_response) { "4.16.088" }
 
     before do
       FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
@@ -61,7 +60,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit "/"
         sleep(1)
-        expect(page).to have_content(docker_response).or have_content(ansible_response)
+        expect(page).to have_content(docker_response)
       end
 
       it "shows the projects based on the user's role" do
