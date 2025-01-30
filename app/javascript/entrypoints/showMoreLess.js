@@ -8,11 +8,11 @@ export const showMoreLess = {
       const linkText = event.target.textContent.toLowerCase();
       event.preventDefault();
 
-      if (linkText === 'more...') {
-        textElement.textContent = 'less...';
+      if (linkText === 'more') {
+        textElement.textContent = 'less';
         excerpt.classList.remove('truncate');
       } else {
-        textElement.textContent = 'more...';
+        textElement.textContent = 'more';
         excerpt.classList.add('truncate');
       }
     });
