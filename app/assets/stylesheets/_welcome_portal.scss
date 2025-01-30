@@ -19,7 +19,6 @@
 
       .welcome-left {
         display: flex;
-        padding: 0rem 7.5rem;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -29,12 +28,12 @@
 
         .welcome-text {
           display: flex;
-          max-width: 50rem;
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
           gap: 2rem;
           align-self: stretch;
+          padding: 7.5rem;
 
           .welcome-heading {
             display: flex;
@@ -138,12 +137,28 @@
           justify-content: center;
           align-items: center;
           flex: 1 0 0;
+          background:
+            linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%),
+            asset_url("welcome_portal.png") lightgray 50% / cover no-repeat;
+        }
 
-          img {
-            flex-shrink: 0;
+        @media only screen and (min-width: $large-desktop) {
+          .welcome-image {
+            display: flex;
             height: 65.4375rem;
-            flex-shrink: 0;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1 0 0;
+            background:
+              linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%),
+              asset_url("welcome_portal_wide.png") lightgray 50% / cover no-repeat;
           }
+        }
+
+        /* medium devices such as tablets (1440px or lesser) */
+        @media only screen and (max-width: $desktop) {
+          display: none;
         }
       }
     }
