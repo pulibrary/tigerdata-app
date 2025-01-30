@@ -10,9 +10,11 @@
   .col-2 {
     margin: auto;
   }
+
   .col-3 {
     margin: auto;
   }
+
   .col-8 {
     margin: auto;
   }
@@ -48,8 +50,8 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 21px;
     text-align: center;
+    padding-bottom: 8px;
   }
 
   .footer-bottom {
@@ -64,13 +66,27 @@
     font-size: 16px;
   }
 
+  .version-info a {
+    color: $white;
+    text-decoration: underline;
+  }
+
+  .version-info a:hover {
+    color: $gray-20;
+    text-decoration: underline;
+  }
+
+  .version-info-divider {
+    padding: 0px 4px;
+  }
+
   .pul-accessible-container {
     width: max-content;
     background-color: #000;
     color: #fff;
 
     &:hover {
-      background-color: #fff;
+      border-bottom: 1px solid rgb(255, 255, 255) 333;
     }
 
     .pul-accessible {
@@ -80,8 +96,7 @@
         margin: 0px 0px 5px 0px;
 
         &:hover {
-          color: #000;
-          border-bottom: 1px solid #000;
+          text-decoration: underline;
 
           &::after {
             background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE4IDEzdjZhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOGEyIDIgMCAwIDEgMi0yaDYiLz48cG9seWxpbmUgcG9pbnRzPSIxNSAzIDIxIDMgMjEgOSIvPjxsaW5lIHgxPSIxMCIgeDI9IjIxIiB5MT0iMTQiIHkyPSIzIi8+PC9zdmc+");

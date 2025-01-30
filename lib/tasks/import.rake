@@ -53,7 +53,7 @@ namespace :import do
           department_names = parse_multiple(project_metadata,"department")
           departments = department_names.map {|name| Affiliation.find_fuzzy_by_name(name)&.code || name }
           
-          storage_size_gb = project_metadata["quota"].to_i/1000000000.0
+          storage_size_gb = project_metadata["quota"].downcase.to_f/1000000000.0
           metadata = ProjectMetadata.new_from_hash({
             project_id:,
             title: project_metadata["title"],
