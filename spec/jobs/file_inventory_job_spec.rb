@@ -65,5 +65,26 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
         end.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find User/)
       end
     end
+
+    context "when an ActiveRecord::StatementInvalid error occurs" do
+      before do
+        @error_count = 0
+        allow_any_instance_of(FileInventoryRequest).to receive(:update).and_wrap_original do |original_method, *args|
+          if @error_count == 0
+            # Force an error the first time to make sure the retry is invoked in the code
+            @error_count = 1
+            raise ActiveRecord::StatementInvalid, "error"
+          else
+            original_method.call(*args)
+          end
+        end
+      end
+
+      it "it handles the retry for ActiveRecord::StatementInvalid exception" do
+        described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+        file_inventory_request = FileInventoryRequest.first
+        expect(file_inventory_request.state).to eq "completed"
+      end
+    end
   end
 end
