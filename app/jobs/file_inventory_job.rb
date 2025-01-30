@@ -33,12 +33,9 @@ class FileInventoryJob < ApplicationJob
     Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
     project.file_list_to_file(session_id: mediaflux_session, filename: filename)
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
-    # Make the FileInventoryRequest object
-    inventory_request = FileInventoryRequest.find_by(user_id: user.id, project_id: project.id, job_id: @job_id)
-    request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
-    inventory_request.update(state: UserRequest::COMPLETED, request_details: request_details,
-                             completion_time: Time.current.in_time_zone("America/New_York"))
-    inventory_request
+
+    # Update the job record as completed
+    update_inventory_request(user_id: user.id, project: project, job_id: @job_id, filename: filename)
   end
 
   private
@@ -52,5 +49,16 @@ class FileInventoryJob < ApplicationJob
       raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
       pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
       pathname.join("#{job_id}.csv").to_s
+    end
+
+    def update_inventory_request(user_id:, project:, job_id:, filename: )
+      inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
+      request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
+      inventory_request.update(state: UserRequest::COMPLETED, request_details: request_details,
+                                completion_time: Time.current.in_time_zone("America/New_York"))
+      inventory_request
+    rescue ActiveRecord::StatementInvalid
+      ActiveRecord::Base.connection_pool.release_connection
+      retry
     end
 end
