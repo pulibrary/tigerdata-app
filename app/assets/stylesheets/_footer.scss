@@ -7,6 +7,13 @@
   border-top: $princeton-orange 8px solid;
   margin-top: 2em;
 
+  .col-2 {
+    margin: auto;
+  }
+  .col-8 {
+    margin: auto;
+  }
+
   .logos {
     text-align: center;
     padding: 60px 0px;
@@ -60,7 +67,7 @@
     color: #fff;
 
     &:hover {
-        border-bottom: 1px solid rgb(255, 255, 255)333;
+      border-bottom: 1px solid rgb(255, 255, 255) 333;
     }
 
     .pul-accessible {
