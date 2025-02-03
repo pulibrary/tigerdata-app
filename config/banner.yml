@@ -1,16 +1,16 @@
 ---
 development:
   title: Welcome to the development site
-  body: This is a message for development
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:tigerdata@princeton.edu">tigerdata@princeton.edu</a>.
 test:
   title: Welcome to the <i>test</i> site
   body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
 staging:
   title: Welcome to TigerData (Staging)!
-  body: PRDS is proud to share our new website for the management of research data.
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:tigerdata@princeton.edu">tigerdata@princeton.edu</a>.
 qa:
   title: Welcome to TigerData (QA)!
-  body: PRDS is proud to share our new website for the management of research data.
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:tigerdata@princeton.edu">tigerdata@princeton.edu</a>.
 production:
   title: Welcome to TigerData!
-  body: PRDS is proud to share our new website for the management of research data.
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:tigerdata@princeton.edu">tigerdata@princeton.edu</a>.
