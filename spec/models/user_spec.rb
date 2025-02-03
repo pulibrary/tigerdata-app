@@ -215,6 +215,38 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "#eligible_to_create_new?" do
+    it "should be true for a sysadmin" do
+      user = FactoryBot.create(:sysadmin)
+      expect(user).to be_eligible_to_create_new
+    end
+
+    it "should be true for a superuser" do
+      user = FactoryBot.create(:superuser)
+      expect(user).to be_eligible_to_create_new
+    end
+
+    it "should be true for a sponsor who is a trainer" do
+      user = FactoryBot.create(:project_sponsor, trainer: true)
+      expect(user).to be_eligible_to_create_new
+    end
+
+    it "should be false for a manager" do
+      user = FactoryBot.create(:data_manager)
+      expect(user).not_to be_eligible_to_create_new
+    end
+
+    it "should be false for a sponsor" do
+      user = FactoryBot.create(:project_sponsor)
+      expect(user).not_to be_eligible_to_create_new
+    end
+
+    it "should be false for a data user" do
+      user = FactoryBot.create(:user)
+      expect(user).not_to be_eligible_to_create_new
+    end
+  end
+
   describe "#mediaflux_from_session" do
     let(:user) { described_class.new }
     before do
