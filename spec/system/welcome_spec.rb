@@ -248,12 +248,12 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     context "with the sysadmin role" do
       let(:current_user) { FactoryBot.create(:sysadmin, uid: "xxx999") }
 
-      it "does not show the 'New Project' button" do
+      it "does show the 'New Project' button" do
         sign_in current_user
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).not_to have_content "Create new project"
+        expect(page).to have_content "Create new project"
       end
 
       it "shows the system administrator dashboard" do
