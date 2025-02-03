@@ -6,7 +6,7 @@ module EmulatorHelper
   def emulator_content
     return if current_user.nil? || current_user.id.nil?
     @yaml_data = YAML.load_file("config/emulator.yml")
-    return false if @yaml_data[Rails.env].nil? || @yaml_data[Rails.env] == "production"
+    return false if @yaml_data[Rails.env].nil? || Rails.env.production?
     # return false unless current_page?("/")
     @emulator_title = @yaml_data[Rails.env]["title"]
     @emulator_body = @yaml_data[Rails.env]["body"]

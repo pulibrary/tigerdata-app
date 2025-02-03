@@ -121,7 +121,9 @@ class User < ApplicationRecord
   end
 
   def eligible_to_create_new?
-    return true if eligible_sysadmin? || (eligible_sponsor? && trainer?)
+    return true if eligible_sysadmin?
+
+    !Rails.env.production? && (eligible_sponsor? && trainer?)
   end
 
   # Parse the USER_REGISTRATION_LIST csv
