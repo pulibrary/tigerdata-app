@@ -12,9 +12,6 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
     end
 
     it "shows the welcome message and does not show the create button" do
-      sign_in current_user
-      visit "/"
-
       expect(page).to have_content("Welcome, #{current_user.given_name}!")
       expect(page).not_to have_content "Create new project"
     end
@@ -23,9 +20,6 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
       let(:current_user) { FactoryBot.create(:project_sponsor) }
 
       it "shows the welcome message and does not show the create button" do
-        sign_in current_user
-        visit "/"
-
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Create new project"
       end
@@ -35,9 +29,6 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
       let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session, eligible_manager: true) }
 
       it "shows the welcome message and does not show the create button" do
-        sign_in current_user
-        visit "/"
-
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Create new project"
       end
@@ -50,6 +41,18 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
         expect(page).not_to have_content "Create new project"
         select "Data Sponsor", from: "emulation_menu"
         expect(page).to have_content "Create new project"
+      end
+
+      context "in production" do
+        before do
+          allow(Rails.env).to receive(:production?).and_return true
+          visit "/"
+        end
+
+        it "does not show the emulation menu or the create new button" do
+          expect(page).not_to have_select("emulation_menu")
+          expect(page).not_to have_content "Create new project"
+        end
       end
     end
 
