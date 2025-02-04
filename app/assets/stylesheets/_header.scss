@@ -36,6 +36,14 @@
         text-decoration: none;
       }
     }
+
+    .navbar-contact-us:hover {
+      text-decoration: underline;
+    }
+
+    .navbar-faq:hover {
+      text-decoration: underline;
+    }
   }
   .btn.btn-warning.btn-sm {
     --bs-btn-bg: white;
@@ -44,6 +52,9 @@
     font-size: 16px;
     color: $black;
     border: none;
+  }
+  .btn.btn-warning.btn-sm:hover {
+    background-color: $princeton-orange-80;
   }
 }
 
