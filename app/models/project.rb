@@ -184,7 +184,7 @@ class Project < ApplicationRecord
   end
 
   def user_has_access?(user:)
-    # return true if user.eligible_sysadmin?
+    return true if user.eligible_sysadmin?
     metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
     metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
   end
