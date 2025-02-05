@@ -3,7 +3,7 @@ class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!, except: [:styles_preview]
   skip_before_action :verify_authenticity_token
 
-  def index
+  def index # rubocop:disable Metrics/AbcSize
     if current_user.nil?
       render layout: "welcome"
       return
