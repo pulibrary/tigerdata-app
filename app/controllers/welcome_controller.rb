@@ -20,6 +20,7 @@ class WelcomeController < ApplicationController
     session[:dashtab] ||= @dash_session
     @dash_session = session[:dashtab]
     @session_id = current_user.mediaflux_session
+    @emulation_role = session[:emulation_role] || "Not Emulating"
   end
 
   def emulate
@@ -27,7 +28,7 @@ class WelcomeController < ApplicationController
     return if current_user.nil? || current_user.id.nil?
 
     absolute_user = User.find(current_user.id)
-    return unless absolute_user.trainer
+    return unless absolute_user.trainer?
 
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]

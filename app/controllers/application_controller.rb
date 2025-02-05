@@ -94,25 +94,28 @@ class ApplicationController < ActionController::Base
       current_user.eligible_sponsor = true
       current_user.eligible_manager = false
       current_user.sysadmin = false
+      current_user.trainer = false
     end
 
     def emulate_manager
       current_user.eligible_manager = true
       current_user.eligible_sponsor = false
       current_user.sysadmin = false
+      current_user.trainer = false
     end
 
     def emulate_sysadmin
       current_user.sysadmin = true
       current_user.eligible_manager = false
       current_user.eligible_sponsor = false
+      current_user.trainer = false
     end
 
     def emulate_data_user
       current_user.eligible_sponsor = false
       current_user.eligible_manager = false
-      current_user.trainer = false
       current_user.sysadmin = false
+      current_user.trainer = false
     end
 
     def return_to_self
