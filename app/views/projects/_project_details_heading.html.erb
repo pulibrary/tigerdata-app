@@ -77,20 +77,12 @@ var $c = $element
            .clone()
            .css({display: 'inline', width: 'auto', visibility: 'hidden'})
            .appendTo('body');
-if( $c.width() > $element.width() ) { 
-const ExcerptWidget = {
- showMore: function(showMoreLinksTarget, excerptTarget) {
-  const showMoreLinks = document.querySelectorAll(showMoreLinksTarget);
-   
-   showMoreLinks.forEach(function(link) {
-      const excerpt = document.querySelector(excerptTarget);
-      showMoreLess.showMore(link, excerpt);
-    });
-   }
-  };
-  ExcerptWidget.showMore('.show-more', '#description-text');
-} else {
-  document.getElementById('show-more-less-link').style.display = 'none';
-}
-$c.remove();
+debugger;          
+var $element = $('#description-text')[0];
+      if ($element !== undefined) {
+        var textTruncated = ($element.offsetHeight < $element.scrollHeight || $element.offsetWidth < $element.scrollWidth)
+        if (!textTruncated) {
+          $(textTruncated).addClass("invisible");
+        }
+      }
 </script>

@@ -70,8 +70,7 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 2;
   }
 
   a#show-more-less-link {
@@ -140,22 +139,6 @@
     background-position: left;
     padding-left: 20px;
     color: $red-darker;
-  }
-
-  #project-description {
-    color: $black;
-    font-family: "Libre Franklin";
-    font-size: 1em;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.5em;
-  }
-
-  .truncate {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
   }
 
   a#show-more-less-link {
