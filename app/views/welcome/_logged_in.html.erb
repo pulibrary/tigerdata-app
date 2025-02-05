@@ -2,7 +2,7 @@
     <div class="welcome-pane">
         <h1>Welcome, <%= current_user.given_name %>!</h1>
         <div class="project-button">
-            <% if current_user.eligible_to_create_new? && @emulation_role == "Eligible Data Sponsor" %>
+            <% if current_user.eligible_to_create_new? or (current_user.eligible_to_create_new? && @emulation_role == "Eligible Data Sponsor") %>
                 <%= link_to "Create new project", new_project_path(), class: "btn btn-dark btn-sm" %>
             <% end %>
         </div>
