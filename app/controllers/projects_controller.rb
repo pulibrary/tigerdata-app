@@ -74,6 +74,13 @@ class ProjectsController < ApplicationController
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Details")
     project
+
+    if project.user_has_access?(user: current_user) == false
+      flash[:alert] = "Access Denied"
+      redirect_to root_path
+      return
+    end
+
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
 
@@ -179,6 +186,12 @@ class ProjectsController < ApplicationController
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
     project
+
+    if project.user_has_access?(user: current_user) == false
+      flash[:alert] = "Access Denied"
+      redirect_to root_path
+      return
+    end
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)

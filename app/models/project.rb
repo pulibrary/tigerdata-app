@@ -183,6 +183,12 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
+  def user_has_access?(user:)
+    # return true if user.eligible_sysadmin?
+    metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
+    metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
+  end
+
   def save_in_mediaflux(user:)
     ProjectMediaflux.save(project: self, user: user)
   end
