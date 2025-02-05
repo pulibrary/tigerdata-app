@@ -72,17 +72,24 @@
 
 <script type="module">
 
-var $element = $('#description-text');
-var $c = $element
-           .clone()
-           .css({display: 'inline', width: 'auto', visibility: 'hidden'})
-           .appendTo('body');
-debugger;          
+debugger;        
+// https://rubyyagi.com/how-to-truncate-long-text-and-show-read-more-less-button/  
 var $element = $('#description-text')[0];
       if ($element !== undefined) {
         var textTruncated = ($element.offsetHeight < $element.scrollHeight || $element.offsetWidth < $element.scrollWidth)
         if (!textTruncated) {
-          $(textTruncated).addClass("invisible");
+          $('#show-more-less-link').addClass("invisible");
         }
       }
+      const ExcerptWidget = {
+        showMore: function(showMoreLinksTarget, excerptTarget) {
+         const showMoreLinks = document.querySelectorAll(showMoreLinksTarget);
+          
+          showMoreLinks.forEach(function(link) {
+             const excerpt = document.querySelector(excerptTarget);
+             showMoreLess.showMore(link, excerpt);
+           });
+          }
+         };
+         ExcerptWidget.showMore('.show-more', '#description-text');
 </script>
