@@ -75,12 +75,6 @@ class ProjectsController < ApplicationController
     add_breadcrumb("Details")
     project
 
-    if project.user_has_access?(user: current_user) == false
-      flash[:alert] = "Access Denied"
-      redirect_to root_path
-      return
-    end
-
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
 
@@ -187,12 +181,6 @@ class ProjectsController < ApplicationController
     add_breadcrumb("Contents")
     project
 
-    if project.user_has_access?(user: current_user) == false
-      flash[:alert] = "Access Denied"
-      redirect_to root_path
-      return
-    end
-
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
     @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
@@ -270,7 +258,14 @@ class ProjectsController < ApplicationController
     end
 
     def project
-      @project ||= Project.find(params[:id])
+      @project ||= begin
+        project = Project.find(params[:id])
+        if project.user_has_access?(user: current_user)
+          project
+        else
+          raise "Access denied to project #{project.id}, user #{current_user.uid}"
+        end
+      end
     end
 
     def eligible_editor?
