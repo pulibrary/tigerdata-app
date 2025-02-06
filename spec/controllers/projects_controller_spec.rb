@@ -16,7 +16,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      # TODO: Switch for a user with less access than system admin
+      # (see https://github.com/pulibrary/tigerdata-app/issues/1286)
+      let(:user) { FactoryBot.create :sysadmin }
       before do
         sign_in user
       end
@@ -114,7 +116,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      # TODO: Switch for a user with less access than system admin
+      # (see https://github.com/pulibrary/tigerdata-app/issues/1286)
+      let(:user) { FactoryBot.create :sysadmin }
       before do
         sign_in user
       end
@@ -129,7 +133,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       context "the project is saved to mediaflux", connect_to_mediaflux: true do
-        let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+        # TODO: Switch for a user with less access than system admin
+        # (see https://github.com/pulibrary/tigerdata-app/issues/1286)
+        let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
         let(:project) { FactoryBot.create :project_with_doi }
         before do
           project.save_in_mediaflux(user: user)
