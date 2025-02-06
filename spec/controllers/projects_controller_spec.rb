@@ -97,9 +97,20 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
     end
   end
+
   describe "#create" do
+    let(:user) { FactoryBot.create :user }
+    it "redirects to signin" do
+      post :create, params: {
+        "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
+        "project_directory" => "testparams", "title" => "Params",
+        "description" => "testing controller params", "ro_user_counter" => "0",
+        "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
+      }
+      expect(response).to redirect_to "http://test.host/sign_in"
+    end
+
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
       before do
         sign_in user
       end
@@ -112,6 +123,35 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         }
         project = Project.last
         expect(project.provenance_events.count).to eq 2
+      end
+    end
+  end
+
+  describe "#index" do
+    it "redirects to signin" do
+      get :index
+      expect(response).to redirect_to "http://test.host/sign_in"
+    end
+
+    context "a signed in user" do
+      let(:user) { FactoryBot.create :user }
+      before do
+        sign_in user
+      end
+      it "redirects to root" do
+        get :index
+        expect(response).to redirect_to "http://test.host/"
+      end
+    end
+
+    context "a signed in sysadmin user" do
+      let(:user) { FactoryBot.create :sysadmin }
+      before do
+        sign_in user
+      end
+      it "redirects to root" do
+        get :index
+        expect(response).to render_template("index")
       end
     end
   end

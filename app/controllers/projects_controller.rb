@@ -171,7 +171,12 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.all
+    if current_user.eligible_sysadmin?
+      @projects = Project.all
+    else
+      flash[:alert] = "Access Denied"
+      redirect_to root_path
+    end
   end
 
   def confirmation; end
