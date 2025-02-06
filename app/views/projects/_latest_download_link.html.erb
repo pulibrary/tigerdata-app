@@ -1,1 +1,3 @@
-<%= link_to("Download latest report - generated #{time_ago_in_words(@latest_completed_download.completion_time)} ago", project_file_list_download_path(job_id: @latest_completed_download.job_id, target: "_blank")) %>
+<% if @latest_completed_download.completion_time %>
+  <%= link_to("Download latest report - generated #{time_ago_in_words(@latest_completed_download.completion_time)} ago", project_file_list_download_path(job_id: @latest_completed_download.job_id, target: "_blank")) %>
+<% end %>
