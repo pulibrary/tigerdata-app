@@ -207,6 +207,8 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
+    return if project.blank?
+
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {

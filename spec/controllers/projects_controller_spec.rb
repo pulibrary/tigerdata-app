@@ -156,6 +156,26 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
+  describe "#list_contents" do
+    it "renders an error when requesting json" do
+      get :list_contents, params: { id: project.id, format: :json }
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
+    end
+
+    context "a signed in user" do
+      let(:user) { FactoryBot.create :user }
+      before do
+        sign_in user
+      end
+
+      it "redirects to the root when the user does not have access " do
+        get :list_contents, params: { id: project.id, format: :json }
+        expect(response).to redirect_to "http://test.host/"
+      end
+    end
+  end
+
   describe "#content" do
     it "renders an error when requesting json" do
       get :show, params: { id: project.id, format: :json }

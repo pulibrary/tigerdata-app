@@ -38,9 +38,11 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { "4.16.088" }
 
+    let(:project_222) { FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222") }
+
     before do
       FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: other_user.uid, title: "project 111")
-      FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: current_user.uid, title: "project 222")
+      project_222
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid], title: "project 333")
       FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, title: "project 444")
       allow(File).to receive(:size) { 1_234_567 }
@@ -132,8 +134,8 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "allows for navigation back to user dashboard when clicking logo" do
         sign_in current_user
-        visit "/projects"
-        expect(page).to have_content "project 111"
+        visit project_path(project_222)
+        expect(page).to have_content "project 222"
         page.find(:css, "#logo").click
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
       end
