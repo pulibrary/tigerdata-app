@@ -71,9 +71,11 @@ class ProjectsController < ApplicationController
   end
 
   def details
+    return if project.blank?
+
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Details")
-    project
+
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
 
@@ -169,16 +171,22 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.all
+    if current_user.eligible_sysadmin?
+      @projects = Project.all
+    else
+      flash[:alert] = "Access Denied"
+      redirect_to root_path
+    end
   end
 
   def confirmation; end
   def revision_confirmation; end
 
   def show
+    return if project.blank?
+
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
-    project
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
@@ -199,6 +207,8 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
+    return if project.blank?
+
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {
@@ -257,7 +267,16 @@ class ProjectsController < ApplicationController
     end
 
     def project
-      @project ||= Project.find(params[:id])
+      @project ||= begin
+        project = Project.find(params[:id])
+        if project.user_has_access?(user: current_user)
+          project
+        else
+          flash[:alert] = "Access Denied"
+          redirect_to root_path
+          nil
+        end
+      end
     end
 
     def eligible_editor?
