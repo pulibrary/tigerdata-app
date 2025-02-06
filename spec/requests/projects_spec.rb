@@ -97,7 +97,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         let(:params) do
           {
             data_manager: data_manager,
-            data_sponsor: data_sponsor,
+            data_sponsor: user.uid, # Make sure the user we are testing with has access to the project
             data_user_counter: (data_user_read_only.length + data_user_read_write.length),
             data_user_1: data_user_read_only.first,
             data_user_1_read_access: "read-only",
