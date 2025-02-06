@@ -40,4 +40,17 @@ RSpec.describe ProjectImport do
       end
     end
   end
+
+  describe "##run_with_report" do
+    let (:user) {FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session}
+    it "creates projects for project in Mediaflux" do
+      new_project = FactoryBot.create(:approved_project, project_directory: "test-request-service")
+      new_project.mediaflux_id = nil
+      ProjectMediaflux.create!(project: new_project, user:)
+      new_project.destroy
+
+      expect{ described_class.run_with_report(mediaflux_session: user.mediaflux_session) }.to change { Project.count }.by(1)
+    end
+
+  end
 end
