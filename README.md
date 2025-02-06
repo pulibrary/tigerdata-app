@@ -19,7 +19,7 @@ This application provides a front end for users to create and manage projects th
 
 ## Structure
 
-The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework. 
+The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework.
 
 ### Roles
 The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tigerdata-app/blob/main/docs/roles.md) of the system roles
@@ -149,6 +149,20 @@ Deploy with Capistrano (we are intending to have a deployment mechanism with Ans
 or
 ```bundle exec cap staging deploy```
 
+
+## Load Balancer
+
+To remove a machine from the load balancer you can use the following command:
+
+```
+bundle exec cap --hosts=tigerdata-prod1 production application:remove_from_nginx
+```
+
+Notice that the name of the machine (`tigerdata-prod1` in the example above) must match with the name of the machine indicated in `config/deploy` for the environment that you are working. When execution of this command is successful you should see a message with the changes made on the server, if you see nothing it is probably because you are not passing the right `hosts`.
+
+You can use `application:serve_from_nginx` to re-add the machine to the load balancer.
+
+
 ## Mail
 
 ### Mail on Development
@@ -192,11 +206,11 @@ You can go to the following urls to see the sidekiq dashboard, but because these
  - https://tigerdata-staging.lib.princeton.edu/sidekiq
  - https://tigerdata-qa.princeton.edu/sidekiq
  - https://tigerdata-app.princeton.edu/sidekiq
- 
+
 Instead, use the capistrano task, which will open an ssh tunnel to all nodes in a tigerdata environment (staging, qa or production), with a tab in your browser for each one.
  - `cap staging sidekiq:console`
  - `cap qa sidekiq:console`
- - `cap production sidekiq:console` 
+ - `cap production sidekiq:console`
 
 ### Workers
 
