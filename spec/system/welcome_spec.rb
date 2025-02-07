@@ -273,5 +273,14 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Administration"
       end
     end
+
+    context "flash message" do
+      let(:non_admin_user) { FactoryBot.create(:user) }
+      it "shows the flash message" do
+        sign_in non_admin_user
+        visit "/projects"
+        expect(page).to have_content("Access Denied")
+      end
+    end
   end
 end
