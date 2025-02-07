@@ -9,7 +9,6 @@ namespace :projects do
     raise "Project prefix must be specified" if project_prefix.nil?
 
     user = User.first
-    Organization.create_defaults(session_id: user.mediaflux_session)
     root_ns = Mediaflux::Connection.root_namespace
 
     time_action("Creating projects") do
@@ -52,7 +51,6 @@ namespace :projects do
     root_ns = Mediaflux::Connection.root_namespace
 
     user = User.first
-    Organization.create_defaults(session_id: user.mediaflux_session)
 
     time_action("Getting counts by data_sponsor #{data_sponsor} department #{department} took") do
       count_request = Mediaflux::CollectionCountRequest.new(
