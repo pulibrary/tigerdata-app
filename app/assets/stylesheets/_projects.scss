@@ -103,67 +103,6 @@
     font-weight: bold;
   }
 
-  .status::before {
-    content: "";
-    width: 20px;
-    height: 20px;
-  }
-
-  .active {
-    background: url("status_active.svg") no-repeat;
-    background-color: $status-info;
-    background-position: left;
-    padding-left: 20px;
-    color: $blue-dark;
-  }
-
-  .pending {
-    background: url("status_pending.svg") no-repeat;
-    background-color: $status-warning;
-    background-position: left;
-    padding-left: 20px;
-    color: $yellow-dark;
-  }
-
-  .approved {
-    background: url("status_approved.svg") no-repeat;
-    background-color: $status-success;
-    background-position: left;
-    padding-left: 20px;
-    color: $green-dark;
-  }
-
-  .rejected {
-    background: url("status_rejected.svg") no-repeat;
-    background-color: $status-error;
-    background-position: left;
-    padding-left: 20px;
-    color: $red-darker;
-  }
-
-  a#show-more-less-link {
-    color: $gray-60;
-  }
-
-  .label {
-    font-weight: bold;
-  }
-
-  .date-and-data-info ul {
-    padding: 0;
-  }
-
-  .date-and-data-info li {
-    float: left;
-    list-style-type: none;
-    line-height: 1em;
-  }
-
-  .date-and-data-info li:first-child:after {
-    content: "|";
-    padding: 0 0.5em;
-  }
-
   .storage-quota {
     border-radius: 0.5rem;
     &-total {
