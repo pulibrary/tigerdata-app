@@ -276,7 +276,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "pul123") }
     let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
 
     before do

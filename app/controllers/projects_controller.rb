@@ -174,7 +174,7 @@ class ProjectsController < ApplicationController
     if current_user.eligible_sysadmin?
       @projects = Project.all
     else
-      flash[:alert] = "Access Denied"
+      flash[:alert] = I18n.t(:access_denied)
       redirect_to root_path
     end
   end
@@ -272,7 +272,7 @@ class ProjectsController < ApplicationController
         if project.user_has_access?(user: current_user)
           project
         else
-          flash[:alert] = "Access Denied"
+          flash[:alert] = I18n.t(:access_denied)
           redirect_to root_path
           nil
         end

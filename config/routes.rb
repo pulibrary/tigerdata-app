@@ -45,4 +45,6 @@ Rails.application.routes.draw do
   mount ActionCable.server => "/cable"
   get "mediaflux_extra", to: "users/mediaflux_callbacks#cas", as: :mediaflux_extra
   get "mediaflux_passthru", to: "users/mediaflux_callbacks#passthru", as: :mediaflux_passthru
+
+  put "project_import", to: "project_import#run"
 end
