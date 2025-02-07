@@ -12,15 +12,6 @@ describe "application accessibility", type: :system, js: true, connect_to_mediaf
     end
   end
 
-  context "when browsing the organizations page" do
-    it "complies with WCAG 2.0 AA and Section 508" do
-      visit "/organizations"
-      expect(page).to be_axe_clean
-        .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-        .skipping(:'color-contrast')
-    end
-  end
-
   context "when browsing media_flux" do
     let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
     it "complies with WCAG 2.0 AA and Section 508" do

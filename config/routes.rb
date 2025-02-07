@@ -25,7 +25,6 @@ Rails.application.routes.draw do
   post "dash_project", to: "welcome#dash_project", as: :dash_project
   post "dash_admin", to: "welcome#dash_admin", as: :dash_admin
 
-  resources :organizations
   resources :projects
   get "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
