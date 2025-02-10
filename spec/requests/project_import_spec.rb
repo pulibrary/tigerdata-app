@@ -17,7 +17,7 @@ RSpec.describe "ProjectImports", type: :request do
 
       it "renders a successful response" do
         put project_import_path
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(dashboard_path)
         expect(flash[:alert]).to eq("Access Denied")
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe "ProjectImports", type: :request do
         new_project.destroy
 
         expect{ put project_import_path }.to change { Project.count }.by(1)
-        expect(response).not_to redirect_to(root_path)
+        expect(response).not_to redirect_to(dashboard_path)
         expect(flash[:alert]).to be_blank
       end
     end
