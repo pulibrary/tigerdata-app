@@ -16,12 +16,12 @@ module EmulatorHelper
   end
 
   def homepage?
-    return true if current_page?("/")
+    return true if current_page?("/dashboard")
   end
 
   def otherpage?
     @current_role = check_role
-    return true unless current_page?("/")
+    return true unless current_page?("/dashbaord")
   end
 
   def check_role

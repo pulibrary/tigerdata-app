@@ -85,9 +85,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "only allows the Data Sponsor to load the New Projects page" do
       sign_in data_manager
       visit "/projects/new"
-      expect(current_path).to eq root_path
+      expect(current_path).to eq dashboard_path
     end
-    it "does not give the sytem admin New Project button" do
+    it "does give the system admin New Project button" do
       sign_in system_admin
       visit "/"
       expect(page).to have_content "Create new project"
@@ -95,7 +95,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     it "does not allow the system administrato to load New Projects page" do
       sign_in system_admin
       visit "/projects/new"
-      expect(current_path).to eq root_path
+      expect(current_path).to eq dashboard_path
     end
   end
   context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
