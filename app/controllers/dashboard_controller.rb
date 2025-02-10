@@ -26,12 +26,6 @@ class DashboardController < ApplicationController
     end
   end
 
-  def dash_classic
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
-  end
-
   def dash_project
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]

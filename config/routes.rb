@@ -22,7 +22,6 @@ Rails.application.routes.draw do
   get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
   get "dashboard", to: "dashboard#index"
   post "emulate", to: "dashboard#emulate", as: :emulate
-  post "dash_classic", to: "dashboard#dash_classic", as: :dash_classic
   post "dash_project", to: "dashboard#dash_project", as: :dash_project
   post "dash_admin", to: "dashboard#dash_admin", as: :dash_admin
 

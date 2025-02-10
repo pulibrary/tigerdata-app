@@ -91,19 +91,6 @@ export function dashStyle(railsSession) {
 }
 
 export function dashTab() {
-  $('#dash-classic').on('click', (inv) => {
-    const element = inv;
-    element.preventDefault();
-    $.ajax({
-      type: 'POST',
-      url: '/dash_classic',
-      data: { dashtab: 'classic' },
-      success() {
-        // on success..
-        window.location.reload(); // update the DIV
-      },
-    });
-  });
 
   $('#dash-projects').on('click', (inv) => {
     const element = inv;
