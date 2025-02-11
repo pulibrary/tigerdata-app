@@ -250,7 +250,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
-        expect(page).to have_content("Activity")
+        expect(page).to have_content "project 111"
+        expect(page).to have_content "project 444"
       end
 
       it "renders the 'Administration' tab" do
