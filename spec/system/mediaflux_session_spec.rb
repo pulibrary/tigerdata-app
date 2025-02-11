@@ -21,7 +21,7 @@ RSpec.describe "Mediaflux Sessions", type: :system do
     end
 
     it "connects to mediaflux once", connect_to_mediaflux: true do
-      visit root_path
+      visit dashboard_path
 
       expect { visit project_path(project) }.not_to raise_error
       expect(page).to have_content("Total Files: 0")

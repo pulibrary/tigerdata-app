@@ -2,32 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
+RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
-      visit "/"
-      expect(page).to have_content "TigerData Web Portal"
-      expect(page).to have_content "Log in"
-      expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
-    end
-
-    it "shows the 'Learn More' button, which goes to the TigerData service page" do
-      visit "/"
-      expect(page).to have_button "Learn More"
-      click_button "Learn More"
-      assert_current_path("https://tigerdata.princeton.edu")
-    end
-
-    it "forwards to login page" do
-      project = FactoryBot.create(:project)
-      visit project_path(project)
+      visit dashboard_path
       expect(page).to have_content "You need to sign in or sign up before continuing."
-    end
-
-    it "hides the 'Administration' tab" do
-      visit "/"
-      expect(page).to have_content "TigerData Web Portal"
-      expect(page).not_to have_content "Administration"
     end
   end
 
@@ -51,7 +30,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     context "current user dashboard" do
       it "shows the welcome message and 'Log out' button" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
 
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         click_link current_user.uid.to_s
@@ -60,14 +39,15 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "shows the Mediflux version on the home page for a logged in user" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         sleep(1)
         expect(page).to have_content(docker_response)
       end
 
       it "shows the projects based on the user's role" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
+
         expect(page).not_to have_content "Sponsor"
         expect(page).not_to have_content "project 111"
         expect(page).not_to have_content "Data Manager"
@@ -82,15 +62,18 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         approved_project = Project.users_projects(current_user).first
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         sign_in current_user
-        visit "/"
+        visit dashboard_path
+
         expect(page).to have_content "Latest Downloads"
         expect(page).to have_content "Expires in 7 days"
         expect(page).to have_content "1.18 MB"
       end
 
       it "hides the 'Administration' tab" do
-        visit "/"
-        expect(page).to have_content "TigerData Web Portal"
+        sign_in current_user
+        visit dashboard_path
+
+        expect(page).to have_content "Welcome, #{current_user.given_name}!"
         expect(page).not_to have_content "Administration"
       end
 
@@ -99,7 +82,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           current_user.update(eligible_sponsor: true)
 
           sign_in current_user
-          visit "/"
+          visit dashboard_path
           expect(page).to have_content "Sponsor"
           expect(page).to have_content "project 111"
           expect(page).not_to have_content "Data Manager"
@@ -120,7 +103,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
           current_user.update(eligible_manager: true)
 
           sign_in current_user
-          visit "/"
+          visit dashboard_path
           expect(page).not_to have_content "Sponsor"
           expect(page).not_to have_content "project 111"
           expect(page).to have_content "Data Manager"
@@ -143,7 +126,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       it "paginates the projects; 8 per page" do
         projects = (1..17).map { FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid]) }
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content("8 out of 18 shown")
         find("a.paginate_button", text: 2).click
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse[8].title)
@@ -159,7 +142,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     context "for a user without any projects" do
       it "shows the 'Log out' button" do
         sign_in no_projects_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
         expect(page).to have_content("No pending projects")
         click_link no_projects_user.uid.to_s
@@ -168,7 +151,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "shows no downloads available" do
         sign_in no_projects_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content("No downloads available")
       end
     end
@@ -178,24 +161,27 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "shows the 'New Project' button" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Create new project"
       end
 
-      it "shows the system administrator dashboard" do
+      it "shows the system administrator dashboard", js: true do
         sign_in current_user
-        visit "/"
-        visit "/"
+        visit dashboard_path
+        expect(page).to have_content "project 111"
+        expect(page).not_to have_content "project 444"
         click_on "Administration"
+        expect(page).to have_content "project 111"
+        expect(page).to have_content "project 444"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
       end
 
       it "renders the 'Administration' tab" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content "Administration"
       end
     end
@@ -212,7 +198,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         sign_in current_user
         current_user.trainer = true
         current_user.save!
-        visit "/"
+        visit dashboard_path
         select "Data Sponsor", from: "emulation_menu"
         within("#projects-listing") do
           expect(page).to have_content("Sponsor")
@@ -224,7 +210,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         sign_in current_user
         current_user.trainer = true
         current_user.save!
-        visit "/"
+        visit dashboard_path
         select "Data Manager", from: "emulation_menu"
         within("#projects-listing") do
           expect(page).not_to have_content("Sponsor")
@@ -242,7 +228,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
         current_user.trainer = true
         current_user.save!
 
-        visit "/"
+        visit dashboard_path
         expect(page).not_to have_content "Administration"
       end
     end
@@ -252,7 +238,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "does show the 'New Project' button" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Create new project"
@@ -260,16 +246,17 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
 
       it "shows the system administrator dashboard" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         click_on "Administration"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
-        expect(page).to have_content("Activity")
+        expect(page).to have_content "project 111"
+        expect(page).to have_content "project 444"
       end
 
       it "renders the 'Administration' tab" do
         sign_in current_user
-        visit "/"
+        visit dashboard_path
         expect(page).to have_content "Administration"
       end
     end

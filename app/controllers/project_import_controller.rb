@@ -5,7 +5,7 @@ class ProjectImportController < ApplicationController
       ProjectImport.run_with_report(mediaflux_session: current_user.mediaflux_session)
     else
       flash[:alert] = I18n.t(:access_denied)
-      redirect_to root_path
+      redirect_to dashboard_path
     end
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
 
     before do
       sign_in current_user
-      visit "/"
+      visit dashboard_path
     end
 
     it "shows the welcome message and does not show the create button" do
@@ -46,7 +46,7 @@ RSpec.describe "Create new project", connect_to_mediaflux: true, js: true do
       context "in production" do
         before do
           allow(Rails.env).to receive(:production?).and_return true
-          visit "/"
+          visit dashboard_path
         end
 
         it "does not show the emulation menu or the create new button" do

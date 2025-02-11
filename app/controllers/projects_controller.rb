@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb("New Project Request")
     return build_new_project if current_user.eligible_sponsor?
 
-    redirect_to root_path
+    redirect_to dashboard_path
   end
 
   def project_params
@@ -175,7 +175,7 @@ class ProjectsController < ApplicationController
       @projects = Project.all
     else
       flash[:alert] = I18n.t(:access_denied)
-      redirect_to root_path
+      redirect_to dashboard_path
     end
   end
 
@@ -247,7 +247,7 @@ class ProjectsController < ApplicationController
       @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
 
       @title = @project_metadata["title"]
-    else redirect_to root_path
+    else redirect_to dashboard_path
     end
   end
 
@@ -273,7 +273,7 @@ class ProjectsController < ApplicationController
           project
         else
           flash[:alert] = I18n.t(:access_denied)
-          redirect_to root_path
+          redirect_to dashboard_path
           nil
         end
       end
@@ -290,6 +290,6 @@ class ProjectsController < ApplicationController
     end
 
     def set_breadcrumbs
-      add_breadcrumb("Dashboard","/")
+      add_breadcrumb("Dashboard",dashboard_path)
     end
 end
