@@ -167,11 +167,14 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Create new project"
       end
 
-      it "shows the system administrator dashboard" do
+      it "shows the system administrator dashboard", js: true do
         sign_in current_user
         visit dashboard_path
-        visit dashboard_path
+        expect(page).to have_content "project 111"
+        expect(page).not_to have_content "project 444"
         click_on "Administration"
+        expect(page).to have_content "project 111"
+        expect(page).to have_content "project 444"
         expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
       end
