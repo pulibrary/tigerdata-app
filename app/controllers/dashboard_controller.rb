@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class DashboardController < ApplicationController
+  layout "welcome"
+
   def index # rubocop:disable Metrics/AbcSize
     @pending_projects = Project.pending_projects.map { |project| ProjectDashboardPresenter.new(project) }
     @approved_projects = Project.approved_projects.map { |project| ProjectDashboardPresenter.new(project) }
@@ -23,12 +25,6 @@ class DashboardController < ApplicationController
 
     if params.key?("emulation_menu")
       session[:emulation_role] = params[:emulation_menu]
-    end
-  end
-
-  def dash_classic
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
     end
   end
 
