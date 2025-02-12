@@ -9,7 +9,7 @@ namespace :servers do
 
   desc "Starts development dependencies"
   task start: :environment do
-    system("docker compose up -D")
+    system("docker compose up -d")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
