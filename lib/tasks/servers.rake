@@ -9,7 +9,7 @@ namespace :servers do
 
   desc "Starts development dependencies"
   task start: :environment do
-    system("lando start")
+    system("docker compose up -D")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
@@ -18,7 +18,7 @@ namespace :servers do
 
   desc "Stop development dependencies"
   task stop: :environment do
-    system "lando stop"
+    system "docker compose down"
   end
 end
 # :nocov:
