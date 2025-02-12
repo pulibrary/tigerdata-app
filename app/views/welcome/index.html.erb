@@ -1,22 +1,24 @@
 <div id="welcome">
-    <% unless current_user %>
-    <%= render partial: "logged_out" %>
-    <% else %>
+  <div class="welcome-portal">
+      <div class="welcome-left">
+        <div class="welcome-text">
+          <div class="welcome-heading">
+              <h3>Welcome to</h3>
+              <h1>TigerData Web Portal</h1>
+          </div>
+          <div class="welcome-body"> 
+            <p>TigerData is a data management service for the Princeton research community that includes a suite of software tools and scalable, tiered storage to enable the organization, description, storage, sharing, and long-term sustainability of research and administrative data. </p>
+            <p>It enables the things you want to do (with your data), and makes it easier to do the things you have to do.</p>
+          </div>
+          <%= button_to "Learn More", "https://tigerdata.princeton.edu" %>
 
-      <%= render partial: "logged_in" %>
-    <% end %>
+          <div class="welcome-warn">
+              <p>Log in is currently limited to early adopters. <%= link_to "Contact us", "mailto:tigerdata@princeton.edu" %> for more information.</p>
+          </div>
+        </div>
+      </div>
+      <div class="welcome-right">
+          <div class="welcome-image"></div> <!-- image displayed in welcome_portal.scss -->
+      </div>
+  </div>
 </div>
-
-<script type="module">
-    // Make the AJAX call for version information explicitly on this page
-    // (and for now only on this page) so that we don't make extra calls
-    // to Mediaflux for every page loaded.
-    dashStyle('<%= @dash_session %>');
-    dashTab();
-    displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
-
-    // Setup the DataTables
-    setupTable('#projects-listing');
-    setupTable('#projects-listing-pending');
-    setupTable('#projects-listing-approved');
-</script>

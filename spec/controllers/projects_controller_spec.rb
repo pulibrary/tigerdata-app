@@ -23,7 +23,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
       it "redirects to the root when the user does not have access " do
         get :details, params: { id: project.id, format: :json }
-        expect(response).to redirect_to "http://test.host/"
+        expect(response).to redirect_to "http://test.host/dashboard"
       end
 
       context "a user who has project access" do
@@ -140,7 +140,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
       it "redirects to root" do
         get :index
-        expect(response).to redirect_to "http://test.host/"
+        expect(response).to redirect_to "http://test.host/dashboard"
       end
     end
 
@@ -171,7 +171,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
       it "redirects to the root when the user does not have access " do
         get :list_contents, params: { id: project.id, format: :json }
-        expect(response).to redirect_to "http://test.host/"
+        expect(response).to redirect_to "http://test.host/dashboard"
       end
     end
   end
@@ -191,7 +191,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
       it "redirects to the root when the user does not have access " do
         get :show, params: { id: project.id }
-        expect(response).to redirect_to "http://test.host/"
+        expect(response).to redirect_to "http://test.host/dashboard"
       end
 
       context "a user who has project access" do
@@ -276,7 +276,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "pul123") }
     let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
 
     before do

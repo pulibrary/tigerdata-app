@@ -24,7 +24,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
 
   it "allows the user fill in only valid users for roles" do
     sign_in sponsor_user
-    visit "/"
+    visit dashboard_path
     click_on "Create new project"
 
     # Check data manager validations (invalid value, empty value, valid value)
@@ -67,35 +67,35 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     let(:superuser) { FactoryBot.create(:superuser, mediaflux_session: SystemUser.mediaflux_session) }
     it "allows Data Sponsors to request a new project" do
       sign_in sponsor_user
-      visit "/"
+      visit dashboard_path
       click_on "Create new project"
       expect(page).to have_content "New Project Request"
     end
     it "allows superusers to request a new project" do
       sign_in superuser
-      visit "/"
+      visit dashboard_path
       click_on "Create new project"
       expect(page).to have_content "New Project Request"
     end
     it "does not give the data manager the New Project button" do
       sign_in data_manager
-      visit "/"
+      visit dashboard_path
       expect(page).not_to have_content "Create new project"
     end
     it "only allows the Data Sponsor to load the New Projects page" do
       sign_in data_manager
       visit "/projects/new"
-      expect(current_path).to eq root_path
+      expect(current_path).to eq dashboard_path
     end
-    it "does not give the sytem admin New Project button" do
+    it "does give the system admin New Project button" do
       sign_in system_admin
-      visit "/"
+      visit dashboard_path
       expect(page).to have_content "Create new project"
     end
     it "does not allow the system administrato to load New Projects page" do
       sign_in system_admin
       visit "/projects/new"
-      expect(current_path).to eq root_path
+      expect(current_path).to eq dashboard_path
     end
   end
   context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
