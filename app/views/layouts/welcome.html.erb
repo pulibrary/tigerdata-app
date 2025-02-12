@@ -33,12 +33,7 @@
     <%= render partial: 'shared/banner' %>
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/emulator' %>
-
-    <% if flash[:notice] %>
-      <div class="alert alert-primary" role="alert" ><%= flash[:notice] %></div>
-    <% elsif flash[:alert] %>
-      <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
-    <% end %>
+    <%= render partial: 'shared/alert' %>
 
     <%= yield %>
 

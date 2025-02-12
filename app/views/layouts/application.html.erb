@@ -41,12 +41,7 @@
       <% if flash[:notice] or flash[:alert] %>
         <div class="row">
           <div class="col-12">
-          <% if flash[:notice]%>
-            <div class="alert alert-primary" role="alert" ><%= flash[:notice]&.html_safe %></div>
-          <% end %>
-          <% if flash[:alert]%> 
-            <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
-          <% end %> 
+            <%= render partial: 'shared/alert' %>
           </div>
         </div>
       <% end %>
