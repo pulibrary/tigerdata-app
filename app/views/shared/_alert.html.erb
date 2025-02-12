@@ -1,0 +1,16 @@
+<% if flash[:notice] || flash[:alert] %>
+  <% 
+     class_name = data = ""
+     if flash[:alert]
+        data = flash[:alert]
+        class_name = "alert-warning"
+     else
+        data = flash[:notice]
+        class_name = "alert-primary"
+     end %>
+  <div class="alert <%= class_name %> alert-dismissible fade show" role="alert" >
+    <%= data.html_safe %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
+
