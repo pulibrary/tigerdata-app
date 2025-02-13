@@ -7,7 +7,12 @@ RSpec.describe ProjectImport do
 
   describe "#run" do
     it "flags the missing users" do
-      expect { subject.run }.to raise_error(ActiveRecord::RecordInvalid)
+      expect {
+        output = subject.run
+        expect(output[0]).to include("Error creating project for 4894926: Invalid netid: uid2 for role Data Manager")
+        expect(output[1]).to include("Error creating project for 4894935: Invalid netid: uid1 for role Data Manager")
+        expect(output[2]).to include("Error creating project for 4897938: Invalid netid: uid4 for role Data Manager")
+      }.to change { Project.count }.by(0)
     end
 
     context "when all users exist" do
@@ -19,7 +24,15 @@ RSpec.describe ProjectImport do
         FactoryBot.create :user, uid: "uid5"
       end
       it "creates test data" do
-        expect { subject.run }.to change { Project.count }.by(3)
+        expect { 
+          output = subject.run 
+          expect(output[0]).to eq("Created project for 10.00000/1234-abcd")
+          expect(output[1]).to eq("Created project for 10.00000/1234-efgh")
+
+          # with liberal parsing we will try to create a record, but fail due to errors in the data
+          expect(output[2]).to include("Error creating project for 4897938: Invalid netid: a dataset \\b\" for role Data Sponsor")
+          
+        }.to change { Project.count }.by(2)
         project_metadata = Project.first.metadata_model
         expect(project_metadata.project_id).to eq("10.00000/1234-abcd")
         expect(project_metadata.data_sponsor).to eq("uid1")
@@ -35,7 +48,7 @@ RSpec.describe ProjectImport do
       context "input is a file" do
         let(:csv_data) { File.new(file_fixture("project_report.csv")) }
         it "can also read a file IO" do
-          expect { subject.run }.to change { Project.count }.by(3)
+          expect { subject.run }.to change { Project.count }.by(2)
         end
       end
     end

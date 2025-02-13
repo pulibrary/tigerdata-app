@@ -11,13 +11,15 @@ class ProjectImport
 
     def self.run_with_report(mediaflux_session:)
       report = Mediaflux::ProjectReport.new(session_token: mediaflux_session)
-      importer = self.new(report.csv_data)
+      return [report.response_error] if report.error?
+        
+      importer = self.new(report.csv_data.gsub("\r\n",""))
       importer.run
     end
 
     def run
         output = []
-        mediaflux_projects = CSV.new(csv_data, headers: true)
+        mediaflux_projects = CSV.new(csv_data, headers: true, liberal_parsing: true)
         mediaflux_projects.each do |project_metadata|
           # skip projects not part of the current namespace in dev & test mode since we have both mediaflux instances in one server
           if Rails.env.development? || Rails.env.test?
@@ -32,12 +34,18 @@ class ProjectImport
             if test_run
               output << metadata.to_json
             else
-              project = Project.create!(metadata:, mediaflux_id: project_metadata["asset"])
-              output << "Created project for #{project_id}"
+              project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
+              if (project.valid?)
+                output << "Created project for #{project_id}"
+              else
+                output << "Error creating project for #{project_metadata["asset"]}: #{project.errors.to_a.join(";")}"
+              end
             end
           end
         end
         output
+    rescue CSV::MalformedCSVError => error
+      ["Error parsing response #{ csv_data.to_s.slice(0,200) } error: #{error}"]
     end
 
     private
