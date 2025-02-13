@@ -11,6 +11,8 @@ class ProjectImport
 
     def self.run_with_report(mediaflux_session:)
       report = Mediaflux::ProjectReport.new(session_token: mediaflux_session)
+      return [report.response_error] if report.error?
+        
       importer = self.new(report.csv_data)
       importer.run
     end
@@ -38,6 +40,8 @@ class ProjectImport
           end
         end
         output
+    rescue CSV::MalformedCSVError => error
+      ["Error parsing response #{ csv_data.slice(0,200) } error: #{error}"]
     end
 
     private
