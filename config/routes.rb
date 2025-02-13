@@ -46,4 +46,5 @@ Rails.application.routes.draw do
   get "mediaflux_passthru", to: "users/mediaflux_callbacks#passthru", as: :mediaflux_passthru
 
   put "project_import", to: "project_import#run"
+  get "project_import", to: "dashboard#index"
 end

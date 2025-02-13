@@ -24,13 +24,14 @@ class TestProjectGenerator
         created_by: user.uid,
         data_sponsor: sponsor.uid,
         data_manager: sponsor.uid,
+        data_user_read_write: [user.uid],
         departments: departments,
         project_directory: "#{project_prefix}-#{sequence}",
         title: "Project #{project_prefix} #{sequence}",
         description: "Description of project #{project_prefix} #{sequence}",
         data_user_read_only: [],
         data_user_read_write: [],
-        project_id: "doi-not-generated",
+        project_id: project_id,
         storage_capacity: Rails.configuration.project_defaults[:storage_capacity],
         project_purpose: Rails.configuration.project_defaults[:project_purpose],
         storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
@@ -43,11 +44,11 @@ class TestProjectGenerator
 
     def sponsor
       if (number % 7) == 0
-        User.last
+        User.sponsor_users.last
       elsif (number % 3) == 0
-        User.all[2]
+        User.sponsor_users.all[2]
       else
-        User.first
+        User.sponsor_users.first
       end
     end
 
@@ -58,5 +59,13 @@ class TestProjectGenerator
       ldepartments << Affiliation.all[1][:code] if (number % 5) == 0
       ldepartments << Affiliation.all[0][:code] if ldepartments.count == 0
       ldepartments
+    end
+
+    def project_id
+      part1 = rand(1...99).to_s.rjust(2, "0")
+      part2 = rand(1...99999).to_s.rjust(5, "0")
+      part3 = rand(1...9999).to_s.rjust(4, "0")
+      part4 = rand(1...9999).to_s.rjust(4, "0")
+      "#{part1}.#{part2}/#{part3}-#{part4}"
     end
 end
