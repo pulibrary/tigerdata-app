@@ -1,6 +1,10 @@
-<% if banner_content %>
-  <div id="banner">
-  <h2><%= sanitize @banner_title %></h2>
-  <p><%= sanitize @banner_body, attributes: %w(href target)%></p>
+<div class="row">
+  <div class="col">
+    <% if banner_content %>
+      <div id="banner">
+      <h2><%= sanitize @banner_title %></h2>
+      <p><%= sanitize @banner_body, attributes: %w(href target)%></p>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div> <!-- row -->
