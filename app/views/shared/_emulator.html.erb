@@ -19,12 +19,11 @@
                     </form>
                 <%end%>
 
-                <%if otherpage?%>
-                    <h1><%= sanitize @emulator_alt_title %></h1>
-                    <p><%= sanitize @emulator_alt_body, attributes: %w(href target)%></p>
-                    <p><%=@current_role%></p>
-                <%end%>
-            </div>
-        <% end %>
-  </div>
-</div> <!-- row -->
+
+        <% if otherpage? %>
+            <h1><%= sanitize @emulator_alt_title %></h1>
+            <p><%= sanitize @emulator_alt_body, attributes: %w(href target)%></p>
+            <p><%=@current_role%></p>
+        <%end%>
+    </div>
+<% end %>
