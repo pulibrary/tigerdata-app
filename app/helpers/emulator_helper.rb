@@ -21,7 +21,7 @@ module EmulatorHelper
 
   def otherpage?
     @current_role = check_role
-    return true unless current_page?("/dashbaord")
+    return true unless current_page?("/dashboard")
   end
 
   def check_role
