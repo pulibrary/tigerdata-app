@@ -11,7 +11,7 @@ class ProjectImport
 
     def self.run_with_report(mediaflux_session:)
       report = Mediaflux::ProjectReport.new(session_token: mediaflux_session)
-      return [report.response_error] if report.error?
+      return [report.response_error[:message]] if report.error?
         
       importer = self.new(report.csv_data.gsub("\r\n",""))
       importer.run
