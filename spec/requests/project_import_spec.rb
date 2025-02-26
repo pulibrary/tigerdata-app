@@ -43,7 +43,7 @@ RSpec.describe "ProjectImports", type: :request do
 
       it "renders a successful response" do
         expect{ put project_import_path }.to change { Project.count }.by(0)
-        expect(response).to redirect_to(dashboard_path)
+        expect(response).to render_template(:run)
         expect(flash[:notice]).to eq "Created 0 projects."
       end
 
@@ -54,7 +54,7 @@ RSpec.describe "ProjectImports", type: :request do
         new_project.destroy
 
         expect{ put project_import_path }.to change { Project.count }.by(1)
-        expect(response).to redirect_to(dashboard_path)
+        expect(response).to render_template(:run)
         expect(flash[:notice]).to eq "Created 1 project."
       end
 
@@ -64,8 +64,9 @@ RSpec.describe "ProjectImports", type: :request do
         ProjectMediaflux.create!(project: new_project, user:)
 
         expect{ put project_import_path }.to change { Project.count }.by(0)
-        expect(response).to redirect_to(dashboard_path)
-        expect(flash[:notice]).to eq "Created 0 projects. The following errors occurred: <ul><li>Skipping project 10.34770/tbd.  There are already 1 version of that project in the system</li><ul>"
+        expect(response).to render_template(:run)
+        expect(flash[:notice]).to eq "Created 0 projects."
+        expect(response.body).to include("<li>Skipping project 10.34770/tbd.  There are already 1 version of that project in the system</li>")
       end
     end
   end
