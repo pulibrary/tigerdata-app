@@ -290,11 +290,11 @@ class Project < ApplicationRecord
       # file header
       file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
       loop do
-        start_time = Time.zone.now
+        iterator_start_time = Time.zone.now
         page_number += 1
         iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
         iterator_resp = iterator_req.result
-        log_elapsed(start_time, prefix, "FETCHED page #{page_number} from iterator")
+        log_elapsed(iterator_start_time, prefix, "FETCHED page #{page_number} from iterator")
         lines = files_from_iterator(iterator_resp)
         file.write(lines.join("\r\n") + "\r\n")
         break if iterator_resp[:complete] || iterator_req.error?
