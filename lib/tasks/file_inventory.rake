@@ -13,7 +13,7 @@ namespace :file_inventory do
     puts "Attaching file #{filename} to job #{job_id}"
     request.completion_time = Time.current.in_time_zone("America/New_York")
     request.state = "completed"
-    request.request_details = { file_size: File.size(filename), output_file: filename }
+    request.request_details = { file_size: File.size(filename), output_file: filename, project_title: request.project.title }
     request.save!
   end
 end
