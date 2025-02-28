@@ -52,12 +52,15 @@ class FileInventoryJob < ApplicationJob
     end
 
     def update_inventory_request(user_id:, project:, job_id:, filename: )
+      Rails.logger.info "Export - updating inventory request details for project #{project.id}"
       inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
       request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
       inventory_request.update(state: UserRequest::COMPLETED, request_details: request_details,
                                 completion_time: Time.current.in_time_zone("America/New_York"))
+      Rails.logger.info "Export - updated inventory request details for project #{project.id}"
       inventory_request
     rescue ActiveRecord::StatementInvalid
+      Rails.logger.info "Export - updating inventory request details for project #{project.id} failed, about to retry"
       ActiveRecord::Base.connection_pool.release_connection
       retry
     end
