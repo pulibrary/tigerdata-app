@@ -222,3 +222,20 @@ Workers must be running on each server in order for mail to be sent and backgrou
  To demonstrate the look and feel of elements defined as part of the style guide, this application includes a "styles preview" page, visible at the path `/styles_preview`.  It is intended as a place to make CSS and HTML attributes available for review by users either before they are implemented in the UI, or are difficult to access within the UI of the rest of the application, but the look and feel must be reviewed.  See [this ticket](https://github.com/pulibrary/tigerdata-app/issues/1000) as an example of CSS that is also added to the Styles Preview page as part of development.
 
  All elements on the Styles Preview page are added manually during feature development, and only need to be added if they match the criteria described above (either not yet in the UI or difficult to access otherwise within the UI).  It can be edited at [`app/views/welcome/styles_preview.html.erb`](https://github.com/pulibrary/tigerdata-app/blob/main/app/views/welcome/styles_preview.html.erb).
+
+
+## Manually attaching a File Inventory Job
+To attach the output of an existing File Inventory Job to a user we can run the rake task `file_inventory:attach_file`.
+
+1. Log into one of the production machines
+1. Find the `job_id` of the job that you want to attach the file to. You can do this via the Rails console (for example finding the last job for the user that is having problems)
+1. Find the file that you want to attach to the job. Files are under `/mnt/nfs/tigerdata` and each file is named after their `job_id`. Copy this file to a file named after the `job_id` that you will attach it to.
+1. Run the rake task giving it the `job_id` and the name of the file that you want to attach to it.
+
+For example if the `job_id` is "xxxx-yyyy-zzzz" you'll run the Rake task as follows:
+
+```
+bundle exec rake file_inventory:attach_file[xxxx-yyyy-zzzz,/mnt/nfs/tigerdata/xxxx-yyyy-zzzz.csv]
+```
+
+Technically you don't need to copy the source file to a new file named after the `job_id` that you are interested but keeping each file named after the job that they belong keeps things tiddy. Plus since each file will be cleaned up on their own schedule having them separate also prevents the file from dissapearing for one user then it's cleaned up for another user.
