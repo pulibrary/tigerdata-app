@@ -225,7 +225,7 @@ Workers must be running on each server in order for mail to be sent and backgrou
 
 
 ## Manually attaching a File Inventory Job
-To attach the output of a File Inventory Job to a user we can run the rake task `file_inventory:attach_file`.
+To attach the output of an existing File Inventory Job to a user we can run the rake task `file_inventory:attach_file`.
 
 1. Log into one of the production machines
 1. Find the `job_id` of the job that you want to attach the file to. You can do this via the Rails console (for example finding the last job for the user that is having problems)
@@ -237,3 +237,5 @@ For example if the `job_id` is "xxxx-yyyy-zzzz" you'll run the Rake task as foll
 ```
 bundle exec rake file_inventory:attach_file[xxxx-yyyy-zzzz,/mnt/nfs/tigerdata/xxxx-yyyy-zzzz.csv]
 ```
+
+Technically you don't need to copy the source file to a new file named after the `job_id` that you are interested but keeping each file named after the job that they belong keeps things tiddy. Plus since each file will be cleaned up on their own schedule having them separate also prevents the file from dissapearing for one user then it's cleaned up for another user.
