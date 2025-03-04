@@ -28,10 +28,22 @@ class FileInventoryJob < ApplicationJob
     # set the mediaflux session to the one the user created, do not just utilize the system one
     user.mediaflux_from_session({ mediaflux_session: })
 
+    # Get a MediaFlux session for the tigerdataapp user
+    api_domain = Rails.configuration.mediaflux["api_domain"]
+    api_user = Rails.configuration.mediaflux["api_user"]
+    api_password = Rails.configuration.mediaflux["api_password"]
+    logon_request = Mediaflux::LogonRequest.new(domain: api_domain, user: api_user, password: api_password, identity_token: nil, token_type: nil)
+    tigerdata_user_session = logon_request.session_token
+
+    # ======
+    # TEMPORARY: Run the job with the session for the tigerdataapp user
+    #
     # Queries Mediaflux for the file list and saves it to a CSV file.
     filename = filename_for_export
     Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
-    project.file_list_to_file(session_id: mediaflux_session, filename: filename)
+    Rails.logger.info "Export (session for #{user.uid}: #{mediaflux_session})"
+    Rails.logger.info "Export (session for tigerdataapp: #{tigerdata_user_session})"
+    project.file_list_to_file(session_id: tigerdata_user_session, filename: filename)
     Rails.logger.info "Export file generated #{filename} for project #{project_id}"
 
     # Update the job record as completed
