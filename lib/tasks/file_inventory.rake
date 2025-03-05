@@ -26,6 +26,7 @@ namespace :file_inventory do
 
     # Lets the user enter the credentials to use (domain, username, password)
     # notice that the password is not displayed
+    puts "Enter the credentials to connect to MediaFlux"
     puts "domain: "
     mf_domain = STDIN.gets.chomp
 
