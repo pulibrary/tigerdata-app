@@ -23,7 +23,6 @@ namespace :file_inventory do
     netid = args[:netid]
     project = Project.find(project_id)
     user = User.where(uid: netid).first
-    mediaflux_session = nil
 
     # Lets the user enter the credentials to use (domain, username, password)
     # notice that the password is not displayed
