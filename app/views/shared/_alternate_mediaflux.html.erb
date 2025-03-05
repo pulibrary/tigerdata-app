@@ -1,5 +1,9 @@
-<% if current_user && (current_user.eligible_sysadmin? || current_user.trainer) && Flipflop.alternate_mediaflux? %>
-  <div id="alternate_mediaflux">
-    <h2>You are connected to the Alternate Mediaflux</h2>
+<div class="row">
+  <div class="col">
+    <% if current_user && (current_user.eligible_sysadmin? || current_user.trainer) && Flipflop.alternate_mediaflux? %>
+      <div id="alternate_mediaflux">
+        <h2>You are connected to the Alternate Mediaflux</h2>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div> <!-- row -->

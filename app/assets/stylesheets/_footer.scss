@@ -1,80 +1,118 @@
 @import "variables";
 @import "bootstrap";
 
-#footer {
-  background-color: $black !important;
-  color: $white;
-  border-top: $princeton-orange 8px solid;
-  margin-top: 2em;
+.footer-line {
+  height: 8px;
+  background: $princeton-orange;
+  width: 100%;
+}
 
-  .logos {
-    text-align: center;
-    padding: 60px 0px;
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: $gray-100;
 
-    img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 45%;
-      min-width: 120px;
-    }
-
-    #dean-research-logo {
-      margin: auto;
-      padding: 10px;
-    }
+  .footer-content {
+    display: flex;
+    padding: 80px 0px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
   }
 
-  .princeton-logo {
-    text-align: right;
-
-    img {
-      width: 45%;
-      min-width: 120px;
-    }
-  }
-
-  .version-info {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 21px;
-    text-align: center;
-  }
-
-  .footer-bottom {
-    padding: 24px 20px;
-    border-top: 1px solid $white;
-  }
-
-  #copyright {
+  .logo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    line-height: 24px;
-    text-align: center;
-    font-size: 16px;
-  }
+    padding-left: 120px;
+    padding-right: 120px;
 
-  .pul-accessible-container {
-    width: max-content;
-    background-color: #000;
-    color: #fff;
-
-    &:hover {
-      background-color: #fff;
+    #pul-logo {
+      width: 200px;
+      height: 44.085px;
+      flex-shrink: 0;
     }
 
-    .pul-accessible {
-      a {
-        color: rgb(255, 255, 255);
-        text-decoration: none;
-        margin: 0px 0px 5px 0px;
+    #prds-logo {
+      width: 149.448px;
+      height: 50px;
+      flex-shrink: 0;
+    }
+  }
 
-        &:hover {
-          color: #000;
-          border-bottom: 1px solid #000;
+  .version-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+
+    .version-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: $white;
+
+      /* Body XS */
+      font-family: "Libre Franklin";
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 21px; /* 150% */
+
+      a {
+        color: var(--Neutral-White, $white);
+
+        /* Body XS */
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-skip-ink: none;
+        text-decoration-thickness: auto;
+        text-underline-offset: auto;
+        text-underline-position: from-font;
+      }
+    }
+
+    .version-line {
+      height: 1px;
+      align-self: stretch;
+      background: #d9d9d9;
+    }
+  }
+
+  .link-row {
+    display: flex;
+    height: 80px;
+    padding: 24px 20px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+
+    .pul-accessible-container {
+      width: max-content;
+      background-color: #000;
+      color: $white;
+
+      &:hover {
+        border-bottom: 1px solid $white 333;
+      }
+
+      .pul-accessible {
+        a {
+          color: $white;
+          text-decoration: none;
+          margin: 0px 0px 5px 0px;
+
+          &:hover {
+            text-decoration: underline;
+          }
 
           &::after {
-            background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZmlsbD0ibm9uZSIgaGVpZ2h0PSIyNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE4IDEzdjZhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOGEyIDIgMCAwIDEgMi0yaDYiLz48cG9seWxpbmUgcG9pbnRzPSIxNSAzIDIxIDMgMjEgOSIvPjxsaW5lIHgxPSIxMCIgeDI9IjIxIiB5MT0iMTQiIHkyPSIzIi8+PC9zdmc+");
+            background-image: asset_url("arrow-up-right.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -86,20 +124,28 @@
             width: 12px;
           }
         }
-
-        &::after {
-          background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNScgaGVpZ2h0PScxNCcgdmlld0JveD0nMCAwIDE1IDE0JyBmaWxsPSdub25lJz48ZyBjbGlwLXBhdGg9J3VybCgjY2xpcDBfMTQ5XzE2MDQpJz48cGF0aCBkPSdNOS4yNSAwQzguNzY2MDIgMCA4LjM3NSAwLjM5MTAxNiA4LjM3NSAwLjg3NUM4LjM3NSAxLjM1ODk4IDguNzY2MDIgMS43NSA5LjI1IDEuNzVIMTEuNTExM0w2LjAwNzAzIDcuMjU3MDNDNS42NjUyMyA3LjU5ODgzIDUuNjY1MjMgOC4xNTM5MSA2LjAwNzAzIDguNDk1N0M2LjM0ODgzIDguODM3NSA2LjkwMzkxIDguODM3NSA3LjI0NTcgOC40OTU3TDEyLjc1IDIuOTg4NjdWNS4yNUMxMi43NSA1LjczMzk4IDEzLjE0MSA2LjEyNSAxMy42MjUgNi4xMjVDMTQuMTA5IDYuMTI1IDE0LjUgNS43MzM5OCAxNC41IDUuMjVWMC44NzVDMTQuNSAwLjM5MTAxNiAxNC4xMDkgMCAxMy42MjUgMEg5LjI1Wk0yLjY4NzUgMC44NzVDMS40Nzg5MSAwLjg3NSAwLjUgMS44NTM5MSAwLjUgMy4wNjI1VjExLjgxMjVDMC41IDEzLjAyMTEgMS40Nzg5MSAxNCAyLjY4NzUgMTRIMTEuNDM3NUMxMi42NDYxIDE0IDEzLjYyNSAxMy4wMjExIDEzLjYyNSAxMS44MTI1VjguNzVDMTMuNjI1IDguMjY2MDIgMTMuMjM0IDcuODc1IDEyLjc1IDcuODc1QzEyLjI2NiA3Ljg3NSAxMS44NzUgOC4yNjYwMiAxMS44NzUgOC43NVYxMS44MTI1QzExLjg3NSAxMi4wNTMxIDExLjY3ODEgMTIuMjUgMTEuNDM3NSAxMi4yNUgyLjY4NzVDMi40NDY4NyAxMi4yNSAyLjI1IDEyLjA1MzEgMi4yNSAxMS44MTI1VjMuMDYyNUMyLjI1IDIuODIxODggMi40NDY4NyAyLjYyNSAyLjY4NzUgMi42MjVINS43NUM2LjIzMzk4IDIuNjI1IDYuNjI1IDIuMjMzOTggNi42MjUgMS43NUM2LjYyNSAxLjI2NjAyIDYuMjMzOTggMC44NzUgNS43NSAwLjg3NUgyLjY4NzVaJyBmaWxsPSd3aGl0ZScvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9J2NsaXAwXzE0OV8xNjA0Jz48cmVjdCB3aWR0aD0nMTQnIGhlaWdodD0nMTQnIGZpbGw9J3doaXRlJyB0cmFuc2Zvcm09J3RyYW5zbGF0ZSgwLjUpJy8+PC9jbGlwUGF0aD48L2RlZnM+PC9zdmc+");
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-size: contain;
-          content: "";
-          display: inline-block;
-          height: 12px;
-          margin-left: 8px;
-          position: relative;
-          width: 12px;
-        }
       }
+    }
+
+    .access-link {
+      display: flex;
+      align-items: center;
+    }
+
+    .trustee-link {
+      color: $white;
+
+      /* Body S */
+      font-family: "Libre Franklin";
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px; /* 150% */
+    }
+
+    .princeton-link {
+      width: 192px;
+      height: 54.326px;
     }
   }
 }

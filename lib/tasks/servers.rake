@@ -2,6 +2,11 @@
 # :nocov:
 
 namespace :servers do
+  task install_mediaflux: :environment do
+    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.3.8")
+    system("docker start mediaflux")
+  end
+
   task initialize: :environment do
     Rake::Task["db:create"].invoke
     Rake::Task["db:migrate"].invoke
@@ -10,6 +15,7 @@ namespace :servers do
   desc "Starts development dependencies"
   task start: :environment do
     system("lando start")
+    system("rake servers:install_mediaflux")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")

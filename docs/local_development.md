@@ -13,7 +13,6 @@ Stop the current Docker container and remove both the container and the image us
 ```
 docker stop mediaflux
 docker rm mediaflux
-docker rmi pulibraryrdss/mediaflux_dev:latest
 ```
 
 You can use `docker images` to find out the exact name of the image to delete.
@@ -21,7 +20,7 @@ You can also use the docker desktop to delete the image and container.
 
 ## Load the new Docker image
 
-1. Log in to docker # See [Ansible Vault](https://github.com/pulibrary/princeton_ansible/blob/main/group_vars/mflux/vault.yml) for docker hub username and password, or check lastpass under "RDSS Docker"
+1. Log in to docker # See [Ansible Vault](https://github.com/PrincetonUniversityLibrary/tigerdata-config/blob/main/group_vars/mflux/vault.yml) for docker hub username and password, or check lastpass under "RDSS Docker"
 
 ```
 export DOCKERHUB_USERNAME="username here"
@@ -29,20 +28,10 @@ export DOCKERHUB_PASSWORD="password here"
 echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
 ```
 
-2. _create a container_ with an image from docker hub (notice we name it `mediaflux`)
-
-   You can get the list of tag numbers from [Docker Hub](https://hub.docker.com/repository/docker/pulibraryrdss/mediaflux_dev/general)
+1. Starting the servers (both database and mediaflux). This will not download a new version if you have an existing `mediaflux` container (see `If you have a previous Docker image`)
 
 ```
-docker create --name mediaflux --platform linux/amd64 --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:{tag_number}
-```
-
-NOTE: You might need to tweak the platform parameter to `--platform linux/arm64` depending on the architecture of your machine.
-
-3. From now on when you need _start this container_ you can use:
-
-```
-docker start mediaflux
+rake servers:start
 ```
 
 4. Once the container is running you can access it at the default endpoints:

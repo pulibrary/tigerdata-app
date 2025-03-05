@@ -4,54 +4,10 @@ class WelcomeController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    if current_user.nil?
+    if current_user.blank?
       render layout: "welcome"
-      return
-    end
-
-    @pending_projects = Project.pending_projects.map { |project| ProjectDashboardPresenter.new(project) }
-    @approved_projects = Project.approved_projects.map { |project| ProjectDashboardPresenter.new(project) }
-    @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
-
-    @dashboard_projects = Project.users_projects(@current_user).map { |project| ProjectDashboardPresenter.new(project) }
-
-    @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
-    @dash_session = "project"
-    session[:dashtab] ||= @dash_session
-    @dash_session = session[:dashtab]
-    @session_id = current_user.mediaflux_session
-  end
-
-  def emulate
-    return if Rails.env.production?
-    return if current_user.nil? || current_user.id.nil?
-
-    absolute_user = User.find(current_user.id)
-    return unless absolute_user.trainer
-
-    if params.key?("emulation_menu")
-      session[:emulation_role] = params[:emulation_menu]
-    end
-  end
-
-  def dash_classic
-    return if current_user.nil? || current_user.id.nil?
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
-  end
-
-  def dash_project
-    return if current_user.nil? || current_user.id.nil?
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
-  end
-
-  def dash_admin
-    return if current_user.nil? || current_user.id.nil?
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
+    else
+      redirect_to dashboard_path
     end
   end
 

@@ -7,17 +7,17 @@
       <% else %>
          <p> (none) </p>
       <% end %>
+   </div>
+   <div class="section">
+      <div class="import">
+        <h2>Recently Approved Projects</h2> 
+        <%= button_to "Import Mediaflux Projects", project_import_path, method: "put", class: "btn btn-dark btn-sm" %>
       </div>
-      <div class="section">
-      <h2>Recently Approved Projects</h2>
       <% if !@approved_projects.empty? %>
        <%= render partial: "projects_listing", locals: { projects: @approved_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing-approved"} %>
       <% else %>
         <p> (none) </p>
       <% end %>
    </div>
-   <% unless current_user.superuser? %>
-   <%= render partial: "recent_activity" %>
-   <% end %>
    <%end%>
 </div>

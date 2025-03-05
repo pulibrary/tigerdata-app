@@ -1,0 +1,8 @@
+<h2> The following projects were processed </h2>
+<ul>
+  <% @results.each do |result| %>
+    <li><%=result%></li>
+  <% end %>
+</ul>
+
+<%= link_to "Return to Dashboard", dashboard_path, class: "btn btn-primary btn-sm" %>

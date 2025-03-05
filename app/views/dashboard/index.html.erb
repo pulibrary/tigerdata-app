@@ -1,10 +1,11 @@
-<div class="welcome-container">
+<div id="welcome">
+  <div class="main-content">
     <div class="welcome-pane">
         <h1>Welcome, <%= current_user.given_name %>!</h1>
         <div class="project-button">
-            <%if current_user.eligible_sponsor?%>
-            <%= link_to "Create new project", new_project_path(), class: "btn btn-dark btn-sm" %>
-            <%end%>
+            <% if current_user.eligible_to_create_new? or (current_user.eligible_to_create_new? && @emulation_role == "Eligible Data Sponsor") %>
+                <%= link_to "Create new project", new_project_path(), class: "btn btn-dark btn-sm" %>
+            <% end %>
         </div>
     </div>
     <div class="detail-pane">
@@ -51,4 +52,19 @@
             </div>
         </div>
     </div>
+  </div>
 </div>
+
+<script type="module">
+    // Make the AJAX call for version information explicitly on this page
+    // (and for now only on this page) so that we don't make extra calls
+    // to Mediaflux for every page loaded.
+    dashStyle('<%= @dash_session %>');
+    dashTab();
+    displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
+
+    // Setup the DataTables
+    setupTable('#projects-listing');
+    setupTable('#projects-listing-pending');
+    setupTable('#projects-listing-approved');
+</script>

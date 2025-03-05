@@ -120,6 +120,12 @@ class User < ApplicationRecord
     return true if superuser || sysadmin
   end
 
+  def eligible_to_create_new?
+    return true if eligible_sysadmin?
+
+    !Rails.env.production? && (eligible_sponsor? && trainer?)
+  end
+
   # Parse the USER_REGISTRATION_LIST csv
   # @return [CSV::Table]
   def self.csv_data

@@ -1,22 +1,22 @@
-<footer class="mt-auto">
-   <div id="footer">
-   <div class="content">
-      <div class="logos">
-         <div class="row">
-           <div class="col-3" id="pul-logo">
-             <%= image_tag("footer_pul_logo.svg", alt: "Princeton University Library") %>
-           </div>
-           <div class="col-3" id="prds-logo">
-             <%= image_tag("footer_prds_logo.svg", alt: "Princeton Research Data Service") %>
-           </div>
-           <div class="col-3" id="dean-research-logo">
-             <%= image_tag("footer_dean_research_logo.svg", alt: "Office for the Dean of Research") %>
-           </div>
-           <div class="col-3" id="research-computing-logo">
-             <%= image_tag("footer_research_computing_logo.svg", alt: "Princeton Research Computing") %>
-           </div>
+<footer>
+   <div class="footer-line"></div>
+   <div class="footer-content">
+      <div class="logo-row">
+         <div id="pul-logo">
+            <%= image_tag("footer_pul_logo.svg", alt: "Princeton University Library") %>
+         </div>
+         <div id="prds-logo">
+            <%= image_tag("footer_prds_logo.svg", alt: "Princeton Research Data Service") %>
+         </div>
+         <div id="dean-research-logo">
+            <%= image_tag("footer_dean_research_logo.svg", alt: "Office for the Dean of Research") %>
+         </div>
+         <div id="research-computing-logo">
+            <%= image_tag("footer_research_computing_logo.svg", alt: "Princeton Research Computing") %>
          </div>
       </div>
+   </div>
+   <div class="version-content">
       <div class="version-info">
          Version:
          <% @version = VersionFooter.info %>
@@ -25,34 +25,31 @@
          <% end %>
          <span title="<%= @version[:sha] %>">
          <% if @version[:tagged_release] %>
-         <a href="https://github.com/pulibrary/tigerdata-app/releases/tag/<%= @version[:branch] %>" target="_blank"><%= @version[:branch] %></a>
+         <a class="version-link" href="https://github.com/pulibrary/tigerdata-app/releases/tag/<%= @version[:branch] %>" target="_blank"><%= @version[:branch] %></a>
          <% else %>
-         <%= @version[:branch] %>,
+         <a class="version-link" href="#"><%= @version[:branch] %></a>
          <% end %>
-         last updated: <%= @version[:version] %>
+         <span class="version-info-divider">|</span>Last Updated: <%= @version[:version] %>
          </span>
          <!-- Placeholder for us to display the version via AJAX (see mediafluxVersion.js)-->
          <span id="mediaflux_version"></span>
       </div>
-      <div class="footer-bottom">
-         <div class="row">
-            <div class="col-2">
-               <div class="pul-accessible-container">
-                  <div class= "pul-accessible">
-                     <%= link_to("Accessibility","https://accessibility.princeton.edu/help", target:"blank") %>
-                  </div>
-               </div>
-            </div>
-            <div class="col-8">
-               <div id="copyright">
-                  &copy; <%= Date.current.year %> The Trustees of Princeton University
-               </div>
-            </div>
-            <div class="col-2">
-               <div class="princeton-logo">
-                  <%= link_to(image_tag("footer_princeton_logo.png", alt: "Princeton University"), "https://www.princeton.edu", target: "blank") %>
-               </div>
-            </div>
+      <div class="version-line"></div>
+   </div>
+   <div class="link-row">
+      <div class="pul-accessible-container">
+         <div class= "pul-accessible">
+            <%= link_to("Accessibility","https://accessibility.princeton.edu/help", target:"blank") %>
+         </div>
+      </div>
+      <div class="trustee-link">
+         <div id="copyright">
+            &copy; <%= Date.current.year %> The Trustees of Princeton University
+         </div>
+      </div>
+      <div class="princeton-link">
+         <div class="princeton-logo">
+            <%= link_to(image_tag("footer_princeton_logo.png", alt: "Princeton University"), "https://www.princeton.edu", target: "blank") %>
          </div>
       </div>
    </div>

@@ -183,6 +183,12 @@ class Project < ApplicationRecord
     Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
   end
 
+  def user_has_access?(user:)
+    return true if user.eligible_sysadmin?
+    metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
+    metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
+  end
+
   def save_in_mediaflux(user:)
     ProjectMediaflux.save(project: self, user: user)
   end
@@ -275,17 +281,25 @@ class Project < ApplicationRecord
     query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true,  aql_query: "type!='application/arc-asset-collection'")
     iterator_id = query_req.result
 
+    start_time = Time.zone.now
+    prefix = "file_list_to_file #{session_id[0..7]} #{self.metadata_model.project_id}"
+    log_elapsed(start_time, prefix, "STARTED")
 
     File.open(filename, "w") do |file|
+      page_number = 0
       # file header
       file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
       loop do
+        iterator_start_time = Time.zone.now
+        page_number += 1
         iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
         iterator_resp = iterator_req.result
+        log_elapsed(iterator_start_time, prefix, "FETCHED page #{page_number} from iterator")
         lines = files_from_iterator(iterator_resp)
         file.write(lines.join("\r\n") + "\r\n")
         break if iterator_resp[:complete] || iterator_req.error?
       end
+      log_elapsed(start_time, prefix, "ENDED")
     end
 
     # Destroy _after_ fetching the results from iterator_req
@@ -325,5 +339,11 @@ class Project < ApplicationRecord
     # Ensure that the project directory is a valid path
     def safe_name(name)
       Project.safe_name(name)
+    end
+
+    def log_elapsed(start_time, prefix, message)
+      elapsed_time = Time.zone.now - start_time
+      timing_info = "#{format('%.2f', elapsed_time)} s"
+      Rails.logger.info "#{prefix}: #{message}, #{timing_info}"
     end
 end

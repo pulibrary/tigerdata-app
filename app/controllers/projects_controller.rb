@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb("New Project Request")
     return build_new_project if current_user.eligible_sponsor?
 
-    redirect_to root_path
+    redirect_to dashboard_path
   end
 
   def project_params
@@ -71,9 +71,11 @@ class ProjectsController < ApplicationController
   end
 
   def details
+    return if project.blank?
+
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Details")
-    project
+
     @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
 
@@ -169,16 +171,22 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.all
+    if current_user.eligible_sysadmin?
+      @projects = Project.all
+    else
+      flash[:alert] = I18n.t(:access_denied)
+      redirect_to dashboard_path
+    end
   end
 
   def confirmation; end
   def revision_confirmation; end
 
   def show
+    return if project.blank?
+
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
-    project
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
@@ -199,6 +207,8 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
+    return if project.blank?
+
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {
@@ -237,7 +247,7 @@ class ProjectsController < ApplicationController
       @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
 
       @title = @project_metadata["title"]
-    else redirect_to root_path
+    else redirect_to dashboard_path
     end
   end
 
@@ -257,7 +267,16 @@ class ProjectsController < ApplicationController
     end
 
     def project
-      @project ||= Project.find(params[:id])
+      @project ||= begin
+        project = Project.find(params[:id])
+        if project.user_has_access?(user: current_user)
+          project
+        else
+          flash[:alert] = I18n.t(:access_denied)
+          redirect_to dashboard_path
+          nil
+        end
+      end
     end
 
     def eligible_editor?
@@ -271,6 +290,6 @@ class ProjectsController < ApplicationController
     end
 
     def set_breadcrumbs
-      add_breadcrumb("Dashboard","/")
+      add_breadcrumb("Dashboard",dashboard_path)
     end
 end

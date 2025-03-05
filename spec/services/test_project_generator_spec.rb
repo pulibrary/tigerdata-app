@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   let(:subject) { described_class.new(user:, number: 1, project_prefix: 'test-project') }
-  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session}
+  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true}
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))

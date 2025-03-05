@@ -45,10 +45,8 @@ end
 
 # When connect_to_mediaflux is true reset the mediaflux server and make sure it is setup for the tests
 RSpec.configure do |config|
-  config.before(:each) do |ex|
-    if ex.metadata[:connect_to_mediaflux]
-      reset_mediaflux_root
-    end
+  config.before(:each) do |_ex|
+    reset_mediaflux_root
   rescue StandardError => namespace_error
     message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
     puts message # allow the message to show in CI output

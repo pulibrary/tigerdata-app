@@ -1,0 +1,14 @@
+---
+name: CI
+
+on:
+  schedule:
+  - cron: '0 8 * * 1-5'
+
+jobs:
+  daily_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every weekday morning at 8:00 AM
+      - if: github.event.schedule == '0 8 * * 1-5'
+      - run: daily_check.yml
