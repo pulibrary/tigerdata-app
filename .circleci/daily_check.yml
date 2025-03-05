@@ -1,0 +1,100 @@
+version: 2.1
+
+orbs:
+  coveralls: coveralls/coveralls@2.2.1
+
+commands:
+  install_dependencies:
+    steps:
+      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - run: gem install bundler -v '2.5.6'
+      - run: cp Gemfile.lock Gemfile.lock.bak
+      - restore_cache:
+          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
+      - run: bundle config set path './vendor/bundle'
+      - run: bundle config set --local without production
+      - run: bundle install --jobs=4 --retry=3
+      - save_cache:
+          key: *gem_key
+          paths:
+            - ./vendor/bundle
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install NPM Dependencies via Yarn
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: *yarn_key
+          paths:
+            - ~/.cache/yarn
+
+  # run_mediaflux:
+  #   steps:
+  #     - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+  #     - run: docker pull pulibraryrdss/mediaflux_dev:v0.3.8
+  #     - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.3.8
+
+  # connect to mediaflux CI
+  run_daily:
+    steps:
+      - run:
+
+  run_postgres:
+    steps:
+      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:13.5-alpine
+      - run: docker start postgres
+
+jobs:
+  test:
+    working_directory: ~/tiger_data
+    machine:
+      image: ubuntu-2404:2024.05.1
+      docker_layer_caching: true
+    environment:
+      POSTGRES_USER: tiger_data_user
+      POSTGRES_DB: test_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+      ARCH: linux
+    steps:
+      - checkout
+      - install_dependencies
+      # - run:
+      #     name: Run rubocop
+      #     command: bundle exec rubocop
+      #     paths: "*"
+      # - run:
+      #     name: Run prettier
+      #     command: yarn run prettier --check .
+      # - run:
+      #     name: Run eslint
+      #     command: yarn run eslint 'app/javascript/**'
+      - persist_to_workspace:
+          root: &root "~/tiger_data"
+          paths: "*"
+      - run:
+          name: Run vitest
+          command: yarn run vitest run --coverage
+      # - run_mediaflux
+      - run_postgres
+      # wait for postgres and mediaflux
+      - run: sleep 10
+      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='mflux-ci.lib.princeton.edu' TEST_MEDIAFLUX_PORT=80
+      - run:
+          name: Run Rspec
+          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+      - store_test_results:
+          path: /tmp/rspec
+      - store_artifacts:
+          path: coverage
+      - store_artifacts:
+          path: /home/circleci/tiger_data/tmp/capybara
+      - coveralls/upload
+
+workflows:
+  version: 2
+  build_accept_deploy:
+    jobs:
+      - test
