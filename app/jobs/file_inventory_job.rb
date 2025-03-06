@@ -30,9 +30,9 @@ class FileInventoryJob < ApplicationJob
 
     # Queries Mediaflux for the file list and saves it to a CSV file.
     filename = filename_for_export
-    Rails.logger.info "Exporting file list to #{filename} for project #{project_id}"
+    Rails.logger.info "Exporting file list to #{filename} for project #{project_id} (session: #{mediaflux_session})"
     project.file_list_to_file(session_id: mediaflux_session, filename: filename)
-    Rails.logger.info "Export file generated #{filename} for project #{project_id}"
+    Rails.logger.info "Export file generated #{filename} for project #{project_id} (session: #{mediaflux_session})"
 
     # Update the job record as completed
     update_inventory_request(user_id: user.id, project: project, job_id: @job_id, filename: filename)

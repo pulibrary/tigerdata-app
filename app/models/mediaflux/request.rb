@@ -153,7 +153,7 @@ module Mediaflux
         def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
 
-          Rails.logger.debug(xml_payload)
+          log_xml_request(xml_payload)
           set_authentication_headers(request)
 
           if form_file.nil?
@@ -171,6 +171,16 @@ module Mediaflux
           request
         end
       # rubocop:enable Metrics/MethodLength
+
+      def log_xml_request(xml_payload)
+        password_element = xml_payload.match(/\<password\>.*\<\/password\>/)
+        if password_element.nil?
+          Rails.logger.debug(xml_payload)
+        else
+          # Don't log the password
+          Rails.logger.debug(xml_payload.gsub(password_element.to_s, "<password>***</password>"))
+        end
+      end
 
       # Authentication code to push a few custom HTTP headers to Mediaflux
       # Eventually the `session_user` will need to be an object that provides the timeout value.
