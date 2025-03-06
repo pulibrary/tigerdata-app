@@ -87,26 +87,26 @@ RSpec.describe User, type: :model do
     it "creates a new user for every line in the file" do
       expect(User.count).to eq 0
       User.load_registration_list
-      expect(User.count).to eq 111
+      expect(User.count).to eq 192
     end
     it "does not create a user if they exist already" do
       User.create(uid: "mjc12", family_name: "Chandler", display_name: "Matt Chandler", email: "mjc12@princeton.edu")
       expect(User.count).to eq 1
       User.load_registration_list
-      expect(User.count).to eq 111
+      expect(User.count).to eq 192
       user = User.find_by(uid: "mjc12")
       # If we don't say that this is a cas user, they won't be able to log in with CAS
       expect(user.provider).to eq "cas"
     end
     it "updates a name if the name is updated in the spreadsheet" do
       User.load_registration_list
-      expect(User.count).to eq 111
+      expect(User.count).to eq 192
       blank_name_user = User.find_by(uid: "munan")
       expect(blank_name_user.family_name).to be_nil
       expect(blank_name_user.display_name).to be_nil
       allow(User).to receive(:csv_data).and_return(updated_csv_data)
       User.load_registration_list
-      expect(User.count).to eq 111
+      expect(User.count).to eq 192
       updated_name_user = User.find_by(uid: "munan")
       expect(updated_name_user.family_name).to eq "Nøme"
       expect(updated_name_user.display_name).to eq "Fáké Nøme"
@@ -250,11 +250,11 @@ RSpec.describe User, type: :model do
   describe "#mediaflux_from_session" do
     let(:user) { described_class.new }
     before do
-      allow(SystemUser).to receive(:mediaflux_session).and_return("111system")
+      allow(SystemUser).to receive(:mediaflux_session).and_return("192system")
     end
     it "loads the mediaflux session from the system user" do
-      expect(user.mediaflux_from_session({})).to eq("111system")
-      expect(user.mediaflux_session).to eq("111system")
+      expect(user.mediaflux_from_session({})).to eq("192system")
+      expect(user.mediaflux_session).to eq("192system")
     end
 
     it "loads the mediaflux session from the session when present" do
