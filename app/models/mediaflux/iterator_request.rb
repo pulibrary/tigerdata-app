@@ -40,16 +40,26 @@ module Mediaflux
       end
 
       def parse_files(xml)
+        result = nil
+        start_time = ::Time.zone.now
         case @action
         when "get-name"
-          parse_get_name(xml)
+          result = parse_get_name(xml)
         when "get-meta"
-          parse_get_meta(xml)
+          result = parse_get_meta(xml)
         when "get-values"
-          parse_get_values(xml)
+          result = parse_get_values(xml)
         else
           raise "Cannot parse result. Unknow action: #{@action}."
         end
+        log_elapsed(start_time, "iterator_request", "parsing files")
+        result
+      end
+
+      def log_elapsed(start_time, prefix, message)
+        elapsed_time = ::Time.zone.now - start_time
+        timing_info = "#{format('%.2f', elapsed_time)} s"
+        Rails.logger.info "#{prefix}: #{message}, #{timing_info}"
       end
 
       # Extracts file information when the request was made with the "action: get-name" parameter
