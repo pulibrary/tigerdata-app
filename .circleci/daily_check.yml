@@ -30,16 +30,6 @@ commands:
           paths:
             - ~/.cache/yarn
 
-  # run_mediaflux:
-  #   steps:
-  #     - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-  #     - run: docker pull pulibraryrdss/mediaflux_dev:v0.3.8
-  #     - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.3.8
-
-  # connect to mediaflux CI
-  run_daily:
-    steps:
-      - run:
 
   run_postgres:
     steps:
@@ -60,23 +50,12 @@ jobs:
     steps:
       - checkout
       - install_dependencies
-      # - run:
-      #     name: Run rubocop
-      #     command: bundle exec rubocop
-      #     paths: "*"
-      # - run:
-      #     name: Run prettier
-      #     command: yarn run prettier --check .
-      # - run:
-      #     name: Run eslint
-      #     command: yarn run eslint 'app/javascript/**'
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
       - run:
           name: Run vitest
           command: yarn run vitest run --coverage
-      # - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
