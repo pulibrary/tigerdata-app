@@ -1,5 +1,5 @@
 ---
-name: CI
+name: Run test suite against Mflux-CI daily
 on:
   schedule:
     - cron: 0 8 * * 1-5
@@ -9,4 +9,7 @@ jobs:
     steps:
       - name: Every weekday morning at 8:00 AM
         if: github.event.schedule == '0 8 * * 1-5'
-        run: daily_check.yml
+        id: github.event.id
+        uses: circleci/trigger_circleci_pipeline@v1.0
+        env:
+          CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}

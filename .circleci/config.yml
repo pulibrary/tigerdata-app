@@ -1,4 +1,17 @@
 version: 2.1
+parameters:
+  GHA_Event:
+    type: string
+    default: ""
+  GHA_Actor:
+    type: string
+    default: ""
+  GHA_Action:
+    type: string
+    default: ""
+  GHA_Meta:
+    type: string
+    default: ""
 
 orbs:
   coveralls: coveralls/coveralls@2.2.1
@@ -87,9 +100,48 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload
+  mflux_ci:
+    working_directory: ~/tiger_data
+    machine:
+      image: ubuntu-2404:2024.05.1
+      docker_layer_caching: true
+    environment:
+      POSTGRES_USER: tiger_data_user
+      POSTGRES_DB: test_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+      ARCH: linux
+    steps:
+      - checkout
+      - install_dependencies
+      - persist_to_workspace:
+          root: &root "~/tiger_data"
+          paths: "*"
+      - run:
+          name: Run vitest
+          command: yarn run vitest run --coverage
+      - run_postgres
+      # wait for postgres and mediaflux
+      - run: sleep 10
+      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='mflux-ci.lib.princeton.edu' TEST_MEDIAFLUX_PORT=80
+      - run:
+          name: Run Rspec
+          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+      - store_test_results:
+          path: /tmp/rspec
+      - store_artifacts:
+          path: coverage
+      - store_artifacts:
+          path: /home/circleci/tiger_data/tmp/capybara
+      - coveralls/upload
 
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - test
+  ci_daily:
+    when:
+      equal: ["schedule", "<< pipeline.parameters.GHA_Event >>"]
+    jobs:
+      - mflux_ci
