@@ -30,6 +30,11 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       expect(page).not_to have_content "Administration"
     end
 
+    it "does not allow access to the health monitor page" do
+      visit "/health"
+      expect(page).not_to have_content "Status Page"
+    end
+
     context "flash message" do
       let(:non_admin_user) { FactoryBot.create(:user) }
       it "shows the flash message" do
@@ -50,6 +55,13 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       expect(page).to have_content("Welcome, #{current_user.given_name}!")
       click_link current_user.uid.to_s
       expect(page).to have_content "Log out"
+    end
+
+    it "only allows authenticated users to access the health monitor page" do
+      sign_in current_user
+      visit "/health"
+
+      expect(page).to have_content "Status Page"
     end
   end
 end
