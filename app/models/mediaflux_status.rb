@@ -5,14 +5,20 @@ class MediafluxStatus < HealthMonitor::Providers::Base
     # (rather than the "logged in" user since there is not always a logged
     # in user for the health check)
     Rails.cache.fetch("mediaflux_health_session", expires_in: 5.minutes) do
-      logon_request = Mediaflux::LogonRequest.new
-      session_token = logon_request.session_token
-      if logon_request.error?
-        raise logon_request.response_error[:message]
-      else
-        Mediaflux::LogoutRequest.new(session_token:)
+      byebug
+      begin 
+        logon_request = Mediaflux::LogonRequest.new
+        session_token = logon_request.session_token
+        if logon_request.error?
+          raise logon_request.response_error[:message]
+        else
+          Mediaflux::LogoutRequest.new(session_token:)
+        end
+        session_token
+      rescue StandardError => e
+        byebug
+        raise StandardError, e.message
       end
-      session_token
     end
   end
 end
