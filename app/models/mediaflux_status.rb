@@ -13,6 +13,9 @@ class MediafluxStatus < HealthMonitor::Providers::Base
         Mediaflux::LogoutRequest.new(session_token:)
       end
       session_token
+    rescue StandardError => e
+      Rails.logger.error("Mediaflux error #{e.message}")
+      raise StandardError, "Mediaflux error: Go to the server logs for details"
     end
   end
 end
