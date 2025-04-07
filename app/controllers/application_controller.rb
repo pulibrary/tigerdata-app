@@ -54,11 +54,12 @@ class ApplicationController < ActionController::Base
 
     def mediaflux_login_errors
       yield
-    rescue Mediaflux::SessionError
+    rescue Mediaflux::SessionError => error
       if session_error_handler
         retry
       else
-        raise
+        Honeybadger.notify("Invalid Logon #{error}")
+        redirect_to root_path
       end
     end
 
