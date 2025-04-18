@@ -326,10 +326,13 @@
       .downloads {
         display: flex;
         width: 17.8125rem;
+        height: 17.813rem;
         flex-direction: column;
         align-items: center;
         border-radius: 0.75rem;
         background: $gray-10;
+        padding-bottom: 0.5rem;
+
 
         .header {
           display: flex;
