@@ -326,27 +326,40 @@
       .downloads {
         display: flex;
         width: 17.8125rem;
+        height: 17.813rem;
         flex-direction: column;
         align-items: center;
-
         border-radius: 0.75rem;
         background: $gray-10;
+        padding-bottom: 0.5rem;
+        height: 14.125rem;
 
         .header {
           display: flex;
-          padding: 0.75rem 0.75rem 0rem 0.75rem;
+          padding: 0.75rem 0.75rem 0.75rem 0.75rem;
           justify-content: space-between;
           align-items: center;
           align-self: stretch;
+          color: $black;
+          font-family: $libre-franklin;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 24px;
+          gap: 8px;
         }
-        .details {
-          display: flex;
-          align-items: center;
-          align-self: stretch;
 
+        .contents-window {
+          overflow-y: auto;
+          scrollbar-width: thin;
+          height: 10.125rem;
+          width: 17.8125rem;
+        }
+
+        .details {
           .content {
             display: flex;
-            padding: 0.5rem 0rem 0.5rem 0.5rem;
+            padding: 0rem 0rem 0.5rem 0.5rem;
             flex-direction: column;
             align-items: flex-start;
             flex: 1 0 0;
@@ -354,18 +367,18 @@
 
             .container1 {
               display: flex;
-              padding: 0.5rem 0.5rem 0.5rem 0.5rem;
               flex-direction: column;
-              align-self: stretch;
               align-items: flex-start;
-              flex: 1 0 0;
+              align-self: stretch;
+              background: $white;
+              border-radius: 0.5rem;
+              display: flex;
 
               .container2 {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 align-self: stretch;
-                border-radius: 0.5rem;
 
                 .container3 {
                   display: flex;
@@ -381,7 +394,6 @@
                     gap: 0.125rem;
                     align-self: stretch;
                     border-bottom: 1px solid $gray-10;
-                    background: $white;
 
                     .title {
                       height: 1.3125rem;
@@ -432,21 +444,6 @@
                   }
                 }
               }
-            }
-          }
-
-          .scrollbar {
-            display: flex;
-            padding: 1rem 0.125rem 0.25rem 0.125rem;
-            flex-direction: column;
-            align-items: center;
-            align-self: stretch;
-
-            .indicator {
-              width: 0.25rem;
-              height: 3.125rem;
-              border-radius: 0.5rem;
-              background: $gray-10;
             }
           }
         }
