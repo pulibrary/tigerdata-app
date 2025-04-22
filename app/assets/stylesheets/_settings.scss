@@ -145,6 +145,7 @@
 }
 
 #content {
+  margin-left: -1em;
   #project-nav {
     @include tab-nav;
     border-bottom: solid;
