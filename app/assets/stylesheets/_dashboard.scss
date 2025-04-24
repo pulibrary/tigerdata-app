@@ -37,6 +37,11 @@
     transition-duration: 0.4s;
   }
 
+  a.paginate_button.current {
+    background-color: #e77500;
+    color: #ffffff;
+  }
+
   .paginate_button:hover {
     opacity: 0.6;
     background-color: #e77500;
