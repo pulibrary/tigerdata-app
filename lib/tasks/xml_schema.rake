@@ -3,10 +3,12 @@
 require "nokogiri"
 namespace :xml_schema do
   desc "Validates the example XML provided by Matt against the TigerData XSD"
-  task validate_example: :environment do
+  task :validate_example, [:schema_file, :document_file] => [:environment] do |_, args|
     # Files downloaded from https://github.com/pulibrary/tigerdata-app/issues/896
-    schema_file = "./lib/assets/TigerData_StandardMetadataSchema_v0.7_2024-08-27.xsd"
-    document_file = "./lib/assets/TigerData_MetadataExample-Project_2024-08-27.xml"
+    schema_file = args[:schema_file]
+    raise "Schema file must be specified" if schema_file.nil?
+    document_file = args[:document_file]
+    raise "Document file must be specified" if document_file.nil?
 
     xsd = File.read(schema_file)
     xsd = use_local_xml_xsd(xsd)

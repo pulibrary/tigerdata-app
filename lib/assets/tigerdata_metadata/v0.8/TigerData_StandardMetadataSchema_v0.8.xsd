@@ -1,0 +1,2969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Version Notes:
+        - Version 0.8 of the TigerData Standard Metadata Schema
+        - Updated on 2025-03-28 by Matt Chandler
+-->
+<!-- References:
+        - As noted in documentation fields below, several elements are derived from DataCite:
+            DataCite Metadata Working Group. (2024). DataCite Metadata Schema for the Publication and Citation of Research Data and Other Research Outputs. 
+            Version 4.6. DataCite e.V. https://doi.org/10.14454/mzv1-5b55
+-->
+<!-- Key Concepts:
+        - Resource: a digital object in TigerData systems, falling into two classes, projects and items
+            - The containing element for the metadata record of every project and item in TigerData is "resource"
+            - Common elements and subelements are consistent across classes
+        - Project: a conceptual container linking persons to data and metadata, including a persistent identifier, defined roles, and various system settings
+            - Projects contain items
+            - Projects may contain other projects as subprojects
+        - Item: an abstraction of files and folders contained within projects, bearing their own metadata, including persistent identifiers and Data User roles that may vary within a project
+            - Every item must belong to at least one project
+            - Items may contain other items, in the same way that folders may contain files and subfolders in a file system
+-->
+<!-- Style Notes:
+        - Elements and attributes are defined individually only when needed
+            - If a given element is intended to be used in only one place, then it is defined in that place (e.g., within a group)
+            - If a given attribute is intended to be used only in one element, then it is defined within that element
+            - If a given element or attribute can have multiple applications, then it is called out earlier in the primitives and then referenced where needed
+        - camelCase is used for all custom names for types, attributes, elements, and groups (acronyms are lowercase when beginning a name)
+        - The name of every simple and complex type ends with "Type" (if the semantic part of the name ends in "Type" then "Type" is still appended to the XML type name, e.g. "relationTypeType")
+        - Acronyms and abbreviations are avoided in names and annotations to prevent confusion, but unlike DataCite, some acronyms are used (e.g., ID for identifier)
+        - Repeatable elements are typically placed within container elements, and container elements have names that are the plural form of the repeatable element they contain
+-->
+<!-- Version 0.8 Change Log:
+        2025-03-28:
+          - Removed default value for projectVisibility
+        
+        2025-03-27:
+          - Revised documentation to account for changes and special requests in storage and access
+            - storageCapacity
+            - storagePerformance
+          - Added federallyFunded attribute to funded element
+            - Updated documentation for the federalFunder attribute under fundingReference to note interdependence
+          - Updated documentation for hpc and smbEnable to note their interaction
+          - Revised documentation for provisionalProject to note default of false and possible limitations on other fields
+            - Also made it clear that false for provisionalProject means the project is standard and that required fields are the same regardless
+          - Bumped up the max string length for department names to account for escape sequences in XML, e.g. for ampersand
+          - Tweaked pathSafeType to allow colons
+        
+        2025-03-21:
+          - Revised header comments
+          - Revised comments within body
+          - Revised documentation throughout
+          - Revised resource types to account for various item descriptions
+            - Removed resourceTypeType
+            - Changed resourceType to itemResourceType
+            - Added projectResourceType and made its values fixed
+            - Created shortDescriptionType and shortDescriptionLimitType to manage values for itemResourceType
+            - Updated references in project and Item groups
+          - Revised statusType
+            - Replaced Pending with AdminReview
+            - Reorganized status listing
+            - Updated documentation for status and date-related types
+          - Added Revision as an eventType under the provenanceSubfields
+          - Updated date fields to use dateOrRangeType
+            - nameDate in userType to allow a range
+            - Range options given to allow estimation by users
+          - Split the dates group into projectDates and itemDates
+          - Updated fundingReference
+            - Added the federalFunder attribute
+            - Set the default funderIDType to ROR and the default funderIDSchema to https://ror.org/
+          - Set the projectVisibility default to Limited
+          - Removed the default for projectPurpose
+          - Changed grantFunded to funded (to not bias toward research purposes)
+          - Applied shortDescriptionType to keyword
+             - Repaired shortDescriptionType to use shortDescriptionLimitType
+        
+        2025-03-20:
+          - Revised documentation for researchDomain
+          - Adjusted departments
+            - Removed department abbreviation attribute
+            - Created and applied departmentCodeType
+            - Created and applied departmentType
+          - Revised projectPurposeType
+        
+        2025-03-19:
+          - Revised relationTypeType to align with DataCite 4.6
+          - Revised resourceTypeGeneralType
+            - Aligned controlled vocabulary with DataCite 4.6
+            - Added documentation to OutputManagementPlan to indicate that it should be applied to items serving as a DMP for TigerData projects
+            - Added documentation to Project to indicate that it should be applied to TigerData projects
+            - Added new values README and DataDocumentation, with documentation on usage
+          - Revised relatedIDTypeType to align with DataCite 4.6
+          - Revised dateTypeType to align with DataCite 4.6
+          - Updated other references to DataCite
+        
+        2025-03-13:
+          - Revised accessPoints
+            - Documentation
+            - Changed globusEndpoint to globusCollection
+            - Revised sub-elements in globusCollection to be more specific
+          - Revised documentation for path values
+          - Added approved attribute to smbEnable and globusEnable
+          - Added uuidType
+          - Revised style notes
+       
+       2025-03-12:
+          - Added protocolType to set controlled vocabulary for the protocol attribute in pathType
+          - Revised pathType to use protocolType, with more documentation
+          - Revised pathSafeType to restrict to 18 - 128 characters
+          - Added limitedTitleType and titleType to restrict title lengths below the standard text limits
+            - Set the practical limit for titles to 200 characters
+          - Added accessPoints
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified">
+    <xs:import schemaLocation="https://www.w3.org/2001/xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
+    
+<!-- PRIMITIVES -->
+    <!-- All of the types, attributes, elements, and groups that are combined to make up a standard metadata payload, which is defined last -->
+    
+    <!-- Common Types -->
+        <!-- Simple and complex types that are either necessary building blocks for further types or that have application in various places (e.g., both elements and attributes) -->
+    
+    <xs:simpleType name="doiType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for DOI values (just the prefix and suffix; not a full URL)</xs:documentation>
+            <xs:documentation xml:lang="en">DOI is short for Digital Object Identifier</xs:documentation>
+            <xs:documentation xml:lang="en">Applies a pattern aligned with ISO 26324:2022, allowing any suffix that doesn't have whitespace and doesn't end with unexpected punctuation</xs:documentation>
+            <xs:documentation>https://www.iso.org/standard/81599.html</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="10\.\d{4,9}\/[\S]+[^-_!:;,.?/\\\s]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="projectIDValueType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type for the values of projectID and parentProject fields</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects (projectID and parentProject) and Items (parentProject)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="doiType">
+                <xs:attribute name="projectIDType" fixed="DOI">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Makes explicit that the project ID is always given as a DOI</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="netIDType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for values meant to be a Princeton NetID</xs:documentation>
+            <xs:documentation xml:lang="en">Applies a simple pattern that is true for all Princeton NetIDs</xs:documentation>
+            <xs:documentation xml:lang="en">Validation of user accounts and permissions happens separate from metadata validation</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-z0-9]{2,8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="limitedTextType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Specification for the practical limit for text values within textType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1000"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="textType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type uesed for free text values</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="limitedTextType">
+                <xs:attribute ref="xml:lang" default="en"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="limitedTitleType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Specification for the practical limit for text values within titleType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="titleType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type uesed for title values</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="limitedTitleType">
+                <xs:attribute ref="xml:lang" default="en"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="shortDescriptionLimitType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Specification for the practical limit for text values within shortDescriptionType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="shortDescriptionType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type uesed for short descriptive values (e.g., itemResourceType and keyword)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="shortDescriptionLimitType">
+                <xs:attribute ref="xml:lang" default="en"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="pathSafeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used within pathType to prevent invalid entries</xs:documentation>
+            <xs:documentation xml:lang="en">Restricts to alphanumeric characters, underscore, forward and back slashes, colon, and minus-dash</xs:documentation>
+            <xs:documentation xml:lang="en">The typical value is expected to start "/tigerdata/" and follow with a parent folder of at least 3 characters and a project folder of at least 3 characters, with a slash in-between, hence the minimum of 18 characters</xs:documentation>
+            <xs:documentation xml:lang="en">The ordinary practical limit of 1000 characters for a text field is too high; Windows systems have a hard limit of 260 characters for the full path, so the directory needs to much less than that to avoid problems, hence the maximum of 128 characters</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[\w\\/:-]{18,128}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="uuidType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for values meant to be Universally Unique Identifiers (e.g., in globusUUID)</xs:documentation>
+            <xs:documentation xml:lang="en">Restricts to alphanumeric characters and minus-dashes, with a length ranging from 32 to 36</xs:documentation>
+            <xs:documentation xml:lang="en">The most common value is expected to be hexadecimal in 8-4-4-4-12 format, but this type specification is simplified for XML, and therefore more permissive</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[\w-]{32,36}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="byteUnitType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for byte units in storageQuantityType</xs:documentation>
+            <xs:documentation xml:lang="en">All byte units are base-10, not base-2</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="B" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Bytes (B)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Kilobytes (KB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Megabytes (MB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Gigabytes (GB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Terabytes (TB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Petabytes (PB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="dateOrRangeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for values that may be either dates or date ranges</xs:documentation>
+            <xs:documentation xml:lang="en">Applies a pattern aligned with RKMS-ISO8601</xs:documentation>
+            <xs:documentation>https://www.ukoln.ac.uk/metadata/dcmi/collection-RKMS-ISO8601/</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(\/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))?"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Attribute Types -->
+        <!-- Simple types that apply only to attribute values -->
+    
+    <xs:simpleType name="trackingLevelType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the trackingLevel attribute</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ResourceRecord">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The respective field should be included in any long-term or crosswalked records for the resource</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="InternalUseOnly">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The respective field is intended for internal (Princeton) use only</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="departmentCodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the allowable values for the departmentCode attribute in department</xs:documentation>
+            <xs:documentation xml:lang="en">Princeton departments always have a 5-digit numerical code</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{5}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="protocolType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the protocol attribute in pathType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NFS" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Network File System (version not tracked)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SMB" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Server Message Block (version not tracked)</xs:documentation>
+                    <xs:documentation xml:lang="en">Used interchangeably with Common Internet File System (CIFS)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="S3" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Amazon Simple Storage Service (version not tracked)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="resourceTypeGeneralType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for resourceTypeGeneral values</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects and Items</xs:documentation>
+            <xs:documentation xml:lang="en">TigerData projects and subprojects should always use the standard type Project</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite controlled vocabulary for resourceTypeGeneral (v4.6+)</xs:documentation>
+            <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/resourceTypeGeneral/</xs:documentation>
+            <xs:documentation xml:lang="en">Appends custom options for TigerData items: README and DataDocumentation</xs:documentation>
+            <xs:documentation xml:lang="en">For labeling an item as a Data Management Plan (DMP), use the DataCite standard type OutputManagementPlan</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Audiovisual" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A series of visual representations imparting an impression of motion when shown in succession. May or may not include sound.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Award" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">An umbrella term for resources provided to individual(s) or organization(s) in support of research, academic output, or training, such as a specific instance of funding, grant, investment, sponsorship, scholarship, recognition, or non-monetary materials.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Book" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A medium for recording information in the form of writing or images, typically composed of many pages bound together and protected by a cover.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BookChapter" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">One of the main divisions of a book.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Collection" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">An aggregation of resources, which may encompass collections of one resourceType as well as those of mixed types. A collection is described as a group; its parts may also be separately described.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ComputationalNotebook" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A virtual notebook environment used for literate programming.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ConferencePaper" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Article that is written with the goal of being accepted to a conference.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ConferenceProceeding" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Collection of academic papers published in the context of an academic conference.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DataPaper" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A factual and objective publication with a focused intent to identify and describe specific data, sets of data, or data collections to facilitate discoverability.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Dataset" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Data encoded in a defined structure.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Dissertation" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A written essay, treatise, or thesis, especially one written by a candidate for the degree of Doctor of Philosophy.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Event" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A non-persistent, time-based occurrence.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Image" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A visual representation other than text.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Instrument" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A device, tool or apparatus used to obtain, measure and/or analyze data.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="InteractiveResource" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A resource requiring interaction from the user to be understood, executed, or experienced.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Journal" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A scholarly publication consisting of articles that is published regularly throughout the year.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="JournalArticle" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A written composition on a topic of interest, which forms a separate part of a journal.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Model" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">An abstract, conceptual, graphical, mathematical or visualization model that represents empirical objects, phenomena, or physical processes.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OutputManagementPlan" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A formal document that outlines how research outputs are to be handled both during a research project and after the project is completed.</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this resource type for items that serve as the Data Management Plan (DMP) for a TigerData project.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PeerReview" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Evaluation of scientific, academic, or professional work by others working in the same field.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PhysicalObject" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A physical object or substance.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Preprint" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A version of a scholarly or scientific paper that precedes formal peer review and publication in a peer-reviewed scholarly or scientific journal.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Project" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A planned endeavor or activity, frequently collaborative, intended to achieve a particular aim using allocated resources such as budget, time, and expertise.</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this resource type for all TigerData projects and subprojects.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Report" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A document that presents information in an organized format for a specific audience and purpose.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Service" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">An organized system of apparatus, appliances, staff, etc., for supplying some function(s) required by end users.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Software" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A computer program other than a computational notebook, in either source code (text) or compiled form. Use this type for general software components supporting scholarly research. Use the “ComputationalNotebook” value for virtual notebooks.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Sound" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A resource primarily intended to be heard.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Standard" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Something established by authority, custom, or general consent as a model, example, or point of reference.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="StudyRegistration" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A detailed, time-stamped description of a research plan, often openly shared in a registry or published in a journal before the study is conducted to lend accountability and transparency in the hypothesis generating and testing process.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Text" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A resource consisting primarily of words for reading that is not covered by any other textual resource type in this list.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Workflow" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A structured series of steps which can be executed to produce a final outcome, allowing users a means to specify and enact their work in a more reproducible manner.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Other" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A type of resource not otherwise described by defined types.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="README" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A simple text file used to document important information about a containing resource.</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this resource type for all items serving as README files for TigerData projects.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DataDocumentation" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A resource used to document detailed information about data in a containing resource (e.g., a codebook or data dictionary).</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this resource type for items serving as supplemental documentation to the README for a TigerData project.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="licenseURIType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the licenseURI attribute</xs:documentation>
+            <xs:documentation xml:lang="en">All standard specifications for licenses are drawn from https://spdx.org/licenses/</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="https://creativecommons.org/publicdomain/zero/1.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Public Domain Dedication 1.0 Universal</xs:documentation>
+                    <xs:documentation xml:lang="en">CC0 1.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by-sa/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Sharealike 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY-SA 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by-nc/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY-NC 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial-Sharealike 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY-NC-SA 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by-nd/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noderivatives 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY-ND 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial-Noderivatives 4.0 International</xs:documentation>
+                    <xs:documentation xml:lang="en">CC BY-NC-ND 4.0</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="https://opensource.org/license/MIT">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The MIT License</xs:documentation>
+                    <xs:documentation xml:lang="en">MIT</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="licenseIDType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the licenseID attribute</xs:documentation>
+            <xs:documentation xml:lang="en">All standard specifications for licenses are drawn from https://spdx.org/licenses/</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CC0 1.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Public Domain Dedication 1.0 Universal</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/publicdomain/zero/1.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY-SA 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Sharealike 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-sa/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY-NC 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY-NC-SA 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial-Sharealike 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc-sa/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY-ND 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noderivatives 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nd/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CC BY-NC-ND 4.0" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creative Commons Attribution-Noncommercial-Noderivatives 4.0 International</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc-nd/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MIT" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The MIT License</xs:documentation>
+                    <xs:documentation>https://opensource.org/license/MIT</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="relatedIDTypeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the relatedIDType attribute</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects and Items</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite controlled vocabulary for relatedIdentifierType (v4.6+)</xs:documentation>
+            <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/relatedIdentifierType/</xs:documentation>
+            <xs:documentation xml:lang="en">Appends a custom option for TigerData items: MFAID</xs:documentation>
+            <xs:documentation xml:lang="en">TigerData projects and subprojects should use DOI</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ARK" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Archival Resource Key</xs:documentation>
+                    <xs:documentation xml:lang="en">A URI designed to support long-term access to information objects.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="arXiv" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">arXiv identifier</xs:documentation>
+                    <xs:documentation xml:lang="en">arXiv.org is a repository of preprints of scientific papers in the fields of mathematics, physics, astronomy, computer science, quantitative biology, statistics, and quantitative finance.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="bibcode" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Astrophysics Data System bibliographic codes</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CSTR" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Common Science and Technology Resources Identifier</xs:documentation>
+                    <xs:documentation xml:lang="en">CSTR is an identifier based on the Chinese National Standard GB/T 32843—2016 “Science and technology resource identification”, providing a unique identification service for scientific data, papers, scientific institutions, researchers, scientific instruments, patents and other scientific and technological resources.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DOI" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Digital Object Identifier</xs:documentation>
+                    <xs:documentation xml:lang="en">A character string used to uniquely identify an object. A DOI name is divided into two parts, a prefix and a suffix, separated by a slash.</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this type to reference TigerData projects</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EAN13" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">European Article Number (now renamed International Article Number, but retaining the original acronym)</xs:documentation>
+                    <xs:documentation xml:lang="en">A 13-digit barcoding standard that is a superset of the original 12-digit Universal Product Code (UPC) system.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EISSN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Electronic International Standard Serial Number</xs:documentation>
+                    <xs:documentation xml:lang="en">ISSN used to identify periodicals in electronic form (eISSN or e-ISSN).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Handle" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">This refers specifically to an ID in the Handle system operated by the Corporation for National Research Initiatives (CNRI).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IGSN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">International Generic Sample Number</xs:documentation>
+                    <xs:documentation xml:lang="en">A code that uniquely identifies samples from our natural environment and related features-of-interest.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ISBN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">International Standard Book Number</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique numeric book identifier. There are 2 formats: a 10-digit ISBN format and a 13-digit ISBN.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ISSN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">International Standard Serial Number</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique 8-digit number used to identify a print or electronic periodical publication.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ISTC" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">International Standard Text Code</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique “number” assigned to a textual work. An ISTC consists of 16 numbers and/or letters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="LISSN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The linking ISSN or ISSN-L enables collocation or linking among different media versions of a continuing resource.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="LSID" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Life Science Identifiers</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique identifier for data in the Life Science domain.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PMID" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">PubMed identifier</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique number assigned to each PubMed record.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PURL" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Persistent Uniform Resource Locator</xs:documentation>
+                    <xs:documentation xml:lang="en">A PURL has three parts: (1) a protocol, (2) a resolver address, and (3) a name.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RRID" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Research Resource IDentifier</xs:documentation>
+                    <xs:documentation xml:lang="en">A character string used to uniquely identify key inputs to an experiment including the so-called “key biological resources” as defined by the National Institutes of Health, and related tools such as core facilities and databases. An RRID name is divided into two parts, the authority and a local identifier, separated by an underscore.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="UPC" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Universal Product Code</xs:documentation>
+                    <xs:documentation xml:lang="en">A barcode symbology used for tracking trade items in stores. Its most common form, the UPC-A, consists of 12 numerical digits.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="URL" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Uniform Resource Locator</xs:documentation>
+                    <xs:documentation xml:lang="en">Also known as web address, a URL is a specific character string that constitutes a reference to a resource.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="URN" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Uniform Resource Name</xs:documentation>
+                    <xs:documentation xml:lang="en">A unique and persistent identifier of an electronic document.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="w3id" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Permanent identifier for Web applications</xs:documentation>
+                    <xs:documentation xml:lang="en">Mostly used to publish vocabularies and ontologies. The letters ‘w3’ stand for “World Wide Web”.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MFAID" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A Mediaflux Asset ID number</xs:documentation>
+                    <xs:documentation xml:lang="en">Include the domain and namespace to make the ID as persistent as possible</xs:documentation>
+                    <xs:documentation xml:lang="en">Use this type to reference TigerData items</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="relationTypeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the relationType attribute</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects and Items</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite controlled vocabulary for relationType (v4.6+)</xs:documentation>
+            <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/relationType/</xs:documentation>
+            <xs:documentation xml:lang="en">The value is applied to object A to denote its relation to object B</xs:documentation>
+            <xs:documentation xml:lang="en">Appends custom options for TigerData: HasSubproject, IsSubprojectOf, HasItem, and IsItemOf</xs:documentation>
+            <xs:documentation xml:lang="en">Formal parent-child relationships between TigerData resources are called out in the parentProject field, and they can be further specified by relationType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="IsCitedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B includes A in a citation</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Cites" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A includes B in a citation</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsSupplementTo" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a supplement to B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsSupplementedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is a supplement to A</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsContinuedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is continued by the work B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Continues" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a continuation of the work B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Describes" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A describes B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsDescribedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is described by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasMetadata" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A has additional metadata B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsMetadataFor" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Indicates additional metadata A for a resource B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasVersion" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A has a version B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsVersionOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a version of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsNewVersionOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a new edition of B, where the new edition has been modified or updated</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsPreviousVersionOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a previous edition of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsPartOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a portion of B; may be used for elements of a series</xs:documentation>
+                    <xs:documentation xml:lang="en">Do not use for formal parent-child relationships between TigerData projects, subprojects, or items</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasPart" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A includes the part B</xs:documentation>
+                    <xs:documentation xml:lang="en">Do not use for formal parent-child relationships between TigerData projects, subprojects, or items</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsPublishedIn" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is published inside B, but is independent of other things published inside of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsReferencedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is used as a source of information by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="References" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is used as a source of information for A</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsDocumentedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is documentation about/explaining A</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Documents" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is documentation about/explaining B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsCompiledBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is used to compile or create A</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Compiles" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is the result of a compile or creation event using A</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsVariantFormOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a variant or different form of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsOriginalFormOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is the original form of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsIdenticalTo" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is identical to B, for use when there is a need to register two separate instances of the same resource</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsReviewedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is reviewed by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Reviews" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a review of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsDerivedFrom" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">B is a source upon which A is based</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsSourceOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a source upon which B is based</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsRequiredBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is required by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Requires" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A requires B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Obsoletes" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A replaces B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsObsoletedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is replaced by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsCollectedBy" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is collected by B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Collects" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A collects B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsTranslationOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is a translation of B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasTranslation" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A has a translation B</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasSubproject" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A and B are both projects, and A includes B as a subproject</xs:documentation>
+                    <xs:documentation xml:lang="en">Use only with formal relationships between TigerData projects and subprojects</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsSubprojectOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A and B are both projects, and B includes A as a subproject</xs:documentation>
+                    <xs:documentation xml:lang="en">Use only with formal relationships between TigerData projects and subprojects</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HasItem" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is either a project or an item, B is an item, and A includes B</xs:documentation>
+                    <xs:documentation xml:lang="en">Use only with formal relationships between TigerData projects and/or items</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsItemOf" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A is an item, B is either a project or an item, and B includes A</xs:documentation>
+                    <xs:documentation xml:lang="en">Use only with formal relationships between TigerData projects and/or items</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="dateTypeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the dateType attribute</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects and Items</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite controlled vocabulary for dateType (v4.6+)</xs:documentation>
+            <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/appendices/appendix-1/dateType/</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Accepted" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date that the publisher accepted the resource into their system.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Available" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date the resource is made publicly available. May be a range.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Copyrighted" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The specific, documented date at which the resource receives a copyrighted status, if applicable.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Collected" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date or date range in which the resource content was collected.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Created" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date the resource itself was put together; this could refer to a timeframe in ancient history, a date range, or a single date for a final component, e.g., the finalised file with all the data.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Issued" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date that the resource is published or distributed, e.g., to a data centre.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Submitted" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date the creator submits the resource to the publisher. This could be different from Accepted if the publisher then applies a selection process.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Updated" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date of the last update to the resource, when the resource is being added to. May be a range.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Valid" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date or date range during which the dataset or resource is accurate.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Withdrawn" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date the resource is removed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Other" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Other date that does not fit into an existing category.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Common Attributes -->
+        <!-- Attribute definitions that are applied in multiple elements -->
+    
+    <xs:attribute name="inherited" type="xs:boolean">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard attribute to specify whether a given field's value should be inherited by any child resources</xs:documentation>
+            <xs:documentation xml:lang="en">Inheritance is limited to the applicability of the field to the child resource (e.g., researchDomain may be inherited by a subproject but not an item)</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    
+    <xs:attribute name="discoverable" type="xs:boolean">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard attribute to specify whether a given field should be discoverable to search operations within TigerData systems</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+            
+    <xs:attribute name="trackingLevel" type="trackingLevelType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard attribute to specify the tracking level of a given field (ResourceRecord or InternalUseOnly)</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    
+    <xs:attribute name="resourceTypeGeneral" type="resourceTypeGeneralType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard attribute to specify the general type for a resource, following the controlled vocabulary in resourceTypeGeneralType</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite definition for resourceTypeGeneral (v4.6+)</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    
+    <xs:attribute name="approved" type="xs:boolean">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard attribute to specify whether a given field has an approved value</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to fields which have a request-approval framework, including projectDirectory, storageCapacity, and storagePerformance</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    
+    <!-- Element Types -->
+        <!-- Simple and complex types used to construct element definitions -->
+    
+    <xs:complexType name="userType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for user fields</xs:documentation>
+            <xs:documentation xml:lang="en">Given the required attribute userID, all sub-elements are optional, so the element for a given user field may be left empty</xs:documentation>
+            <xs:documentation xml:lang="en">If the sub-element netID is included, its value should match that of the userID attribute</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="netID" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="orcid" type="xs:anyURI" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The ORCID ID URL for the person in a given role, if available and if verified as valid against the ORCID API upon entry.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="fullName" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The full name of the person in a given role, verified in the format family-comma-given and matching the corresponding given and family name fields, if available.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="givenName" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The given name(s) of the person in a given role. If the person has multiple given names, then all should be included in this field, along with any suffixes.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="familyName" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The family name(s) of the person in a given role. If the person has multiple family names, then all should be included in this field.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="nameDate" type="dateOrRangeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date at which the name metadata was recorded.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="alternativeNameIdentifier" minOccurs="0" maxOccurs="100">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Records alternative (non-ORCID) identifier(s) for the person in a given role.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="nameIdentifierScheme" type="xs:string" use="required">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en">The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given).</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="schemeURI" type="xs:anyURI" use="required">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en">The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given).</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="userID" type="netIDType" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">Specifies the (locally) unique user ID</xs:documentation>
+                <xs:documentation xml:lang="en">If a value is given for the sub-element netID, then it should match the value given for userID</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="userIDType" type="xs:string" fixed="NetID">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">Makes explicit that Princeton NetIDs are always used as the identifier for userID</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:simpleType name="researchDomainNameType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the researchDomain field</xs:documentation>
+            <xs:documentation xml:lang="en">Applies when projectPurpose is Research</xs:documentation>
+            <xs:documentation xml:lang="en">Options are limited to the 4 domains Princeton University uses to categorize academic departments</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Natural Sciences" xml:lang="en"/>
+            <xs:enumeration value="Engineering" xml:lang="en"/>
+            <xs:enumeration value="Social Sciences" xml:lang="en"/>
+            <xs:enumeration value="Humanities" xml:lang="en"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="departmentType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the allowable values for department</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to all projects, regardless of projectPurpose</xs:documentation>
+            <xs:documentation xml:lang="en">Princeton department names typically start with a 2- or 3-character abbreviation, followed by a minus-dash, and then a short description; however, several exceptions exist</xs:documentation>
+            <xs:documentation xml:lang="en">The enforceable pattern is a string length from 6 to 38 (the real string max is 30, but we need to account for XML escape sequences for special characters)</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="6"/>
+            <xs:maxLength value="38"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="pathType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for file path values</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="pathSafeType">
+                <xs:attribute name="protocol" type="protocolType" default="NFS">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">The storage connection protocol that defines how the path is written</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:complexType name="quantityType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for generic quantity values</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="size" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The numeric size of the quantity</xs:documentation>
+                    <xs:documentation xml:lang="en">The practical limits for floating point values set by Mediaflux are the range [4.9E-324,1.7976931348623157E308]</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="unit" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The standardized unit of measure for the quantity</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="storageQuantityType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for storage quantity values</xs:documentation>
+        </xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="size" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The numeric size of the storage quantity</xs:documentation>
+                    <xs:documentation xml:lang="en">The practical limits for floating point values set by Mediaflux are the range [4.9E-324,1.7976931348623157E308]</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="unit" type="byteUnitType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The logical byte unit for the storage quantity (base-10)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="visibilityType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type to specify how open a resource's record should be to users</xs:documentation>
+            <xs:documentation xml:lang="en">Only those fields which have the attribute discoverable set to true can be made visible</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Restricted" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Visibility is restricted to those assigned explicit roles on the resource</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Limited" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Visibility is limited to TigerData users</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Open" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Visibility is open to the general public</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="storagePerformanceType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for storage performance values</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Eco" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The most economical storage tier available in TigerData (lowest cost and smallest carbon footprint)</xs:documentation>
+                    <xs:documentation xml:lang="en">Appropriate for long-term/low-use data, i.e. cold storage</xs:documentation>
+                    <xs:documentation xml:lang="en">The typical implementation is an object store system, e.g. IBM Cloud Object Storage</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Standard" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The middle storage tier for TigerData, expected as a default</xs:documentation>
+                    <xs:documentation xml:lang="en">Appropriate for data that is accessed occasionally but infrequently edited, i.e. cool storage</xs:documentation>
+                    <xs:documentation xml:lang="en">The typical implementation is a network attached storage system, e.g. Dell PowerScale</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Premium" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The most performant storage tier available in TigerData</xs:documentation>
+                    <xs:documentation xml:lang="en">Reserved for actively edited data that needs to be close to high performance computing systems, i.e. warm storage</xs:documentation>
+                    <xs:documentation xml:lang="en">The typical implementation is a cluster file system, e.g. IBM General Parallel File System</xs:documentation>
+                    <xs:documentation xml:lang="en">A special request may be required for this tier</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="fileEstimateType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the numberOfFiles field</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Less than 10,000" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is estimated to include less than 10,000 files at any one time</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10k - 100k" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is estimated to include between 10,000 and 100,000 files at any one time</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="100k - 1mil" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is estimated to include between 100,000 and 1,000,000 files at any one time</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="More than 1 million" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is estimated to include more than 1,000,000 files at any one time</xs:documentation>
+                    <xs:documentation xml:lang="en">A special request may be required for this largest category</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="hpcType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the hpc field</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="No" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is not expected to connect to high performance computing resources</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Yes" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is expected to connect to high performance computing resources</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Not Sure" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The submitter is unsure whether the project will need to connect to high performance computing resources</xs:documentation>
+                    <xs:documentation xml:lang="en">More conversation may be required to clarify needs</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="projectPurposeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the projectPurpose field</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Research" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is intended to contain mainly research data</xs:documentation>
+                    <xs:documentation xml:lang="en">This includes projects for labs and research groups; it is not restricted to one specific research project</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Administrative" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is intended to contain mainly administrative data</xs:documentation>
+                    <xs:documentation xml:lang="en">This includes library and other staff-managed archive use-cases</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Teaching" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is intended to contain mainly data related to teaching and learning activities</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+       
+    <xs:simpleType name="licenseType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the license field</xs:documentation>
+            <xs:documentation xml:lang="en">All standard specifications for licenses are drawn from https://spdx.org/licenses/</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Creative Commons Public Domain Dedication 1.0 Universal" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC0 1.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/publicdomain/zero/1.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution-Sharealike 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY-SA 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-sa/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution-Noncommercial 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY-NC 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution-Noncommercial-Sharealike 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY-NC-SA 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc-sa/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution-Noderivatives 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY-ND 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nd/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Creative Commons Attribution-Noncommercial-Noderivatives 4.0 International" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">CC BY-NC-ND 4.0</xs:documentation>
+                    <xs:documentation>https://creativecommons.org/licenses/by-nc-nd/4.0/</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="The MIT License" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">MIT</xs:documentation>
+                    <xs:documentation xml:lang="en">https://opensource.org/license/MIT</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="statusType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type that defines the controlled vocabulary for the status field</xs:documentation>
+            <xs:documentation xml:lang="en">Applies only to Projects</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AdminReview" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project request has been submitted, with approval by the assigned Data Sponsor, but it is not yet approved by a System Administrator</xs:documentation>
+                    <xs:documentation xml:lang="en">Applies if the submission field lacks complete approvedBy or approvalDateTime subfields</xs:documentation>
+                    <xs:documentation xml:lang="en">This is typically the initial status of a project record; it marks the point at which a DOI is minted for the projectID</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Approved" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project has been approved by the assigned Data Sponsor and a System Administrator, but it is not yet active (i.e., not yet ready for the users)</xs:documentation>
+                    <xs:documentation xml:lang="en">Applies if the submission field has complete approvedBy and approvalDateTime subfields, but the frontend has not yet confirmed the project's collection ID in Mediaflux</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Active" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project is live: approved and available to users</xs:documentation>
+                    <xs:documentation xml:lang="en">Applies if the submission field has complete approvedBy and approvalDateTime subfields, the frontend has confirmed the project's collection ID in Mediaflux, and the project has been neither retired nor published</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Retired" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project has been retired due to lack of use or by request of the Data Sponsor or the Data Manager</xs:documentation>
+                    <xs:documentation xml:lang="en">Applies if the the retirement field has complete approvedBy and approvalDateTime subfields</xs:documentation>
+                    <xs:documentation xml:lang="en">If the retirementDate field is filled, then the change to Retired status is expected to occur on or after the retirementDate</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Published" xml:lang="en">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The project has been published</xs:documentation>
+                    <xs:documentation xml:lang="en">Applies if the the publication field has complete approvedBy and approvalDateTime subfields</xs:documentation>
+                    <xs:documentation xml:lang="en">If the publicationDate field is filled, then the change to Published status is expected to occur on or after the publicationDate</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="mediafluxAssetIDType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Standard type used for Mediaflux Asset ID (MFAID) values</xs:documentation>
+            <xs:documentation xml:lang="en">Per Mediaflux Concepts v 0.10 (2021), asset IDs must be in the range [1,9223372036854775807]</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="9223372036854775807"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Common Elements -->
+        <!-- Element definitions that appear in multiple groups and/or apply to both projects and items -->
+    
+    <xs:element name="alternativeID">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">An alternative identifier for the resource (not the standard TigerData projectID or itemID), given as a string</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">Modeled after the DataCite definition for RelatedIdentifier (v4.6+)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="limitedTextType">
+                    <xs:attribute name="alternativeIDType" type="limitedTextType" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">A simple description of the alternative ID type (e.g. "Local accession number")</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute ref="inherited" default="false"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="alternativeIDs">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all alternative IDs for a resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="alternativeID" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" default="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="parentProject">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The ID of the project to which the resource belongs directly</xs:documentation>
+            <xs:documentation xml:lang="en">Applies to both Projects and Items</xs:documentation>
+            <xs:documentation xml:lang="en">Takes precedence over any IsChildOf relations to other projects</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="projectIDValueType">
+                    <xs:attribute ref="inherited" default="true"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="dataSponsor">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The person who takes primary responsibility for the project</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="userType">
+                    <xs:attribute ref="inherited" fixed="true"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="dataManager">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The person who manages the day-to-day activities for the project</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="userType">
+                    <xs:attribute ref="inherited" default="true"/>
+                    <xs:attribute ref="discoverable" default="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="dataUser">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A person who has access privileges to the resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="userType">
+                    <xs:attribute name="readOnly" type="xs:boolean" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Specifies whether the data user has read-only access to the resource (if false, then read-write access is granted)</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute ref="inherited" default="true"/>
+                    <xs:attribute ref="discoverable" default="false"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="dataUsers">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all data users of a resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="dataUser" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="title">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A plain-language title for the resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">Restricted to fewer characters than the typical free-text limitations</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="titleType">
+                    <xs:attribute ref="inherited" fixed="false"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="description">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A plain-language description of the resource and/or its contents</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="textType">
+                    <xs:attribute ref="inherited" fixed="false"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="language">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Language declaration for the contents of the resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:language">
+                    <xs:attribute ref="inherited" default="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="languages">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all languages for a resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="language" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="fundingReference">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Information about financial support for the resource (at minimum, a name for the funding provider)</xs:documentation>
+            <xs:documentation xml:lang="en">This is most often used to acknowledge grant funding for research projects, but it may also be used to specify any other funding sources for any type of resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">Derived from the DataCite definitions for FundingReference (v4.6+)</xs:documentation>
+            <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/fundingreference/</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="funderName" type="textType" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the name of the funding provider</xs:documentation>
+                        <xs:documentation xml:lang="en">If the funding provider is part of the U.S. federal government, then the federalFunder attribute should be set to true</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="funderID" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the unique identifier for the funding provider, if applicable</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="funderIDType" default="ROR">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en">Records the type of identifier used for funderID</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="Crossref Funder ID" xml:lang="en"/>
+                                            <xs:enumeration value="GRID" xml:lang="en"/>
+                                            <xs:enumeration value="ISNI" xml:lang="en"/>
+                                            <xs:enumeration value="ROR" xml:lang="en"/>
+                                            <xs:enumeration value="Other" xml:lang="en"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="funderIDSchema" type="xs:anyURI" default="https://ror.org/">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en">Records the schema that defines funderIDType</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="awardNumber" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the award number for the fundingReference, if applicable</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="awardURI" type="xs:anyURI" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en">Records the URI for the awardNumber</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="awardTitle" type="textType" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the title for the fundingReference, if applicable</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="federalFunder" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Whether the funder is part of the U.S. federal government (default false)</xs:documentation>
+                    <xs:documentation xml:lang="en">If true, then the federallyFunded attribute for funded should also be true</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute ref="inherited" default="true"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="fundingReferences">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all funding references for a resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="fundingReference" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="itemResourceType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A short description of the type of item, used in conjunction with a standard value for the resourceTypeGeneral attribute</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Projects</xs:documentation>
+            <xs:documentation xml:lang="en">Modeled after the DataCite definition for ResourceType (v4.6+)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="shortDescriptionType">
+                    <xs:attribute ref="resourceTypeGeneral" use="required"/>
+                    <xs:attribute ref="inherited" default="false"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="projectResourceType" fixed="TigerData Project">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The standard (fixed) resource type setting for TigerData projects</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+            <xs:documentation xml:lang="en">Modeled after the DataCite definition for resourceType (v4.6+)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="shortDescriptionType">
+                    <xs:attribute ref="resourceTypeGeneral" fixed="Project"/>
+                    <xs:attribute ref="inherited" default="false"/>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="license">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Specific rights granted for copying and reusing the resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">Modeled after the DataCite definitions for Rights (v4.6+)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="licenseType">
+                    <xs:attribute name="licenseURI" type="licenseURIType" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Specifies the URI of the license</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="licenseID" type="licenseIDType" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Specifies the short, standardized version of the license name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="licenseIDScheme" type="xs:string" fixed="SPDX">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Specifies the scheme used for licenseID</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="licenseIDSchemeURI" type="xs:anyURI" fixed="https://spdx.org/licenses/">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Specifies the URI of the scheme given by licenseIDScheme</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute ref="inherited" default="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="licenses">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all licenses for a resource</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="license" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="duaReference">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Information about a formal agreement governing data use pertaining to the resource (at minimum, a name for the agreement grantor)</xs:documentation>
+            <xs:documentation xml:lang="en">DUA is short for Data Use Agreement</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="grantorName" type="textType" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the name of the DUA grantor</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="duaID" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the identifier for the DUA, if applicable (given as a string)</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="duaURI" type="xs:anyURI" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation xml:lang="en">Records the URI for the DUA</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="duaTitle" type="textType" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Records the title for the DUA, if applicable</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute ref="inherited" default="true"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="duaReferences">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all DUA references for a resource</xs:documentation>
+            <xs:documentation xml:lang="en">DUA is short for Data Use Agreement</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="duaReference" minOccurs="1" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="startDate">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The date when the resource became, or will become, active (may be estimated with a range)</xs:documentation>
+            <xs:documentation xml:lang="en">The value should not be chronologically earlier than that of the approvalDateTime subfield under the submission field</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, this date field is discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="dateOrRangeType">
+                    <xs:attribute ref="inherited" default="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="endDate">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The date when the resource became, or will become, inactive from a user perspective, i.e., no further changes are expected to be made (may be estimated with a range)</xs:documentation>
+            <xs:documentation xml:lang="en">The value should not be chronologically earlier than that of startDate, nor later than that of retirementDate</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, this date field is discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="dateOrRangeType">
+                    <xs:attribute ref="inherited" default="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="retirementDate">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The date when the resource became, or will become, no longer useful to the primary users (may be estimated with a range)</xs:documentation>
+            <xs:documentation xml:lang="en">The value should not be chronolocially earlier than that of endDate, nor later than that of the approvalDateTime subfield under the retirement provenance field</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, this date field is discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="dateOrRangeType">
+                    <xs:attribute ref="inherited" fixed="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="publicationDate">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The date when the resource became, or will become, publicly available (may be estimated with a range)</xs:documentation>
+            <xs:documentation xml:lang="en">The value should not be chronoligically earlier than that of startDate, nor later than that of the approvalDateTime subfield under the publication field</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, this date field is discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="dateOrRangeType">
+                    <xs:attribute ref="inherited" fixed="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="otherDate">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A date or date range relevant to the resource, not captured by any other date field</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, this date field is discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="dateOrRangeType">
+                    <xs:attribute name="dateType" type="dateTypeType" use="required"/>
+                    <xs:attribute name="dateInformation" type="shortDescriptionLimitType" use="optional">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">More information about the value of otherDate (recommended if dateType is Other)</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute ref="inherited" default="true"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="projectDates">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all date elements that apply to a Project</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, these date fields are all discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="endDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="retirementDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="publicationDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="otherDate" minOccurs="0" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="itemDates">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The container element for all date elements that apply to an Item</xs:documentation>
+            <xs:documentation xml:lang="en">Unlike provenance records, these date fields are all discoverable and tracked in the resource record</xs:documentation>
+            <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="endDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="retirementDate" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="otherDate" minOccurs="0" maxOccurs="100"/>
+            </xs:sequence>
+            <xs:attribute ref="discoverable" fixed="true"/>
+            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Subelement Groups -->
+        <!-- Group definitions for elements that appear only as subelements of other defined elements -->
+    
+    <xs:group name="provenanceSubfields">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The group of all standard subfields included in project provenance fields</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="requestedBy" type="userType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The person who made the request</xs:documentation>
+                    <xs:documentation xml:lang="en">May be an eligible Data Sponsor or Data Manager, a System Administrator, or a technical service account</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="requestDateTime" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date and time the request was made</xs:documentation>
+                    <xs:documentation xml:lang="en">Include the time zone at the location of the host institution</xs:documentation>
+                    <xs:documentation xml:lang="en">Princeton University is in the Eastern Time Zone (UTC-05:00 during Eastern Standard Time and UTC-04:00 during Eastern Daylight Time)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="approvedBy" type="userType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The person who approved the request</xs:documentation>
+                    <xs:documentation xml:lang="en">Should be a System Administrator</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="approvalDateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date and time the request was approved</xs:documentation>
+                    <xs:documentation xml:lang="en">Include the time zone at the location of the host institution</xs:documentation>
+                    <xs:documentation xml:lang="en">Princeton University is in the Eastern Time Zone (UTC-05:00 during Eastern Standard Time and UTC-04:00 during Eastern Daylight Time)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="deniedBy" type="userType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The person who denied the request</xs:documentation>
+                    <xs:documentation xml:lang="en">Should be a System Administrator</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="denialDateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The date and time the request was denied</xs:documentation>
+                    <xs:documentation xml:lang="en">Include the time zone at the location of the host institution</xs:documentation>
+                    <xs:documentation xml:lang="en">Princeton University is in the Eastern Time Zone (UTC-05:00 during Eastern Standard Time and UTC-04:00 during Eastern Daylight Time)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="eventNote" minOccurs="0" maxOccurs="100">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A supplementary record of noteworthy details for a given provenance event</xs:documentation>
+                    <xs:documentation xml:lang="en">Intended to be retained in a running log of all noteworthy events</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="noteBy" type="userType" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The person making the note</xs:documentation>
+                                <xs:documentation xml:lang="en">Should be a System Administrator</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="noteDateTime" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The date and time the note was made</xs:documentation>
+                                <xs:documentation xml:lang="en">Include the time zone at the location of the host institution</xs:documentation>
+                                <xs:documentation xml:lang="en">Princeton University is in the Eastern Time Zone (UTC-05:00 during Eastern Standard Time and UTC-04:00 during Eastern Daylight Time)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="eventType" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">A general category label for the event note</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Collection" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note records the assignment of or change to the project's Mediaflux collection ID</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Directory" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note pertains to the project's directory or mount point</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Quota" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note pertains to the project's quota settings in Mediaflux</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Tier" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note pertains to the project's storage tier</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Sponsor" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note records any changes to the project's Data Sponsor</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Revision" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note explains the return of the project request to the submitter for revision</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Denial" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">Event note explains the denial of the project request</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="Other" xml:lang="en">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The event note is not otherwise classified</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="message" type="textType" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The plain-language message contents of the event note</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
+    
+    <!-- Element Groups -->
+        <!-- Group definitions for elements, including some reference to common elements and some new element definitions within -->
+        
+    <xs:group name="projectRoles">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements included in TigerData project roles</xs:documentation>
+            <xs:documentation xml:lang="en">Requires 1 Data Sponsor and 1 Data Manager; Data Users are optional and repeatable</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="dataSponsor" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="dataManager" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="dataUsers" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+       
+    <xs:group name="projectDescription">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements included in TigerData project descriptions</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="researchDomains" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all research domains for a project</xs:documentation>
+                    <xs:documentation xml:lang="en">If projectPurpose is Research, then at least one researchDomain element should be given</xs:documentation>
+                    <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+                    <xs:documentation xml:lang="en">No duplicate domains; no more than 4 total</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="researchDomain" minOccurs="1" maxOccurs="4">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The general field(s) of academic research related to the project, if applicable</xs:documentation>
+                                <xs:documentation xml:lang="en">Options are limited to the 4 domains Princeton University uses to categorize departments</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="researchDomainNameType">
+                                        <xs:attribute ref="inherited" fixed="true"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="departments" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all departments for a project</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="department" minOccurs="1" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The primary Princeton University department(s) affiliated with the project</xs:documentation>
+                                <xs:documentation xml:lang="en">Use the canonical name for each recorded department</xs:documentation>
+                                <xs:documentation xml:lang="en">Princeton department names typically start with a 2- or 3-character abbreviation, followed by a minus-dash, and then a short description</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="departmentType">
+                                        <xs:attribute name="departmentCode" type="departmentCodeType" use="required">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">Records the numerical code for the department (required)</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute ref="inherited" default="true"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="projectDirectory" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The locally unique name for the project’s directory</xs:documentation>
+                    <xs:documentation xml:lang="en">The typical value is expected to be in NFS protocol</xs:documentation>
+                    <xs:documentation xml:lang="en">A parent folder is recommended to organize projects by groups (e.g., lab or principal investigator)</xs:documentation>
+                    <xs:documentation xml:lang="en">If no user request was received and no value has yet been approved, then this field may be empty</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="projectDirectoryPath" type="pathType" minOccurs="0" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">A current setting for projectDirectory (omitted until approved)</xs:documentation>
+                                <xs:documentation xml:lang="en">After approval, this value should be updated to match the approved value (in rare cases, the current setting may later deviate from the approved value)</xs:documentation>
+                                <xs:documentation xml:lang="en">Multiple elements are allowed to specify paths in alternative protocols, using the protocol attribute</xs:documentation>
+                                <xs:documentation xml:lang="en">Example NFS path: /tigerdata/parent-folder/project-folder</xs:documentation>
+                                <xs:documentation xml:lang="en">Example SMB path: \\tigerdata-smb\parent-folder\project-folder</xs:documentation>
+                                <xs:documentation xml:lang="en">Example S3 path: S3://princeton/tigerdata/parent-folder/project-folder</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="requestedValue" type="pathType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The requested value for projectDirectory (omitted if no user request was received)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="approvedValue" type="pathType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The approved value for projectDirectory (omitted if no sys admin has approved yet)</xs:documentation>
+                                <xs:documentation xml:lang="en">Once approved, the approved attribute should also be set to true</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="approved" default="false"/>
+                    <xs:attribute ref="inherited" fixed="false"/>
+                    <xs:attribute ref="discoverable" fixed="false"/>
+                    <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="title" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="description" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="languages" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="storageAndAccess">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements included in TigerData project storage and access needs</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="storageCapacity" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The amount of storage allotted for the project (using logical byte units, base-10)</xs:documentation>
+                    <xs:documentation xml:lang="en">If no user request was received and no value has yet been approved, then this field may be empty</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="storageCapacitySetting" type="storageQuantityType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The current setting for storageCapacity (omitted until approved)</xs:documentation>
+                                <xs:documentation xml:lang="en">After the implementation of the approval, this value should be updated to match the approvedValue</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="requestedValue" type="storageQuantityType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The requested value for storageCapacity (omitted if no user request was received)</xs:documentation>
+                                <xs:documentation xml:lang="en">This field gets updated when a Data Sponsor or Data Manager requests a change in storage capacity on an active project</xs:documentation>
+                                <xs:documentation xml:lang="en">Depending on the amount requested, a System Administrator may ask the Data Sponsor for more justification for the request</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="approvedValue" type="storageQuantityType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The approved value for storageCapacity (omitted if no sys admin has approved yet)</xs:documentation>
+                                <xs:documentation xml:lang="en">Once approved for initial project setup, the approved attribute should also be set to true</xs:documentation>
+                                <xs:documentation xml:lang="en">If the Data Sponsor or Data Manager requests a change in storage capacity, then the approval of the new amount will change the approvedValue</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="approved" default="false"/>
+                    <xs:attribute ref="inherited" fixed="false"/>
+                    <xs:attribute ref="discoverable" fixed="false"/>
+                    <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="projectVisibility" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The level of openness to allow for the project record</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="visibilityType">
+                            <xs:attribute ref="inherited" default="true"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="storagePerformance" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The qualitative assignment for storage performance, i.e. storage tier</xs:documentation>
+                    <xs:documentation xml:lang="en">If no user request was received and no value has yet been approved, then this field may be empty</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="storagePerformanceSetting" type="storagePerformanceType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The current setting for storagePerformance (omitted until approved)</xs:documentation>
+                                <xs:documentation xml:lang="en">After the implementation of the approval, this value should be updated to match the approvedValue</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="requestedValue" type="storagePerformanceType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The requested value for storagePerformance (omitted if no user request was received)</xs:documentation>
+                                <xs:documentation xml:lang="en">This field gets updated when a Data Sponsor or Data Manager requests a change in storage performance on an active project</xs:documentation>
+                                <xs:documentation xml:lang="en">Depending on the level requested, a System Administrator may ask the Data Sponsor for more justification for the request</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="approvedValue" type="storagePerformanceType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The approved value for storagePerformance (omitted if no sys admin has approved yet)</xs:documentation>
+                                <xs:documentation xml:lang="en">Once approved, the approved attribute should also be set to true</xs:documentation>
+                                <xs:documentation xml:lang="en">If the Data Sponsor or Data Manager requests a change in storage performance, then the approval of the new level will change the approvedValue</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="approved" default="false"/>
+                    <xs:attribute ref="inherited" default="true"/>
+                    <xs:attribute ref="discoverable" fixed="false"/>
+                    <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="numberOfFiles" minOccurs="1" maxOccurs="1" default="Less than 10,000">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The estimated number of files the project will incorporate (default is Less than 10,000)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="fileEstimateType">
+                            <xs:attribute ref="inherited" default="false"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="hpc" minOccurs="1" maxOccurs="1" default="No">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Whether the project is expected to connect to high performance computing resources (default is No)</xs:documentation>
+                    <xs:documentation xml:lang="en">This value must be Yes for a project to be mounted to any HPC cluster</xs:documentation>
+                    <xs:documentation xml:lang="en">If this value is No, then smbEnable is likely needed</xs:documentation>
+                    <xs:documentation xml:lang="en">If this value is Not Sure, then a System Administrator should follow up with the Data Sponsor to clarify needs</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="hpcType">
+                            <xs:attribute ref="inherited" default="true"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="accessPoints" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Records requests/approvals and settings for SMB shares and Globus endpoints</xs:documentation>
+                    <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="smbEnable" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">Whether a project has an SMB share enabled</xs:documentation>
+                                <xs:documentation xml:lang="en">By default, projects do not get an SMB share, but if the hpc value is No, then smbEnable is likely needed</xs:documentation>
+                                <xs:documentation xml:lang="en">If an SMB share is approved and set, then the SMB path should be included in projectDirectoryPath</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="smbEnableSetting" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The current setting for smbEnable (false by default)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="requestedValue" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The requested value for smbEnable (false by default)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="approvedValue" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The approved value for smbEnable (false by default)</xs:documentation>
+                                            <xs:documentation xml:lang="en">If approvedValue is true, then smbEnableSetting and the approved attribute should also be set to true</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute ref="approved" default="false"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="globusEnable" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">Whether a project has a Globus collection enabled</xs:documentation>
+                                <xs:documentation xml:lang="en">By default, projects do not get a Globus collection</xs:documentation>
+                                <xs:documentation xml:lang="en">If a Globus collection is approved and set, then the details should be given in globusCollection</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="globusEnableSetting" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The current setting for globusEnable (false by default)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="requestedValue" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The requested value for globusEnable (false by default)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="approvedValue" type="xs:boolean" maxOccurs="1" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The approved value for globusEnable (false by default)</xs:documentation>
+                                            <xs:documentation xml:lang="en">If approvedValue is true, then globusEnableSetting and the approved attribute should also be set to true</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute ref="approved" default="false"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="globusCollection" minOccurs="0" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">Details for an enabled Globus collection for the project</xs:documentation>
+                                <xs:documentation xml:lang="en">If globusEnableSetting is true, then at least one globusCollection value set should be given</xs:documentation>
+                                <xs:documentation xml:lang="en">If no Globus collection is approved, then this field should be omitted</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="globusName" type="textType" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The Globus collection name (required)</xs:documentation>
+                                            <xs:documentation xml:lang="en">The naming convention is "Princeton TigerData - parent-folder/project-folder"</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="globusUUID" type="uuidType" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The Globus collection universally unique identifier (required)</xs:documentation>
+                                            <xs:documentation xml:lang="en">The value is expected to be 32 hexadecimal digits in 8-4-4-4-12 format</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="globusOwner" type="userType" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The Globus collection owner, given as a TigerData userType (required)</xs:documentation>
+                                            <xs:documentation xml:lang="en">The owner is typically the project's Data Manager</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="globusURL" type="xs:anyURI" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">The Globus collection URL (optional)</xs:documentation>
+                                            <xs:documentation xml:lang="en">The expected format for a Globus collection URL is https://app.globus.org/file-manager?origin_id=[uuid]</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="inherited" fixed="false"/>
+                    <xs:attribute ref="discoverable" fixed="false"/>
+                    <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="additionalProjectInformation">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements included in TigerData additional project information fields</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="projectPurpose" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The high-level category for the purpose of the project</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="projectPurposeType">
+                            <xs:attribute ref="inherited" default="true"/>
+                            <xs:attribute ref="discoverable" fixed="true"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="provisionalProject" minOccurs="1" maxOccurs="1" default="false">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Whether the project is provisional, i.e., temporary, experimental, or intended for testing purposes only (default false)</xs:documentation>
+                    <xs:documentation xml:lang="en">If the value is true, then limitations may be placed on other fields, e.g. storageCapacity, storagePerformance, and endDate</xs:documentation>
+                    <xs:documentation xml:lang="en">If the value is false, then the project is considered standard and the provisional limitations are not imposed</xs:documentation>
+                    <xs:documentation xml:lang="en">Whether provisional or standard, the same fields are required for all projects</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:boolean">
+                            <xs:attribute ref="inherited" fixed="true"/>
+                            <xs:attribute ref="discoverable" fixed="true"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="funded" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Whether a resource is funded</xs:documentation>
+                    <xs:documentation xml:lang="en">If the value is true, then at least one fundingReference field must be filled</xs:documentation>
+                    <xs:documentation xml:lang="en">If any subproject or item contained in a project has a fundingReference, then this field should be set to true</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:boolean">
+                            <xs:attribute name="federallyFunded" type="xs:boolean" default="false">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en">Whether the resource is funded by the U.S. federal government (default false)</xs:documentation>
+                                    <xs:documentation xml:lang="en">If true, then at least one fundingReference must have the federalFunder attribute set to true</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute ref="inherited" default="true"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="fundingReferences" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="projectDates" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="projectResourceType" minOccurs="1" maxOccurs="1"/>            
+            <xs:element ref="licenses" minOccurs="0" maxOccurs="1"/>            
+            <xs:element name="dataUseAgreement" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Whether a data use agreement applies to the project</xs:documentation>
+                    <xs:documentation xml:lang="en">If the value is true, then at least one duaReference field must be filled</xs:documentation>
+                    <xs:documentation xml:lang="en">If any subproject or item contained in a project has a duaReference, then this field should be set to true</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:boolean">
+                            <xs:attribute ref="inherited" default="true"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="duaReferences" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="supplementalMetadata">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements included in TigerData supplemental metadata fields</xs:documentation>
+            <xs:documentation xml:lang="en">May apply to either Projects and Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="keywords" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all keywords for a resource</xs:documentation>
+                    <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+                    <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="keyword" minOccurs="1" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">Tag for a subject heading, content type, or other keyword (given as a string)</xs:documentation>
+                                <xs:documentation xml:lang="en">May apply to either Projects and Items</xs:documentation>
+                                <xs:documentation xml:lang="en">Derived from the DataCite definitions for Subject (v4.6+)</xs:documentation>
+                                <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/subject/</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="shortDescriptionType">
+                                        <xs:attribute name="subjectScheme" type="limitedTextType" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The name of the subject scheme or classification code or authority, if applicable</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="subjectSchemeURI" type="xs:anyURI" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The URI of the subject identifier scheme, if applicable</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="valueURI" type="xs:anyURI" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The URI of the subject term, if applicable</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="classificationCode" type="limitedTextType" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The classification code used for the subject term in the subject scheme, if applicable</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute ref="inherited" default="true"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="relations" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all relations for a resource</xs:documentation>
+                    <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+                    <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="relation" minOccurs="1" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">Specifies a related TigerData project or item, a published paper, or any other digital object, given as a string</xs:documentation>
+                                <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+                                <xs:documentation xml:lang="en">Derived from the DataCite definitions for RelatedIdentifier (v4.6+)</xs:documentation>
+                                <xs:documentation>https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/relatedidentifier/</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="limitedTextType">
+                                        <xs:attribute name="relatedIDType" type="relatedIDTypeType" default="DOI"/>
+                                        <xs:attribute name="relationType" type="relationTypeType" use="required"/>
+                                        <xs:attribute name="relatedMetadataScheme" type="limitedTextType" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The name of the related metadata scheme, if applicable</xs:documentation>
+                                                <xs:documentation xml:lang="en">Use only with HasMetadata and IsMetadataFor relation types</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="relatedMetadataSchemeURI" type="xs:anyURI" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The URI of the related metadata scheme, if applicable</xs:documentation>
+                                                <xs:documentation xml:lang="en">Use only with HasMetadata and IsMetadataFor relation types</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="relatedMetadataSchemeType" type="limitedTextType" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="en">The type of the related metadata scheme, if applicable (e.g. XSD, DDT, Turtle)</xs:documentation>
+                                                <xs:documentation xml:lang="en">Use only with HasMetadata and IsMetadataFor relation types</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute ref="resourceTypeGeneral" use="optional"/>
+                                        <xs:attribute ref="inherited" default="false"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="discoverable" fixed="true"/>
+                    <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="extendedMetadataSchemas" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all extended metadata schemas for a resource, if applicable</xs:documentation>
+                    <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+                    <xs:documentation xml:lang="en">If this element is present, then it should contain at least one sub-element</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="extendedMetadataSchema" minOccurs="1" maxOccurs="100">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">An indication of which TigerData supported metadata schemas should apply to a resource (given as a string)</xs:documentation>
+                                <xs:documentation xml:lang="en">May apply to either Projects or Items</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="limitedTextType">
+                                        <xs:attribute ref="inherited" default="false"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute ref="discoverable" fixed="false"/>
+                    <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
+
+    <!-- Composite Groups -->
+        <!-- Group definitions that include references to prior group definitions, along with some new element defintions within -->
+    
+    <xs:group name="projectFields">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements/groups included in the TigerData standard metadata for projects</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Items</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="projectID" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The universally unique identifier for the project (required)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="projectIDValueType">
+                            <xs:attribute ref="inherited" fixed="false"/>
+                            <xs:attribute ref="discoverable" fixed="true"/>
+                            <xs:attribute ref="trackingLevel" fixed="ResourceRecord"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="alternativeIDs" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="parentProject" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="projectRoles"/>
+            <xs:group ref="projectDescription"/>
+            <xs:group ref="storageAndAccess"/>
+            <xs:group ref="additionalProjectInformation"/>
+            <xs:group ref="supplementalMetadata"/>
+            <xs:element name="projectProvenance" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The container element for all TigerData project provenance fields (required)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="submission" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">A record of a project’s initial submission (required)</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:group ref="provenanceSubfields"/>
+                                <xs:attribute ref="inherited" fixed="false"/>
+                                <xs:attribute ref="discoverable" fixed="false"/>
+                                <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="revisions" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The container element for all revision records, if applicable</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="revision" minOccurs="1" maxOccurs="100">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="en">A record of a major revision to an active project</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:group ref="provenanceSubfields"/>
+                                            <xs:attribute ref="inherited" default="false"/>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute ref="discoverable" fixed="false"/>
+                                <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="retirement" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">A record of a project’s retirement, if applicable</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:group ref="provenanceSubfields"/>
+                                <xs:attribute ref="inherited" fixed="true"/>
+                                <xs:attribute ref="discoverable" fixed="false"/>
+                                <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="publication" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">A record of a project’s publication, if applicable</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:group ref="provenanceSubfields"/>
+                                <xs:attribute ref="inherited" fixed="true"/>
+                                <xs:attribute ref="discoverable" fixed="false"/>
+                                <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="status" minOccurs="1" maxOccurs="1" default="AdminReview">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The current status of the project (required)</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="statusType">
+                                        <xs:attribute ref="inherited" default="false"/>
+                                        <xs:attribute ref="discoverable" fixed="true"/>
+                                        <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="schemaVersion" maxOccurs="1" minOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">The version of the TigerData Standard Metadata Schema used (required)</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="limitedTextType">
+                                        <xs:attribute ref="inherited" default="true"/>
+                                        <xs:attribute ref="discoverable" fixed="true"/>
+                                        <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="itemFields">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A group of all elements/groups included in the TigerData standard metadata for items</xs:documentation>
+            <xs:documentation xml:lang="en">Does not apply to Projects</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="itemID" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The unique identifier for the item (required)</xs:documentation>
+                    <xs:documentation xml:lang="en">TigerData items use Mediaflux Asset IDs as their primary identifiers</xs:documentation>
+                    <xs:documentation xml:lang="en">If an item also has any other IDs, they all should be included under alternativeIDs</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="mediafluxAssetIDType">
+                            <xs:attribute name="itemIDType" fixed="MFAID">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="en">Makes explicit that itemID is always given as a Mediaflux Asset ID</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute ref="inherited" fixed="false"/>
+                            <xs:attribute ref="discoverable" fixed="false"/>
+                            <xs:attribute ref="trackingLevel" fixed="InternalUseOnly"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="alternativeIDs" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="parentProject" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="dataUsers" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="title" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="itemResourceType" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="supplementalMetadata"/>
+            <xs:element ref="languages" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="licenses" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="fundingReferences" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="duaReferences" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="itemDates" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    
+<!-- PAYLOAD -->
+    <!-- The definition for a standard metadata payload, constructed from the above primitives -->
+    
+    <xs:element name="resource">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Root element of any metadata record for TigerData resources (projects and items).</xs:documentation>
+            <xs:documentation xml:lang="en">If the resourceClass is Project, then the projectFields group must be used. If the resourceClass is Item, then the itemFields group must be used.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:group ref="projectFields"/>
+                    <xs:group ref="itemFields"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="resourceClass" use="required">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Specifies the class of a given resource: either Project or Item (required)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Project" xml:lang="en"/>
+                        <xs:enumeration value="Item" xml:lang="en"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="resourceID" type="limitedTextType" use="required">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The unique identifier for the resource within TigerData systems (required)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="resourceIDType" use="required">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">If the resourceClass is Project, then the resourceID should be a DOI; if Item, then the resourceID should be a Mediaflux AssetID (MFAID)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="DOI"/>
+                        <xs:enumeration value="MFAID"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
