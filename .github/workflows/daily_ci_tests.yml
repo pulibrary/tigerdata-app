@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Every weekday morning at 8:00 AM
         if: github.event.schedule == '0 8 * * 1-5'
-        id: 10001
+        id: tigerdata_ci_trigger
         uses: circleci/trigger_circleci_pipeline@v1.0
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}
