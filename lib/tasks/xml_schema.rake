@@ -20,7 +20,7 @@ namespace :xml_schema do
     doc = Nokogiri::XML(File.read(document_file))
     errors = xsd.validate(doc)
     if errors.count == 0
-      puts "\n\nOK! - XML example #{document_file} validates against schema #{schema_file}"
+      puts "OK! - XML example #{document_file} validates against schema #{schema_file}"
     else
       errors.each do |error|
         puts error.message
