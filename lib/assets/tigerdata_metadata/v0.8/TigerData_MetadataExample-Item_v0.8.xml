@@ -1,0 +1,61 @@
+<resource resourceClass="Item" resourceID="123456789" resourceIDType="MFAID">
+    <itemID itemIDType="MFAID" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">123456789</itemID>
+    <alternativeIDs discoverable="true" trackingLevel="ResourceRecord">
+        <alternativeID alternativeIDType="Local accession number" inherited="false">abcd1234</alternativeID>
+    </alternativeIDs>
+    <parentProject projectIDType="DOI" inherited="true" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</parentProject>
+    <dataUsers trackingLevel="ResourceRecord">
+        <dataUser userID="ghij3" userIDType="NetID" readOnly="true" inherited="true" discoverable="true">
+            <netID>ghij3</netID>
+            <orcid>https://orcid.org/0000-0003-2345-6789</orcid>
+            <fullName>Familyg Familyh, Giveni Jr.</fullName>
+            <givenName>Giveni Jr.</givenName>
+            <familyName>Familyg Familyh</familyName>
+            <nameDate>2025-03-28</nameDate>
+            <alternativeNameIdentifier nameIdentifierScheme="ScopusAuthorID" schemeURI="https://www.elsevier.com/products/scopus/author-profiles">323456789</alternativeNameIdentifier>
+        </dataUser>
+        <dataUser userID="lmno4" userIDType="NetID" readOnly="false" inherited="false" discoverable="false"/>
+    </dataUsers>
+    <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Test Item 1</title>
+    <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is the first among an unspecified number of test items.</description>
+    <itemResourceType resourceTypeGeneral="Dataset" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Important Scientific Data</itemResourceType>
+    <keywords discoverable="true" trackingLevel="ResourceRecord">
+        <keyword xml:lang="en" inherited="true">Example keyword</keyword>
+        <keyword xml:lang="en" subjectScheme="Library of Congress Subject Headings (LCSH)" subjectSchemeURI="https://id.loc.gov/authorities/subjects.html" valueURI="https://id.loc.gov/authorities/subjects/sh2009009655.html" inherited="true">Climate change mitigation</keyword>
+        <keyword xml:lang="en" subjectScheme="ANZSRC Fields of Research" subjectSchemeURI="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc" classificationCode="370201" inherited="true">Climate change processes</keyword>
+    </keywords>
+    <relations discoverable="true" trackingLevel="ResourceRecord">
+        <relation relatedIDType="DOI" relationType="IsCitedBy" resourceTypeGeneral="JournalArticle" inherited="false">10.21384/bar1</relation>
+    </relations>
+    <extendedMetadataSchemas discoverable="false" trackingLevel="InternalUseOnly">
+        <extendedMetadataSchema inherited="false">Example supported schema name</extendedMetadataSchema>
+    </extendedMetadataSchemas>
+    <languages discoverable="true" trackingLevel="ResourceRecord">
+        <language inherited="true">en</language>
+    </languages>
+    <licenses discoverable="true" trackingLevel="ResourceRecord">
+        <license licenseURI="https://creativecommons.org/licenses/by/4.0/" licenseID="CC BY 4.0" licenseIDScheme="SPDX" licenseIDSchemeURI="https://spdx.org/licenses/" inherited="true">Creative Commons Attribution 4.0 International</license>
+    </licenses>
+    <fundingReferences discoverable="true" trackingLevel="ResourceRecord">
+        <fundingReference federalFunder="false" inherited="true">
+            <funderName>Example Funder</funderName>
+            <funderID funderIDType="Crossref Funder ID" funderIDSchema="https://www.crossref.org/services/funder-registry/">abc123</funderID>
+            <awardNumber awardURI="www.fakeuri.fake">123456</awardNumber>
+            <awardTitle>Example Award Title</awardTitle>
+        </fundingReference>
+    </fundingReferences>
+    <duaReferences discoverable="true" trackingLevel="ResourceRecord">
+        <duaReference inherited="true">
+            <grantorName>Example Grantor</grantorName>
+            <duaID duaURI="www.fakeuri-dua.fake">123.456</duaID>
+            <duaTitle xml:lang="en">Example DUA Title</duaTitle>
+        </duaReference>
+    </duaReferences>
+    <itemDates discoverable="true" trackingLevel="ResourceRecord">
+        <startDate inherited="true">2025-03-28</startDate>
+        <endDate inherited="true">2026-12-31</endDate>
+        <retirementDate inherited="true">2031-12-31</retirementDate>
+        <otherDate dateType="Collected" inherited="true">2024-07-23/2025-12-31</otherDate>
+        <otherDate dateType="Updated" dateInformation="Error correction" inherited="true">2025-03-28</otherDate>
+    </itemDates>
+</resource>
