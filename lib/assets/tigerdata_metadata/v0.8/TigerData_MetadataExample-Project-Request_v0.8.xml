@@ -1,0 +1,36 @@
+<resource resourceClass="Project" resourceID="10.34770/az09-0002" resourceIDType="DOI">
+    <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0002</projectID>
+    <dataSponsor userID="mjc12" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
+    <dataManager userID="mjc12" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
+    <departments discoverable="true" trackingLevel="ResourceRecord">
+        <department departmentCode="41043" inherited="true">LIB-Data, Rsrch &amp; Teachng Svcs</department>
+    </departments>
+    <projectDirectory approved="false" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>/tigerdata/mjc12/test-project-1</requestedValue>
+    </projectDirectory>
+    <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Test Project 1</title>
+    <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is the first among an unspecified number of test projects.</description>
+    <storageCapacity approved="false" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>
+            <size>500</size>
+            <unit>GB</unit>
+        </requestedValue>
+    </storageCapacity>
+    <projectVisibility inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Limited</projectVisibility>
+    <storagePerformance approved="false" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>Standard</requestedValue>
+    </storagePerformance>
+    <numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">Less than 10,000</numberOfFiles>
+    <hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">No</hpc>
+    <projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
+    <provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">false</provisionalProject>
+    <projectResourceType resourceTypeGeneral="Project" inherited="false" discoverable="true" trackingLevel="ResourceRecord">TigerData Project</projectResourceType>
+    <projectProvenance>
+        <submission>
+            <requestedBy userID="mjc12" userIDType="NetID"/>
+            <requestDateTime>2025-03-27T09:56:09-04:00</requestDateTime>
+        </submission>
+        <status>AdminReview</status>
+        <schemaVersion>0.8</schemaVersion>
+    </projectProvenance>
+</resource>

@@ -21,18 +21,30 @@
 // put pages and totals on the same line
 .dataTables_info {
   float: left;
+  margin-top: 10px;
 }
 
 // Put pagination on the far right
 .dataTables_paginate {
   float: right;
+  display: inline-block;
+  margin-top: 10px;
+
   .paginate_button {
-    padding: 0.25em;
+    padding: 8px 16px;
     color: $gray-60;
-  }
-  .paginate_button.current,
-  .paginate_button.disabled {
     text-decoration: none;
+    transition-duration: 0.4s;
+  }
+
+  a.paginate_button.current {
+    background-color: #e77500;
+    color: #ffffff;
+  }
+
+  .paginate_button:hover {
+    opacity: 0.6;
+    background-color: #e77500;
   }
 }
 

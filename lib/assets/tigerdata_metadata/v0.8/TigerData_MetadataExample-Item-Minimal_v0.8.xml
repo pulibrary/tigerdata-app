@@ -1,0 +1,4 @@
+<resource resourceClass="Item" resourceID="123456790" resourceIDType="MFAID">
+    <itemID itemIDType="MFAID" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">123456790</itemID>
+    <parentProject projectIDType="DOI" inherited="true" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0001</parentProject>
+</resource>
