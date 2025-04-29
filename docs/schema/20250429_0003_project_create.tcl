@@ -4,7 +4,7 @@
 # We are not using "tigerdata:project" so that we don't pollute the existing schema in our Mediaflux instances.
 set tdNamespace "tigerdataX"
 set tdResourceDoc "resourceDoc"
-set schemaVersion "v0.9"
+set schemaVersion "v0.8"
 
 set rootCollection "/td-demo-001/dev/tigerdata"
 set rootNamespace "/td-demo-001/dev/tigerdataNS"
