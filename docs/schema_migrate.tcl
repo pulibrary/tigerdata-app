@@ -7,7 +7,7 @@
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
 set namespace "tigerdataX"
 set rootDoc "resourceDoc"
-set schemaVersion "v0.8a"
+set schemaVersion "v0.9"
 
 # Create the namespace
 asset.doc.namespace.update :create true :namespace $namespace
@@ -20,9 +20,9 @@ asset.doc.namespace.update :create true :namespace $namespace
 #
 asset.doc.type.update :create true :description "testing doc definition via a TCL script" :type $namespace:$rootDoc :definition < \
     :element -name resource -type document < \
-        :element -name resourceClass -type string -min-occurs 1 -max-occurs 1 \
-        :element -name resourceID -type string -min-occurs 1 -max-occurs 1 \
-        :element -name resourceIDType -type string -min-occurs 1 -max-occurs 1 \
+        :attribute -name resourceClass -type string \
+        :attribute -name resourceID -type string \
+        :attribute -name resourceIDType -type string  \
         :element -name projectID -type string -min-occurs 1 -max-occurs 1 < \
             :attribute -name projectIDType -type string \
         > \
@@ -37,3 +37,9 @@ asset.doc.type.update :create true :description "testing doc definition via a TC
 #
 #   We can use `asset.doc.type.versions :type tigerdata:rootdoc` to get a list of the versions of a given type.
 #   We can use `asset.doc.type.describe :type tigerdata:rootdoc -version 1` to view the definition of a given version.
+
+
+# Validating:
+# asset.meta.validate :id 1059
+#   :invalid -id "1059" -version "2" -nb "1" "XPath tigerdata:project is invalid: missing element 'new_req_element'"
+#    :invalid -id "1059" -version "2" -nb "2" "XPath tigerdata:project is invalid: missing element 'another_element'"
