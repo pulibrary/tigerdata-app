@@ -1,0 +1,72 @@
+<resource resourceClass="Project" resourceID="10.34770/az09-0004" resourceIDType="DOI">
+    <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</projectID>
+    <dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
+    <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
+    <dataUsers trackingLevel="ResourceRecord">
+        <dataUser userID="ghij3" userIDType="NetID" readOnly="true" inherited="true" discoverable="true"></dataUser>
+        <dataUser userID="lmno4" userIDType="NetID" readOnly="false" inherited="false" discoverable="false"></dataUser>
+    </dataUsers>
+    <researchDomains discoverable="true" trackingLevel="ResourceRecord">
+        <researchDomain inherited="true">Natural Sciences</researchDomain>
+    </researchDomains>
+    <departments discoverable="true" trackingLevel="ResourceRecord">
+        <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
+    </departments>
+    <projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-2</projectDirectoryPath>
+        <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-2</projectDirectoryPath>
+        <requestedValue protocol="NFS">/tigerdata/abcd1/test-project-2</requestedValue>
+        <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-2</approvedValue>
+    </projectDirectory>
+    <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Example Title</title>
+    <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is just an example description.</description>
+    <storageCapacity approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <storageCapacitySetting>
+            <size>2</size>
+            <unit>TB</unit>
+        </storageCapacitySetting>
+        <requestedValue>
+            <size>2</size>
+            <unit>TB</unit>
+        </requestedValue>
+        <approvedValue>
+            <size>2</size>
+            <unit>TB</unit>
+        </approvedValue>
+    </storageCapacity>
+    <projectVisibility inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Restricted</projectVisibility>
+    <storagePerformance approved="true" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
+        <storagePerformanceSetting>Eco</storagePerformanceSetting>
+        <requestedValue>Eco</requestedValue>
+        <approvedValue>Eco</approvedValue>
+    </storagePerformance>
+    <numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">100k - 1mil</numberOfFiles>
+    <hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">No</hpc>
+    <accessPoints inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <smbEnable approved="true">
+            <smbEnableSetting>true</smbEnableSetting>
+            <requestedValue>true</requestedValue>
+            <approvedValue>true</approvedValue>
+        </smbEnable>
+        <globusEnable approved="true">
+            <globusEnableSetting>false</globusEnableSetting>
+            <requestedValue>false</requestedValue>
+            <approvedValue>false</approvedValue>
+        </globusEnable>
+    </accessPoints>
+    <projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
+    <provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">false</provisionalProject>
+    <funded federallyFunded="false" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">false</funded>
+    <projectResourceType resourceTypeGeneral="Project" inherited="false" discoverable="true" trackingLevel="ResourceRecord">TigerData Project</projectResourceType>
+    <dataUseAgreement inherited="true" discoverable="false" trackingLevel="InternalUseOnly">false</dataUseAgreement>
+    <projectProvenance>
+        <submission>
+            <requestedBy userID="abdc12" userIDType="NetID"/>
+            <requestDateTime>2025-03-28T15:34:11-04:00</requestDateTime>
+            <approvedBy userID="xyz321" userIDType="NetID"/>
+            <approvalDateTime>2025-03-28T16:15:25-04:00</approvalDateTime>
+        </submission>
+        <status>Active</status>
+        <schemaVersion>0.8</schemaVersion>
+    </projectProvenance>
+</resource>

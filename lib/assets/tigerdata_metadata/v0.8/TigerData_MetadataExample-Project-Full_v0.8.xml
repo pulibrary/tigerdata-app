@@ -1,0 +1,155 @@
+<resource resourceClass="Project" resourceID="10.34770/az09-0003" resourceIDType="DOI">
+    <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0003</projectID>
+    <alternativeIDs discoverable="true" trackingLevel="ResourceRecord">
+        <alternativeID alternativeIDType="Local accession number" inherited="false">abc123</alternativeID>
+    </alternativeIDs>
+    <parentProject projectIDType="DOI" inherited="true" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0001</parentProject>
+    <dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord">
+        <netID>abcd1</netID>
+        <orcid>https://orcid.org/0000-0001-2345-6789</orcid>
+        <fullName>Familyc-Familyd, Givena Givenb</fullName>
+        <givenName>Givena Givenb</givenName>
+        <familyName>Familyc-Familyd</familyName>
+        <nameDate>2025-03-28</nameDate>
+        <alternativeNameIdentifier nameIdentifierScheme="ScopusAuthorID" schemeURI="https://www.elsevier.com/products/scopus/author-profiles">123456789</alternativeNameIdentifier>
+    </dataSponsor>
+    <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord">
+        <netID>def3</netID>
+        <orcid>https://orcid.org/0000-0002-2345-6789</orcid>
+        <fullName>Familyf, Givend Givene</fullName>
+        <givenName>Givend Givene</givenName>
+        <familyName>Familyf</familyName>
+        <nameDate>2025-03-28</nameDate>
+        <alternativeNameIdentifier nameIdentifierScheme="ScopusAuthorID" schemeURI="https://www.elsevier.com/products/scopus/author-profiles">223456789</alternativeNameIdentifier>
+    </dataManager>
+    <dataUsers trackingLevel="ResourceRecord">
+        <dataUser userID="ghij3" userIDType="NetID" readOnly="true" inherited="true" discoverable="true">
+            <netID>ghij3</netID>
+            <orcid>https://orcid.org/0000-0003-2345-6789</orcid>
+            <fullName>Familyg Familyh, Giveni Jr.</fullName>
+            <givenName>Giveni Jr.</givenName>
+            <familyName>Familyg Familyh</familyName>
+            <nameDate>2025-03-28</nameDate>
+            <alternativeNameIdentifier nameIdentifierScheme="ScopusAuthorID" schemeURI="https://www.elsevier.com/products/scopus/author-profiles">323456789</alternativeNameIdentifier>
+        </dataUser>
+        <dataUser userID="lmno4" userIDType="NetID" readOnly="false" inherited="false" discoverable="false"></dataUser>
+    </dataUsers>
+    <researchDomains discoverable="true" trackingLevel="ResourceRecord">
+        <researchDomain inherited="true">Natural Sciences</researchDomain>
+        <researchDomain inherited="true">Engineering</researchDomain>
+    </researchDomains>
+    <departments discoverable="true" trackingLevel="ResourceRecord">
+        <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
+        <department departmentCode="25300" inherited="false">CBE-Chem &amp; Environ Eng</department>
+    </departments>
+    <projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-1</projectDirectoryPath>
+        <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-1</projectDirectoryPath>
+        <requestedValue protocol="NFS">/tigerdata/abc/test-project</requestedValue>
+        <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-1</approvedValue>
+    </projectDirectory>
+    <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Example Title</title>
+    <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is just an example description.</description>
+    <languages discoverable="true" trackingLevel="ResourceRecord">
+        <language inherited="true">en</language>
+    </languages>
+    <storageCapacity approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <storageCapacitySetting>
+            <size>10</size>
+            <unit>TB</unit>
+        </storageCapacitySetting>
+        <requestedValue>
+            <size>200</size>
+            <unit>TB</unit>
+        </requestedValue>
+        <approvedValue>
+            <size>10</size>
+            <unit>TB</unit>
+        </approvedValue>
+    </storageCapacity>
+    <projectVisibility inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Limited</projectVisibility>
+    <storagePerformance approved="true" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
+        <storagePerformanceSetting>Standard</storagePerformanceSetting>
+        <requestedValue>Standard</requestedValue>
+        <approvedValue>Standard</approvedValue>
+    </storagePerformance>
+    <numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">100k - 1mil</numberOfFiles>
+    <hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Yes</hpc>
+    <accessPoints inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <smbEnable approved="true">
+            <smbEnableSetting>true</smbEnableSetting>
+            <requestedValue>true</requestedValue>
+            <approvedValue>true</approvedValue>
+        </smbEnable>
+        <globusEnable approved="true">
+            <globusEnableSetting>true</globusEnableSetting>
+            <requestedValue>true</requestedValue>
+            <approvedValue>true</approvedValue>
+        </globusEnable>
+        <globusCollection>
+            <globusName>Princeton TigerData - abcd1/test-project-1</globusName>
+            <globusUUID>abcd1234-0001-0002-0003-1234567890ab</globusUUID>
+            <globusOwner userID="def2" userIDType="NetID"></globusOwner>
+            <globusURL>https://app.globus.org/file-manager?origin_id=abcd1234-0001-0002-0003-1234567890ab</globusURL>
+        </globusCollection>
+    </accessPoints>
+    <projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
+    <provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">false</provisionalProject>
+    <funded federallyFunded="false" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">true</funded>
+    <fundingReferences discoverable="true" trackingLevel="ResourceRecord">
+        <fundingReference federalFunder="false" inherited="true">
+            <funderName>Example Funder</funderName>
+            <funderID funderIDType="Crossref Funder ID" funderIDSchema="https://www.crossref.org/services/funder-registry/">abc123</funderID>
+            <awardNumber awardURI="www.fakeuri.fake">123456</awardNumber>
+            <awardTitle>Example Award Title</awardTitle>
+        </fundingReference>
+    </fundingReferences>
+    <projectDates discoverable="true" trackingLevel="ResourceRecord">
+        <startDate inherited="true">2025-03-28</startDate>
+        <endDate inherited="true">2026-12-31</endDate>
+        <retirementDate inherited="true">2031-12-31</retirementDate>
+        <otherDate dateType="Collected" inherited="true">2024-07-23/2025-12-31</otherDate>
+        <otherDate dateType="Updated" dateInformation="Error correction" inherited="true">2025-03-28</otherDate>
+    </projectDates>
+    <projectResourceType resourceTypeGeneral="Project" inherited="false" discoverable="true" trackingLevel="ResourceRecord">TigerData Project</projectResourceType>
+    <licenses discoverable="true" trackingLevel="ResourceRecord">
+        <license licenseURI="https://creativecommons.org/licenses/by/4.0/" licenseID="CC BY 4.0" licenseIDScheme="SPDX" licenseIDSchemeURI="https://spdx.org/licenses/" inherited="true">Creative Commons Attribution 4.0 International</license>
+    </licenses>
+    <dataUseAgreement inherited="true" discoverable="false" trackingLevel="InternalUseOnly">true</dataUseAgreement>
+    <duaReferences discoverable="true" trackingLevel="ResourceRecord">
+        <duaReference inherited="true">
+            <grantorName>Example Grantor</grantorName>
+            <duaID duaURI="www.fakeuri-dua.fake">123.456</duaID>
+            <duaTitle xml:lang="en">Example DUA Title</duaTitle>
+        </duaReference>
+    </duaReferences>
+    <keywords discoverable="true" trackingLevel="ResourceRecord">
+        <keyword xml:lang="en" inherited="true">Example keyword</keyword>
+        <keyword xml:lang="en" subjectScheme="Library of Congress Subject Headings (LCSH)" subjectSchemeURI="https://id.loc.gov/authorities/subjects.html" valueURI="https://id.loc.gov/authorities/subjects/sh2009009655.html" inherited="true">Climate change mitigation</keyword>
+        <keyword xml:lang="en" subjectScheme="ANZSRC Fields of Research" subjectSchemeURI="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc" classificationCode="370201" inherited="true">Climate change processes</keyword>
+    </keywords>
+    <relations discoverable="true" trackingLevel="ResourceRecord">
+        <relation relatedIDType="DOI" relationType="IsCitedBy" resourceTypeGeneral="JournalArticle" inherited="false">10.21384/bar1</relation>
+        <relation relatedIDType="DOI" relationType="IsDerivedFrom" resourceTypeGeneral="Project" inherited="false">10.21384/bar2</relation>
+        <relation relatedIDType="DOI" relationType="HasMetadata" relatedMetadataScheme="Metadata Title" relatedMetadataSchemeURI="www.fakeuri-m.fake" relatedMetadataSchemeType="Turtle" resourceTypeGeneral="Text" inherited="false">10.21384/bar3</relation>
+    </relations>
+    <extendedMetadataSchemas discoverable="false" trackingLevel="InternalUseOnly">
+        <extendedMetadataSchema inherited="false">Example supported schema name</extendedMetadataSchema>
+    </extendedMetadataSchemas>
+    <projectProvenance>
+        <submission>
+            <requestedBy userID="abdc12" userIDType="NetID"/>
+            <requestDateTime>2025-03-28T15:10:03-04:00</requestDateTime>
+            <approvedBy userID="xyz321" userIDType="NetID"/>
+            <approvalDateTime>2025-03-28T16:14:47-04:00</approvalDateTime>
+            <eventNote>
+                <noteBy userID="xyz321" userIDType="NetID"/>
+                <noteDateTime>2025-03-28T16:18:11-04:00</noteDateTime>
+                <eventType>Quota</eventType>
+                <message>Delivering just 10 TB to start, and planning to increase to 200 TB by 2025-10-31</message>
+            </eventNote>
+        </submission>
+        <status>Active</status>
+        <schemaVersion>0.8</schemaVersion>
+    </projectProvenance>
+</resource>
