@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RequestsController < ApplicationController
   before_action :set_breadcrumbs
 
@@ -9,6 +10,6 @@ class RequestsController < ApplicationController
   private
 
     def set_breadcrumbs
-      add_breadcrumb("Dashboard",dashboard_path)
+      add_breadcrumb("Dashboard", dashboard_path)
     end
 end
