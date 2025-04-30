@@ -68,17 +68,19 @@ asset.meta.validate :id xxxx
     is invalid: missing element 'newRequiredField'"
 ```
 
-## 20250430_0001_populating_required_field.tcl
+## Populating required fields
 
-This script populates the value for the new required field we added after the project was created.
-
-Notice that this script sets all the values for the project again (plus the new required field). This is less than ideal but I have _not found a way to set only the required field the very first time_. Once the value has been set once it is possible to change it via a simpler command like the one below:
+If a new required field with no default value is added to the schema we can set its value with a command as follows:
 
 ```
-asset.meta.value.set :id 1076 :value the-new-value -xpath tigerdataX:resourceDoc/resource/newRequiredField
+asset.meta.value.set :id 1080 :value -xpath tigerdataX:resourceDoc/resource/newRequiredField -create true "new required value"
 ```
 
-NOTE: the `value` parameter does not accept quotes on this command, you can pass spaces on the value without quotes, though.
+NOTE: The `-create true` parameter is very important because otherwise `asset.meta.value.set` will refuse to set a value for field that is not already on the document.
+
+The example in the script `20250430_0001_populating_required_field.tcl` shows an example updating all the fields in a document.
+
+After setting the value you can validate the document again with `asset.meta.validate :id xxxx` and it should report no errors:
 
 ## Viewing schema versions
 

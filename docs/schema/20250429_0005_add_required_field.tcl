@@ -1,4 +1,5 @@
-# Adds an optional field to the existing schema
+# Adds a required field to the existing schema
+# Notice that we are not setting a default value for this required field (but we could)
 #
 
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
@@ -24,7 +25,7 @@ asset.doc.type.update :create true :description "testing doc definition via a TC
         > \
         :element -name title -type string -min-occurs 1 -max-occurs 1 \
         :element -name newOptionalField -type string -min-occurs 0 -max-occurs 1 < :value 'something optional' -as default > \
-        :element -name newRequiredField -type string -min-occurs 1 -max-occurs 1 < :value 'something required' -as default > \
+        :element -name newRequiredField -type string -min-occurs 1 -max-occurs 1 \
         :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
             :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
         > \

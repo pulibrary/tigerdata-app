@@ -1,4 +1,5 @@
-
+# Populates the fields in a project. This uses brute force
+# sets all the values in the project.
 set tdNamespace "tigerdataX"
 set tdResourceDoc "resourceDoc"
 set collectionPath "/td-demo-001/dev/tigerdata/april29-test502"
