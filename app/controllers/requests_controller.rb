@@ -4,6 +4,7 @@ class RequestsController < ApplicationController
 
   # GET /requests
   def index
+    return head :forbidden unless Flipflop.new_project_request_wizard?
     add_breadcrumb("New Project Request")
   end
 
