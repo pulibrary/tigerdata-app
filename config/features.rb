@@ -23,4 +23,5 @@ Flipflop.configure do
   #   description: "Take over the world."
 
   feature :alternate_mediaflux, default: false
+  feature :new_project_request_wizard, default: false
 end
