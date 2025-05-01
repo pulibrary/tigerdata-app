@@ -147,5 +147,3 @@ workflows:
       equal: [ "<< pipeline.parameters.GHA_Event >>", ""]
     jobs:
       - mflux_ci
-    env:
-      MFLUX_CI_PASSWORD: ${{ secrets.MFLUX_CI_PASSWORD }}

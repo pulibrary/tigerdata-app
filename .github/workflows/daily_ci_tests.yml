@@ -12,4 +12,3 @@ jobs:
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}
-          MFLUX_CI_PASSWORD: ${{ secrets.MFLUX_CI_PASSWORD }}
