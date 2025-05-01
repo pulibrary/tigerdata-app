@@ -14,7 +14,7 @@
     </div>
     <div class="row align-items-center contents-summary">
       <div class="col-sm-2 file-inventory">File Inventory:</div>
-      <div class="col-sm-2 file-total-label">Total Files: <%= @num_files %></div>
+      <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
       <div class="col-sm-8 text-end divider">
         <form name="project-contents-preview">
           <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#list-contents-modal">Download Complete List</button>
