@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_08_202203) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_30_182310) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_08_202203) do
     t.integer "project_id"
     t.jsonb "event_note"
     t.index ["project_id"], name: "index_project_id"
+  end
+
+  create_table "requests", force: :cascade do |t|
+    t.string "request_type"
+    t.string "request_title"
+    t.string "project_title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_requests", force: :cascade do |t|
