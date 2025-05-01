@@ -139,11 +139,11 @@ workflows:
   version: 2
   build_accept_deploy:
     when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
+      equal: ["<< pipeline.parameters.GHA_Event >>", ""]
     jobs:
       - test
   ci_daily:
     when:
-      equal: [ "<< pipeline.parameters.GHA_Event >>", ""]
+      equal: [ "<< pipeline.parameters.GHA_Event >>", "schedule"]
     jobs:
       - mflux_ci
