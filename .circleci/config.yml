@@ -144,6 +144,6 @@ workflows:
       - test
   ci_daily:
     when:
-      equal: [ "<< pipeline.parameters.GHA_Event >>", "schedule"]
+      equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
     jobs:
       - mflux_ci
