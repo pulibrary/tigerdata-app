@@ -8,6 +8,11 @@
             <% end %>
          </div>
       </div>
+
+      <% if Flipflop.new_project_request_wizard? %>
+        <%= render partial: "new_project_request_wizard_link" %>
+      <% end %>
+      
       <div class="detail-pane">
          <div class="main">
             <div id="dashboard-nav">
