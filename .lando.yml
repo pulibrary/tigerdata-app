@@ -1,5 +1,5 @@
 name: tiger-data-app
 services:
   database:
-    type: postgres:13
+    type: postgres:15
     portforward: true
