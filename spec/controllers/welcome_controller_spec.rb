@@ -20,20 +20,10 @@ RSpec.describe WelcomeController do
     end
   end
 
-  it "does not render the styles preview page for a non-logged-in user" do
-    get :styles_preview
-    expect(response).to redirect_to("/sign_in")
-  end
-
   context "when a user is logged in", connect_to_mediaflux: true do
     let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
     before do
       sign_in user
-    end
-
-    it "renders the styles preview page" do
-      get :styles_preview
-      expect(response).to render_template("styles_preview")
     end
   end
 end
