@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "welcome#index"
   get "help", to: "welcome#help", as: :help
-  get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
   get "dashboard", to: "dashboard#index"
   post "emulate", to: "dashboard#emulate", as: :emulate
   post "dash_project", to: "dashboard#dash_project", as: :dash_project

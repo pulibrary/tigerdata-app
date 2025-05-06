@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class WelcomeController < ApplicationController
-  skip_before_action :authenticate_user!, except: [:styles_preview]
+  skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
   def index
