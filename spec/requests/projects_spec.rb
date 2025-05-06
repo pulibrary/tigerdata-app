@@ -48,7 +48,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         expect(Project.all).not_to be_empty
         new_project = Project.last
         expect(response).to redirect_to(project_confirmation_path(new_project))
-      end
+      end      
 
       it "drafts a DOI when the project is valid" do
         post(projects_path, params: params)
@@ -128,4 +128,26 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
       end
     end
   end
+
+  describe "GET /projects" do
+    let(:data_manager) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+    let(:project) { FactoryBot.create(:approved_project, data_manager: data_manager.uid) }
+
+    context "when the user is authenticated" do
+      before do
+        sign_in data_manager
+      end
+
+      it "provides the xml metadata for a project" do
+        get projects_url(project), params: { format: :xml }
+        follow_redirect!
+        expect(response.code).to eq "200"
+      end
+  
+
+    end
+
+  end
 end
+
+
