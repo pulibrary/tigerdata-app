@@ -1,0 +1,38 @@
+<h1>Users</h1>
+
+<table id="user-list-table">
+  <thead>
+    <tr class="user-list-header-row">
+      <th>Net ID</th>
+      <th>Given name</th>
+      <th>Family name</th>
+      <th>Full name</th>
+      <th>Eligible Sponsor</th>
+      <th>Eligible Manager</th>
+      <th>Super User</th>
+      <th>System Administrator</th>
+      <th>Tester-Trainer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+    <tr class="user-list-data-row">
+      <td>
+        <%= user.uid %>
+        <% if user.uid == current_user.uid %>
+          &nbsp;(you)
+        <% end %>
+      </td>
+
+      <td><%= user.given_name %></td>
+      <td><%= user.family_name %></td>
+      <td><%= user.display_name %></td>
+      <td class="td-<%= user.eligible_sponsor %> bi-exclamation-circle"><%= user.eligible_sponsor %></td>
+      <td class="td-<%= user.eligible_manager %> bi-check-circle-fill"><%= user.eligible_manager %></td>
+      <td class="td-<%= user.superuser %>"><%= user.superuser %></td>
+      <td class="td-<%= user.sysadmin %>"><%= user.sysadmin %></td>
+      <td class="td-<%= user.trainer %>"><%= user.trainer %></td>
+    </tr>
+    <% end %>
+</tbody>
+</table>

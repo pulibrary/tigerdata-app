@@ -13,6 +13,21 @@
   text-overflow: ellipsis;
 }
 
+#user-list-table {
+  font-family: $libre-franklin;
+  td {
+    border: 1px solid $gray-20;
+    padding: 0.15rem;
+  }
+  .td-true {
+    background-color: $user-table-true;
+    
+  }
+  .td-false {
+    background-color: $user-table-false;
+  }
+}
+
 // hide pagination menu
 .dataTables_length {
   display: none;
