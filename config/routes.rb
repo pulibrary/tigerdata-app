@@ -48,4 +48,10 @@ Rails.application.routes.draw do
 
   put "project_import", to: "project_import#run"
   get "project_import", to: "dashboard#index"
+
+  get "new-project/project-info/(:request_id)", to: "new_project_wizard/project_information#show", as: :new_project_project_info
+  put "new-project/project-info/:request_id/save", to: "new_project_wizard/project_information#save", as: :new_project_project_info_save
+
+  get "new-project/project-info-categories/:request_id", to: "new_project_wizard/project_information_categories#show", as: :new_project_project_info_categories
+  put "new-project/project-info-categories/:request_id/save", to: "new_project_wizard/project_information_categories#save", as: :new_project_project_info_categories_save
 end
