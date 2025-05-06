@@ -184,7 +184,6 @@ class ProjectsController < ApplicationController
 
   def show
     return if project.blank?
-
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
 
@@ -200,6 +199,10 @@ class ProjectsController < ApplicationController
     @project = ProjectShowPresenter.new(project)
 
     @project_session = "content"
+    respond_to do |format| 
+      format.html
+      format.xml { render :xml => @cases } 
+    end 
   end
 
   def project_job_service

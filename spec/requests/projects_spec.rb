@@ -139,8 +139,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
       end
 
       it "provides the xml metadata for a project" do
-        get projects_url(project), params: { format: :xml }
-        follow_redirect!
+        # project/12.xml
+        get project_url(project), params: { format: :xml }
         expect(response.code).to eq "200"
         expect(response.content_type).to match "xml"
       end
