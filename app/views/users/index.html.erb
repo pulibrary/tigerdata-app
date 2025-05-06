@@ -27,11 +27,11 @@
       <td><%= user.given_name %></td>
       <td><%= user.family_name %></td>
       <td><%= user.display_name %></td>
-      <td class="td-<%= user.eligible_sponsor %> bi-exclamation-circle"><%= user.eligible_sponsor %></td>
-      <td class="td-<%= user.eligible_manager %> bi-check-circle-fill"><%= user.eligible_manager %></td>
-      <td class="td-<%= user.superuser %>"><%= user.superuser %></td>
-      <td class="td-<%= user.sysadmin %>"><%= user.sysadmin %></td>
-      <td class="td-<%= user.trainer %>"><%= user.trainer %></td>
+      <td class="<%= role_status_style(user.eligible_sponsor) %>"><%= user.eligible_sponsor %></td>
+      <td class="<%= role_status_style(user.eligible_manager) %>"><%= user.eligible_manager %></td>
+      <td class="<%= role_status_style(user.superuser) %>"><%= user.superuser %></td>
+      <td class="<%= role_status_style(user.sysadmin) %>"><%= user.sysadmin %></td>
+      <td class="<%= role_status_style(user.trainer) %>"><%= user.trainer %></td>
     </tr>
     <% end %>
 </tbody>
