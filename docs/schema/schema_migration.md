@@ -95,3 +95,10 @@ and you can also inspect the actual definitions of previous versions via the fol
 ```
 asset.doc.type.describe :type tigerdataX:resourceDoc -version 3
 ```
+
+## Metadata diff
+You can also get the diff of the metadata between versions with the `asset.meta.diff` command:
+
+```
+asset.meta.diff :id 1084 :version 1
+```
