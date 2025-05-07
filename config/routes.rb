@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root to: "welcome#index"
   get "help", to: "welcome#help", as: :help
-  get "styles_preview", to: "welcome#styles_preview", as: :styles_preview
   get "dashboard", to: "dashboard#index"
   post "emulate", to: "dashboard#emulate", as: :emulate
   post "dash_project", to: "dashboard#dash_project", as: :dash_project
@@ -49,4 +48,10 @@ Rails.application.routes.draw do
 
   put "project_import", to: "project_import#run"
   get "project_import", to: "dashboard#index"
+
+  get "new-project/project-info/(:request_id)", to: "new_project_wizard/project_information#show", as: :new_project_project_info
+  put "new-project/project-info/:request_id/save", to: "new_project_wizard/project_information#save", as: :new_project_project_info_save
+
+  get "new-project/project-info-categories/:request_id", to: "new_project_wizard/project_information_categories#show", as: :new_project_project_info_categories
+  put "new-project/project-info-categories/:request_id/save", to: "new_project_wizard/project_information_categories#save", as: :new_project_project_info_categories_save
 end
