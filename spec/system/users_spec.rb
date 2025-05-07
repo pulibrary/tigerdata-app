@@ -26,7 +26,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "system administrator" do
     it "shows the error message" do
-      sign_in current_user
+      sign_in sysadmin_user
       visit "/users"
       expect(page).to have_content "Current Users"
     end
@@ -34,7 +34,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "superadmin" do
     it "shows the error message" do
-      sign_in current_user
+      sign_in superuser
       visit "/users"
       expect(page).to have_content "Current Users"
     end
@@ -52,7 +52,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "data sponsor" do
     it "shows the error message" do
-      sign_in current_user
+      sign_in sponsor_user
       visit "/users"
       expect(page).to have_content "You do not have access to this page."
     end
@@ -60,7 +60,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "data manager" do
     it "shows the error message" do
-      sign_in current_user
+      sign_in data_manager
       visit "/users"
       expect(page).to have_content "You do not have access to this page."
     end
