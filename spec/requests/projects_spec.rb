@@ -48,7 +48,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         expect(Project.all).not_to be_empty
         new_project = Project.last
         expect(response).to redirect_to(project_confirmation_path(new_project))
-      end      
+      end
 
       it "drafts a DOI when the project is valid" do
         post(projects_path, params: params)
@@ -144,11 +144,6 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         expect(response.code).to eq "200"
         expect(response.content_type).to match "xml"
       end
-  
-
     end
-
   end
 end
-
-
