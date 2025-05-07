@@ -10,6 +10,13 @@ class ProjectShowPresenter
     @project_metadata = @project.metadata_model
   end
 
+  # Placeholder
+  # This is where the xml payload will be generated 
+  # (or, more likely, where it will delgate that to another class)
+  def to_xml
+
+  end
+
   def created
     @project.created_at.strftime("%b %e, %Y %l:%M %p")
   end
