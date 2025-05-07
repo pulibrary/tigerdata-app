@@ -4,8 +4,13 @@ class UsersController < ApplicationController
   
     # GET /requests
     def index
-      @users = User.order('family_name ASC NULLS LAST')
-      add_breadcrumb("Current Users")
+      if current_user.superuser || current_user.sysadmin || current_user.trainer
+        @users = User.order('family_name ASC NULLS LAST')
+        add_breadcrumb("Current Users")
+      else
+        flash[:notice] = "You do not have access to this page."
+        redirect_to dashboard_path
+      end
     end
   
     private
