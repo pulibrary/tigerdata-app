@@ -2,6 +2,7 @@
 
 require "sidekiq/web"
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   mount Flipflop::Engine => "/features"
   mount HealthMonitor::Engine, at: "/"
@@ -54,4 +55,8 @@ Rails.application.routes.draw do
 
   get "new-project/project-info-categories/:request_id", to: "new_project_wizard/project_information_categories#show", as: :new_project_project_info_categories
   put "new-project/project-info-categories/:request_id/save", to: "new_project_wizard/project_information_categories#save", as: :new_project_project_info_categories_save
+
+  get "new-project/project-info-dates/:request_id", to: "new_project_wizard/project_information_dates#show", as: :new_project_project_info_dates
+  put "new-project/project-info-dates/:request_id/save", to: "new_project_wizard/project_information_dates#save", as: :new_project_project_info_dates_save
 end
+# rubocop:enable Metrics/BlockLength
