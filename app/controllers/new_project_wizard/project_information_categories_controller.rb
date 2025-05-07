@@ -7,7 +7,7 @@ class NewProjectWizard::ProjectInformationCategoriesController < RequestWizardsC
     end
 
     def render_next
-      redirect_to dashboard_path
+      redirect_to new_project_project_info_dates_path(request_model)
     end
 
     def render_back
