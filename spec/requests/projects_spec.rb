@@ -128,4 +128,22 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
       end
     end
   end
+
+  describe "GET /projects" do
+    let(:data_manager) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+    let(:project) { FactoryBot.create(:approved_project, data_manager: data_manager.uid) }
+
+    context "when the user is authenticated" do
+      before do
+        sign_in data_manager
+      end
+
+      it "provides the xml metadata for a project" do
+        # project/12.xml
+        get project_url(project), params: { format: :xml }
+        expect(response.code).to eq "200"
+        expect(response.content_type).to match "xml"
+      end
+    end
+  end
 end
