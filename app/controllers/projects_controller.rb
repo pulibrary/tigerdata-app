@@ -201,7 +201,7 @@ class ProjectsController < ApplicationController
     @project_session = "content"
     respond_to do |format| 
       format.html
-      format.xml { render :xml => @cases } 
+      format.xml { render :xml => @project } 
     end 
   end
 
