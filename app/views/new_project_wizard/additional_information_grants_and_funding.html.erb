@@ -1,0 +1,9 @@
+<h2>Additional Information: Grants and Funding</h2>
+<%= form_with(url: new_project_additional_information_grants_and_funding_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
+  <%= @request_model.id %>
+  <div>
+    <%= form.label :project_title %>
+    <%= form.text_field :project_title %>
+  </div>
+  <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
+<% end %>

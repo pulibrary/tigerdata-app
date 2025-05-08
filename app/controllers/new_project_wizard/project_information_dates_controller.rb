@@ -7,7 +7,7 @@ class NewProjectWizard::ProjectInformationDatesController < RequestWizardsContro
     end
 
     def render_next
-      redirect_to dashboard_path
+      redirect_to new_project_roles_and_people_path(request_model)
     end
 
     def render_back
