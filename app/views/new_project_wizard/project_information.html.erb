@@ -4,9 +4,9 @@
   <div>
     <div class="form-field-container">
       <%= form.label :title %>
-      <%= form.text_field :request_title, class: "required-field", placeholder: "required" %>
+      <%= form.text_field :request_title, class: "required-field", required: true, placeholder: "required" %>
     </div>
-
+    
     <div class="form-field-container">
       <%= form.label :title %>
       <%= form.text_field :request_title, class: "optional-field", placeholder: "optional" %>
@@ -17,7 +17,7 @@
       <%= form.text_field :request_title, class: "disabled-field", disabled: true, placeholder: "disabled" %>
     </div>
     
-    <div class="form-field-container">
+    <div class="form-field-container error-field-container">
       <%= form.label :title %>
       <%= form.text_field :request_title, class: "error-field", placeholder: "error"%>
       <div class="error-field-message">Error message</div>

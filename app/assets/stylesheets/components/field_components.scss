@@ -57,6 +57,14 @@ input[type="text"]:focus {
   border: 1px solid $red-dark;
 }
 
+.error-field-container {
+  background: url("text_field_error.svg") no-repeat;
+  background-position: right 1.7rem;
+  background-size: 20px 20px;
+  padding-right: 20px;
+  width: max-content;
+}
+
 .error-field-message {
   color: $red-dark;
   font-family: $libre-franklin;
