@@ -16,7 +16,7 @@ The step controllers need to implement the methods to render or redirect the vie
 
 ## Routes
 
-The routes should include a top level path item for the wizard and then a path item for the step. ( new-project/project-information). Routes are needed for the show and save of each step.
+The routes should include a top level path item for the wizard and then a path item for the step. ( new-project/project-info). Routes are needed for the show and save of each step.
 
 ## Adding a new step
 

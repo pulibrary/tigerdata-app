@@ -17,7 +17,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-    it "walks through the wizard" do
+    it "walks through the wizard if the feature is enabled" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
       sign_in current_user
@@ -60,6 +60,35 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Project Information: Categories"
       click_on "Back"
       expect(page).to have_content "Project Information: Basic"
+    end
+
+    it "walks through the wizard if the feature is enabled" do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, false)
+      request = Request.create
+      sign_in current_user
+      visit "/"
+      expect(page).not_to have_content("New Project Request")
+      visit "/new-project/project-info/#{request.id}"
+      expect(page).not_to have_content "Project Information: Basic"
+      visit "/new-project/project-info-categories/#{request.id}"
+      expect(page).not_to have_content "Project Information: Categories"
+      visit "/new-project/project-info-dates/#{request.id}"
+      expect(page).not_to have_content "Project Information: Dates"
+      visit "/new-project/roles-people/#{request.id}"
+      expect(page).not_to have_content "Roles and People"
+      visit "/new-project/project-type/#{request.id}"
+      expect(page).not_to have_content "Project Type"
+      visit "/new-project/storage-access/#{request.id}"
+      expect(page).not_to have_content "Storage and Access"
+      visit "/new-project/additional-info-grants-funding/#{request.id}"
+      expect(page).not_to have_content "Additional Information: Grants and Funding"
+      visit "/new-project/additional-info-project-permissions/#{request.id}"
+      expect(page).not_to have_content "Additional Information: Project Permissions"
+      visit "/new-project/additional-info-related-resources/#{request.id}"
+      expect(page).not_to have_content "Additional Information: Related Resources"
+      visit "/new-project/review-submit/#{request.id}"
+      expect(page).not_to have_content "Review and Submit"
     end
   end
 end
