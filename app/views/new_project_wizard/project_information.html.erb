@@ -2,8 +2,26 @@
 <%= form_with(url: new_project_project_info_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
   <%= @request_model.id %>
   <div>
-    <%= form.label :title %>
-    <%= form.text_field :request_title %>
+    <div class="form-field-container">
+      <%= form.label :title %>
+      <%= form.text_field :request_title, class: "required-field", placeholder: "required" %>
+    </div>
+
+    <div class="form-field-container">
+      <%= form.label :title %>
+      <%= form.text_field :request_title, class: "optional-field", placeholder: "optional" %>
+    </div>
+  
+    <div class="form-field-container">
+      <%= form.label :title %>
+      <%= form.text_field :request_title, class: "disabled-field", disabled: true, placeholder: "disabled" %>
+    </div>
+    
+    <div class="form-field-container">
+      <%= form.label :title %>
+      <%= form.text_field :request_title, class: "error-field", placeholder: "error"%>
+      <div class="error-field-message">Error message</div>
+    </div>
   </div>
   <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
 <% end %>
