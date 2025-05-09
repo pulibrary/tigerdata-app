@@ -3,27 +3,28 @@
 @import "bootstrap";
 
 .form-field-container {
-    margin: 0.625rem 0rem;
+  margin: 0.625rem 0rem;
 }
 
-input[type=text], label {
+input[type="text"],
+label {
   display: block;
 }
 
 label {
-    color: $gray-60;
-    font-family: $libre-franklin;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 1.313rem;
+  color: $gray-60;
+  font-family: $libre-franklin;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.313rem;
 }
 
-input[type=text] {
+input[type="text"] {
   border-radius: 8px;
 }
 
-input[type=text]::placeholder {
+input[type="text"]::placeholder {
   color: $gray-60;
   font-family: $libre-franklin;
   font-size: 1rem;
@@ -32,7 +33,7 @@ input[type=text]::placeholder {
   line-height: 1.5rem;
 }
 
-input[type=text]:focus {
+input[type="text"]:focus {
   border-color: $princeton-orange !important;
 }
 
@@ -47,9 +48,9 @@ input[type=text]:focus {
 }
 
 .disabled-field {
-    border-radius: 8px;
-    border: 1px solid $gray-20;
-    background: $gray-10;
+  border-radius: 8px;
+  border: 1px solid $gray-20;
+  background: $gray-10;
 }
 
 .error-field {
@@ -64,4 +65,3 @@ input[type=text]:focus {
   font-weight: 400;
   line-height: 1.125rem;
 }
-
