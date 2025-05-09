@@ -1,5 +1,5 @@
-<h2>Project Information: Categories</h2>
-<%= form_with(url: new_project_project_info_categories_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
+<h2>Review and Submit</h2>
+<%= form_with(url: new_project_review_and_submit_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
   <%= @request_model.id %>
   <div>
     <%= form.label :project_title %>

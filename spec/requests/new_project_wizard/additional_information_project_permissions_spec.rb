@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe "new-project/project-info-dates", type: :request do
+RSpec.describe "new-project/additional-information-project-permissions", type: :request do
   describe "GET" do
     it "redirects the client to the sign in path" do
-      get new_project_project_info_dates_url(1)
+      get new_project_additional_information_project_permissions_url(1)
 
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
@@ -15,7 +15,7 @@ RSpec.describe "new-project/project-info-dates", type: :request do
 
       it "renders a successful response" do
         sign_in user
-        get new_project_project_info_dates_url(request.id)
+        get new_project_additional_information_project_permissions_url(request.id)
         expect(response).to be_successful
         expect(response.body).to include("new project")
       end
@@ -24,7 +24,7 @@ RSpec.describe "new-project/project-info-dates", type: :request do
 
   describe "PUT /save" do
     it "redirects the client to the sign in path" do
-      put new_project_project_info_dates_save_url(request_id: 1)
+      put new_project_additional_information_project_permissions_save_url(request_id: 1)
 
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
@@ -36,7 +36,7 @@ RSpec.describe "new-project/project-info-dates", type: :request do
         let(:request) { Request.create(request_title: "abc123", project_title: "project") }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_project_info_dates_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
           expect(response).to redirect_to(dashboard_path)
           request.reload
           expect(request.request_title).to eq("new title")
@@ -45,8 +45,8 @@ RSpec.describe "new-project/project-info-dates", type: :request do
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_project_info_dates_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-          expect(response).to redirect_to(new_project_roles_and_people_url(request))
+          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+          expect(response).to redirect_to(new_project_additional_information_related_resources_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
@@ -54,8 +54,8 @@ RSpec.describe "new-project/project-info-dates", type: :request do
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_project_info_dates_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
-          expect(response).to redirect_to(new_project_project_info_categories_url(request))
+          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
+          expect(response).to redirect_to(new_project_additional_information_grants_and_funding_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
