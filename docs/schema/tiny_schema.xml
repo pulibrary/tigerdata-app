@@ -1,0 +1,10 @@
+<resource resourceClass="Project" resourceID="10.34770/az09-0011" resourceIDType="DOI">
+    <projectID projectIDType="DOI">10.34770/az09-0011</projectID>
+    <projectDirectory>
+        <requestedValue>/tigerdata/mjc12/test-poc-1</requestedValue>
+    </projectDirectory>
+    <title>Test Proof of Concept Project 1</title>
+    <projectProvenance>
+        <schemaVersion>0.8</schemaVersion>
+    </projectProvenance>
+</resource>

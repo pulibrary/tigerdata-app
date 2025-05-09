@@ -1,0 +1,44 @@
+<resource resourceClass="Project" resourceID="10.34770/az09-0001" resourceIDType="DOI">
+    <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0001</projectID>
+    <dataSponsor userID="mjc12" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
+    <dataManager userID="mjc12" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
+    <departments discoverable="true" trackingLevel="ResourceRecord">
+        <department departmentCode="41043" inherited="true">LIB-Data, Rsrch &amp; Teachng Svcs</department>
+    </departments>
+    <projectDirectory approved="false" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>/tigerdata/mjc12/test-provisional-1</requestedValue>
+        <approvedValue>/tigerdata/mjc12/test-provisional-1</approvedValue>
+    </projectDirectory>
+    <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Test Provisional Project 1</title>
+    <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is the first among an unspecified number of test provisional projects.</description>
+    <storageCapacity approved="false" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>
+            <size>500</size>
+            <unit>GB</unit>
+        </requestedValue>
+        <approvedValue>
+            <size>500</size>
+            <unit>GB</unit>
+        </approvedValue>
+    </storageCapacity>
+    <projectVisibility inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Restricted</projectVisibility>
+    <storagePerformance approved="false" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
+        <requestedValue>Standard</requestedValue>
+        <approvedValue>Standard</approvedValue>
+    </storagePerformance>
+    <numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">Less than 10,000</numberOfFiles>
+    <hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">No</hpc>
+    <projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
+    <provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">true</provisionalProject>
+    <projectResourceType resourceTypeGeneral="Project" inherited="false" discoverable="true" trackingLevel="ResourceRecord">TigerData Project</projectResourceType>
+    <projectProvenance>
+        <submission>
+            <requestedBy userID="mjc12" userIDType="NetID"></requestedBy>
+            <requestDateTime>2025-03-28T13:25:47-04:00</requestDateTime>
+            <approvedBy userID="cbentler" userIDType="NetID"></approvedBy>
+            <approvalDateTime>2025-04-02T09:38:30-04:00</approvalDateTime>
+        </submission>
+        <status>Approved</status>
+        <schemaVersion>0.8</schemaVersion>
+    </projectProvenance>
+</resource>
