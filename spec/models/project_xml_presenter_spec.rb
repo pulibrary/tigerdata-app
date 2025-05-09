@@ -10,10 +10,13 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   context "rails XML payload" do
-    it 'has an xml payload' do
-      
+    it "has an xml payload" do
     end
-    
   end
-  
+
+  describe "#to_xml" do
+    it "generates a XML Document" do
+      expect(presenter.to_xml).to be_a(Nokogiri::XML::Document)
+    end
+  end
 end
