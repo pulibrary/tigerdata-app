@@ -2,6 +2,11 @@
 require "rails_helper"
 
 RSpec.describe "/new-project/project-info", type: :request do
+  before do
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:new_project_request_wizard, true)
+  end
+
   describe "GET" do
     it "redirects the client to the sign in path" do
       get new_project_project_info_url

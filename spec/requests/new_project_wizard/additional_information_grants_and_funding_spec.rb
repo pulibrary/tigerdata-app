@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe "new-project/additional-information-grants-funding", type: :request do
+RSpec.describe "new-project/additional-info-grants-funding", type: :request do
+  before do
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:new_project_request_wizard, true)
+  end
+
   describe "GET" do
     it "redirects the client to the sign in path" do
       get new_project_additional_information_grants_and_funding_url(1)

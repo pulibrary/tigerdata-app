@@ -69,20 +69,20 @@ Rails.application.routes.draw do
   get "new-project/storage-access/:request_id", to: "new_project_wizard/storage_and_access#show", as: :new_project_storage_and_access
   put "new-project/storage-access/:request_id/save", to: "new_project_wizard/storage_and_access#save", as: :new_project_storage_and_access_save
 
-  get "new-project/additional-information-grants-funding/:request_id", to: "new_project_wizard/additional_information_grants_and_funding#show",
-                                                                       as: :new_project_additional_information_grants_and_funding
-  put "new-project/additional-information-grants-funding/:request_id/save", to: "new_project_wizard/additional_information_grants_and_funding#save",
-                                                                            as: :new_project_additional_information_grants_and_funding_save
+  get "new-project/additional-info-grants-funding/:request_id", to: "new_project_wizard/additional_information_grants_and_funding#show",
+                                                                as: :new_project_additional_information_grants_and_funding
+  put "new-project/additional-info-grants-funding/:request_id/save", to: "new_project_wizard/additional_information_grants_and_funding#save",
+                                                                     as: :new_project_additional_information_grants_and_funding_save
 
-  get "new-project/additional-information-project-permissions/:request_id", to: "new_project_wizard/additional_information_project_permissions#show",
-                                                                            as: :new_project_additional_information_project_permissions
-  put "new-project/additional-information-project-permissions/:request_id/save", to: "new_project_wizard/additional_information_project_permissions#save",
-                                                                                 as: :new_project_additional_information_project_permissions_save
+  get "new-project/additional-info-project-permissions/:request_id", to: "new_project_wizard/additional_information_project_permissions#show",
+                                                                     as: :new_project_additional_information_project_permissions
+  put "new-project/additional-info-project-permissions/:request_id/save", to: "new_project_wizard/additional_information_project_permissions#save",
+                                                                          as: :new_project_additional_information_project_permissions_save
 
-  get "new-project/additional-information-related-resources/:request_id", to: "new_project_wizard/additional_information_related_resources#show",
-                                                                          as: :new_project_additional_information_related_resources
-  put "new-project/additional-information-related-resources/:request_id/save", to: "new_project_wizard/additional_information_related_resources#save",
-                                                                               as: :new_project_additional_information_related_resources_save
+  get "new-project/additional-info-related-resources/:request_id", to: "new_project_wizard/additional_information_related_resources#show",
+                                                                   as: :new_project_additional_information_related_resources
+  put "new-project/additional-info-related-resources/:request_id/save", to: "new_project_wizard/additional_information_related_resources#save",
+                                                                        as: :new_project_additional_information_related_resources_save
 
   get "new-project/review-submit/:request_id", to: "new_project_wizard/review_and_submit#show", as: :new_project_review_and_submit
   put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", as: :new_project_review_and_submit_save

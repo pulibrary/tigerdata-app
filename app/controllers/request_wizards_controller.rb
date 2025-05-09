@@ -3,6 +3,8 @@ class RequestWizardsController < ApplicationController
   before_action :set_request_model, only: %i[save]
   before_action :set_or_create_request_model, only: %i[show]
 
+  before_action :check_flipper
+
   attr_reader :request_model
 
   # GET /request_wizards/1
@@ -60,5 +62,9 @@ class RequestWizardsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def request_params
       params.fetch(:request, {}).permit(:request_title, :project_title)
+    end
+
+    def check_flipper
+      return head :forbidden unless Flipflop.new_project_request_wizard?
     end
 end
