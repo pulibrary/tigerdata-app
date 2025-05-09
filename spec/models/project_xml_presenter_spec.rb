@@ -8,4 +8,12 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   it "can be instantiated" do
     expect(presenter).to be_instance_of(described_class)
   end
+
+  context "rails XML payload" do
+    it 'has an xml payload' do
+      
+    end
+    
+  end
+  
 end
