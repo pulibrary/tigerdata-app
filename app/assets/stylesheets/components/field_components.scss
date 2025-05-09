@@ -1,0 +1,75 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+.form-field-container {
+  margin: 0.625rem 0rem;
+}
+
+input[type="text"],
+label {
+  display: block;
+}
+
+label {
+  color: $gray-60;
+  font-family: $libre-franklin;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.313rem;
+}
+
+input[type="text"] {
+  border-radius: 8px;
+}
+
+input[type="text"]::placeholder {
+  color: $gray-60;
+  font-family: $libre-franklin;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem;
+}
+
+input[type="text"]:focus {
+  border-color: $princeton-orange !important;
+}
+
+.required-field {
+  border: 1px solid $gray-20;
+  background: $white;
+}
+
+.optional-field {
+  border: 1px solid $gray-20;
+  background: $white;
+}
+
+.disabled-field {
+  border-radius: 8px;
+  border: 1px solid $gray-20;
+  background: $gray-10;
+}
+
+.error-field {
+  border: 1px solid $red-dark;
+}
+
+.error-field-container {
+  background: url("text_field_error.svg") no-repeat;
+  background-position: right 1.7rem;
+  background-size: 20px 20px;
+  padding-right: 20px;
+  width: max-content;
+}
+
+.error-field-message {
+  color: $red-dark;
+  font-family: $libre-franklin;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.125rem;
+}
