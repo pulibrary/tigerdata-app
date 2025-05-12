@@ -36,7 +36,7 @@ Here is an example of how the field styles are applicable to view partials:
    <div class="form-field-container error-field-container">
       <%= form.label :field_with_error %>
       <%= form.text_field :request_title, class: "error-field", placeholder: "error"%>
-      <div class="error-field-message">500GB max can be requested</div>
+      <div class="error-field-message">500 max can be requested</div>
    </div>
 
 </div>
