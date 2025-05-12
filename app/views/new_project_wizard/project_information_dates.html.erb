@@ -1,5 +1,7 @@
 <h2>Project Information: Dates</h2>
 <%= form_with(url: new_project_project_info_dates_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
+  <%= render partial: '/new_project_wizard/sidebar', locals: {form:} %>
+
   <%= @request_model.id %>
   <div>
     <%= form.label :project_title %>
