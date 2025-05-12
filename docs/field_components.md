@@ -4,18 +4,17 @@ Form fields have standardized styles for required fields, optional fields, disab
 
 ## How to use these styles
 
-* Each textfield should be contained within a div with the class `form-field-container` applied.
-* Required fields should have the `required-field` class applied to the textfield.
-* Optional fields should have the `optional-field` class applied to the textfield.
-* Disabled fields should have the `disabled-field` class, and the attribute `disabled: true` also applied to the textfield.
-* Fields with an error should have the `error-field` class applied to the textfield, should be contained within a div with the classes `form-field-container error-field-container` applied, and should have a div with the class `error-field-message` containing the text of the error message directly underneath the textfield with the error.
-
+- Each textfield should be contained within a div with the class `form-field-container` applied.
+- Required fields should have the `required-field` class applied to the textfield.
+- Optional fields should have the `optional-field` class applied to the textfield.
+- Disabled fields should have the `disabled-field` class, and the attribute `disabled: true` also applied to the textfield.
+- Fields with an error should have the `error-field` class applied to the textfield, should be contained within a div with the classes `form-field-container error-field-container` applied, and should have a div with the class `error-field-message` containing the text of the error message directly underneath the textfield with the error.
 
 ## Example HTML
 
 Here is an example of how the field styles are applicable to view partials:
 
-```rails 
+```rails
 <div>
 
    <div class="form-field-container">
@@ -42,7 +41,6 @@ Here is an example of how the field styles are applicable to view partials:
 </div>
 ```
 
-Here is what the example looks like when rendered in a browser: 
+Here is what the example looks like when rendered in a browser:
 
 ![Form field style examples](./images/form_field_examples.png)
-
