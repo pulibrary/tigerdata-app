@@ -1,9 +1,13 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
 #banner {
   text-align: center;
-  background-color: #e1f0fb;
+  background-color: $banner-white;
   padding: 20px 0px 10px 0px;
-  border-bottom: #0060a7 solid 2px;
-  color: #0060a7;
+  border-bottom: $blue-mid solid 2px;
+  color: $blue-mid;
   h1 {
     font-size: 24px;
     font-weight: bold;

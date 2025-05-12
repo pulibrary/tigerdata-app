@@ -95,7 +95,7 @@ h6 {
 
 .autocomplete-suggestions strong {
   font-weight: normal;
-  color: #3399ff;
+  color: $bright-light-blue;
 }
 
 .autocomplete-group {
@@ -104,7 +104,7 @@ h6 {
 
 .autocomplete-group strong {
   display: block;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid $black;
 }
 
 /*
@@ -118,5 +118,5 @@ h6 {
 }
 
 .autocomplete-error {
-  color: var(--Secondary-Red-Dark, #b00002);
+  color: $red-dark;
 }

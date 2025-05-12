@@ -13,7 +13,7 @@
   }
 
   label {
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -32,14 +32,14 @@
   }
 
   .mediaflux-tooltip {
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 14px;
     font-style: normal;
     color: $gray-60;
   }
 
   .required-field {
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 14px;
     font-style: normal;
     line-height: 21px;
