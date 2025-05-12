@@ -1,3 +1,7 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
 .container {
   //Main body of every page
   background-color: rgb(255, 255, 255);
@@ -20,9 +24,9 @@
     justify-content: center;
 
     // Typography
-    color: var(--Neutral-Black, #121212);
+    color: $gray-100;
     /* Body S Bold */
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -30,7 +34,7 @@
 
     // states
     button:active {
-      color: var(--Primary-Blue, #0d6efd);
+      color: $bright-blue;
     }
   }
 }
@@ -78,7 +82,7 @@
     @include tab-nav;
     margin-bottom: 1em;
     border-bottom: solid;
-    border-color: #d0d0d0;
+    border-color: $gray-20;
   }
 
   .pending-project {
@@ -87,8 +91,8 @@
   }
 
   .btn.btn-return.btn-sm {
-    background-color: white;
-    border-color: #0d6efd;
+    background-color: $white;
+    border-color: $bright-blue;
     border-width: 2px;
   }
   .provenance-header {
@@ -149,16 +153,16 @@
   #project-nav {
     @include tab-nav;
     border-bottom: solid;
-    border-color: #d0d0d0;
+    border-color: $gray-20;
   }
 
   #file-list {
     width: 90%;
-    border: 1px solid gray;
+    border: 1px solid $gray-60;
   }
 
   #file-list > tbody > tr > th {
-    background-color: #dddcdc;
+    background-color: $gray-15;
   }
   label {
     padding-bottom: 0.5em;
@@ -202,12 +206,12 @@
 
 #edit {
   .added_user_textbox {
-    background-color: #f4f2f2;
+    background-color: $gray-10;
     margin-bottom: 2px;
   }
 
   .delete_icon {
-    color: #bb6c6c;
+    color: $princeton-orange-80;
   }
 
   .add_new_user_textbox {
@@ -220,11 +224,11 @@
   }
 
   input[type="text"]:valid {
-    background-color: rgb(255, 255, 255);
+    background-color: $white;
   }
 
   input[type="text"]:invalid {
-    outline-color: red;
+    outline-color: $red-dark;
   }
 
   h2 {
@@ -343,13 +347,13 @@
 }
 
 .login button {
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: $yellow-orange;
+  border-color: $yellow-orange;
 }
 
 #create-script-text {
   font-family: "Courier New", Courier, monospace;
-  background-color: #f2f1f1;
+  background-color: $gray-10;
   margin-left: 35px;
   margin-top: 15px;
   margin-bottom: 15px;

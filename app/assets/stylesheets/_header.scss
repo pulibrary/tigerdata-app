@@ -9,7 +9,7 @@
   padding: 1.5rem 1.25rem;
   justify-content: space-between;
   align-items: center;
-  background: #121212;
+  background: $gray-100;
 
   .header-image {
     width: 9.25rem;
@@ -48,7 +48,7 @@
   .btn.btn-warning.btn-sm {
     --bs-btn-bg: white;
     padding: 0.5rem 2rem;
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 16px;
     color: $black;
     border: none;
@@ -71,10 +71,10 @@
   margin: auto;
   float: right;
   display: -webkit-inline-box;
-  font-family: "Libre Franklin";
+  font-family: $libre-franklin;
   .navbar-item {
     color: $white;
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 16px;
     font-style: normal;
     line-height: 24px;
@@ -83,7 +83,7 @@
   }
   .navbar-item a {
     color: $white;
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 16px;
     font-style: normal;
     line-height: 24px;
@@ -112,13 +112,13 @@
 }
 
 a.dropdown-item {
-  color: #000000 !important;
+  color: $black !important;
 }
 
 /* Do not put a h1 in the banner as it is not show always.  Make the only h1 be part of the page*/
 #banner {
   h2 {
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 2.5rem;
     font-style: normal;
     font-weight: 600;

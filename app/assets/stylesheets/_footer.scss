@@ -1,4 +1,5 @@
 @import "variables";
+@import "typography";
 @import "bootstrap";
 
 .footer-line {
@@ -68,7 +69,7 @@ footer {
       color: $white;
 
       /* Body XS */
-      font-family: "Libre Franklin";
+      font-family: $libre-franklin;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
@@ -90,7 +91,7 @@ footer {
     .version-line {
       height: 1px;
       align-self: stretch;
-      background: #d9d9d9;
+      background: $gray-version-number;
     }
   }
 
@@ -104,7 +105,7 @@ footer {
 
     .pul-accessible-container {
       width: max-content;
-      background-color: #000;
+      background-color: $black;
       color: $white;
 
       &:hover {
@@ -146,7 +147,7 @@ footer {
       color: $white;
 
       /* Body S */
-      font-family: "Libre Franklin";
+      font-family: $libre-franklin;
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
