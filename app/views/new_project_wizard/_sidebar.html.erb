@@ -1,22 +1,22 @@
 <div>
   <ul>
-    <li>Project Information
+    <li id="project-information" class="<%= 'active' if controller.controller_name.start_with?('project_information') %>">Project Information
       <ul>
-        <li>Basic Details</li>
-        <li>Categories (Optional)</li>
-        <li>Dates (Optional)</li>
+        <li id="project-basic-details" class="substep <%= 'active' if controller.controller_name == 'project_information' %>">Basic Details</li>
+        <li id="project-categories" class="substep <%= 'active' if controller.controller_name == 'project_information_categories' %>">Categories (Optional)</li>
+        <li id="project-dates" class="substep <%= 'active' if controller.controller_name == 'project_information_dates' %>">Dates (Optional)</li>
       </ul>
     </li>
-    <li>Roles and People</li>
-    <li>Project Type</li>
-    <li>Storage and Access</li>
-    <li>Additional Information <span class="sidebar-note">(Optional)</span>
+    <li id="project-roles-people" class="<%= 'active' if controller.controller_name == 'roles_and_people' %>">Roles and People</li>
+    <li id="project-type" class="<%= 'active' if controller.controller_name == 'project_type' %>">Project Type</li>
+    <li id="project-storage-access" class="<%= 'active' if controller.controller_name == 'storage_and_access' %>">Storage and Access</li>
+    <li id="project-additional-information" class="<%= 'active' if controller.controller_name.start_with?('additional_information') %>">Additional Information <span class="sidebar-note">(Optional)</span>
       <ul>
-        <li>Funding Sources</li>
-        <li>Project Permissions</li>
-        <li>Related Resources</li>
+        <li id="project-funding-sources" class="substep <%= 'active' if controller.controller_name == 'additional_information_grants_and_funding' %>">Funding Sources</li>
+        <li id="project-permissions" class="substep <%= 'active' if controller.controller_name == 'additional_information_project_permissions' %>">Project Permissions</li>
+        <li id="project-related-resources" class="substep <%= 'active' if controller.controller_name == 'additional_information_related_resources' %>">Related Resources</li>
       </ul>
     </li>
-    <li>Review and Submit</li>
+    <li id="project-review-submit" class="<%= 'active' if controller.controller_name == 'review_and_submit' %>">Review and Submit</li>
   </ul>
 </div>

@@ -2,6 +2,7 @@
 @import "typography";
 @import "bootstrap";
 
-.focus {
+.active {
   color: $red-dark;
+  font-weight: bold;
 }

@@ -1,6 +1,6 @@
 <h2>Project Information: Categories</h2>
 <%= form_with(url: new_project_project_info_categories_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
-  <%= render partial: '/new_project_wizard/sidebar', locals: {form:} %>
+  <%= render partial: '/new_project_wizard/sidebar' %>
 
   <%= @request_model.id %>
   <div>
