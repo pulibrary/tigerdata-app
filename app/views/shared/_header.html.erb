@@ -17,5 +17,12 @@
       <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
     <% end %>
   </ul>
-</div> 
+</div>
+<script>
+  $(document).ready(function (){
+    $('#dropdownMenuButton').click(function () {
+      $('.dropdown-toggle').dropdown('toggle');
+    });
+  });
+</script>
 </header>

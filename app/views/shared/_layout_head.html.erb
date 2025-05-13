@@ -1,0 +1,27 @@
+<head>
+    <title>TigerData</title>
+    <%= favicon_link_tag asset_path('tiger-head.png') %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+    <%= action_cable_meta_tag %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
+    <script src="//code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- Load our local Autocomplete plug-in which is a copy of https://github.com/devbridge/jQuery-Autocomplete -->
+    <script src="<%= root_path + 'jquery.autocomplete.js' %>"></script>
+
+    <% if Rails.env.development? || Rails.env.staging? %>
+    <%= render 'shared/plausible_dev_staging' %>
+    <% elsif Rails.env.production? %>
+    <%= render 'shared/plausible' %>
+    <% end %>
+
+</head>
