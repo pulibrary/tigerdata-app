@@ -46,6 +46,20 @@ class ProjectXmlPresenter
       new_node
     end
 
+    def description_node
+      # <description xml:lang="en"
+      # inherited="false"
+      # discoverable="true"
+      # trackingLevel="ResourceRecord">This is just an example description.</description>
+      new_node = @document.create_element("description")
+      new_node["inherited"] = "false"
+      new_node["discoverable"] = "true"
+      new_node["trackingLevel"] = "ResourceRecord"
+      new_node.content = description
+
+      new_node
+    end
+
     def root_node
       # An example root node:
       # <resource resourceClass="Project"
@@ -61,6 +75,7 @@ class ProjectXmlPresenter
                        root["resourceIDType"] = "DOI"
 
                        root.add_child(title_node)
+                       root.add_child(description_node)
                        root
                      end
     end
