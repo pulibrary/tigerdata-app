@@ -2,24 +2,71 @@
 @import "typography";
 @import "bootstrap";
 
+#new-project-wizard-sidebar {
+  width: 17.8125rem;
+  padding: 1.5rem 1.25rem;
+  background: $gray-5; 
+  overflow: hidden; 
+  border-radius: 0.75rem; 
+  justify-content: center; 
+  align-items: flex-start; 
+  display: inline-flex;
+}
+
+.new-project-wizard-container {
+  flex: 1 1 0; 
+  overflow: hidden; 
+  flex-direction: column; 
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  gap: 1.25rem; 
+  display: inline-flex;
+}
+
 #new-project-wizard-sidebar li {
-  color: $black;
-  font-family: $libre-franklin;
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 1.313rem;
-  list-style: none;
+  align-self: stretch; 
+  flex-direction: column; 
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  gap: 1.25rem; 
+  display: flex;
+}
+
+.step-content {
+  justify-content: flex-start; 
+  align-items: center; 
+  gap: 0.75rem; 
+  display: inline-flex;
 }
 
 .step-number {
-  border-radius: 0.875rem;
-  background: $princeton-orange;
+  width: 1.75rem; 
+  height: 1.75rem; 
+  background: $princeton-orange-80; 
+  border-radius: 0.875rem; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 0.625; 
   display: flex;
-  width: 1.75rem;
-  height: 1.75rem;
-  justify-content: center;
-  align-items: center;
+
+  color: $black; 
+  font-size: 0.875rem; 
+  font-family: $libre-franklin; 
+  font-weight: 600; 
+  line-height: 21px; 
+  word-wrap: break-word;
+}
+
+.step-text {
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  display: flex;
+  color: $black; 
+  font-size: 0.875rem; 
+  font-family: $libre-franklin; 
+  font-weight: 600; 
+  line-height: 21px; 
+  word-wrap: break-word;
 }
 
 .active {
