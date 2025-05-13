@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class RequestWizardsController < ApplicationController
+  layout "wizard"
+  before_action :set_breadcrumbs
+
   before_action :set_request_model, only: %i[save]
   before_action :set_or_create_request_model, only: %i[show]
 
@@ -66,5 +69,9 @@ class RequestWizardsController < ApplicationController
 
     def check_flipper
       return head :forbidden unless Flipflop.new_project_request_wizard?
+    end
+
+    def set_breadcrumbs
+      add_breadcrumb("Dashboard", dashboard_path)
     end
 end
