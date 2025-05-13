@@ -1,0 +1,20 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+.wizard {
+  display: flex;
+  padding: 1.5rem 7.5rem 6.25rem 7.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
+  color: red;
+  nav {
+    display: flex;
+    width: 75rem;
+    height: 1.8125rem;
+    padding: 0.25rem 0rem;
+    align-items: center;
+    gap: 0.625rem;
+  }
+}
