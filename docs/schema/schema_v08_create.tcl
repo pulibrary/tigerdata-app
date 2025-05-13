@@ -75,5 +75,23 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
                 :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
             > \
+            :element -name "alternativeIDs" -type "document" -min-occurs "0" -max-occurs "1" -label "The container element for all alternative IDs for a resource" \
+            < \
+                :description "May apply to either Projects or Items" \
+                :instructions "If this element is present, then it should contain at least one sub-element" \
+                :element -name "alternativeID" -type "string" -max-occurs "100" \
+                < \
+                    :description "An alternative identifier for the resource (not the standard TigerData projectID or itemID), given as a string. Modeled after the DataCite definition for RelatedIdentifier (v4.6+)" \
+                    :instructions "May apply to either Projects or Items" \
+                    :attribute -name "alternativeIDType" -type "string" \
+                    < \
+                        :description "A simple description of the alternative ID type (e.g. Local accession number)" \
+                    > \
+                    :attribute -name "inherited" -type "boolean" \
+                    < \
+                        :value -as "default" "false" \
+                    > \
+                > \
+            > \
         > \
     >
