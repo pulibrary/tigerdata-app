@@ -1,22 +1,56 @@
 <div id="new-project-wizard-sidebar">
   <ul id="primary-steps">
-    <li id="project-information" class="<%= 'active' if controller.controller_name.start_with?('project_information') %>"><span class="step-number">1</span>Project Information
+    <li id="project-information">
+      <span class="step-number <%= 'active' if controller.controller_name.start_with?('project_information') %>">1</span>
+      Project Information
       <ul>
-        <li id="project-basic-details" class="<%= 'substep-active' if controller.controller_name == 'project_information' %>">Basic Details</li>
-        <li id="project-categories" class="<%= 'substep-active' if controller.controller_name == 'project_information_categories' %>">Categories (Optional)</li>
-        <li id="project-dates" class="<%= 'substep-active' if controller.controller_name == 'project_information_dates' %>">Dates (Optional)</li>
+        <li id="project-basic-details">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information' %>"></span>
+          Basic Details
+        </li>
+        <li id="project-categories">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information_categories' %>"></span>
+          Categories (Optional)
+        </li>
+        <li id="project-dates">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information_dates' %>"</span>
+          Dates (Optional)
+        </li>
       </ul>
     </li>
-    <li id="project-roles-people" class="<%= 'active' if controller.controller_name == 'roles_and_people' %>"><span class="step-number">2</span>Roles and People</li>
-    <li id="project-type" class="<%= 'active' if controller.controller_name == 'project_type' %>"><span class="step-number">3</span>Project Type</li>
-    <li id="project-storage-access" class="<%= 'active' if controller.controller_name == 'storage_and_access' %>"><span class="step-number">4</span>Storage and Access</li>
-    <li id="project-additional-information" class="<%= 'active' if controller.controller_name.start_with?('additional_information') %>"><span class="step-number">5</span>Additional Information <span class="sidebar-note">(Optional)</span>
+    <li id="project-roles-people">
+      <span class="step-number <%= 'active' if controller.controller_name == 'roles_and_people' %>">2</span>
+      Roles and People
+    </li>
+    <li id="project-type">
+      <span class="step-number <%= 'active' if controller.controller_name == 'project_type' %>">3</span>
+      Project Type
+    </li>
+    <li id="project-storage-access">
+      <span class="step-number <%= 'active' if controller.controller_name == 'storage_and_access' %>">4</span>
+      Storage and Access
+    </li>
+    <li id="project-additional-information">
+      <span class="step-number <%= 'active' if controller.controller_name.start_with?('additional_information') %>">5</span>
+      Additional Information <span class="sidebar-note">(Optional)</span>
       <ul>
-        <li id="project-funding-sources" class="<%= 'substep-active' if controller.controller_name == 'additional_information_grants_and_funding' %>">Funding Sources</li>
-        <li id="project-permissions" class="<%= 'substep-active' if controller.controller_name == 'additional_information_project_permissions' %>">Project Permissions</li>
-        <li id="project-related-resources" class="<%= 'substep-active' if controller.controller_name == 'additional_information_related_resources' %>">Related Resources</li>
+        <li id="project-funding-sources">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_grants_and_funding' %>"></span>
+          Funding Sources
+        </li>
+        <li id="project-permissions">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_project_permissions' %>"></span>
+          Project Permissions
+        </li>
+        <li id="project-related-resources">
+          <span class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_related_resources' %>"></span>
+          Related Resources
+        </li>
       </ul>
     </li>
-    <li id="project-review-submit" class="<%= 'active' if controller.controller_name == 'review_and_submit' %>"><span class="step-number">6</span>Review and Submit</li>
+    <li id="project-review-submit">
+      <span class="step-number <%= 'active' if controller.controller_name == 'review_and_submit' %>">6</span>
+      Review and Submit
+    </li>
   </ul>
 </div>
