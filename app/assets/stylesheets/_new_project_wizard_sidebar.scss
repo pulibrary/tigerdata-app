@@ -2,12 +2,41 @@
 @import "typography";
 @import "bootstrap";
 
+#new-project-wizard-sidebar li {
+  color: $black;
+  font-family: $libre-franklin;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.313rem;
+  list-style: none;
+}
+
+.step-number {
+  border-radius: 0.875rem;
+  background: $princeton-orange;
+  display: flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
 .active {
-  color: $red-dark;
-  font-weight: bold;
+  border-radius: 0.875rem;
+  border: 2px solid $princeton-orange-80;
+  background: $white;
+  display: flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625ren;
+  flex-shrink: 0;
 }
 
 .substep-active {
-  color: $black;
-  font-weight: bold;
+  
 }
