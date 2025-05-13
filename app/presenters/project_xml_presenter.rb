@@ -11,7 +11,7 @@ class ProjectXmlPresenter
   end
 
   def document
-    @document ||= build_xml_document
+    @document ||= root_node.document
   end
   alias to_xml document
 
@@ -32,10 +32,19 @@ class ProjectXmlPresenter
     end
 
     def root_node
-      # <resource resourceClass="Project" resourceID="10.34770/az09-0003" resourceIDType="DOI">
+      # An example root node:
+      # <resource resourceClass="Project"
+      # resourceID="10.34770/az09-0003"
+      # resourceIDType="DOI">
       @root_node ||= begin
-                       name = "resource"
-                       document.create_element(name)
+                       new_document = build_xml_document
+                       root_name = "resource"
+                       root = new_document.create_element(root_name)
+                       new_document.root = root
+                       root["resourceClass"] = "Project"
+                       root["resourceID"] = project_id
+                       root["resourceIDType"] = "DOI"
+                       root
                      end
     end
 end
