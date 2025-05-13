@@ -29,13 +29,24 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
 
     describe "<title>" do
       let(:title_node) { presenter.to_xml.root.at_xpath("title") }
-
       it "builds a <title> element containing the title of the project" do
         expect(title_node).to be_a(Nokogiri::XML::Element)
         expect(title_node.name).to eq("title")
         expect(title_node["inherited"]).to eq("false")
         expect(title_node["discoverable"]).to eq("true")
         expect(title_node["trackingLevel"]).to eq("ResourceRecord")
+      end
+    end
+
+    describe "<description>" do
+      let(:description_node) { presenter.to_xml.root.at_xpath("description") }
+
+      it "builds a <description> element containing the description of the project" do
+        expect(description_node).to be_a(Nokogiri::XML::Element)
+        expect(description_node.name).to eq("description")
+        expect(description_node["inherited"]).to eq("false")
+        expect(description_node["discoverable"]).to eq("true")
+        expect(description_node["trackingLevel"]).to eq("ResourceRecord")
       end
     end
   end
