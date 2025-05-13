@@ -68,9 +68,6 @@ gem "net-http-persistent"
 gem "sidekiq"
 
 gem "whenever", require: false
-group :staging, :production do
-  gem "ddtrace", require: "ddtrace/auto_instrument"
-end
 
 group :development, :test do
   gem "rspec-rails", "~> 6.0.0"
