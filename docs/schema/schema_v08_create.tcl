@@ -10,7 +10,7 @@
 
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
 # We are not using "tigerdata:project" so that we don't pollute the existing schema in our Mediaflux instances.
-set namespace "tigerdataX"
+set namespace "tigerdataY"
 set rootDoc "resourceDoc"
 set schemaVersion "v0.8"
 
@@ -24,17 +24,56 @@ asset.doc.namespace.update :create true :namespace $namespace
 # MediaFlux does not allow attributes as part of the document type, attributes are allowed as part
 # of elements.
 #
-asset.doc.type.update :create true :description "testing doc definition via a TCL script" :type $namespace:$rootDoc :definition < \
-    :element -name resource -type document < \
-        :attribute -name resourceClass -type string \
-        :attribute -name resourceID -type string \
-        :attribute -name resourceIDType -type string  \
-        :element -name projectID -type string -min-occurs 1 -max-occurs 1 < \
-            :attribute -name projectIDType -type string \
+asset.doc.type.update :create true :description "Document type to represent TigerData resources (projects and items)." \
+    :type $namespace:$rootDoc \
+    :definition \
+    < \
+        :element -name resource -type document < \
+            :description "Root element of any metadata record for TigerData resources (projects and items)." \
+            :attribute -name "resourceClass" -min-occurs "1" -type "enumeration" \
+            < \
+                :description "Specifies the class of a given resource: either Project or Item (required)" \
+                :restriction -base "enumeration" \
+                < \
+                :value "Project" \
+                :value "Item" \
+                > \
+            > \
+            :attribute -name resourceID -min-occurs "1" -type string \
+            < \
+               :description "The unique identifier for the resource within TigerData systems (required)" \
+            > \
+            :attribute -name resourceIDType -min-occurs "1" -type "enumeration" \
+            < \
+                :description "If the resourceClass is Project, then the resourceID should be a DOI; if Item, then the resourceID should be a Mediaflux AssetID (MFAID)" \
+                :restriction -base "enumeration" \
+                < \
+                :value "DOI" \
+                :value "MFAID" \
+                > \
+            > \
+            :element -name projectID -type string -min-occurs 1 -max-occurs 1 < \
+                :description "The universally unique identifier for the project (required)" \
+                :attribute -name projectIDType -type string \
+                < \
+                    :value -as "constant" "DOI" \
+                > \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as "default" "false" \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" "true" \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as "default" "ResourceRecord" \
+                > \
+            > \
+            :element -name title -type string -min-occurs 1 -max-occurs 1 \
+            :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
+                :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
+            > \
         > \
-        :element -name title -type string -min-occurs 1 -max-occurs 1 \
-        :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
-            :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
-        > \
-    > \
->
+    >
