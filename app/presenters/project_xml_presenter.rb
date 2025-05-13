@@ -31,19 +31,36 @@ class ProjectXmlPresenter
       Nokogiri::XML::Document.new(*xml_document_args)
     end
 
+    def title_node
+      # <title xml:lang="en"
+      # inherited="false"
+      # discoverable="true"
+      # trackingLevel="ResourceRecord">Test Item 1</title>
+      new_node = @document.create_element("title")
+      # TODO: Determine how Ruby models might affect these attributes
+      new_node["inherited"] = "false"
+      new_node["discoverable"] = "true"
+      new_node["trackingLevel"] = "ResourceRecord"
+      new_node.content = title
+
+      new_node
+    end
+
     def root_node
       # An example root node:
       # <resource resourceClass="Project"
       # resourceID="10.34770/az09-0003"
       # resourceIDType="DOI">
       @root_node ||= begin
-                       new_document = build_xml_document
+                       @document = build_xml_document
                        root_name = "resource"
-                       root = new_document.create_element(root_name)
-                       new_document.root = root
+                       root = @document.create_element(root_name)
+                       @document.root = root
                        root["resourceClass"] = "Project"
                        root["resourceID"] = project_id
                        root["resourceIDType"] = "DOI"
+
+                       root.add_child(title_node)
                        root
                      end
     end
