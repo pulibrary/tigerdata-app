@@ -27,14 +27,78 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       expect(presenter.to_xml.root["resourceIDType"]).to eq("DOI")
     end
 
-    describe "<title>" do
-      let(:title_node) { presenter.to_xml.root.at_xpath("title") }
+    describe "<projectID>" do
+      let(:node) { presenter.to_xml.root.at_xpath("projectID") }
+
       it "builds a <title> element containing the title of the project" do
-        expect(title_node).to be_a(Nokogiri::XML::Element)
-        expect(title_node.name).to eq("title")
-        expect(title_node["inherited"]).to eq("false")
-        expect(title_node["discoverable"]).to eq("true")
-        expect(title_node["trackingLevel"]).to eq("ResourceRecord")
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("projectID")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("ResourceRecord")
+        expect(node.content).to eq(project.metadata_model.project_id)
+      end
+    end
+
+    describe "<title>" do
+      let(:node) { presenter.to_xml.root.at_xpath("title") }
+
+      it "builds a <title> element containing the title of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("title")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("ResourceRecord")
+        expect(node.content).to eq(project.metadata_model.title)
+      end
+    end
+
+    describe "<description>" do
+      let(:node) { presenter.to_xml.root.at_xpath("description") }
+
+      it "builds a <title> element containing the title of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("description")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("ResourceRecord")
+        expect(node.content).to eq(project.metadata_model.description)
+      end
+    end
+
+    describe "<projectPurpose>" do
+      let(:node) { presenter.to_xml.root.at_xpath("projectPurpose") }
+
+      it "builds a <title> element containing the title of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("projectPurpose")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.content).to eq(project.metadata_model.project_purpose)
+      end
+    end
+
+    describe "<storagePerformance>" do
+      let(:node) { presenter.to_xml.root.at_xpath("storagePerformance") }
+
+      it "builds a <title> element containing the title of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("storagePerformance")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("false")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.children.length).to eq(1)
+      end
+
+      describe "<requestedValue>" do
+        let(:node) { presenter.to_xml.root.at_xpath("storagePerformance/requestedValue") }
+
+        it "builds a <title> element containing the title of the project" do
+          expect(node).to be_a(Nokogiri::XML::Element)
+          expect(node.name).to eq("requestedValue")
+          expect(node.content).to eq(project.metadata_model.storage_performance_expectations[:requested])
+        end
       end
     end
 
