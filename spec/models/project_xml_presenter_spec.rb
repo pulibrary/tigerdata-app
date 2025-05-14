@@ -14,23 +14,23 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     end
   end
 
-  describe "#to_xml" do
+  describe "#document" do
     it "generates a XML Document" do
-      expect(presenter.to_xml).to be_a(Nokogiri::XML::Document)
+      expect(presenter.document).to be_a(Nokogiri::XML::Document)
     end
 
     it "ensures that the root node is a <resource> element with the required attributes" do
-      expect(presenter.to_xml.root).to be_a(Nokogiri::XML::Element)
-      expect(presenter.to_xml.root.name).to eq("resource")
-      expect(presenter.to_xml.root["resourceClass"]).to eq("Project")
-      expect(presenter.to_xml.root["resourceID"]).to eq(project.metadata_model.project_id)
-      expect(presenter.to_xml.root["resourceIDType"]).to eq("DOI")
+      expect(presenter.document.root).to be_a(Nokogiri::XML::Element)
+      expect(presenter.document.root.name).to eq("resource")
+      expect(presenter.document.root["resourceClass"]).to eq("Project")
+      expect(presenter.document.root["resourceID"]).to eq(project.metadata_model.project_id)
+      expect(presenter.document.root["resourceIDType"]).to eq("DOI")
     end
 
     describe "<projectID>" do
-      let(:node) { presenter.to_xml.root.at_xpath("projectID") }
+      let(:node) { presenter.document.root.at_xpath("projectID") }
 
-      it "builds a <title> element containing the title of the project" do
+      it "builds a <projectID> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("projectID")
         expect(node["inherited"]).to eq("false")
@@ -40,8 +40,19 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
     end
 
+    describe "<departments>" do
+      let(:node) { presenter.document.root.at_xpath("departments") }
+
+      it "builds a <departments> element containing the title of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("departments")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("ResourceRecord")
+      end
+    end
+
     describe "<title>" do
-      let(:node) { presenter.to_xml.root.at_xpath("title") }
+      let(:node) { presenter.document.root.at_xpath("title") }
 
       it "builds a <title> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
@@ -54,9 +65,9 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     describe "<description>" do
-      let(:node) { presenter.to_xml.root.at_xpath("description") }
+      let(:node) { presenter.document.root.at_xpath("description") }
 
-      it "builds a <title> element containing the title of the project" do
+      it "builds a <description> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("description")
         expect(node["inherited"]).to eq("false")
@@ -67,9 +78,9 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     describe "<projectPurpose>" do
-      let(:node) { presenter.to_xml.root.at_xpath("projectPurpose") }
+      let(:node) { presenter.document.root.at_xpath("projectPurpose") }
 
-      it "builds a <title> element containing the title of the project" do
+      it "builds a <projectPurpose> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("projectPurpose")
         expect(node["inherited"]).to eq("false")
@@ -80,9 +91,9 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     describe "<storagePerformance>" do
-      let(:node) { presenter.to_xml.root.at_xpath("storagePerformance") }
+      let(:node) { presenter.document.root.at_xpath("storagePerformance") }
 
-      it "builds a <title> element containing the title of the project" do
+      it "builds a <storagePerformance> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("storagePerformance")
         expect(node["inherited"]).to eq("false")
@@ -92,9 +103,9 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
 
       describe "<requestedValue>" do
-        let(:node) { presenter.to_xml.root.at_xpath("storagePerformance/requestedValue") }
+        let(:node) { presenter.document.root.at_xpath("storagePerformance/requestedValue") }
 
-        it "builds a <title> element containing the title of the project" do
+        it "builds a <requestedValue> element containing the title of the project" do
           expect(node).to be_a(Nokogiri::XML::Element)
           expect(node.name).to eq("requestedValue")
           expect(node.content).to eq(project.metadata_model.storage_performance_expectations[:requested])
