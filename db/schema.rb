@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_30_182310) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_14_182831) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_30_182310) do
     t.string "project_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state", default: "draft"
+    t.string "data_sponsor"
+    t.string "data_manager"
+    t.string "departments"
+    t.string "description"
+    t.string "parent_folder"
+    t.string "project_folder"
+    t.string "project_id"
+    t.float "quota"
+    t.string "requested_by"
   end
 
   create_table "user_requests", force: :cascade do |t|
