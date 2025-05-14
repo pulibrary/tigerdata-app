@@ -1,141 +1,341 @@
 ---
-default: &default
-  # Each entry is named after the class which it is rendering into XML
-  # This maps to the Project Class
-  project:
-    resource: # This is the <resource> Element within the metadata schema
-      children: # Each entry within the "children" maps attributes into XML child elements
-        #<projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</projectID>
-        - project_id:
-            name: projectID
-            attributes:
-              inherited: "false"
-              discoverable: "true"
-              trackingLevel: ResourceRecord
-              projectIDType: DOI
-            content:
-              message: project_id
+# Each entry is named after the class which it is rendering into XML
+# This maps to the Project Class
+project:
 
-          #<dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
-          data_sponsor:
-            name: dataSponsor
-            attributes:
-              userID:
-                message: data_sponsor
-              userIDType: "NetID"
-              discoverable: "true"
-              inherited: "true"
-              trackingLevel: ResourceRecord
+  #<resource resourceClass="Project" resourceID="10.34770/az09-0004" resourceIDType="DOI">
+  resource:
+    name: resource
+    attributes:
+      resourceClass: Project
+      resourceID:
+        object_method: project_id
+      resourceIDType: DOI
+    children: # Each entry within the "children" maps attributes into XML child elements
 
-          # <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
-          data_manager:
-            name: dataManager
-            attributes:
-              userID:
-                message: data_manager
-              userIDType: "NetID"
-              discoverable: "true"
-              inherited: "true"
-              trackingLevel: ResourceRecord
+      #<projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</projectID>
+      - project_id:
+          name: projectID
+          attributes:
+            inherited: "false"
+            discoverable: "true"
+            trackingLevel: ResourceRecord
+            projectIDType: DOI
+          content:
+            object_method: project_id
 
-          #<departments discoverable="true" trackingLevel="ResourceRecord">
-          #  <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
-          #</departments>
-          departments:
-            name: departments
-            attributes:
-              discoverable: "true"
-              trackingLevel: ResourceRecord
-            children:
-              - department:
-                  multiple: true
-                  message: departments
-                  name: department
-                  attributes:
-                    departmentCode:
-                      message: department_codes
-                      args: []
-                    inherited: "true"
+        #<dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
+        data_sponsor:
+          name: dataSponsor
+          attributes:
+            userID:
+              object_method: data_sponsor
+            userIDType: "NetID"
+            discoverable: "true"
+            inherited: "true"
+            trackingLevel: ResourceRecord
 
-          #<projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
-          #  <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-2</projectDirectoryPath>
-          #  <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-2</projectDirectoryPath>
-          #  <requestedValue protocol="NFS">/tigerdata/abcd1/test-project-2</requestedValue>
-          #  <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-2</approvedValue>
-          #</projectDirectory>
-          project_directory:
-            name: projectDirectory
-            attributes:
-              approved: "true"
-              inherited: "false"
-              discoverable: "false"
-              trackingLevel: InternalUseOnly
-            children:
-              - project_directory_path:
-                  name: projectDirectoryPath
-                  attributes:
-                    protocol:
-                      message: project_directory_protocols
-                      args: []
-                    content:
-                      message: project_directory_paths
-                      args: []
+        # <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
+        data_manager:
+          name: dataManager
+          attributes:
+            userID:
+              object_method: data_manager
+            userIDType: "NetID"
+            discoverable: "true"
+            inherited: "true"
+            trackingLevel: ResourceRecord
 
-          title: # This is the <title> Element within the metadata schema
-            name: title
-            attributes:
-              inherited: "false"
-              discoverable: "true"
-              trackingLevel: ResourceRecord
-            content:
-              message: title
+        #<departments discoverable="true" trackingLevel="ResourceRecord">
+        #  <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
+        #</departments>
+        departments:
+          name: departments
+          attributes:
+            discoverable: "true"
+            trackingLevel: ResourceRecord
+          children:
+            - department:
+                name: department
+                multiple: true
+                object_method: departments
+                attributes:
+                  departmentCode:
+                    object_method: department_code
+                  inherited: "true"
+                content:
+                  object_method: department
 
-          description: # This is the <description> Element within the metadata schema
-            name: description
-            attributes:
-              inherited: "false"
-              discoverable: "true"
-              trackingLevel: ResourceRecord
-            content:
-              message: description
+        #<projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        #  <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-2</projectDirectoryPath>
+        #  <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-2</projectDirectoryPath>
+        #  <requestedValue protocol="NFS">/tigerdata/abcd1/test-project-2</requestedValue>
+        #  <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-2</approvedValue>
+        #</projectDirectory>
+        project_directory:
+          name: projectDirectory
+          attributes:
+            approved:
+              object_method: project_directory_approved?
+            inherited: "false"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+          children:
+            - project_directory_path:
+                name: projectDirectoryPath
+                multiple: true
+                object_method: project_directory
+                attributes:
+                  protocol:
+                    object_method: project_directory_protocol
+                content:
+                  object_method: project_directory_path
 
-          project_purpose: # This is the <projectPurpose> Element within the metadata schema
-            name: projectPurpose
-            attributes:
-              inherited: "false"
-              discoverable: "true"
-              trackingLevel: InternalUseOnly
-            content:
-              message: project_purpose
+        #<title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Example Title</title>
+        title: # This is the <title> Element within the metadata schema
+          name: title
+          attributes:
+            inherited: "false"
+            discoverable: "true"
+            trackingLevel: ResourceRecord
+          content:
+            object_method: title
 
-          storage_performance:
-            name: storagePerformance
-            attributes: # Each entry within the "attributes" maps attributes into XML attributes
-              inherited: "false"
-              discoverable: "false"
-              trackingLevel: InternalUseOnly
-              approved:
-                message: storage_performance_approved?
-            children:
-              - requested_value:
-                  name: requestedValue
-                  content:
-                    message: requested_storage_performance
+        #<description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is just an example description.</description>
+        description: # This is the <description> Element within the metadata schema
+          name: description
+          attributes:
+            inherited: "false"
+            discoverable: "true"
+            trackingLevel: ResourceRecord
+          content:
+            object_method: description
 
-      name: resource
-      attributes:
-        resourceClass: Project
-        resourceID:
-          message: project_id
-        resourceIDType: DOI
+        #    <storageCapacity approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        #        <storageCapacitySetting>
+        #            <size>2</size>
+        #            <unit>TB</unit>
+        #        </storageCapacitySetting>
+        #        <requestedValue>
+        #            <size>2</size>
+        #            <unit>TB</unit>
+        #        </requestedValue>
+        #        <approvedValue>
+        #            <size>2</size>
+        #            <unit>TB</unit>
+        #        </approvedValue>
+        #    </storageCapacity>
+        storage_capacity:
+          name: storageCapacity
+          attributes: # Each entry within the "attributes" maps attributes into XML attributes
+            approved:
+              object_method: storage_capacity_approved?
+            inherited: "false"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
 
-production:
-  <<: *default
-qa:
-  <<: *default
-staging:
-  <<: *default
-development:
-  <<: *default
-test:
-  <<: *default
+        #<projectVisibility inherited="true" discoverable="false" trackingLevel="InternalUseOnly">Restricted</projectVisibility>
+        project_visibility:
+          name: projectVisibility
+          attributes:
+            inherited: "true"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+          content:
+            object_method: project_visibility
+
+        #    <storagePerformance approved="true" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
+        #        <storagePerformanceSetting>Eco</storagePerformanceSetting>
+        #        <requestedValue>Eco</requestedValue>
+        #        <approvedValue>Eco</approvedValue>
+        #    </storagePerformance>
+        storage_performance:
+          name: storagePerformance
+          attributes: # Each entry within the "attributes" maps attributes into XML attributes
+            inherited: "false"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+            approved:
+              object_method: storage_performance_approved?
+          children:
+            - requested_value:
+                name: requestedValue
+                content:
+                  object_method: requested_storage
+
+        #<numberOfFiles inherited="false" discoverable="false" trackingLevel="InternalUseOnly">100k - 1mil</numberOfFiles>
+        number_of_files:
+          name: numberOfFiles
+          attributes:
+            inherited: "false"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+
+        #<hpc inherited="true" discoverable="false" trackingLevel="InternalUseOnly">No</hpc>
+        hpc:
+          name: hpc
+          attributes:
+            inherited: "true"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+          content:
+            object_method: hpc
+
+        #    <accessPoints inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+        #        <smbEnable approved="true">
+        #            <smbEnableSetting>true</smbEnableSetting>
+        #            <requestedValue>true</requestedValue>
+        #            <approvedValue>true</approvedValue>
+        #        </smbEnable>
+        #        <globusEnable approved="true">
+        #            <globusEnableSetting>false</globusEnableSetting>
+        #            <requestedValue>false</requestedValue>
+        #            <approvedValue>false</approvedValue>
+        #        </globusEnable>
+        #    </accessPoints>
+        access_points:
+          name: accessPoints
+          attributes:
+            inherited: "false"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+          children:
+            - smb_enable:
+                name: smbEnable
+                attributes:
+                  approved:
+                    object_method: smb_enable_approved?
+                children:
+                  - smb_enable_setting:
+                      name: smbEnableSetting
+                      content:
+                        object_method: smb_enable_approved?
+
+                  - requested_value:
+                      name: requestedValue
+                      content:
+                        object_method: smb_enable_approved?
+
+                  - approved_value:
+                      name: approvedValue
+                      content:
+                        object_method: smb_enable_approved?
+
+            - globus_enable:
+                name: globusEnable
+                attributes:
+                  approved:
+                    object_method: globus_enable_approved?
+                children:
+                  - globus_enable_setting:
+                      name: globusEnableSetting
+                      content:
+                        object_method: globus_enable_approved?
+
+                  - requested_value:
+                      name: requestedValue
+                      content:
+                        object_method: globus_enable_approved?
+
+                  - approved_value:
+                      name: approvedValue
+                      content:
+                        object_method: globus_enable_approved?
+
+        #<projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
+        project_purpose:
+          name: projectPurpose
+          attributes:
+            inherited: "true"
+            discoverable: "true"
+            trackingLevel: InternalUseOnly
+          content:
+            object_method: project_purpose
+
+        #<provisionalProject inherited="true" discoverable="true" trackingLevel="InternalUseOnly">false</provisionalProject>
+        provisional_project:
+          name: provisionalProject
+          attributes:
+            inherited: "true"
+            discoverable: "true"
+            trackingLevel: InternalUseOnly
+          content:
+            object_method: provisional_project?
+
+        #<projectResourceType resourceTypeGeneral="Project" inherited="false" discoverable="true" trackingLevel="ResourceRecord">TigerData Project</projectResourceType>
+        project_resource_type:
+          name: projectResourceType
+          attributes:
+            resourceTypeGeneral: Project
+            inherited: "false"
+            discoverable: "true"
+            trackingLevel: ResourceRecord
+          content:
+            object_method: project_resource_type
+
+        #<dataUseAgreement inherited="true" discoverable="false" trackingLevel="InternalUseOnly">false</dataUseAgreement>
+        data_use_agreement:
+          name: dataUseAgreement
+          attributes:
+            inherited: "true"
+            discoverable: "false"
+            trackingLevel: InternalUseOnly
+          content:
+            object_method: data_use_agreement?
+
+        #<projectProvenance>
+        #  <submission>
+        #    <requestedBy userID="abdc12" userIDType="NetID"></requestedBy>
+        #    <requestDateTime>2025-03-28T15:34:11-04:00</requestDateTime>
+        #    <approvedBy userID="xyz321" userIDType="NetID"></approvedBy>
+        #    <approvalDateTime>2025-03-28T16:15:25-04:00</approvalDateTime>
+        #  </submission>
+        #  <status>Active</status>
+        #  <schemaVersion>0.8</schemaVersion>
+        #</projectProvenance>
+        project_provenance:
+          name: projectProvenance
+          children:
+            - submission:
+                multiple: true
+                object_method: provenance_submissions
+                name: submission
+                children:
+                  - requested_by:
+                      name: requestedBy
+                      attributes:
+                        userID:
+                          object_method: requested_by
+                        userIDType: NetID
+                      content:
+                        object_method: requested_by
+
+                  - request_date_time:
+                      name: requestDateTime
+                      content:
+                        object_method: request_date_time
+
+                  - approved_by:
+                      name: approvedBy
+                      attributes:
+                        userID:
+                          object_method: approved_by
+                        userIDType: NetID
+                      content:
+                        object_method: approved_by
+
+                  - approval_date_time:
+                      name: approvalDateTime
+                      content:
+                        object_method: approval_date_time
+
+            - status:
+                name: status
+                content:
+                  object_method: status
+
+            - schema_version:
+                name: schemaVersion
+                content:
+                  object_method: schema_version
+
