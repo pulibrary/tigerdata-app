@@ -8,6 +8,15 @@
 #   java -Dmf.host=0.0.0.0 -Dmf.port=8888 -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -jar aterm.jar --app exec script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/schema_v08_create.tcl
 #
 
+# As of this version it defines the `resource` and the following project fields within the resource:
+#   * projectID
+#   * alternativeIDs
+#   * parentProject
+#   * title
+#   * dataSponsor
+#   * projectProvenance (incomplete)
+#
+
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
 # We are not using "tigerdata:project" so that we don't pollute the existing schema in our Mediaflux instances.
 set namespace "tigerdataX"
@@ -174,8 +183,11 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                         :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                     > \
                 > \
+                :element -name "nameDate" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The date at which the name metadata was recorded." \
+                    :instructions "Applies a pattern aligned with RKMS-ISO8601 https://www.ukoln.ac.uk/metadata/dcmi/collection-RKMS-ISO8601" \
+                > \
             > \
         > \
     >
-
-# TODO: add nameDate to dataSponsor
