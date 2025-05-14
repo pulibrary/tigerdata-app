@@ -10,7 +10,7 @@
 
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
 # We are not using "tigerdata:project" so that we don't pollute the existing schema in our Mediaflux instances.
-set namespace "tigerdataY"
+set namespace "tigerdataX"
 set rootDoc "resourceDoc"
 set schemaVersion "v0.8"
 
@@ -54,6 +54,25 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             > \
             :element -name projectID -type string -min-occurs 1 -max-occurs 1 < \
                 :description "The universally unique identifier for the project (required)" \
+                :attribute -name projectIDType -type string \
+                < \
+                    :value -as "constant" "DOI" \
+                > \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as "default" "false" \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" "true" \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as "default" "ResourceRecord" \
+                > \
+            > \
+            :element -name parentProject -type string -min-occurs 0 -max-occurs 1 < \
+                :description "The ID of the project to which the resource belongs directly" \
                 :attribute -name projectIDType -type string \
                 < \
                     :value -as "constant" "DOI" \
