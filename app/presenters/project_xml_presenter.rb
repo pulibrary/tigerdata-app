@@ -20,7 +20,7 @@ class ProjectXmlPresenter
     def build
       return @node unless @node.nil?
 
-      document
+      @node = document.root
     end
 
     def initialize(document: nil)
@@ -31,42 +31,58 @@ class ProjectXmlPresenter
   end
 
   class XmlElementBuilder < XmlNodeBuilder
-    attr_reader :name, :attributes, :content
+    attr_reader :presenter, :name, :attributes, :content
 
     def build
       super
 
       element = document.create_element(name)
-      attributes.each do |key, value|
+      attributes.each do |key, entry|
+        value = entry
+        if entry.is_a?(Hash) && entry.key?(:message)
+          message = entry[:message]
+          method_args = []
+          if entry.key?(:args)
+            method_args = entry[:args] || []
+            method_args += @message_args
+          end
+          value = presenter.send(message, *method_args)
+        end
+
         element[key] = value
       end
+
+      if content.is_a?(Hash) && content.key?(:message)
+        entry = content
+        message = entry[:message]
+        method_args = []
+        if entry.key?(:args)
+          method_args = entry[:args] || []
+          method_args += @message_args
+        end
+        content = presenter.send(message, *method_args)
+      end
+
       element.content = content
 
       @node = element
     end
 
-    def initialize(name:, attributes: {}, content: nil, **kwargs)
+    def initialize(presenter:, name:, attributes: {}, content: nil, index: nil, **kwargs)
       super(**kwargs)
 
+      @presenter = presenter
       @name = name
       @attributes = attributes
       @content = content
+
+      @message_args = []
+      @message_args << index unless index.nil?
     end
   end
 
   class XmlTreeBuilder < XmlNodeBuilder
     attr_reader :parent, :children
-
-    def initialize(parent:, children:, **kwargs)
-      @parent = parent.build
-      super(document: @parent.document, **kwargs)
-      document.root = @parent
-
-      @children = children
-      @children.each do |child|
-        child.document = document
-      end
-    end
 
     def build
       super
@@ -75,14 +91,62 @@ class ProjectXmlPresenter
       nodes.each do |child|
         parent.add_child(child)
       end
+      document.root = parent
 
-      @node = parent
+      @node = document.root
+    end
+
+    def initialize(children: [], **kwargs)
+      parent_builder = XmlElementBuilder.new(**kwargs)
+      @parent = parent_builder.build
+
+      super(document: @parent.document)
+
+      instances = [:default]
+      builders = children.map do |entry|
+        entry.values.map do |child_args|
+          multiple = child_args[:multiple] || false
+
+          if multiple
+            message = child_args[:message]
+
+            if child_args.key?(:args)
+              method_args = entry[:args] || []
+              instances = parent_builder.presenter.send(message, *method_args)
+            else
+              instances = parent_builder.presenter.send(message)
+            end
+          end
+
+          instances.each_with_index.map do |_instance, i|
+            child_args[:index] = i
+            child_args[:presenter] = parent_builder.presenter
+            child_args[:document] = document
+            child_args.delete(:multiple)
+            child_args.delete(:message)
+            child_args.delete(:args)
+            self.class.new(**child_args)
+          end
+        end
+      end
+
+      @children = builders.flatten
     end
   end
 
   # Delegate methods to the project and project_metadata objects
   delegate "id", "in_mediaflux?", "mediaflux_id", "pending?", "status", "title", to: :project
-  delegate "description", "project_id", "storage_performance_expectations", "project_purpose", to: :project_metadata
+  delegate(
+    "data_manager", "data_sponsor",
+    "data_user_read_only", "data_user_read_write",
+    "departments", "description",
+    "project_directory", "project_id", "project_purpose",
+    "storage_capacity", "storage_performance_expectations",
+    "created_by", "created_on",
+    "updated_by", "updated_on",
+    to: :project_metadata
+  )
+  # :approval_note, :schema_version, :submission
 
   attr_reader :project, :project_metadata
 
@@ -92,154 +156,49 @@ class ProjectXmlPresenter
   end
 
   def document
-    @document ||= xml_builder.build.document
+    @document ||= build.document
   end
-  alias to_xml document
+
+  def project_directory_paths(index)
+    project_directory[index]
+  end
+
+  def project_directory_protocols(index)
+    project_directory[index]
+  end
 
   private
 
-    #  delegate "mediaflux_id", "status",  to: :project
-    #  delegate "storage_performance_expectations", to: :project_metadata
+    def department_codes(index)
+      departments[index]
+    end
 
-    def storage_performance_requested_content
+    def requested_storage_performance
       storage_performance_expectations[:requested]
     end
 
-    def storage_performance_requested_node
-      XmlElementBuilder.new(
-        document: storage_performance_node.document,
-        name: "requestedValue",
-        content: storage_performance_requested_content
-      )
+    def xml_builder_config
+      Rails.configuration.xml_builder
     end
 
-    def storage_performance_children
-      [
-        storage_performance_requested_node
-      ]
+    def presenter_builder_config
+      xml_builder_config[:project]
     end
 
-    def storage_performance_node
-      XmlElementBuilder.new(
-        name: "storagePerformance",
-        attributes: {
-          "approved" => "true",
-          "inherited" => "false",
-          "discoverable" => "false",
-          "trackingLevel" => "InternalUseOnly"
-        }
-      )
-    end
-
-    def storage_performance_tree
-      @storage_performance_tree ||= XmlTreeBuilder.new(
-        document: root_node.document,
-        parent: storage_performance_node,
-        children: storage_performance_children
-      )
-      # <storagePerformance approved="true" inherited="true" discoverable="false" trackingLevel="InternalUseOnly">
-      #        <storagePerformanceSetting>Eco</storagePerformanceSetting>
-      #        <requestedValue>Eco</requestedValue>
-      #        <approvedValue>Eco</approvedValue>
-      #    </storagePerformance>
-    end
-
-    def project_purpose_node
-      XmlElementBuilder.new(
-        document: root_node.document,
-        name: "projectPurpose",
-        attributes: {
-          "inherited" => "false",
-          "discoverable" => "true",
-          "trackingLevel" => "InternalUseOnly"
-        },
-        content: project_purpose
-      )
-    end
-
-    def description_node
-      # <description xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">This is just an example description.</description>
-      XmlElementBuilder.new(
-        document: root_node.document,
-        name: "description",
-        attributes: {
-          "inherited" => "false",
-          "discoverable" => "true",
-          "trackingLevel" => "ResourceRecord"
-        },
-        content: description
-      )
-    end
-
-    def title_node
-      # <title xml:lang="en" inherited="false" discoverable="true" trackingLevel="ResourceRecord">Example Title</title>
-      XmlElementBuilder.new(
-        document: root_node.document,
-        name: "title",
-        attributes: {
-          "inherited" => "false",
-          "discoverable" => "true",
-          "trackingLevel" => "ResourceRecord"
-        },
-        content: title
-      )
-    end
-
-    def project_id_node
-      # <projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</projectID>
-      @project_id_node ||= XmlElementBuilder.new(
-        document: root_node.document,
-        name: "projectID",
-        attributes: {
-          "projectIDType" => "DOI",
-          "inherited" => "false",
-          "discoverable" => "true",
-          "trackingLevel" => "ResourceRecord"
-        },
-        content: project_id
-      )
-    end
-
-    def child_nodes
-      [
-        storage_performance_tree,
-        project_purpose_node,
-        description_node,
-        title_node,
-        project_id_node
-      ]
-    end
-
-    def root_node
-      @root_node ||= XmlElementBuilder.new(
-        name: "resource",
-        attributes: {
-          "resourceClass" => "Project",
-          "resourceID" => project_id,
-          "resourceIDType" => "DOI"
-        }
-      )
+    def find_builder_args(key)
+      values = presenter_builder_config[key]
+      values[:presenter] = self
+      values
     end
 
     def xml_builder
-      @xml_builder ||= XmlTreeBuilder.new(
-        parent: root_node,
-        children: child_nodes
-      )
-    end
-    ##
-
-    def xml_version
-      "1.0"
+      @xml_builder ||= begin
+                         builder_args = find_builder_args(:resource)
+                         XmlTreeBuilder.new(**builder_args)
+                       end
     end
 
-    def xml_document_args
-      [
-        xml_version
-      ]
-    end
-
-    def build_xml_document
-      Nokogiri::XML::Document.new(*xml_document_args)
+    def build
+      xml_builder.build
     end
 end
