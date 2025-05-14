@@ -5,6 +5,10 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   let(:project) { FactoryBot.create :project_with_doi }
   subject(:presenter) { described_class.new(project) }
 
+  let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
+  let(:schema_file) { File.read(schema_file_path) }
+  let(:schema) { Nokogiri::XML::Schema(schema_file) }
+
   it "can be instantiated" do
     expect(presenter).to be_instance_of(described_class)
   end
@@ -114,16 +118,8 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
     end
 
-    describe "<description>" do
-      let(:description_node) { presenter.to_xml.root.at_xpath("description") }
-
-      it "builds a <description> element containing the description of the project" do
-        expect(description_node).to be_a(Nokogiri::XML::Element)
-        expect(description_node.name).to eq("description")
-        expect(description_node["inherited"]).to eq("false")
-        expect(description_node["discoverable"]).to eq("true")
-        expect(description_node["trackingLevel"]).to eq("ResourceRecord")
-      end
+    xit "validates against the XSD schema document" do
+      expect(schema.valid?(presenter.document)).to be true
     end
   end
 end

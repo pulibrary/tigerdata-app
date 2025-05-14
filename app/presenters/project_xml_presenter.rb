@@ -163,12 +163,12 @@ class ProjectXmlPresenter
     false
   end
 
-  def project_directory_paths(index)
-    project_directory[index]
+  def project_directory_paths(_index)
+    project_directory
   end
 
-  def project_directory_protocols(index)
-    project_directory[index]
+  def project_directory_protocols(_index)
+    project_directory
   end
 
   private

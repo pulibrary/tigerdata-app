@@ -1,124 +1,127 @@
 ---
-
 default: &default
   # Each entry is named after the class which it is rendering into XML
   # This maps to the Project Class
   project:
     resource: # This is the <resource> Element within the metadata schema
       children: # Each entry within the "children" maps attributes into XML child elements
-      - storage_performance:
-          name: storagePerformance
-          attributes: # Each entry within the "attributes" maps attributes into XML attributes
-            inherited: 'false'
-            discoverable: 'false'
-            trackingLevel: InternalUseOnly
-            approved:
-              message: storage_performance_approved?
-          children:
-          - requested_value:
-              name: requestedValue
-              content:
-                message: requested_storage_performance
-        project_purpose: # This is the <projectPurpose> Element within the metadata schema
-          name: projectPurpose
-          attributes:
-            inherited: 'false'
-            discoverable: 'true'
-            trackingLevel: InternalUseOnly
-          content:
-            message: project_purpose
-        description: # This is the <description> Element within the metadata schema
-          name: description
-          attributes:
-            inherited: 'false'
-            discoverable: 'true'
-            trackingLevel: ResourceRecord
-          content:
-            message: description
-        title: # This is the <title> Element within the metadata schema
-          name: title
-          attributes:
-            inherited: 'false'
-            discoverable: 'true'
-            trackingLevel: ResourceRecord
-          content:
-            message: title
-
-        #<projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
-        #  <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-2</projectDirectoryPath>
-        #  <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-2</projectDirectoryPath>
-        #  <requestedValue protocol="NFS">/tigerdata/abcd1/test-project-2</requestedValue>
-        #  <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-2</approvedValue>
-        #</projectDirectory>
-        project_directory:
-          name: projectDirectory
-          attributes:
-            approved: 'true'
-            inherited: 'false'
-            discoverable: 'false'
-            trackingLevel: InternalUseOnly
-          children:
-          - project_directory_path:
-              name: projectDirectoryPath
-              attributes:
-                protocol:
-                  message: project_directory_protocols
-                  args: []
-                content:
-                  message: project_directory_paths
-                  args: []
-
-        #<departments discoverable="true" trackingLevel="ResourceRecord">
-        #  <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
-        #</departments>
-        departments:
-          name: departments
-          attributes:
-            discoverable: 'true'
-            trackingLevel: ResourceRecord
-          children:
-          - department:
-              multiple: true
-              message: departments
-              name: department
-              attributes:
-                departmentCode:
-                  message: department_codes
-                  args: []
-                inherited: 'true'
-
-        # <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
-        data_manager:
-          name: dataManager
-          attributes:
-            userID:
-              message: data_manager
-            userIDType: "NetID"
-            discoverable: 'true'
-            inherited: 'true'
-            trackingLevel: ResourceRecord
-
-        #<dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
-        data_sponsor:
-          name: dataSponsor
-          attributes:
-            userID:
-              message: data_sponsor
-            userIDType: "NetID"
-            discoverable: 'true'
-            inherited: 'true'
-            trackingLevel: ResourceRecord
-
         #<projectID projectIDType="DOI" inherited="false" discoverable="true" trackingLevel="ResourceRecord">10.34770/az09-0004</projectID>
-        project_id:
-          name: projectID
-          attributes:
-            inherited: 'false'
-            discoverable: 'true'
-            trackingLevel: ResourceRecord
-            projectIDType: DOI
-          content:
-            message: project_id
+        - project_id:
+            name: projectID
+            attributes:
+              inherited: "false"
+              discoverable: "true"
+              trackingLevel: ResourceRecord
+              projectIDType: DOI
+            content:
+              message: project_id
+
+          #<dataSponsor userID="abcd1" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataSponsor>
+          data_sponsor:
+            name: dataSponsor
+            attributes:
+              userID:
+                message: data_sponsor
+              userIDType: "NetID"
+              discoverable: "true"
+              inherited: "true"
+              trackingLevel: ResourceRecord
+
+          # <dataManager userID="def2" userIDType="NetID" discoverable="true" inherited="true" trackingLevel="ResourceRecord"></dataManager>
+          data_manager:
+            name: dataManager
+            attributes:
+              userID:
+                message: data_manager
+              userIDType: "NetID"
+              discoverable: "true"
+              inherited: "true"
+              trackingLevel: ResourceRecord
+
+          #<departments discoverable="true" trackingLevel="ResourceRecord">
+          #  <department departmentCode="23500" inherited="true">CHM-Chemistry</department>
+          #</departments>
+          departments:
+            name: departments
+            attributes:
+              discoverable: "true"
+              trackingLevel: ResourceRecord
+            children:
+              - department:
+                  multiple: true
+                  message: departments
+                  name: department
+                  attributes:
+                    departmentCode:
+                      message: department_codes
+                      args: []
+                    inherited: "true"
+
+          #<projectDirectory approved="true" inherited="false" discoverable="false" trackingLevel="InternalUseOnly">
+          #  <projectDirectoryPath protocol="NFS">/tigerdata/abcd1/test-project-2</projectDirectoryPath>
+          #  <projectDirectoryPath protocol="SMB">\\tigerdata-smb\abcd1\test-project-2</projectDirectoryPath>
+          #  <requestedValue protocol="NFS">/tigerdata/abcd1/test-project-2</requestedValue>
+          #  <approvedValue protocol="NFS">/tigerdata/abcd1/test-project-2</approvedValue>
+          #</projectDirectory>
+          project_directory:
+            name: projectDirectory
+            attributes:
+              approved: "true"
+              inherited: "false"
+              discoverable: "false"
+              trackingLevel: InternalUseOnly
+            children:
+              - project_directory_path:
+                  name: projectDirectoryPath
+                  attributes:
+                    protocol:
+                      message: project_directory_protocols
+                      args: []
+                    content:
+                      message: project_directory_paths
+                      args: []
+
+          title: # This is the <title> Element within the metadata schema
+            name: title
+            attributes:
+              inherited: "false"
+              discoverable: "true"
+              trackingLevel: ResourceRecord
+            content:
+              message: title
+
+          description: # This is the <description> Element within the metadata schema
+            name: description
+            attributes:
+              inherited: "false"
+              discoverable: "true"
+              trackingLevel: ResourceRecord
+            content:
+              message: description
+
+          project_purpose: # This is the <projectPurpose> Element within the metadata schema
+            name: projectPurpose
+            attributes:
+              inherited: "false"
+              discoverable: "true"
+              trackingLevel: InternalUseOnly
+            content:
+              message: project_purpose
+
+          storage_performance:
+            name: storagePerformance
+            attributes: # Each entry within the "attributes" maps attributes into XML attributes
+              inherited: "false"
+              discoverable: "false"
+              trackingLevel: InternalUseOnly
+              approved:
+                message: storage_performance_approved?
+            children:
+              - requested_value:
+                  name: requestedValue
+                  content:
+                    message: requested_storage_performance
+
       name: resource
       attributes:
         resourceClass: Project
