@@ -5,7 +5,7 @@
         <div data-state="Expanded" class="expanded-state">
             <div class="step-container">
                 <div data-state="Completed" data-type="Step" class="step">
-                    <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('project_information') ? 'step-number-current' : 'step-number-completed' %>">
                         <div class="step-text">1</div>
                     </div>
                     <div class="step-text-container">
@@ -20,32 +20,32 @@
                 <div class="connector-line"></div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'project_information' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Basic Details</div>
+                        <div class="<%= controller.controller_name == 'project_information' ? 'substep-text' : 'substep-text-current' %>">Basic Details</div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Categories (Optional)</div>
+                        <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-text' : 'substep-text-current' %>">Categories (Optional)</div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Dates (Optional)</div>
+                        <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-text' : 'substep-text-current' %>">Dates (Optional)</div>
                     </div>
                 </div>
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'roles_and_people' ? 'step-number-current' : 'step-number-completed' %>">
                 <div class="step-text">2</div>
             </div>
             <div class="step-text-container">
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'project_type' ? 'step-number-current' : 'step-number-completed' %>">
                 <div class="step-text">3</div>
             </div>
             <div class="step-text-container">
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'storage_and_access' ? 'step-number-current' : 'step-number-completed' %>">
                 <div class="step-text">4</div>
             </div>
             <div class="step-text-container">
@@ -71,7 +71,7 @@
         <div data-state="Expanded" class="expanded-state">
             <div class="step-container">
                 <div data-state="Completed" data-type="Step" class="step">
-                    <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('additional_information') ? 'step-number-current' : 'step-number-completed' %>">
                         <div class="step-text">5</div>
                     </div>
                     <div class="step-text-container">
@@ -86,32 +86,32 @@
                 <div class="connector-line"></div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Funding Sources</div>
+                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-text' : 'substep-text-current' %>">Funding Sources</div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Project Permissions</div>
+                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-text' : 'substep-text-current' %>">Project Permissions</div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="substep-indicator-completed"></div>
+                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="substep-text">Related Resources</div>
+                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-text' : 'substep-text-current' %>">Related Resources</div>
                     </div>
                 </div>
             </div>
         </div>
         <div data-state="Active" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Active" class="step-number-completed">
+            <div data-size="Normal" data-state="Active" class="<%= controller.controller_name == 'review_and_submit' ? 'step-number-current' : 'step-number-completed' %>">
                 <div class="step-text">6</div>
             </div>
             <div class="step-text-container">
