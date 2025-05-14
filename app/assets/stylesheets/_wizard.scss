@@ -8,13 +8,165 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2.5rem;
-  color: red;
   nav {
     display: flex;
-    width: 75rem;
     height: 1.8125rem;
     padding: 0.25rem 0rem;
     align-items: center;
     gap: 0.625rem;
+  }
+  .heading-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+
+    .heading-text {
+      color: $gray-100;
+
+      /* Heading 1 */
+      font-family: "Libre Franklin";
+      font-size: 2.5rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 3rem; /* 120% */
+    }
+
+    .deco-line {
+      width: 6.25rem;
+      height: 0.5rem;
+      background: $princeton-orange;
+    }
+  }
+  .main-frame {
+    display: flex;
+    height: 45.6875rem;
+    align-items: flex-start;
+    gap: 1.25rem;
+    align-self: stretch;
+
+    .navigation-panel {
+      display: flex;
+      width: 17.8125rem;
+      padding: 1.5rem 1.25rem;
+      justify-content: center;
+      align-items: flex-start;
+      border-radius: 0.75rem;
+      background: $gray-extra-light;
+
+      .frame {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        flex: 1 0 0;
+
+        .step {
+          display: flex;
+          height: 1.75rem;
+          align-items: center;
+          gap: 0.75rem;
+          align-self: stretch;
+
+          .step-icon {
+            display: flex;
+            width: 1.75rem;
+            height: 1.75rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.625rem;
+            border-radius: 0.875rem;
+            background: $gray-20;
+            .step-number {
+              color: $gray-100;
+
+              /* Body XS Bold */
+              font-family: "Libre Franklin";
+              font-size: 0.875rem;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 1.3125rem; /* 150% */
+            }
+          }
+
+          .step-info {
+            display: flex;
+            align-items: flex-start;
+
+            .step-name {
+              color: $gray-60;
+
+              /* Body XS Bold */
+              font-family: "Libre Franklin";
+              font-size: 0.875rem;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 1.3125rem; /* 150% */
+            }
+          }
+        }
+      }
+    }
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      align-self: stretch;
+      flex-grow: 1;
+
+      .scrollable-frame {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+        flex: 1 0 0;
+        align-self: stretch;
+
+        .form-header {
+          display: flex;
+          padding: 0.75rem 0rem 1.5rem 0rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+          align-self: stretch;
+          border-bottom: 1px solid $gray-20;
+          background: $white;
+        }
+        .form-frame {
+          display: flex;
+          height: 33.1875rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2.5rem;
+          align-self: stretch;
+          background: $gray-20;
+        }
+      }
+
+      .button-frame {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+
+        .button {
+          display: flex;
+          padding: 0.5rem 1.25rem;
+          justify-content: center;
+          align-items: center;
+          gap: 0.25rem;
+          border-radius: 0.25rem;
+          border: 1px solid $gray-60;
+          background: $white;
+        }
+
+        .right-frame {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+      }
+    }
   }
 }

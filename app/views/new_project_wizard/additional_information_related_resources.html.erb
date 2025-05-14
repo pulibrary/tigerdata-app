@@ -1,9 +1,16 @@
-<h2>Additional Information: Related Resources</h2>
-<%= form_with(url: new_project_additional_information_related_resources_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
-  <%= @request_model.id %>
-  <div>
-    <%= form.label :project_title %>
-    <%= form.text_field :project_title %>
+<% content_for :title, "Additional Information: Related Resources" %>
+<%= render partial: '/new_project_wizard/wizard_navigation' %>
+<%= form_with(url: new_project_additional_information_related_resources_save_path(@request_model), model: @request_model, 
+              action: :save, method: :put, class: "form-panel") do |form| %>
+  <div class="scrollable-frame">
+    <div class="form-header">
+    </div>
+    <div class="form-frame">
+      <%= form.label :project_title %>
+      <%= form.text_field :project_title %>
+    </div>
   </div>
-  <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
-<% end %>
+  <div class="button-frame">
+      <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
+  </div>
+<% end %>  

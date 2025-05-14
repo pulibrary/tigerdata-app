@@ -8,10 +8,19 @@
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/emulator' %>
     <%= render partial: 'shared/alert' %>
-    wizard
-    <%= render partial: 'shared/breadcrumbs' %>
 
-    <%= yield %>
+    <div class="wizard">
+      <%= render partial: 'shared/breadcrumbs' %>
+      <div class="heading-frame">
+        <div class="heading-text">
+          <%= yield :title %>
+        </div>
+        <div class="deco-line"></div>
+      </div>
+      <div class="main-frame">
+        <%= yield %>
+      </div>
+    </div>
 
     <div class="welcome-footer"><%= render partial: 'shared/footer' %></div>
   </body>
