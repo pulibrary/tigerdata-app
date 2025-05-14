@@ -96,6 +96,7 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       it "builds a <storagePerformance> element containing the title of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("storagePerformance")
+        expect(node["approved"]).to eq("false")
         expect(node["inherited"]).to eq("false")
         expect(node["discoverable"]).to eq("false")
         expect(node["trackingLevel"]).to eq("InternalUseOnly")

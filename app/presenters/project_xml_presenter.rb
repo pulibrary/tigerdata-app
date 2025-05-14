@@ -159,6 +159,10 @@ class ProjectXmlPresenter
     @document ||= build.document
   end
 
+  def storage_performance_approved?
+    false
+  end
+
   def project_directory_paths(index)
     project_directory[index]
   end
