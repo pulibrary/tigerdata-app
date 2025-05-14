@@ -112,5 +112,46 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     > \
                 > \
             > \
+            :element -name "dataSponsor" -type "document" -max-occurs "1" \
+            < \
+                :description "The person who takes primary responsibility for the project" \
+                :instructions "Does not apply to Items" \
+                :attribute -name userID -min-occurs "1" -type string \
+                < \
+                    :description "Specifies the (locally) unique user ID" \
+                    :instructions "If a value is given for the sub-element netID, then it should match the value given for userID" \
+                > \
+                :attribute -name userIDType -min-occurs "1" -type string \
+                < \
+                    :description "Makes explicit that Princeton NetIDs are always used as the identifier for the userID attribute" \
+                    :value -as "constant" "NetID" \
+                > \
+                :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
+                > \
+                :element -name "PUID" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The Princeton University ID (aka Student ID, Employee ID, EMPLID, Princeton ID, or PUID) is a unique nine digit identifier assigned to an individual who has an official affiliation with the University." \
+                > \
+                :element -name "orcid" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The ORCID ID URL for the person in a given role, if available and if verified as valid against the ORCID API upon entry." \
+                > \
+                :element -name "fullName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The full name of the person in a given role, verified in the format family-comma-given and matching the corresponding given and family name fields, if available." \
+                > \
+                :element -name "givenName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The given name(s) of the person in a given role. If the person has multiple given names, then all should be included in this field, along with any suffixes." \
+                > \
+                :element -name "familyName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The family name(s) of the person in a given role. If the person has multiple family names, then all should be included in this field." \
+                > \
+            > \
         > \
     >
+
+# TODO: add nameDate and alternativeNameIdentifier to dataSponsor
