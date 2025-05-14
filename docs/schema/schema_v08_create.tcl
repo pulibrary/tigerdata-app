@@ -14,7 +14,8 @@
 #   * parentProject
 #   * title
 #   * dataSponsor
-#   * projectProvenance (incomplete)
+#   * dataManager
+#   * projectProvenance (incomplete, only include schemaVersion)
 #
 
 # Define where our document type will be located (e.g. tigerdataX:resourceDoc)
@@ -124,6 +125,74 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             :element -name "dataSponsor" -type "document" -max-occurs "1" \
             < \
                 :description "The person who takes primary responsibility for the project" \
+                :instructions "Does not apply to Items" \
+                :attribute -name userID -min-occurs "1" -type string \
+                < \
+                    :description "Specifies the (locally) unique user ID" \
+                    :instructions "If a value is given for the sub-element netID, then it should match the value given for userID" \
+                > \
+                :attribute -name userIDType -min-occurs "1" -type string \
+                < \
+                    :description "Makes explicit that Princeton NetIDs are always used as the identifier for the userID attribute" \
+                    :value -as "constant" "NetID" \
+                > \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as "default" "false" \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" "true" \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as "default" "ResourceRecord" \
+                > \
+                :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
+                > \
+                :element -name "PUID" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The Princeton University ID (aka Student ID, Employee ID, EMPLID, Princeton ID, or PUID) is a unique nine digit identifier assigned to an individual who has an official affiliation with the University." \
+                > \
+                :element -name "orcid" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The ORCID ID URL for the person in a given role, if available and if verified as valid against the ORCID API upon entry." \
+                > \
+                :element -name "fullName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The full name of the person in a given role, verified in the format family-comma-given and matching the corresponding given and family name fields, if available." \
+                > \
+                :element -name "givenName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The given name(s) of the person in a given role. If the person has multiple given names, then all should be included in this field, along with any suffixes." \
+                > \
+                :element -name "familyName" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The family name(s) of the person in a given role. If the person has multiple family names, then all should be included in this field." \
+                > \
+                :element -name "alternativeNameIdentifier" -type "string" -min-occurs "0" -max-occurs "100" \
+                < \
+                    :description "Records alternative (non-ORCID) identifier(s) for the person in a given role." \
+                    :attribute -name nameIdentifierScheme -min-occurs "1" -type string \
+                    < \
+                        :description "The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
+                    > \
+                    :attribute -name schemeURI -min-occurs "1" -type string \
+                    < \
+                        :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
+                    > \
+                > \
+                :element -name "nameDate" -type "string" -min-occurs "0" -max-occurs "1" \
+                < \
+                    :description "The date at which the name metadata was recorded." \
+                    :instructions "Applies a pattern aligned with RKMS-ISO8601 https://www.ukoln.ac.uk/metadata/dcmi/collection-RKMS-ISO8601" \
+                > \
+            > \
+            :element -name "dataManager" -type "document" -max-occurs "1" \
+            < \
+                :description "The person who manages the day-to-day activities for the project" \
                 :instructions "Does not apply to Items" \
                 :attribute -name userID -min-occurs "1" -type string \
                 < \
