@@ -5,6 +5,10 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   let(:project) { FactoryBot.create :project_with_doi }
   subject(:presenter) { described_class.new(project) }
 
+  let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
+  let(:schema_file) { File.read(schema_file_path) }
+  let(:schema) { Nokogiri::XML::Schema(schema_file) }
+
   it "can be instantiated" do
     expect(presenter).to be_instance_of(described_class)
   end
@@ -112,6 +116,10 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
           expect(node.content).to eq(project.metadata_model.storage_performance_expectations[:requested])
         end
       end
+    end
+
+    xit "validates against the XSD schema document" do
+      expect(schema.valid?(presenter.document)).to be true
     end
   end
 end
