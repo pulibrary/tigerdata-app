@@ -1,22 +1,25 @@
 ---
 
 default: &default
+  # Each entry is named after the class which it is rendering into XML
+  # This maps to the Project Class
   project:
-    resource:
-      children:
+    resource: # This is the <resource> Element within the metadata schema
+      children: # Each entry within the "children" maps attributes into XML child elements
       - storage_performance:
           name: storagePerformance
-          attributes:
-            approved: 'true'
+          attributes: # Each entry within the "attributes" maps attributes into XML attributes
             inherited: 'false'
             discoverable: 'false'
             trackingLevel: InternalUseOnly
+            approved:
+              message: storage_performance_approved?
           children:
           - requested_value:
               name: requestedValue
               content:
                 message: requested_storage_performance
-        project_purpose:
+        project_purpose: # This is the <projectPurpose> Element within the metadata schema
           name: projectPurpose
           attributes:
             inherited: 'false'
@@ -24,7 +27,7 @@ default: &default
             trackingLevel: InternalUseOnly
           content:
             message: project_purpose
-        description:
+        description: # This is the <description> Element within the metadata schema
           name: description
           attributes:
             inherited: 'false'
@@ -32,7 +35,7 @@ default: &default
             trackingLevel: ResourceRecord
           content:
             message: description
-        title:
+        title: # This is the <title> Element within the metadata schema
           name: title
           attributes:
             inherited: 'false'
