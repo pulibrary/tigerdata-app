@@ -1,84 +1,123 @@
+<div class="sidebar-width"> 
+
 <div id="new-project-wizard-sidebar">
-<div class="new-project-wizard-container">
-  <ul id="primary-steps">
-    <li id="project-information">
-      <div class="step-content">
-        <div class="step-number <%= 'active' if controller.controller_name.start_with?('project_information') %>">1</div>
-        <div class="step-text">Project Information</div>
-      </div>
-      
-      <ul>
-        <li id="project-basic-details">
-        <div class="step-content">
-        <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information' %>"></div>
-          <div class="step-text">Basic Details</div>
+    <div class="sidebar-container">
+        <div data-state="Expanded" class="expanded-state">
+            <div class="step-container">
+                <div data-state="Completed" data-type="Step" class="step">
+                    <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                        <div class="step-text">1</div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="step-text">Project Information</div>
+                    </div>
+                </div>
+                <div class="step-expanded-container">
+                    <div class="step-expanded"></div>
+                </div>
+            </div>
+            <div data-count="3" class="substeps-container">
+                <div class="connector-line"></div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Basic Details</div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Categories (Optional)</div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Dates (Optional)</div>
+                    </div>
+                </div>
+            </div>
         </div>
-          
-        </li>
-        <li id="project-categories">
-        <div class="step-content">
-          <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information_categories' %>"></div>
-          <div class="step-text">Categories (Optional)</div>
-          </div>
-        </li>
-        <li id="project-dates">
-        <div class="step-content">
-          <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'project_information_dates' %>"</div>
-          <div class="step-text">Dates (Optional)</div>
-          </div>
-        </li>
-      </ul>
-    </li>
-    <li id="project-roles-people">
-    <div class="step-content">
-      <div class="step-number <%= 'active' if controller.controller_name == 'roles_and_people' %>">2</div>
-      <div class="step-text">Roles and People</div>
-      </div>
-    </li>
-    <li id="project-type">
-    <div class="step-content">
-      <div class="step-number <%= 'active' if controller.controller_name == 'project_type' %>">3</div>
-      <div class="step-text">Project Type</div>
-      </div>
-    </li>
-    <li id="project-storage-access">
-    <div class="step-content">
-      <div class="step-number <%= 'active' if controller.controller_name == 'storage_and_access' %>">4</div>
-      <div class="step-text">Storage and Access</div>
-      </div>
-    </li>
-    <li id="project-additional-information">
-    <div class="step-content">
-      <div class="step-number <%= 'active' if controller.controller_name.start_with?('additional_information') %>">5</div>
-      <div class="step-text">Additional Information<br />(Optional)</div>
-      </div>
-      <ul>
-        <li id="project-funding-sources">
-        <div class="step-content">
-          <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_grants_and_funding' %>"></div>
-          <div class="step-text">Funding Sources</div>
-          </div>
-        </li>
-        <li id="project-permissions">
-        <div class="step-content">
-          <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_project_permissions' %>"></div>
-          <div class="step-text">Project Permissions</div>
-          </div>
-        </li>
-        <li id="project-related-resources">
-        <div class="step-content">
-          <div class="non-numbered <%= 'substep-active' if controller.controller_name == 'additional_information_related_resources' %>"></div>
-          <div class="step-text">Related Resources</div>
-          </div>
-        </li>
-      </ul>
-    </li>
-    <li id="project-review-submit">
-    <div class="step-content">
-      <div class="step-number <%= 'active' if controller.controller_name == 'review_and_submit' %>">6</div>
-      <div class="step-text">Review and Submit</div>
-      </div>
-    </li>
-  </ul>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                <div class="step-text">2</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text">Roles and People</div>
+            </div>
+        </div>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                <div class="step-text">3</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text">Project Type</div>
+            </div>
+        </div>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                <div class="step-text">4</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text">Storage and Access</div>
+            </div>
+        </div>
+        <div data-state="Expanded" class="expanded-state">
+            <div class="step-container">
+                <div data-state="Completed" data-type="Step" class="step">
+                    <div data-size="Normal" data-state="Completed" class="step-number-completed">
+                        <div class="step-text">5</div>
+                    </div>
+                    <div class="step-text-container">
+                        <div><span class="step-text">Additional Information</span><br /><span class="substep-text">(Optional)</span></div>
+                    </div>
+                </div>
+                <div class="step-expanded-container">
+                    <div class="step-expanded"></div>
+                </div>
+            </div>
+            <div data-count="3" class="substeps-container">
+                <div class="connector-line"></div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Funding Sources</div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Project Permissions</div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="substep-indicator-completed"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="substep-text">Related Resources</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-state="Active" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Active" class="step-number-completed">
+                <div class="step-text">6</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text">Review and Submit</div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
