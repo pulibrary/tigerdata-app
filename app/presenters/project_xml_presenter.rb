@@ -37,29 +37,27 @@ class ProjectXmlPresenter
       super
 
       element = document.create_element(name)
+
+      default_method_args = []
+      default_method_args << @index unless @index.nil?
+
       attributes.each do |key, entry|
         value = entry
-        if entry.is_a?(Hash) && entry.key?(:message)
-          message = entry[:message]
-          method_args = []
-          if entry.key?(:args)
-            method_args = entry[:args] || []
-            method_args += @message_args
-          end
+        if entry.is_a?(Hash) && entry.key?(:object_method)
+          message = entry[:object_method]
+          method_args = entry[:args] || []
+          method_args = default_method_args + method_args
           value = presenter.send(message, *method_args)
         end
 
         element[key] = value
       end
 
-      if content.is_a?(Hash) && content.key?(:message)
+      if content.is_a?(Hash) && content.key?(:object_method)
         entry = content
-        message = entry[:message]
-        method_args = []
-        if entry.key?(:args)
-          method_args = entry[:args] || []
-          method_args += @message_args
-        end
+        message = entry[:object_method]
+        method_args = entry[:args] || []
+        method_args = default_method_args + method_args
         content = presenter.send(message, *method_args)
       end
 
@@ -76,8 +74,7 @@ class ProjectXmlPresenter
       @attributes = attributes
       @content = content
 
-      @message_args = []
-      @message_args << index unless index.nil?
+      @index = index
     end
   end
 
@@ -96,41 +93,44 @@ class ProjectXmlPresenter
       @node = document.root
     end
 
-    def initialize(children: [], **kwargs)
-      parent_builder = XmlElementBuilder.new(**kwargs)
-      @parent = parent_builder.build
-
-      super(document: @parent.document)
-
+    def parse_child_entries(entries)
       instances = [:default]
-      builders = children.map do |entry|
+      builders = entries.map do |entry|
         entry.values.map do |child_args|
           multiple = child_args[:multiple] || false
 
           if multiple
-            message = child_args[:message]
+            message = child_args[:object_method]
 
-            if child_args.key?(:args)
-              method_args = entry[:args] || []
-              instances = parent_builder.presenter.send(message, *method_args)
-            else
-              instances = parent_builder.presenter.send(message)
-            end
+            method_args = entry[:args] || []
+            instances = @parent_builder.presenter.send(message, *method_args)
           end
 
           instances.each_with_index.map do |_instance, i|
-            child_args[:index] = i
-            child_args[:presenter] = parent_builder.presenter
-            child_args[:document] = document
-            child_args.delete(:multiple)
-            child_args.delete(:message)
-            child_args.delete(:args)
-            self.class.new(**child_args)
+            builder_args = child_args.dup
+            builder_args[:presenter] = @parent_builder.presenter
+            builder_args[:document] = document
+
+            if multiple
+              builder_args[:index] = i
+              builder_args.delete(:multiple)
+            end
+            builder_args.delete(:object_method)
+            builder_args.delete(:args)
+            self.class.new(**builder_args)
           end
         end
       end
+      builders.flatten
+    end
 
-      @children = builders.flatten
+    def initialize(children: [], **kwargs)
+      @parent_builder = XmlElementBuilder.new(**kwargs)
+      @parent = @parent_builder.build
+
+      super(document: @parent.document)
+
+      @children = parse_child_entries(children)
     end
   end
 
@@ -140,7 +140,7 @@ class ProjectXmlPresenter
     "data_manager", "data_sponsor",
     "data_user_read_only", "data_user_read_write",
     "departments", "description",
-    "project_directory", "project_id", "project_purpose",
+    "project_id", "project_purpose",
     "storage_capacity", "storage_performance_expectations",
     "created_by", "created_on",
     "updated_by", "updated_on",
@@ -156,40 +156,111 @@ class ProjectXmlPresenter
   end
 
   def document
-    @document ||= build.document
+    @document ||= build_xml.document
+  end
+
+  def globus_enable_approved?
+    false
+  end
+
+  def smb_enable_approved?
+    false
+  end
+
+  def schema_version
+    0.8
+  end
+
+  def status
+    "Active"
+  end
+
+  def provenance_submissions
+    []
+  end
+
+  def data_use_agreement?
+    false
+  end
+
+  def project_resource_type
+    "TigerData Project"
+  end
+
+  def provisional_project?
+    false
+  end
+
+  def hpc
+    "No"
+  end
+
+  def project_visibility
+    "Restricted"
+  end
+
+  def project_directory_approved?
+    false
+  end
+
+  def storage_capacity_approved?
+    false
   end
 
   def storage_performance_approved?
     false
   end
 
-  def project_directory_paths(_index)
-    project_directory
+  def project_directory
+    [project_metadata.project_directory]
   end
 
-  def project_directory_protocols(_index)
-    project_directory
+  def project_directory_path(index)
+    entry = project_directory[index]
+    entry
+  end
+
+  def project_directory_protocol(index)
+    entry = project_directory[index]
+    segments = entry.split("://")
+    default_protocol = "NFS"
+
+    if segments.length > 1
+      segments[0]
+    else
+      default_protocol
+    end
+  end
+
+  def department(index)
+    value = departments[index]
+    if value.length < 6
+      value = value.rjust(6, "0")
+    end
+    value
+  end
+
+  def department_code(index)
+    departments[index]
+  end
+
+  def requested_storage
+    storage_performance_expectations[:requested]
   end
 
   private
-
-    def department_codes(index)
-      departments[index]
-    end
-
-    def requested_storage_performance
-      storage_performance_expectations[:requested]
-    end
 
     def xml_builder_config
       Rails.configuration.xml_builder
     end
 
     def presenter_builder_config
-      xml_builder_config[:project]
+      xml_builder_config[:project] || {}
     end
 
     def find_builder_args(key)
+      raise "No builder config for #{key}" unless presenter_builder_config.key?(key)
+
       values = presenter_builder_config[key]
       values[:presenter] = self
       values
@@ -202,7 +273,7 @@ class ProjectXmlPresenter
                        end
     end
 
-    def build
+    def build_xml
       xml_builder.build
     end
 end
