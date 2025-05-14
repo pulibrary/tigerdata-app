@@ -1,17 +1,3 @@
 <% content_for :title, "Additional Information: Project Permissions" %>
-<%= render partial: '/new_project_wizard/sidebar' %>
-<%= form_with(url: new_project_additional_information_project_permissions_save_path(@request_model), model: @request_model, 
-              action: :save, method: :put, class: "form-panel") do |form| %>
-  <div class="scrollable-frame">
-    <div class="form-header">
-    </div>
-    <div class="form-frame">
-      <%= form.label :project_title %>
-      <%= form.text_field :project_title %>
-    </div>
-  </div>
-  <div class="button-frame">
-      <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
-  </div>
-<% end %>  
-    
+<label for="request_project_title">Project Title</label>
+<input type="text" name="request[project_title]" id="request_project_title" value="<%=@request_model.project_title %>">

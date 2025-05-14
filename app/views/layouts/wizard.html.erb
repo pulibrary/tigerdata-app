@@ -18,7 +18,20 @@
         <div class="deco-line"></div>
       </div>
       <div class="main-frame">
-        <%= yield %>
+      <%= render partial: '/new_project_wizard/sidebar' %>
+      <%= form_with(url: @form_url, model: @request_model, 
+                    action: :save, method: :put, class: "form-panel") do |form| %>
+        <div class="scrollable-frame">
+          <div class="form-header">
+          </div>
+          <div class="form-frame">
+            <%= yield %>
+          </div>
+        </div>
+        <div class="button-frame">
+            <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
+        </div>
+      <% end %>
       </div>
     </div>
 

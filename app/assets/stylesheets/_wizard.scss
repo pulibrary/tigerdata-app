@@ -45,68 +45,6 @@
     gap: 1.25rem;
     align-self: stretch;
 
-    .navigation-panel {
-      display: flex;
-      width: 17.8125rem;
-      padding: 1.5rem 1.25rem;
-      justify-content: center;
-      align-items: flex-start;
-      border-radius: 0.75rem;
-      background: $gray-extra-light;
-
-      .frame {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.25rem;
-        flex: 1 0 0;
-
-        .step {
-          display: flex;
-          height: 1.75rem;
-          align-items: center;
-          gap: 0.75rem;
-          align-self: stretch;
-
-          .step-icon {
-            display: flex;
-            width: 1.75rem;
-            height: 1.75rem;
-            justify-content: center;
-            align-items: center;
-            gap: 0.625rem;
-            border-radius: 0.875rem;
-            background: $gray-20;
-            .step-number {
-              color: $gray-100;
-
-              /* Body XS Bold */
-              font-family: "Libre Franklin";
-              font-size: 0.875rem;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 1.3125rem; /* 150% */
-            }
-          }
-
-          .step-info {
-            display: flex;
-            align-items: flex-start;
-
-            .step-name {
-              color: $gray-60;
-
-              /* Body XS Bold */
-              font-family: "Libre Franklin";
-              font-size: 0.875rem;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 1.3125rem; /* 150% */
-            }
-          }
-        }
-      }
-    }
     .form-panel {
       display: flex;
       flex-direction: column;
