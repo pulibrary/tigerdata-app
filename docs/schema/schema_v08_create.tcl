@@ -126,6 +126,18 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     :description "Makes explicit that Princeton NetIDs are always used as the identifier for the userID attribute" \
                     :value -as "constant" "NetID" \
                 > \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as "default" "false" \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" "true" \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as "default" "ResourceRecord" \
+                > \
                 :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
                 < \
                     :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
@@ -150,8 +162,20 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :description "The family name(s) of the person in a given role. If the person has multiple family names, then all should be included in this field." \
                 > \
+                :element -name "alternativeNameIdentifier" -type "string" -min-occurs "0" -max-occurs "100" \
+                < \
+                    :description "Records alternative (non-ORCID) identifier(s) for the person in a given role." \
+                    :attribute -name nameIdentifierScheme -min-occurs "1" -type string \
+                    < \
+                        :description "The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
+                    > \
+                    :attribute -name schemeURI -min-occurs "1" -type string \
+                    < \
+                        :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
+                    > \
+                > \
             > \
         > \
     >
 
-# TODO: add nameDate and alternativeNameIdentifier to dataSponsor
+# TODO: add nameDate to dataSponsor
