@@ -1,0 +1,123 @@
+<div class="sidebar-width"> 
+<div id="new-project-wizard-sidebar">
+    <div class="sidebar-container">
+        <div data-state="Expanded" class="expanded-state">
+            <div class="step-container">
+                <div data-state="Completed" data-type="Step" class="step">
+                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('project_information') ? 'step-number-current' : 'step-number-completed' %>">
+                        <div class="step-text">1</div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="step-text"><a href="<%= new_project_project_info_path(@request_model) %>">Project Information</a></div>
+                    </div>
+                </div>
+                <div class="step-expanded-container">
+                    <div class="step-expanded"></div>
+                </div>
+            </div>
+            
+            <div data-count="3" class="substeps-container">
+                <div class="connector-line"></div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'project_information' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'project_information' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_path(@request_model) %>">Basic Details</a></div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_categories_path(@request_model) %>">Categories (Optional)</a></div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_dates_path(@request_model) %>">Dates (Optional)</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'roles_and_people' ? 'step-number-current' : 'step-number-completed' %>">
+                <div class="step-text">2</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text"><a href="<%= new_project_roles_and_people_path(@request_model) %>">Roles and People</a></div>
+            </div>
+        </div>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'project_type' ? 'step-number-current' : 'step-number-completed' %>">
+                <div class="step-text">3</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text"><a href="<%= new_project_project_type_path(@request_model) %>">Project Type</a></div>
+            </div>
+        </div>
+        <div data-state="Completed" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'storage_and_access' ? 'step-number-current' : 'step-number-completed' %>">
+                <div class="step-text">4</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text"><a href="<%= new_project_storage_and_access_path(@request_model) %>">Storage and Access</a></div>
+            </div>
+        </div>
+        <div data-state="Expanded" class="expanded-state">
+            <div class="step-container">
+                <div data-state="Completed" data-type="Step" class="step">
+                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('additional_information') ? 'step-number-current' : 'step-number-completed' %>">
+                        <div class="step-text">5</div>
+                    </div>
+                    <div class="step-text-container">
+                        <div><span class="step-text"><a href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Additional Information</a></span><br /><span class="substep-text">(Optional)</span></div>
+                    </div>
+                </div>
+                <div class="step-expanded-container">
+                    <div class="step-expanded"></div>
+                </div>
+            </div>
+            <div data-count="3" class="substeps-container">
+                <div class="connector-line"></div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Funding Sources</a></div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_project_permissions_path(@request_model) %>">Project Permissions</a></div>
+                    </div>
+                </div>
+                <div data-state="Completed" data-type="Sub-Step" class="substep-container">
+                    <div data-size="Small" data-state="Completed" class="substep-indicator-container">
+                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                    </div>
+                    <div class="step-text-container">
+                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_related_resources_path(@request_model) %>">Related Resources</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-state="Active" data-type="Step" class="unexpanded-state">
+            <div data-size="Normal" data-state="Active" class="<%= controller.controller_name == 'review_and_submit' ? 'step-number-current' : 'step-number-completed' %>">
+                <div class="step-text">6</div>
+            </div>
+            <div class="step-text-container">
+                <div class="step-text"><a href="<%= new_project_review_and_submit_path(@request_model) %>">Review and Submit</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
