@@ -25,6 +25,7 @@ Metrics/AbcSize:
   Exclude:
     - "app/mailers/tigerdata_mailer.rb"
     - "app/presenters/project_xml_presenter.rb"
+    - "app/presenters/project_xml_node_builder.rb"
 
 Metrics/BlockLength:
   Exclude:
@@ -42,6 +43,7 @@ Metrics/MethodLength:
   Exclude:
     - "app/mailers/tigerdata_mailer.rb"
     - "app/presenters/project_xml_presenter.rb"
+    - "app/presenters/project_xml_node_builder.rb"
 
 Metrics/ParameterLists:
   Enabled: false
