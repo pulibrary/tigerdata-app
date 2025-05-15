@@ -13,7 +13,7 @@
 #   * alternativeIDs
 #   * parentProject
 #   * title
-#   * description (missing)
+#   * description
 #   * languages (missing)
 #   * dataSponsor
 #   * dataManager
@@ -21,7 +21,7 @@
 #   * projectProvenance (incomplete, only includes schemaVersion)
 #   * researchDomains (missing)
 #   * departments (missing)
-#   * projectDirectory (missing)
+#   * projectDirectory
 #   * storageAndAccess (missing)
 #   * additionalProjectInformation (missing)
 #   * supplementalMetadata (missing)
@@ -127,7 +127,44 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     :value -as default "ResourceRecord" \
                 > \
             > \
-            :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
+            :element -name projectDirectory -type document -min-occurs 1 -max-occurs 1 \
+            < \
+                :description "The locally unique name for the project's directory" \
+                :instructions "The typical value is expected to be in NFS protocol. A parent folder is recommended to organize projects by groups (e.g., lab or principal investigator). If no user request was received and no value has yet been approved, then this field may be empty." \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as constant false \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as constant false \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as constant "InternalUseOnly" \
+                > \
+                :attribute -name approved -type boolean \
+                < \
+                    :value -as default false \
+                > \
+                :element -name projectDirectoryPath -type string -min-occurs 0 -max-occurs 100 \
+                < \
+                    :description "A current setting for projectDirectory (omitted until approved)" \
+                    :instructions "After approval, this value should be updated to match the approved value (in rare cases, the current setting may later deviate from the approved value). Multiple elements are allowed to specify paths in alternative protocols, using the protocol attribute. Example NFS path: /tigerdata/parent-folder/project-folder. Example SMB path: \\tigerdata-smb\parent-folder\project-folder. Example S3 path: S3://princeton/tigerdata/parent-folder/project-folder." \
+                > \
+                :element -name requestedValue -type string -min-occurs 0 -max-occurs 1 \
+                < \
+                    :description "A current setting for projectDirectory (omitted until approved)" \
+                    :instructions "After approval, this value should be updated to match the approved value (in rare cases, the current setting may later deviate from the approved value). Multiple elements are allowed to specify paths in alternative protocols, using the protocol attribute. Example NFS path: /tigerdata/parent-folder/project-folder. Example SMB path: \\tigerdata-smb\parent-folder\project-folder. Example S3 path: S3://princeton/tigerdata/parent-folder/project-folder." \
+                > \
+                :element -name approvedValue -type string -min-occurs 0 -max-occurs 1 \
+                < \
+                    :description "The approved value for projectDirectory (omitted if no sys admin has approved yet)" \
+                    :instructions "Once approved, the approved attribute should also be set to true." \
+                > \
+            > \
+            :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 \
+            < \
                 :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
             > \
             :element -name "alternativeIDs" -type "document" -min-occurs "0" -max-occurs "1" -label "The container element for all alternative IDs for a resource" \

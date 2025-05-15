@@ -22,10 +22,9 @@ if { "$createRoot2" != "true" } \
 }
 
 # Create the /tigerdata/dev/tigerdata root collection
-set createRoot3 [xvalue exists [asset.namespace.exists :namespace /td-demo-001/dev/tigerdata]]
+set createRoot3 [xvalue exists [asset.exists :id path=/td-demo-001/dev/tigerdata]]
 if { "$createRoot3" != "true" } \
 {
-    puts "Creating /td-demo-001/dev/tigerdata"
     asset.create \
          :namespace /td-demo-001/dev \
          :name tigerdata \
