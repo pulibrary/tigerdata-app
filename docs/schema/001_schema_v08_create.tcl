@@ -79,11 +79,11 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
                 :attribute -name inherited -type boolean \
                 < \
-                    :value -as "default" "false" \
+                    :value -as "default" false \
                 > \
                 :attribute -name discoverable -type boolean \
                 < \
-                    :value -as "default" "true" \
+                    :value -as "default" true \
                 > \
                 :attribute -name trackingLevel -type string \
                 < \
@@ -98,11 +98,11 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
                 :attribute -name inherited -type boolean \
                 < \
-                    :value -as "default" "false" \
+                    :value -as "default" false \
                 > \
                 :attribute -name discoverable -type boolean \
                 < \
-                    :value -as "default" "true" \
+                    :value -as "default" true \
                 > \
                 :attribute -name trackingLevel -type string \
                 < \
@@ -110,6 +110,23 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
             > \
             :element -name title -type string -min-occurs 1 -max-occurs 1 \
+            :element -name description -type string -min-occurs 1 -max-occurs 1 \
+            < \
+                :description "A plain-language description of the resource and/or its contents" \
+                :instructions "May apply to either Projects or Items" \
+                :attribute -name inherited -type boolean \
+                < \
+                    :value -as default false \
+                > \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as default true \
+                > \
+                :attribute -name trackingLevel -type string \
+                < \
+                    :value -as default "ResourceRecord" \
+                > \
+            > \
             :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 < \
                 :element -name schemaVersion -min-occurs 1 -max-occurs 1 -type string < :value $schemaVersion -as default > \
             > \
@@ -127,7 +144,7 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     > \
                     :attribute -name "inherited" -type "boolean" \
                     < \
-                        :value -as "default" "false" \
+                        :value -as "default" false \
                     > \
                 > \
             > \
@@ -147,11 +164,11 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
                 :attribute -name inherited -type boolean \
                 < \
-                    :value -as "default" "false" \
+                    :value -as "default" false \
                 > \
                 :attribute -name discoverable -type boolean \
                 < \
-                    :value -as "default" "true" \
+                    :value -as "default" true \
                 > \
                 :attribute -name trackingLevel -type string \
                 < \
@@ -215,11 +232,11 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
                 :attribute -name inherited -type boolean \
                 < \
-                    :value -as "default" "false" \
+                    :value -as "default" false \
                 > \
                 :attribute -name discoverable -type boolean \
                 < \
-                    :value -as "default" "true" \
+                    :value -as "default" true \
                 > \
                 :attribute -name trackingLevel -type string \
                 < \
@@ -281,16 +298,16 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     :instructions "May apply to either Projects or Items" \
                     :attribute -name inherited -type boolean \
                     < \
-                        :value -as "default" "true" \
+                        :value -as "default" true \
                     > \
                     :attribute -name discoverable -type boolean \
                     < \
-                        :value -as "default" "false" \
+                        :value -as "default" false \
                     > \
                     :attribute -name "readOnly" -type boolean -min-occurs "1" \
                     < \
                         :description "Specifies whether the data user has read-only access to the resource (if false, then read-write access is granted)" \
-                        :value -as "default" "true" \
+                        :value -as "default" true \
                     > \
                     :attribute -name userID -min-occurs "1" -type string \
                     < \
