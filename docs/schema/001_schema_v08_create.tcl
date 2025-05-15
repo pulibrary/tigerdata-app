@@ -2,7 +2,7 @@
 #
 # You can run this script form aTerm:
 #
-#   script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/schema_v08_create.tcl
+#   script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/001_schema_v08_create.tcl
 #
 # Or directly from the Terminal:
 #   java -Dmf.host=0.0.0.0 -Dmf.port=8888 -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -jar aterm.jar --app exec script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/schema_v08_create.tcl
