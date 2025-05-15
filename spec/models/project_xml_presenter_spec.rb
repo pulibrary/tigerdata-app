@@ -213,10 +213,23 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
     end
 
+    describe "<projectProvenance>" do
+      let(:node) { root.at_xpath("projectProvenance") }
+
+      describe "<submission>" do
+        let(:node) { root.at_xpath("projectProvenance/submission") }
+
+        it "builds a <submission> element tracking the latest activity for the project" do
+          expect(node).to be_a(Nokogiri::XML::Element)
+          expect(node.name).to eq("submission")
+        end
+      end
+    end
+
     describe "XSD schema validation" do
       let(:validation_errors) { schema.validate(document) }
 
-      xit "validates against the XSD schema document" do
+      it "validates against the XSD schema document" do
         expect(validation_errors).to be_empty
       end
     end

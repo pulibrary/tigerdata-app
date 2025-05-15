@@ -305,8 +305,6 @@ project:
                         userID:
                           object_method: requested_by
                         userIDType: NetID
-                      content:
-                        object_method: requested_by
 
                   - request_date_time:
                       name: requestDateTime
@@ -319,8 +317,6 @@ project:
                         userID:
                           object_method: approved_by
                         userIDType: NetID
-                      content:
-                        object_method: approved_by
 
                   - approval_date_time:
                       name: approvalDateTime
