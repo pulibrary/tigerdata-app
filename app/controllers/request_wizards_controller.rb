@@ -64,7 +64,8 @@ class RequestWizardsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def request_params
-      params.fetch(:request, {}).permit(:request_title, :project_title)
+      params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager, :departments,
+                                        :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by)
     end
 
     def check_flipper
