@@ -2,15 +2,6 @@
 class ProjectXmlPresenter
   SCHEMA_VERSION = 0.8
 
-    def initialize(children: [], **kwargs)
-      @parent_builder = XmlElementBuilder.new(**kwargs)
-      @parent = @parent_builder.build
-
-      super(document: @parent.document)
-
-      @children = parse_child_entries(children)
-    end
-
   # Delegate methods to the project and project_metadata objects
   delegate "id", "in_mediaflux?", "mediaflux_id", "pending?", "status", "title", to: :project
   delegate(
