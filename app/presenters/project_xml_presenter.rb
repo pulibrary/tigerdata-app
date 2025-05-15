@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class ProjectXmlPresenter
+  SCHEMA_VERSION = 0.8
+
   class XmlNodeBuilder
     attr_accessor :document
 
@@ -168,35 +170,67 @@ class ProjectXmlPresenter
   end
 
   def schema_version
-    0.8
+    SCHEMA_VERSION
   end
 
   def status
     "Active"
   end
 
+  def requested_by
+    "abdc12"
+  end
+
+  def request_date_time
+    "2025-03-28T15:34:11-04:00"
+  end
+
+  def approved_by
+    "abdc12"
+  end
+
+  def approval_date_time
+    "2025-03-28T15:34:11-04:00"
+  end
+
   def provenance_submissions
-    []
+    [
+      {
+        submission: {}
+      }
+    ]
   end
 
   def data_use_agreement?
     false
   end
 
-  def project_resource_type
+  def self.default_project_resource_type
     "TigerData Project"
+  end
+
+  def project_resource_type
+    self.class.default_project_resource_type
   end
 
   def provisional_project?
     false
   end
 
-  def hpc
+  def self.default_hpc
     "No"
   end
 
-  def project_visibility
+  def hpc
+    self.class.default_hpc
+  end
+
+  def self.default_project_visibility
     "Restricted"
+  end
+
+  def project_visibility
+    self.class.default_project_visibility
   end
 
   def project_directory_approved?
@@ -220,15 +254,18 @@ class ProjectXmlPresenter
     entry
   end
 
+  def self.default_directory_protocol
+    "NFS"
+  end
+
   def project_directory_protocol(index)
     entry = project_directory[index]
     segments = entry.split("://")
-    default_protocol = "NFS"
 
     if segments.length > 1
       segments[0]
     else
-      default_protocol
+      self.class.default_directory_protocol
     end
   end
 
@@ -245,7 +282,7 @@ class ProjectXmlPresenter
   end
 
   def requested_storage
-    storage_performance_expectations[:requested]
+    storage_performance_expectations[:requested] || nil
   end
 
   private
