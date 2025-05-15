@@ -67,4 +67,110 @@ RSpec.describe Request, type: :model do
     subject(:requested_by) { request.requested_by }
     it { should eq("uid") }
   end
+
+  describe "#valid_title?" do
+    it "requires a title" do
+      request = Request.new(project_title: "")
+      expect(request.valid_title?).to be_falsey
+      request.project_title = "abc"
+      expect(request.valid_title?).to be_truthy
+    end
+  end
+
+  describe "#valid_data_sponsor?" do
+    it "requires a data_sponsor" do
+      request = Request.new(data_sponsor: "")
+      expect(request.valid_data_sponsor?).to be_falsey
+      request.data_sponsor = "abc"
+      expect(request.valid_data_sponsor?).to be_truthy
+    end
+  end
+
+  describe "#valid_data_manager?" do
+    it "requires a data_manager" do
+      request = Request.new(data_manager: "")
+      expect(request.valid_data_manager?).to be_falsey
+      request.data_manager = "abc"
+      expect(request.valid_data_manager?).to be_truthy
+    end
+  end
+
+  describe "#valid_departments?" do
+    it "requires departments" do
+      request = Request.new(departments: "")
+      expect(request.valid_departments?).to be_falsey
+      request.departments = "abc"
+      expect(request.valid_departments?).to be_truthy
+    end
+  end
+
+  describe "#valid_description?" do
+    it "requires a description" do
+      request = Request.new(description: "")
+      expect(request.valid_description?).to be_falsey
+      request.description = "abc"
+      expect(request.valid_description?).to be_truthy
+    end
+  end
+
+  describe "#valid_parent_folder?" do
+    it "requires a parent_folder" do
+      request = Request.new(parent_folder: "")
+      expect(request.valid_parent_folder?).to be_falsey
+      request.parent_folder = "abc"
+      expect(request.valid_parent_folder?).to be_truthy
+    end
+  end
+
+  describe "#valid_project_folder?" do
+    it "requires a project_folder" do
+      request = Request.new(project_folder: "")
+      expect(request.valid_project_folder?).to be_falsey
+      request.project_folder = "abc"
+      expect(request.valid_project_folder?).to be_truthy
+    end
+  end
+
+  describe "#valid_quota?" do
+    it "requires a quota to be positive" do
+      request = Request.new(quota: 0)
+      expect(request.valid_quota?).to be_falsey
+      request.quota = 500
+      expect(request.valid_quota?).to be_truthy
+    end
+  end
+
+  describe "#valid_requested_by?" do
+    it "requires a requested_by" do
+      request = Request.new(requested_by: "")
+      expect(request.valid_requested_by?).to be_falsey
+      request.requested_by = "abc"
+      expect(request.valid_requested_by?).to be_truthy
+    end
+  end
+
+  describe "#valid_to_submit?" do
+    it "requires all the validations to be true" do
+      request = Request.new
+      expect(request.valid_to_submit?).to be_falsey
+      request.project_title = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.data_sponsor = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.data_manager = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.parent_folder = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.departments = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.parent_folder = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.project_folder = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.quota = 500
+      expect(request.valid_to_submit?).to be_falsey
+      request.requested_by = "abc"
+      expect(request.valid_requested_by?).to be_truthy
+    end
+  end
 end
