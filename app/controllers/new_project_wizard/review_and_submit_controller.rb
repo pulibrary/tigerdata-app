@@ -3,6 +3,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
   protected
 
     def render_current
+      @form_url = new_project_review_and_submit_save_path(@request_model)
       render "/new_project_wizard/review_and_submit"
     end
 

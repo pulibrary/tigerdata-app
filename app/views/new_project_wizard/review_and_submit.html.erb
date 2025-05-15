@@ -1,11 +1,3 @@
-<h2>Review and Submit</h2>
-<%= form_with(url: new_project_review_and_submit_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
-  <%= render partial: '/new_project_wizard/sidebar', locals: {form:} %>
-
-  <%= @request_model.id %>
-  <div>
-    <%= form.label :project_title %>
-    <%= form.text_field :project_title %>
-  </div>
-  <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
-<% end %>
+<% content_for :title, "Review and Submit" %>
+<label for="request_project_title">Project Title</label>
+<input type="text" name="request[project_title]" id="request_project_title" value="<%=@request_model.project_title %>">

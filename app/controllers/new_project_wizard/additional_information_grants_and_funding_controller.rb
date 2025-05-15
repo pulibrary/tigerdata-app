@@ -3,6 +3,7 @@ class NewProjectWizard::AdditionalInformationGrantsAndFundingController < Reques
   protected
 
     def render_current
+      @form_url = new_project_additional_information_grants_and_funding_save_path(@request_model)
       render "/new_project_wizard/additional_information_grants_and_funding"
     end
 
