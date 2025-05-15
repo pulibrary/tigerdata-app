@@ -17,10 +17,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-    it "shows the New Project Request page" do
+    it "shows the New Project Requests page" do
       sign_in current_user
       visit "/requests"
-      expect(page).to have_content "New Project Request"
+      expect(page).to have_content "New Project Requests"
     end
+    let(:request) { Request.create(request_title: "abc123", project_title: "project") }
+    it "shows the approve button on a single request view" do 
+      sign_in current_user
+      put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+      expect(page).to have_content "Approve request"
+    end 
+      
   end
 end

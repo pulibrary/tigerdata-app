@@ -8,7 +8,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
     end
 
     def render_next
-      redirect_to "/requests/#{@request_model.id}"
+      redirect_to "#{requests_path}/#{@request_model.id}"
     end
 
     def render_back
