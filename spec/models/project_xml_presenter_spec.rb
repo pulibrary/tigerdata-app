@@ -31,7 +31,17 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   let(:project) { FactoryBot.create(:project_with_doi, data_sponsor: data_sponsor.uid, data_manager: data_manager.uid, metadata_model: metadata_model) }
 
   let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
-  let(:schema_file) { File.read(schema_file_path) }
+  let(:schema_file) do
+    File.read(schema_file_path).tap do |xsd|
+      # Replace the reference to `xml.xsd` from the xsd with a reference to our
+      # local copy of the file, otherwise the validation tends to fail because
+      # Nokogiri cannot load the original `xml.xsd` file from the W3C
+      # source. ¯\_(ツ)_/¯
+      # For more information see: https://stackoverflow.com/a/18527198/446681
+      local_xml_xsd = Pathname.new("./lib/assets/xml.xsd").realpath.to_s
+      xsd.sub!("https://www.w3.org/2001/xml.xsd", "file://#{local_xml_xsd}")
+    end
+  end
   let(:schema) { Nokogiri::XML::Schema(schema_file) }
 
   describe "#document" do
