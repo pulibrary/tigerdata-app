@@ -113,7 +113,7 @@
 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified">
-    <xs:import schemaLocation="lib/assets/tigerdata_metadata/v0.8/xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xs:import schemaLocation="https://www.w3.org/2001/xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
     
 <!-- PRIMITIVES -->
     <!-- All of the types, attributes, elements, and groups that are combined to make up a standard metadata payload, which is defined last -->
