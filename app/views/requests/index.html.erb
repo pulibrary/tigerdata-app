@@ -1,3 +1,6 @@
-<h1>New Project Request</h1>
-
-<div>This is a placeholder.</div>
+<h1>New Project Requests</h1>
+<ul>
+  <% @requests.each do |request| %> 
+    <li><%= link_to request.project_title, request_path(request.id) %></li>
+  <% end %>
+</ul>

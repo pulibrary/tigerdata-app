@@ -36,7 +36,11 @@ Rails.application.routes.draw do
   get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
   get "projects/:id/create-script", to: "projects#create_script", as: :project_create_script
 
-  resources :requests
+  resources :requests do
+    member do
+      get :approve
+    end
+  end
 
   namespace :api do
     namespace :v0 do
