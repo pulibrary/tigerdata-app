@@ -263,7 +263,8 @@ class ProjectXmlPresenter
     segments = entry.split("://")
 
     if segments.length > 1
-      segments[0]
+      value = segments[0]
+      value.upcase
     else
       self.class.default_directory_protocol
     end
