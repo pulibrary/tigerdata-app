@@ -95,14 +95,14 @@ class ProjectXmlPresenter
 
     def parse_child_entries(entries)
       instances = [:default]
-      builders = entries.map do |entry|
-        entry.values.map do |child_args|
+      builders = entries.map do |child_entry|
+        child_entry.values.map do |child_args|
           multiple = child_args[:multiple] || false
 
           if multiple
             message = child_args[:object_method]
 
-            method_args = entry[:args] || []
+            method_args = child_args[:args] || []
             instances = @parent_builder.presenter.send(message, *method_args)
           end
 
