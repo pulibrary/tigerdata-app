@@ -212,7 +212,7 @@ project:
                   - requested_value:
                       name: requestedValue
                       content:
-                        object_method: smb_enable_approved?
+                        object_method: smb_enable_requested?
 
                   - approved_value:
                       name: approvedValue
@@ -228,7 +228,7 @@ project:
                   - globus_enable_setting:
                       name: globusEnableSetting
                       content:
-                        object_method: globus_enable_approved?
+                        object_method: globus_enable_requested?
 
                   - requested_value:
                       name: requestedValue
@@ -296,7 +296,7 @@ project:
           children:
             - submission:
                 multiple: true
-                object_method: provenance_submissions
+                object_method: submissions
                 name: submission
                 children:
                   - requested_by:

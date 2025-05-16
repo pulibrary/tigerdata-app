@@ -9,7 +9,13 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:department) { "77777" }
-
+  let(:submitter) { FactoryBot.create(:user, uid: "cde345") }
+  let(:submission) do
+    {
+      requested_by: submitter.uid,
+      request_date_time: Time.current.in_time_zone("America/New_York").iso8601
+    }
+  end
   let(:metadata_model) do
     hash = {
       data_sponsor: data_sponsor.uid,
@@ -24,11 +30,17 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
       project_id: "10.34770/az09-0004"
+      # submission: submission
     }
     ProjectMetadata.new_from_hash(hash)
   end
-
-  let(:project) { FactoryBot.create(:project_with_doi, data_sponsor: data_sponsor.uid, data_manager: data_manager.uid, metadata_model: metadata_model) }
+  let(:project) do
+    FactoryBot.create(:project_with_doi,
+                      data_sponsor: data_sponsor.uid,
+                      data_manager: data_manager.uid,
+                      metadata_model: metadata_model)
+  end
+  let(:submission_event) { FactoryBot.create(:submission_event, project: project, event_person: submitter.uid) }
 
   let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
   let(:schema_file) do
@@ -43,6 +55,10 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     end
   end
   let(:schema) { Nokogiri::XML::Schema(schema_file) }
+
+  before do
+    submission_event
+  end
 
   describe "#document" do
     let(:document) { presenter.document }
@@ -223,6 +239,177 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
     end
 
+    describe "<numberOfFiles>" do
+      let(:node) { root.at_xpath("numberOfFiles") }
+
+      it "builds a <numberOfFiles> element containing the number of files for the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("numberOfFiles")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("false")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+      end
+    end
+
+    describe "<hpc>" do
+      let(:node) { root.at_xpath("hpc") }
+
+      it "builds a <hpc> element detailing high performance compute cluster information" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("hpc")
+        expect(node["inherited"]).to eq("true")
+        expect(node["discoverable"]).to eq("false")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.content).to eq(presenter.hpc)
+      end
+    end
+
+    describe "<accessPoints>" do
+      let(:node) { root.at_xpath("accessPoints") }
+
+      it "builds a <accessPoints> element detailing the SMB and NFS mount points" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("accessPoints")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("false")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+      end
+
+      describe "<smbEnable>" do
+        let(:node) { root.at_xpath("accessPoints/smbEnable") }
+
+        it "builds a <smbEnable> element detailing the SMB mount status" do
+          expect(node).to be_a(Nokogiri::XML::Element)
+          expect(node.name).to eq("smbEnable")
+          expect(node["approved"]).to eq(presenter.smb_enable_approved?.to_s)
+        end
+
+        describe "<smbEnableSetting>" do
+          let(:node) { root.at_xpath("accessPoints/smbEnable/smbEnableSetting") }
+
+          it "builds a <smbEnableSetting> element detailing the SMB mount status" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("smbEnableSetting")
+            expect(node.content).to eq(presenter.smb_enable_approved?.to_s)
+          end
+        end
+
+        describe "<requestedValue>" do
+          let(:node) { root.at_xpath("accessPoints/smbEnable/requestedValue") }
+
+          it "builds a <requestedValue> element detailing whether or not SMB was requested" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("requestedValue")
+            expect(node.content).to eq(presenter.smb_enable_requested?.to_s)
+          end
+        end
+
+        describe "<approvedValue>" do
+          let(:node) { root.at_xpath("accessPoints/smbEnable/approvedValue") }
+
+          it "builds a <approvedValue> element detailing whether or not SMB was approved" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("approvedValue")
+            expect(node.content).to eq(presenter.smb_enable_approved?.to_s)
+          end
+        end
+      end
+
+      describe "<globusEnable>" do
+        describe "<globusEnableSetting>" do
+        end
+        let(:node) { root.at_xpath("accessPoints/globusEnable") }
+
+        it "builds a <globusEnable> element detailing the Globus mount status" do
+          expect(node).to be_a(Nokogiri::XML::Element)
+          expect(node.name).to eq("globusEnable")
+          expect(node["approved"]).to eq(presenter.globus_enable_approved?.to_s)
+        end
+
+        describe "<globusEnableSetting>" do
+          let(:node) { root.at_xpath("accessPoints/globusEnable/globusEnableSetting") }
+
+          it "builds a <globusEnableSetting> element detailing the Globus mount status" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("globusEnableSetting")
+            expect(node.content).to eq(presenter.globus_enable_approved?.to_s)
+          end
+        end
+
+        describe "<requestedValue>" do
+          let(:node) { root.at_xpath("accessPoints/globusEnable/requestedValue") }
+
+          it "builds a <requestedValue> element detailing whether or not Globus was requested" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("requestedValue")
+            expect(node.content).to eq(presenter.globus_enable_requested?.to_s)
+          end
+        end
+
+        describe "<approvedValue>" do
+          let(:node) { root.at_xpath("accessPoints/globusEnable/approvedValue") }
+
+          it "builds a <approvedValue> element detailing whether or not Globus was approved" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("approvedValue")
+            expect(node.content).to eq(presenter.globus_enable_approved?.to_s)
+          end
+        end
+      end
+    end
+
+    describe "<projectPurpose>" do
+      let(:node) { root.at_xpath("projectPurpose") }
+
+      it "builds a <projectPurpose> element detailing the purpose of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("projectPurpose")
+        expect(node["inherited"]).to eq("true")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.content).to eq(presenter.project_purpose)
+      end
+    end
+
+    describe "<provisionalProject>" do
+      let(:node) { root.at_xpath("provisionalProject") }
+
+      it "builds a <provisionalProject> element detailing the purpose of the project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("provisionalProject")
+        expect(node["inherited"]).to eq("true")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.content).to eq(presenter.provisional_project?.to_s)
+      end
+    end
+
+    describe "<projectResourceType>" do
+      let(:node) { root.at_xpath("projectResourceType") }
+
+      it "builds a <projectResourceType> element detailing the type of research project" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("projectResourceType")
+        expect(node["inherited"]).to eq("false")
+        expect(node["discoverable"]).to eq("true")
+        expect(node["trackingLevel"]).to eq("ResourceRecord")
+        expect(node.content).to eq(presenter.project_resource_type)
+      end
+    end
+
+    describe "<dataUseAgreement>" do
+      let(:node) { root.at_xpath("dataUseAgreement") }
+
+      it "builds a <dataUseAgreement> element detailing the use restrictions for the project data" do
+        expect(node).to be_a(Nokogiri::XML::Element)
+        expect(node.name).to eq("dataUseAgreement")
+        expect(node["inherited"]).to eq("true")
+        expect(node["discoverable"]).to eq("false")
+        expect(node["trackingLevel"]).to eq("InternalUseOnly")
+        expect(node.content).to eq(presenter.data_use_agreement?.to_s)
+      end
+    end
+
     describe "<projectProvenance>" do
       let(:node) { root.at_xpath("projectProvenance") }
 
@@ -232,6 +419,47 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         it "builds a <submission> element tracking the latest activity for the project" do
           expect(node).to be_a(Nokogiri::XML::Element)
           expect(node.name).to eq("submission")
+        end
+
+        describe "<requestedBy>" do
+          let(:node) { root.at_xpath("projectProvenance/submission/requestedBy") }
+
+          it "builds a <requestedBy> element tracking the user requesting resources for the project" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("requestedBy")
+            expect(node["userID"]).to eq(presenter.requested_by)
+            expect(node["userIDType"]).to eq("NetID")
+          end
+        end
+        describe "<requestDateTime>" do
+          let(:node) { root.at_xpath("projectProvenance/submission/requestDateTime") }
+
+          it "builds a <requestDateTime> element tracking the user requesting resources for the project" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("requestDateTime")
+            expect(node.content).to eq(presenter.request_date_time)
+          end
+        end
+
+        describe "<approvedBy>" do
+          let(:node) { root.at_xpath("projectProvenance/submission/approvedBy") }
+
+          it "builds a <approvedBy> element tracking the approved request for resources for the project" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("approvedBy")
+            expect(node["userID"]).to eq(presenter.approved_by)
+            expect(node["userIDType"]).to eq("NetID")
+          end
+        end
+
+        describe "<approvalDateTime>" do
+          let(:node) { root.at_xpath("projectProvenance/submission/approvalDateTime") }
+
+          it "builds a <approvalDateTime> element tracking the approved request for resources for the project" do
+            expect(node).to be_a(Nokogiri::XML::Element)
+            expect(node.name).to eq("approvalDateTime")
+            expect(node.content).to eq(presenter.approval_date_time)
+          end
         end
       end
     end
