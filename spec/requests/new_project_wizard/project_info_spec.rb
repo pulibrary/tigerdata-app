@@ -24,12 +24,16 @@ RSpec.describe "/new-project/project-info", type: :request do
       end
 
       context "the request exists" do
-        let(:request) { Request.create(request_title: "abc123") }
+        let(:request) { Request.create(project_title: "abc123", description: "magical world", parent_folder: "parent-folder", project_folder: "project-folder") }
         it "renders a successful response" do
           sign_in user
           get new_project_project_info_url(request.id)
           expect(response).to be_successful
           expect(response.body).to include("abc123")
+          expect(response.body).to include("magical world")
+          expect(response.body).to include("magical world")
+          expect(response.body).to include("parent-folder")
+          expect(response.body).to include("project-folder")
         end
       end
     end
@@ -46,7 +50,7 @@ RSpec.describe "/new-project/project-info", type: :request do
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
-        let(:request) { Request.create(request_title: "abc123") }
+        let(:request) { Request.create(project_title: "abc123") }
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_project_info_save_url(request.id, request: { request_title: "new title" }, commit: "Save")

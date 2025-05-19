@@ -23,7 +23,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
-      expect(page).to have_content "Project Information: Basic"
+      expect(page).to have_content "Basic Details"
       click_on "Next"
       expect(page).to have_content "Project Information: Categories"
       click_on "Next"
@@ -59,10 +59,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       click_on "Back"
       expect(page).to have_content "Project Information: Categories"
       click_on "Back"
-      expect(page).to have_content "Project Information: Basic"
+      expect(page).to have_content "Basic Details"
     end
 
-    it "walks through the wizard if the feature is enabled" do
+    it "cannot walk through the wizard if the feature is disabled" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, false)
       request = Request.create
@@ -70,7 +70,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       visit "/"
       expect(page).not_to have_content("New Project Request")
       visit "/new-project/project-info/#{request.id}"
-      expect(page).not_to have_content "Project Information: Basic"
+      expect(page).not_to have_content "Basic Details"
       visit "/new-project/project-info-categories/#{request.id}"
       expect(page).not_to have_content "Project Information: Categories"
       visit "/new-project/project-info-dates/#{request.id}"
