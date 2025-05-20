@@ -16,7 +16,6 @@ class ProjectXmlPresenter
     "updated_by", "updated_on",
     "approval_note",
     "schema_version",
-    # "submission",
     to: :project_metadata
   )
 
@@ -88,11 +87,15 @@ class ProjectXmlPresenter
 
   # @return [String] The user ID of the user who requested the project
   def requested_by
+    return if submission.nil?
+
     submission.event_person
   end
 
   # @return [String] The date and time of the request
   def request_date_time
+    return if submission.nil?
+
     value = submission.created_at
     value.strftime("%Y-%m-%dT%H:%M:%S%:z")
   end
