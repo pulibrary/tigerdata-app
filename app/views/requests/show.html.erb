@@ -1,0 +1,23 @@
+<h1><%= @request.project_title %></h1>
+
+This screen is a review of the request.  No project has been created yet.
+
+<%= button_to "Approve request", approve_request_path, method: "get", class: "btn btn-dark btn-sm" %>
+
+<ul class="request-fields">
+  <li>Request created at: <%= @request.created_at.strftime("%m/%d/%Y") %></li>
+  <li>Request updated at: <%= @request.updated_at.strftime("%m/%d/%Y") %></li>
+  <li>Project title: <%= @request.project_title %></li>
+  <li>Request state:<%= @request.state %></li>
+  <li>Data sponsor: <%= @request.data_sponsor %></li>
+  <li>Data manager: <%= @request.data_manager %></li>
+  <li>Department(s): <%= @request.departments %></li>
+  <li>Description: <%= @request.description %></li>
+  <li>Parent folder: <%= @request.parent_folder %></li>
+  <li>Project folder: <%= @request.project_folder %></li>
+  <li>Project ID: <%= @request.project_id %></li>
+  <li>Quota: <%= @request.quota %></li>
+  <li>Requested by: <%= @request.requested_by %></li>
+</ul>
+
+

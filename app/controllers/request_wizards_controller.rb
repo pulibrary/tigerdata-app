@@ -26,7 +26,7 @@ class RequestWizardsController < ApplicationController
     when "Next"
       render_next
     else
-      redirect_to dashboard_path
+      redirect_to "#{requests_path}/#{@request_model.id}"
     end
   end
 
