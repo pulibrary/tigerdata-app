@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 class XmlElementBuilder < XmlNodeBuilder
-  attr_reader :presenter, :name, :attributes, :content
+  attr_reader :presenter, :name, :allow_empty, :attributes, :content
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   #
   # @return [Nokogiri::XML::Element]
   def build
@@ -23,7 +25,14 @@ class XmlElementBuilder < XmlNodeBuilder
         value = presenter.send(message, *method_args)
       end
 
-      element[key] = value
+      # NOTE: If the configuration does not permit empty XML elements, then ensure that `element` is set to `nil` if it is empty.
+      unless element.nil?
+        if !allow_empty && value.nil?
+          element = nil
+        else
+          element[key] = value
+        end
+      end
     end
 
     if content.is_a?(Hash) && content.key?(:object_method)
@@ -32,26 +41,37 @@ class XmlElementBuilder < XmlNodeBuilder
       method_args = entry[:args] || []
       method_args = default_method_args + method_args
       content = presenter.send(message, *method_args)
+
+      # NOTE: If the configuration does not permit empty XML elements, then ensure that `element` is set to `nil` if it is empty.
+      if !allow_empty && content.blank?
+        element = nil
+      end
     end
 
-    element.content = content
+    unless element.nil?
+      element.content = content
+    end
 
     @node = element
   end
+  # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
 
   # @param [ProjectXmlPresenter] presenter
   # @param [String] name
+  # @param [Boolean] allow_empty whether to allow the creation of XML elements with nil or empty content
   # @param [Hash] attributes
   # @param [String] content
   # @param [Integer] index the index for the element (when there are multiple sibling nodes)
   # @param [Hash] kwargs
-  def initialize(presenter:, name:, attributes: {}, content: nil, index: nil, **kwargs)
+  def initialize(presenter:, name:, allow_empty: true, attributes: {}, content: nil, index: nil, **kwargs)
     super(**kwargs)
 
     @presenter = presenter
     @name = name
+    @allow_empty = allow_empty
     @attributes = attributes
     @content = content
 

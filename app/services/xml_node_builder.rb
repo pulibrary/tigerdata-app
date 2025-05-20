@@ -23,7 +23,7 @@ class XmlNodeBuilder
 
   # @return [Nokogiri::XML::Element]
   def build
-    return @node unless @node.nil?
+    return unless @node.nil?
 
     @node = document.root
   end

@@ -300,6 +300,9 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    pry-byebug (3.10.1)
+      byebug (~> 11.0)
+      pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.5)
@@ -546,6 +549,7 @@ DEPENDENCIES
   net-ldap
   omniauth-cas (~> 3.0)
   pg
+  pry-byebug
   pry-rails
   puma (~> 5.6)
   rails (~> 7.0.4, >= 7.0.4.2)
