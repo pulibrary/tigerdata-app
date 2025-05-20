@@ -1,3 +1,7 @@
-<% content_for :title, "Additional Information: Related Resources" %>
-<label for="request_project_title">Project Title</label>
-<input type="text" name="request[project_title]" id="request_project_title" value="<%=@request_model.project_title %>">
+<% content_for :title, "New Project Request" %>
+<% content_for :form_title, "Related Resources" %>
+<% content_for :form_optional, "(Optional)" %>
+<% content_for :form_description, "If you know of other TigerData projects or published works that relate to this new project, you can link them here." %>
+
+<!-- TODO: render form fields for this page -->
+<%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
