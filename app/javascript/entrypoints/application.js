@@ -154,6 +154,14 @@ function showValidationError() {
   });
 }
 
+function charCount() {
+  $('.counted-input').on('keyup', (event) => {
+    const element = event.currentTarget;
+    element.parentNode.querySelector('.current-count').innerHTML =
+      `${element.value.length}/${element.maxLength} characters`;
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -163,6 +171,7 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
+  charCount();
 }
 
 window.addEventListener('load', () => initPage());

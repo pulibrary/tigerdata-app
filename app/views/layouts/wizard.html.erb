@@ -23,6 +23,17 @@
                     action: :save, method: :put, class: "form-panel") do |form| %>
         <div class="scrollable-frame">
           <div class="form-header">
+            <div class="form-title">
+              <div class="form-text">
+                <%= yield :form_title %>
+              </div>
+              <div class="form-optional">
+                <%= yield :form_optional %>
+              </div>
+            </div>
+            <div class="form-description">
+              <%= yield :form_description %>
+            </div> 
           </div>
           <div class="form-frame">
             <%= yield %>
