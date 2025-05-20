@@ -3,17 +3,30 @@ class ProjectXmlPresenter
   attr_reader :project, :project_metadata
 
   # Delegate methods to the project and project_metadata objects
-  delegate "id", "in_mediaflux?", "mediaflux_id", "pending?", "status", "title", to: :project
+  delegate(
+    "id",
+    "in_mediaflux?",
+    "mediaflux_id",
+    "pending?",
+    "status",
+    "title",
+    to: :project
+  )
   delegate(
     "description",
-    "data_manager", "data_sponsor",
-    "data_user_read_only", "data_user_read_write",
+    "data_manager",
+    "data_sponsor",
+    "data_user_read_only",
+    "data_user_read_write",
     "departments",
     "project_id",
     "project_purpose",
-    "storage_capacity", "storage_performance_expectations",
-    "created_by", "created_on",
-    "updated_by", "updated_on",
+    "storage_capacity",
+    "storage_performance_expectations",
+    "created_by",
+    "created_on",
+    "updated_by",
+    "updated_on",
     "approval_note",
     "schema_version",
     to: :project_metadata
@@ -152,7 +165,7 @@ class ProjectXmlPresenter
 
   # @return [Array<String>] The project directory paths
   def project_directory
-    [project_metadata.project_directory]
+    [project.project_directory]
   end
 
   # @param index [Integer] The index of the project directory

@@ -638,6 +638,22 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
             .skipping(:'color-contrast')
         end
+
+        context "when requesting the XML for a project" do
+          before do
+            visit project_path(approved_project, params: { format: "xml" })
+          end
+
+          it "returns the XML with the correct attributes" do
+            xml = page.body
+            expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
+            expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")
+
+            expect(xml).to include("<storage_capacity><size requested=\"500\" approved=\"500\" unit=\"GB\"/></storage_capacity>")
+            expect(xml).to include("<storage_performance_expectations><requested>Standard</requested></storage_performance_expectations>")
+            expect(xml).to include("<project_purpose>Research</project_purpose>")
+          end
+        end
       end
     end
   end
