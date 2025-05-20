@@ -84,9 +84,9 @@ class ProjectShowPresenter
 
   def quota_percentage(session_id:)
     return 0 if project.pending? || project.storage_capacity_raw(session_id:).zero?
-    
+
    (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
-  end  
+  end
 
   private
 
