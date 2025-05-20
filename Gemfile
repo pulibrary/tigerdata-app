@@ -81,6 +81,7 @@ group :development, :test do
   gem "ed25519"
   gem "factory_bot_rails", require: false
   gem "ffaker"
+  gem "pry-byebug"
 end
 
 group :development do
