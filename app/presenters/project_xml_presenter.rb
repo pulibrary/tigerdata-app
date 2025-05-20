@@ -1,22 +1,36 @@
 # frozen_string_literal: true
+
+# rubocop:disable Metrics/ClassLength
 class ProjectXmlPresenter
   attr_reader :project, :project_metadata
 
   # Delegate methods to the project and project_metadata objects
-  delegate "id", "in_mediaflux?", "mediaflux_id", "pending?", "status", "title", to: :project
+  delegate(
+    "id",
+    "in_mediaflux?",
+    "mediaflux_id",
+    "pending?",
+    "status",
+    "title",
+    to: :project
+  )
   delegate(
     "description",
-    "data_manager", "data_sponsor",
-    "data_user_read_only", "data_user_read_write",
+    "data_manager",
+    "data_sponsor",
+    "data_user_read_only",
+    "data_user_read_write",
     "departments",
     "project_id",
     "project_purpose",
-    "storage_capacity", "storage_performance_expectations",
-    "created_by", "created_on",
-    "updated_by", "updated_on",
+    "storage_capacity",
+    "storage_performance_expectations",
+    "created_by",
+    "created_on",
+    "updated_by",
+    "updated_on",
     "approval_note",
     "schema_version",
-    # "submission",
     to: :project_metadata
   )
 
@@ -47,9 +61,7 @@ class ProjectXmlPresenter
   end
 
   # @return [Nokogiri::XML::Document] The XML document
-  def document
-    @document ||= build_xml.document
-  end
+  delegate :document, to: :build
 
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
@@ -88,11 +100,15 @@ class ProjectXmlPresenter
 
   # @return [String] The user ID of the user who requested the project
   def requested_by
+    return if submission.nil?
+
     submission.event_person
   end
 
   # @return [String] The date and time of the request
   def request_date_time
+    return if submission.nil?
+
     value = submission.created_at
     value.strftime("%Y-%m-%dT%H:%M:%S%:z")
   end
@@ -149,7 +165,7 @@ class ProjectXmlPresenter
 
   # @return [Array<String>] The project directory paths
   def project_directory
-    [project_metadata.project_directory]
+    [project.project_directory]
   end
 
   # @param index [Integer] The index of the project directory
@@ -211,14 +227,13 @@ class ProjectXmlPresenter
       values
     end
 
-    def xml_builder
-      @xml_builder ||= begin
+    def builder
+      @builder ||= begin
                          builder_args = find_builder_args(:resource)
                          XmlTreeBuilder.new(**builder_args)
                        end
     end
 
-    def build_xml
-      xml_builder.build
-    end
+    delegate :build, to: :builder
 end
+# rubocop:enable Metrics/ClassLength

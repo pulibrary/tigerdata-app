@@ -76,4 +76,16 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       expect(presenter.title).to eq(project.title)
     end
   end
+
+  describe "#xml_document" do
+    it "builds the XML document for the Project" do
+      expect(presenter.xml_document).to be_a(Nokogiri::XML::Document)
+    end
+  end
+
+  describe "#to_xml" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.to_xml).to be_a(String)
+    end
+  end
 end
