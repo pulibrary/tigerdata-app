@@ -1,4 +1,4 @@
-<% content_for :title, "Project Request" %>
+<% content_for :title, "New Project Request" %>
 <% content_for :form_title, "Basic Details" %>
 <% content_for :form_description, "Tell us a little about your project! These details are important for setting up and organizing your project." %>
 <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
