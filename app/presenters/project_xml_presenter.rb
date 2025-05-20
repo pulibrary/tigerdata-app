@@ -59,9 +59,7 @@ class ProjectXmlPresenter
   end
 
   # @return [Nokogiri::XML::Document] The XML document
-  def document
-    @document ||= build_xml.document
-  end
+  delegate :document, to: :build
 
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
@@ -227,14 +225,12 @@ class ProjectXmlPresenter
       values
     end
 
-    def xml_builder
-      @xml_builder ||= begin
+    def builder
+      @builder ||= begin
                          builder_args = find_builder_args(:resource)
                          XmlTreeBuilder.new(**builder_args)
                        end
     end
 
-    def build_xml
-      xml_builder.build
-    end
+    delegate :build, to: :builder
 end
