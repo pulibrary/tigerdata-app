@@ -154,7 +154,7 @@ project:
             discoverable: "false"
             trackingLevel: InternalUseOnly
             approved:
-              object_method: storage_performance_approved?
+              object_method: storage_performance_requested? # We do not permit the users to specify the approved, so always use the requested value
           children:
             - requested_value:
                 name: requestedValue
@@ -207,38 +207,38 @@ project:
                   - smb_enable_setting:
                       name: smbEnableSetting
                       content:
-                        object_method: smb_enable_approved?
+                        object_method: smb_enable_approved
 
                   - requested_value:
                       name: requestedValue
                       content:
-                        object_method: smb_enable_requested?
+                        object_method: smb_enable_requested
 
                   - approved_value:
                       name: approvedValue
                       content:
-                        object_method: smb_enable_approved?
+                        object_method: smb_enable_approved
 
             - globus_enable:
                 name: globusEnable
                 attributes:
                   approved:
-                    object_method: globus_enable_approved?
+                    object_method: globus_enable_approved
                 children:
                   - globus_enable_setting:
                       name: globusEnableSetting
                       content:
-                        object_method: globus_enable_requested?
+                        object_method: globus_enable_approved
 
                   - requested_value:
                       name: requestedValue
                       content:
-                        object_method: globus_enable_approved?
+                        object_method: globus_enable_requested
 
                   - approved_value:
                       name: approvedValue
                       content:
-                        object_method: globus_enable_approved?
+                        object_method: globus_enable_approved
 
         #<projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
         project_purpose:
@@ -313,6 +313,7 @@ project:
 
                   - approved_by:
                       name: approvedBy
+                      allow_empty: false
                       attributes:
                         userID:
                           object_method: approved_by
@@ -320,6 +321,7 @@ project:
 
                   - approval_date_time:
                       name: approvalDateTime
+                      allow_empty: false
                       content:
                         object_method: approval_date_time
 

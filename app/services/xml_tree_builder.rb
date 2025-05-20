@@ -6,7 +6,9 @@ class XmlTreeBuilder < XmlNodeBuilder
   def build
     super
 
-    nodes = children.map(&:build)
+    built_children = children.map(&:build)
+    # NOTE: Handle cases where `#build` returns `nil` (XML element has `nil` or empty content).
+    nodes = built_children.reject(&:nil?)
     nodes.each do |child|
       parent.add_child(child)
     end
@@ -59,7 +61,14 @@ class XmlTreeBuilder < XmlNodeBuilder
     @parent_builder = XmlElementBuilder.new(**kwargs)
     @parent = @parent_builder.build
 
-    super(document: @parent.document)
+    # NOTE: Handle cases where `#build` returns `nil` (XML element has `nil` or empty content).
+    document = if @parent.nil?
+                 nil
+               else
+                 @parent.document
+               end
+
+    super(document: document)
 
     @children = parse_child_entries(children)
   end

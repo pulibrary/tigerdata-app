@@ -648,8 +648,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             xml = page.body
             expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
             expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")
-            expect(xml).to include("<storageCapacity approved=\"false\" inherited=\"false\" discoverable=\"false\" trackingLevel=\"InternalUseOnly\"/>")
-            expect(xml).to include("<storagePerformance inherited=\"false\" discoverable=\"false\" trackingLevel=\"InternalUseOnly\" approved=\"false\">")
+            # NOTE: 500 GB are available, hence the request was approved
+            expect(xml).to include("<storageCapacity approved=\"true\" inherited=\"false\" discoverable=\"false\" trackingLevel=\"InternalUseOnly\"/>")
+            expect(xml).to include("<storagePerformance inherited=\"false\" discoverable=\"false\" trackingLevel=\"InternalUseOnly\" approved=\"true\">")
             expect(xml).to include("<requestedValue>Standard</requestedValue>")
             expect(xml).to include("</storagePerformance>")
             expect(xml).to include("<projectPurpose inherited=\"true\" discoverable=\"true\" trackingLevel=\"InternalUseOnly\">Research</projectPurpose>")
