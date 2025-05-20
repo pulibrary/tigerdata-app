@@ -31,7 +31,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in sysadmin_user
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
       expect(response).to redirect_to("#{requests_path}/#{request.id}")
-      binding.pry
       expect(page).to have_content "Approve request"
     end
 
