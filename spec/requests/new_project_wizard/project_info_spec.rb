@@ -64,7 +64,7 @@ RSpec.describe "/new-project/project-info", type: :request do
         it "renders a successful response for a back commit" do
           sign_in user
           put new_project_project_info_save_url(request.id, request: { request_title: "new title" }, commit: "Back")
-          expect(response).to redirect_to("#{requests_path}/#{request.id}")
+          expect(response).to redirect_to(dashboard_path)
           expect(request.reload.request_title).to eq("new title")
         end
       end
