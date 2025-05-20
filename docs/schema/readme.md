@@ -24,3 +24,11 @@ java -Dmf.host=0.0.0.0 -Dmf.port=8888 -Dmf.transport=http -Dmf.domain=system -Dm
 ```
 
 You'll need to be on the same folder as your `aterm.jar` file for this to work.
+
+
+## Regenerating the script to create the schema
+You can run `asset.doc.type.script.create` to get the TCL script to create the schema. It gives you something like what we have in `001_schema_v08_create.tcl` but it is coming straight from what's defined in Mediaflux.
+
+```
+asset.doc.type.script.create :type tigerdataX:resourceDoc :out file:/full/path/to/the/script.tcl
+``
