@@ -30,35 +30,43 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     it "shows the approve button on a single request view for sysadmins" do
       sign_in sysadmin_user
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-      visit "#{requests_path}/#{request.id}"
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
+      binding.pry
       expect(page).to have_content "Approve request"
+    end
+
+    it "redirects to the request path" do
+      sign_in superuser
+      put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
+      expect(page).to have_content("Approve request")
     end
 
     it "shows the approve button on a single request view for superusers" do
       sign_in superuser
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-      visit "#{requests_path}/#{request.id}"
-      expect(page).to have_content "Approve request"
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
+      expect(page).to have_content("Approve request")
     end
 
     it "does not show the approve button on a single request view for data sponsors" do
       sign_in sponsor_user
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-      visit "#{requests_path}/#{request.id}"
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
       expect(page).not_to have_content "Approve request"
     end
 
     it "does not show the approve button on a single request view for data managers" do
       sign_in data_manager
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-      visit "#{requests_path}/#{request.id}"
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
       expect(page).not_to have_content "Approve request"
     end
 
     it "does not show the approve button on a single request view for users without a role" do
       sign_in current_user
       put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-      visit "#{requests_path}/#{request.id}"
+      expect(response).to redirect_to("#{requests_path}/#{request.id}")
       expect(page).not_to have_content "Approve request"
     end
   end
