@@ -24,7 +24,6 @@ Layout/LineLength:
 Metrics/AbcSize:
   Exclude:
     - "app/mailers/tigerdata_mailer.rb"
-    - "app/presenters/project_xml_presenter.rb"
 
 Metrics/BlockLength:
   Exclude:
@@ -41,7 +40,6 @@ Metrics/MethodLength:
   Max: 15 # default: 10
   Exclude:
     - "app/mailers/tigerdata_mailer.rb"
-    - "app/presenters/project_xml_presenter.rb"
 
 Metrics/ParameterLists:
   Enabled: false
