@@ -45,7 +45,7 @@ RSpec.describe "new-project/review-submit", type: :request do
                                                                             state: "draft", data_sponsor: "sponsor", data_manager: "manager", departments: "dep1,dep2",
                                                                             description: "descr", parent_folder: "parent", project_folder: "folder",
                                                                             project_id: "doi", quota: 500, requested_by: "uid" }, commit: "Save")
-          expect(response).to redirect_to(dashboard_path)
+          expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
@@ -64,7 +64,7 @@ RSpec.describe "new-project/review-submit", type: :request do
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-          expect(response).to redirect_to(dashboard_path)
+          expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
