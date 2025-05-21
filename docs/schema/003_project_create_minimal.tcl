@@ -4,7 +4,7 @@
 
 
 # Project values
-set projectDirectory "test-minimal-6"
+set projectDirectory "test-minimal-7"
 set projectDescription "This is just an example description."
 set projectDOI "10.34770/az09-0001"
 set projectTitle "Test Project 1"
@@ -37,14 +37,14 @@ asset.create \
     :meta < \
         :tigerdataX:resourceDoc < \
             :resource -resourceClass "Project" -resourceID $projectDOI -resourceIDType "DOI" < \
-                :title $projectTitle \
-                :description -inherited false -discoverable true -trackingLevel "ResourceRecord" $projectDescription \
+                :title -lang "en" $projectTitle \
+                :description -lang "en" -inherited false -discoverable true -trackingLevel "ResourceRecord" $projectDescription \
                 :projectID -projectIDType "DOI" -inherited true -discoverable true -trackingLevel "ResourceRecord" $projectDOI \
                 :projectDirectory -inherited false -discoverable false -trackingLevel "InternalUseOnly" -approved true \
                 < \
-                    :projectDirectoryPath $projectDirectory \
-                    :requestedValue $projectDirectory \
-                    :approvedValue $projectDirectory \
+                    :projectDirectoryPath -protocol "NFS" $projectDirectory \
+                    :requestedValue -protocol "NFS" $projectDirectory \
+                    :approvedValue -protocol "NFS" $projectDirectory \
                 > \
                 :dataSponsor -userID "mjc12" -userIDType "NetID" -discoverable true -inherited true -trackingLevel "ResourceRecord" \
                 :dataManager -userID "mjc12" -userIDType "NetID" -discoverable true -inherited true -trackingLevel "ResourceRecord" \

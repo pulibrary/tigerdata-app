@@ -135,6 +135,14 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             < \
                 :description "A plain-language description of the resource and/or its contents" \
                 :instructions "May apply to either Projects or Items" \
+                :attribute -name "lang" -type "enumeration" \
+                < \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "en" \
+                    > \
+                    :value -as "default" "en" \
+                > \
                 :attribute -name inherited -type boolean \
                 < \
                     :value -as default false \
