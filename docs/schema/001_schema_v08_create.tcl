@@ -115,6 +115,22 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
             > \
             :element -name title -type string -min-occurs 1 -max-occurs 1 \
+            < \
+                :description "A plain-language title for the resource" \
+                :instructions "May apply to either Projects or Items. Restricted to fewer characters than the typical free-text limitations" \
+                :restriction -base "string" \
+                < \
+                    :max-length "200" \
+                > \
+                :attribute -name "lang" -type "enumeration" \
+                < \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "en" \
+                    > \
+                    :value -as "default" "en" \
+                > \
+            > \
             :element -name description -type string -min-occurs 1 -max-occurs 1 \
             < \
                 :description "A plain-language description of the resource and/or its contents" \
