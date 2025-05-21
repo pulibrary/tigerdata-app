@@ -1,9 +1,16 @@
-<h2>Review and Submit</h2>
-<%= form_with(url: new_project_review_and_submit_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
-  <%= @request_model.id %>
-  <div>
-    <%= form.label :project_title %>
-    <%= form.text_field :project_title %>
-  </div>
-  <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
-<% end %>
+<% content_for :title, "New Project Request" %>
+<% content_for :form_title, "Review" %>
+<% content_for :form_description, "Take a moment to review your details and make any necessary edits before finalizing." %>
+
+<div class="section">
+    <div class="section-title">
+      <div class="section-frame">
+        Project Information - Basic Details
+      </div>  
+    </div>
+    <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
+    <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error: "",
+                                                                                parent_folder: @request_model.parent_folder || "", parent_folder_error: ""} %>
+    <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: "" } %>
+</div>
+<div class="section-line"></div>

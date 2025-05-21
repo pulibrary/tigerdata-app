@@ -8,10 +8,43 @@
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/emulator' %>
     <%= render partial: 'shared/alert' %>
-    wizard
-    <%= render partial: 'shared/breadcrumbs' %>
 
-    <%= yield %>
+    <div class="wizard">
+      <%= render partial: 'shared/breadcrumbs' %>
+      <div class="heading-frame">
+        <div class="heading-text">
+          <%= yield :title %>
+        </div>
+        <div class="deco-line"></div>
+      </div>
+      <div class="main-frame">
+      <%= render partial: '/new_project_wizard/sidebar' %>
+      <%= form_with(url: @form_url, model: @request_model, 
+                    action: :save, method: :put, class: "form-panel") do |form| %>
+        <div class="scrollable-frame">
+          <div class="form-header">
+            <div class="form-title">
+              <div class="form-text">
+                <%= yield :form_title %>
+              </div>
+              <div class="form-optional">
+                <%= yield :form_optional %>
+              </div>
+            </div>
+            <div class="form-description">
+              <%= yield :form_description %>
+            </div> 
+          </div>
+          <div class="form-frame">
+            <%= yield %>
+          </div>
+        </div>
+        <div class="button-frame">
+            <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
+        </div>
+      <% end %>
+      </div>
+    </div>
 
     <div class="welcome-footer"><%= render partial: 'shared/footer' %></div>
   </body>

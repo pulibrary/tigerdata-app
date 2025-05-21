@@ -1,9 +1,7 @@
-<h2>Project Information: Basic</h2>
-<%= form_with(url: new_project_project_info_save_path(@request_model), model: @request_model, action: :save, method: :put) do |form| %>
-  <%= @request_model.id %>
-  <div>
-    <%= form.label :title %>
-    <%= form.text_field :request_title %>
-  </div>
-  <%= render partial: '/new_project_wizard/navigation', locals: {form:} %>
-<% end %>
+<% content_for :title, "New Project Request" %>
+<% content_for :form_title, "Basic Details" %>
+<% content_for :form_description, "Tell us a little about your project! These details are important for setting up and organizing your project." %>
+<%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
+<%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error: "",
+                                                                            parent_folder: @request_model.parent_folder || "", parent_folder_error: ""} %>
+<%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: "" } %>

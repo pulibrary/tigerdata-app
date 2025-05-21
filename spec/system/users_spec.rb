@@ -25,15 +25,15 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   end
 
   context "system administrator" do
-    it "shows the error message" do
+    it "shows the Current Users page" do
       sign_in sysadmin_user
       visit "/users"
       expect(page).to have_content "Current Users"
     end
   end
 
-  context "superadmin" do
-    it "shows the error message" do
+  context "superuser" do
+    it "shows the Current Users page" do
       sign_in superuser
       visit "/users"
       expect(page).to have_content "Current Users"
@@ -41,7 +41,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   end
 
   context "trainer" do
-    it "shows the error message" do
+    it "shows the the Current Users page" do
       sign_in current_user
       current_user.trainer = true
       current_user.save!

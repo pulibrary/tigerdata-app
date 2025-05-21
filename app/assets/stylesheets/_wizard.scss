@@ -8,13 +8,536 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2.5rem;
-  color: red;
   nav {
     display: flex;
-    width: 75rem;
     height: 1.8125rem;
     padding: 0.25rem 0rem;
     align-items: center;
     gap: 0.625rem;
   }
+  .heading-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+
+    .heading-text {
+      color: $gray-100;
+
+      /* Heading 1 */
+      font-family: "Libre Franklin";
+      font-size: 2.5rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 3rem; /* 120% */
+    }
+
+    .deco-line {
+      width: 6.25rem;
+      height: 0.5rem;
+      background: $princeton-orange;
+    }
+  }
+  .main-frame {
+    display: flex;
+    height: 45.6875rem;
+    align-items: flex-start;
+    gap: 1.25rem;
+    align-self: stretch;
+
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      align-self: stretch;
+      flex-grow: 1;
+
+      .scrollable-frame {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+        flex: 1 0 0;
+        align-self: stretch;
+
+        .form-header {
+          display: flex;
+          padding: 0.75rem 0rem 1.5rem 0rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+          align-self: stretch;
+          border-bottom: 1px solid $gray-20;
+          background: $white;
+
+          .form-title {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            align-self: stretch;
+
+            .form-text {
+              color: $gray-100;
+
+              /* Heading 4 */
+              font-family: $libre-franklin;
+              font-size: 1.5rem;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 1.75rem; /* 116.667% */
+            }
+
+            .form-optional {
+              color: $gray-60;
+
+              /* Heading 4 */
+              font-family: libre-franklin;
+              font-size: 1.5rem;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 1.75rem; /* 116.667% */
+            }
+          }
+          .form-description {
+            color: $gray-60;
+
+            /* Body S */
+            font-family: $libre-franklin;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.5rem; /* 150% */
+          }
+        }
+        .form-frame {
+          display: flex;
+          height: 33.1875rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2.5rem;
+          align-self: stretch;
+
+          .form-field {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            align-self: stretch;
+
+            .field-info {
+              display: flex;
+              width: 11.4375rem;
+              flex-direction: column;
+              align-items: flex-start;
+
+              .field-label {
+                color: $gray-100;
+
+                /* Body Bold */
+                font-family: $libre-franklin;
+                font-size: 1.125rem;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 1.6875rem; /* 150% */
+              }
+
+              .field-sub-label {
+                width: 8.375rem;
+                color: $gray-60;
+
+                /* Body XS */
+                font-family: $libre-franklin;
+                font-size: 0.875rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 1.3125rem; /* 150% */
+              }
+            }
+
+            .input-label {
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+
+              .label {
+                color: $gray-60;
+
+                /* Body XS Bold */
+                font-family: $libre-franklin;
+                font-size: 0.875rem;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 1.3125rem; /* 150% */
+              }
+              .info {
+                width: 1.25rem;
+                height: 1.25rem;
+                aspect-ratio: 1/1;
+                background: url("info.svg") no-repeat;
+              }
+            }
+
+            .input-frame {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.5rem;
+              flex: 1 0 0;
+              .text-input {
+                display: flex;
+                width: 36.875rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+                .horizontal-frame {
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 0.25rem;
+                  align-self: stretch;
+                  .vertical-frame {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 0.25rem;
+                    flex: 1 0 0;
+                    .form-input {
+                      display: flex;
+                      width: 36.875rem;
+                      flex-direction: column;
+                      align-items: flex-start;
+                      gap: 0.25rem;
+                    }
+                    .char-limit {
+                      display: flex;
+                      justify-content: flex-end;
+                      align-items: center;
+                      align-self: stretch;
+                      .char-limit-text {
+                        color: $gray-60;
+
+                        /* Body XXS */
+                        font-family: $libre-franklin;
+                        font-size: 0.75rem;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 1.125rem; /* 150% */
+                      }
+                    }
+                    .input-error {
+                    }
+                  }
+                }
+              }
+              .project-directory {
+                display: flex;
+                width: 38.625rem;
+                align-items: center;
+                gap: 0.5rem;
+                .parent-folder {
+                  display: flex;
+                  width: 15rem;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  gap: 0.25rem;
+                  flex-shrink: 0;
+                }
+                .project-folder {
+                  display: flex;
+                  width: 23.125rem;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  gap: 0.25rem;
+                  flex-shrink: 0;
+                }
+              }
+            }
+          }
+
+          .section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            align-self: stretch;
+
+            .section-frame {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.75rem;
+
+              color: $black;
+
+              /* Heading 5 */
+              font-family: $libre-franklin;
+              font-size: 1.25rem;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 1.5rem; /* 120% */
+            }
+          }
+
+          .section-line {
+            width: 55.9375rem;
+            height: 0.0625rem;
+            background: $gray-10;
+          }
+        }
+      }
+
+      .button-frame {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+
+        .button {
+          display: flex;
+          padding: 0.5rem 1.25rem;
+          justify-content: center;
+          align-items: center;
+          gap: 0.25rem;
+          border-radius: 0.25rem;
+          border: 1px solid $gray-60;
+          background: $white;
+        }
+
+        .right-frame {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+.sidebar-width {
+  width: 17.8125rem;
+}
+
+/* NOTE - Values within the New Project Wizard sidebar need to be measured in pixels to maintain the layout */
+
+#new-project-wizard-sidebar {
+  width: 100%;
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  background: $gray-5;
+  overflow: hidden;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: flex-start;
+  display: inline-flex;
+}
+
+.sidebar-container {
+  flex: 1 1 0;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  display: inline-flex;
+}
+
+.expanded-state {
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  display: flex;
+}
+
+.unexpanded-state {
+  align-self: stretch;
+  height: 28px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  display: inline-flex;
+}
+
+.step-container {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  display: inline-flex;
+}
+
+.step {
+  width: 217px;
+  height: 28px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.step-number-completed {
+  width: 28px;
+  height: 28px;
+  background: $princeton-orange-80;
+  border-radius: 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  display: flex;
+}
+
+.step-number-current {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  border: 2px solid $princeton-orange-80;
+  background: $white;
+}
+
+.step-number-value {
+  color: $black;
+  font-size: 14px;
+  font-family: $libre-franklin;
+  font-weight: 600;
+  line-height: 21px;
+  word-wrap: break-word;
+}
+
+.step-text-container {
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: flex;
+}
+
+.step-text,
+.step-text a:link,
+.step-text a:visited {
+  color: $black;
+  font-size: 14px;
+  font-family: $libre-franklin;
+  font-weight: 600;
+  line-height: 21px;
+  word-wrap: break-word;
+  text-decoration: none;
+}
+
+.step-text a:hover {
+  text-decoration: underline;
+}
+
+.step-expanded-container {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.step-expanded {
+  width: 4px;
+  height: 8px;
+  left: 12px;
+  top: 6px;
+  position: absolute;
+  transform: rotate(90deg);
+  transform-origin: top left;
+  outline: 1.33px $black solid;
+  outline-offset: -0.67px;
+}
+
+.substeps-container {
+  width: 217px;
+  position: relative;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  display: flex;
+}
+
+.connector-line {
+  width: 74px;
+  height: 0px;
+  left: 49px;
+  top: 16px;
+  position: absolute;
+  transform: rotate(90deg);
+  transform-origin: top left;
+  outline: 1px $gray-20 solid;
+  outline-offset: -0.5px;
+}
+
+.substep-container {
+  width: 217px;
+  height: 20px;
+  padding-left: 40px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  display: inline-flex;
+}
+
+.substep-indicator-container {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.substep-indicator-completed {
+  width: 20px;
+  height: 20px;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  background: $princeton-orange-80;
+  border-radius: 9999px;
+}
+
+.substep-indicator-current {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  border: 2px solid $princeton-orange-80;
+  background: $white;
+}
+
+.substep-text,
+.substep-text a:link,
+.substep-text a:visited {
+  color: $black;
+  font-size: 12px;
+  font-family: $libre-franklin;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
+  text-decoration: none;
+}
+
+.substep-text a:hover {
+  text-decoration: underline;
+}
+
+.substep-text-current,
+.substep-text-current a:link,
+.substep-text-current a:visited {
+  color: $black;
+  font-size: 12px;
+  font-family: $libre-franklin;
+  font-weight: 600;
+  line-height: 18px;
+  word-wrap: break-word;
+  text-decoration: none;
+}
+
+.substep-text-current a:hover {
+  text-decoration: underline;
 }

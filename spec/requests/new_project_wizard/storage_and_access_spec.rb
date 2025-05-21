@@ -42,7 +42,7 @@ RSpec.describe "new-project/storage-access", type: :request do
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-          expect(response).to redirect_to(dashboard_path)
+          expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
