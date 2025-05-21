@@ -21,7 +21,7 @@
 #   * dataUsers
 #   * projectProvenance (incomplete, only includes schemaVersion)
 #   * researchDomains (missing)
-#   * departments (missing)
+#   * departments
 #   * projectDirectory
 #   * storageAndAccess (missing)
 #   * additionalProjectInformation (missing)
@@ -226,6 +226,42 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                             :value "S3" \
                         > \
                         :value -as "default" "NFS" \
+                    > \
+                > \
+            > \
+            :element -name departments -type document -min-occurs 1 -max-occurs 1 \
+            < \
+                :description "The container element for all departments for a project" \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" true \
+                > \
+                :attribute -name "trackingLevel" -type "enumeration" \
+                < \
+                    :description "Standard attribute to specify the tracking level of a given field" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "ResourceRecord" \
+                    > \
+                    :value -as "constant" "ResourceRecord" \
+                > \
+                :element -name department -type string -min-occurs 1 -max-occurs 100 \
+                < \
+                    :description "The primary Princeton University department(s) affiliated with the project." \
+                    :instructions "Use the canonical name for each recorded department. Princeton department names typically start with a 2- or 3-character abbreviation, followed by a minus-dash, and then a short description." \
+                    :attribute -name departmentCode -type string \
+                    < \
+                        :description "Records the numerical code for the department (required)" \
+                    > \
+                    :attribute -name inherited -type boolean \
+                    < \
+                        :value -as constant false \
+                    > \
+                    :restriction -base "string" \
+                    < \
+                        :min-length "6" \
+                        :max-length "38" \
+                        :display-length "38" \
                     > \
                 > \
             > \

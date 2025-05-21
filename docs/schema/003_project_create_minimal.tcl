@@ -4,7 +4,7 @@
 
 
 # Project values
-set projectDirectory "test-minimal-7"
+set projectDirectory "test-minimal-8"
 set projectDescription "This is just an example description."
 set projectDOI "10.34770/az09-0001"
 set projectTitle "Test Project 1"
@@ -48,6 +48,9 @@ asset.create \
                 > \
                 :dataSponsor -userID "mjc12" -userIDType "NetID" -discoverable true -inherited true -trackingLevel "ResourceRecord" \
                 :dataManager -userID "mjc12" -userIDType "NetID" -discoverable true -inherited true -trackingLevel "ResourceRecord" \
+                :departments -discoverable true -trackingLevel "ResourceRecord" < \
+                    :department -departmentCode RDSS -inherited false "Research Data and Scholarly Services" \
+                > \
                 :projectProvenance < \
                     :schemaVersion $schemaVersion \
                 > \
