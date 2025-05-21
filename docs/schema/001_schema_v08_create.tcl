@@ -5,7 +5,7 @@
 #   script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/001_schema_v08_create.tcl
 #
 # Or directly from the Terminal:
-#   java -Dmf.host=0.0.0.0 -Dmf.port=8888 -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -jar aterm.jar --app exec script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/schema_v08_create.tcl
+#   java -Dmf.host=0.0.0.0 -Dmf.port=8888 -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -jar aterm.jar --app exec script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/001_schema_v08_create.tcl
 #
 
 # As of this version it defines the `resource` and the following project fields within the resource:
@@ -16,6 +16,7 @@
 #   * description
 #   * languages (missing)
 #   * dataSponsor
+#           Q. allow incomplete dates in `nameDate` vs Mediaflux date restriction?
 #   * dataManager
 #   * dataUsers
 #   * projectProvenance (incomplete, only includes schemaVersion)
@@ -73,8 +74,12 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             > \
             :element -name projectID -type string -min-occurs 1 -max-occurs 1 < \
                 :description "The universally unique identifier for the project (required)" \
-                :attribute -name projectIDType -type string \
+                :attribute -name "projectIDType" -type "enumeration" \
                 < \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "DOI" \
+                    > \
                     :value -as "constant" "DOI" \
                 > \
                 :attribute -name inherited -type boolean \
@@ -87,7 +92,7 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 > \
                 :attribute -name trackingLevel -type string \
                 < \
-                    :value -as "default" "ResourceRecord" \
+                    :value -as "constant" "ResourceRecord" \
                 > \
             > \
             :element -name parentProject -type string -min-occurs 0 -max-occurs 1 < \
@@ -193,6 +198,12 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :description "Specifies the (locally) unique user ID" \
                     :instructions "If a value is given for the sub-element netID, then it should match the value given for userID" \
+                    :restriction -base "string" \
+                    < \
+                        :min-length "2" \
+                        :max-length "8" \
+                        :display-length "8" \
+                    > \
                 > \
                 :attribute -name userIDType -min-occurs "1" -type string \
                 < \
@@ -207,13 +218,24 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :value -as "default" true \
                 > \
-                :attribute -name trackingLevel -type string \
+                :attribute -name "trackingLevel" -type "enumeration" \
                 < \
-                    :value -as "default" "ResourceRecord" \
+                    :description "Standard attribute to specify the tracking level of a given field" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "ResourceRecord" \
+                    > \
+                    :value -as "constant" "ResourceRecord" \
                 > \
                 :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
                 < \
                     :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
+                    :restriction -base "string" \
+                    < \
+                    :min-length "2" \
+                    :max-length "8" \
+                    :display-length "8" \
+                    > \
                 > \
                 :element -name "PUID" -type "string" -min-occurs "0" -max-occurs "1" \
                 < \
@@ -242,7 +264,7 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     < \
                         :description "The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                     > \
-                    :attribute -name schemeURI -min-occurs "1" -type string \
+                    :attribute -name schemeURI -min-occurs "1" -type url \
                     < \
                         :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                     > \
@@ -261,6 +283,12 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :description "Specifies the (locally) unique user ID" \
                     :instructions "If a value is given for the sub-element netID, then it should match the value given for userID" \
+                    :restriction -base "string" \
+                    < \
+                        :min-length "2" \
+                        :max-length "8" \
+                        :display-length "8" \
+                    > \
                 > \
                 :attribute -name userIDType -min-occurs "1" -type string \
                 < \
@@ -275,13 +303,24 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :value -as "default" true \
                 > \
-                :attribute -name trackingLevel -type string \
+                :attribute -name "trackingLevel" -type "enumeration" \
                 < \
-                    :value -as "default" "ResourceRecord" \
+                    :description "Standard attribute to specify the tracking level of a given field" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "ResourceRecord" \
+                    > \
+                    :value -as "constant" "ResourceRecord" \
                 > \
                 :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
                 < \
                     :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
+                    :restriction -base "string" \
+                    < \
+                        :min-length "2" \
+                        :max-length "8" \
+                        :display-length "8" \
+                    > \
                 > \
                 :element -name "PUID" -type "string" -min-occurs "0" -max-occurs "1" \
                 < \
@@ -310,7 +349,7 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     < \
                         :description "The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                     > \
-                    :attribute -name schemeURI -min-occurs "1" -type string \
+                    :attribute -name schemeURI -min-occurs "1" -type url \
                     < \
                         :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                     > \
@@ -325,8 +364,13 @@ asset.doc.type.update :create true :description "Document type to represent Tige
             < \
                 :description "The container element for all data users of a resource" \
                 :instructions "May apply to either Projects or Items. If this element is present, then it should contain at least one sub-element" \
-                :attribute -name trackingLevel -type string \
+                :attribute -name "trackingLevel" -type "enumeration" \
                 < \
+                    :description "Standard attribute to specify the tracking level of a given field" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "ResourceRecord" \
+                    > \
                     :value -as "constant" "ResourceRecord" \
                 > \
                 :element -name "dataUser" -type "document"  -min-occurs "1" -max-occurs "100" \
@@ -359,6 +403,12 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                     :element -name "netID" -type "string" -min-occurs "0" -max-occurs "1" \
                     < \
                         :description "The Princeton University NetID (also called the OIT NetID) is the name or user-id that identifies a person to a computer system or electronic service at Princeton." \
+                        :restriction -base "string" \
+                        < \
+                            :min-length "2" \
+                            :max-length "8" \
+                            :display-length "8" \
+                        > \
                     > \
                     :element -name "PUID" -type "string" -min-occurs "0" -max-occurs "1" \
                     < \
@@ -387,7 +437,7 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                         < \
                             :description "The name of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                         > \
-                        :attribute -name schemeURI -min-occurs "1" -type string \
+                        :attribute -name schemeURI -min-occurs "1" -type url \
                         < \
                             :description "The URI of the scheme to which the name identifier belongs (required when an alternative name identifier is given)." \
                         > \
