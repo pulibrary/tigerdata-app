@@ -14,7 +14,7 @@
 #   * parentProject
 #   * title
 #   * description
-#   * languages (missing)
+#   * languages
 #   * dataSponsor
 #           Q. allow incomplete dates in `nameDate` vs Mediaflux date restriction?
 #   * dataManager
@@ -262,6 +262,33 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                         :min-length "6" \
                         :max-length "38" \
                         :display-length "38" \
+                    > \
+                > \
+            > \
+            :element -name languages -type document -min-occurs 0 -max-occurs 1 \
+            < \
+                :description "The container element for all languages for a resource" \
+                :instructions "May apply to either Projects or Items. If this element is present, then it should contain at least one sub-element" \
+                :attribute -name discoverable -type boolean \
+                < \
+                    :value -as "default" true \
+                > \
+                :attribute -name "trackingLevel" -type "enumeration" \
+                < \
+                    :description "Standard attribute to specify the tracking level of a given field" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "ResourceRecord" \
+                    > \
+                    :value -as "constant" "ResourceRecord" \
+                > \
+                :element -name language -type string -min-occurs 1 -max-occurs 100 \
+                < \
+                    :description "Language declaration for the contents of the resource" \
+                    :instructions "A language code as defined by xs:language, for example en or en-US" \
+                    :attribute -name inherited -type boolean \
+                    < \
+                        :value -as "default" true \
                     > \
                 > \
             > \

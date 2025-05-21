@@ -4,7 +4,7 @@
 
 
 # Project values
-set projectDirectory "test-minimal-8"
+set projectDirectory "test-minimal-9"
 set projectDescription "This is just an example description."
 set projectDOI "10.34770/az09-0001"
 set projectTitle "Test Project 1"
