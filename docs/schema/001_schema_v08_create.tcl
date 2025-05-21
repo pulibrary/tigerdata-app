@@ -144,9 +144,13 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :value -as constant false \
                 > \
-                :attribute -name trackingLevel -type string \
+                :attribute -name "trackingLevel" -type "enumeration" \
                 < \
-                    :value -as constant "InternalUseOnly" \
+                    :restriction -base "enumeration" \
+                    < \
+                        :value "InternalUseOnly" \
+                    > \
+                    :value -as "constant" "InternalUseOnly" \
                 > \
                 :attribute -name approved -type boolean \
                 < \
@@ -156,16 +160,49 @@ asset.doc.type.update :create true :description "Document type to represent Tige
                 < \
                     :description "A current setting for projectDirectory (omitted until approved)" \
                     :instructions "After approval, this value should be updated to match the approved value (in rare cases, the current setting may later deviate from the approved value). Multiple elements are allowed to specify paths in alternative protocols, using the protocol attribute. Example NFS path: /tigerdata/parent-folder/project-folder. Example SMB path: \\tigerdata-smb\parent-folder\project-folder. Example S3 path: S3://princeton/tigerdata/parent-folder/project-folder." \
+                    :attribute -name "protocol" -type "enumeration" \
+                    < \
+                        :description "The storage connection protocol that defines how the path is written" \
+                        :restriction -base "enumeration" \
+                        < \
+                            :value "NFS" \
+                            :value "SMB" \
+                            :value "S3" \
+                        > \
+                        :value -as "default" "NFS" \
+                    > \
                 > \
                 :element -name requestedValue -type string -min-occurs 0 -max-occurs 1 \
                 < \
                     :description "A current setting for projectDirectory (omitted until approved)" \
                     :instructions "After approval, this value should be updated to match the approved value (in rare cases, the current setting may later deviate from the approved value). Multiple elements are allowed to specify paths in alternative protocols, using the protocol attribute. Example NFS path: /tigerdata/parent-folder/project-folder. Example SMB path: \\tigerdata-smb\parent-folder\project-folder. Example S3 path: S3://princeton/tigerdata/parent-folder/project-folder." \
+                    :attribute -name "protocol" -type "enumeration" \
+                    < \
+                        :description "The storage connection protocol that defines how the path is written" \
+                        :restriction -base "enumeration" \
+                        < \
+                            :value "NFS" \
+                            :value "SMB" \
+                            :value "S3" \
+                        > \
+                        :value -as "default" "NFS" \
+                    > \
                 > \
                 :element -name approvedValue -type string -min-occurs 0 -max-occurs 1 \
                 < \
                     :description "The approved value for projectDirectory (omitted if no sys admin has approved yet)" \
                     :instructions "Once approved, the approved attribute should also be set to true." \
+                    :attribute -name "protocol" -type "enumeration" \
+                    < \
+                        :description "The storage connection protocol that defines how the path is written" \
+                        :restriction -base "enumeration" \
+                        < \
+                            :value "NFS" \
+                            :value "SMB" \
+                            :value "S3" \
+                        > \
+                        :value -as "default" "NFS" \
+                    > \
                 > \
             > \
             :element -name projectProvenance -type document -min-occurs 1 -max-occurs 1 \
