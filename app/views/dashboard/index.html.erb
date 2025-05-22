@@ -6,9 +6,9 @@
             <% if current_user.eligible_to_create_new? or (current_user.eligible_to_create_new? && @emulation_role == "Eligible Data Sponsor") %>
             <%= link_to "Create new project", new_project_path(), class: "btn btn-dark btn-sm" %>
             <% end %>
-            
+
          <div class="requests-button">
-            <% if current_user.eligible_to_create_new? or (current_user.eligible_to_create_new?) %>
+            <% if current_user.eligible_to_create_new? %>
             <%= link_to "New project request", requests_path(), class: "btn btn-dark btn-sm" %>
             <% end %>
          </div>
