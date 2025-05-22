@@ -44,7 +44,7 @@ RSpec.describe "new-project/review-submit", type: :request do
           put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project",
                                                                             state: "draft", data_sponsor: "sponsor", data_manager: "manager", departments: "dep1,dep2",
                                                                             description: "descr", parent_folder: "parent", project_folder: "folder",
-                                                                            project_id: "doi", quota: 500, requested_by: "uid" }, commit: "Save")
+                                                                            project_id: "doi", quota: "500 GB", requested_by: "uid" }, commit: "Save")
           expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
@@ -57,7 +57,7 @@ RSpec.describe "new-project/review-submit", type: :request do
           expect(request.parent_folder).to eq("parent")
           expect(request.project_folder).to eq("folder")
           expect(request.project_id).to eq("doi")
-          expect(request.quota).to eq(500)
+          expect(request.quota).to eq("500 GB")
           expect(request.requested_by).to eq("uid")
         end
 

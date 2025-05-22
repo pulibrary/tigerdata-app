@@ -5,7 +5,7 @@ RSpec.describe Request, type: :model do
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                            data_sponsor: "sponsor", data_manager: "manager", departments: "dept", description: "description", parent_folder: "folder",
-                           project_folder: "project", project_id: "doi", quota: 500, requested_by: "uid")
+                           project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid")
   end
 
   describe "#request_type" do
@@ -60,7 +60,7 @@ RSpec.describe Request, type: :model do
 
   describe "#quota" do
     subject(:quota) { request.quota }
-    it { should eq(500) }
+    it { should eq("500 GB") }
   end
 
   describe "#requested_by" do
@@ -133,9 +133,22 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_quota?" do
     it "requires a quota to be positive" do
-      request = Request.new(quota: 0)
+      request = Request.new(quota: "")
       expect(request.valid_quota?).to be_falsey
-      request.quota = 500
+      request.quota = "500 GB"
+      expect(request.valid_quota?).to be_truthy
+      request.quota = "2 TB"
+      expect(request.valid_quota?).to be_truthy
+      request.quota = "10 TB"
+      expect(request.valid_quota?).to be_truthy
+      request.quota = "25 TB"
+      expect(request.valid_quota?).to be_truthy
+      request.quota = "23 TB"
+      expect(request.valid_quota?).to be_falsey
+      request.quota = "custom"
+      expect(request.valid_quota?).to be_falsey
+      request.storage_size = 23
+      request.storage_unit = "TB"
       expect(request.valid_quota?).to be_truthy
     end
   end
