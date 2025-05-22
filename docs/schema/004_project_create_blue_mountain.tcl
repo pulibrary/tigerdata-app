@@ -1,4 +1,4 @@
-# Create a project with the data from the blue Mountain project in production
+# Create a project with the data from the "Blue Mountain" project in production
 # (https://drive.google.com/drive/folders/1co2jp1lKcgi9x9XG3a6sWX5ZlnwhGb8o)
 #
 #   script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/004_project_create_blue_mountain.tcl
