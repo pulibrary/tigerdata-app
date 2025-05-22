@@ -162,6 +162,14 @@ function charCount() {
   });
 }
 
+function toggleHidden() {
+  $('.hidden-toggle').on('click', (event) => {
+    const toggleElement = event.currentTarget;
+    const element = toggleElement.parentNode.querySelector('.hidden-div');
+    element.hidden = false;
+  });
+}
+
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -172,6 +180,7 @@ function initPage() {
   emulate();
   showValidationError();
   charCount();
+  toggleHidden();
 }
 
 window.addEventListener('load', () => initPage());

@@ -38,7 +38,8 @@ class Request < ApplicationRecord
   end
 
   def valid_quota?
-    quota.present? && quota > 0
+    ((quota == "500 GB") || (quota == "2 TB") || (quota == "10 TB") || (quota == "25 TB")) ||
+      ((quota == "custom") && (storage_size.present? && (storage_size > 0)) && ((storage_unit == "GB") || (storage_unit == "TB")))
   end
 
   def valid_requested_by?
