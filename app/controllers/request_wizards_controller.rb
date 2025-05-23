@@ -51,6 +51,7 @@ class RequestWizardsController < ApplicationController
 
     # set if id is present or create request if not
     def set_or_create_request_model
+      @princeton_departments = Affiliation.all.map { |dep| "(#{dep.code}) #{dep.name}" }
       if params[:request_id].blank?
         @request_model = Request.create
       else
@@ -64,8 +65,20 @@ class RequestWizardsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def request_params
-      params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager, :departments,
+      request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager, :departments,
                                         :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by)
+      if request_params[:departments].present?
+        request_params[:departments] = clean_department_list request_params[:departments]
+      end
+      request_params
+    end
+
+    def clean_department_list(department_list)
+      department_list = department_list.gsub(",,", ",")
+      if department_list.start_with?(",")
+        department_list = department_list[1..]
+      end
+      department_list
     end
 
     def check_flipper

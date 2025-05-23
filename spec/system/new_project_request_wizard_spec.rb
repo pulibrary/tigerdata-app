@@ -90,5 +90,38 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       visit "/new-project/review-submit/#{request.id}"
       expect(page).not_to have_content "Review and Submit"
     end
+
+    it "Supports all the Skeletor fields on the basic information page" do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, true)
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Basic Details"
+      fill_in :project_title, with: "A basic Project"
+      expect(page).to have_content "15/200 characters"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      expect(page).to have_content "46/1000 characters"
+      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      select "(77777) RDSS-Research Data and Scholarship Services", from: "department_find"
+      # This is triggering the html5 element like it would normally if the page has focus
+      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+
+      # force a save and page reload to make sure all data is being saved to the model
+      click_on "Next"
+      expect(page).to have_content "Categories (Optional)"
+      click_on("Back")
+      expect(page).to have_content "Basic Details"
+      expect(page).to have_field("project_title", with: "A basic Project")
+      expect(page).to have_field("parent_folder", with: "abc_lab")
+      expect(page).to have_field("project_folder", with: "skeletor")
+      expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+    end
   end
 end

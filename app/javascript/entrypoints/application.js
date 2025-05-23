@@ -19,6 +19,7 @@ import { setTargetHtml } from './helper';
 import { displayMediafluxVersion } from './mediafluxVersion';
 import { showCreateScript } from './atermScripts';
 import { dashStyle, dashTab } from './dashboardTabs';
+import { departmentAutocomplete } from './departmentAutocomplete';
 import { setupTable } from './pulDataTables';
 import { showMoreLess } from './showMoreLess';
 import { projectStyle, projectTab } from './projectTabs';
@@ -181,6 +182,7 @@ function initPage() {
   showValidationError();
   charCount();
   toggleHidden();
+  departmentAutocomplete();
 }
 
 window.addEventListener('load', () => initPage());

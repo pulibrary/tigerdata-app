@@ -5,3 +5,4 @@
 <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error: "",
                                                                             parent_folder: @request_model.parent_folder || "", parent_folder_error: ""} %>
 <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: "" } %>
+<%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @request_model.departments || "", department_error: "" } %>
