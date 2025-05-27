@@ -188,7 +188,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Project Requests"
+        expect(page).to have_content "New project request"
       end
 
       it "shows the system administrator dashboard", js: true do
@@ -273,7 +273,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Project Requests"
+        expect(page).to have_content "New project request"
       end
 
       it "shows the system administrator dashboard" do
