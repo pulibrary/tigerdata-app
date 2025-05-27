@@ -66,26 +66,30 @@ class ProjectXmlPresenter
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
     raise("Not currently supported in the XML presenter")
+    globus_request = project_metadata.globus_request
   end
 
   # @return [Boolean] Whether there is a request for a Globus mount
   def globus_enable_requested?
     raise("Not currently supported in the XML presenter")
+    globus_request = project_metadata.globus_request
   end
 
   # @return [Boolean] Whether the request for the SMB mount is approved
   def smb_enable_approved?
     raise("Not currently supported in the XML presenter")
+    smb_request = project_metadata.smb_request
   end
 
   # @return [Boolean] Whether there is a request for SMB mount
   def smb_enable_requested?
     raise("Not currently supported in the XML presenter")
+    smb_request = project_metadata.smb_request
   end
 
   # @return [String] The project status
   def status
-    raise("Not currently supported in the XML presenter")
+    project_metadata.status
   end
 
   # @return [ProvenanceEvent] The first project submission event
@@ -113,47 +117,59 @@ class ProjectXmlPresenter
     value.strftime("%Y-%m-%dT%H:%M:%S%:z")
   end
 
+  def approval_note
+    project_metadata.approval_note
+  end
+
   # @return [String] The user ID of the user who approved the project
   def approved_by
-    raise("Not currently supported in the XML presenter")
+    return if approval_note.nil?
+
+    approval_note.note_by
   end
 
   # @return [String] The date and time of the approval
   def approval_date_time
-    raise("Not currently supported in the XML presenter")
+    return if approval_note.nil?
+
+    approval_note.note_date_time
   end
 
   # @return [String] Whether or not the project data use agreement
   def data_use_agreement?
     raise("Not currently supported in the XML presenter")
+    project_metadata.data_use_agreement
   end
 
   # @return [String] The project resource type
   def project_resource_type
     raise("Not currently supported in the XML presenter")
-    self.class.default_project_resource_type
+    project_metadata.resource_type || self.class.default_project_resource_type
   end
 
   # @return [Boolean] Whether the project is provisional
   def provisional_project?
     raise("Not currently supported in the XML presenter")
+    project.provisional?
   end
 
   # @return [String] Whether or not the project is associated with HPC
   def hpc
     raise("Not currently supported in the XML presenter")
-    self.class.default_hpc
+    project_metadata.hpc || self.class.default_hpc
   end
 
   # @return [String] The project visibility
   def project_visibility
     raise("Not currently supported in the XML presenter")
-    self.class.default_project_visibility
+    project.visibility || self.class.default_project_visibility
   end
 
   # @return [Boolean] Whether the project directory request is approved
   def project_directory_approved?
     raise("Not currently supported in the XML presenter")
+    project_directory = project_metadata.project_directory
+    project_directory.get(:approved, false)
   end
 
   # @return [Boolean] Whether the project storage capacity request is approved

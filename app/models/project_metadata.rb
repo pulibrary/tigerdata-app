@@ -2,9 +2,13 @@
 class ProjectMetadata
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
-  attr_accessor :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
+  attr_accessor(
+    :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
-    :updated_by, :updated_on, :approval_note, :schema_version, :submission
+    :updated_by, :updated_on, :approval_note, :schema_version, :submission,
+    :hpc,
+    :data_use_agreement,
+  )
 
   def initialize
     @departments = []
@@ -46,6 +50,7 @@ class ProjectMetadata
     @created_on = metadata_hash[:created_on] if metadata_hash[:created_on]
     @updated_by = metadata_hash[:updated_by] if metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
+
     set_defaults
   end
   # rubocop:enable Metrics/MethodLength
