@@ -15,14 +15,16 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
+      let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
+      let(:request) { Request.create(data_sponsor: "pul123", data_manager: "manager1", project_title: "new project") }
 
       it "renders a successful response" do
         sign_in user
         get new_project_roles_and_people_url(request.id)
         expect(response).to be_successful
-        expect(response.body).to include("new project")
+        expect(response.body).to include("pul123")
+        expect(response.body).to include("manager1")
       end
     end
   end
@@ -35,34 +37,39 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
+      let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
+      let(:other_user) { FactoryBot.create(:user) }
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
-        let(:request) { Request.create(request_title: "abc123", project_title: "project") }
+        let(:request) { Request.create(request_title: "abc123", project_title: "project", data_sponsor: other_user.uid, data_manager: other_user.uid) }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", data_manager: "manager1", project_title: "new project" }, commit: "Save")
           expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
-          expect(request.request_title).to eq("new title")
+          expect(request.data_sponsor).to eq("pul123")
+          expect(request.data_manager).to eq("manager1")
           expect(request.project_title).to eq("new project")
         end
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Next")
           expect(response).to redirect_to(new_project_project_type_url(request))
           request.reload
-          expect(request.request_title).to eq("new title")
+          expect(request.data_sponsor).to eq("pul123")
+          expect(request.data_manager).to eq("manager1")
           expect(request.project_title).to eq("new project")
         end
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
+          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Back")
           expect(response).to redirect_to(new_project_project_info_dates_url(request))
           request.reload
-          expect(request.request_title).to eq("new title")
+          expect(request.data_sponsor).to eq("pul123")
+          expect(request.data_manager).to eq("manager1")
           expect(request.project_title).to eq("new project")
         end
       end
