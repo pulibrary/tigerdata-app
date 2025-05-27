@@ -1,8 +1,14 @@
 # Copies the metadata from the tigerdata:project schema to the new fields defined
 # for the tigerdataX:resourceDoc schema.
+#
+# You can run this script form aTerm:
+#   script.execute :in file:/Users/correah/src/tigerdata-app/docs/schema/006_project_migrate_metadata.tcl
+#
+
+
+# Fetch the current data for the project
 set assetId 1123
 set asset [asset.get :id $assetId]
-
 set oldTitle [xvalue asset/meta/tigerdata:project/Title $asset]
 set oldDescription [xvalue asset/meta/tigerdata:project/Description $asset]
 set oldDataSponsor [xvalue asset/meta/tigerdata:project/DataSponsor $asset]
@@ -14,8 +20,8 @@ set oldDepartmentCode [xvalue asset/meta/tigerdata:project/Department $asset]
 set oldDepartmentName "(pending)"
 set schemaVersion "0.8"
 
-server.log :app "migrate" :event info :msg "Old title ${oldTitle}"
 
+# Update the fields in the new metadata schema with the data from the old schema
 asset.set  \
     :id $assetId \
     :meta < \
@@ -43,5 +49,7 @@ asset.set  \
     >
 
 
-# You can view the value logged via
-# server.log.display :name migrate :last 10
+# You can view the value logged via:
+#   server.log.display :name migrate :last 10
+#
+server.log :app "migrate" :event info :msg "Migrate data for project ${assetId} ${oldTitle}"
