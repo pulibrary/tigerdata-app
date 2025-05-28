@@ -4,6 +4,8 @@ class XmlElementBuilder < XmlNodeBuilder
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
+  #
+  # @return [Nokogiri::XML::Element]
   def build
     super
 
@@ -39,6 +41,12 @@ class XmlElementBuilder < XmlNodeBuilder
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
+  # @param [ProjectXmlPresenter] presenter
+  # @param [String] name
+  # @param [Hash] attributes
+  # @param [String] content
+  # @param [Integer] index the index for the element (when there are multiple sibling nodes)
+  # @param [Hash] kwargs
   def initialize(presenter:, name:, attributes: {}, content: nil, index: nil, **kwargs)
     super(**kwargs)
 

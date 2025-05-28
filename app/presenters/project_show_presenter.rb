@@ -5,16 +5,24 @@ class ProjectShowPresenter
 
   attr_reader :project, :project_metadata
 
+  # @return [Class] The presenter class for building XML Documents from Projects
+  def self.xml_presenter_class
+    ProjectXmlPresenter
+  end
+
   def initialize(project)
     @project = project
     @project_metadata = @project.metadata_model
   end
 
-  # Placeholder
-  # This is where the xml payload will be generated 
-  # (or, more likely, where it will delgate that to another class)
+  # @return [String] the XML for the project Document 
   def to_xml
+    xml_document.to_xml
+  end
 
+  # @return [Nokogiri::XML::Document] the XML Document for the Project
+  def xml_document
+    @xml_document ||= xml_presenter.document
   end
 
   def created
@@ -99,5 +107,13 @@ class ProjectShowPresenter
 
       remaining = (capacity/default_capacity_divisor) - usage
       remaining*default_capacity_divisor
+    end
+
+    def xml_presenter_args
+      project
+    end
+
+    def xml_presenter
+      @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
     end
 end
