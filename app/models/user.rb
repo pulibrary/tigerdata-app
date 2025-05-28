@@ -120,8 +120,13 @@ class User < ApplicationRecord
     return true if superuser || sysadmin
   end
 
+  def eligible_to_create_project_request?
+    return true if eligible_sysadmin? || trainer
+    false
+  end
+
   def eligible_to_create_new?
-    return true if eligible_sysadmin?
+    return true if eligible_sysadmin? 
 
     !Rails.env.production? && (eligible_sponsor? && trainer?)
   end

@@ -5,7 +5,7 @@ class RequestsController < ApplicationController
   # GET /requests
   def index
     return head :forbidden unless Flipflop.new_project_request_wizard?
-    if current_user.superuser || current_user.sysadmin || current_user.trainer
+    if current_user.eligible_to_create_project_request?
       add_breadcrumb("New Project Request")
       @requests = Request.all
     else

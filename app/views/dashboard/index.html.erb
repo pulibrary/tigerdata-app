@@ -10,9 +10,12 @@
       </div>
 
       <% if Flipflop.new_project_request_wizard? %>
-        <%= render partial: "new_project_request_wizard_link" %>
+         <% if current_user.eligible_to_create_project_request? %>
+            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm" %>            
+            <%= render partial: "new_project_request_wizard_link" %>
+         <% end %>
       <% end %>
-      
+
       <div class="detail-pane">
          <div class="main">
             <div id="dashboard-nav">
