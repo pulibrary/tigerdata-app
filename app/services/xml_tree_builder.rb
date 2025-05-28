@@ -53,8 +53,8 @@ class XmlTreeBuilder < XmlNodeBuilder
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
-  # @param [Array<XmlNodeBuilder>] builder objects for the child nodes in the XML tree
-  # @param [Hash] kwargs
+  # @param children [Array<XmlNodeBuilder>] XmlNodeBuilder objects for the child nodes in the XML tree
+  # @param kwargs [Hash] keyword arguments for the parent XmlElementBuilder
   def initialize(children: [], **kwargs)
     @parent_builder = XmlElementBuilder.new(**kwargs)
     @parent = @parent_builder.build

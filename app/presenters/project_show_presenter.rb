@@ -110,12 +110,10 @@ class ProjectShowPresenter
     end
 
     def xml_presenter_args
-      [
-        project
-      ]
+      project
     end
 
     def xml_presenter
-      @xml_presenter ||= self.class.xml_presenter_class.new(*xml_presenter_args)
+      @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
     end
 end
