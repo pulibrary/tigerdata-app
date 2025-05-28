@@ -1,1 +1,5 @@
-<%= link_to("New Project Request", new_project_project_info_path) %>
+<div class="requests-button">
+  <% if current_user.eligible_to_create_new? %>
+  <%= link_to "New project request", requests_path(), class: "btn btn-dark btn-sm" %>
+  <% end %>
+</div>
