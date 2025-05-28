@@ -194,8 +194,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Create new project"
       end
 
-      it "shoes the 'New Project Request' button" do
-        sign_in current_user
+      it "shows the 'New Project Request' button for admins only" do
+        sign_in admin_user
         visit dashboard_path
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
