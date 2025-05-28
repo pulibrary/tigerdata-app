@@ -17,11 +17,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-    let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
     it "walks through the wizard if the feature is enabled" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
-      sign_in admin_user
+      sign_in current_user
       visit "/"
       click_on "New Project Request"
       expect(page).to have_content "Basic Details"
@@ -97,7 +96,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
-      sign_in admin_user
+      sign_in current_user
       visit "/"
       click_on "New Project Request"
       expect(page).to have_content "Basic Details"
