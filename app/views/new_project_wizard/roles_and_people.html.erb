@@ -2,5 +2,6 @@
 <% content_for :form_title, "Roles and People" %>
 <% content_for :form_description, "Assign roles for your project." %>
 
-<!-- TODO: render form fields for this page -->
-<%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
+<%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: "" } %>
+<%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: "" } %>
+<!-- TODO: render the data manager and data users form fields for this page -->
