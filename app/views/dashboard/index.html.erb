@@ -10,10 +10,10 @@
       </div>
 
       <% if Flipflop.new_project_request_wizard? %>
-         <% if current_user.eligible_to_create_project_request? %>
-            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm" %>            
-            <%= render partial: "new_project_request_wizard_link" %>
+         <% if current_user.eligible_sysadmin? %>
+            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm" %>
          <% end %>
+         <%= render partial: "new_project_request_wizard_link" %>
       <% end %>
 
       <div class="detail-pane">
@@ -68,7 +68,7 @@
    dashStyle('<%= @dash_session %>');
    dashTab();
    displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
-   
+
    // Setup the DataTables
    setupTable('#projects-listing');
    setupTable('#projects-listing-pending');
