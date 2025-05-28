@@ -65,6 +65,7 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
+    binding.pry
     raise("Not currently supported in the XML presenter")
     globus_request = project_metadata.globus_request
   end
@@ -137,50 +138,45 @@ class ProjectXmlPresenter
 
   # @return [String] Whether or not the project data use agreement
   def data_use_agreement?
-    raise("Not currently supported in the XML presenter")
-    project_metadata.data_use_agreement
+    project_metadata.data_use_agreement.present?
   end
 
   # @return [String] The project resource type
   def project_resource_type
-    raise("Not currently supported in the XML presenter")
     project_metadata.resource_type || self.class.default_project_resource_type
   end
 
   # @return [Boolean] Whether the project is provisional
   def provisional_project?
     raise("Not currently supported in the XML presenter")
-    project.provisional?
+    project_.provisional?
   end
 
   # @return [String] Whether or not the project is associated with HPC
   def hpc
-    raise("Not currently supported in the XML presenter")
-    project_metadata.hpc || self.class.default_hpc
+    project_metadata.hpc
   end
 
   # @return [String] The project visibility
   def project_visibility
-    raise("Not currently supported in the XML presenter")
-    project.visibility || self.class.default_project_visibility
+    project_metadata.project_visibility
   end
 
   # @return [Boolean] Whether the project directory request is approved
   def project_directory_approved?
-    raise("Not currently supported in the XML presenter")
-    project_directory = project_metadata.project_directory
-    project_directory.get(:approved, false)
+    expectations = storage_performance_expectations
+    expectations[:approved] || false
   end
 
   # @return [Boolean] Whether the project storage capacity request is approved
   def storage_capacity_approved?
-    storage_capacity_unit = storage_capacity.get("unit", {})
-    storage_capacity_unit.get(:approved, false)
+    storage_capacity_unit = storage_capacity["unit"] || {}
+    storage_capacity_unit[:approved] || false
   end
 
   # @return [Boolean] Whether the project storage request is approved
   def storage_performance_approved?
-    storage_performance_expectations.get(:approved, false)
+    storage_performance_expectations[:approved] || false
   end
 
   # @return [Array<String>] The project directory paths

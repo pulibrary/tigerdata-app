@@ -6,8 +6,12 @@ class ProjectMetadata
     :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
     :updated_by, :updated_on, :approval_note, :schema_version, :submission,
+    # NOTE: The following attributes are required by the XML schema
     :hpc,
     :data_use_agreement,
+    :project_visibility,
+    :project_resource_type,
+    :project_directory_protocol
   )
 
   def initialize
@@ -50,6 +54,12 @@ class ProjectMetadata
     @created_on = metadata_hash[:created_on] if metadata_hash[:created_on]
     @updated_by = metadata_hash[:updated_by] if metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
+
+    # NOTE: The following attributes are required by the XML schema
+    @hpc = metadata_hash[:hpc] || ProjectXmlPresenter.default_hpc
+    @data_use_agreement = metadata_hash[:data_use_agreement] || "No"
+    @project_visibility = metadata_hash[:project_visibility] || ProjectXmlPresenter.default_project_visibility
+    @project_resource_type = metadata_hash[:project_resource_type] || ProjectXmlPresenter.default_project_resource_type
 
     set_defaults
   end
