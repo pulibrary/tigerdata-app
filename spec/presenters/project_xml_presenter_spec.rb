@@ -333,7 +333,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
             expect(node).to be_a(Nokogiri::XML::Element)
             expect(node.name).to eq("globusEnableSetting")
             expect(node.content).to be_a(String)
-            expect(node.content).to eq(presenter.globus_enable_requested)
+            expect(node.content).to eq(presenter.globus_enable_approved)
           end
         end
 
