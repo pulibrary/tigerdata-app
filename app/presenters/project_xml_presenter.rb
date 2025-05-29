@@ -10,7 +10,7 @@ class ProjectXmlPresenter
     "in_mediaflux?",
     "mediaflux_id",
     "pending?",
-    "status",
+    # "status",
     "title",
     to: :project
   )
@@ -62,14 +62,14 @@ class ProjectXmlPresenter
   def self.default_globus_request
     {
       requested: false,
-      approved: false,
+      approved: false
     }
   end
 
   def self.default_smb_request
     {
       requested: false,
-      approved: false,
+      approved: false
     }
   end
 
@@ -146,8 +146,23 @@ class ProjectXmlPresenter
     end
   end
 
-  # @return [String] The project status
-  delegate :status, to: :project_metadata
+  def status
+    project_status = project.status
+    return if project_status.nil?
+
+    # 'AdminReview', 'Approved', 'Active', 'Retired', 'Published'
+    project_status = "AdminReview"
+
+    if project_status == Project::PENDING_STATUS
+      project_status = "Pending"
+    elsif project_status == Project::APPROVED_STATUS
+      project_status = "Approved"
+    elsif project_status == Project::ACTIVE_STATUS
+      project_status = "Active"
+    end
+
+    project_status
+  end
 
   # @return [ProvenanceEvent] The first project submission event
   def submission

@@ -3,7 +3,9 @@ class XmlElementBuilder < XmlNodeBuilder
   attr_reader :presenter, :name, :allow_empty, :attributes, :content
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   #
   # @return [Nokogiri::XML::Element]
   def build
@@ -50,7 +52,9 @@ class XmlElementBuilder < XmlNodeBuilder
 
     @node = element
   end
+  # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
 
   # @param [ProjectXmlPresenter] presenter

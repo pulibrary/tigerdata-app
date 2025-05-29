@@ -65,9 +65,9 @@ class XmlTreeBuilder < XmlNodeBuilder
                  @parent.document
                end
 
-      super(document: document)
+    super(document: document)
 
-      @children = parse_child_entries(children)
-    #end
+    @children = parse_child_entries(children)
+    # end
   end
 end
