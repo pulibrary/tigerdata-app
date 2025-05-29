@@ -186,6 +186,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "shows the 'Project Requests' button" do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:new_project_request_wizard, true)
         sign_in admin_user
         visit dashboard_path
         expect(page).to have_content("Welcome, #{admin_user.given_name}!")
