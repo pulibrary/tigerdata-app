@@ -12,6 +12,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
@@ -138,12 +139,13 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse.first.title)
       end
 
-      it "should display the New Project Request link on the dashboard if the feature is activated" do
+      it "should display the New Project Request if the feature is activated" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:new_project_request_wizard, true)
         sign_in current_user
         visit dashboard_path
         expect(page).to have_content("New Project Request")
+        expect(page).not_to have_content("Requests")
       end
 
       it "should not display the New Project Request link on the dashboard if the New Project Request Wizard feature is not activated" do
@@ -181,6 +183,16 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Create new project"
+      end
+
+      it "shows the 'Project Requests' button" do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:new_project_request_wizard, true)
+        sign_in admin_user
+        visit dashboard_path
+        expect(page).to have_content("Welcome, #{admin_user.given_name}!")
+        expect(page).not_to have_content "Please log in"
+        expect(page).to have_content "Requests"
       end
 
       it "shows the system administrator dashboard", js: true do
