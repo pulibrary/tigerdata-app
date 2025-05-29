@@ -111,9 +111,7 @@ class ProjectXmlPresenter
   end
 
   # @return [String] The project status
-  def status
-    project_metadata.status
-  end
+  delegate :status, to: :project_metadata
 
   # @return [ProvenanceEvent] The first project submission event
   def submission
@@ -140,22 +138,20 @@ class ProjectXmlPresenter
     value.strftime("%Y-%m-%dT%H:%M:%S%:z")
   end
 
-  def approval_note
-    project_metadata.approval_note
-  end
+  delegate :approval_note, to: :project_metadata
 
   # @return [String] The user ID of the user who approved the project
   def approved_by
     return if approval_note.nil?
 
-    approval_note.note_by
+    approval_note[:note_by]
   end
 
   # @return [String] The date and time of the approval
   def approval_date_time
     return if approval_note.nil?
 
-    approval_note.note_date_time
+    approval_note[:note_date_time]
   end
 
   # @return [String] Whether or not the project data use agreement
@@ -174,14 +170,10 @@ class ProjectXmlPresenter
   end
 
   # @return [String] Whether or not the project is associated with HPC
-  def hpc
-    project_metadata.hpc
-  end
+  delegate :hpc, to: :project_metadata
 
   # @return [String] The project visibility
-  def project_visibility
-    project_metadata.project_visibility
-  end
+  delegate :project_visibility, to: :project_metadata
 
   # @return [Boolean] Whether the project directory request is approved
   def project_directory_approved?
