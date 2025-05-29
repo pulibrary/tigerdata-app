@@ -313,6 +313,7 @@ project:
 
                   - approved_by:
                       name: approvedBy
+                      allow_empty: false
                       attributes:
                         userID:
                           object_method: approved_by
@@ -320,6 +321,7 @@ project:
 
                   - approval_date_time:
                       name: approvalDateTime
+                      allow_empty: false
                       content:
                         object_method: approval_date_time
 

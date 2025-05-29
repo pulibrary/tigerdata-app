@@ -61,15 +61,15 @@ class ProjectXmlPresenter
 
   def self.default_globus_request
     {
+      requested: false,
       approved: false,
-      requested: false
     }
   end
 
   def self.default_smb_request
     {
+      requested: false,
       approved: false,
-      requested: false
     }
   end
 
@@ -122,6 +122,7 @@ class ProjectXmlPresenter
     smb_request[:approved] || false
   end
 
+  # @return [String] Whether the request for the SMB mount is approved
   def smb_enable_approved
     if smb_enable_approved?
       "true"
@@ -136,6 +137,7 @@ class ProjectXmlPresenter
     smb_request.present?
   end
 
+  # @return [String] Whether the request for the SMB mount is requested
   def smb_enable_requested
     if smb_enable_requested?
       "true"
