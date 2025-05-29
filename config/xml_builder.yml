@@ -207,38 +207,38 @@ project:
                   - smb_enable_setting:
                       name: smbEnableSetting
                       content:
-                        object_method: smb_enable_approved?
+                        object_method: smb_enable_approved
 
                   - requested_value:
                       name: requestedValue
                       content:
-                        object_method: smb_enable_requested?
+                        object_method: smb_enable_requested
 
                   - approved_value:
                       name: approvedValue
                       content:
-                        object_method: smb_enable_approved?
+                        object_method: smb_enable_approved
 
             - globus_enable:
                 name: globusEnable
                 attributes:
                   approved:
-                    object_method: globus_enable_approved?
+                    object_method: globus_enable_approved
                 children:
                   - globus_enable_setting:
                       name: globusEnableSetting
                       content:
-                        object_method: globus_enable_requested?
+                        object_method: globus_enable_approved
 
                   - requested_value:
                       name: requestedValue
                       content:
-                        object_method: globus_enable_approved?
+                        object_method: globus_enable_requested
 
                   - approved_value:
                       name: approvedValue
                       content:
-                        object_method: globus_enable_approved?
+                        object_method: globus_enable_approved
 
         #<projectPurpose inherited="true" discoverable="true" trackingLevel="InternalUseOnly">Research</projectPurpose>
         project_purpose:

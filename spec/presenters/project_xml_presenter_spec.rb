@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
+describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(project) }
 
   let(:data_sponsor) { FactoryBot.create(:project_sponsor, uid: "abc123") }
@@ -332,7 +332,8 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
           it "builds a <globusEnableSetting> element detailing the Globus mount status" do
             expect(node).to be_a(Nokogiri::XML::Element)
             expect(node.name).to eq("globusEnableSetting")
-            expect(node.content).to eq(presenter.globus_enable_approved?.to_s)
+            expect(node.content).to be_a(String)
+            expect(node.content).to eq(presenter.globus_enable_requested)
           end
         end
 
@@ -342,7 +343,8 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
           it "builds a <requestedValue> element detailing whether or not Globus was requested" do
             expect(node).to be_a(Nokogiri::XML::Element)
             expect(node.name).to eq("requestedValue")
-            expect(node.content).to eq(presenter.globus_enable_requested?.to_s)
+            expect(node.content).to be_a(String)
+            expect(node.content).to eq(presenter.globus_enable_requested)
           end
         end
 
@@ -352,7 +354,8 @@ RSpec.describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
           it "builds a <approvedValue> element detailing whether or not Globus was approved" do
             expect(node).to be_a(Nokogiri::XML::Element)
             expect(node.name).to eq("approvedValue")
-            expect(node.content).to eq(presenter.globus_enable_approved?.to_s)
+            expect(node.content).to be_a(String)
+            expect(node.content).to eq(presenter.globus_enable_approved)
           end
         end
       end
