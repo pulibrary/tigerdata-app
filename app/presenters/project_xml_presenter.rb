@@ -40,7 +40,7 @@ class ProjectXmlPresenter
   end
 
   # @return [String] The default project resource type
-  def self.default_project_resource_type
+  def self.default_resource_type
     "TigerData Project"
   end
 
@@ -54,6 +54,29 @@ class ProjectXmlPresenter
     "Restricted"
   end
 
+  # @return [String] The default data use agreement
+  def self.default_data_use_agreement
+    "No"
+  end
+
+  def self.default_globus_request
+    {
+      approved: false,
+      requested: false
+    }
+  end
+
+  def self.default_smb_request
+    {
+      approved: false,
+      requested: false
+    }
+  end
+
+  def self.default_provisionality
+    false
+  end
+
   # @param project [Project] The project for the presenter
   def initialize(project)
     @project = project
@@ -65,27 +88,26 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
-    binding.pry
-    raise("Not currently supported in the XML presenter")
     globus_request = project_metadata.globus_request
+    globus_request[:approved] || false
   end
 
   # @return [Boolean] Whether there is a request for a Globus mount
   def globus_enable_requested?
-    raise("Not currently supported in the XML presenter")
     globus_request = project_metadata.globus_request
+    globus_request.present?
   end
 
   # @return [Boolean] Whether the request for the SMB mount is approved
   def smb_enable_approved?
-    raise("Not currently supported in the XML presenter")
     smb_request = project_metadata.smb_request
+    smb_request[:approved] || false
   end
 
   # @return [Boolean] Whether there is a request for SMB mount
   def smb_enable_requested?
-    raise("Not currently supported in the XML presenter")
     smb_request = project_metadata.smb_request
+    smb_request.present?
   end
 
   # @return [String] The project status
@@ -143,13 +165,12 @@ class ProjectXmlPresenter
 
   # @return [String] The project resource type
   def project_resource_type
-    project_metadata.resource_type || self.class.default_project_resource_type
+    project_metadata.resource_type
   end
 
   # @return [Boolean] Whether the project is provisional
   def provisional_project?
-    raise("Not currently supported in the XML presenter")
-    project_.provisional?
+    project_metadata.provisional
   end
 
   # @return [String] Whether or not the project is associated with HPC

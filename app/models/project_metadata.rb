@@ -10,8 +10,11 @@ class ProjectMetadata
     :hpc,
     :data_use_agreement,
     :project_visibility,
-    :project_resource_type,
-    :project_directory_protocol
+    :resource_type,
+    :project_directory_protocol,
+    :globus_request,
+    :smb_request,
+    :provisional
   )
 
   def initialize
@@ -55,11 +58,18 @@ class ProjectMetadata
     @updated_by = metadata_hash[:updated_by] if metadata_hash[:updated_by]
     @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
 
-    # NOTE: The following attributes are required by the XML schema
+    # NOTE: The following attributes are required by the 0.8 XML schema
     @hpc = metadata_hash[:hpc] || ProjectXmlPresenter.default_hpc
-    @data_use_agreement = metadata_hash[:data_use_agreement] || "No"
+
+    @data_use_agreement = metadata_hash[:data_use_agreement] || ProjectXmlPresenter.default_data_use_agreement
+
     @project_visibility = metadata_hash[:project_visibility] || ProjectXmlPresenter.default_project_visibility
-    @project_resource_type = metadata_hash[:project_resource_type] || ProjectXmlPresenter.default_project_resource_type
+    @resource_type = metadata_hash[:resource_type] || ProjectXmlPresenter.default_resource_type
+
+    @globus_request = metadata_hash[:globus_request] || ProjectXmlPresenter.default_globus_request
+    @smb_request = metadata_hash[:smb_request] || ProjectXmlPresenter.default_smb_request
+
+    @provisional = metadata_hash[:provisional] || ProjectXmlPresenter.default_provisionality
 
     set_defaults
   end
