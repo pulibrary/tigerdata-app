@@ -117,6 +117,7 @@
           align-items: flex-start;
           gap: 2.5rem;
           align-self: stretch;
+          overflow-y: scroll;
 
           .form-field {
             display: flex;

@@ -6,21 +6,26 @@
       <div class="horizontal-frame">
         <div class="vertical-frame">
           <input class="form-input datalist" type="text" name="department_find" id="department_find"
-                list="departments" placeholder="Search using department code or name" autocomplete="off"></input>
-          <datalist id="departments">
+                list="princeton_departments" placeholder="Search using department code or name" autocomplete="off"></input>
+          <datalist id="princeton_departments">
             <% @princeton_departments.each do |department| %>
-                <option value="<%= department %>">
+                <!-- Non breaking space &nbsp; is at the end of every option to indicate an option was selected not just the user typing -->
+                <option data-value="<%= {code: department.code, name: department.name}.to_json %>" value="<%= "(#{department.code}) #{department.name}" %>&nbsp;"></option>
             <% end %>
           </datalist>
           <ul class="selected-departments selected-items">
-            <% departments.split(",").each do |department| %>
-              <li class="selected-item"><%= department %><div tabindex="0" class="remove-department remove-item"></div></li>
+            <% departments.each do |department| %>
+              <li class="selected-item">
+                <%= "(#{department['code']}) #{department['name']}" %>
+                <div tabindex="0" class="remove-department remove-item"></div>
+                <input type="hidden" name="request[departments][]" value="<%= {code: department['code'], name: department['name']}.to_json %>"> </input>
+              </li>
             <% end %>
           </ul>
           <div class="input-error">
                <%= department_error %>
           </div>
-          <input type="hidden" id="request-departments" name="request[departments]" value="<%= departments %>" />
+          <input type="hidden" id="request-departments" name="request[departments][]" value="" />
         </div>
       </div>
     </div>

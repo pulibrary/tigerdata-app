@@ -107,10 +107,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      select "(77777) RDSS-Research Data and Scholarship Services", from: "department_find"
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
       # This is triggering the html5 element like it would normally if the page has focus
       page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
 
       # force a save and page reload to make sure all data is being saved to the model
       click_on "Next"
@@ -122,6 +124,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("project_folder", with: "skeletor")
       expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
       expect(page).to have_content "Categories (Optional)"
       click_on "Next"
