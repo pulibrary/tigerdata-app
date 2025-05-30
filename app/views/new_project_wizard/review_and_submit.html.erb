@@ -12,6 +12,18 @@
     <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error: "",
                                                                                 parent_folder: @request_model.parent_folder || "", parent_folder_error: ""} %>
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: "" } %>
+    <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @request_model.departments || [], department_error: "" } %>
+<div class="section-line"></div>
+<div class="section">
+    <div class="section-title">
+      <div class="section-frame">
+      Roles and People
+      </div>
+    </div>
+    <%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: "" } %>
+    <%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: "" } %>
+    <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: "" } %>    
+</div>
 <div class="section-line"></div>
 <div class="section">
     <div class="section-title">

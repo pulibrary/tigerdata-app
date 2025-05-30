@@ -42,7 +42,8 @@ RSpec.describe "new-project/review-submit", type: :request do
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project",
-                                                                            state: "draft", data_sponsor: "sponsor", data_manager: "manager", departments: "dep1,dep2",
+                                                                            state: "draft", data_sponsor: "sponsor", data_manager: "manager",
+                                                                            departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
                                                                             description: "descr", parent_folder: "parent", project_folder: "folder",
                                                                             project_id: "doi", quota: "500 GB", requested_by: "uid" }, commit: "Save")
           expect(response).to redirect_to("#{requests_path}/#{request.id}")
@@ -52,7 +53,7 @@ RSpec.describe "new-project/review-submit", type: :request do
           expect(request.state).to eq("draft")
           expect(request.data_sponsor).to eq("sponsor")
           expect(request.data_manager).to eq("manager")
-          expect(request.departments).to eq("dep1,dep2")
+          expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, { "code" => "dept2", "name" => "two" }])
           expect(request.description).to eq("descr")
           expect(request.parent_folder).to eq("parent")
           expect(request.project_folder).to eq("folder")

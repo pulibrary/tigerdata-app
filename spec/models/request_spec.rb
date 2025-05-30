@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe Request, type: :model do
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
-                           data_sponsor: "sponsor", data_manager: "manager", departments: "dept", description: "description", parent_folder: "folder",
+                           data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
                            project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog" }])
   end
 
@@ -35,7 +35,7 @@ RSpec.describe Request, type: :model do
 
   describe "#departments" do
     subject(:departments) { request.departments }
-    it { should eq("dept") }
+    it { should eq([{ "code" => "dept", "name" => "department" }]) }
   end
 
   describe "#description" do
