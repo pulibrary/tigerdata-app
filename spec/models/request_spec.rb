@@ -5,7 +5,7 @@ RSpec.describe Request, type: :model do
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                            data_sponsor: "sponsor", data_manager: "manager", departments: "dept", description: "description", parent_folder: "folder",
-                           project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid")
+                           project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog" }])
   end
 
   describe "#request_type" do
@@ -66,6 +66,11 @@ RSpec.describe Request, type: :model do
   describe "#requested_by" do
     subject(:requested_by) { request.requested_by }
     it { should eq("uid") }
+  end
+
+  describe "#user_roles" do
+    subject(:user_roles) { request.user_roles }
+    it { should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog" }]) }
   end
 
   describe "#valid_title?" do
