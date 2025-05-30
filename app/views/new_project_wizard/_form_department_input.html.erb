@@ -12,9 +12,9 @@
                 <option value="<%= department %>">
             <% end %>
           </datalist>
-          <ul class="selected-departments">
+          <ul class="selected-departments selected-items">
             <% departments.split(",").each do |department| %>
-              <li class="selected-department"><%= department %><div tabindex="0" class="remove-department"></div></li>
+              <li class="selected-item"><%= department %><div tabindex="0" class="remove-department remove-item"></div></li>
             <% end %>
           </ul>
           <div class="input-error">

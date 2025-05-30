@@ -17,7 +17,7 @@ function registerRemove() {
 
 // eslint-disable-next-line import/prefer-default-export
 export function departmentAutocomplete() {
-  $('.datalist').on('input', (event) => {
+  $('#department_find').on('input', (event) => {
     if (
       String(event.originalEvent.inputType) === 'insertReplacementText' ||
       event.originalEvent.inputType == null
@@ -25,10 +25,11 @@ export function departmentAutocomplete() {
       const ul = document.querySelector('.selected-departments');
       const li = document.createElement('li');
       const departmentList = document.getElementById('request-departments');
-      li.classList.add('selected-department');
+      li.classList.add('selected-item');
       li.appendChild(document.createTextNode(event.currentTarget.value));
       const newDiv = document.createElement('div');
       newDiv.classList.add('remove-department');
+      newDiv.classList.add('remove-item');
       newDiv.focus = true;
       newDiv.tabIndex = 0;
       li.appendChild(newDiv);

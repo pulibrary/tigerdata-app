@@ -122,6 +122,31 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("project_folder", with: "skeletor")
       expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      click_on "Next"
+      expect(page).to have_content "Categories (Optional)"
+      click_on "Next"
+      expect(page).to have_content "Dates (Optional)"
+      click_on "Next"
+      expect(page).to have_content "Roles and People"
+      current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
+      select current_user_str, from: "request_data_sponsor"
+      select current_user_str, from: "request_data_manager"
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select current_user_str + "\u00A0", from: "user_find"
+      # The user selected is visible on the page
+      expect(page).to have_content(current_user_str)
+      # the javascript created the hidden form element
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      # the javascript cleared the find to get ready for the next search
+      expect(page).to have_field("user_find", with: "")
+      click_on "Back"
+      expect(page).to have_content "Dates (Optional)"
+      click_on "Next"
+      expect(page).to have_content "Roles and People"
+      expect(page).to have_content "Data Manager"
+      expect(page).to have_field("request_data_sponsor", with: current_user.uid)
+      expect(page).to have_field("request_data_manager", with: current_user.uid)
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
     end
   end
 end

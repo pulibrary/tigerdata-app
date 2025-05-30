@@ -67,9 +67,12 @@ class RequestWizardsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def request_params
       request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager, :departments,
-                                        :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by)
+                                        :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by, user_roles: [])
       if request_params[:departments].present?
         request_params[:departments] = clean_department_list request_params[:departments]
+      end
+      if request_params[:user_roles].present?
+        request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
       end
       request_params
     end

@@ -23,6 +23,7 @@ import { departmentAutocomplete } from './departmentAutocomplete';
 import { setupTable } from './pulDataTables';
 import { showMoreLess } from './showMoreLess';
 import { projectStyle, projectTab } from './projectTabs';
+import { userRolesAutocomplete } from './userRolesAutocomplete';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -183,6 +184,7 @@ function initPage() {
   charCount();
   toggleHidden();
   departmentAutocomplete();
+  userRolesAutocomplete();
 }
 
 window.addEventListener('load', () => initPage());

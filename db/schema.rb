@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_21_165145) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_28_183403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_21_165145) do
     t.string "requested_by"
     t.string "storage_unit", default: "GB"
     t.string "quota", default: "500 GB"
+    t.jsonb "user_roles"
   end
 
   create_table "user_requests", force: :cascade do |t|
