@@ -5,7 +5,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let(:project) { FactoryBot.create :project, project_id: "abc123/def" }
   let(:project_id) { project.id }
 
-  it "Sends project creation reuests" do
+  it "Sends project creation requests" do
     expect { described_class.with(project_id:).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
@@ -17,6 +17,16 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(html_body).to have_content(project.metadata_model.title)
     project.metadata.keys.each do |field|
       next if ["updated_on", "created_on", "created_by", "updated_by", "departments", "submission"].include?(field)
+      # NOTE: These are not included for 0.6 schema project creation requests
+      next if [
+        "hpc",
+        "data_use_agreement",
+        "project_visibility",
+        "resource_type",
+        "globus_request",
+        "smb_request",
+        "provisional"
+      ].include?(field)
 
       value = project.metadata[field]
       value = value.sort.join(", ") if value.is_a? Array

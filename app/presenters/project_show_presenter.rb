@@ -75,18 +75,21 @@ class ProjectShowPresenter
 
   def quota_usage(session_id:)
     if project.pending?
-      quota_usage = "0 KB out of 0 GB used"
+      "0 KB out of 0 GB used"
     else
-      quota_usage = "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
+      "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
     end
-    quota_usage
   end
 
   def quota_percentage(session_id:)
-    return 0 if project.pending? || project.storage_capacity_raw(session_id:).zero?
-    
-   (project.storage_usage_raw(session_id:).to_f / project.storage_capacity_raw(session_id:).to_f) * 100
-  end  
+    return 0 if project.pending?
+
+    storage_capacity = project.storage_capacity_raw(session_id:)
+    return 0 if storage_capacity.zero?
+
+    storage_usage = project.storage_usage_raw(session_id:)
+    (storage_usage.to_f / storage_capacity.to_f) * 100
+  end
 
   private
 
