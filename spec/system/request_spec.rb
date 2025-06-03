@@ -110,7 +110,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_content("Project approved and created in the TigerData web portal")
-        binding.pry
         expect(Project.where(title: full_request.title)).to be_present
       end
     end
