@@ -65,6 +65,7 @@ gem "health-monitor-rails", "12.4.0"
 gem "honeybadger"
 gem "mailcatcher"
 gem "net-http-persistent"
+gem "net-ldap"
 gem "sidekiq"
 
 gem "whenever", require: false
