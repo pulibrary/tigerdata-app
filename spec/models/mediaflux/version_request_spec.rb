@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::VersionRequest, connect_to_mediaflux: true, type: :mod
   subject(:request) { described_class.new(session_token: session_token) }
   let(:session_token) { user.mediaflux_session }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:expected_mflux_version) { "4.16" }
+  let(:expected_mflux_version) { Mediaflux::EXPECTED_VERSION }
 
   describe "#resolve" do
     it "authenticates and stores the session token" do
