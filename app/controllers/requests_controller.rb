@@ -6,7 +6,7 @@ class RequestsController < ApplicationController
   def index
     return head :forbidden unless Flipflop.new_project_request_wizard?
     if current_user.eligible_sysadmin?
-      add_breadcrumb("New Project Request")
+      add_breadcrumb("Project Requests - All")
       @requests = Request.all
     else
       error_message = "You do not have access to this page."
