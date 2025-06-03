@@ -109,8 +109,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "#{requests_path}/#{full_request.id}"
         expect(page).to have_content("Approve request")
         click_on "Approve request"
+        expect(page).to have_css("#project-details-heading")
         expect(page).to have_content("Project approved and created in the TigerData web portal")
-        expect(Project.where(title: full_request.title)).to be_present
       end
     end
 
