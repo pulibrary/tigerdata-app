@@ -313,16 +313,16 @@ project:
 
                   - approved_by:
                       name: approvedBy
-                      allow_empty: false
                       attributes:
                         userID:
+                          allow_empty: false
                           object_method: approved_by
                         userIDType: NetID
 
                   - approval_date_time:
                       name: approvalDateTime
-                      allow_empty: false
                       content:
+                        allow_empty: false
                         object_method: approval_date_time
 
             - status:

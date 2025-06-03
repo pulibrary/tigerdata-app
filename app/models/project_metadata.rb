@@ -50,7 +50,6 @@ class ProjectMetadata
     false
   end
 
-
   attr_accessor(
     :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,

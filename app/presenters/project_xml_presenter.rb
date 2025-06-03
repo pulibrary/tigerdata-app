@@ -109,6 +109,8 @@ class ProjectXmlPresenter
     project_status = project.status
     return if project_status.nil?
 
+    return "AdminReview" if project_status == Project::PENDING_STATUS
+
     project_status.capitalize
   end
 
@@ -146,7 +148,7 @@ class ProjectXmlPresenter
 
   # @return [String] The date and time of the approval
   def approval_date_time
-    return if approval_note.nil?
+    return nil if approval_note.nil?
 
     approval_note[:note_date_time]
   end
@@ -259,9 +261,9 @@ class ProjectXmlPresenter
 
     def builder
       @builder ||= begin
-                         builder_args = find_builder_args(:resource)
-                         XmlTreeBuilder.new(**builder_args)
-                       end
+                     builder_args = find_builder_args(:resource)
+                     XmlTreeBuilder.new(**builder_args)
+                   end
     end
 
     delegate :build, to: :builder
