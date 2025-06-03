@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Request, type: :model do
+  let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                            data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
@@ -87,6 +88,8 @@ RSpec.describe Request, type: :model do
       request = Request.new(data_sponsor: "")
       expect(request.valid_data_sponsor?).to be_falsey
       request.data_sponsor = "abc"
+      expect(request.valid_data_sponsor?).to be_falsey
+      request.data_sponsor = valid_user.uid
       expect(request.valid_data_sponsor?).to be_truthy
     end
   end
@@ -96,6 +99,8 @@ RSpec.describe Request, type: :model do
       request = Request.new(data_manager: "")
       expect(request.valid_data_manager?).to be_falsey
       request.data_manager = "abc"
+      expect(request.valid_data_manager?).to be_falsey
+      request.data_manager = valid_user.uid
       expect(request.valid_data_manager?).to be_truthy
     end
   end
@@ -173,9 +178,9 @@ RSpec.describe Request, type: :model do
       expect(request.valid_to_submit?).to be_falsey
       request.project_title = "abc"
       expect(request.valid_to_submit?).to be_falsey
-      request.data_sponsor = "abc"
+      request.data_sponsor = valid_user.uid
       expect(request.valid_to_submit?).to be_falsey
-      request.data_manager = "abc"
+      request.data_manager = valid_user.uid
       expect(request.valid_to_submit?).to be_falsey
       request.parent_folder = "abc"
       expect(request.valid_to_submit?).to be_falsey
@@ -185,10 +190,12 @@ RSpec.describe Request, type: :model do
       expect(request.valid_to_submit?).to be_falsey
       request.project_folder = "abc"
       expect(request.valid_to_submit?).to be_falsey
-      request.quota = 500
+      request.quota = "500 GB"
       expect(request.valid_to_submit?).to be_falsey
       request.requested_by = "abc"
-      expect(request.valid_requested_by?).to be_truthy
+      expect(request.valid_to_submit?).to be_falsey
+      request.description = "abc"
+      expect(request.valid_to_submit?).to be_truthy
     end
   end
 end
