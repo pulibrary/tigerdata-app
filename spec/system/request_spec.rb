@@ -43,6 +43,27 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         quota: "500 GB",
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
+      let(:bluemountain) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "kjlj",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "41000", "name" => "LIB-PU Library" }],
+        description: "This collection contains important periodicals of the European avant-garde.",
+        parent_folder: "pul",
+        project_folder: "bluemountain",
+        project_id: nil,
+        storage_size: nil,
+        requested_by: nil,
+        storage_unit: "GB",
+        quota: "500 GB",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
     end
 
     context "user without a role" do
@@ -107,6 +128,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "creates a project when a request is approved" do
         sign_in sysadmin_user
         visit "#{requests_path}/#{full_request.id}"
+        expect(page).to have_content("Approve request")
+        click_on "Approve request"
+        expect(page).to have_css("#project-details-heading")
+        expect(page).to have_content("Project approved and created in the TigerData web portal")
+      end
+      it "creates a project with BlueMountain fixture data when the request is approved" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{bluemountain.id}"
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
