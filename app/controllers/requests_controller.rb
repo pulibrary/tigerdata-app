@@ -32,10 +32,10 @@ class RequestsController < ApplicationController
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request = Request.find(params[:id])
       project_metadata_json = parse_request_metadata(@request)
-      Project.create!({ metadata_json: project_metadata_json })
+      project = Project.create!({ metadata_json: project_metadata_json })
       @request.destroy
       stub_message = "Project approved and created in the TigerData web portal; request has been processed and deleted"
-      redirect_to dashboard_path, notice: stub_message
+      redirect_to project_path(project.id), notice: stub_message
     else
       error_message = "You do not have access to this page."
       flash[:notice] = error_message
