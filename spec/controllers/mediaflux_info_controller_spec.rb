@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
-  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"4.16.088\"}" }
+  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"#{Mediaflux::EXPECTED_VERSION}\"}" }
 
   before do
     sign_in user
