@@ -43,7 +43,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         quota: "500 GB",
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
-      let(:bluemountain) do
+    end
+    let(:bluemountain) do
       Request.create(
         request_type: nil,
         request_title: nil,
