@@ -205,6 +205,21 @@ class Project < ApplicationRecord
     ProjectMediaflux.document(project: self)
   end
 
+  # @return [Nokogiri::XML::Element] the <meta> element from the mediaflux document
+  def mediaflux_meta_element
+    doc = mediaflux_document.dup
+    doc.remove_namespaces! # remove all namespaces
+    elements = doc.xpath("/request/service/args/meta")
+    raise(RuntimeError, "Failed to extract the <meta> element found in mediaflux document for project #{self.id}") if elements.empty?
+
+    elements.first
+  end
+
+  # @return [String] the XML representation of the <meta> element
+  def mediaflux_meta_xml
+    mediaflux_meta_element.to_xml
+  end
+
   def mediaflux_metadata(session_id:)
     @mediaflux_metadata ||= begin
       accum_req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)

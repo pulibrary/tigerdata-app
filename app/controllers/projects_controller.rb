@@ -183,7 +183,7 @@ class ProjectsController < ApplicationController
   def revision_confirmation; end
 
   def show
-    
+
     return if project.blank?
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
@@ -261,6 +261,15 @@ class ProjectsController < ApplicationController
     service = MediafluxScriptFactory.new(project: project)
     respond_to do |format|
       format.json { render json: {script: service.aterm_script} }
+    end
+  end
+
+  def show_mediaflux
+    project_id = params[:id]
+    project = Project.find(project_id)
+
+    respond_to do |format|
+      format.xml { render xml: project.mediaflux_meta_xml }
     end
   end
 
