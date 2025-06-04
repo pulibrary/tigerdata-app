@@ -22,6 +22,50 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
     let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
     let(:request) { Request.create(request_title: "abc123", project_title: "project") }
+    let(:full_request) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "Test Project Title",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+        description: "Test project description",
+        parent_folder: "test_parent_folder",
+        project_folder: "test_project_folder",
+        project_id: nil,
+        storage_size: nil,
+        requested_by: nil,
+        storage_unit: "GB",
+        quota: "500 GB",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
+    end
+    let(:bluemountain) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "kjlj",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "41000", "name" => "LIB-PU Library" }],
+        description: "This collection contains important periodicals of the European avant-garde.",
+        parent_folder: "pul",
+        project_folder: "bluemountain",
+        project_id: nil,
+        storage_size: nil,
+        requested_by: nil,
+        storage_unit: "GB",
+        quota: "500 GB",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
+    end
 
     context "user without a role" do
       it "does not show the New Project Requests page to users without a role" do
@@ -81,6 +125,22 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(response).to redirect_to("#{requests_path}/#{request.id}")
         follow_redirect!
         expect(response.body).to have_content("Approve request")
+      end
+      it "creates a project when a request is approved" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{full_request.id}"
+        expect(page).to have_content("Approve request")
+        click_on "Approve request"
+        expect(page).to have_css("#project-details-heading")
+        expect(page).to have_content("Project approved and created in the TigerData web portal")
+      end
+      it "creates a project with BlueMountain fixture data when the request is approved" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{bluemountain.id}"
+        expect(page).to have_content("Approve request")
+        click_on "Approve request"
+        expect(page).to have_css("#project-details-heading")
+        expect(page).to have_content("Project approved and created in the TigerData web portal")
       end
     end
 
