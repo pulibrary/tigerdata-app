@@ -48,7 +48,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       Request.create(
         request_type: nil,
         request_title: nil,
-        project_title: "kjlj",
+        project_title: "Blue Mountain",
         created_at: Time.current.in_time_zone("America/New_York").iso8601,
         state: "draft",
         data_sponsor: sponsor_user.uid,
