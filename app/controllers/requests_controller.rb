@@ -32,7 +32,10 @@ class RequestsController < ApplicationController
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request = Request.find(params[:id])
       project_metadata_json = RequestProjectMetadata.convert(@request)
+      # this line does not call the create! method defined in Project, but the ActiveRecord method.
       project = Project.create!({ metadata_json: project_metadata_json })
+      # TODO: Mint a DOI & create the project in mediaflux here
+
       @request.destroy
       stub_message = "Project approved and created in the TigerData web portal; request has been processed and deleted"
       redirect_to project_path(project.id), notice: stub_message
