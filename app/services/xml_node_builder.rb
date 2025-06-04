@@ -2,7 +2,7 @@
 class XmlNodeBuilder
   XML_VERSION = "1.0"
 
-  attr_accessor :document
+  attr_reader :document, :node
 
   # @return [String]
   def xml_version
@@ -23,7 +23,7 @@ class XmlNodeBuilder
 
   # @return [Nokogiri::XML::Element]
   def build
-    return @node unless @node.nil?
+    return node if node.present?
 
     @node = document.root
   end
