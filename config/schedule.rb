@@ -21,8 +21,8 @@
 # Learn more: http://github.com/javan/whenever
 set :output, "/opt/tigerdata/shared/cron.log"
 
-every 1.day do
-  FileInventoryCleanupJob.perform_later
+every 1.day, roles: [:rake] do
+  rake "file_inventory:clean_up"
 end
 
 every :day, at: "01:00am", roles: [:rake] do

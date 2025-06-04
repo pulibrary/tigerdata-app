@@ -48,4 +48,9 @@ namespace :file_inventory do
     job_request = FileInventoryJob.perform_later(user_id: user.id, project_id: project.id, mediaflux_session: mediaflux_session)
     puts "Scheduled file inventory #{job_request.job_id} for project #{project.title} (#{project.id}) user: #{user.uid} (#{user.id}), session: #{mediaflux_session}"
   end
+
+  desc "Runs FileInventoryCleanupJob to clean up old jobs"
+  task clean_up: [:environment] do
+    FileInventoryCleanupJob.perform_later
+  end
 end
