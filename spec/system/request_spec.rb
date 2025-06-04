@@ -133,6 +133,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
         expect(page).to have_content("Project approved and created in the TigerData web portal")
+        project = Project.last
+        expect(project.title).to eq("Test Project Title")
+        expect(project).to be_valid
       end
       it "creates a project with BlueMountain fixture data when the request is approved" do
         sign_in sysadmin_user
@@ -141,6 +144,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
         expect(page).to have_content("Project approved and created in the TigerData web portal")
+        project = Project.last
+        expect(project.title).to eq("Blue Mountain")
+        expect(project).to be_valid
       end
     end
 

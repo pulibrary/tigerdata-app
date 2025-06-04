@@ -14,7 +14,8 @@ class RequestProjectMetadata
         storage_capacity: storage_capacity(request),
         storage_performance_expectations: { requested: "Standard", approved: "Standard" },
         created_by: nil,
-        created_on: request[:created_at]
+        created_on: request[:created_at],
+        project_id: ProjectMetadata::DOI_NOT_MINTED
       }
     end
 
@@ -35,7 +36,7 @@ class RequestProjectMetadata
        def storage_capacity(request)
          size, unit = request.quota.split(" ")
          if request.custom_quota?
-           size = request.storage_size
+           size = request.storage_size.to_s
            unit = request.storage_unit
          end
          {
