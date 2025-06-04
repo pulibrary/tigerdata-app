@@ -31,7 +31,7 @@ class RequestsController < ApplicationController
   def approve
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request = Request.find(params[:id])
-      project_metadata_json = parse_request_metadata(@request)
+      project_metadata_json = RequestProjectMetadata.convert(@request)
       project = Project.create!({ metadata_json: project_metadata_json })
       @request.destroy
       stub_message = "Project approved and created in the TigerData web portal; request has been processed and deleted"

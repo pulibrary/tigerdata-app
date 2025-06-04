@@ -36,12 +36,16 @@ class Request < ApplicationRecord
 
   def valid_quota?
     if ((quota == "500 GB") || (quota == "2 TB") || (quota == "10 TB") || (quota == "25 TB")) ||
-       ((quota == "custom") && (storage_size.present? && (storage_size > 0)) && ((storage_unit == "GB") || (storage_unit == "TB")))
+       (custom_quota? && (storage_size.present? && (storage_size > 0)) && ((storage_unit == "GB") || (storage_unit == "TB")))
       true
     else
       errors.add(:quota, :invalid, message: "must be one of '500 GB', '2 TB', '10 TB', '25 TB', or 'custom'")
       false
     end
+  end
+
+  def custom_quota?
+    quota == "custom"
   end
 
   def valid_requested_by?
