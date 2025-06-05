@@ -23,6 +23,7 @@ class PrincetonUsers
     end
 
     def user_from_ldap(ldap_person)
+      return if ldap_person[:edupersonprincipalname].blank?
       uid = ldap_person[:uid].first.downcase
       current_entries = User.where(uid:)
       if current_entries.empty?
