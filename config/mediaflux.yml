@@ -123,3 +123,28 @@ test:
   api_user: "manager"
   api_password: "<%= ENV['MFLUX_CI_PASSWORD'] || 'change_me' %>"
   shared_files_location: "./public/"
+ci:
+  api_hidden_root: "/td-ci-001"
+  api_root_to_clean: "/td-ci-001/test/"
+  api_root_ns: "/td-ci-001/test/tigerdataNS"
+  api_root_collection_name: "tigerdata"
+  api_root_collection_namespace: "/td-ci-001/test"
+  api_root_collection: "path=/td-ci-001/test/tigerdata"
+  api_transport: "http"
+  api_host: "<%= ENV['MFLUX_CI'] ? 'mflux-ci.lib.princeton.edu' : '0.0.0.0' %>"
+  api_port: "<%= ENV['MFLUX_CI'] ?  '80' : '8888' %>"
+
+  # Alternate to test is still a test location
+  api_alternate_hidden_root: "/td-ci-002"
+  api_alternate_root_ns: "/td-ci-002/tigerdataNS"
+  api_alternate_root_collection: "path=/td-ci-002/tigerdata-alt"
+  api_alternate_root_collection_name: "tigerdata-alt"
+  api_alternate_root_collection_namespace: "/td-ci-002"
+  api_alternate_transport: "https"
+  api_alternate_host: "mediaflux-alt.example.com"
+  api_alternate_port: "7777"
+
+  api_domain: "system"
+  api_user: "manager"
+  api_password: "<%= ENV['MFLUX_CI_PASSWORD'] || 'change_me' %>"
+  shared_files_location: "./public/"
