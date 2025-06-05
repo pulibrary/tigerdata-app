@@ -70,6 +70,20 @@ RSpec.describe PrincetonUsers, type: :model do
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsja#{char}*"))
         end
       end
+
+      it "skips the user if the email is nil" do
+        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname], filter: anything).and_return([])
+        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+                                                   filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsjo*")).and_return([entry])
+        allow(entry).to receive(:[]).with(:uid).and_return(["gsjobs"])
+        allow(entry).to receive(:[]).with(:sn).and_return(["Graduate School Jobs"])
+        allow(entry).to receive(:[]).with(:pudisplayname).and_return(["Graduate School Jobs, "])
+        allow(entry).to receive(:[]).with(:edupersonprincipalname).and_return([])
+        allow(entry).to receive(:[]).with(:givenname).and_return([])
+
+        expect { described_class.create_users_from_ldap(current_uid_start: "gsj", ldap_connection: connection) }
+          .to change { User.count }.by(0)
+      end
     end
   end
 end
