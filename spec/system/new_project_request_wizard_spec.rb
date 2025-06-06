@@ -16,7 +16,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true) }
     it "walks through the wizard if the feature is enabled" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
@@ -60,6 +60,41 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Categories (Optional)"
       click_on "Back"
       expect(page).to have_content "Basic Details"
+    end
+
+    it "can not submit if the request is not valid" do
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, true)
+      request = Request.create
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      visit "/new-project/review-submit/#{request.id}"
+      expect(page).to have_content "Review and Submit"
+      click_on("Next")
+      within(".project-title") do
+        expect(page).to have_content("cannot be empty")
+      end
+      expect(page.body).to include("Please resolve errors before submitting your request")
+      fill_in :project_title, with: "A basic Project"
+      expect(page).to have_content "15/200 characters"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      expect(page).to have_content "46/1000 characters"
+      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
+      # This is triggering the html5 element like it would normally if the page has focus
+      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
+      select current_user_str, from: "request_data_sponsor"
+      select current_user_str, from: "request_data_manager"
+      click_on("Next")
+      expect(page).to have_content("Request state: submitted")
     end
 
     it "cannot walk through the wizard if the feature is disabled" do

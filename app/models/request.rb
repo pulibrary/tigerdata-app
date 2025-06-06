@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class Request < ApplicationRecord
+  DRAFT = "draft" # default state set by database
+  SUBMITTED = "submitted" # Ready to be approved
+
   def valid_to_submit?
     errors.clear
     # run all validations and then check for errors otherwise ruby stops at the first error

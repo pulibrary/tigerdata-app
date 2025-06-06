@@ -7,7 +7,11 @@ class RequestsController < ApplicationController
     return head :forbidden unless Flipflop.new_project_request_wizard?
     if current_user.eligible_sysadmin?
       add_breadcrumb("Project Requests - All")
-      @requests = Request.all
+      @draft_requests = Request.where(state: Request::DRAFT).map do |request|
+        request.project_title = "no title set" if request.project_title.blank?
+        request
+      end
+      @submitted_requests = Request.where(state: Request::SUBMITTED)
     else
       error_message = "You do not have access to this page."
       flash[:notice] = error_message
@@ -17,9 +21,9 @@ class RequestsController < ApplicationController
 
   def show
     if current_user.superuser || current_user.sysadmin || current_user.trainer
-      @request = Request.find(params[:id])
+      @request_model = Request.find(params[:id])
       add_breadcrumb("Requests", requests_path)
-      add_breadcrumb(@request.project_title, request_path)
+      add_breadcrumb(@request_model.project_title, request_path(@request_model))
       render :show
     else
       error_message = "You do not have access to this page."
@@ -30,14 +34,14 @@ class RequestsController < ApplicationController
 
   def approve
     if current_user.superuser || current_user.sysadmin || current_user.trainer
-      @request = Request.find(params[:id])
-      if @request.valid_to_submit?
-        project = @request.approve(current_user)
-        @request.destroy
+      @request_model = Request.find(params[:id])
+      if @request_model.valid_to_submit?
+        project = @request_model.approve(current_user)
+        @request_model.destroy
         stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."
         redirect_to project_path(project.id), notice: stub_message
       else
-        redirect_to new_project_review_and_submit_path(@request)
+        redirect_to new_project_review_and_submit_path(@request_model)
       end
     else
       error_message = "You do not have access to this page."
