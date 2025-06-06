@@ -223,10 +223,23 @@
                         line-height: 1.125rem; /* 150% */
                       }
                     }
-                    .input-error {
+                    .error-and-count {
+                      .input-error {
+                        flex-basis: 80%;
+                      }
                     }
                   }
                 }
+              }
+              .input-error {
+                color: var(--Secondary-Red-Dark, #b00002);
+
+                /* Body XXS */
+                font-family: "Libre Franklin";
+                font-size: 0.75rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 1.125rem; /* 150% */
               }
               .number-input {
                 display: flex;

@@ -8,11 +8,11 @@
         Project Information - Basic Details
       </div>  
     </div>
-    <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
-    <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error: "",
-                                                                                parent_folder: @request_model.parent_folder || "", parent_folder_error: ""} %>
-    <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: "" } %>
-    <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @request_model.departments || [], department_error: "" } %>
+    <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: @request_model.errors[:project_title].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error:  @request_model.errors[:project_folder].join(", "),
+                                                                                parent_folder: @request_model.parent_folder || "", parent_folder_error: @request_model.errors[:parent_folder].join(", ")} %>
+    <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: @request_model.errors[:description].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @request_model.departments || [], department_error: @request_model.errors[:departments].join(", ") } %>
 <div class="section-line"></div>
 <div class="section">
     <div class="section-title">
@@ -20,9 +20,9 @@
       Roles and People
       </div>
     </div>
-    <%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: "" } %>
-    <%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: "" } %>
-    <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: "" } %>    
+    <%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: @request_model.errors[:data_sponsor].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: @request_model.errors[:data_manager].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: @request_model.errors[:user_roles].join(", ") } %>    
 </div>
 <div class="section-line"></div>
 <div class="section">
@@ -31,7 +31,7 @@
       Storage and Performance
       </div>  
     </div>
-    <%= render partial: "/new_project_wizard/form_project_storage", locals: { quota: @request_model.quota || "", quota_error: "", 
+    <%= render partial: "/new_project_wizard/form_project_storage", locals: { quota: @request_model.quota || "", quota_error: @request_model.errors[:quota].join(", "), 
                                                                           storage_size: @request_model.storage_size || 0,  storage_size_error: "", 
                                                                           storage_unit: @request_model.storage_unit || "GB",  storage_unit_error: "" } %>
 </div>

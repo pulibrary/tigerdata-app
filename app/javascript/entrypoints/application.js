@@ -25,6 +25,7 @@ import { showMoreLess } from './showMoreLess';
 import { projectStyle, projectTab } from './projectTabs';
 import { userRolesAutocomplete } from './userRolesAutocomplete';
 import { storageInputs } from './storageInputs';
+import { validationClear } from './validation';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -178,6 +179,7 @@ function initPage() {
   storageInputs();
   departmentAutocomplete();
   userRolesAutocomplete();
+  validationClear();
 }
 
 window.addEventListener('load', () => initPage());

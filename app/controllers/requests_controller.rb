@@ -31,14 +31,14 @@ class RequestsController < ApplicationController
   def approve
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request = Request.find(params[:id])
-      project_metadata_json = RequestProjectMetadata.convert(@request)
-      # this line does not call the create! method defined in Project, but the ActiveRecord method.
-      project = Project.create!({ metadata_json: project_metadata_json })
-      # TODO: Mint a DOI & create the project in mediaflux here
-
-      @request.destroy
-      stub_message = "Project approved and created in the TigerData web portal; request has been processed and deleted"
-      redirect_to project_path(project.id), notice: stub_message
+      if @request.valid_to_submit?
+        project = @request.approve(current_user)
+        @request.destroy
+        stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."
+        redirect_to project_path(project.id), notice: stub_message
+      else
+        redirect_to new_project_review_and_submit_path(@request)
+      end
     else
       error_message = "You do not have access to this page."
       flash[:notice] = error_message

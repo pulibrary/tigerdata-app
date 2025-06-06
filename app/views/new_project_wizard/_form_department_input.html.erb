@@ -1,4 +1,4 @@
-<div class="form-field">
+<div class="form-field departments">
   <%= render partial: "/new_project_wizard/form_field_label", 
            locals: {field_label: "Department(s)", field_sub_label: "Required"} %>
   <div class="input-frame">
@@ -13,6 +13,9 @@
                 <option data-value="<%= {code: department.code, name: department.name}.to_json %>" value="<%= "(#{department.code}) #{department.name}" %>&nbsp;"></option>
             <% end %>
           </datalist>
+          <div class="input-error">
+               <%= department_error %>
+          </div>
           <ul class="selected-departments selected-items">
             <% departments.each do |department| %>
               <li class="selected-item">
@@ -22,9 +25,6 @@
               </li>
             <% end %>
           </ul>
-          <div class="input-error">
-               <%= department_error %>
-          </div>
           <input type="hidden" id="request-departments" name="request[departments][]" value="" />
         </div>
       </div>
