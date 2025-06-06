@@ -68,7 +68,7 @@ class Project < ApplicationRecord
     ProvenanceEvent.generate_active_events(project: self, user: current_user)
   end
 
-  def draft_doi(user:)
+  def draft_doi(user: nil)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
   end

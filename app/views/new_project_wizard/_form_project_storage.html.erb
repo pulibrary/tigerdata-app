@@ -46,12 +46,13 @@
           <div class="text-input number-input">
             <div class="horizontal-frame">
               <div class="vertical-frame">
-              <select class="form-select" name="request[storage_unit]" id="storage_unit">
-                <option value="TB" <%= "selected" if storage_unit == "TB" %>>TB</option>
-                <option value="GB" <%= "selected" if storage_unit == "GB" %>>GB</option>
-              </select>
-              <div class="input-error">
-                  <%= storage_unit_error %>
+                <select class="form-select" name="request[storage_unit]" id="storage_unit">
+                  <option value="TB" <%= "selected" if storage_unit == "TB" %>>TB</option>
+                  <option value="GB" <%= "selected" if storage_unit == "GB" %>>GB</option>
+                </select>
+                <div class="input-error">
+                    <%= storage_unit_error %>
+                </div>
               </div>
             </div>
           </div>

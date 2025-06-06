@@ -2,12 +2,23 @@
 class Request < ApplicationRecord
   def valid_to_submit?
     errors.clear
-    valid_title? && valid_data_sponsor? && valid_data_manager? && valid_departments? && valid_quota? &&
-      valid_description? && valid_parent_folder? && valid_project_folder? && valid_requested_by?
+    # run all validations and then check for errors otherwise ruby stops at the first error
+    valid_title?
+    valid_data_sponsor?
+    valid_data_manager?
+    valid_departments?
+    valid_quota?
+    valid_description?
+    # Is parent folder really required?  For Skeletor let's skip it.
+    # valid_parent_folder?
+    valid_project_folder?
+    # For Skeletor we are setting the requestor to the data sponsor
+    # valid_requested_by?
+    errors.count == 0
   end
 
   def valid_title?
-    field_present?(project_title, :title)
+    field_present?(project_title, :project_title)
   end
 
   def valid_data_sponsor?
@@ -19,7 +30,7 @@ class Request < ApplicationRecord
   end
 
   def valid_departments?
-    departments.present?
+    field_present?(departments, :departments)
   end
 
   def valid_description?
@@ -50,6 +61,16 @@ class Request < ApplicationRecord
 
   def valid_requested_by?
     field_present?(requested_by, :requested_by)
+  end
+
+  def approve(_approver)
+    project_metadata_json = RequestProjectMetadata.convert(self)
+    project = Project.create!({ metadata_json: project_metadata_json })
+    # TODO: Draft the DOI here
+    # project.draft_doi
+    # project.save
+    # TODO: create the project in mediaflux here (need new tigerdata.project command)
+    project
   end
 
   private
