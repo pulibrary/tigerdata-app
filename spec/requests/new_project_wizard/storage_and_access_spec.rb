@@ -62,12 +62,15 @@ RSpec.describe "new-project/storage-access", type: :request do
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Back")
+          put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "custom", storage_size: "60", storage_unit: "TB" },
+                                                                  commit: "Back")
           expect(response).to redirect_to(new_project_project_type_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
-          expect(request.quota).to eq("2 TB")
+          expect(request.quota).to eq("custom")
+          expect(request.storage_size).to eq(60.0)
+          expect(request.storage_unit).to eq("TB")
         end
       end
     end

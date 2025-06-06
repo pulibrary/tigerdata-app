@@ -5,42 +5,47 @@
     <div class="options-frame">
       <div class="quota-select">
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio500gb"  Value="500 GB" class="quota-option" <%= "checked" if quota == "500 GB" %> ></input>
-          <label for="radio500gb">500 GB</label>
+          <input type="radio" name="request[quota]" id="radio500gb"  Value="500 GB" class="quota-option" <%= "checked" if quota == "500 GB" %> tabindex="-1" ></input>
+          <label for="radio500gb" focus="true" tabindex="0">500 GB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio2tb"  Value="2 TB" class="quota-option"  <%= "checked" if quota == "2 TB" %> ></input>
-          <label for="radio2tb">2 TB</label>
+          <input type="radio" name="request[quota]" id="radio2tb"  Value="2 TB" class="quota-option"  <%= "checked" if quota == "2 TB" %> tabindex="-1" ></input>
+          <label for="radio2tb" focus="true" tabindex="0">2 TB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio10tb"  Value="10 TB" class="quota-option" <%= "checked" if quota == "10 TB" %> ></input>
-          <label for="radio10tb">10 TB</label>
+          <input type="radio" name="request[quota]" id="radio10tb"  Value="10 TB" class="quota-option" <%= "checked" if quota == "10 TB" %> tabindex="-1"></input>
+          <label for="radio10tb" focus="true" tabindex="0">10 TB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio25tb"  Value="25 TB" class="quota-option" <%= "checked" if quota == "25 TB" %> ></input>
-          <label for="radio25tb">25 TB</label>
+          <input type="radio" name="request[quota]" id="radio25tb"  Value="25 TB" class="quota-option" <%= "checked" if quota == "25 TB" %> tabindex="-1" ></input>
+          <label for="radio25tb" focus="true" tabindex="0">25 TB</label>
         </div>
       </div>
     </div>
     <div class="options-frame hidden-toggle">
       <div class="quota-select">
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radiocustom"  Value="custom" class="quota-option"  <%= "checked" if quota == "custom" %> ></input>
-          <label for="radiocustom">Custom</label>
+          <input type="radio" name="request[quota]" id="radiocustom"  Value="custom" class="quota-option"  <%= "checked" if quota == "custom" %> tabindex="-1" ></input>
+          <label for="radiocustom" focus="true" tabindex="0">Custom</label>
         </div>
       </div>
 
       <div class="hidden-div input-frame" <%= "hidden" if quota != "custom" %> >
-        <div class="text-input number-input">
-          <div class="horizontal-frame">
-            <div class="vertical-frame">
-              <input class="form-input" type="number" name="request[storage_size]" id="storage_size"
-                    value="<%= storage_size %>" placeholder="Enter a value" min="0" step="1"></input>
-              <div class="input-error">
-                  <%= storage_size_error %>
+        <div class="custom-quota">
+          <div class="text-input number-input">
+            <div class="horizontal-frame">
+              <div class="vertical-frame">
+                <input class="form-input" type="number" name="request[storage_size]" id="storage_size"
+                      value="<%= storage_size %>" placeholder="Enter a value" min="0" step="1"></input>
+                <div class="input-error">
+                    <%= storage_size_error %>
+                </div>
               </div>
             </div>
-            <div class="vertical-frame">
+          </div>
+          <div class="text-input number-input">
+            <div class="horizontal-frame">
+              <div class="vertical-frame">
               <select class="form-select" name="request[storage_unit]" id="storage_unit">
                 <option value="TB" <%= "selected" if storage_unit == "TB" %>>TB</option>
                 <option value="GB" <%= "selected" if storage_unit == "GB" %>>GB</option>
