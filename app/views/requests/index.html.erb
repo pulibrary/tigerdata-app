@@ -1,6 +1,14 @@
 <h1>New Project Requests</h1>
+<h2>Draft Requests</h2>
 <ul>
-  <% @requests.each do |request| %> 
+  <% @draft_requests.each do |request| %> 
+    <li><%= link_to request.project_title, request_path(request.id) %></li>
+  <% end %>
+</ul>
+
+<h2>Submitted Requests</h2>
+<ul>
+  <% @submitted_requests.each do |request| %> 
     <li><%= link_to request.project_title, request_path(request.id) %></li>
   <% end %>
 </ul>

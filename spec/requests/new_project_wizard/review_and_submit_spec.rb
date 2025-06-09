@@ -36,23 +36,26 @@ RSpec.describe "new-project/review-submit", type: :request do
     end
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:valid_request_params) do
+        { request_title: "new title", project_title: "new project",
+          state: "draft", data_sponsor: user.uid, data_manager: user.uid,
+          departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
+          description: "descr", parent_folder: "parent", project_folder: "folder",
+          project_id: "doi", quota: "500 GB", requested_by: "uid" }
+      end
 
       context "the request exists" do
         let(:request) { Request.create(request_title: "abc123", project_title: "project") }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project",
-                                                                            state: "draft", data_sponsor: "sponsor", data_manager: "manager",
-                                                                            departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
-                                                                            description: "descr", parent_folder: "parent", project_folder: "folder",
-                                                                            project_id: "doi", quota: "500 GB", requested_by: "uid" }, commit: "Save")
+          put new_project_review_and_submit_save_url(request.id, request: valid_request_params, commit: "Save")
           expect(response).to redirect_to("#{requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
           expect(request.state).to eq("draft")
-          expect(request.data_sponsor).to eq("sponsor")
-          expect(request.data_manager).to eq("manager")
+          expect(request.data_sponsor).to eq("pul123")
+          expect(request.data_manager).to eq("pul123")
           expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, { "code" => "dept2", "name" => "two" }])
           expect(request.description).to eq("descr")
           expect(request.parent_folder).to eq("parent")
@@ -64,8 +67,17 @@ RSpec.describe "new-project/review-submit", type: :request do
 
         it "renders a successful response for a next commit" do
           sign_in user
+          put new_project_review_and_submit_save_url(request.id, request: valid_request_params, commit: "Next")
+          expect(response).to redirect_to(request_path(request.id))
+          request.reload
+          expect(request.request_title).to eq("new title")
+          expect(request.project_title).to eq("new project")
+        end
+
+        it "renders the current page for a next commit without a request that is valid to submit" do
+          sign_in user
           put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-          expect(response).to redirect_to("#{requests_path}/#{request.id}")
+          expect(response).to redirect_to(new_project_review_and_submit_url(request.id))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
