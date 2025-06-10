@@ -206,6 +206,20 @@ class ProjectsController < ApplicationController
     end 
   end
 
+  # GET "projects/:id/:id-mf"
+  #
+  # This action is used to render the mediaflux metadata for a project.
+  def show_mediaflux
+    project_id = params[:id]
+    project = Project.find(project_id)
+
+    respond_to do |format|
+      format.xml do
+        render xml: project.mediaflux_meta_xml
+      end
+    end
+  end
+
   def project_job_service
     @project_job_service ||= ProjectJobService.new(project:)
   end
