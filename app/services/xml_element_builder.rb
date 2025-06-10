@@ -2,6 +2,7 @@
 class XmlElementBuilder < XmlNodeBuilder
   attr_reader :presenter, :name, :attributes, :content
   alias entry content
+  delegate :blank?, to: :content
 
   # @return [Nokogiri::XML::Element] the XML element node
   def element
@@ -45,8 +46,6 @@ class XmlElementBuilder < XmlNodeBuilder
     raise ArgumentError, "Content for #{name} cannot be nil" if content.nil? && !allow_empty_content
     content
   end
-
-  delegate :blank?, to: :content
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -104,7 +103,6 @@ class XmlElementBuilder < XmlNodeBuilder
     @content = content
 
     @index = index
-    # @allow_empty = allow_empty
 
     @default_method_args = []
     @default_method_args << @index unless @index.nil?
