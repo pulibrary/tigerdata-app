@@ -24,6 +24,7 @@
     "@rails/actioncable": "^7.1.3",
     "@rollup/plugin-inject": "^5.0.3",
     "bootstrap": "^5.2.3",
+    "brace-expansion": "^2.0.2",
     "browserslist": "^4.21.5",
     "datatables": "^1.10.18",
     "jquery": "^3.6.3",
