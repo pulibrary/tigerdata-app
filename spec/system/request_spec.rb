@@ -38,7 +38,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         project_folder: "test_project_folder",
         project_id: nil,
         storage_size: nil,
-        requested_by: nil,
+        requested_by: current_user.uid,
         storage_unit: "GB",
         quota: "500 GB",
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
@@ -60,11 +60,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         project_folder: "bluemountain",
         project_id: nil,
         storage_size: nil,
-        requested_by: nil,
+        requested_by: current_user.uid,
         storage_unit: "GB",
         quota: "500 GB",
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
+    end
+    let(:invalid_request) do
+      Request.create
     end
 
     context "user without a role" do
@@ -132,7 +135,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("Project approved and created in the TigerData web portal")
+        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        project = Project.last
+        expect(project.title).to eq("Test Project Title")
+        expect(project).to be_valid
       end
       it "creates a project with BlueMountain fixture data when the request is approved" do
         sign_in sysadmin_user
@@ -140,7 +146,36 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("Project approved and created in the TigerData web portal")
+        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        project = Project.last
+        expect(project.title).to eq("Blue Mountain")
+        expect(project).to be_valid
+      end
+
+      it "forwards back to the request review page when the request is not ready to submit" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{invalid_request.id}"
+        expect(page).to have_content("Approve request")
+        click_on "Approve request"
+        expect(page).to have_content("Review")
+        within(".project-title") do
+          expect(page).to have_content("cannot be empty")
+        end
+        within(".project-description") do
+          expect(page).to have_content("cannot be empty")
+        end
+        within(".departments") do
+          expect(page).to have_content("cannot be empty")
+        end
+        within(".data-manager") do
+          expect(page).to have_content("cannot be empty")
+        end
+        within(".data-sponsor") do
+          expect(page).to have_content("cannot be empty")
+        end
+        within(".project-folder") do
+          expect(page).to have_content("cannot be empty")
+        end
       end
     end
 

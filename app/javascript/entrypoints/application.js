@@ -24,6 +24,8 @@ import { setupTable } from './pulDataTables';
 import { showMoreLess } from './showMoreLess';
 import { projectStyle, projectTab } from './projectTabs';
 import { userRolesAutocomplete } from './userRolesAutocomplete';
+import { storageInputs } from './storageInputs';
+import { validationClear } from './validation';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -164,14 +166,6 @@ function charCount() {
   });
 }
 
-function toggleHidden() {
-  $('.hidden-toggle').on('click', (event) => {
-    const toggleElement = event.currentTarget;
-    const element = toggleElement.parentNode.querySelector('.hidden-div');
-    element.hidden = false;
-  });
-}
-
 function initPage() {
   $('#test-jquery').click((event) => {
     setTargetHtml(event, 'jQuery works!');
@@ -182,9 +176,10 @@ function initPage() {
   emulate();
   showValidationError();
   charCount();
-  toggleHidden();
+  storageInputs();
   departmentAutocomplete();
   userRolesAutocomplete();
+  validationClear();
 }
 
 window.addEventListener('load', () => initPage());

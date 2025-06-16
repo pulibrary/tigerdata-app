@@ -1,4 +1,4 @@
-<div class="form-field">
+<div class="form-field project-description">
   <%= render partial: "/new_project_wizard/form_field_label", 
            locals: {field_label: "Project Description", field_sub_label: "Required"} %>
   <div class="input-frame">
@@ -7,13 +7,16 @@
         <div class="vertical-frame">
           <textarea class="form-input counted-input" type="text" name="request[description]" id="description"
                 placeholder="Describe your project" maxlength="1000"><%= description %></textarea>
-          <div class="char-limit">
-            <div class="char-limit-text current-count">
-               <%= description.size %>/1000 characters
+
+          <div class="horizontal-frame error-and-count">
+            <div class="input-error">
+                <%= description_error %>
             </div>
-          </div>
-          <div class="input-error">
-               <%= description_error %>
+            <div class="char-limit">
+              <div class="char-limit-text current-count">
+                <%= description.size %>/1000 characters
+              </div>
+            </div>
           </div>
         </div>
       </div>

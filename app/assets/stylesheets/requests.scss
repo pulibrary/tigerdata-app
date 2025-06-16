@@ -5,3 +5,10 @@
 .request-fields {
   padding-top: 30px;
 }
+
+.horizontal-frame {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  align-self: stretch;
+}

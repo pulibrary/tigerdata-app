@@ -9,6 +9,7 @@ require "capistrano/deploy"
 require "capistrano/bundler"
 require "capistrano/passenger"
 require "capistrano/rails"
+require "whenever/capistrano"
 
 # include yarn
 require "capistrano/yarn"

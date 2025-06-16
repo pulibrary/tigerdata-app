@@ -1,4 +1,4 @@
-<div class="form-field">
+<div class="form-field project-title">
   <%= render partial: "/new_project_wizard/form_field_label", 
            locals: {field_label: "Project Title", field_sub_label: "Required"} %>
   <div class="input-frame">
@@ -8,13 +8,15 @@
           <input class="form-input counted-input" type="text" name="request[project_title]" id="project_title"
                 value="<%= project_title %>" placeholder="Give your project a proper name for display throughout the Web Portal"
                 maxlength="200"></input>
-          <div class="char-limit">
-            <div class="char-limit-text current-count">
-               <%= project_title.size %>/200 characters
+          <div class="horizontal-frame error-and-count">
+            <div class="input-error">
+                <%= project_title_error %>
             </div>
-          </div>
-          <div class="input-error">
-               <%= project_title_error %>
+            <div class="char-limit">
+              <div class="char-limit-text current-count">
+                <%= project_title.size %>/200 characters
+              </div>
+            </div>
           </div>
         </div>
       </div>
