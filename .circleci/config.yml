@@ -92,7 +92,7 @@ jobs:
       - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='0.0.0.0' TEST_MEDIAFLUX_PORT=8888
       - run:
           name: Run Rspec
-          command: bundle exec rspec --tag \~no_ci --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
