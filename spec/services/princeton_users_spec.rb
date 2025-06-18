@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.describe PrincetonUsers, type: :model do
   describe "#create_users_from_ldap" do
-    # this test can not be run on circle (tagged :no_ci to not run on circle ci)
+    # this test can not be run on circle (tagged :integration to not run on circle ci)
     it "create the user when connected to the actual ldap (you must be on campus or VPN for this to work)",
-       :no_ci do
+       :integration do
       expect { described_class.create_users_from_ldap(current_uid_start: "gsj") }.to change { User.count }.by(1)
       expect(User.last.uid).to eq("gsjobs")
       expect(User.last.display_name).to eq("Graduate School Jobs, ")
