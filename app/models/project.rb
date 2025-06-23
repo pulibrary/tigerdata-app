@@ -208,7 +208,7 @@ class Project < ApplicationRecord
 
   # @return [Nokogiri::XML::Element] the <meta> element from the Mediaflux XML document
   def mediaflux_meta_element
-    doc = mediaflux_document.dup
+    doc = mediaflux_document.clone
     # Remove the namespaces in order to simplify the XPath query
     doc.remove_namespaces!
     elements = doc.xpath("/request/service/args/meta")

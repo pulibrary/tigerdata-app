@@ -17,11 +17,20 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
     }
   end
   let(:status) { ::Project::PENDING_STATUS }
+  let(:globus_request) do
+    {}
+  end
+  let(:smb_request) do
+    {}
+  end
+  let(:project_directory) do
+    "/tigerdata/abcd1/test-project-2"
+  end
   let(:metadata_model) do
     hash = {
       data_sponsor: data_sponsor.uid,
       data_manager: data_manager.uid,
-      project_directory: "/tigerdata/abcd1/test-project-2",
+      project_directory: project_directory,
       title: "project 123",
       departments: [department], # RDSS test code in fixture data
       description: "hello world",
@@ -30,7 +39,9 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       status: status,
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
-      project_id: "10.34770/az09-0004"
+      project_id: "10.34770/az09-0004",
+      globus_request: globus_request,
+      smb_request: smb_request
     }
     ProjectMetadata.new_from_hash(hash)
   end
@@ -509,6 +520,126 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       it "validates against the XSD schema document" do
         expect(validation_errors).to be_empty
       end
+    end
+  end
+
+  describe "#globus_enable_approved?" do
+    it "returns false by default" do
+      expect(presenter.globus_enable_approved?).to be false
+    end
+
+    context "when the Globus endpoint request is approved" do
+      let(:globus_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns true" do
+        expect(presenter.globus_enable_approved?).to be true
+      end
+    end
+  end
+
+  describe "#globus_enable_approved" do
+    it "returns 'false' by default" do
+      expect(presenter.globus_enable_approved).to eq("false")
+    end
+
+    context "when the Globus endpoint request is approved" do
+      let(:globus_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns 'true'" do
+        expect(presenter.globus_enable_approved).to eq("true")
+      end
+    end
+  end
+
+  describe "#globus_enable_requested?" do
+    it "returns false by default" do
+      expect(presenter.globus_enable_requested?).to be false
+    end
+
+    context "when the Globus endpoint is requested" do
+      let(:globus_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns true" do
+        expect(presenter.globus_enable_requested?).to be true
+      end
+    end
+  end
+
+  describe "#globus_enable_requested" do
+    it "returns 'false' by default" do
+      expect(presenter.globus_enable_requested).to eq("false")
+    end
+
+    context "when the Globus endpoint is requested" do
+      let(:globus_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns 'true'" do
+        expect(presenter.globus_enable_requested).to eq("true")
+      end
+    end
+  end
+
+  describe "#smb_enable_approved?" do
+    it "returns false by default" do
+      expect(presenter.smb_enable_approved?).to be false
+    end
+
+    context "when SMB is approved" do
+      let(:smb_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns true" do
+        expect(presenter.smb_enable_approved?).to be true
+      end
+    end
+  end
+
+  describe "#smb_enable_approved" do
+    it "returns 'false' by default" do
+      expect(presenter.smb_enable_approved).to eq("false")
+    end
+
+    context "when SMB is approved" do
+      let(:smb_request) do
+        {
+          approved: true
+        }
+      end
+
+      it "returns 'true'" do
+        expect(presenter.smb_enable_approved).to eq("true")
+      end
+    end
+  end
+
+  describe "#project_directory_protocol" do
+    let(:project_directory) do
+      "nfs://tigerdata/abcd1/test-project-2"
+    end
+    let(:index) { 0 }
+    let(:value) { presenter.project_directory_protocol(index) }
+
+    it "returns the protocol for the project directory at the given index" do
+      expect(value).to eq("NFS")
     end
   end
 end

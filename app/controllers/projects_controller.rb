@@ -2,6 +2,7 @@
 class ProjectsController < ApplicationController
 
   before_action :set_breadcrumbs
+  before_action :authenticate_user!
 
   def new
     add_breadcrumb("New Project Request")
