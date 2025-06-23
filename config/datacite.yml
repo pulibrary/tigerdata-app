@@ -12,6 +12,8 @@ qa:
   <<: *default
 staging:
   <<: *default
+ci:
+  <<: *default
 development:
   <<: *default
 test:

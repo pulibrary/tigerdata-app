@@ -14,6 +14,10 @@ qa:
   <<: *staging
   channel_prefix: tigerdata_qa
 
+ci:
+  <<: *staging
+  channel_prefix: tigerdata_ci
+
 production:
   <<: *staging
   channel_prefix: tigerdata_production

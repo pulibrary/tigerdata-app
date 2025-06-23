@@ -1,5 +1,7 @@
 ---
 :concurrency: 2
+ci:
+  :concurrency: 2
 staging:
   :concurrency: 2
 qa:
