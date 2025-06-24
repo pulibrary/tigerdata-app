@@ -3,7 +3,7 @@
 
 namespace :servers do
   task install_mediaflux: :environment do
-    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.5.0")
+    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.4.0")
     system("docker start mediaflux")
   end
 
