@@ -19,6 +19,13 @@ staging:
   project_activation:
     to_email: tigerdata@princeton.edu
     cc_email: mchandler@princeton.edu
+ci:
+  project_creation:
+    to_email: tigerdata@princeton.edu
+    cc_email: mchandler@princeton.edu
+  project_activation:
+    to_email: tigerdata@princeton.edu
+    cc_email: mchandler@princeton.edu
 development:
   project_creation:
     to_email: test@example.com
