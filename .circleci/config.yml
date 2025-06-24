@@ -122,11 +122,11 @@ jobs:
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
-      - run: bundle exec rake db:migrate RAILS_ENV=test
-      - run: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=test bundle exec rake schema:create
+      - run: bundle exec rake db:migrate RAILS_ENV=ci
+      - run: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rake schema:create
       - run:
           name: Run Rspec
-          command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
