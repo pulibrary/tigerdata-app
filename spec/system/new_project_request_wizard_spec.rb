@@ -187,7 +187,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
     end
 
-     it "deletes departments when clicking on the X next to them" do
+    it "deletes departments when clicking on the X next to them" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
@@ -214,7 +214,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
 
       # Remove the department
-      page.execute_script("document.getElementsByClassName('remove-department')[0].click()");
+      page.execute_script("document.getElementsByClassName('remove-department')[0].click()")
       expect(page).not_to have_content(department_to_test)
     end
   end
