@@ -136,7 +136,8 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
-- Run connected to CI mediaflux instance: `MFLUX_CI=true bundle exec rspec spec`
+- Run connected to CI mediaflux instance: `MFLUX_CI=true MFLUX_CI_PASSWORD="[MFLUX_CI_PASSWORD]" bundle exec rspec spec`
+- `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
 
 ### Starting the development server
 
