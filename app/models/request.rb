@@ -69,10 +69,9 @@ class Request < ApplicationRecord
   def approve(_approver)
     project_metadata_json = RequestProjectMetadata.convert(self)
     project = Project.create!({ metadata_json: project_metadata_json })
-    # TODO: Draft the DOI here
-    # project.draft_doi
-    # project.save
-    # TODO: create the project in mediaflux here (need new tigerdata.project command)
+    project.draft_doi
+    project.save
+    # TODO: create the project in mediaflux here (need new tigerdata.project.create command)
     project
   end
 

@@ -129,7 +129,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         follow_redirect!
         expect(response.body).to have_content("Approve request")
       end
-      it "creates a project when a request is approved" do
+      it "creates a project with a DOI when a request is approved" do
         sign_in sysadmin_user
         visit "#{requests_path}/#{full_request.id}"
         expect(page).to have_content("Approve request")
@@ -138,6 +138,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
         project = Project.last
         expect(project.title).to eq("Test Project Title")
+        expect(project.metadata_json["project_id"]).to eq("10.34770/tbd")
         expect(project).to be_valid
       end
       it "creates a project with BlueMountain fixture data when the request is approved" do
