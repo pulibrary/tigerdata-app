@@ -26,7 +26,12 @@ class RequestWizardsController < ApplicationController
     when "Next"
       render_next
     else
-      redirect_to "#{requests_path}/#{@request_model.id}"
+      if params[:commit].start_with?("http")
+        # Go directly to the step the user clicked on
+        redirect_to params[:commit]
+      else
+        redirect_to "#{requests_path}/#{@request_model.id}"
+      end
     end
   end
 
