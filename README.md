@@ -132,8 +132,11 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/mflux/service-docs/
 
 
-### Running tests
-
+### How to run test suite
+- `asdf install`
+- `bundle install`
+- `yarn install`
+- `bundle exec rake servers:start`
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
 - Run connected to CI mediaflux instance: `MFLUX_CI=true MFLUX_CI_PASSWORD="[MFLUX_CI_PASSWORD]" bundle exec rspec spec`
