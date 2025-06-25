@@ -27,6 +27,7 @@ function addNewDepartment(value, dataValue) {
   newDiv.classList.add('remove-item');
   newDiv.focus = true;
   newDiv.tabIndex = 0;
+  newDiv.title = 'Remove department';
   li.appendChild(newDiv);
   const input = document.createElement('input');
   input.type = 'hidden';

@@ -186,5 +186,36 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request_data_manager", with: current_user.uid)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
     end
+
+    it "deletes departments when clicking on the X next to them" do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, true)
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Basic Details"
+      fill_in :project_title, with: "A basic Project"
+      expect(page).to have_content "15/200 characters"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      expect(page).to have_content "46/1000 characters"
+
+      # Select a department
+      department_to_test = "(77777) RDSS-Research Data and Scholarship Services"
+      expect(page).not_to have_content(department_to_test)
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select "#{department_to_test}\u00A0", from: "department_find"
+      # This is triggering the html5 element like it would normally if the page has focus
+      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
+      expect(page).to have_content(department_to_test)
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+
+      # Remove the department
+      page.execute_script("document.getElementsByClassName('remove-department')[0].click()")
+      expect(page).not_to have_content(department_to_test)
+    end
   end
 end
