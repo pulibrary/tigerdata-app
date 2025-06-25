@@ -1,4 +1,4 @@
-<div class="sidebar-width"> 
+<div class="sidebar-width">
 <div id="new-project-wizard-sidebar">
     <div class="sidebar-container">
         <div data-state="Expanded" class="expanded-state">
@@ -8,14 +8,14 @@
                         <div class="step-text">1</div>
                     </div>
                     <div class="step-text-container">
-                        <div class="step-text"><a href="<%= new_project_project_info_path(@request_model) %>">Project Information</a></div>
+                        <div class="step-text"><a class="go-to-step" href="<%= new_project_project_info_path(@request_model) %>">Project Information</a></div>
                     </div>
                 </div>
                 <div class="step-expanded-container">
                     <div class="step-expanded"></div>
                 </div>
             </div>
-            
+
             <div data-count="3" class="substeps-container">
                 <div class="connector-line"></div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
@@ -49,7 +49,7 @@
                 <div class="step-text">2</div>
             </div>
             <div class="step-text-container">
-                <div class="step-text"><a href="<%= new_project_roles_and_people_path(@request_model) %>">Roles and People</a></div>
+                <div class="step-text"><a class="go-to-step" href="<%= new_project_roles_and_people_path(@request_model) %>">Roles and People</a></div>
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
@@ -57,7 +57,7 @@
                 <div class="step-text">3</div>
             </div>
             <div class="step-text-container">
-                <div class="step-text"><a href="<%= new_project_project_type_path(@request_model) %>">Project Type</a></div>
+                <div class="step-text"><a class="go-to-step" href="<%= new_project_project_type_path(@request_model) %>">Project Type</a></div>
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
@@ -65,7 +65,7 @@
                 <div class="step-text">4</div>
             </div>
             <div class="step-text-container">
-                <div class="step-text"><a href="<%= new_project_storage_and_access_path(@request_model) %>">Storage and Access</a></div>
+                <div class="step-text"><a class="go-to-step" href="<%= new_project_storage_and_access_path(@request_model) %>">Storage and Access</a></div>
             </div>
         </div>
         <div data-state="Expanded" class="expanded-state">
@@ -75,7 +75,7 @@
                         <div class="step-text">5</div>
                     </div>
                     <div class="step-text-container">
-                        <div><span class="step-text"><a href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Additional Information</a></span><br /><span class="substep-text">(Optional)</span></div>
+                        <div><span class="step-text"><a class="go-to-step" href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Additional Information</a></span><br /><span class="substep-text">(Optional)</span></div>
                     </div>
                 </div>
                 <div class="step-expanded-container">
@@ -115,9 +115,24 @@
                 <div class="step-text">6</div>
             </div>
             <div class="step-text-container">
-                <div class="step-text"><a href="<%= new_project_review_and_submit_path(@request_model) %>">Review and Submit</a></div>
+                <div class="step-text"><a class="go-to-step" href="<%= new_project_review_and_submit_path(@request_model) %>">Review and Submit</a></div>
             </div>
         </div>
     </div>
 </div>
 </div>
+
+<script type="module">
+  $(".go-to-step").on("click", (event) => {
+    // Prevent the normal click event from continue executing...
+    event.preventDefault();
+
+    // ...and instead submit the form but indicating via the submit's button value property
+    // what step we want to go after saving the data
+    var submitButton = document.querySelectorAll('input[type=submit][value=Next]')[0];
+    var stepToGoTo = event.target.href;
+    submitButton.value = stepToGoTo;
+    submitButton.click();
+    return false;
+  });
+</script>

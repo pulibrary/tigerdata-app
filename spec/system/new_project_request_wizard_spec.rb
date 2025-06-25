@@ -187,6 +187,24 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
     end
 
+    it "saves work in progress if user jumps to another step in the wizard" do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, true)
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Basic Details"
+      random_title = "Project #{rand(100_000)} title"
+      fill_in :project_title, with: random_title
+
+      # Click on the last step in the Wizard
+      # and make sure the data from the previous step was saved
+      click_on "Review and Submit"
+      expect(page).to have_field("project_title", with: random_title)
+    end
+
     it "deletes departments when clicking on the X next to them" do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
