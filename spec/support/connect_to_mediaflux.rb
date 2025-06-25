@@ -10,6 +10,9 @@ def reset_mediaflux_root
   # then create it and the project root collection and namespace so it exists for any tests
   create_test_root_namespace(user)
   ProjectMediaflux.create_root_tree(session_id: user.mediaflux_session)
+
+  # Clear the login cache
+  Rails.cache.clear
 end
 
 def destroy_root_namespace(user)
@@ -58,8 +61,5 @@ RSpec.configure do |config|
 
   config.after(:suite) do |_ex|
     reset_mediaflux_root
-
-    # # Clear the login cache
-    Rails.cache.clear
   end
 end
