@@ -71,18 +71,6 @@ namespace :mailcatcher do
   end
 end
 
-namespace :load_users do
-  desc "Load in users from the registration list"
-  task :from_registration_list do
-    on roles(:rake) do
-      within release_path do
-        execute("cd #{release_path} && bundle exec rake load_users:from_registration_list")
-        execute("cd #{release_path} && bundle exec rake load_affiliations:from_file[#{deploy_to}/shared/departments.csv]")
-      end
-    end
-  end
-end
-
 namespace :schema do
   desc "Load the current schema"
   task :load do
@@ -94,8 +82,7 @@ namespace :schema do
   end
 end
 
-after "deploy:published", "load_users:from_registration_list"
-after "load_users:from_registration_list", "schema:load"
+after "deploy:published", "schema:load"
 
 before "deploy:reverted", "npm:install"
 
