@@ -164,6 +164,7 @@ workflows:
             branches:
               only:
                 - main
+                - 1528-refine-auto-deploy
   ci_daily:
     when:
       equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
