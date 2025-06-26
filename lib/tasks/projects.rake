@@ -149,6 +149,29 @@ namespace :projects do
     end
   end
 
+  desc "Creates a project in MediaFlux"
+  task :create_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
+    netid = args[:netid]
+    project_id = args[:project_id]
+    user = User.where(uid: netid).first
+    raise "User #{netid} not found" if user.nil?
+
+    logon = Mediaflux::LogonRequest.new
+    logon.resolve
+
+    create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
+    identity_token = create.identity
+
+    doi = "10.626/349"
+    directory = "test-jun26-349"
+    title = "hello world 349"
+
+    puts "Creating project in directory #{directory}"
+    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token, doi:, directory:, title:)
+    request.resolve
+    puts request.response_xml
+  end
+
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)
     counts = []
