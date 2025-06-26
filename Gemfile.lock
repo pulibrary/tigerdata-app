@@ -249,6 +249,7 @@ GEM
     msgpack (1.7.2)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-http-persistent (4.0.2)
@@ -547,6 +548,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   mailcatcher
+  mutex_m (~> 0.2.0)
   net-http-persistent
   net-ldap
   omniauth-cas (~> 3.0)
