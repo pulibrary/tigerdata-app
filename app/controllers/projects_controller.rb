@@ -2,6 +2,7 @@
 class ProjectsController < ApplicationController
 
   before_action :set_breadcrumbs
+  before_action :authenticate_user!
 
   def new
     add_breadcrumb("New Project Request")
@@ -204,6 +205,20 @@ class ProjectsController < ApplicationController
       format.html { render }
       format.xml { render xml: @project.to_xml } 
     end 
+  end
+
+  # GET "projects/:id/:id-mf"
+  #
+  # This action is used to render the mediaflux metadata for a project.
+  def show_mediaflux
+    project_id = params[:id]
+    project = Project.find(project_id)
+
+    respond_to do |format|
+      format.xml do
+        render xml: project.mediaflux_meta_xml
+      end
+    end
   end
 
   def project_job_service
