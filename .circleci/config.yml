@@ -15,6 +15,14 @@ parameters:
 
 orbs:
   coveralls: coveralls/coveralls@2.2.1
+executors:
+  basic-executor:
+    docker:
+      - image: cimg/ruby:3.4.1-browsers
+        environment:
+          RAILS_ENV: ci
+    resource_class: small
+    working_directory: ~/tigerdata-app
 
 commands:
   install_dependencies:
@@ -134,6 +142,12 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload
+  deploy:
+    executor: basic-executor
+    steps:
+      - run:
+          name: Deploy to CI
+          command: "curl -k \"https://ansible-tower.princeton.edu/api/v2/job_templates/57/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
 
 workflows:
   version: 2
@@ -142,6 +156,13 @@ workflows:
       equal: ["<< pipeline.parameters.GHA_Event >>", ""]
     jobs:
       - test
+      - deploy:
+         requires:
+           - test
+         filters:
+           branches:
+             only:
+               - main
   ci_daily:
     when:
       equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
