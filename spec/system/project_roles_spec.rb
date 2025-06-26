@@ -189,7 +189,10 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       fill_in_and_out "data-user-uid-to-add", with: ro_data_user.uid
       click_on "Save changes"
       click_on "Submit"
-      visit "/projects/#{project.id}/details"
+      click_on "Return to Dashboard"
+      page.find("a.click-row").click
+      click_on "Details" #this does not go to the details page
+      byebug
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
     end
   end
