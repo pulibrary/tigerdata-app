@@ -99,7 +99,8 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          # command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
