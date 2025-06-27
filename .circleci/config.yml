@@ -54,8 +54,8 @@ commands:
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker pull pulibraryrdss/mediaflux_dev:v0.5.0
-      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.5.0
+      - run: docker pull pulibraryrdss/mediaflux_dev:v0.6.0
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.6.0
 
   run_postgres:
     steps:
@@ -97,7 +97,6 @@ jobs:
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
-      - run: bundle exec rake schema:create RAILS_ENV=test TEST_MEDIAFLUX_HOST='0.0.0.0' TEST_MEDIAFLUX_PORT=8888
       - run:
           name: Run Rspec
           command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
@@ -131,7 +130,6 @@ jobs:
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=ci
-      - run: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rake schema:create
       - run:
           name: Run Rspec
           command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
