@@ -96,7 +96,7 @@ jobs:
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
-      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: bundle exec rake db:migrate RAILS_ENV=ci
       - run:
           name: Run Rspec
           # command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
