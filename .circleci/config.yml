@@ -146,8 +146,9 @@ jobs:
     executor: basic-executor
     steps:
       - run:
+          # prettier-ignore
           name: Deploy to CI
-          command: 'curl -k "https://ansible-tower.princeton.edu/api/v2/job_templates/57/launch/" --header "Content-Type: application/json" --header "Authorization: Bearer $TOWER_TOKEN" -d ''{"credential_passwords":{},"extra_vars":{"repo_name":"tigerdata-app", "runtime_env":"ci"}}'''
+          command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/57/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\",\"runtime_env\":\"ci\"}}'"
 
 workflows:
   version: 2
@@ -163,6 +164,7 @@ workflows:
             branches:
               only:
                 - main
+                - 1528-refine-auto-deploy
   ci_daily:
     when:
       equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
