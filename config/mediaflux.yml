@@ -145,6 +145,6 @@ ci:
   api_alternate_port: "7777"
 
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'princeton' %>
-  api_user: <%= ENV["MEDIAFLUX_USER"]%>
+  api_user: <%= ENV["MEDIAFLUX_USER"] %>
   api_password: <%= ENV['MFLUX_CI_PASSWORD'] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
