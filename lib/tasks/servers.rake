@@ -15,7 +15,6 @@ namespace :servers do
   desc "Starts development dependencies"
   task start: :environment do
     system("lando start")
-    system("rake servers:install_mediaflux")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
