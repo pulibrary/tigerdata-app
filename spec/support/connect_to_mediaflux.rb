@@ -53,11 +53,11 @@ RSpec.configure do |config|
     Rails.logger.error(message)
   end
 
-  # config.before(:suite) do |_ex|
-  #   # Ensure the latest mediaflux schema has been loaded before running the tests
-  #   Rake::Task["schema:create"].reenable
-  #   Rake::Task["schema:create"].invoke
-  # end
+  config.before(:suite) do |_ex|
+    # Ensure the latest mediaflux schema has been loaded before running the tests
+    Rake::Task["schema:create"].reenable
+    Rake::Task["schema:create"].invoke
+  end
 
   config.after(:suite) do |_ex|
     reset_mediaflux_root

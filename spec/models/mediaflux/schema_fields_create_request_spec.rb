@@ -34,10 +34,10 @@ RSpec.describe Mediaflux::SchemaFieldsCreateRequest, type: :model, connect_to_me
       sub_elements: [requested_by, requested_date, event_note] }
   end
 
-  # after do
-  #   Rake::Task["schema:create"].reenable
-  #   Rake::Task["schema:create"].invoke
-  # end
+  after do
+    Rake::Task["schema:create"].reenable
+    Rake::Task["schema:create"].invoke
+  end
 
   describe "required indexed field" do
     it "submits the proper request" do
