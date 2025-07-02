@@ -167,7 +167,7 @@ namespace :projects do
     data_sponsor = "hc8719"
     title ="Fake Study"
     description = "Our fake project"
-    directory= "tigerdata/RC/td-testing/md1908/HectorProject7"
+    directory= "tigerdata/RC/td-testing/md1908/HectorProject8"
     project_id = "fake.id"
     department = "Physics"
     quota = "10 TB"

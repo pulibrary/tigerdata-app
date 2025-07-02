@@ -11,10 +11,10 @@ module Mediaflux
       super(session_token: session_token)
       @token = token
       @data_manager = data_manager
-      @data_sponsor=data_sponsor
+      @data_sponsor = data_sponsor
       @title = title
       @description = description
-      @directory= directory
+      @directory = directory
       @project_id = project_id
       @department = department
       @quota = quota
@@ -29,6 +29,8 @@ module Mediaflux
 
     private
 
+      # rubocop:disable Metrics/MethodLength
+      #
       # This is what the call would look like from aterm:
       # tigerdata.project.create \
       #   :data-manager md1908 \
@@ -40,20 +42,28 @@ module Mediaflux
       #   :quota "10 TB" \
       #   :store db \
       #   :title "Fake Study"
+      #
       def build_http_request_body(name:)
         super do |xml|
           xml.args do
-            xml.data_manager @data_manager   # TODO: use data-manager
-            xml.data_sponsor @data_sponsor   # TODO: use data-sponsor
+            xml.send("data-manager") do
+              xml.text(@data_manager)
+            end
+            xml.send("data-sponsor") do
+              xml.text(@data_sponsor)
+            end
             xml.department @department
             xml.description @description
             xml.directory @directory
-            xml.project_id @project_id      # TODO: use project-id
+            xml.send("project-id") do
+              xml.text(@project_id)
+            end
             xml.quota @quota
             xml.store @store
             xml.title @title
           end
         end
       end
+    # rubocop:enable Metrics/MethodLength
   end
 end
