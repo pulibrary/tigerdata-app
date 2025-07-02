@@ -5,48 +5,53 @@ module Mediaflux
 
     # Constructor
     # @param session_token [String] the API token for the authenticated session
-    # @param service_name  [String] Name of the service to run.
-    #                               Can be any command like asset.namespace.list
     # @param token         [String] Optional User token for the person executing the command
-    # @param document      [String] Optional xml document to pass on to the service.
-    #                               Used to pass parameters to the command
     #
-    # asset.script.execute :id path=/system/scripts/projectCreate.tcl
-    #   :arg -name doi 10.123/456
-    #   :arg -name directory test-308
-    #   :arg -name title "hello world"
-    #
-    # => :result -id "2212" "<result><id>2213</id></result>"
-    #
-    def initialize(session_token:, doi:, directory:, title:, token: nil)
+    def initialize(session_token:, data_manager:, data_sponsor:, title:, description:, directory:, project_id:, department:, quota:, store:, token: nil)
       super(session_token: session_token)
-      @doi = doi
-      @directory = directory
-      @title = title
       @token = token
+      @data_manager = data_manager
+      @data_sponsor=data_sponsor
+      @title = title
+      @description = description
+      @directory= directory
+      @project_id = project_id
+      @department = department
+      @quota = quota
+      @store = store
     end
 
     # Specifies the Mediaflux service to use when creating project
     # @return [String]
     def self.service
-      "asset.script.execute"
+      "tigerdata.project.create"
     end
 
     private
 
+      # This is what the call would look like from aterm:
+      # tigerdata.project.create \
+      #   :data-manager md1908 \
+      #   :data-sponsor hc8719 \
+      #   :department "Physics" \
+      #   :description "Our fake project" \
+      #   :directory tigerdata/RC/td-testing/md1908/HectorProject2 \
+      #   :project-id "fake.id" \
+      #   :quota "10 TB" \
+      #   :store db \
+      #   :title "Fake Study"
       def build_http_request_body(name:)
         super do |xml|
           xml.args do
-            xml.id "path=/system/scripts/projectCreate.tcl"
-            xml.arg name: "doi" do
-              xml.text(@doi)
-            end
-            xml.arg name: "directory" do
-              xml.text(@directory)
-            end
-            xml.arg name: "title" do
-              xml.text(@title)
-            end
+            xml.data_manager @data_manager   # TODO: use data-manager
+            xml.data_sponsor @data_sponsor   # TODO: use data-sponsor
+            xml.department @department
+            xml.description @description
+            xml.directory @directory
+            xml.project_id @project_id      # TODO: use project-id
+            xml.quota @quota
+            xml.store @store
+            xml.title @title
           end
         end
       end

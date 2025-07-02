@@ -162,12 +162,20 @@ namespace :projects do
     create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
     identity_token = create.identity
 
-    doi = "10.626/349"
-    directory = "test-jun26-349"
-    title = "hello world 349"
+    # TODO: get these values from the project_id
+    data_manager = "md1908"
+    data_sponsor = "hc8719"
+    title ="Fake Study"
+    description = "Our fake project"
+    directory= "tigerdata/RC/td-testing/md1908/HectorProject7"
+    project_id = "fake.id"
+    department = "Physics"
+    quota = "10 TB"
+    store = "db"
 
     puts "Creating project in directory #{directory}"
-    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token, doi:, directory:, title:)
+    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token,
+      data_manager:, data_sponsor:, title:, description:, directory:, project_id:, department:, quota:, store:,)
     request.resolve
     puts request.response_xml
   end
