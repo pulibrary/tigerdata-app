@@ -43,7 +43,7 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain.
   config.action_cable.mount_path = "/cable/"
-  config.action_cable.allowed_request_origins = ["http://localhost", "https://tigerdata-ci.lib.princeton.edu"]
+  config.action_cable.allowed_request_origins = ["http://localhost", "http://tigerdata-ci.lib.princeton.edu"]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true

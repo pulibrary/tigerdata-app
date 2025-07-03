@@ -16,7 +16,6 @@ RSpec.describe "ProjectImports", type: :request do
 
       context "a signed in user" do
       let(:user) { FactoryBot.create :user }
-      
       before do
         sign_in(user)
       end
@@ -36,7 +35,6 @@ RSpec.describe "ProjectImports", type: :request do
 
     context "a sysadmin user" do
       let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor:true }
-      
       before do
         sign_in(user)
       end
