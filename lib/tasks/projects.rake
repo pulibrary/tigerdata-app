@@ -149,36 +149,27 @@ namespace :projects do
     end
   end
 
-  desc "Creates a project in MediaFlux"
-  task :create_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
-    netid = args[:netid]
-    project_id = args[:project_id]
-    user = User.where(uid: netid).first
-    raise "User #{netid} not found" if user.nil?
+  # desc "Creates a project in MediaFlux"
+  # task :create_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
+  #   netid = args[:netid]
+  #   project_id = args[:project_id]
+  #   user = User.where(uid: netid).first
+  #   raise "User #{netid} not found" if user.nil?
+  #   project = Project.find(project_id)
+  #   raise "Project #{project_id} not found" if project.nil?
 
-    logon = Mediaflux::LogonRequest.new
-    logon.resolve
+  #   puts "Creating project #{project.id} - #{project.title} in Mediaflux"
 
-    create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
-    identity_token = create.identity
+  #   logon = Mediaflux::LogonRequest.new
+  #   logon.resolve
 
-    # TODO: get these values from the project_id
-    data_manager = "md1908"
-    data_sponsor = "hc8719"
-    title ="Fake Study"
-    description = "Our fake project"
-    directory= "tigerdata/RC/td-testing/md1908/HectorProject8"
-    project_id = "fake.id"
-    department = "Physics"
-    quota = "10 TB"
-    store = "db"
+  #   create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
+  #   identity_token = create.identity
 
-    puts "Creating project in directory #{directory}"
-    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token,
-      data_manager:, data_sponsor:, title:, description:, directory:, project_id:, department:, quota:, store:,)
-    request.resolve
-    puts request.response_xml
-  end
+  #   request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token, project: project)
+  #   request.resolve
+  #   puts request.response_xml
+  # end
 
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)

@@ -6,19 +6,20 @@ module Mediaflux
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param token         [String] Optional User token for the person executing the command
-    #
-    def initialize(session_token:, data_manager:, data_sponsor:, title:, description:, directory:, project_id:, department:, quota:, store:, token: nil)
+    # @param project       [Project] A project object
+    def initialize(session_token:, project:, token: nil)
       super(session_token: session_token)
       @token = token
-      @data_manager = data_manager
-      @data_sponsor = data_sponsor
-      @title = title
-      @description = description
-      @directory = directory
-      @project_id = project_id
-      @department = department
-      @quota = quota
-      @store = store
+      @project = project
+      @data_manager = @project.metadata_model.data_manager
+      @data_sponsor = @project.metadata_model.data_sponsor
+      @title = @project.metadata_model.title
+      @description = @project.metadata_model.description
+      @directory = @project.metadata_model.project_directory
+      @project_id = @project.metadata_model.project_id
+      @department = @project.metadata_model.departments.first # TODO: account for multiple departments
+      @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
+      @store = "db" # TODO: fetch the store from the project (but we don't have this value yet!)
     end
 
     # Specifies the Mediaflux service to use when creating project

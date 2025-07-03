@@ -150,7 +150,19 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     #Approve action
     if params.key?("mediaflux_id")
+
+      byebug
+      # Set the project directory to use the system root (e.g. "tigerdata) plus the two parts of the path indicated by the user
       @project.metadata_model.update_with_params(params, current_user)
+      @project.metadata_model.project_directory = ["tigerdata", params["project_directory_prefix"], params["project_directory"]].compact.join("/")
+      @project.metadata_model.status = Project::APPROVED_STATUS
+
+      # The logged in user must have access to create the project in Mediaflux
+      request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: @project)
+      request.resolve
+      puts request.response_xml
+      byebug
+
       @project.approve!(mediaflux_id: params["mediaflux_id"],current_user:)
     end
 
@@ -183,7 +195,7 @@ class ProjectsController < ApplicationController
   def revision_confirmation; end
 
   def show
-    
+
     return if project.blank?
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
@@ -200,10 +212,10 @@ class ProjectsController < ApplicationController
     @project = ProjectShowPresenter.new(project)
 
     @project_session = "content"
-    respond_to do |format| 
+    respond_to do |format|
       format.html { render }
-      format.xml { render xml: @project.to_xml } 
-    end 
+      format.xml { render xml: @project.to_xml }
+    end
   end
 
   def project_job_service
