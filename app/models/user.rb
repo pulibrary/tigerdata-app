@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   has_many :user_requests, dependent: :destroy
 
+  paginates_per 100
+
   USER_REGISTRATION_LIST = Rails.root.join("data", "user_registration_list_#{Rails.env}.csv")
 
   attr_accessor :mediaflux_session
