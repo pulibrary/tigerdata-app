@@ -83,6 +83,7 @@ namespace :schema do
 end
 
 after "deploy:published", "schema:load"
+
 before "deploy:reverted", "npm:install"
 
 namespace :sidekiq do
