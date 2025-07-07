@@ -12,7 +12,7 @@ class ProjectImport
     def self.run_with_report(mediaflux_session:)
       report = Mediaflux::ProjectReport.new(session_token: mediaflux_session)
       return [report.response_error[:message]] if report.error?
-        
+
       importer = self.new(report.csv_data.gsub("\r\n",""))
       importer.run
     end
@@ -53,7 +53,7 @@ class ProjectImport
             data_user = parse_multiple(project_metadata, "dataUser")
             department_names = parse_multiple(project_metadata,"department")
             departments = department_names.map {|name| Affiliation.find_fuzzy_by_name(name)&.code || name }
-            
+
             storage_size_gb = project_metadata["quota"].downcase.to_f/1000000000.0
             ProjectMetadata.new_from_hash({
               project_id:,

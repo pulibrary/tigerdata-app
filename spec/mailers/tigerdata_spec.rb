@@ -14,7 +14,6 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.cc).to eq ["test_to@example.com"]
     expect(mail.from).to eq ["no-reply@princeton.edu"]
     html_body = mail.html_part.body.to_s
-    byebug
     expect(html_body).to have_content(project.metadata_model.title)
     project.metadata.keys.each do |field|
       next if ["updated_on", "created_on", "created_by", "updated_by", "departments", "submission"].include?(field)

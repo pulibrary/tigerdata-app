@@ -86,7 +86,6 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
                      "<quota><allocation>500 GB</allocation><description>Project Quota</description></quota>" \
                      "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
                      "<type>application/arc-asset-collection</type></service></request>"
-      byebug
       expect(create_request.xtoshell_xml).to eq(expected_xml)
     end
   end
