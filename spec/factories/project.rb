@@ -65,7 +65,7 @@ FactoryBot.define do
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
-          Project.safe_name("#{FFaker::Food.fruit}#{n}")
+          Project.safe_directory("#{FFaker::Food.fruit}#{n}")
         end
       end
     end

@@ -149,21 +149,20 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     #Approve action
-    if params.key?("mediaflux_id")
+    if params.key?("approved")
 
-      byebug
-      # Set the project directory to use the system root (e.g. "tigerdata) plus the two parts of the path indicated by the user
       @project.metadata_model.update_with_params(params, current_user)
-      @project.metadata_model.project_directory = ["tigerdata", params["project_directory_prefix"], params["project_directory"]].compact.join("/")
+      @project.metadata_model.project_directory = [params["project_directory_prefix"], params["project_directory"]].compact.join("/")
       @project.metadata_model.status = Project::APPROVED_STATUS
 
       # The logged in user must have access to create the project in Mediaflux
       request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: @project)
       request.resolve
-      puts request.response_xml
-      byebug
 
-      @project.approve!(mediaflux_id: params["mediaflux_id"],current_user:)
+      mediaflux_id_xml = request.response_xml.xpath("response/reply/result/result").to_s.match("\&lt\;id\&gt\;[0-9]*\&lt\;\/id\&gt\;").to_s
+      mediaflux_id = mediaflux_id_xml.gsub("&lt;id&gt;", "").gsub("&lt;/id&gt;", "")
+
+      @project.approve!(mediaflux_id: mediaflux_id, current_user:)
     end
 
     #Edit action
@@ -173,7 +172,7 @@ class ProjectsController < ApplicationController
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
-    if project.save and params.key?("mediaflux_id")
+    if project.save and params.key?("approved")
       redirect_to project_approval_received_path(@project)
     elsif project.save and params.key?("title")
       redirect_to project_revision_confirmation_path(@project)

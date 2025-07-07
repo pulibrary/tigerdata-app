@@ -104,28 +104,15 @@ class Project < ApplicationRecord
   end
 
   def project_directory
-    return nil if metadata_model.project_directory.nil?
-    dirname, basename = project_directory_pathname.split
-    if (dirname.relative?)
-      "#{Mediaflux::Connection.root_namespace}/#{safe_name(metadata_model.project_directory)}"
-    else
-      project_directory_pathname.to_s
-    end
+    metadata_model.project_directory || ""
   end
 
   def project_directory_parent_path
-    return Mediaflux::Connection.root_namespace if metadata_model.project_directory.nil?
-    dirname  = project_directory_pathname.dirname
-    if (dirname.relative?)
-      Mediaflux::Connection.root_namespace
-    else
-      dirname.to_s
-    end
+    Mediaflux::Connection.root
   end
 
   def project_directory_short
-    return nil if metadata_model.project_directory.nil?
-    project_directory_pathname.basename.to_s
+    project_directory
   end
 
   def status
@@ -310,10 +297,10 @@ class Project < ApplicationRecord
 
   # Ensure that the project directory is a valid path
   # @example
-  #   Project.safe_name("My Project") # => "My-Project"
-  def self.safe_name(name)
-    # only alphanumeric characters
-    name.strip.gsub(/[^A-Za-z\d]/, "-")
+  #   Project.safe_directory("My Project") # => "My-Project"
+  def self.safe_directory(directory)
+    # only alphanumeric characters and /
+    name.strip.gsub(/[^A-Za-z\d\/]/, "-")
   end
 
   private
@@ -337,8 +324,8 @@ class Project < ApplicationRecord
     end
 
     # Ensure that the project directory is a valid path
-    def safe_name(name)
-      Project.safe_name(name)
+    def safe_directory(directory)
+      Project.safe_directory(directory)
     end
 
     def log_elapsed(start_time, prefix, message)
