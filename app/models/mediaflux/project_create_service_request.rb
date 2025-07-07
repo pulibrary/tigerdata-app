@@ -28,6 +28,21 @@ module Mediaflux
       "tigerdata.project.create"
     end
 
+    # Returns the entire response returned by the project create service.
+    # This includes debug information that is useful to troubleshoot issues
+    # if the request fails.
+    def debug_output
+      response_xml.xpath("response/reply/result/result").to_s
+    end
+
+    # Returns the id of the collection created in Mediaflux
+    def mediaflux_id
+      # Extract the <id>nnnn</id> value from the output and then extract the
+      # numeric value inside of it.
+      id_xml = debug_output.match("\&lt\;id\&gt\;[0-9]*\&lt\;\/id\&gt\;").to_s
+      id_xml.gsub("&lt;id&gt;", "").gsub("&lt;/id&gt;", "").to_i
+    end
+
     private
 
       # rubocop:disable Metrics/MethodLength

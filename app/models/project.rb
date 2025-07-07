@@ -32,15 +32,19 @@ class Project < ApplicationRecord
     end
   end
 
-  def approve!(mediaflux_id:, current_user:)
-    self.mediaflux_id = mediaflux_id
+  def approve!(current_user:)
+    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
+    request.resolve
+
+    self.mediaflux_id = request.mediaflux_id
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
 
     # create two provenance events, one for approving the project and
-      # another for changing the status of the project
+    # another for changing the status of the project
     ProvenanceEvent.generate_approval_events(project: self, user: current_user)
 
+    # TODO: save the debug output
   end
 
   def reload
