@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # GET /requests
   def index
     if current_user.superuser || current_user.sysadmin || current_user.trainer
-      @users = User.order("family_name ASC NULLS LAST")
+      @users = User.order("uid ASC NULLS LAST").page params[:page]
       add_breadcrumb("Current Users")
     else
       error_message = "You do not have access to this page."
