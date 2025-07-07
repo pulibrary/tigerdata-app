@@ -40,11 +40,11 @@ class Project < ApplicationRecord
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
 
-    # create two provenance events, one for approving the project and
-    # another for changing the status of the project
-    ProvenanceEvent.generate_approval_events(project: self, user: current_user)
-
-    # TODO: save the debug output
+    # create two provenance events:
+    # - one for approving the project and
+    # - another for changing the status of the project
+    # - another with debug information from the create project service
+    ProvenanceEvent.generate_approval_events(project: self, user: current_user, debug_output: request.debug_output)
   end
 
   def reload
