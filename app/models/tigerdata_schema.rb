@@ -126,7 +126,7 @@ class TigerdataSchema
                      instructions: "The numerical value of the quantity (e.g., count, size, magnitude, etc.)",
                      attributes: [requested_attribute, approved_attribute]
                     }
-    storage_unit = { name: "Unit", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Unit", description: "TThe unit of measure for the quantity",
+    storage_unit = { name: "Unit", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Unit", description: "The unit of measure for the quantity",
                      instructions: "The unit of measure for the quantity (e.g., MB, GB, TB, etc.)",
                      attributes: [requested_attribute, approved_attribute]
                     }
