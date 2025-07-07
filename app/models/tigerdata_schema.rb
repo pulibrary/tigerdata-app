@@ -67,55 +67,55 @@ class TigerdataSchema
   def self.project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
     project_directory = { name: "ProjectDirectory", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project Directory", description: "The locally unique name for the project's top-level directory",
-                          instructions: "The locally unique name for the project's top-level directory, as shown in a file path. Data Sponsors may suggest a project directory name that is meaningful to them, subject to system administrator approval." 
+                          instructions: "The locally unique name for the project's top-level directory, as shown in a file path. Data Sponsors may suggest a project directory name that is meaningful to them, subject to system administrator approval."
                         }
-    title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Title", 
+    title = { name: "Title", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Title",
               description: "A plain-language title for the project",
-              instructions: "A plain-language title for the project (at the highest level, if sub-projects exist), which will display in metadata records and search results, and which can be edited later (unlike the Project ID)." 
+              instructions: "A plain-language title for the project (at the highest level, if sub-projects exist), which will display in metadata records and search results, and which can be edited later (unlike the Project ID)."
             }
-    description = { name: "Description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, 
-                    label: "Description", 
+    description = { name: "Description", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1,
+                    label: "Description",
                     description: "A brief description of the project",
                     instructions: "A brief description of the project (at the highest level, if sub-projects exist), which serves to summarize the project objectives and (anticipated) data and metadata included in the project."
                   }
     status = { name: "Status", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Status", description: "The current status of the project",
-               instructions: "The current status of the project, as it pertains to the major events tracked by provenance fields (e.g., active, approved, pending, published, or retired)." 
+               instructions: "The current status of the project, as it pertains to the major events tracked by provenance fields (e.g., active, approved, pending, published, or retired)."
               }
     data_sponsor = { name: "DataSponsor", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1,
-                    label: "Data Sponsor", 
+                    label: "Data Sponsor",
                     description: "The person who takes primary responsibility for the project",
                     instructions: "The 'Data Sponsor' is the person who takes primary responsibility for the project, including oversight of all of the other roles, all of the data contained in the project," \
                                  " and all of the metadata associated with the data and the project itself." \
                                  " This field is required for all projects in TigerData, and all files in a given project inherit the Data Sponsor value from the project metadata." \
-                                 " The person filling the role must be both a registered TigerData user and a current member of the list of eligible Data Sponsors for TigerData." 
+                                 " The person filling the role must be both a registered TigerData user and a current member of the list of eligible Data Sponsors for TigerData."
                    }
     data_manager = { name: "DataManager", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1,
-                      label: "Data Manager", 
+                      label: "Data Manager",
                       description: "The person who manages the day-to-day activities for the project",
                       instructions: "The 'Data Manager' is the person who manages the day-to-day activities for the project, including both data and metadata, but not including role assignments, which is instead determined by the Data Sponsor." \
                                    " (However, the same person may fill both the Data Sponsor and the Data Manager roles on the same project, provided they are eligible for both.) This field is required for all projects in TigerData, and all files in a given project inherit the Data Manager value from the project metadata." \
-                                   " The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData." 
+                                   " The person filling the role must be both a registered TigerData user and current member of the list of eligible Data Managers for TigerData."
                     }
-    data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0, 
-                   label: "Data User(s)", 
+    data_users = { name: "DataUser", type: "string", index: true, "min-occurs" => 0,
+                   label: "Data User(s)",
                    description: "A person who has read and write access privileges to the project",
                    instructions: "A 'Data User' is a person who has access privileges to a given project or file, including data and metadata."\
                                 " This field is optional for both projects and files."\
                                 " Any number of Data Users may be assigned to a given project or file, with or without a read-only restriction."\
                                 " All Data Users must be registered for TigerData prior to assignment.",
                    attributes: [{ name: "ReadOnly", type: "boolean", index: false, "min-occurs" => 0, description: "Determines whether a given Data User is limited to read-only access to files" }] }
-    departments = { name: "Department", type: "string", index: true, "min-occurs" => 1, 
-                    label: "Department(s)",  
+    departments = { name: "Department", type: "string", index: true, "min-occurs" => 1,
+                    label: "Department(s)",
                     description: "The primary Princeton University department(s) affiliated with the project",
                     instructions: "The primary Princeton University department(s) affiliated with the project. In cases where the Data Sponsor holds cross-appointments, or where multiple departments are otherwise " \
                                   "involved with the project, multiple departments may be recorded. This field is not meant to capture the departmental affiliations of every person connected to this project, " \
-                                  "but rather the departments directly tied to the project itself." 
+                                  "but rather the departments directly tied to the project itself."
                   }
     created_on = { name: "CreatedOn", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Created On", description: "Timestamp project was created" }
     created_by = { name: "CreatedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Created By", description: "User that created the project" }
     updated_on = { name: "UpdatedOn", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Updated On", description: "Timestamp project was updated" }
     updated_by = { name: "UpdatedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Updated By", description: "User that updated the project" }
-    project_id = { name: "ProjectID", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project ID", 
+    project_id = { name: "ProjectID", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project ID",
                    description: "The universally unique identifier for the project (or in some cases, for the sub-project), automatically generated as a valid DOI compliant with ISO 26324:2012.",
                    instructions: "Records the DOI reserved for the project, from which the automatic code component of the Project ID is determined"
                  }
@@ -123,51 +123,51 @@ class TigerdataSchema
     requested_attribute = { name: "Requested", type: "string", index: false, "min-occurs" => 0, description: "The requested value provided by the Data Sponsor or Data Manager."}
     approved_attribute = { name: "Approved", type: "string", index: false, "min-occurs" => 0, description: "The value approved and assigned by a system administrator (may not be the same as the requested value)."}
     storage_size = { name: "Size", type: "float", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Size", description: "The numerical value of the quantity",
-                     instructions: "The numerical value of the quantity (e.g., count, size, magnitude, etc.)", 
+                     instructions: "The numerical value of the quantity (e.g., count, size, magnitude, etc.)",
                      attributes: [requested_attribute, approved_attribute]
                     }
     storage_unit = { name: "Unit", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Unit", description: "TThe unit of measure for the quantity",
-                     instructions: "TThe unit of measure for the quantity (e.g., MB, GB, TB, etc.",
+                     instructions: "The unit of measure for the quantity (e.g., MB, GB, TB, etc.)",
                      attributes: [requested_attribute, approved_attribute]
                     }
-    storage_capacity = { name: "StorageCapacity", type: "document", index: false, "min-occurs" => 1, "max-occurs" => 1, 
-                         label: "Storage Capacity", 
+    storage_capacity = { name: "StorageCapacity", type: "document", index: false, "min-occurs" => 1, "max-occurs" => 1,
+                         label: "Storage Capacity",
                          description: "The requested storage capacity (default 500 GB)",
-                         instructions: "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team", 
+                         instructions: "The anticipated amount of storage needed (in gigabytes or terabytes), given so that the system administrators can prepare the appropriate storage systems for access by the project team",
                          sub_elements: [storage_size, storage_unit]
                         }
-    storage_performance = { name: "Performance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, 
-                            label: "Storage Performance Expectations", 
+    storage_performance = { name: "Performance", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1,
+                            label: "Storage Performance Expectations",
                             description: "The requested storage performance (default Standard)",
                             instructions: "The expected needs for storage performance, i.e. relative read/write and transfer speeds."\
                                           " The 'Standard' default for TigerData is balanced and tuned for moderate usage."\
                                           " Those who expect more intensive usage should select the 'Premium' option, while those who expect to simply store their data for long-term, low-usage should select the 'Eco' option",
                             attributes: [requested_attribute, approved_attribute]
                           }
-    project_purpose = { name: "ProjectPurpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project Purpose", 
+    project_purpose = { name: "ProjectPurpose", type: "string", index: true, "min-occurs" => 1, "max-occurs" => 1, label: "Project Purpose",
                         description: "The high-level category for the purpose of the project (research, administrative, or library)",
-                        instructions: "The high-level category for the purpose of the project: 'Research' (default), 'Administrative', or 'Library Archive'." 
+                        instructions: "The high-level category for the purpose of the project: 'Research' (default), 'Administrative', or 'Library Archive'."
                       }
     requested_by = { name: "RequestedBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Requested By",
                      description: "The person who made the request",
                      instructions: "The person who made the request, given as a locally unique user."
                    }
     requested_date = { name: "RequestDateTime", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Request Date-Time", description: "The date and time the request was made",
-                       instructions: "The date and time the request was made, following ISO 8601 standards for timestamps." 
+                       instructions: "The date and time the request was made, following ISO 8601 standards for timestamps."
                       }
     approved_by = { name: "ApprovedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Approved By",
                        description: "The person who approved the request",
                        instructions: "The person who approved the request, given as a locally unique user."
                      }
     approved_date = { name: "ApprovalDateTime", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Approval Date-Time", description: "The date and time the request was approved",
-                         instructions: "The date and time the request was approved, following ISO 8601 standards for timestamps" 
+                         instructions: "The date and time the request was approved, following ISO 8601 standards for timestamps"
                         }
     denied_by = { name: "DeniedBy", type: "string", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Denied  By",
                   description: "The person who denied the request",
                   instructions: "The person who denied the request, given as a locally unique user."
                 }
     denial_date = { name: "DenialDateTime", type: "date", index: false, "min-occurs" => 0, "max-occurs" => 1, label: "Denial Date-Time", description: "The date and time the request was denied",
-                       instructions: "The date and time the request was denied, following ISO 8601 standards for timestamps" 
+                       instructions: "The date and time the request was denied, following ISO 8601 standards for timestamps"
                       }
     note_by = { name: "NoteBy", type: "string", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Note By", description: "The person making the note." }
     note_date = { name: "NoteDateTime", type: "date", index: false, "min-occurs" => 1, "max-occurs" => 1, label: "Note Date-Time", description: "The date and time the note was made" }
@@ -233,6 +233,6 @@ class TigerdataSchema
         end
         field_command += "#{new_line_start}>#{line_terminator}"
       end
-      field_command  
-    end 
+      field_command
+    end
 end
