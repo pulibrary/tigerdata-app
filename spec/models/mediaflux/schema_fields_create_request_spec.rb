@@ -1,4 +1,4 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 # require "rails_helper"
 
 # RSpec.describe Mediaflux::SchemaFieldsCreateRequest, type: :model, connect_to_mediaflux: true do
