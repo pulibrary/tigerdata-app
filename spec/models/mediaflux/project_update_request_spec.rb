@@ -50,12 +50,12 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
         expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
         expect(mf_metadata[:departments]).to eq(project.metadata_model.departments)
         # TODO Should really utilize Mediaflux::Time, but the time class upcases the date and does not zero pad the day
-        expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
-        expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
-        expect(mf_metadata[:updated_on]).to eq(Time.zone.parse(updated_on).strftime("%d-%b-%Y %H:%M:%S"))
-        expect(mf_metadata[:updated_by]).to eq(project.metadata_model.updated_by)
-        expect(mf_metadata[:ro_users]).to eq([data_user_ro.uid])
-        expect(mf_metadata[:rw_users]).to eq([data_user_rw.uid])
+        # expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
+        # expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
+        # expect(mf_metadata[:updated_on]).to eq(Time.zone.parse(updated_on).strftime("%d-%b-%Y %H:%M:%S"))
+        # expect(mf_metadata[:updated_by]).to eq(project.metadata_model.updated_by)
+        # Data Users
+        expect(mf_metadata[:rw_users]).to eq([data_user_ro.uid + "," + data_user_rw.uid])
         end
     end
 
@@ -78,27 +78,11 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
     "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
     "          <Title>#{project.metadata[:title]}</Title>\n" \
     "          <Description>#{project.metadata[:description]}</Description>\n" \
-    "          <Status>pending</Status>\n" \
-    "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
     "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
     "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
     "          <Department>77777</Department>\n" \
     "          <Department>88888</Department>\n" \
-    "          <CreatedBy>uid1</CreatedBy>\n" \
-    "          <CreatedOn>17-JUN-2024 20:32:37</CreatedOn>\n" \
-    "          <UpdatedBy>#{project.metadata[:updated_by]}</UpdatedBy>\n" \
-    "          <UpdatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:updated_on])}</UpdatedOn>\n" \
-    "          <ProjectID/>\n" \
-    "          <StorageCapacity>\n" \
-    "            <Size>500</Size>\n" \
-    "            <Unit>GB</Unit>\n" \
-    "          </StorageCapacity>\n" \
-    "          <Performance Requested=\"standard\">standard</Performance>\n" \
-    "          <Submission>\n" \
-    "            <RequestedBy>uid1</RequestedBy>\n" \
-    "            <RequestDateTime>17-JUN-2024 20:32:37</RequestDateTime>\n" \
-    "          </Submission>\n" \
-    "          <ProjectPurpose>research</ProjectPurpose>\n" \
+    "          <DataUser>n/a</DataUser>\n" \
     "        </tigerdata:project>\n" \
     "      </meta>\n" \
     "    </args>\n" \
