@@ -24,14 +24,14 @@ RSpec.describe ProjectImport do
         FactoryBot.create :user, uid: "uid5"
       end
       it "creates test data" do
-        expect { 
-          output = subject.run 
+        expect {
+          output = subject.run
           expect(output[0]).to eq("Created project for 10.00000/1234-abcd")
           expect(output[1]).to eq("Created project for 10.00000/1234-efgh")
 
           # with liberal parsing we will try to create a record, but fail due to errors in the data
           expect(output[2]).to include("Error creating project for 4897938: Invalid netid: a dataset \\b\" for role Data Sponsor")
-          
+
         }.to change { Project.count }.by(2)
         project_metadata = Project.first.metadata_model
         expect(project_metadata.project_id).to eq("10.00000/1234-abcd")
@@ -59,6 +59,7 @@ RSpec.describe ProjectImport do
     it "creates projects for project in Mediaflux" do
       new_project = FactoryBot.create(:approved_project, project_directory: "test-request-service")
       new_project.mediaflux_id = nil
+
       ProjectMediaflux.create!(project: new_project, user:)
       new_project.destroy
 

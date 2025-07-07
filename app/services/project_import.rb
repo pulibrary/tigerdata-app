@@ -34,6 +34,9 @@ class ProjectImport
             if test_run
               output << metadata.to_json
             else
+              if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
+                metadata.data_user_read_only = []
+              end
               project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
               if (project.valid?)
                 output << "Created project for #{project_id}"
