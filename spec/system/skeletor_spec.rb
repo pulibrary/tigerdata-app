@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-
-RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true, integration: true do
+# This is the automated test to the Skeletor epic https://github.com/pulibrary/tigerdata-app/issues/1478
+RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integration: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
