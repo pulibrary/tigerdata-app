@@ -148,7 +148,7 @@ jobs:
       - run:
           # prettier-ignore
           name: Deploy to CI
-          command: "curl -k \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{}}'"
+          command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{}}'"
 
 workflows:
   version: 2
