@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
+RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true, integration: true do 
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
@@ -15,8 +15,7 @@ end
     #Authenticated user logging in
     context "authenticated user" do
         let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-        it "redirects to the user's dashboard and shows the logout button",
-          :integration do 
+        it "redirects to the user's dashboard and shows the logout button" do
         sign_in current_user
         visit "/"
         expect(page).to have_content("Welcome, #{current_user.given_name}!")
