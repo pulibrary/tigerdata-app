@@ -44,45 +44,48 @@ module Mediaflux
             xml.send("#{@xml_namespace}:project") do
               xml.ProjectDirectory project.project_directory
               xml.Title project_metadata.title
-              xml.Description project_metadata.description if project_metadata.description.present?
-              xml.Status project_metadata.status
+              if project_metadata.description.blank?
+                xml.Description "description not provided"
+              else
+                xml.Description project_metadata.description
+              end
+              # xml.Status project_metadata.status
               xml.DataSponsor project_metadata.data_sponsor
               xml.DataManager project_metadata.data_manager
               departments =  project_metadata.departments || []
               departments.each do |department|
                 xml.Department department
               end
+
               ro_users = project_metadata.ro_users || []
-              ro_users.each do |ro_user|
-                xml.DataUser do
-                  xml.parent.set_attribute("ReadOnly", true)
-                  xml.text(ro_user)
-                end
-              end
               rw_users = project_metadata.rw_users || []
-              rw_users.each do |rw_user|
-                xml.DataUser rw_user
+              all_users = ro_users + rw_users
+              data_users = all_users.join(",")
+              if data_users.blank?
+                xml.DataUser "n/a"
+              else
+                xml.DataUser data_users
               end
-              created_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.created_on)
-              xml.CreatedOn created_on
-              xml.CreatedBy project_metadata.created_by
+            #   created_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.created_on)
+            #   xml.CreatedOn created_on
+            #   xml.CreatedBy project_metadata.created_by
               xml.ProjectID project_metadata.project_id
-              capacity = project_metadata.storage_capacity.with_indifferent_access
-              xml.StorageCapacity do
-                xml.Size capacity["size"]["requested"]
-                xml.Unit capacity["unit"]["requested"]
-              end
-              performance = project_metadata.storage_performance_expectations
-              xml.Performance do
-                xml.parent.set_attribute("Requested", performance["requested"])
-                xml.text(performance["requested"])
-              end
-              xml.Submission do
-                xml.RequestedBy project_metadata.created_by
-                xml.RequestDateTime created_on
-              end
-              xml.ProjectPurpose project_metadata.project_purpose
-              xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
+            #   capacity = project_metadata.storage_capacity.with_indifferent_access
+            #   xml.StorageCapacity do
+            #     xml.Size capacity["size"]["requested"]
+            #     xml.Unit capacity["unit"]["requested"]
+            #   end
+            #   performance = project_metadata.storage_performance_expectations
+            #   xml.Performance do
+            #     xml.parent.set_attribute("Requested", performance["requested"])
+            #     xml.text(performance["requested"])
+            #   end
+            #   xml.Submission do
+            #     xml.RequestedBy project_metadata.created_by
+            #     xml.RequestDateTime created_on
+            #   end
+            #   xml.ProjectPurpose project_metadata.project_purpose
+            #   xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
             end
           end
           # TODO: SHOULD WE CREATE A PROJECT USING REQUESTED VALUES OR APPROVED VALUES?

@@ -10,7 +10,9 @@ Rails.application.routes.draw do
 
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
-  resources :users, except: [:new, :destroy, :create]
+  resources :users, except: [:new, :destroy, :create] do
+    get "/users/:user", action: :index, on: :collection
+  end
 
   devise_scope :user do
     get "sign_in", to: "devise/sessions#new", as: :new_user_session
@@ -35,6 +37,7 @@ Rails.application.routes.draw do
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
   get "projects/:id/create-script", to: "projects#create_script", as: :project_create_script
+  get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
   resources :requests do
     member do

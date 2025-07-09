@@ -139,7 +139,11 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - `bundle exec rake servers:start`
 - Fast: `bundle exec rspec spec`
 - Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
-- Run connected to CI mediaflux instance: `MFLUX_CI=true bundle exec rspec spec`
+- Run connected to CI mediaflux instance: `MFLUX_CI=true MFLUX_CI_PASSWORD="[MFLUX_CI_PASSWORD]" bundle exec rspec spec`
+- `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
+
+### How to run only integration tests
+- To run just the tests that are integration tests, we will need to pass a flag that will only run tests that are tagged as an integration test `bundle exec rspec --tag integration` 
 
 ### Starting the development server
 

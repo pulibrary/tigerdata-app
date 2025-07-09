@@ -1,19 +1,19 @@
 ---
 development:
   title: Welcome to the development site
-  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.<p>TigerData will be undergoing a maintenance downtime on Tuesday, June 10th, 2025 from 6am to 2pm EDT. All TigerData systems will be unavailable during that period.</p>
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.
 test:
   title: Welcome to the <i>test</i> site
   body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
 staging:
   title: Welcome to TigerData (Staging)!
-  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.<p>TigerData will be undergoing a maintenance downtime on Tuesday, June 10th, 2025 from 6am to 2pm EDT. All TigerData systems will be unavailable during that period.</p>
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.
 qa:
   title: Welcome to TigerData (QA)!
-  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.<p>TigerData will be undergoing a maintenance downtime on Tuesday, June 10th, 2025 from 6am to 2pm EDT. All TigerData systems will be unavailable during that period.</p>
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.
 ci:
   title: Welcome to TigerData (CI)!
   body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.
 production:
   title: Welcome to TigerData!
-  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.<p>TigerData will be undergoing a maintenance downtime on Tuesday, June 10th, 2025 from 6am to 2pm EDT. All TigerData systems will be unavailable during that period.</p>
+  body: Thank you for visiting this early version of the TigerData Web Portal. Please let us know what you think through our <a href="https://bit.ly/TigerDataFeedback" target="_blank">feedback survey</a>. To report bugs or other errors, you may also email us at <a href="mailto:td-frontend@princeton.edu">td-frontend@princeton.edu</a>.

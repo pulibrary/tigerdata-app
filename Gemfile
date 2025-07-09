@@ -63,6 +63,7 @@ gem "flipflop"
 gem "google-protobuf", "~> 3.25"
 gem "health-monitor-rails", "12.4.0"
 gem "honeybadger"
+gem "kaminari"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
@@ -82,6 +83,7 @@ group :development, :test do
   gem "ed25519"
   gem "factory_bot_rails", require: false
   gem "ffaker"
+  gem "mutex_m", "~> 0.2.0"
   gem "pry-byebug"
 end
 
