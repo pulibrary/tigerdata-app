@@ -71,19 +71,6 @@ namespace :mailcatcher do
   end
 end
 
-# namespace :schema do
-#   desc "Load the current schema"
-#   task :load do
-#     on roles(:schema) do
-#       within release_path do
-#         execute("cd #{release_path} && bundle exec rake schema:create")
-#       end
-#     end
-#   end
-# end
-
-# after "deploy:published", "schema:load"
-
 before "deploy:reverted", "npm:install"
 
 namespace :sidekiq do
