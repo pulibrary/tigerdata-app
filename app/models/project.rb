@@ -33,6 +33,12 @@ class Project < ApplicationRecord
   end
 
   def approve!(current_user:)
+    if self.metadata_model.project_directory.include?("tigerdata/") == false
+      self.metadata_model.project_directory = "tigerdata/#{self.metadata_model.project_directory}"
+    end
+    puts self.metadata_model.project_directory
+    byebug
+
     request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
     request.resolve
 

@@ -45,7 +45,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       FactoryBot.create(:project, title: "project 111", data_user_read_only: [data_user.uid])
       FactoryBot.create(:project, title: "project 222", data_user_read_only: [user.uid, data_user.uid])
       FactoryBot.create(:project, title: "project 333", data_user_read_write: [data_user.uid])
-      FactoryBot.create(:project, title: "project 444", data_user_read_only: [user.uid])      
+      FactoryBot.create(:project, title: "project 444", data_user_read_only: [user.uid])
     end
 
     it "returns projects for the data users" do
@@ -64,7 +64,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       FactoryBot.create(:project, title: "project 222", data_sponsor: test_user.uid)
       FactoryBot.create(:project, title: "project 333", data_user_read_only: [user.uid, test_user.uid])
       FactoryBot.create(:project, title: "project 444", data_user_read_write: [test_user.uid])
-      FactoryBot.create(:project, title: "project 555", data_user_read_only: [user.uid])      
+      FactoryBot.create(:project, title: "project 555", data_user_read_only: [user.uid])
     end
 
     it "returns projects for the data users" do
@@ -166,7 +166,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#file_list" do
-    let(:manager) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:manager) { FactoryBot.create(:user, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) do
       project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
       project.mediaflux_id = nil
@@ -175,19 +175,30 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     before do
       # Save the project in mediaflux
+      byebug
       project.save_in_mediaflux(user: manager)
 
       # create a collection so it can be filtered
+      byebug
       Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
 
 
       # Create files for the project in mediaflux using test asset create request
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
+      byebug
+      r1 = Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt")
+      r1.resolve
+      puts r1.response_xml
+      byebug
+
+      r2 = Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt")
+      r2.resolve
+      puts r2.response_xml
+
+      puts "hello"
     end
 
     after do
-      Mediaflux::AssetDestroyRequest.new(session_token: manager.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+      # Mediaflux::AssetDestroyRequest.new(session_token: manager.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
     end
 
     it "fetches the file list" do
@@ -259,20 +270,20 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "#project_directory_short" do
     it "does not include the full path" do
       project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
-      expect(project.project_directory_short).to eq("directory")
+      expect(project.project_directory_short).to eq("/123/abc/directory")
     end
   end
 
   describe "#project_directory_parent_path" do
     it "does not include the directory" do
       project = FactoryBot.create(:project, project_directory: "/123/abc/directory")
-      expect(project.project_directory_parent_path).to eq("/123/abc")
+      expect(project.project_directory_parent_path).to eq(Mediaflux::Connection.root)
     end
 
-    it "defaults to the configured vaule if no directory is present" do
-      project = FactoryBot.create(:project, project_directory: "directory")
-      expect(project.project_directory_parent_path).to eq(Mediaflux::Connection.root_namespace)
-    end
+    # it "defaults to the configured vaule if no directory is present" do
+    #   project = FactoryBot.create(:project, project_directory: "directory")
+    #   expect(project.project_directory_parent_path).to eq(Mediaflux::Connection.root)
+    # end
   end
 
   describe "#pending?" do

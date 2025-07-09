@@ -101,6 +101,7 @@ development:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
 test:
+  api_root: "tigerdata"
   api_hidden_root: "/td-test-001"
   api_root_to_clean: "/td-test-001/test/"
   api_root_ns: "/td-test-001/test/tigerdataNS"
@@ -112,6 +113,7 @@ test:
   api_port: "<%= ENV['MFLUX_CI'] ?  '80' : '8888' %>"
 
   # Alternate to test is still a test location
+  api_alternate_root: "tigerdata-alternate"
   api_alternate_hidden_root: "/td-test-002"
   api_alternate_root_ns: "/td-test-002/tigerdataNS"
   api_alternate_root_collection: "path=/td-test-002/tigerdata-alt"

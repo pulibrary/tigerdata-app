@@ -13,8 +13,8 @@ class ProjectMediaflux
     session_id = user.mediaflux_session
     if project.mediaflux_id.nil?
       mediaflux_id = ProjectMediaflux.create!(project: project, user: user)
-      ProjectAccumulator.new(project: project, session_id: session_id).create!()
-      Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
+      # ProjectAccumulator.new(project: project, session_id: session_id).create!()
+      # Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
     else
       ProjectMediaflux.update(project: project, user: user)
       Rails.logger.debug "Project #{project.id} has been updated in MediaFlux (asset id #{project.mediaflux_id})"
@@ -30,47 +30,49 @@ class ProjectMediaflux
   # @param xml_namespace []
   # @return [String] The id of the project that got created
   def self.create!(project:, user:, xml_namespace: nil)
-    session_id = user.mediaflux_session
-    store_name = Store.default(session_id: session_id).name
+    project.approve!(current_user: user)
+    project.mediaflux_id
+    # session_id = user.mediaflux_session
+    # store_name = Store.default(session_id: session_id).name
 
-    # Make sure the root namespace and the required nodes below it exist.
-    create_root_tree(session_id: session_id)
+    # # Make sure the root namespace and the required nodes below it exist.
+    # create_root_tree(session_id: session_id)
 
-    # Create a namespace for the project
-    # The namespace is directly under our root namespace'
-    project_name = project.project_directory
-    project_namespace = "#{project_name}NS"
-    namespace = Mediaflux::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
-    if namespace.error?
-      raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
-    end
-    # Create a collection asset under the root namespace and set its metadata
-    project_parent = Mediaflux::Connection.root_collection
-    create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
-    id = create_request.id
-    if id.blank?
-      response_error = create_request.response_error
-      case response_error[:message]
-      when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
-        raise "Project name already taken"
-      when /'asset.create' failed/
+    # # Create a namespace for the project
+    # # The namespace is directly under our root namespace'
+    # project_name = project.project_directory
+    # project_namespace = "#{project_name}NS"
+    # namespace = Mediaflux::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
+    # if namespace.error?
+    #   raise MediafluxDuplicateNamespaceError.new("Can not create the namespace #{namespace.response_error}")
+    # end
+    # # Create a collection asset under the root namespace and set its metadata
+    # project_parent = Mediaflux::Connection.root_collection
+    # create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
+    # id = create_request.id
+    # if id.blank?
+    #   response_error = create_request.response_error
+    #   case response_error[:message]
+    #   when "failed: The namespace #{project_namespace} already contains an asset named '#{project_name}'"
+    #     raise "Project name already taken"
+    #   when /'asset.create' failed/
 
-        # Ensure that the metadata validations are run
-        if project.valid?
-          raise response_error[:message]  # something strange went wrong
-        else
-          raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.errors)
-        end
-      else
-        raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
-      end
-    end
+    #     # Ensure that the metadata validations are run
+    #     if project.valid?
+    #       raise response_error[:message]  # something strange went wrong
+    #     else
+    #       raise TigerData::MissingMetadata.missing_metadata(schema_version: ::TigerdataSchema::SCHEMA_VERSION, errors: project.errors)
+    #     end
+    #   else
+    #     raise(StandardError,"An error has occured during project creation, not related to namespace creation or collection creation")
+    #   end
+    # end
 
-    # Save the ActiveRecord to make sure the mediaflux_id is recorded
-    project.mediaflux_id = id
-    project.save!
+    # # Save the ActiveRecord to make sure the mediaflux_id is recorded
+    # project.mediaflux_id = id
+    # project.save!
 
-    id
+    # id
   end
 
   def self.update(project:, user:)
