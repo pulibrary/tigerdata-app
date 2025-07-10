@@ -36,8 +36,6 @@ class Project < ApplicationRecord
     if self.metadata_model.project_directory.include?("tigerdata/") == false
       self.metadata_model.project_directory = "tigerdata/#{self.metadata_model.project_directory}"
     end
-    puts self.metadata_model.project_directory
-    byebug
 
     request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
     request.resolve
@@ -46,7 +44,7 @@ class Project < ApplicationRecord
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
 
-    # create two provenance events:
+    # create provenance events:
     # - one for approving the project and
     # - another for changing the status of the project
     # - another with debug information from the create project service
