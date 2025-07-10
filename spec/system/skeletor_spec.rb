@@ -22,5 +22,57 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       click_link current_user.uid.to_s
       expect(page).to have_content "Log out"
     end
+  
+    it "allows the sysadmin or superuser to fill out the project and allows them to review and submit" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Basic Details"
+      fill_in :project_title, with: "A basic Project"
+      expect(page).to have_content "15/200 characters"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      expect(page).to have_content "46/1000 characters"
+      click_on "Review and Submit"
+      expect(page).to have_field("project_title", with: random_title)
+    end
+  end
+
+  context "sysadmin" do
+    let (:current_sysadmin) {FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
+    it "allows the sysadmin or superuser to fill out the project and allows them to review and submit" do
+      
+      #this is the feature flipper
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:new_project_request_wizard, true)
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+
+      sign_in current_sysadmin
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Basic Details"
+      fill_in :project_title, with: "She was a Fairy"
+      expect(page).to have_content "15/200 characters"
+      fill_in :parent_folder, with: "Fairy"
+      fill_in :project_folder, with: "Pixie Dust"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      expect(page).to have_content "46/1000 characters"
+      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
+      # This is triggering the html5 element like it would normally if the page has focus
+      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      byebug
+      expect(page).to have_content "Review and Submit"
+      click_on "Review and Submit"
+      #byebug
+    end
+  end
+#To-do: fill in information for the sponspor and data manager, we need those fields to submit the project request
+
+  context "superuser" do
   end
 end
