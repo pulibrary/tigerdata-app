@@ -17,7 +17,7 @@ FactoryBot.define do
       storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard" }.with_indifferent_access }
       project_purpose { "research" }
-      project_directory { "big-data" }
+      project_directory { "big-data-#{Time.now.utc.iso8601.gsub(':','-')}" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
