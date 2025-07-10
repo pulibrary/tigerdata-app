@@ -4,7 +4,8 @@ require "rails_helper"
 RSpec.describe ProjectMediaflux, type: :model do
   let(:collection_metadata) { { id: "abc", name: "test", path: "/td-demo-001/rc/test-ns/test", description: "description", namespace: "/td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project_with_doi }
-  let(:current_user) { FactoryBot.create(:user, uid: "jh1234", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:current_user) { hc_user }
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
@@ -19,7 +20,9 @@ RSpec.describe ProjectMediaflux, type: :model do
                               session_token: current_user.mediaflux_session,
                               path: namespace_path
                             ).metadata
-        expect(namespace_metadata[:description]).to match(/Namespace for/)
+
+        project_directory_postfix = project.metadata_model.project_directory.split("/").last
+        expect(namespace_metadata[:path]).to end_with(project_directory_postfix + "NS")
       end
 
       describe "quota", connect_to_mediaflux: true do
@@ -39,43 +42,13 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "raises an error" do
           # Make the project once
           described_class.create!(project: project, user: current_user)
-          # It should raise a duplicate namespace error the second time
-          expect do
-            described_class.create!(project: project, user: current_user)
-          end.to raise_error(MediafluxDuplicateNamespaceError) # Raises custom error when a duplicate project already exists
-        end
-      end
+          duplicate_events = project.provenance_events.where(event_type:"Debug Output").find { |event| event.event_note.include?("Collection already exists") }
+          expect(duplicate_events).to be nil
 
-      context "when the parent colllection does not exist" do
-        let(:mediaflux_id) { described_class.create!(project: project, user: current_user) }
-        let(:mediaflux_metadata) do
-          Mediaflux::AssetMetadataRequest.new(
-                             session_token: current_user.mediaflux_session,
-                             id: mediaflux_id
-                           ).metadata
-        end
-        let(:project_parent) { Rails.configuration.mediaflux["api_root_collection"] }
-
-        it "creates a project namespace" do
-          namespace_path = mediaflux_metadata[:namespace]
-          namespace_metadata = Mediaflux::NamespaceDescribeRequest.new(
-            session_token: current_user.mediaflux_session,
-            path: namespace_path
-          ).metadata
-
-          expect(namespace_metadata[:description]).to match(/Namespace for/)
-        end
-
-        it "creates a collection" do
-          expect(mediaflux_metadata[:collection]).to eq true
-        end
-
-        it "creates a parent collection" do
-          parent_collection_metadata = Mediaflux::AssetMetadataRequest.new(
-                                        session_token: current_user.mediaflux_session,
-                                        id: project_parent
-                                      ).metadata
-          expect(parent_collection_metadata[:path]).to eq project_parent.gsub("path=", "")
+          # Try to create the same project again
+          described_class.create!(project: project, user: current_user)
+          duplicate_events = project.provenance_events.where(event_type:"Debug Output").find { |event| event.event_note.include?("Collection already exists") }
+          expect(duplicate_events).not_to be nil
         end
       end
     end

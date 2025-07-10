@@ -44,7 +44,7 @@ class Project < ApplicationRecord
     request.resolve
 
     self.mediaflux_id = request.mediaflux_id
-    self.metadata_model.status = Project::APPROVED_STATUS
+    self.metadata_model.status = Project::APPROVED_STATUS if self.mediaflux_id != 0
     self.save!
 
     # create provenance events:
