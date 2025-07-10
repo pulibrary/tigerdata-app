@@ -2,16 +2,17 @@
 require "rails_helper"
 
 RSpec.describe TestAssetGenerator do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
   let(:project) { FactoryBot.create :project, mediaflux_id: 1234 }
-  let(:user) { FactoryBot.create :user }
+  let(:user) { hc_user }
 
   describe "#generate" do
 
     let(:test_asset_create) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
     let(:test_collection_create) { instance_double(Mediaflux::AssetCreateRequest, id: "5678") }
     let(:test_directory_create) { instance_double(Mediaflux::AssetCreateRequest, id: "2222") }
-    
+
 
     before do
       allow(user).to receive(:mediaflux_session).and_return("mediaflux_sessionid")
@@ -64,7 +65,7 @@ RSpec.describe TestAssetGenerator do
       end
     end
 
-    context "Multiple directories" do 
+    context "Multiple directories" do
       let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
       let(:test_directory_create_2) { instance_double(Mediaflux::AssetCreateRequest, id: "9222") }
       let(:test_asset_create_2) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
