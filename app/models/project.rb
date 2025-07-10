@@ -33,6 +33,9 @@ class Project < ApplicationRecord
   end
 
   def approve!(current_user:)
+    # =========================
+    # TODO: remove this once we update the test to always pass this value
+    # =========================
     if self.metadata_model.project_directory.include?("tigerdata/") == false
       self.metadata_model.project_directory = "tigerdata/#{self.metadata_model.project_directory}"
     end
@@ -320,13 +323,6 @@ class Project < ApplicationRecord
     Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
-  # Ensure that the project directory is a valid path
-  # @example
-  #   Project.safe_directory("My Project") # => "My-Project"
-  def self.safe_directory(directory)
-    # only alphanumeric characters and /
-    name.strip.gsub(/[^A-Za-z\d\/]/, "-")
-  end
 
   private
 

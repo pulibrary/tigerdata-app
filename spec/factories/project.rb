@@ -14,8 +14,8 @@ FactoryBot.define do
       updated_by { FactoryBot.create(:user).uid }
       project_id { "" }
       status { "pending" }
-      storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } }.with_indifferent_access }
-      storage_performance { { requested: "standard" }.with_indifferent_access }
+      storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
+      storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
       project_directory { "big-data-#{Time.now.utc.iso8601.gsub(':','-')}" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
@@ -65,7 +65,7 @@ FactoryBot.define do
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
-          Project.safe_directory("#{FFaker::Food.fruit}#{n}")
+          ProjectMetadata.safe_directory("#{FFaker::Food.fruit}#{n}")
         end
       end
     end

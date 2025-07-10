@@ -50,6 +50,14 @@ class ProjectMetadata
     false
   end
 
+  # Ensure that the project directory is a valid path
+  def self.safe_directory(directory)
+    return "" if directory.nil?
+
+    # only alphanumeric characters and /
+    directory.strip.gsub(/[^A-Za-z\d\/]/, "-")
+  end
+
   attr_accessor(
     :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
@@ -99,7 +107,7 @@ class ProjectMetadata
 
     @project_id = metadata_hash[:project_id] || ProjectMetadata::DOI_NOT_MINTED
     @project_purpose = metadata_hash[:project_purpose]
-    @project_directory = metadata_hash[:project_directory]
+    @project_directory = ProjectMetadata.safe_directory(metadata_hash[:project_directory])
 
     @storage_capacity = metadata_hash[:storage_capacity]
     @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
@@ -261,11 +269,9 @@ class ProjectMetadata
       end
 
       def calculate_project_directory(params)
-        if params["project_directory_prefix"].present?
-          current_directory = params["project_directory"]
-          @project_directory = Pathname.new(params["project_directory_prefix"]).join(current_directory)
-        else
-          set_value(params, "project_directory")
+        if params.key?("project_directory_prefix") || params.key?("project_directory")
+          full_path = [params["project_directory_prefix"], params["project_directory"]].compact.join("/")
+          @project_directory = ProjectMetadata.safe_directory(full_path)
         end
       end
 end
