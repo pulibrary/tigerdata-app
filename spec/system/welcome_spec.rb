@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
