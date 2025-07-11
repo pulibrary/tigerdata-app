@@ -3,8 +3,8 @@
 <div class="container">
   <div class="field">
     <label for="project_directory" class="form-label">Confirm Project Directory</label>
-    <input class="form-directory" type="text" name="project_directory_prefix" required value="<%= @project.project_directory_parent_path %>"></input> /
-    <input class="form-directory-confirm" type="text" name="project_directory" required value=<%= "#{@project.project_directory_short}"%>></input>
+    <input class="form-directory" type="text" name="project_directory_prefix" readonly value="<%= @project.project_directory_parent_path %>"></input> /
+    <input class="form-directory-confirm" type="text" name="project_directory" required value=<%= "#{@project.project_directory}"%>></input>
   </div>
   <div class="field">
     <label for="storage_capacity" class="form-label">Confirm Storage Capacity</label>
@@ -17,10 +17,7 @@
       <option value="PB" <%= "selected" if "#{@project.metadata[:storage_capacity][:unit][:requested]}" == "PB"%>>PB</option>
     </select>
   </div>
-  <div class="field">
-    <label for="mediaflux_id" class="form-label">Collection ID</label>
-    <input class="form-control" type="text" required name="mediaflux_id"></input>
-  </div>
+
   <div class="field">
     <label for="approver" class="form-label">Approver</label>
     <input class="form-control" type="text" name="approver" disabled value=<%=current_user.uid%>></input>
@@ -40,6 +37,10 @@
     <label for="event_note_message" class="form-label">Message</label>
     <input class="form-message" type="text" name="event_note_message"> </input>
   </div>
+
+  <% # Internal flag to indicate that we are approving the project %>
+  <input class="hidden-element" type="text" name="approved" value="true"></input>
+
   <div class="controls">
     <button type="submit" class="btn btn-primary">Approve</button>
     <%= link_to "Cancel", dashboard_path, class: "btn btn-secondary" %>

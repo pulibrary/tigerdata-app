@@ -132,12 +132,12 @@
             <span class="path-info"><%= @project.project_directory_parent_path %>/ </span>
             <% if @project.persisted? %>
               <% if (current_user.superuser? || current_user.eligible_sysadmin?) %>
-                <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+                <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\/\-]{1,64}" />
               <% else %>
                 <input type="text" aria-label="project directory" id="project_directory" name="project_directory" readonly value="<%= @project.project_directory_short %>" />
               <% end %>
             <% else %>
-              <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\-]{1,64}" />
+              <input type="text" aria-label="project directory" id="project_directory" name="project_directory" required oninvalid="this.setCustomValidity('')" oninput="this.setCustomValidity('')" value="<%= @project.project_directory_short %>" pattern="[\w\p{L}\/\-]{1,64}" />
             <% end %>
           </div>
         </div><!-- row -->

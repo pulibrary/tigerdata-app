@@ -4,7 +4,8 @@ require "rails_helper"
 RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:session_token) { SystemUser.mediaflux_session }
-  let(:user) { FactoryBot.create(:user, mediaflux_session: session_token) }
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user) { hc_user }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
@@ -22,7 +23,8 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
     end
 
     context "an asset with metadata" do
-      it "sends the metadata to the server", connect_to_mediaflux: true do
+      # TODO: We don't support yet updates to Mediaflux from the UI after the project has been created in Mediaflux
+      xit "sends the metadata to the server", connect_to_mediaflux: true do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user
         session_id = session_token

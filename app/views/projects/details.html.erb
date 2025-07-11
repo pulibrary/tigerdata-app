@@ -95,7 +95,12 @@
   <p class="provenance-header"> Submission </p>
   <ul class>
     <% @provenance_events.each do |event| %>
-      <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%> </li>
+      <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
+      <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
+        <blockquote>
+          <%= event.event_note %>
+        </blockquote>
+      <% end %>
     <% end %>
   </ul>
 </div>
