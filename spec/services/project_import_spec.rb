@@ -55,16 +55,28 @@ RSpec.describe ProjectImport do
   end
 
   describe "##run_with_report" do
+    let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
     let (:user) {FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session}
-    it "creates projects for project in Mediaflux" do
-      new_project = FactoryBot.create(:approved_project, project_directory: "test-request-service")
-      new_project.mediaflux_id = nil
 
+    before do
+      # Make sure we start with a clean slate
+      namespace_to_clear = "princeton/tigerdataNS/rspec-importNS"
+      Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, namespace: namespace_to_clear, ignore_missing: true).destroy
+    end
+
+    it "creates projects for project in Mediaflux" do
+      # Create a project in Mediaflux...
+      # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
+      new_project_id = "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}"
+      new_project_directory = "rspec-import/#{new_project_id}"
+      new_project = FactoryBot.create(:approved_project, project_id: new_project_id, project_directory: new_project_directory)
       ProjectMediaflux.create!(project: new_project, user:)
+
+      # ...and delete it from the Rails database
+      # (but it still exists in Mediaflux)
       new_project.destroy
 
       expect{ described_class.run_with_report(mediaflux_session: user.mediaflux_session) }.to change { Project.count }.by(1)
     end
-
   end
 end
