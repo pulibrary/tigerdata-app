@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_mediaflux: true, js: true do
   # TODO: - When the sponsors have access to write in the system we should remove trainer from here
   # let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session, trainer: true) }
   let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:system_admin) { FactoryBot.create(:sysadmin, uid: "pul777", mediaflux_session: SystemUser.mediaflux_session) }
@@ -49,7 +50,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
 
     fill_in "project_directory", with: "test_project"
     fill_in "title", with: "My test project"
-    expect(page).to have_content("/td-test-001/")
+    expect(page).to have_content("#{Rails.configuration.mediaflux['api_root']}/")
     expect(page.find_all("input:invalid").count).to eq(0)
     expect do
       click_button("Submit")
@@ -128,9 +129,9 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   end
 
   context "Data Sponsors are the only people who can assign Data Managers" do
-    let(:project) { FactoryBot.create(:project) }
+    let(:data_manager) { FactoryBot.create(:data_manager) }
+    let(:project) { FactoryBot.create(:project, data_manager: data_manager.uid) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
-    let(:data_manager) { User.find_by(uid: project.metadata_model.data_manager) }
     let!(:new_data_manager) { FactoryBot.create(:data_manager) }
     it "allows a Data Sponsor to assign a Data Manager" do
       sign_in sponsor_user
@@ -195,20 +196,22 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   end
 
   context "only system admins and super users can approve a project" do
-    let(:project) { FactoryBot.create(:project, status: Project::PENDING_STATUS) }
+    let(:project) { FactoryBot.create(:project, status: Project::PENDING_STATUS, project_id: "10.123/456") }
 
     it "allows a system admins user to approve the project" do
       sign_in system_admin
       visit project_approve_path(project)
-      click_on "Approve"
       expect(page).to have_content "Metadata Highlights"
+      click_on "Approve"
+      expect(page).to have_content "Project Approval Received"
     end
 
     it "allows a super user to approve the project" do
       sign_in superuser
       visit project_approve_path(project)
-      click_on "Approve"
       expect(page).to have_content "Metadata Highlights"
+      click_on "Approve"
+      expect(page).to have_content "Project Approval Received"
     end
 
     it "does not allow a data sponsor to approve the project" do

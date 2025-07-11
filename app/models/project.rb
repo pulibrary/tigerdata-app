@@ -47,6 +47,10 @@ class Project < ApplicationRecord
     self.metadata_model.status = Project::APPROVED_STATUS if self.mediaflux_id != 0
     self.save!
 
+    if request.mediaflux_id == 0
+      Rails.log.error "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+    end
+
     # create provenance events:
     # - one for approving the project and
     # - another for changing the status of the project
