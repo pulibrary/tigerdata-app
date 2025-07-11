@@ -8,6 +8,8 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#type" do
     it "returns the requested type" do
+      project.metadata_model.storage_performance_expectations["approved"] = nil
+      presenter = ProjectDashboardPresenter.new(project)
       expect(presenter.type).to include("Requested")
     end
 
@@ -88,7 +90,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#project_directory" do
     it "hides the root project" do
-      expect(presenter.project_directory).to eq("/test/tigerdataNS/big-data")
+      expect(presenter.project_directory).to eq(project.metadata_model.project_directory)
     end
   end
 
