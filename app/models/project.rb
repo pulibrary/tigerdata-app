@@ -48,7 +48,7 @@ class Project < ApplicationRecord
     self.save!
 
     if request.mediaflux_id == 0
-      Rails.log.error "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+      Rails.logger.error "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
     end
 
     # create provenance events:
