@@ -41,8 +41,13 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
 
   context "sysadmin" do
     let (:current_sysadmin) {FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
-    it "allows the sysadmin or superuser to fill out the project and allows them to review and submit" do
-      
+    let (:datasponsor) {FactoryBot.create(:user)}
+    let (:datamanager) {FactoryBot.create(:user)}
+    before do 
+      datasponsor
+    end
+    it "allows the sysadmin to fill out the project" do
+
       #this is the feature flipper
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
@@ -65,13 +70,17 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
-      byebug
+      click_on "Roles and People"
+      fill_in :request_data_sponsor, with: "display_name"
+      fill_in :request_data_manager, with: "Trixie"
+      click_on "Review and Submit"
       expect(page).to have_content "Review and Submit"
+      byebug
       click_on "Review and Submit"
       #byebug
     end
   end
-#To-do: fill in information for the sponspor and data manager, we need those fields to submit the project request
+#To-do: must be a valid user
 
   context "superuser" do
   end
