@@ -33,6 +33,7 @@ class Project < ApplicationRecord
   end
 
   def approve!(current_user:)
+    byebug
     # =========================
     # TODO: remove this once we update the test to always pass this value
     # =========================

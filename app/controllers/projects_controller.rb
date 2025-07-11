@@ -135,7 +135,6 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    byebug
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Edit")
     project
@@ -149,7 +148,6 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    byebug
     @project = Project.find(params[:id])
     #Approve action
     if params.key?("approved")
