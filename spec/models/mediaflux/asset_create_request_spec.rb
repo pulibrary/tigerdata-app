@@ -10,6 +10,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:approved_project2) { FactoryBot.create(:approved_project) }
+  let(:random_directory) { random_project_directory }
 
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
@@ -20,12 +21,12 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
     it "creates a collection on the server" do
       Mediaflux::RootCollectionAsset.new(session_token: session_token, root_ns: root_ns, parent_collection: parent_collection).create
 
-      create_request = described_class.new(session_token: session_token, name: "testasset", namespace: Rails.configuration.mediaflux[:api_root_ns])
+      create_request = described_class.new(session_token: session_token, name: random_directory, namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::AssetMetadataRequest.new(session_token: session_token, id: create_request.id)
       metadata = req.metadata
-      expect(metadata[:name]).to eq("testasset")
+      expect(metadata[:name]).to eq(random_directory)
     end
 
     context "A collection within a collection" do
