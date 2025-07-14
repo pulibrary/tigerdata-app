@@ -12,12 +12,12 @@ FactoryBot.define do
       created_by { FactoryBot.create(:user).uid }
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
       updated_by { FactoryBot.create(:user).uid }
-      project_id { "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}" } # make it unique
+      project_id { random_project_id }
       status { "pending" }
       storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
-      project_directory { random_project_id }
+      project_directory { random_project_directory }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }

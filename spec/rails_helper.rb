@@ -99,10 +99,10 @@ end
 
 # Generates a random project directory so that each test goes to its own location in Mediaflux
 def random_project_directory
-  "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}"
+  "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100_000)}"
 end
 
-# Generates a random project id in the form 10.nnn/nnn
+# Generates a random project id in the form 10.nnn/nnn so that it looks like a DOI
 def random_project_id
-  "10.#{rand(1..100000)}/#{rand(1..100000)}"
+  "10.#{rand(1..100000)}/#{rand(1..100_000)}"
 end
