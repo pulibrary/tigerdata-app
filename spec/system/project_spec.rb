@@ -488,7 +488,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   context "Approve page" do
     let(:project) { project_not_in_mediaflux }
-    let(:custom_directory) { "new-project/dir/example-project-#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}" }
+    let(:custom_directory) { "new-project/dir/example-project-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}" }
 
     it "renders the form with the Mediaflux ID" do
       sign_in sysadmin_user
@@ -595,7 +595,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           hash = {
             data_sponsor: sponsor_user.uid,
             data_manager: data_manager.uid,
-            project_directory: "rspec-#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}",
+            project_directory: "rspec-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}",
             title: "project 123",
             departments: ["RDSS"],
             description: "hello world",

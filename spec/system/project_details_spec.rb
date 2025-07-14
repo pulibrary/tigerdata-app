@@ -17,7 +17,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
-      project_directory: "rspec-#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}",
+      project_directory: "rspec-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}",
       title: "project 123",
       departments: ["RDSS"],
       description: "hello world",

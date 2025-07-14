@@ -42,12 +42,12 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "raises an error" do
           # Make the project once
           described_class.create!(project: project, user: current_user)
-          duplicate_events = project.provenance_events.where(event_type:"Debug Output").find { |event| event.event_note.include?("Collection already exists") }
+          duplicate_events = project.provenance_events.where(event_type: "Debug Output").find { |event| event.event_note.include?("Collection already exists") }
           expect(duplicate_events).to be nil
 
           # Try to create the same project again
           described_class.create!(project: project, user: current_user)
-          duplicate_events = project.provenance_events.where(event_type:"Debug Output").find { |event| event.event_note.include?("Collection already exists") }
+          duplicate_events = project.provenance_events.where(event_type: "Debug Output").find { |event| event.event_note.include?("Collection already exists") }
           expect(duplicate_events).not_to be nil
         end
       end
@@ -83,7 +83,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         # TODO: We are handling errors different from before.
         # Revisit if we want to throw an exception.
         ProjectMediaflux.create!(project: incomplete_project, user: current_user)
-        errors = incomplete_project.provenance_events.select { |event| (event.event_note || "").include?("call to service 'tigerdata.project.create' failed: XPath args/project-id is invalid")}
+        errors = incomplete_project.provenance_events.select { |event| (event.event_note || "").include?("call to service 'tigerdata.project.create' failed: XPath args/project-id is invalid") }
         expect(errors.count > 0).to be true
       end
     end
