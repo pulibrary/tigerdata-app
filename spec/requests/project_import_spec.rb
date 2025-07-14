@@ -58,12 +58,12 @@ RSpec.describe "ProjectImports", type: :request do
 
       it "renders a successful response with any errors" do
         new_project = FactoryBot.create(:approved_project, project_directory: random_project_directory)
-        new_project.mediaflux_id = nil
         ProjectMediaflux.create!(project: new_project, user:)
 
         put project_import_path
         expect(response).to render_template(:run)
-        expect(response.body).to include("<li>Error creating project for 5211")
+        # The data in the import file includes this invalid Data Manager
+        expect(response.body).to include("Invalid netid: mjc12 for role Data Manager")
       end
     end
   end
