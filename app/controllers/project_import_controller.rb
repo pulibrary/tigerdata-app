@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 class ProjectImportController < ApplicationController
   def run
-    byebug
     if current_user.eligible_sysadmin?
       @results = ProjectImport.run_with_report(mediaflux_session: current_user.mediaflux_session).sort
       created_count = @results.count { |out| out.starts_with?("Created") }

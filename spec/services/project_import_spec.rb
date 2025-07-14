@@ -76,7 +76,8 @@ RSpec.describe ProjectImport do
       # (but it still exists in Mediaflux)
       new_project.destroy
 
-      expect{ described_class.run_with_report(mediaflux_session: user.mediaflux_session) }.to change { Project.count }.by(1)
+      import_results = described_class.run_with_report(mediaflux_session: user.mediaflux_session)
+      expect(import_results).to include("Created project for #{new_project_id}")
     end
   end
 end

@@ -18,12 +18,9 @@ class ProjectImport
     end
 
     def run
-      byebug
         output = []
         mediaflux_projects = CSV.new(csv_data, headers: true, liberal_parsing: true)
         mediaflux_projects.each do |project_metadata|
-          byebug
-
           # skip projects not part of the current namespace in dev & test mode since we have both mediaflux instances in one server
           if Rails.env.development? || Rails.env.test?
             # TODO: Revisit this log.
