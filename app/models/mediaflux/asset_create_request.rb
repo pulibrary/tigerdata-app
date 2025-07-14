@@ -42,7 +42,6 @@ module Mediaflux
       #     >
       #
       def build_http_request_body(name:)
-        byebug
         super do |xml|
           xml.args do
             xml.name asset_name

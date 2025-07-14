@@ -127,6 +127,7 @@ class Project < ApplicationRecord
   end
 
   def project_directory_parent_path
+    # The tigerdata.project.create expectes every project to be under "tigerdata"
     Mediaflux::Connection.root
   end
 

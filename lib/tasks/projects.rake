@@ -149,28 +149,6 @@ namespace :projects do
     end
   end
 
-  # desc "Creates a project in MediaFlux"
-  # task :create_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
-  #   netid = args[:netid]
-  #   project_id = args[:project_id]
-  #   user = User.where(uid: netid).first
-  #   raise "User #{netid} not found" if user.nil?
-  #   project = Project.find(project_id)
-  #   raise "Project #{project_id} not found" if project.nil?
-
-  #   puts "Creating project #{project.id} - #{project.title} in Mediaflux"
-
-  #   logon = Mediaflux::LogonRequest.new
-  #   logon.resolve
-
-  #   create = Mediaflux::TokenCreateRequest.new(domain: Mediaflux::LogonRequest.mediaflux_domain, user: Mediaflux::LogonRequest.mediaflux_user, session_token: logon.session_token)
-  #   identity_token = create.identity
-
-  #   request = Mediaflux::ProjectCreateServiceRequest.new(session_token: logon.session_token, token: identity_token, project: project)
-  #   request.resolve
-  #   puts request.response_xml
-  # end
-
   # rubocop:disable Metrics/MethodLength
   def query_test_projects(user, root_ns)
     counts = []

@@ -47,13 +47,6 @@ class TestProjectGenerator
 
     def sponsor
       return User.where(uid: "hc8719").first
-      if (number % 7) == 0
-        User.sponsor_users.last
-      elsif (number % 3) == 0
-        User.sponsor_users.all[2]
-      else
-        User.sponsor_users.first
-      end
     end
 
     def departments

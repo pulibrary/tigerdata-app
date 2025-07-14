@@ -17,7 +17,7 @@ FactoryBot.define do
       storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
-      project_directory { "big-data-#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}" }
+      project_directory { random_project_id }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
@@ -77,7 +77,7 @@ FactoryBot.define do
         status { "approved" }
         approved_by { FactoryBot.create(:sysadmin).uid }
         approved_on { Time.current.in_time_zone("America/New_York").iso8601 }
-        project_id { "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}" } # Make it unique
+        project_id { random_project_id }
       end
     end
   end

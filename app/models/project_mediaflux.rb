@@ -13,8 +13,7 @@ class ProjectMediaflux
     session_id = user.mediaflux_session
     if project.mediaflux_id.nil?
       mediaflux_id = ProjectMediaflux.create!(project: project, user: user)
-      # ProjectAccumulator.new(project: project, session_id: session_id).create!()
-      # Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
+      Rails.logger.debug "Project #{project.id} has been created in MediaFlux (asset id #{mediaflux_id})"
     else
       ProjectMediaflux.update(project: project, user: user)
       Rails.logger.debug "Project #{project.id} has been updated in MediaFlux (asset id #{project.mediaflux_id})"

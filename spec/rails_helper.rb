@@ -101,3 +101,8 @@ end
 def random_project_directory
   "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}"
 end
+
+# Generates a random project id in the form 10.nnn/nnn
+def random_project_id
+  "10.#{rand(1..100000)}/#{rand(1..100000)}"
+end
