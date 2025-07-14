@@ -2,8 +2,9 @@
 require "rails_helper"
 
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
-  let(:subject) { described_class.new(user:, number: 1, project_prefix: 'test-project') }
-  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true}
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:subject) { described_class.new(user:, number: 1, project_prefix: random_project_directory) }
+  let(:user) { hc_user }
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
@@ -15,11 +16,11 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
       project = Project.last
       expect(project).to be_persisted
       metadata_query = Mediaflux::AssetMetadataRequest.new(
-        session_token: user.mediaflux_session, 
+        session_token: user.mediaflux_session,
         id: project.mediaflux_id
-      )      
+      )
       metadata_query.resolve
-      expect(metadata_query.metadata[:path]).to eq "/td-test-001/test/tigerdata/test-project-00001"
+      expect(metadata_query.metadata[:path]).to eq "/princeton/#{project.metadata_model.project_directory}"
       Mediaflux::AssetDestroyRequest.new(session_token: user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
     end
   end
