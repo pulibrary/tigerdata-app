@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe TigerdataSchema, type: :model do
 
-    let (:aterm_schema_command_pretty) do   
+    let (:aterm_schema_command_pretty) do
         "asset.doc.namespace.update :create true :namespace tigerdata :description \"TigerData metadata schema\"\n\n" \
         "asset.doc.type.update :create true :description \"Project metadata\" :type tigerdata:project :definition < \\\n" \
         "  :element -name ProjectDirectory -type string -index true -min-occurs 1 -max-occurs 1 -label \"Project Directory\" \\\n" \
@@ -84,8 +84,8 @@ RSpec.describe TigerdataSchema, type: :model do
         "        > \\\n" \
         "      :element -name Unit -type string -min-occurs 1 -max-occurs 1 -label \"Unit\" \\\n" \
         "        < \\\n" \
-        "          :description \"TThe unit of measure for the quantity\" \\\n" \
-        "          :instructions \"TThe unit of measure for the quantity (e.g., MB, GB, TB, etc.\" \\\n" \
+        "          :description \"The unit of measure for the quantity\" \\\n" \
+        "          :instructions \"The unit of measure for the quantity (e.g., MB, GB, TB, etc.)\" \\\n" \
         "          :attribute -name Requested -type string -min-occurs 0 \\\n" \
         "            < :description \"The requested value provided by the Data Sponsor or Data Manager.\" > \\\n" \
         "          :attribute -name Approved -type string -min-occurs 0 \\\n" \

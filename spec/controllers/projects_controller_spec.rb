@@ -61,25 +61,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
           "          <Title>#{project.metadata[:title]}</Title>\n" \
           "          <Description>#{project.metadata[:description]}</Description>\n" \
-          "          <Status>#{project.metadata[:status]}</Status>\n" \
           "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
           "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
           "          <Department>77777</Department>\n" \
           "          <Department>88888</Department>\n" \
-          "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
-          "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
+          "          <DataUser>n/a</DataUser>\n" \
           "          <ProjectID>abc-123</ProjectID>\n" \
-          "          <StorageCapacity>\n" \
-          "            <Size>500</Size>\n" \
-          "            <Unit>GB</Unit>\n" \
-          "          </StorageCapacity>\n" \
-          "          <Performance Requested=\"standard\">standard</Performance>\n" \
-          "          <Submission>\n" \
-          "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
-          "            <RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
-          "          </Submission>\n" \
-          "          <ProjectPurpose>research</ProjectPurpose>\n" \
-          "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
           "        </tigerdata:project>\n" \
           "      </meta>\n" \
           "      <quota>\n" \

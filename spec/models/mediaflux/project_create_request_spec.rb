@@ -29,10 +29,11 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
       expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
       expect(mf_metadata[:departments]).to eq(project.metadata_model.departments)
       # TODO Should really utilize Mediaflux""Time, but the time class upcases the date and does not zero pad the day
-      expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
-      expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
-      expect(mf_metadata[:ro_users]).to eq([data_user_ro.uid])
-      expect(mf_metadata[:rw_users]).to eq([data_user_rw.uid])
+
+      # Temporarily removing as the current project schema in mediaflux is not expecting these fields
+      # expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
+      # expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
+      # expect(mf_metadata[:data_users]).to eq(data_user_ro.uid + "," + data_user_rw.uid)
       expect(mf_metadata[:quota_allocation]).to eq("700 TB")
     end
   end
@@ -51,25 +52,12 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
       "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
       "          <Title>#{project.metadata[:title]}</Title>\n" \
       "          <Description>#{project.metadata[:description]}</Description>\n" \
-      "          <Status>#{project.metadata[:status]}</Status>\n" \
       "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
       "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
       "          <Department>77777</Department>\n" \
       "          <Department>88888</Department>\n" \
-      "          <CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>\n" \
-      "          <CreatedBy>#{project.metadata[:created_by]}</CreatedBy>\n" \
+      "          <DataUser>n/a</DataUser>\n" \
       "          <ProjectID>abc-123</ProjectID>\n" \
-      "          <StorageCapacity>\n" \
-      "            <Size>500</Size>\n" \
-      "            <Unit>GB</Unit>\n" \
-      "          </StorageCapacity>\n" \
-      "          <Performance Requested=\"standard\">standard</Performance>\n" \
-      "          <Submission>\n" \
-      "            <RequestedBy>#{project.metadata[:created_by]}</RequestedBy>\n" \
-      "            <RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime>\n" \
-      "          </Submission>\n" \
-      "          <ProjectPurpose>research</ProjectPurpose>\n" \
-      "          <SchemaVersion>0.6.1</SchemaVersion>\n" \
       "        </tigerdata:project>\n" \
       "      </meta>\n" \
       "      <quota>\n" \
@@ -91,13 +79,10 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
       create_request = described_class.new(session_token: nil, project: project, namespace: nil)
       expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \
                      "<meta><tigerdata:project><ProjectDirectory>#{project.project_directory}</ProjectDirectory><Title>#{project.metadata[:title]}</Title>" \
-                     "<Description>#{project.metadata[:description]}</Description><Status>#{project.metadata[:status]}</Status>" \
+                     "<Description>#{project.metadata[:description]}</Description>" \
                      "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor><DataManager>#{project.metadata[:data_manager]}</DataManager>" \
-                     "<Department>77777</Department><Department>88888</Department><CreatedOn>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</CreatedOn>" \
-                     "<CreatedBy>#{project.metadata[:created_by]}</CreatedBy><ProjectID>abc-123</ProjectID><StorageCapacity><Size>500</Size><Unit>GB</Unit></StorageCapacity>" \
-                     "<Performance Requested='standard'>standard</Performance><Submission><RequestedBy>#{project.metadata[:created_by]}</RequestedBy>" \
-                     "<RequestDateTime>#{Mediaflux::Time.format_date_for_mediaflux(project.metadata[:created_on])}</RequestDateTime></Submission>" \
-                     "<ProjectPurpose>research</ProjectPurpose><SchemaVersion>0.6.1</SchemaVersion></tigerdata:project></meta>" \
+                     "<Department>77777</Department><Department>88888</Department><DataUser>n/a</DataUser>" \
+                     "<ProjectID>abc-123</ProjectID></tigerdata:project></meta>" \
                      "<quota><allocation>500 GB</allocation><description>Project Quota</description></quota>" \
                      "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
                      "<type>application/arc-asset-collection</type></service></request>"
