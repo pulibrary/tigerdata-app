@@ -168,7 +168,7 @@ workflows:
     jobs:
       - mflux_ci:
           filters:
-              branches:
-                only:
-                  - main
-                  - 1602-ci-test-suite
+            branches:
+              only:
+                - main
+                - 1602-ci-test-suite
