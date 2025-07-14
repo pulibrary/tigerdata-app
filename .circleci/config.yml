@@ -163,8 +163,8 @@ workflows:
               only:
                 - main
   ci_daily:
-    when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
+    # when:
+    #   equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
     jobs:
       - mflux_ci:
           filters:
