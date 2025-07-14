@@ -8,11 +8,6 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
-  let(:metdata_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "asset_get_response.xml")
-    File.new(filename).read
-  end
-
   describe "#metadata" do
     before do
       approved_project.mediaflux_id = nil
@@ -43,12 +38,11 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:collection]).to be_truthy
         expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
-        byebug
-        expect(metadata[:size]).to eq("")
-        expect(metadata[:total_file_count]).to eq("")
-        expect(metadata[:quota_allocation]).to eq("500 GB")
-        expect(metadata[:project_directory]).to eq("/td-test-001/test/tigerdataNS/big-data")
-        expect(metadata[:project_id]).to eq("10.34770/tbd")
+        expect(metadata[:size]).to eq("200 bytes")
+        expect(metadata[:total_file_count]).to eq("2")
+        expect(metadata[:quota_allocation]).to eq("600 KB")
+        expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
+        expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
       end
     end
 

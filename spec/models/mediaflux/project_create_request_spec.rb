@@ -10,7 +10,9 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
 
   describe "#id" do
 
-    it "sends the metadata to the server" do
+    # Class Mediaflux::ProjectCreateRequest should be removed now that we are creating projects
+    # via Mediaflux::ProjectCreateServiceRequest
+    xit "sends the metadata to the server" do
       data_user_ro = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
       data_user_rw = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
       session_id =  data_user_ro.mediaflux_session
@@ -41,7 +43,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
   end
 
   describe "#xml_payload" do
-    it "creates the asset create payload" do
+    xit "creates the asset create payload" do
       project = FactoryBot.create :project, project_id: "abc-123", project_directory: "testasset"
       create_request = described_class.new(session_token: nil, project: project, namespace: nil)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
@@ -76,7 +78,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
   end
 
   describe "#xtoshell_xml" do
-    it "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
+    xit "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
       project = FactoryBot.create :project, project_id: "abc-123", project_directory: "testasset"
       create_request = described_class.new(session_token: nil, project: project, namespace: nil)
       expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \

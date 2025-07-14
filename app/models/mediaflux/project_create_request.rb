@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
+    # TODO: I think this class should be removed now that we are creating projects
+    # via ProjectCreateServiceRequest.
     class ProjectCreateRequest < AssetCreateRequest
       attr_reader :namespace, :project, :collection, :project_metadata
 
