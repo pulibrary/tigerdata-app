@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:root_ns) { Rails.configuration.mediaflux["api_root_collection_namespace"] }        # /td-test-001
@@ -37,9 +38,8 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
         create_request = described_class.new(session_token: user.mediaflux_session, name: "testasset", pid: @mediaflux_id)
         expect(create_request.id).to_not be_blank
         expect(a_request(:post, mediaflux_url).with do |req|
-                 req.body.include?("<name>tigerdata</name>") &&
-                 req.body.include?("<type>application/arc-asset-collection</type>")
-               end).to have_been_made
+          req.body.include?('service name="tigerdata.project.create"')
+        end).to have_been_made
       end
     end
   end

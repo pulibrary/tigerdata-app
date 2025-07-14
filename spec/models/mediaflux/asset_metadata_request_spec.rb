@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type: :model do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
@@ -28,7 +29,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       expect(metadata[:creator]).to eq("manager")
       expect(metadata[:description]).to eq("")
       expect(metadata[:collection]).to be_falsey
-      expect(metadata[:path]).to eq("/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}")
+      expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}")
       expect(metadata[:type]).to eq("")
       expect(metadata[:size]).to be nil
     end
@@ -40,8 +41,9 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("a random description")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path]).to eq("/td-test-001/test/tigerdata/big-data")
+        expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
+        byebug
         expect(metadata[:size]).to eq("")
         expect(metadata[:total_file_count]).to eq("")
         expect(metadata[:quota_allocation]).to eq("500 GB")
