@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe TigerdataMailer, type: :mailer do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project, project_id: "abc123/def" }
   let(:project_id) { project.id }
 

@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type: :model do
+  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
     File.new(filename).read
@@ -16,14 +17,15 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
 
       created_on = Time.current.in_time_zone("America/New_York").iso8601
       project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
-                                            project_id: "abc/123", project_directory: "testasset", storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" }.with_indifferent_access }
+                                            project_id: "abc/123", project_directory: random_project_directory,
+                                            storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" }.with_indifferent_access }
       create_request = described_class.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
       mf_metadata  = req.metadata
 
-      expect(mf_metadata[:name]).to eq("testasset")
+      expect(mf_metadata[:name]).to eq(project.metadata_model.project_directory)
       expect(mf_metadata[:title]).to eq(project.metadata_model.title)
       expect(mf_metadata[:description]).to eq(project.metadata_model.description)
       expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
