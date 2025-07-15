@@ -152,10 +152,6 @@ class ProjectsController < ApplicationController
     #Approve action
     if params.key?("approved")
       @project.metadata_model.update_with_params(params, current_user)
-      # =========================
-      # TODO: I don't think we need this, update_with_params handle this
-      # =========================
-      @project.metadata_model.project_directory = [params["project_directory_prefix"], params["project_directory"]].compact.join("/")
       @project.approve!(current_user:)
     end
 

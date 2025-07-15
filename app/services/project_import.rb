@@ -21,17 +21,6 @@ class ProjectImport
         output = []
         mediaflux_projects = CSV.new(csv_data, headers: true, liberal_parsing: true)
         mediaflux_projects.each do |project_metadata|
-          # skip projects not part of the current namespace in dev & test mode since we have both mediaflux instances in one server
-          if Rails.env.development? || Rails.env.test?
-            # TODO: Revisit this log.
-            # All projects are now being created under /princeton/tigerdata by the tigerdata.project.create service
-            # so we need to tweak this logic (or the code that creates our test projects) to figure out if we need
-            # to skip the project.
-            if project_metadata["path"].include?("big-data-")
-              next
-            end
-            # next unless project_metadata["path"].starts_with?(Rails.configuration.mediaflux["api_root"])
-          end
           project_id = project_metadata["projectID"]
           existing_project = Project.where("metadata_json @> ?", JSON.dump(project_id:))
           if existing_project.count > 0

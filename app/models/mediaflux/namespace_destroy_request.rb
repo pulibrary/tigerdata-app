@@ -10,6 +10,7 @@ module Mediaflux
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param namespace [String] name of namespace to be destroyed
+    # @param ignore_missing [Bool] ignore error if the namespace to delete is missing
     def initialize(session_token:, namespace:, ignore_missing: false)
       super(session_token: session_token)
       @namespace = namespace
