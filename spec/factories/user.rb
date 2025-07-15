@@ -31,7 +31,7 @@ FactoryBot.define do
 
     ##
     # A user who is both a Data Sponsor and a Data Manager
-    factory :project_sponsor_and_data_manager do
+    factory :sponsor_and_data_manager do
       eligible_sponsor { true }
       eligible_manager { true }
     end

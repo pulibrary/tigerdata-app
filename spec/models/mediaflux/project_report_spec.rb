@@ -2,8 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :model do
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:user) { hc_user }
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
 
   describe "#result" do

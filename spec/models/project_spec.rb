@@ -3,10 +3,10 @@ require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#sponsored_projects" do
-    let(:sponsor) { hc_user }
+    let(:sponsor) { sponsor_and_data_manager_user }
     before do
       FactoryBot.create(:project, title: "project 111", data_sponsor: sponsor.uid)
       FactoryBot.create(:project, title: "project 222", data_sponsor: sponsor.uid)
@@ -23,7 +23,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
   describe "#managed_projects" do
-    let(:manager) { hc_user }
+    let(:manager) { sponsor_and_data_manager_user }
     before do
       FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
       FactoryBot.create(:project, title: "project 222", data_manager: manager.uid)
@@ -41,7 +41,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#data_users" do
-    let(:data_user) { hc_user }
+    let(:data_user) { sponsor_and_data_manager_user }
     before do
       FactoryBot.create(:project, title: "project 111", data_user_read_only: [data_user.uid])
       FactoryBot.create(:project, title: "project 222", data_user_read_only: [user.uid, data_user.uid])
@@ -60,7 +60,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#users_projects" do
     let(:test_user) { FactoryBot.create(:user, uid: "kl37") }
-    # let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719") }
     before do
       FactoryBot.create(:project, title: "project 111", data_manager: test_user.uid)
       FactoryBot.create(:project, title: "project 222", data_sponsor: test_user.uid)
@@ -125,8 +124,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#pending_projects" do
-    # let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719") }
-
     before do
       FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
       FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
@@ -142,8 +139,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#approved_projects" do
-    # let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719") }
-
     before do
       FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
       FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
@@ -172,7 +167,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   end
 
   describe "#file_list" do
-    let(:manager) { hc_user }
+    let(:manager) { sponsor_and_data_manager_user }
     let(:project) do
       project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
       project.mediaflux_id = nil

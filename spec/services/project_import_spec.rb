@@ -55,7 +55,7 @@ RSpec.describe ProjectImport do
   end
 
   describe "##run_with_report" do
-    let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+    let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
     let (:user) {FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session}
 
     before do

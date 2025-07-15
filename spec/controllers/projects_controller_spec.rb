@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project }
 
   before do
@@ -264,7 +264,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
-    let(:current_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "pul123") }
+    let(:current_user) { sponsor_and_data_manager }
     let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
 
     before do

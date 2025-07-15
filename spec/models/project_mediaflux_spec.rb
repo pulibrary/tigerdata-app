@@ -4,8 +4,7 @@ require "rails_helper"
 RSpec.describe ProjectMediaflux, type: :model do
   let(:collection_metadata) { { id: "abc", name: "test", path: "/td-demo-001/rc/test-ns/test", description: "description", namespace: "/td-demo-001/rc/test-ns" } }
   let(:project) { FactoryBot.build :project_with_doi }
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:current_user) { hc_user }
+  let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do

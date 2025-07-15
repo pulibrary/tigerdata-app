@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "POST /projects" do
     let(:data_manager) { FactoryBot.create(:user).uid }

@@ -2,7 +2,7 @@
 require "rails_helper"
 
 describe MediafluxScriptFactory do
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create(:approved_project) }
   subject(:mediaflux_service) { described_class.new(project: project) }
 

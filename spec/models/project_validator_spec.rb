@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectValidator, type: :model do
-  let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#sponsored_projects" do
     context "with valid roles" do

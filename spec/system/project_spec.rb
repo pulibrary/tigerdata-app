@@ -543,7 +543,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   context "GET /projects/:id" do
     context "when authenticated" do
-      let!(:hc_user) { FactoryBot.create(:project_sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+      let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
       let(:approved_project) do
         project = FactoryBot.create(:approved_project, title: "project 111", data_sponsor: sponsor_user.uid)
