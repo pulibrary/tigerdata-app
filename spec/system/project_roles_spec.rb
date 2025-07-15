@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_mediaflux: true, js: true do
   # TODO: - When the sponsors have access to write in the system we should remove trainer from here
   # let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session, trainer: true) }
   let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:system_admin) { FactoryBot.create(:sysadmin, uid: "pul777", mediaflux_session: SystemUser.mediaflux_session) }

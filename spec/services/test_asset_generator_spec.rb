@@ -2,10 +2,9 @@
 require "rails_helper"
 
 RSpec.describe TestAssetGenerator do
-  let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
   let(:project) { FactoryBot.create :project, mediaflux_id: 1234 }
-  let(:user) { hc_user }
 
   describe "#generate" do
 

@@ -3,8 +3,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
-  let!(:hc_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:user) { hc_user }
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
   # Docker and Ansible responses are the same, but may be different in the future
