@@ -17,9 +17,13 @@ module Mediaflux
       @description = @project.metadata_model.description
       @directory = @project.metadata_model.project_directory
       @project_id = @project.metadata_model.project_id
-      @department = @project.metadata_model.departments.first # TODO: account for multiple departments
+      # We pass only the first department for now
+      # See https://github.com/PrincetonUniversityLibrary/tigerdata-config/issues/193
+      @department = @project.metadata_model.departments.first
       @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
-      @store = "db" # TODO: fetch the store from the project (but we don't have this value yet!)
+      # We currently don't have this value
+      # See https://github.com/pulibrary/tigerdata-app/issues/1609
+      @store = "db"
     end
 
     # Specifies the Mediaflux service to use when creating project

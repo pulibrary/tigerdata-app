@@ -23,6 +23,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
 
     context "an asset with metadata" do
       # TODO: We don't support yet updates to Mediaflux from the UI after the project has been created in Mediaflux
+      # See https://github.com/pulibrary/tigerdata-app/issues/1608
       xit "sends the metadata to the server", connect_to_mediaflux: true do
         data_user_ro = FactoryBot.create :user
         data_user_rw = FactoryBot.create :user

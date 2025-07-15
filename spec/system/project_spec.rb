@@ -123,9 +123,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content("Only data sponsors and data managers can revise this project.")
       end
 
-      # TODO: Add ticket for this.
-      # Project edit is not really working since we are not pushing the value to Mediaflux.
+      # TODO: Project edit is not really working since we are not pushing the value to Mediaflux.
       # By the looks of it the code is not saving the changes in the Rails DB either.
+      # See https://github.com/pulibrary/tigerdata-app/issues/1608
       xit "preserves the readonly directory field" do
         click_on "Submit"
         project_in_mediaflux.reload
@@ -140,9 +140,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       end
 
-      # TODO: Add ticket for this.
-      # Project edit is not really working since we are not pushing the value to Mediaflux.
+      # TODO: Project edit is not really working since we are not pushing the value to Mediaflux.
       # By the looks of it the code is not saving the changes in the Rails DB either.
+      # See https://github.com/pulibrary/tigerdata-app/issues/1608
       xit "redirects the user to the revision request confirmation page upon submission" do
         page.save_screenshot
         click_on "Submit"
