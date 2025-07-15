@@ -33,12 +33,7 @@ class ProvenanceEvent < ApplicationRecord
       event_details: "The Status of this project has been set to approved"
     )
     unless debug_output.nil?
-      project.provenance_events.create(
-        event_type: ProvenanceEvent::DEBUG_OUTPUT_TYPE,
-        event_person: user.uid,
-        event_details: "Debug output",
-        event_note: debug_output
-      )
+      project.provenance_events.create(event_type: ProvenanceEvent::DEBUG_OUTPUT_TYPE, event_person: user.uid, event_details: "Debug output", event_note: debug_output)
     end
   end
 

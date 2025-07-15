@@ -121,7 +121,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Provenance Events" do
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
+      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       it "shows provenance events" do
         submission_event
@@ -138,7 +138,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Project Contents", connect_to_mediaflux: true do
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, project_directory: FFaker::Food.ingredient.underscore) }
+      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }

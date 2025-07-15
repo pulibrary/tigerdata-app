@@ -595,7 +595,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           hash = {
             data_sponsor: sponsor_user.uid,
             data_manager: data_manager.uid,
-            project_directory: "rspec-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}",
+            project_directory: "tigerdata/#{random_project_directory}",
             title: "project 123",
             departments: ["RDSS"],
             description: "hello world",
@@ -604,7 +604,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             status: ::Project::APPROVED_STATUS,
             created_on: Time.current.in_time_zone("America/New_York").iso8601,
             created_by: FactoryBot.create(:user).uid,
-            project_id: "abc-123",
+            project_id: random_project_id,
             storage_capacity: storage_capacity,
             storage_performance_expectations: storage_performance_expectations,
             project_purpose: "Research"

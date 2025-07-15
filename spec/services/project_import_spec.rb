@@ -67,8 +67,8 @@ RSpec.describe ProjectImport do
     it "creates projects for project in Mediaflux" do
       # Create a project in Mediaflux...
       # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
-      new_project_id = "#{Time.now.utc.iso8601.gsub(':','-')}-#{rand(1..100000)}"
-      new_project_directory = "rspec-import/#{new_project_id}"
+      new_project_id = random_project_id
+      new_project_directory = "tigerdata/rspec-import/#{random_project_directory}"
       new_project = FactoryBot.create(:approved_project, project_id: new_project_id, project_directory: new_project_directory)
       ProjectMediaflux.create!(project: new_project, user:)
 
