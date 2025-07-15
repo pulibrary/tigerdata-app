@@ -33,14 +33,6 @@ class Project < ApplicationRecord
   end
 
   def approve!(current_user:)
-    # byebug
-    # # =========================
-    # # TODO: remove this once we update the test to always pass this value
-    # # =========================
-    # if self.metadata_model.project_directory.include?("tigerdata/") == false
-    #   self.metadata_model.project_directory = "tigerdata/#{self.metadata_model.project_directory}"
-    # end
-
     request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
     request.resolve
 
