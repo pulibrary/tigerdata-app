@@ -33,6 +33,7 @@ class ProjectImport
               if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
                 metadata.data_user_read_only = []
               end
+              # Create the Rails record for the project
               project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
               if (project.valid?)
                 output << "Created project for #{project_id}"
