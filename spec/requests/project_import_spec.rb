@@ -42,28 +42,28 @@ RSpec.describe "ProjectImports", type: :request do
       end
 
       it "renders a successful response" do
-        new_project = FactoryBot.create(:approved_project, project_directory: random_project_directory)
-        new_project.mediaflux_id = nil
+        # Create the project in the Rails database and in Mediaflux
+        # (and then delete it from the Rails database)
+        new_project = FactoryBot.create(:approved_project)
         ProjectMediaflux.create!(project: new_project, user:)
         new_project.destroy
 
-        # Because in Mediaflux we are using the same namespace gor our tests and our development
-        # environment (/princeton/tigerdataNS) it is possible that the import will pick up more
-        # than just our one project defined above, so our test accounts for 1 or more projects
-        # being imported.
+        # The new project will be imported because we deleted it from the Rail database
         put project_import_path
         expect(response).to render_template(:run)
         expect(flash[:notice].match?(/Created\s\d*\sproject/)).to be true
+        expect(response.body).to include("Created project for #{new_project.metadata_model.project_id}")
       end
 
       it "renders a successful response with any errors" do
-        new_project = FactoryBot.create(:approved_project, project_directory: random_project_directory)
+        # Create the project in the Rails database and in Mediaflux
+        new_project = FactoryBot.create(:approved_project)
         ProjectMediaflux.create!(project: new_project, user:)
 
+        # The import will detect that the project is already in the database
         put project_import_path
         expect(response).to render_template(:run)
-        # The data in the import file includes this invalid Data Manager
-        expect(response.body).to include("Invalid netid: mjc12 for role Data Manager")
+        expect(response.body).to include("Skipping project #{new_project.metadata_model.project_id}.")
       end
     end
   end

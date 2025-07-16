@@ -101,7 +101,10 @@ development:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] || 'change_me' %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
 test:
-  api_root: "tigerdata"
+  # api_root must start with "tigerdata/" since the tigerdata.project.create service in Mediaflux
+  # is hard coded to that path. We add "rspec" here to force all of our tests projects to be
+  # groupped together.
+  api_root: "tigerdata/rspec"
   api_hidden_root: "/td-test-001"
   api_root_to_clean: "/td-test-001/test/"
   api_root_ns: "/td-test-001/test/tigerdataNS"

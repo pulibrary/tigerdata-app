@@ -17,7 +17,7 @@ FactoryBot.define do
       storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
-      project_directory { "tigerdata/#{random_project_directory}" }
+      project_directory { "#{Rails.configuration.mediaflux['api_root']}/#{random_project_directory}" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
@@ -65,7 +65,7 @@ FactoryBot.define do
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
-          "tigerdata/#{ProjectMetadata.safe_directory(FFaker::Food.fruit)}#{n}"
+          "#{Rails.configuration.mediaflux['api_root']}/#{ProjectMetadata.safe_directory(FFaker::Food.fruit)}#{n}"
         end
       end
     end

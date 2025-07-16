@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
     it "deletes a namespace and everything inside of it" do
       mediaflux_id = valid_project.save_in_mediaflux(user: sponsor_user)
       expect(mediaflux_id).not_to be_nil
-      parent_namespace = "princeton/#{Mediaflux::Connection.root}NS"
+      parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
       namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).to include(namespace)

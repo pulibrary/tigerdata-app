@@ -506,7 +506,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       project.reload
       expect(project.mediaflux_id).not_to be nil
       expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
-      expect(project.project_directory).to eq("tigerdata/#{custom_directory}")
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root']}/#{custom_directory}")
     end
 
     it "redirects the user to the project approval confirmation page upon submission", js: true do
