@@ -17,13 +17,11 @@ module Mediaflux
       @description = @project.metadata_model.description
       @directory = @project.metadata_model.project_directory
       @project_id = @project.metadata_model.project_id
-      # We pass only the first department for now
-      # See https://github.com/PrincetonUniversityLibrary/tigerdata-config/issues/193
-      @department = @project.metadata_model.departments.first
+      @department = @project.metadata_model.departments.join(", ")
       @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
-      # We currently don't have this value
-      # See https://github.com/pulibrary/tigerdata-app/issues/1609
-      @store = "db"
+      # We set the datastore to "db" because the default is a store that
+      # only exists in the production Mediaflux.
+      @store = "db" unless Rails.env.production?
     end
 
     # Specifies the Mediaflux service to use when creating project
