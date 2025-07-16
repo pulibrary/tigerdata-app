@@ -24,22 +24,6 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
     end
   end
 
-  # it "allows the sysadmin or superuser to fill out the project and allows them to review and submit" do
-  #   sign_in current_user
-  #   visit "/"
-  #   click_on "New Project Request"
-  #   expect(page).to have_content "Basic Details"
-  #   fill_in :project_title, with: "A basic Project"
-  #   expect(page).to have_content "15/200 characters"
-  #   fill_in :parent_folder, with: "abc_lab"
-  #   fill_in :project_folder, with: "skeletor"
-  #   fill_in :description, with: "An awesome project to show the wizard is magic"
-  #   expect(page).to have_content "46/1000 characters"
-  #   click_on "Review and Submit"
-  #   expect(page).to have_field("project_title", with: random_title)
-  # end
-  # end
-
   context "sysadmin" do
     let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:datasponsor) { FactoryBot.create(:project_sponsor) } # we grabbed this from project.rb
