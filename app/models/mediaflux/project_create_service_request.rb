@@ -86,7 +86,7 @@ module Mediaflux
 
     # Returns the names of the departments as a comma separated string
     def departments_string(departments)
-      names = departments.map { |code| Affiliation.where(code:).first&.name }
+      names = departments.map { |code| Affiliation.where(code:).first&.name || code }
       names.compact.join(", ")
     end
   end
