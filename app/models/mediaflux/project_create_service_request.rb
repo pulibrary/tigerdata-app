@@ -17,7 +17,7 @@ module Mediaflux
       @description = @project.metadata_model.description
       @directory = @project.metadata_model.project_directory
       @project_id = @project.metadata_model.project_id
-      @department = @project.metadata_model.departments.join(", ")
+      @department = departments_string(@project.metadata_model.departments)
       @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
       # We set the datastore to "db" because the default is a store that
       # only exists in the production Mediaflux.
@@ -83,5 +83,11 @@ module Mediaflux
         end
       end
     # rubocop:enable Metrics/MethodLength
+
+    # Returns the names of the departments as a comma separated string
+    def departments_string(departments)
+      names = departments.map { |code| Affiliation.where(code:).first&.name }
+      names.compact.join(", ")
+    end
   end
 end
