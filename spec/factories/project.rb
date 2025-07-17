@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :project, class: "Project" do
     transient do
-      data_sponsor { "hc8719" }   # Must be a valid netid
-      data_manager { "hc8719"  }  # Must be a valid netid
+      data_sponsor { FactoryBot.create(:project_sponsor).uid } # Must be a valid netid
+      data_manager { FactoryBot.create(:data_manager).uid }  # Must be a valid netid
       data_user_read_only { [] }
       data_user_read_write { [] }
       title { FFaker::Movie.title }
