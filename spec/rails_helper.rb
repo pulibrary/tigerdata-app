@@ -96,3 +96,13 @@ def fill_in_and_out(element_id, with:)
   # Tab out of the textbox (https://www.grepper.com/answers/723997/focusout+event+in+capybara)
   find("#" + element_id).native.send_keys :tab
 end
+
+# Generates a random project directory so that each test goes to its own location in Mediaflux
+def random_project_directory
+  "#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}"
+end
+
+# Generates a random project id in the form 10.nnn/nnn so that it looks like a DOI
+def random_project_id
+  "10.#{rand(1..100_000)}/#{rand(1..100_000)}"
+end

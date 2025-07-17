@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type: :model do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
     File.new(filename).read
@@ -9,21 +10,24 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
 
   describe "#id" do
 
-    it "sends the metadata to the server" do
+    # Class Mediaflux::ProjectCreateRequest should be removed now that we are creating projects
+    # via Mediaflux::ProjectCreateServiceRequest
+    xit "sends the metadata to the server" do
       data_user_ro = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
       data_user_rw = FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session
       session_id =  data_user_ro.mediaflux_session
 
       created_on = Time.current.in_time_zone("America/New_York").iso8601
       project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
-                                            project_id: "abc/123", project_directory: "testasset", storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" }.with_indifferent_access }
+                                            project_id: "abc/123", project_directory: random_project_directory,
+                                            storage_capacity: { size: { requested: 700 }, unit: { requested: "TB" }.with_indifferent_access }
       create_request = described_class.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: create_request.id)
       mf_metadata  = req.metadata
 
-      expect(mf_metadata[:name]).to eq("testasset")
+      expect(mf_metadata[:name]).to eq(project.metadata_model.project_directory)
       expect(mf_metadata[:title]).to eq(project.metadata_model.title)
       expect(mf_metadata[:description]).to eq(project.metadata_model.description)
       expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
@@ -39,7 +43,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
   end
 
   describe "#xml_payload" do
-    it "creates the asset create payload" do
+    xit "creates the asset create payload" do
       project = FactoryBot.create :project, project_id: "abc-123", project_directory: "testasset"
       create_request = described_class.new(session_token: nil, project: project, namespace: nil)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
@@ -74,7 +78,7 @@ RSpec.describe Mediaflux::ProjectCreateRequest, connect_to_mediaflux: true, type
   end
 
   describe "#xtoshell_xml" do
-    it "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
+    xit "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
       project = FactoryBot.create :project, project_id: "abc-123", project_directory: "testasset"
       create_request = described_class.new(session_token: nil, project: project, namespace: nil)
       expected_xml = "<request xmlns:tigerdata='http://tigerdata.princeton.edu'><service name='asset.create'><name>testasset</name>" \

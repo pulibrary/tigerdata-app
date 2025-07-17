@@ -66,12 +66,14 @@ class Request < ApplicationRecord
     field_present?(requested_by, :requested_by)
   end
 
-  def approve(_approver)
+  def approve(approver)
     project_metadata_json = RequestProjectMetadata.convert(self)
+    # Create the project in the Rails database
     project = Project.create!({ metadata_json: project_metadata_json })
     project.draft_doi
     project.save
-    # TODO: create the project in mediaflux here (need new tigerdata.project.create command)
+    # Create the project in Mediaflux
+    project.approve!(current_user: approver)
     project
   end
 

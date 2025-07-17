@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:data_manager) { FactoryBot.create(:user, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:data_manager) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:pending_text) do
@@ -16,7 +17,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
-      project_directory: "project-123",
+      project_directory: "rspec-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}",
       title: "project 123",
       departments: ["RDSS"],
       description: "hello world",
@@ -27,7 +28,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       storage_performance_expectations: { "requested" => "standard" },
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
-      project_id: ""
+      project_id: "10.123/456"
     }
     ProjectMetadata.new_from_hash(hash)
   end
@@ -45,10 +46,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             visit "/projects/#{project_in_mediaflux.id}/details"
 
             expect(page).to have_content(project_in_mediaflux.title)
-
-            # shows the project directory without the hidden root
-            expect(page).to have_content(project_in_mediaflux.project_directory.gsub("/td-test-001", ""))
-            expect(page).not_to have_content(project_in_mediaflux.project_directory)
+            expect(page).to have_content(project_in_mediaflux.project_directory)
 
             expect(page).not_to have_content(pending_text)
             expect(page).to have_css ".approved"
@@ -123,7 +121,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Provenance Events" do
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid) }
+      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       it "shows provenance events" do
         submission_event
@@ -140,15 +138,15 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Project Contents", connect_to_mediaflux: true do
-      let(:project) { FactoryBot.create(:project, project_id: "jh34", data_sponsor: sponsor_user.uid, project_directory: FFaker::Food.ingredient.underscore) }
+      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
 
       before do
-        # Create a project in mediaflux, attach an accumulator, and generate assests for the collection
-        project.save_in_mediaflux(user: sponsor_user)
+        # Create a project in mediaflux and generate assests for the collection
+        project.approve!(current_user: sponsor_and_data_manager_user)
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
       end
 
@@ -238,10 +236,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         sign_in sysadmin_user
         visit "/projects/#{project_in_mediaflux.id}/details"
 
-        # shows the project directory without the hidden root
-        expect(page).to have_content(project_in_mediaflux.project_directory.gsub("/td-test-001", ""))
-        expect(page).not_to have_content(project_in_mediaflux.project_directory)
-
+        expect(page).to have_content project_in_mediaflux.project_directory
         expect(page).to have_content "project 123"
         expect(page).to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"

@@ -31,6 +31,14 @@ module Mediaflux
       end
     end
 
+    def self.root
+      if Flipflop.alternate_mediaflux?
+        Rails.configuration.mediaflux["api_alternate_root"]
+      else
+        Rails.configuration.mediaflux["api_root"]
+      end
+    end
+
     def self.root_collection
       if Flipflop.alternate_mediaflux?
         Rails.configuration.mediaflux["api_alternate_root_collection"]

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "ProjectImports", type: :request do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+
   describe "POST /index" do
     it "redirects to sign in" do
       put project_import_path
@@ -40,31 +42,28 @@ RSpec.describe "ProjectImports", type: :request do
       end
 
       it "renders a successful response" do
-        expect{ put project_import_path }.to change { Project.count }.by(0)
-        expect(response).to render_template(:run)
-        expect(flash[:notice]).to eq "Created 0 projects."
-      end
-
-      it "renders a successful response" do
-        new_project = FactoryBot.create(:approved_project, project_directory: "test-request")
-        new_project.mediaflux_id = nil
+        # Create the project in the Rails database and in Mediaflux
+        # (and then delete it from the Rails database)
+        new_project = FactoryBot.create(:approved_project)
         ProjectMediaflux.create!(project: new_project, user:)
         new_project.destroy
 
-        expect{ put project_import_path }.to change { Project.count }.by(1)
+        # The new project will be imported because we deleted it from the Rail database
+        put project_import_path
         expect(response).to render_template(:run)
-        expect(flash[:notice]).to eq "Created 1 project."
+        expect(flash[:notice].match?(/Created\s\d*\sproject/)).to be true
+        expect(response.body).to include("Created project for #{new_project.metadata_model.project_id}")
       end
 
       it "renders a successful response with any errors" do
-        new_project = FactoryBot.create(:approved_project, project_directory: "test-request")
-        new_project.mediaflux_id = nil
+        # Create the project in the Rails database and in Mediaflux
+        new_project = FactoryBot.create(:approved_project)
         ProjectMediaflux.create!(project: new_project, user:)
 
-        expect{ put project_import_path }.to change { Project.count }.by(0)
+        # The import will detect that the project is already in the database
+        put project_import_path
         expect(response).to render_template(:run)
-        expect(flash[:notice]).to eq "Created 0 projects."
-        expect(response.body).to include("<li>Skipping project 10.34770/tbd.  There are already 1 version of that project in the system</li>")
+        expect(response.body).to include("Skipping project #{new_project.metadata_model.project_id}.")
       end
     end
   end

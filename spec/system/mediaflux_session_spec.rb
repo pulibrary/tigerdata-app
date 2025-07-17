@@ -5,6 +5,7 @@ require "rails_helper"
 # Makes sure the Application Controller handles Mediaflux::SessionExpired in a test from the user's perspective
 #
 RSpec.describe "Mediaflux Sessions", type: :system do
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
   let(:project) { FactoryBot.create(:project, mediaflux_id: "abc123", data_sponsor: "pul123") }
 

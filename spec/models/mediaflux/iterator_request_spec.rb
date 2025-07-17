@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :model do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
@@ -24,7 +25,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
-      expect(result[:files][0].path).to eq "/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}"
+      expect(result[:files][0].path).to eq "/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}"
       expect(result[:files][0].size).to eq 100
       expect(result[:files].count).to eq 2
       expect(result[:complete]).to eq true
@@ -77,7 +78,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
-      expect(result[:files][0].path).to eq "/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}"
+      expect(result[:files][0].path).to eq "/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}"
       expect(result[:files].count).to eq 2
       expect(result[:complete]).to eq true
       expect(a_request(:post, mediaflux_url).with do |req|

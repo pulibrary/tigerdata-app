@@ -6,7 +6,7 @@ RSpec.describe FileInventoryRequest, type: :model do
     described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state, request_details: request_details)
   end
 
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create(:project) }
   let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }

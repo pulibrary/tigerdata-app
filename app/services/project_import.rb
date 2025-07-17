@@ -21,10 +21,6 @@ class ProjectImport
         output = []
         mediaflux_projects = CSV.new(csv_data, headers: true, liberal_parsing: true)
         mediaflux_projects.each do |project_metadata|
-          # skip projects not part of the current namespace in dev & test mode since we have both mediaflux instances in one server
-          if Rails.env.development? || Rails.env.test?
-            next unless project_metadata["path"].starts_with?(Rails.configuration.mediaflux["api_root_collection_namespace"])
-          end
           project_id = project_metadata["projectID"]
           existing_project = Project.where("metadata_json @> ?", JSON.dump(project_id:))
           if existing_project.count > 0
@@ -37,6 +33,7 @@ class ProjectImport
               if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
                 metadata.data_user_read_only = []
               end
+              # Create the Rails record for the project
               project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
               if (project.valid?)
                 output << "Created project for #{project_id}"

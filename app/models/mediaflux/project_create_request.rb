@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 module Mediaflux
+    # FOLLOW-UP-PR-1572: think this class should be removed now that we are creating projects
+    # via ProjectCreateServiceRequest. However we are calling it in ProjectMediaflux.xml_payload
+    # (not sure why) so I am not deleting it just yet.
+    # See https://github.com/pulibrary/tigerdata-app/issues/1607
     class ProjectCreateRequest < AssetCreateRequest
       attr_reader :namespace, :project, :collection, :project_metadata
 
