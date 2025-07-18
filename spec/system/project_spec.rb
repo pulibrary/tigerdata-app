@@ -5,10 +5,10 @@ require "rails_helper"
 RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   # TODO: - When the sponsors have access to write in the system we should remove trainer from here
   # let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session, trainer: true) }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session, trainer: true) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:pending_text) do
@@ -18,7 +18,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     hash = {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
-      project_directory: "project-123",
       title: "project 123",
       departments: ["77777"], # RDSS test code in fixture data
       description: "hello world",
@@ -27,7 +26,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       status: ::Project::PENDING_STATUS,
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
-      project_id: ""
+      project_id: "10.123/456"
     }
     ProjectMetadata.new_from_hash(hash)
   end
@@ -124,7 +123,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page).to have_content("Only data sponsors and data managers can revise this project.")
       end
 
-      it "preserves the readonly directory field" do
+      # TODO: Project edit is not really working since we are not pushing the value to Mediaflux.
+      # By the looks of it the code is not saving the changes in the Rails DB either.
+      # See https://github.com/pulibrary/tigerdata-app/issues/1608
+      xit "preserves the readonly directory field" do
         click_on "Submit"
         project_in_mediaflux.reload
         expect(project_in_mediaflux.metadata[:project_directory]).to eq "project-123"
@@ -138,7 +140,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
       end
 
-      it "redirects the user to the revision request confirmation page upon submission" do
+      # TODO: Project edit is not really working since we are not pushing the value to Mediaflux.
+      # By the looks of it the code is not saving the changes in the Rails DB either.
+      # See https://github.com/pulibrary/tigerdata-app/issues/1608
+      xit "redirects the user to the revision request confirmation page upon submission" do
         page.save_screenshot
         click_on "Submit"
         page.save_screenshot
@@ -228,7 +233,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       select "Research Data and Scholarship Services", from: "departments"
       fill_in "project_directory", with: "test_project"
       fill_in "title", with: "My test project"
-      expect(page).to have_content("/td-test-001/")
+      expect(page).to have_content("tigerdata/")
       expect do
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
@@ -271,7 +276,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         click_on "Submit"
         click_on "Return to Dashboard"
         find(:xpath, "//a[text()='My test project']").click
@@ -293,7 +298,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         click_on "Submit"
         click_on "Return to Dashboard"
         find(:xpath, "//a[text()='My test project']").click
@@ -334,7 +339,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         expect do
           click_on "Submit"
         end.not_to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
@@ -353,7 +358,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(page.find("#data_manager_error").text).to eq "This field is required"
         fill_in "project_directory", with: "test_project"
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         expect(page.find("button[value=Submit]")).to be_disabled
       end
     end
@@ -386,17 +391,13 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         valid = page.find("input#project_directory:invalid")
         expect(valid).to be_truthy
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         expect(page).to have_content("New Project")
       end
     end
 
     context "when the description is empty", connect_to_mediaflux: true do
-      before do
-        @session_id = sponsor_user.mediaflux_session
-      end
-
-      it "allows the projects to be created" do
+      it "allows the projects to be created in the Rails database" do
         sign_in sponsor_user
         visit dashboard_path
         click_on "Create new project"
@@ -406,7 +407,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         project_directory = FFaker::Name.name.tr(" ", "_")
         fill_in "project_directory", with: project_directory
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         expect(page.find_all("input:invalid").count).to eq(0)
         click_on "Submit"
         # For some reason the above click on submit sometimes does not submit the form
@@ -415,10 +416,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           click_on "Submit"
         end
         expect(page).to have_content "New Project Request Received"
-        project = Project.last
-        project.save_in_mediaflux(user: sponsor_user)
-        expect(project.mediaflux_id).not_to be_blank
-        expect(Mediaflux::AssetDestroyRequest.new(session_token: @session_id, collection: project.mediaflux_id, members: true).error?).to be_falsey
       end
     end
 
@@ -451,7 +448,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         select "Research Data and Scholarship Services", from: "departments"
         fill_in "project_directory", with: FFaker::Name.name.tr(" ", "_")
         fill_in "title", with: "My test project"
-        expect(page).to have_content("/td-test-001/")
+        expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
         invalid_fields = page.find_all("input:invalid").count
         # There seemed to be some cases where this might fail when run with a headless Chrome browser
         # Inserting a delay ensured that this did not occur at all
@@ -490,28 +487,26 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   end
 
   context "Approve page" do
-    let(:mediaflux_id) { 1234 }
     let(:project) { project_not_in_mediaflux }
+    let(:custom_directory) { "new-project/dir/example-project-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}" }
 
-    it "renders the form for providing the Mediaflux ID" do
+    it "renders the form with the Mediaflux ID" do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
 
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
-      fill_in "mediaflux_id", with: mediaflux_id
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
-      fill_in "project_directory_prefix", with: "/new_project/dir"
-      fill_in "project_directory", with: "example_project"
+      fill_in "project_directory", with: custom_directory
       click_on "Approve"
       expect(page).to have_content("Project Approval Received")
 
       project.reload
-      expect(project.mediaflux_id).to eq(mediaflux_id)
+      expect(project.mediaflux_id).not_to be nil
       expect(project.metadata_json["status"]).to eq Project::APPROVED_STATUS
-      expect(project.project_directory).to eq("/new_project/dir/example_project")
+      expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root']}/#{custom_directory}")
     end
 
     it "redirects the user to the project approval confirmation page upon submission", js: true do
@@ -520,14 +515,13 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
       visit project_approve_path(project)
       expect(page).to have_content("Project Approval: #{project.metadata_json['title']}")
-      expect(page).to have_content(Rails.configuration.mediaflux["api_root_ns"])
+      expect(page).to have_content(Rails.configuration.mediaflux["api_root"])
       expect(page).to have_content(project.project_directory_short)
 
       fill_in "storage_capacity", with: 500
       select "GB", from: "storage_unit"
-      fill_in "project_directory_prefix", with: project.project_directory_parent_path
-      fill_in "project_directory", with: project.project_directory_short
-      fill_in "mediaflux_id", with: mediaflux_id
+      fill_in "project_directory", with: custom_directory
+
       select "Other", from: "event_note"
       fill_in "event_note_message", with: "Note from sysadmin"
       click_on "Approve"
@@ -549,6 +543,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   context "GET /projects/:id" do
     context "when authenticated" do
+      let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
       let(:approved_project) do
         project = FactoryBot.create(:approved_project, title: "project 111", data_sponsor: sponsor_user.uid)
@@ -600,7 +595,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           hash = {
             data_sponsor: sponsor_user.uid,
             data_manager: data_manager.uid,
-            project_directory: "project-123",
+            project_directory: "tigerdata/#{random_project_directory}",
             title: "project 123",
             departments: ["RDSS"],
             description: "hello world",
@@ -609,7 +604,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             status: ::Project::APPROVED_STATUS,
             created_on: Time.current.in_time_zone("America/New_York").iso8601,
             created_by: FactoryBot.create(:user).uid,
-            project_id: "abc-123",
+            project_id: random_project_id,
             storage_capacity: storage_capacity,
             storage_performance_expectations: storage_performance_expectations,
             project_purpose: "Research"

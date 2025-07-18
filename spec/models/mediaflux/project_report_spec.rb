@@ -2,12 +2,11 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :model do
-  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
 
   describe "#result" do
     before do
-      approved_project.mediaflux_id = nil
       ProjectMediaflux.create!(project: approved_project, user:)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
@@ -18,10 +17,9 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
 
       # the mediaflux command gets ALL the project in mediaflux
       #  since we have development and test in our single mediaflux instance we have to filter
-      test_projects = mediaflux_projects.select{|project| project["path"].starts_with?(Rails.configuration.mediaflux["api_root_collection_namespace"])}
-      expect(test_projects.count).to eq(1)
-      expect(test_projects.first["projectID"]).to eq(approved_project.metadata_model.project_id)
-      expect(test_projects.first["asset"].to_i).to eq(approved_project.mediaflux_id)
+      test_project = mediaflux_projects.select{ |project| project["asset"].to_i == approved_project.mediaflux_id }
+      expect(test_project.count).to eq(1)
+      expect(test_project.first["projectID"]).to eq(approved_project.metadata_model.project_id)
     end
   end
 end

@@ -37,19 +37,16 @@ class TestProjectGenerator
         storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
         status: Project::PENDING_STATUS
       }
+      # For testing purposes we use the same size as the requested values
+      metadata[:storage_capacity][:size][:approved] = metadata[:storage_capacity][:size][:requested]
+      metadata[:storage_capacity][:unit][:approved] = metadata[:storage_capacity][:unit][:requested]
       project = Project.new(metadata: )
       project.save!
       project
     end
 
     def sponsor
-      if (number % 7) == 0
-        User.sponsor_users.last
-      elsif (number % 3) == 0
-        User.sponsor_users.all[2]
-      else
-        User.sponsor_users.first
-      end
+      return User.where(uid: "hc8719").first
     end
 
     def departments

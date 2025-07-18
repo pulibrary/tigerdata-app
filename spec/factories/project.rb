@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :project, class: "Project" do
     transient do
-      data_sponsor { FactoryBot.create(:project_sponsor).uid }
-      data_manager { FactoryBot.create(:data_manager).uid }
+      data_sponsor { "hc8719" }   # Must be a valid netid
+      data_manager { "hc8719"  }  # Must be a valid netid
       data_user_read_only { [] }
       data_user_read_write { [] }
       title { FFaker::Movie.title }
@@ -12,12 +12,12 @@ FactoryBot.define do
       created_by { FactoryBot.create(:user).uid }
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
       updated_by { FactoryBot.create(:user).uid }
-      project_id { "" }
+      project_id { random_project_id }
       status { "pending" }
-      storage_capacity { { size: { requested: 500 }, unit: { requested: "GB" } }.with_indifferent_access }
-      storage_performance { { requested: "standard" }.with_indifferent_access }
+      storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
+      storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
-      project_directory { "big-data" }
+      project_directory { "#{Rails.configuration.mediaflux['api_root']}/#{random_project_directory}" }
       schema_version { ::TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
@@ -65,7 +65,7 @@ FactoryBot.define do
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|
-          Project.safe_name("#{FFaker::Food.fruit}#{n}")
+          "#{Rails.configuration.mediaflux['api_root']}/#{ProjectMetadata.safe_directory(FFaker::Food.fruit)}#{n}"
         end
       end
     end
@@ -77,7 +77,7 @@ FactoryBot.define do
         status { "approved" }
         approved_by { FactoryBot.create(:sysadmin).uid }
         approved_on { Time.current.in_time_zone("America/New_York").iso8601 }
-        project_id { "10.34770/tbd" }
+        project_id { random_project_id }
       end
     end
   end

@@ -2,9 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, type: :model do
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   subject(:request) { described_class.new(session_token: user.mediaflux_session, service_name: "asset.namespace.list") }
-
-  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:session_token) { "test-session-token" }
   let(:identity_token) { "test-identity-token" }

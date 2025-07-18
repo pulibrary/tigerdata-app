@@ -2,11 +2,14 @@
 require "rails_helper"
 
 RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: false do
+  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project }
   subject(:presenter) { ProjectDashboardPresenter.new(project) }
 
   describe "#type" do
     it "returns the requested type" do
+      project.metadata_model.storage_performance_expectations["approved"] = nil
+      presenter = ProjectDashboardPresenter.new(project)
       expect(presenter.type).to include("Requested")
     end
 
@@ -87,7 +90,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#project_directory" do
     it "hides the root project" do
-      expect(presenter.project_directory).to eq("/test/tigerdataNS/big-data")
+      expect(presenter.project_directory).to eq(project.metadata_model.project_directory)
     end
   end
 

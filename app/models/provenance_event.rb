@@ -4,6 +4,7 @@ class ProvenanceEvent < ApplicationRecord
   APPROVAL_EVENT_TYPE = "Approved"
   ACTIVE_EVENT_TYPE = "Active"
   STATUS_UPDATE_EVENT_TYPE = "Status Update"
+  DEBUG_OUTPUT_TYPE = "Debug Output"
   belongs_to :project
 
   def self.generate_submission_events(project:, user:)
@@ -19,7 +20,7 @@ class ProvenanceEvent < ApplicationRecord
     )
   end
 
-  def self.generate_approval_events(project:, user:)
+  def self.generate_approval_events(project:, user:, debug_output: nil)
     project.provenance_events.create(
       event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
       event_person: user.uid,
@@ -31,6 +32,9 @@ class ProvenanceEvent < ApplicationRecord
       event_person: user.uid,
       event_details: "The Status of this project has been set to approved"
     )
+    unless debug_output.nil?
+      project.provenance_events.create(event_type: ProvenanceEvent::DEBUG_OUTPUT_TYPE, event_person: user.uid, event_details: "Debug output", event_note: debug_output)
+    end
   end
 
   def self.generate_active_events(project:, user:)

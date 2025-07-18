@@ -22,7 +22,7 @@ class RequestProjectMetadata
      private
 
        def project_directory(request)
-         "/tigerdata/#{request[:parent_folder]}/#{request[:project_folder]}"
+         "#{Rails.configuration.mediaflux['api_root']}/#{request[:parent_folder]}/#{request[:project_folder]}"
        end
 
        def data_users(request)

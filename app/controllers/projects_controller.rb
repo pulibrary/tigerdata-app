@@ -150,9 +150,9 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     #Approve action
-    if params.key?("mediaflux_id")
+    if params.key?("approved")
       @project.metadata_model.update_with_params(params, current_user)
-      @project.approve!(mediaflux_id: params["mediaflux_id"],current_user:)
+      @project.approve!(current_user:)
     end
 
     #Edit action
@@ -162,7 +162,7 @@ class ProjectsController < ApplicationController
     end
 
     # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
-    if project.save and params.key?("mediaflux_id")
+    if project.save and params.key?("approved")
       redirect_to project_approval_received_path(@project)
     elsif project.save and params.key?("title")
       redirect_to project_revision_confirmation_path(@project)
@@ -184,7 +184,7 @@ class ProjectsController < ApplicationController
   def revision_confirmation; end
 
   def show
-    
+
     return if project.blank?
     add_breadcrumb(project.title, project_path)
     add_breadcrumb("Contents")
@@ -201,10 +201,10 @@ class ProjectsController < ApplicationController
     @project = ProjectShowPresenter.new(project)
 
     @project_session = "content"
-    respond_to do |format| 
+    respond_to do |format|
       format.html { render }
-      format.xml { render xml: @project.to_xml } 
-    end 
+      format.xml { render xml: @project.to_xml }
+    end
   end
 
   # GET "projects/:id/:id-mf"

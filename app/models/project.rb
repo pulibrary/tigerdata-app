@@ -32,15 +32,26 @@ class Project < ApplicationRecord
     end
   end
 
-  def approve!(mediaflux_id:, current_user:)
-    self.mediaflux_id = mediaflux_id
-    self.metadata_model.status = Project::APPROVED_STATUS
+  def approve!(current_user:)
+    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
+    request.resolve
+
+    self.mediaflux_id = request.mediaflux_id
+    self.metadata_model.status = Project::APPROVED_STATUS if self.mediaflux_id != 0
     self.save!
 
-    # create two provenance events, one for approving the project and
-      # another for changing the status of the project
-    ProvenanceEvent.generate_approval_events(project: self, user: current_user)
+    debug_output = if request.mediaflux_id == 0
+                     "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+                   else
+                     "#{request.debug_output}"
+                   end
+    Rails.logger.error debug_output
 
+    # create provenance events:
+    # - one for approving the project and
+    # - another for changing the status of the project
+    # - another with debug information from the create project service
+    ProvenanceEvent.generate_approval_events(project: self, user: current_user, debug_output: debug_output)
   end
 
   def reload
@@ -104,28 +115,16 @@ class Project < ApplicationRecord
   end
 
   def project_directory
-    return nil if metadata_model.project_directory.nil?
-    dirname, basename = project_directory_pathname.split
-    if (dirname.relative?)
-      "#{Mediaflux::Connection.root_namespace}/#{safe_name(metadata_model.project_directory)}"
-    else
-      project_directory_pathname.to_s
-    end
+    metadata_model.project_directory || ""
   end
 
   def project_directory_parent_path
-    return Mediaflux::Connection.root_namespace if metadata_model.project_directory.nil?
-    dirname  = project_directory_pathname.dirname
-    if (dirname.relative?)
-      Mediaflux::Connection.root_namespace
-    else
-      dirname.to_s
-    end
+    # The tigerdata.project.create expectes every project to be under "tigerdata"
+    Mediaflux::Connection.root
   end
 
   def project_directory_short
-    return nil if metadata_model.project_directory.nil?
-    project_directory_pathname.basename.to_s
+    project_directory
   end
 
   def status
@@ -325,13 +324,6 @@ class Project < ApplicationRecord
     Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
-  # Ensure that the project directory is a valid path
-  # @example
-  #   Project.safe_name("My Project") # => "My-Project"
-  def self.safe_name(name)
-    # only alphanumeric characters
-    name.strip.gsub(/[^A-Za-z\d]/, "-")
-  end
 
   private
 
@@ -354,8 +346,8 @@ class Project < ApplicationRecord
     end
 
     # Ensure that the project directory is a valid path
-    def safe_name(name)
-      Project.safe_name(name)
+    def safe_directory(directory)
+      Project.safe_directory(directory)
     end
 
     def log_elapsed(start_time, prefix, message)

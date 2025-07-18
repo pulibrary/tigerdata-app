@@ -7,7 +7,8 @@ class TestAssetGenerator
     @levels = levels
     @directory_per_level = directory_per_level
     @file_count_per_directory = file_count_per_directory
-    @base_name = @project.project_directory_short
+    # Only use the last part of the path as the base (so we don't get the root "tigerdata/")
+    @base_name = @project.project_directory_short.split("/").last
     @mediaflux_session = @user.mediaflux_session
   end
 

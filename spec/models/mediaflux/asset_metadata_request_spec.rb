@@ -2,15 +2,11 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type: :model do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { FactoryBot.create(:approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
-
-  let(:metdata_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "asset_get_response.xml")
-    File.new(filename).read
-  end
 
   describe "#metadata" do
     before do
@@ -28,7 +24,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       expect(metadata[:creator]).to eq("manager")
       expect(metadata[:description]).to eq("")
       expect(metadata[:collection]).to be_falsey
-      expect(metadata[:path]).to eq("/td-test-001/test/tigerdata/big-data/__asset_id__#{@asset_id}")
+      expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}")
       expect(metadata[:type]).to eq("")
       expect(metadata[:size]).to be nil
     end
@@ -40,13 +36,13 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("a random description")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path]).to eq("/td-test-001/test/tigerdata/big-data")
+        expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
-        expect(metadata[:size]).to eq("")
-        expect(metadata[:total_file_count]).to eq("")
-        expect(metadata[:quota_allocation]).to eq("500 GB")
-        expect(metadata[:project_directory]).to eq("/td-test-001/test/tigerdataNS/big-data")
-        expect(metadata[:project_id]).to eq("10.34770/tbd")
+        expect(metadata[:size]).to eq("200 bytes")
+        expect(metadata[:total_file_count]).to eq("2")
+        expect(metadata[:quota_allocation]).to eq("600 KB")
+        expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
+        expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
       end
     end
 
@@ -58,7 +54,6 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       before do
         # create a project in mediaflux
         valid_project.mediaflux_id = ProjectMediaflux.create!(project: valid_project, user: current_user)
-        ProjectAccumulator.new(project: valid_project, session_id: session_token).create!
       end
 
       it "parses the resonse" do

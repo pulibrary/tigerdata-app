@@ -2,15 +2,16 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd") }
-  let(:namespace) { "#{valid_project.project_directory_short}NS".strip.gsub(/[^A-Za-z\d]/, "-") }
+  let(:namespace) { valid_project.project_directory.split("/").last + "NS" }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_id) { sponsor_user.mediaflux_session }
   context "when a namespace exists" do
     it "deletes a namespace and everything inside of it" do
       mediaflux_id = valid_project.save_in_mediaflux(user: sponsor_user)
       expect(mediaflux_id).not_to be_nil
-      parent_namespace = Mediaflux::Connection.root_namespace
+      parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
       namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).to include(namespace)
