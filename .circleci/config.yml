@@ -171,4 +171,3 @@ workflows:
             branches:
               only:
                 - main
-                - 1602-ci-test-suite
