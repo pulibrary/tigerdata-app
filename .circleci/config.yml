@@ -129,7 +129,7 @@ jobs:
       - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
-      - run: bundle exec rake db:migrate RAILS_ENV=ci
+      - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
           command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD RAILS_ENV=ci bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
@@ -162,7 +162,6 @@ workflows:
             branches:
               only:
                 - main
-                - update-continuous-deploy
   ci_daily:
     when:
       equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
