@@ -102,3 +102,5 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
     end
   end
 end
+
+# once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
