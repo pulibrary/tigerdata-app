@@ -10,7 +10,8 @@ RSpec.describe Mediaflux::Time do
     subject(:instance) { described_class.new }
 
     describe "#convert", connect_to_mediaflux: true do
-      it "converts mediaflux time objects to utc before converting to america/new_york" do
+      it "converts mediaflux time objects to utc before converting to america/new_york",
+      :integration do
         project = FactoryBot.create(:project_with_doi)
         ProjectMediaflux.create!(project: project, user: current_user)
         metadata = Mediaflux::AssetMetadataRequest.new(

@@ -17,7 +17,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       @asset_id = asset_response.split("<")[0].to_i
       asset_req.resolve
     end
-    it "parses a metadata response" do
+    it "parses a metadata response",
+    :integration do
       metadata_request = described_class.new(session_token: user.mediaflux_session, id: @asset_id)
       metadata = metadata_request.metadata
       expect(metadata[:id]).to eq(@asset_id.to_s)
@@ -30,7 +31,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
     end
 
     context "A collection" do
-      it "parses a metadata response" do
+      it "parses a metadata response",
+      :integration do
         metadata_request = described_class.new(session_token: user.mediaflux_session, id: @mediaflux_id)
         metadata = metadata_request.metadata
         expect(metadata[:creator]).to eq("manager")
@@ -56,7 +58,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         valid_project.mediaflux_id = ProjectMediaflux.create!(project: valid_project, user: current_user)
       end
 
-      it "parses the resonse" do
+      it "parses the resonse",
+      :integration do
         metadata_request = described_class.new(session_token: session_token, id: valid_project.mediaflux_id)
         metadata = metadata_request.metadata
         expect(metadata[:id]).to eq(valid_project.mediaflux_id.to_s)

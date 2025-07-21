@@ -186,7 +186,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
     end
 
-    it "fetches the file list" do
+    it "fetches the file list",
+    :integration do
       file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
@@ -296,7 +297,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       allow(PULDatacite).to receive(:new).and_return(datacite_stub)
     end
 
-    it "Records the mediaflux id and sets the status to approved" do
+    it "Records the mediaflux id and sets the status to approved",
+    :integration do
       project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
       project.create!(initial_metadata: project.metadata_model, user: current_user)
 
@@ -307,7 +309,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
     end
 
-    it "creates the provenance events when creating a new project" do
+    it "creates the provenance events when creating a new project",
+    :integration do
       project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED}, current_user)
       project.create!(initial_metadata: project.metadata_model, user: current_user)
       project.approve!(current_user: current_user)
@@ -329,7 +332,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#activate!" do
+  describe "#activate!",
+  :integration do
   let(:project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
   let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_metadata) {project.metadata_model}

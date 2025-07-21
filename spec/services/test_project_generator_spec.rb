@@ -10,7 +10,8 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   end
 
   describe "#generate" do
-    it "creates a project in mediaflux" do
+    it "creates a project in mediaflux",
+    :integration do
       subject.generate
       project = Project.last
       expect(project).to be_persisted
