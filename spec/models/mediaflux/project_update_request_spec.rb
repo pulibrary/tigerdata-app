@@ -14,7 +14,8 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
       mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
     end
 
-    it "passes the metadata values in the request" do
+    it "passes the metadata values in the request" ,
+    :integration do
       update_request = described_class.new(session_token: session_token, project: approved_project)
       update_request.resolve
       expect(update_request.error?).to be false

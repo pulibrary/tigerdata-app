@@ -162,7 +162,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         click_on("Content Preview")
       end
 
-      it "Contents page has collection summary data" do
+      it "Contents page has collection summary data",
+      :integration do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
@@ -190,7 +191,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Showing the first 100 files due to preview limit.")
       end
 
-      it "displays the file list" do
+      it "displays the file list",
+      :integration do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"

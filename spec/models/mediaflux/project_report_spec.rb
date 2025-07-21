@@ -11,7 +11,8 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
-    it "returns csv data with one row for our test project" do
+    it "returns csv data with one row for our test project",
+    :integration do
       report = described_class.new(session_token: user.mediaflux_session)
       mediaflux_projects = CSV.new(report.csv_data, headers: true).to_a
 

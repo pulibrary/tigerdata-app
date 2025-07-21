@@ -490,7 +490,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     let(:project) { project_not_in_mediaflux }
     let(:custom_directory) { "new-project/dir/example-project-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}" }
 
-    it "renders the form with the Mediaflux ID" do
+    it "renders the form with the Mediaflux ID",
+    :integration do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
@@ -561,7 +562,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       end
 
       context "when the Mediaflux assets have one or multiple files" do
-        it "enqueues a Sidekiq job for asynchronously requesting project files" do
+        it "enqueues a Sidekiq job for asynchronously requesting project files",
+        :integration do
           visit project_path(approved_project)
 
           expect(page).to have_content("Download Complete List")
@@ -624,7 +626,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           approved_project.save_in_mediaflux(user: sponsor_user)
         end
 
-        it "renders the storage capacity in the show view" do
+        it "renders the storage capacity in the show view",
+        :integration do
           visit project_path(approved_project)
 
           expect(page).to have_content "Storage (500.000 GB)"
@@ -639,7 +642,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             visit project_path(approved_project, params: { format: "xml" })
           end
 
-          it "returns the XML with the correct attributes" do
+          it "returns the XML with the correct attributes",
+          :integration do
             xml = page.body
             expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
             expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")

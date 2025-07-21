@@ -8,7 +8,8 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_id) { sponsor_user.mediaflux_session }
   context "when a namespace exists" do
-    it "deletes a namespace and everything inside of it" do
+    it "deletes a namespace and everything inside of it",
+    :integration do
       mediaflux_id = valid_project.save_in_mediaflux(user: sponsor_user)
       expect(mediaflux_id).not_to be_nil
       parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")

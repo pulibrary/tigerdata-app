@@ -15,7 +15,8 @@ RSpec.describe Mediaflux::TestAssetCreateRequest, connect_to_mediaflux: true, ty
       @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
     end
 
-    it "disconnects the session" do
+    it "disconnects the session",
+    :integration do
       namespace_request = described_class.new(session_token: user.mediaflux_session, parent_id: @mediaflux_id, count: 20, pattern: "abc")
       namespace_request.resolve
       expect(namespace_request.error?).to eq false

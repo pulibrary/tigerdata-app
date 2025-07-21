@@ -15,14 +15,16 @@ RSpec.describe Mediaflux::RangeQueryRequest, connect_to_mediaflux: true, type: :
   end
 
   describe "#minimum" do
-    it "returns the minimum value" do
+    it "returns the minimum value",
+      :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, xpath: "content/size", collection: @mediaflux_id)
       expect(query_request.minimum).to eq(100)
     end
   end
 
   describe "#maximum" do
-    it "returns the maximum value" do
+    it "returns the maximum value",
+    :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, xpath: "content/size", collection: @mediaflux_id)
       expect(query_request.maximum).to eq(100)
     end
