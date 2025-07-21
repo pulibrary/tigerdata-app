@@ -54,8 +54,8 @@ commands:
   run_mediaflux:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker pull pulibraryrdss/mediaflux_dev:v0.6.2
-      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.6.2
+      - run: docker pull pulibraryrdss/mediaflux_dev:pr-201
+      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:pr-201
 
   run_postgres:
     steps:
