@@ -21,7 +21,8 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       @iterator_id = query_req.result
     end
 
-    it "returns asset information" do
+    it "returns asset information",
+    :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
@@ -49,7 +50,8 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       @iterator_id = query_req.result
     end
 
-    it "returns basic asset information" do
+    it "returns basic asset information",
+    :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-name")
       result = query_request.result
       expect(result.count).to eq 3
@@ -74,7 +76,8 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       @iterator_id = query_req.result
     end
 
-    it "returns asset information" do
+    it "returns asset information",
+    :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"

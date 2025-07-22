@@ -41,7 +41,8 @@ RSpec.describe "ProjectImports", type: :request do
         sign_in(user)
       end
 
-      it "renders a successful response" do
+      it "renders a successful response",
+      :integration do
         # Create the project in the Rails database and in Mediaflux
         # (and then delete it from the Rails database)
         new_project = FactoryBot.create(:approved_project)
@@ -55,7 +56,8 @@ RSpec.describe "ProjectImports", type: :request do
         expect(response.body).to include("Created project for #{new_project.metadata_model.project_id}")
       end
 
-      it "renders a successful response with any errors" do
+      it "renders a successful response with any errors",
+      :integration do
         # Create the project in the Rails database and in Mediaflux
         new_project = FactoryBot.create(:approved_project)
         ProjectMediaflux.create!(project: new_project, user:)

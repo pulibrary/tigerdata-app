@@ -7,7 +7,8 @@ RSpec.describe ProjectMediaflux, type: :model do
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
-      it "creates a project namespace and collection and returns the mediaflux id" do
+      it "creates a project namespace and collection and returns the mediaflux id",
+      :integration do
         mediaflux_id = described_class.create!(project: project, user: current_user)
         mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
                               session_token: current_user.mediaflux_session,
@@ -24,7 +25,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       describe "quota", connect_to_mediaflux: true do
-        it "adds a quota when it creates a project in mediaflux" do
+        it "adds a quota when it creates a project in mediaflux",
+        :integration do
           project = FactoryBot.create(:project_with_doi)
           described_class.create!(project: project, user: current_user)
           metadata = Mediaflux::AssetMetadataRequest.new(
@@ -37,7 +39,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       context "when the name is already taken" do
-        it "raises an error" do
+        it "raises an error",
+        :integration do
           # Make the project once
           described_class.create!(project: project, user: current_user)
           duplicate_events = project.provenance_events.where(event_type: "Debug Output").find { |event| event.event_note.include?("Collection already exists") }
@@ -91,7 +94,8 @@ RSpec.describe ProjectMediaflux, type: :model do
     before do
       described_class.create!(project: project, user: current_user)
     end
-    it "defaults updated_on/by when not provided" do
+    it "defaults updated_on/by when not provided",
+    :integration do
       project.metadata_model.updated_on = nil
       project.metadata_model.updated_by = nil
       described_class.update(project: project, user: current_user)
@@ -99,7 +103,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       expect(project.metadata_model.updated_by).not_to be nil
     end
 
-    it "honors updated_on/by values when provided" do
+    it "honors updated_on/by values when provided",
+    :integration do
       updated_on = Time.current.in_time_zone("America/New_York").iso8601
       project.metadata_model.updated_on = updated_on
       project.metadata_model.updated_by = "user123"

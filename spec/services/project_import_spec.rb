@@ -64,7 +64,8 @@ RSpec.describe ProjectImport do
       Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, namespace: namespace_to_clear, ignore_missing: true).destroy
     end
 
-    it "creates projects for project in Mediaflux" do
+    it "creates projects for project in Mediaflux",
+    :integration do
       # Create a project in Mediaflux...
       # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
       new_project_id = random_project_id

@@ -35,7 +35,8 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
         @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
       end
 
-      it "parses a metadata response" do
+      it "parses a metadata response",
+        :integration do
         create_request = described_class.new(session_token: user.mediaflux_session, name: "testasset", pid: @mediaflux_id)
         expect(create_request.id).to_not be_blank
         expect(a_request(:post, mediaflux_url).with do |req|
