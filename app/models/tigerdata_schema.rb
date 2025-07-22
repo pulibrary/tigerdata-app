@@ -39,30 +39,6 @@ class TigerdataSchema
     end
   end
 
-  def create_aterm_schema_command(line_terminator = nil)
-    namespace_command = "asset.doc.namespace.update :create true :namespace tigerdata :description \"TigerData metadata schema\"\n\n"
-    field_command = "asset.doc.type.update :create true :description \"Project metadata\" :type tigerdata:project :definition <#{line_terminator}"
-    project_schema_fields.each do |field|
-      field_command += aterm_element(field:, line_terminator:)
-    end
-    field_command += ">"
-    namespace_command + field_command
-  end
-
-  def create_aterm_doc_script(filename: Rails.root.join("docs", "schema_script.txt"))
-    File.open(filename, "w") do |script|
-      script.write("# This file was automatically generated on #{Time.current.in_time_zone("America/New_York").iso8601}\n")
-      script.write("# Create the \"tigerdata\" namespace schema and the \"project\" definition inside of it.\n#\n")
-      script.write("# To run this script, issue the following command from Aterm\n#\n")
-      script.write("# script.execute :in file://full/path/to/tigerdata-app/docs/schema_script.txt\n#\n")
-      script.write("# Notice that if you copy and paste the (multi-line) asset.doc.type.update command\n")
-      script.write("# into Aterm you'll have to make it single line (i.e. remove the \\)\n")
-
-      script.write(create_aterm_schema_command(" \\\n"))
-      script.write("\n")
-    end
-  end
-
   # rubocop:disable Metrics/MethodLength
   def self.project_schema_fields
     # WARNING: Do not use `id` as field name, MediaFlux uses specific rules for an `id` field.
@@ -193,6 +169,7 @@ class TigerdataSchema
      storage_performance, project_purpose, submission, revisions, schema_version]
   end
   # rubocop:enable Metrics/MethodLength
+
   def project_schema_fields
     self.class.project_schema_fields
   end
@@ -200,39 +177,4 @@ class TigerdataSchema
   def self.required_project_schema_fields
     project_schema_fields.select { |field| field["min-occurs"] > 0 }
   end
-
-  private
-
-    def aterm_element(field:, line_terminator:, line_start: "  ")
-      new_line_start="#{line_start}  "
-      field_command = "#{line_start}:element -name #{field[:name]} -type #{field[:type]}"
-      field_command += " -index #{field[:index]}" if field[:index]
-      field_command += " -min-occurs #{field['min-occurs']}"
-      field_command += " -max-occurs #{field['max-occurs']}" if field["max-occurs"].present?
-      field_command += " -label \"#{field[:label]}\"" if field[:label].present?
-      field_command += line_terminator.to_s
-      if field[:description].present? || field[:attributes].present? || field[:sub_elements]&.count > 0
-        field_command += "#{new_line_start}<#{line_terminator}"
-        indented_line_start="#{new_line_start}  "
-        if field[:description].present?
-          field_command += "#{indented_line_start}:description \"#{field[:description]}\"#{line_terminator}"
-        end
-        if field[:instructions].present?
-          field_command += "#{indented_line_start}:instructions \"#{field[:instructions]}\"#{line_terminator}"
-        end
-        if field[:attributes].present?
-          field[:attributes].each do |attribute|
-            field_command += "#{indented_line_start}:attribute -name #{attribute[:name]} -type #{attribute[:type]} -min-occurs #{attribute['min-occurs']}"
-            field_command += "-max-occurs #{attribute['max-occurs']} " if attribute["max-occurs"].present?
-            field_command += "#{line_terminator}#{indented_line_start}  < :description \"#{attribute[:description]}\" >"
-            field_command += line_terminator.to_s
-          end
-        end
-        field[:sub_elements]&.each do |sub_field|
-          field_command += aterm_element(field: sub_field, line_terminator:, line_start: indented_line_start )
-        end
-        field_command += "#{new_line_start}>#{line_terminator}"
-      end
-      field_command
-    end
 end

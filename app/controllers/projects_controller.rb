@@ -270,15 +270,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def create_script
-    project_id = params[:id]
-    project = Project.find(project_id)
-    service = MediafluxScriptFactory.new(project: project)
-    respond_to do |format|
-      format.json { render json: {script: service.aterm_script} }
-    end
-  end
-
   private
 
     def build_new_project
