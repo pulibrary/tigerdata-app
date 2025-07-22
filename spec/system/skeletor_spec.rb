@@ -36,7 +36,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-
+      expect(Project.count).to eq 0
       sign_in current_sysadmin
       visit "/"
       click_on "New Project Request"
@@ -60,6 +60,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       click_on "Review and Submit"
       click_on "Next"
       click_on "Approve request"
+      expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
     end
   end
 
@@ -75,7 +76,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-
+      expect(Project.count).to eq 0
       sign_in current_superuser
       visit "/"
       click_on "New Project Request"
@@ -99,6 +100,9 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       click_on "Review and Submit"
       click_on "Next"
       click_on "Approve request"
+      expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
     end
   end
 end
+
+# once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
