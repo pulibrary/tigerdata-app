@@ -1,5 +1,6 @@
 ---
 production:
+  api_root: "tigerdata"
   api_hidden_root: <%= ENV["MEDIAFLUX_HIDDEN_ROOT"] || '/princeton' %>
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/princeton/tigerdataNS' %>
   api_root_collection: <%= ENV["MEDIAFLUX_ROOT_COLLECTION"] || 'path=/princeton/tigerdata' %>
@@ -24,6 +25,7 @@ production:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 qa:
+  api_root: "tigerdata"
   api_hidden_root: "/td-qa-001"
   api_root_to_clean: "/td-qa-001/qa"
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-qa-001/qa/tigerdataNS' %>
@@ -49,6 +51,7 @@ qa:
   api_password: <%= ENV["MEDIAFLUX_PASSWORD"] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || '/mnt/nfs/tigerdata' %>
 staging:
+  api_root: "tigerdata"
   api_hidden_root: "/td-staging-001"
   api_root_ns: <%= ENV["MEDIAFLUX_ROOT_NS"] || '/td-staging-001/tigerdataNS'  %>
   api_root_to_clean: "/td-staging-001/"
@@ -112,8 +115,8 @@ test:
   api_root_collection_namespace: "/td-test-001/test"
   api_root_collection: "path=/td-test-001/test/tigerdata"
   api_transport: "http"
-  api_host: "<%= ENV['MFLUX_CI'] ? 'mflux-ci.lib.princeton.edu' : '0.0.0.0' %>"
-  api_port: "<%= ENV['MFLUX_CI'] ?  '80' : '8888' %>"
+  api_host: "0.0.0.0"
+  api_port: "8888"
 
   # Alternate to test is still a test location
   api_alternate_root: "tigerdata-alternate"
@@ -131,6 +134,7 @@ test:
   api_password: "<%= ENV['MFLUX_CI_PASSWORD'] || 'change_me' %>"
   shared_files_location: "./public/"
 ci:
+  api_root: "tigerdata"
   api_hidden_root: "/td-ci-001"
   api_root_to_clean: "/td-ci-001/test/"
   api_root_ns: "/td-ci-001/test/tigerdataNS"
