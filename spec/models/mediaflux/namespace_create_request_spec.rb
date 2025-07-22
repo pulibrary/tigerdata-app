@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe Mediaflux::NamespaceCreateRequest, connect_to_mediaflux: true, type: :model do
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
-  let(:namespace_test) { "princeton/namespace-create-test/#{random_project_directory}NS"}
+  let(:namespace_test) { "princeton/namespace-create-test/#{random_project_directory}NS" }
 
   describe "#resolve" do
     before do
