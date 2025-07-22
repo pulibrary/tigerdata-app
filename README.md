@@ -86,8 +86,6 @@ If your name is not on the registration list see steps below under "User Registr
 
 Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
 
-1. Once mediaflux is running locally
-  1. `bundle exec rake schema:create`
 
 ##### Authentication
 
@@ -143,7 +141,7 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
 
 ### How to run only integration tests
-- To run just the tests that are integration tests, we will need to pass a flag that will only run tests that are tagged as an integration test `bundle exec rspec --tag integration` 
+- To run just the tests that are integration tests, we will need to pass a flag that will only run tests that are tagged as an integration test `bundle exec rspec --tag integration`
 
 ### Starting the development server
 
