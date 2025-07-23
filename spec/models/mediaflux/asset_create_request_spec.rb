@@ -14,7 +14,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   end
 
   before do
-      project.approve!(current_user: user)
+    project.approve!(current_user: user)
   end
 
   describe "#id" do
