@@ -18,7 +18,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   end
 
   describe "#id" do
-    it "creates a collection on the server" do
+    it "creates a collection on the server", :integration do
       create_request = described_class.new(session_token: session_token, name: random_directory, pid: project.mediaflux_id)
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
@@ -29,7 +29,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   end
 
   describe "#xml_payload" do
-    it "creates the asset create payload" do
+    it "creates the asset create payload", :integration do
       create_request = described_class.new(session_token: nil, name: random_directory, pid: project.mediaflux_id)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
       "<request>\n" \
@@ -47,7 +47,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   end
 
   describe "#xtoshell_xml" do
-    it "creates the asset create xml in a format that can be passed to xtoshell in aterm" do
+    it "creates the asset create xml in a format that can be passed to xtoshell in aterm", :integration do
       create_request = described_class.new(session_token: nil, name: random_directory, pid: project.mediaflux_id)
       expected_xml = "<request><service name='asset.create'><name>#{random_directory}</name>" \
                      "<collection cascade-contained-asset-index='true' contained-asset-index='true' unique-name-index='true'>true</collection>" \
