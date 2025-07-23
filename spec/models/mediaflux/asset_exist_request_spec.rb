@@ -12,7 +12,7 @@ RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux:
   end
 
   describe "#exist" do
-    it "validates that an asset exist or not" do
+    it "validates that an asset exist or not", :integration do
       valid_path = "princeton/#{project.metadata_model.project_directory}"
       subject = described_class.new(session_token: session_token, path: valid_path)
       expect(subject.exist?).to be true
