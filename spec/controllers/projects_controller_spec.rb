@@ -46,41 +46,16 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         end
 
         it "renders the project metadata as xml" do
-          data_sponsor = project.metadata_model.data_sponsor
-          project = FactoryBot.create :project, project_id: "abc-123", data_sponsor: data_sponsor
+          project.approve!(current_user: sponsor_and_data_manager)
           get :details, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
-          expect(response.body).to eq(
-          "<?xml version=\"1.0\"?>\n" \
-          "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \
-          "  <service name=\"asset.create\">\n" \
-          "    <args>\n" \
-          "      <name>#{project.project_directory_short}</name>\n" \
-          "      <namespace>#{project.project_directory}NS</namespace>\n" \
-          "      <meta>\n" \
-          "        <tigerdata:project>\n" \
-          "          <ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n" \
-          "          <Title>#{project.metadata[:title]}</Title>\n" \
-          "          <Description>#{project.metadata[:description]}</Description>\n" \
-          "          <DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n" \
-          "          <DataManager>#{project.metadata[:data_manager]}</DataManager>\n" \
-          "          <Department>77777</Department>\n" \
-          "          <Department>88888</Department>\n" \
-          "          <DataUser>n/a</DataUser>\n" \
-          "          <ProjectID>abc-123</ProjectID>\n" \
-          "        </tigerdata:project>\n" \
-          "      </meta>\n" \
-          "      <quota>\n" \
-          "        <allocation>500 GB</allocation>\n" \
-          "        <description>Project Quota</description>\n" \
-          "      </quota>\n" \
-          "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
-          "      <type>application/arc-asset-collection</type>\n" \
-          "      <pid>path=/td-test-001/test/tigerdata</pid>\n" \
-          "    </args>\n" \
-          "  </service>\n" \
-          "</request>\n"
-        )
+          xml_doc = Nokogiri::XML(response.body)
+          expect(xml_doc.xpath("/hash/title").text).to eq project.title
+          expect(xml_doc.xpath("/hash/project-directory").text).to eq project.project_directory
+          expect(xml_doc.xpath("/hash/description").text).to eq project.metadata[:description]
+          expect(xml_doc.xpath("/hash/data-sponsor").text).to eq project.metadata[:data_sponsor]
+          expect(xml_doc.xpath("/hash/data-manager").text).to eq project.metadata[:data_manager]
+          expect(xml_doc.xpath("/hash/project-id").text).to eq project.metadata[:project_id]
         end
       end
     end

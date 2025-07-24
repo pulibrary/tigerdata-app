@@ -120,7 +120,6 @@ class ProjectsController < ApplicationController
 
     @project_session = "details"
 
-
     respond_to do |format|
       format.html do
         @project = ProjectShowPresenter.new(project)
@@ -213,10 +212,14 @@ class ProjectsController < ApplicationController
   def show_mediaflux
     project_id = params[:id]
     project = Project.find(project_id)
-
-    respond_to do |format|
-      format.xml do
-        render xml: project.mediaflux_meta_xml
+    if project.mediaflux_id == 0
+      flash[:error] = "Project has not been created in Mediaflux"
+      redirect_to project_path(project_id)
+    else
+      respond_to do |format|
+        format.xml do
+          render xml: project.mediaflux_meta_xml(user: current_user)
+        end
       end
     end
   end
