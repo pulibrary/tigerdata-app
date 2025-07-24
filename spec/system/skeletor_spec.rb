@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require 'open-uri'
+require "open-uri"
 # This is the automated test to the Skeletor epic https://github.com/pulibrary/tigerdata-app/issues/1478
 RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integration: true do
   context "unauthenticated user" do
@@ -63,7 +63,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       click_on "Approve request"
       expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
       visit "/projects/#{Project.last.id}.xml"
-      expect(page.body).to include('<resource')
+      expect(page.body).to include("<resource")
     end
   end
 
@@ -105,7 +105,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       click_on "Approve request"
       expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
       visit "/projects/#{Project.last.id}.xml"
-      expect(page.body).to include('<resource')
+      expect(page.body).to include("<resource")
     end
   end
 end
