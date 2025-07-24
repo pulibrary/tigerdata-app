@@ -4,7 +4,7 @@
         <div data-state="Expanded" class="expanded-state">
             <div class="step-container">
                 <div data-state="Completed" data-type="Step" class="step">
-                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('project_information') ? 'step-number-current' : 'step-number-completed' %>">
+                    <div data-size="Normal" data-state="Completed" class="<%= find_step_class(step_name: 'project_information') %>">
                         <div class="step-text">1</div>
                     </div>
                     <div class="step-text-container">
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'roles_and_people' ? 'step-number-current' : 'step-number-completed' %>">
+            <div data-size="Normal" data-state="Completed" class="<%= find_step_class(step_name: 'roles_and_people') %>">
                 <div class="step-text">2</div>
             </div>
             <div class="step-text-container">
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'project_type' ? 'step-number-current' : 'step-number-completed' %>">
+            <div data-size="Normal" data-state="Completed" class="<%= find_step_class(step_name: 'project_type') %>">
                 <div class="step-text">3</div>
             </div>
             <div class="step-text-container">
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div data-state="Completed" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name == 'storage_and_access' ? 'step-number-current' : 'step-number-completed' %>">
+            <div data-size="Normal" data-state="Completed" class="<%= find_step_class(step_name: 'storage_and_access') %>">
                 <div class="step-text">4</div>
             </div>
             <div class="step-text-container">
@@ -71,7 +71,7 @@
         <div data-state="Expanded" class="expanded-state">
             <div class="step-container">
                 <div data-state="Completed" data-type="Step" class="step">
-                    <div data-size="Normal" data-state="Completed" class="<%= controller.controller_name.start_with?('additional_information') ? 'step-number-current' : 'step-number-completed' %>">
+                    <div data-size="Normal" data-state="Completed" class="<%= find_step_class(step_name: 'additional_information') %>">
                         <div class="step-text">5</div>
                     </div>
                     <div class="step-text-container">
@@ -111,7 +111,7 @@
             </div>
         </div>
         <div data-state="Active" data-type="Step" class="unexpanded-state">
-            <div data-size="Normal" data-state="Active" class="<%= controller.controller_name == 'review_and_submit' ? 'step-number-current' : 'step-number-completed' %>">
+            <div data-size="Normal" data-state="Active" class="<%= find_step_class(step_name: 'review_and_submit') %>">
                 <div class="step-text">6</div>
             </div>
             <div class="step-text-container">

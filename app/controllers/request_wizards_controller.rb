@@ -10,8 +10,22 @@ class RequestWizardsController < ApplicationController
 
   attr_reader :request_model
 
+  def find_step_class(step_name:)
+    controller_name == step_name ? 'step-number-current' : 'step-number-completed'
+  end
+
+  def find_substep_class(substep_name)
+    controller_name == substep_name ? 'substep-indicator-current' : 'substep-indicator-completed'
+  end
+
+  def find_substep_text_class(substep_name)
+    controller_name == substep_name ? 'substep-text' : 'substep-text-current'
+  end
+  helper_method :find_step_class, :find_substep_class, :find_substep_text_class
+
   # GET /request_wizards/1
   def show
+    @step_class = nil
     # create a request in the first step
     render_current
   end
