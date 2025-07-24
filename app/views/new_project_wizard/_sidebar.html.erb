@@ -23,7 +23,7 @@
                         <div class="<%= controller.controller_name == 'project_information' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'project_information' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_path(@request_model) %>">Basic Details</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'project_information') %>"><a href="<%= new_project_project_info_path(@request_model) %>">Basic Details</a></div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
@@ -31,7 +31,7 @@
                         <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'project_information_categories' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_categories_path(@request_model) %>">Categories (Optional)</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'project_information_categories') %>"><a href="<%= new_project_project_info_categories_path(@request_model) %>">Categories (Optional)</a></div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
@@ -39,7 +39,7 @@
                         <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'project_information_dates' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_project_info_dates_path(@request_model) %>">Dates (Optional)</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'project_information_dates') %>"><a href="<%= new_project_project_info_dates_path(@request_model) %>">Dates (Optional)</a></div>
                     </div>
                 </div>
             </div>
@@ -86,26 +86,26 @@
                 <div class="connector-line"></div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                        <div class="<%= find_substep_class(substep_name: 'additional_information_grants_and_funding') %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'additional_information_grants_and_funding' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Funding Sources</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'additional_information_grants_and_funding') %>"><a href="<%= new_project_additional_information_grants_and_funding_path(@request_model) %>">Funding Sources</a></div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                        <div class="<%= find_substep_class(substep_name: 'additional_information_project_permissions') %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'additional_information_project_permissions' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_project_permissions_path(@request_model) %>">Project Permissions</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'additional_information_project_permissions') %>"><a href="<%= new_project_additional_information_project_permissions_path(@request_model) %>">Project Permissions</a></div>
                     </div>
                 </div>
                 <div data-state="Completed" data-type="Sub-Step" class="substep-container">
                     <div data-size="Small" data-state="Completed" class="substep-indicator-container">
-                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-indicator-current' : 'substep-indicator-completed' %>"></div>
+                        <div class="<%= find_substep_class(substep_name: 'additional_information_related_resources') %>"></div>
                     </div>
                     <div class="step-text-container">
-                        <div class="<%= controller.controller_name == 'additional_information_related_resources' ? 'substep-text' : 'substep-text-current' %>"><a href="<%= new_project_additional_information_related_resources_path(@request_model) %>">Related Resources</a></div>
+                        <div class="<%= find_substep_text_class(substep_name: 'additional_information_related_resources') %>"><a href="<%= new_project_additional_information_related_resources_path(@request_model) %>">Related Resources</a></div>
                     </div>
                 </div>
             </div>

@@ -14,11 +14,11 @@ class RequestWizardsController < ApplicationController
     controller_name == step_name ? 'step-number-current' : 'step-number-completed'
   end
 
-  def find_substep_class(substep_name)
+  def find_substep_class(substep_name:)
     controller_name == substep_name ? 'substep-indicator-current' : 'substep-indicator-completed'
   end
 
-  def find_substep_text_class(substep_name)
+  def find_substep_text_class(substep_name:)
     controller_name == substep_name ? 'substep-text' : 'substep-text-current'
   end
   helper_method :find_step_class, :find_substep_class, :find_substep_text_class
