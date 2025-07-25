@@ -49,11 +49,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     expect(mail.attachments.first.mime_type).to eq "application/json"
     # testing the xml response
     expect(mail.attachments.second.filename).to eq "abc123_def.xml"
-    parsed_xml = Nokogiri::XML(mail.attachments.second.body.raw_source)
-    project_xml = Nokogiri::XML(project.to_xml)
-    expect(parsed_xml.xpath("/hash/title").to_s).to eq project_xml.xpath("/hash/title").to_s
-    expect(parsed_xml.xpath("/hash/project-directory").to_s).to eq project_xml.xpath("/hash/project-directory").to_s
-    expect(mail.attachments.second.mime_type).to eq "application/xml"
+    expect(mail.attachments.second.body.raw_source).to eq project.to_xml.gsub("\n", "\r\n")
   end
 
   it "creates a provenance entry for the project creation" do
