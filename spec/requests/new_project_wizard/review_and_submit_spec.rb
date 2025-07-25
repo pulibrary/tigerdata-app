@@ -15,7 +15,7 @@ RSpec.describe "new-project/review-submit", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
-      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
 
       it "renders a successful response" do
@@ -35,7 +35,7 @@ RSpec.describe "new-project/review-submit", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
-      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:valid_request_params) do
         { request_title: "new title", project_title: "new project",
           state: "draft", data_sponsor: user.uid, data_manager: user.uid,

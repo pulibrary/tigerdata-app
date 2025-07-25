@@ -28,7 +28,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       allow(File).to receive(:size) { 1_234_567 }
     end
 
-    context "current user dashboard" do
+    context "current user dashboard - non admin user" do
       it "shows the welcome message and 'Log out' button" do
         sign_in current_user
         visit dashboard_path
@@ -139,16 +139,15 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse.first.title)
       end
 
-      it "should display the New Project Request if the feature is activated" do
+      it "should not display the New Project Request even if the feature is activated" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:new_project_request_wizard, true)
         sign_in current_user
         visit dashboard_path
-        expect(page).to have_content("New Project Request")
-        expect(page).not_to have_content("Requests")
+        expect(page).not_to have_content("New Project Request")
       end
 
-      it "should not display the New Project Request link on the dashboard if the New Project Request Wizard feature is not activated" do
+      it "should not display the New Project Request if the feature is not activated" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:new_project_request_wizard, false)
         sign_in current_user

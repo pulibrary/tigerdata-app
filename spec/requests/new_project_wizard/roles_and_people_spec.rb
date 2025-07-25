@@ -16,7 +16,7 @@ RSpec.describe "new-project/roles-people", type: :request do
     end
     context "when the client is authenticated" do
       let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
-      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:request) { Request.create(data_sponsor: "pul123", data_manager: "manager1", project_title: "new project") }
 
       it "renders a successful response" do
@@ -39,7 +39,7 @@ RSpec.describe "new-project/roles-people", type: :request do
     context "when the client is authenticated" do
       let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
       let(:other_user) { FactoryBot.create(:user) }
-      let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
         let(:request) { Request.create(request_title: "abc123", project_title: "project", data_sponsor: other_user.uid, data_manager: other_user.uid) }
