@@ -45,7 +45,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             .or(include("99999"))
         end
 
-        it "renders the project metadata as xml" do
+        it "renders the project metadata as xml", :integration do
           project.approve!(current_user: sponsor_and_data_manager)
           get :details, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
@@ -58,7 +58,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata[:project_id]
         end
 
-        it "renders the Mediaflux metadata as xml" do
+        it "renders the Mediaflux metadata as xml", :integration do
           project.approve!(current_user: sponsor_and_data_manager)
           get :show_mediaflux, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
