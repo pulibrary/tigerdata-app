@@ -197,7 +197,7 @@ class Project < ApplicationRecord
   end
 
   def to_xml
-    JSON.parse(self.to_json).to_xml
+    ProjectShowPresenter.new(self).to_xml
   end
 
   # @return [String] XML representation of the <meta> element

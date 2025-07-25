@@ -50,12 +50,25 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           get :details, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
           xml_doc = Nokogiri::XML(response.body)
-          expect(xml_doc.xpath("/hash/title").text).to eq project.title
-          expect(xml_doc.xpath("/hash/project-directory").text).to eq project.project_directory
-          expect(xml_doc.xpath("/hash/description").text).to eq project.metadata[:description]
-          expect(xml_doc.xpath("/hash/data-sponsor").text).to eq project.metadata[:data_sponsor]
-          expect(xml_doc.xpath("/hash/data-manager").text).to eq project.metadata[:data_manager]
-          expect(xml_doc.xpath("/hash/project-id").text).to eq project.metadata[:project_id]
+          expect(xml_doc.xpath("/resource/title").text).to eq project.title
+          expect(xml_doc.xpath("/resource/projectDirectory/projectDirectoryPath").text).to eq project.project_directory
+          expect(xml_doc.xpath("/resource/description").text).to eq project.metadata[:description]
+          expect(xml_doc.xpath("/resource/dataSponsor/@userID").text).to eq project.metadata[:data_sponsor]
+          expect(xml_doc.xpath("/resource/dataManager/@userID").text).to eq project.metadata[:data_manager]
+          expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata[:project_id]
+        end
+
+        it "renders the Mediaflux metadata as xml" do
+          project.approve!(current_user: sponsor_and_data_manager)
+          get :show_mediaflux, params: { id: project.id, format: :xml }
+          expect(response.content_type).to eq("application/xml; charset=utf-8")
+          xml_doc = Nokogiri::XML(response.body)
+          expect(xml_doc.xpath("/meta//Title").text).to eq project.title
+          expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project.project_directory
+          expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata[:description]
+          expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata[:data_sponsor]
+          expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata[:data_manager]
+          expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata[:project_id]
         end
       end
     end
