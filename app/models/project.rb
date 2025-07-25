@@ -197,28 +197,13 @@ class Project < ApplicationRecord
   end
 
   def to_xml
-    ProjectMediaflux.xml_payload(project: self)
-  end
-
-  # @return [Nokogiri::XML::Document] the Mediaflux XML document for this project
-  def mediaflux_document
-    ProjectMediaflux.document(project: self)
-  end
-
-  # @return [Nokogiri::XML::Element] the <meta> element from the Mediaflux XML document
-  def mediaflux_meta_element
-    doc = mediaflux_document.clone
-    # Remove the namespaces in order to simplify the XPath query
-    doc.remove_namespaces!
-    elements = doc.xpath("/request/service/args/meta")
-    raise("Failed to extract the <meta> element found in the Mediaflux XML document for project #{self.id}") if elements.empty?
-
-    elements.first
+    ProjectShowPresenter.new(self).to_xml
   end
 
   # @return [String] XML representation of the <meta> element
-  def mediaflux_meta_xml
-    mediaflux_meta_element.to_xml
+  def mediaflux_meta_xml(user:)
+    doc = ProjectMediaflux.document(project: self, user: user)
+    doc.xpath("/response/reply/result/asset/meta").to_s
   end
 
   def mediaflux_metadata(session_id:)
