@@ -50,6 +50,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     # testing the xml response
     expect(mail.attachments.second.filename).to eq "abc123_def.xml"
     expect(mail.attachments.second.body.raw_source).to eq project.to_xml.gsub("\n", "\r\n")
+    expect(mail.attachments.second.mime_type).to eq "application/xml"
   end
 
   it "creates a provenance entry for the project creation" do
