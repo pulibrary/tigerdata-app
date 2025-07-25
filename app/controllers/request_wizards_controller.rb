@@ -12,8 +12,14 @@ class RequestWizardsController < ApplicationController
 
   # GET /request_wizards/1
   def show
-    # create a request in the first step
-    render_current
+    if current_user.superuser || current_user.sysadmin || current_user.trainer
+      # create a request in the first step
+      render_current
+    else
+      error_message = "You do not have access to this page."
+      flash[:notice] = error_message
+      redirect_to dashboard_path
+    end
   end
 
   # PUT /request_wizards/1/save
