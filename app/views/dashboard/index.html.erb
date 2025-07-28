@@ -10,10 +10,12 @@
       </div>
 
       <% if Flipflop.new_project_request_wizard? %>
-         <% if current_user.eligible_sysadmin? %>
-            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm" %>
-         <% end %>
-         <%= render partial: "new_project_request_wizard_link" %>
+        <div class="dashboard-admin-buttons">
+          <% if current_user.eligible_sysadmin? %>
+            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
+            <%= render partial: "new_project_request_wizard_link" %>
+          <% end %>
+        </div>
       <% end %>
 
       <div class="detail-pane">

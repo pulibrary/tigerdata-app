@@ -13,6 +13,18 @@
   text-overflow: ellipsis;
 }
 
+.dashboard-admin-buttons {
+  display: flex;
+  gap: 0.5em;
+
+  #requests-listing-button {
+    float: left;
+  }
+  #new-project-request-wizard-button {
+    float: right;
+  }
+}
+
 #user-list-table {
   font-family: $libre-franklin;
   td {
