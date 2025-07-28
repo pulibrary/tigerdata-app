@@ -47,6 +47,12 @@ class Project < ApplicationRecord
                    end
     Rails.logger.error debug_output
 
+    add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: self)
+    add_users_request.resolve
+
+    user_debug = "#{add_users_request.debug_output}"
+    Rails.logger.debug "Project #{self.id} users have been added to MediaFlux: #{user_debug}"
+
     # create provenance events:
     # - one for approving the project and
     # - another for changing the status of the project
