@@ -3,6 +3,8 @@ module Mediaflux
   class ActorGrantRoleRequest < Request
     attr_reader :namespace, :asset_name, :collection
 
+    # TODO: remove this class when closing https://github.com/pulibrary/tigerdata-app/issues/1652
+
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param type [String] the type of the name (role or user)

@@ -20,7 +20,7 @@ namespace :servers do
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
     system("rake load_affiliations:from_file[spec/fixtures/departments.csv]")
-    system("rake servers:dev_admin_users")
+    system("rake servers:dev_admin_users") # TODO: remove when closing https://github.com/pulibrary/tigerdata-app/issues/1652
   end
 
   desc "Stop development dependencies"
@@ -28,6 +28,7 @@ namespace :servers do
     system "lando stop"
   end
 
+  # TODO: remove when closing https://github.com/pulibrary/tigerdata-app/issues/1652
   desc "Make sure the developer accounts are administrators"
   task dev_admin_users: :environment do
     login = Mediaflux::LogonRequest.new
