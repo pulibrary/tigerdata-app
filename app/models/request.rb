@@ -71,9 +71,18 @@ class Request < ApplicationRecord
     # Create the project in the Rails database
     project = Project.create!({ metadata_json: project_metadata_json })
     project.draft_doi
-    project.save
-    # Create the project in Mediaflux
-    project.approve!(current_user: approver)
+    project.save!
+    begin
+      # Create the project in Mediaflux
+      project.approve!(current_user: approver)
+    rescue Project::ProjectCreateError => ex
+      # Save the error within the Request object
+      self.error_message = {message: ex.message}
+      self.save!
+      # ..and get rid of the Rails project
+      project.destroy!
+      raise "Error approving request #{self.id}"
+    end
     project
   end
 

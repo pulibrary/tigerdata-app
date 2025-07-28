@@ -48,6 +48,9 @@ class RequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
+  rescue => ex
+    flash[:notice] = "Error approving request #{@request_model.id}"
+    redirect_to request_path(@request_model)
   end
 
   private

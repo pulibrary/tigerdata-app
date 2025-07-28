@@ -7,6 +7,13 @@ This screen is a review of the request.  No project has been created yet.
 <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
 </div>
 
+<% if @request_model.nil? == false %>
+  <p>There was an error with this request</p>
+  <blockquote>
+    <%= @request_model.error_message %>
+  </blockquote>
+<% end %>
+
 <ul class="request_model-fields">
   <li>Request created at: <%= @request_model.created_at.strftime("%m/%d/%Y") %></li>
   <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
@@ -22,5 +29,3 @@ This screen is a review of the request.  No project has been created yet.
   <li>Quota: <%= @request_model.quota %></li>
   <li>Requested by: <%= @request_model.requested_by %></li>
 </ul>
-
-

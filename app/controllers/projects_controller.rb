@@ -213,7 +213,7 @@ class ProjectsController < ApplicationController
     project_id = params[:id]
     project = Project.find(project_id)
     if project.mediaflux_id == 0
-      flash[:error] = "Project has not been created in Mediaflux"
+      flash[:alert] = "Project has not been created in Mediaflux"
       redirect_to project_path(project_id)
     else
       respond_to do |format|
@@ -269,7 +269,8 @@ class ProjectsController < ApplicationController
       @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
 
       @title = @project_metadata["title"]
-    else redirect_to dashboard_path
+    else
+      redirect_to dashboard_path
     end
   end
 
