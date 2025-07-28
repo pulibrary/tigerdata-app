@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceDescribeRequest, connect_to_mediaflux: true, type: :model do
-  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#metadata" do
     before do
