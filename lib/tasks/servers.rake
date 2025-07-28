@@ -20,11 +20,28 @@ namespace :servers do
     system("rake servers:initialize RAILS_ENV=test")
     system("rake load_users:from_registration_list")
     system("rake load_affiliations:from_file[spec/fixtures/departments.csv]")
+    system("rake servers:dev_admin_users") # TODO: remove when closing https://github.com/pulibrary/tigerdata-app/issues/1652
   end
 
   desc "Stop development dependencies"
   task stop: :environment do
     system "lando stop"
+  end
+
+  # TODO: remove when closing https://github.com/pulibrary/tigerdata-app/issues/1652
+  desc "Make sure the developer accounts are administrators"
+  task dev_admin_users: :environment do
+    login = Mediaflux::LogonRequest.new
+    login.resolve
+
+    type = "role"
+    name = "pu-lib:developer"
+    role = "system-administrator"
+    grant_role_request = Mediaflux::ActorGrantRoleRequest.new(session_token: login.session_token, type:, name:, role:)
+    grant_role_request.resolve
+    if grant_role_request.error?
+      puts "ERROR: #{grant_role_request.response_body}"
+    end
   end
 end
 # :nocov:
