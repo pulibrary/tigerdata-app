@@ -108,6 +108,20 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       expect(page.body).to include("<resource")
     end
   end
+
+  context "user" do
+    let(:datasponsor) { FactoryBot.create(:project_sponsor) }
+    let(:project) { FactoryBot.create(:project, data_sponsor: datasponsor.uid, data_manager: datamanager.uid) }
+    let(:datamanager) { FactoryBot.create(:data_manager) }
+    let(:user_a) { FactoryBot.create(:user) }
+    it "does not allow a user to see someone elses project" do
+      sign_in user_a
+      visit "/projects/#{project.id}"
+      expect(page).to have_content("Access Denied")
+      visit "/projects/#{project.id}.xml"
+      expect(page).to have_content("Access Denied")
+    end
+  end
 end
 
 # once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
