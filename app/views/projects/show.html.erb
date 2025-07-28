@@ -7,7 +7,6 @@
       <button id="project-details" class="tab-nav"> Details </button>
       <% if current_user.eligible_sysadmin? %>
         <% if @project.pending? %>
-          <button id="project-script" class="tab-nav"> View Create Script </button>
           <button id="project-approval" class="tab-nav"> Approval Setting </button>
           <% end %>
       <% end %>

@@ -72,24 +72,6 @@ namespace :projects do
     puts "Mediaflux asset #{asset_id} updated"
   end
 
-  desc "Outputs to the console the Aterm script to create a project in Mediaflux"
-  task :create_script, [:project_id] => [:environment] do |_, args|
-    project_id = args[:project_id]
-    project = Project.find(project_id)
-    service = MediafluxScriptFactory.new(project: project)
-    puts service.aterm_script
-  end
-
-  desc "Outputs to a file the Aterm script to create a project in Mediaflux"
-  task :create_script_file, [:project_id] => [:environment] do |_, args|
-    project_id = args[:project_id]
-    project = Project.find(project_id)
-    service = MediafluxScriptFactory.new(project: project)
-    file_name = "project_create_#{project.id}.txt"
-    puts "Saving script to #{file_name}"
-    File.write(file_name, service.aterm_script)
-  end
-
   task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
     netid = args[:netid]
     user = User.where(uid: netid).first

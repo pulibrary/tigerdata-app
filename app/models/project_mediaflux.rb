@@ -45,24 +45,16 @@ class ProjectMediaflux
     project.save!
   end
 
-  def self.xml_payload(project:, xml_namespace: nil)
-    project_name = project.project_directory
-    project_namespace = "#{project_name}NS"
-    project_parent = Mediaflux::Connection.root_collection
-
-    create_request = Mediaflux::ProjectCreateRequest.new(session_token: nil, namespace: project_namespace, project:, xml_namespace: xml_namespace, pid: project_parent)
-    create_request.xml_payload
+  # Returns the XML string with the mediaflux metadata
+  def self.xml_payload(project:, user:, xml_namespace: nil)
+    request = Mediaflux::AssetMetadataRequest.new(session_token: user.mediaflux_session, id: project.mediaflux_id)
+    request.resolve
+    request.response_body
   end
 
-  def self.document(project:, xml_namespace: nil)
-    xml_body = xml_payload(project:, xml_namespace:)
+  # Returns an XML document with the mediaflux metadata
+  def self.document(project:, user:, xml_namespace: nil)
+    xml_body = xml_payload(project:, user:, xml_namespace:)
     Nokogiri::XML.parse(xml_body)
-  end
-
-  def self.create_root_tree(session_id:)
-    root_ns = Rails.configuration.mediaflux["api_root_collection_namespace"]
-    parent_collection = Rails.configuration.mediaflux["api_root_collection_name"]
-    req = Mediaflux::RootCollectionAsset.new(session_token: session_id, root_ns:, parent_collection:)
-    req.create
   end
 end
