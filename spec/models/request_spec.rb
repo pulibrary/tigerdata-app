@@ -103,7 +103,7 @@ RSpec.describe Request, type: :model do
                              requested_by: "uid", user_roles: [])
     end
 
-    it "creates a project from the request" do
+    it "creates a project from the request", integration: true do
       project = valid_request.approve(sponsor_and_data_manager_user)
       expect(project.id > 0).to be true
       expect(project.mediaflux_id > 0).to be true

@@ -198,7 +198,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
   context "only system admins and super users can approve a project" do
     let(:project) { FactoryBot.create(:project, status: Project::PENDING_STATUS, project_id: "10.123/456") }
 
-    it "allows a system admins user to approve the project" do
+    it "allows a system admins user to approve the project", integration: true do
       sign_in system_admin
       visit project_approve_path(project)
       expect(page).to have_content "Metadata Highlights"
@@ -206,7 +206,7 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       expect(page).to have_content "Project Approval Received"
     end
 
-    it "allows a super user to approve the project" do
+    it "allows a super user to approve the project", integration: true do
       sign_in superuser
       visit project_approve_path(project)
       expect(page).to have_content "Metadata Highlights"

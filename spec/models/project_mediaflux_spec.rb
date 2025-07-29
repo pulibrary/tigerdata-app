@@ -57,7 +57,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         test_project.metadata_model.project_id = nil
         test_project
       end
-      it "should raise a MetadataError if project is invalid", integration:true do
+      it "should raise a MetadataError if project is invalid", integration: true do
         project.create!(initial_metadata: incomplete_project.metadata_model, user: current_user)
 
         expect(project.valid?).to be false
@@ -65,7 +65,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect(project.errors.first.type).to include("Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for project_id")
       end
 
-      it "should raise a error if any error occurs in mediaflux", integration:true do
+      it "should raise a error if any error occurs in mediaflux", integration: true do
         expect { incomplete_project.approve!(current_user: current_user) }.to raise_error(Project::ProjectCreateError)
       end
     end

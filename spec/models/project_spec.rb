@@ -212,7 +212,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "#save_in_mediaflux" do
     let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) { FactoryBot.create(:project_with_doi) }
-    it "calls ProjectMediaflux to create the project and save the id" do
+    it "calls ProjectMediaflux to create the project and save the id", integration: true do
       expect(project.mediaflux_id).to be nil
       project.save_in_mediaflux(user: user)
       expect(project.mediaflux_id).not_to be nil
