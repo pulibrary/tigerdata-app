@@ -2,6 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Request, type: :model do
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
@@ -80,6 +81,37 @@ RSpec.describe Request, type: :model do
       expect(request.valid_title?).to be_falsey
       request.project_title = "abc"
       expect(request.valid_title?).to be_truthy
+    end
+  end
+
+  describe "#approve" do
+    let(:valid_request) do
+      described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
+                            data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
+                            departments: [{ code: "dept", name: "department" }],
+                            description: "description", parent_folder: random_project_directory,
+                            project_folder: "project", project_id: "doi", quota: "500 GB",
+                            requested_by: "uid", user_roles: [])
+    end
+
+    let(:invalid_request) do
+      described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
+                            data_sponsor:sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
+                            departments: [{ code: "dept", name: "department" }],
+                            description: "description", parent_folder: random_project_directory,
+                            project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
+                            requested_by: "uid", user_roles: [])
+    end
+
+    it "creates a project from the request" do
+      project = valid_request.approve(sponsor_and_data_manager_user)
+      expect(project.id > 0).to be true
+      expect(project.mediaflux_id > 0).to be true
+    end
+
+    it "logs errors when the request is not valid" do
+      expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error
+      expect(invalid_request.error_message["message"]).to include("Error saving project")
     end
   end
 
