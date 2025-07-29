@@ -182,13 +182,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(response.body).to eq("")
         end
 
-        context "the project is saved to mediaflux", connect_to_mediaflux: true do
-          let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
-          let(:project) { FactoryBot.create :project_with_doi, data_sponsor: user.uid }
+        context "the project is saved to mediaflux", connect_to_mediaflux: true, integration: true do
+          let(:project) { FactoryBot.create :project_with_doi, data_sponsor: sponsor_and_data_manager.uid }
           before do
-            project.save_in_mediaflux(user: user)
+            project.approve!(current_user: sponsor_and_data_manager)
           end
           it "runs a query" do
+            sign_in sponsor_and_data_manager
             allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
 
             get :show, params: { id: project.id }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe FileInventoryJob, connect_to_mediaflux: true do
+RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true do
   include ActiveJob::TestHelper
 
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }

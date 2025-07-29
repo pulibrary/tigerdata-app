@@ -137,7 +137,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
-    context "Project Contents", connect_to_mediaflux: true do
+    context "Project Contents", connect_to_mediaflux: true, integration: true do
       let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job do
+RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, integration: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
