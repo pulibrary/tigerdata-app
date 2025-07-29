@@ -182,7 +182,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(response.body).to eq("")
         end
 
-        context "the project is saved to mediaflux", connect_to_mediaflux: true do
+        context "the project is saved to mediaflux", connect_to_mediaflux: true, integration: true do
           let(:project) { FactoryBot.create :project_with_doi, data_sponsor: sponsor_and_data_manager.uid }
           before do
             project.approve!(current_user: sponsor_and_data_manager)

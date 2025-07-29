@@ -510,7 +510,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       expect(project.project_directory).to eq("#{Rails.configuration.mediaflux['api_root']}/#{custom_directory}")
     end
 
-    it "redirects the user to the project approval confirmation page upon submission", js: true do
+    it "redirects the user to the project approval confirmation page upon submission", js: true, integration: true do
       sign_in sysadmin_user
       expect(project.mediaflux_id).to be nil
       expect(project.metadata_json["status"]).to eq Project::PENDING_STATUS
