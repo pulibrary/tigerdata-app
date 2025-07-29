@@ -51,7 +51,7 @@ class Project < ApplicationRecord
     add_users_request.resolve
 
     user_debug = "#{add_users_request.debug_output}"
-    Rails.logger.debug "Project #{self.id} users have been added to MediaFlux: #{user_debug}"
+    Rails.logger.error "Project #{self.id} users have been added to MediaFlux: #{user_debug}"
 
     # create provenance events:
     # - one for approving the project and

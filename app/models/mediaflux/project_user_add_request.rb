@@ -28,7 +28,6 @@ module Mediaflux
     # if the request fails.
     def debug_output
       response_xml.xpath("response/reply/result/result").to_s
-      byebug
     end
 
     private
@@ -39,30 +38,23 @@ module Mediaflux
       #
       # This is what the call would look like from aterm:
       # tigerdata.project.user.add \
+      #   :id 1234 \
       #   :data-user "md1908" \
       #
       # OR FOR MULTIPLE USERS:
       # tigerdata.project.user.add \
+      #   :id 1234 \
       #  :data-user "md1908,md1909,md1910" \
       #
       def build_http_request_body(name:)
         super do |xml|
           xml.args do
             xml.id @id
-            xml.meta do
-              doc = xml.doc
-              root = doc.root
-              root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
-
-              element_name = "#{@xml_namespace}:project"
-              xml.send(element_name) do
-                xml.send("data-users") do
-                  if @data_users.blank?
-                    xml.DataUser "n/a"
-                  else
-                    xml.DataUser @data_users
-                  end
-                end
+            xml.send("data-user") do
+              if @data_users.blank?
+                xml.text("n/a")
+              else
+                xml.text(@data_users)
               end
             end
           end
