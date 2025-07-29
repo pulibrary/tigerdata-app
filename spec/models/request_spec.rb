@@ -87,20 +87,20 @@ RSpec.describe Request, type: :model do
   describe "#approve" do
     let(:valid_request) do
       described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
-                            data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
-                            departments: [{ code: "dept", name: "department" }],
-                            description: "description", parent_folder: random_project_directory,
-                            project_folder: "project", project_id: "doi", quota: "500 GB",
-                            requested_by: "uid", user_roles: [])
+                             data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
+                             departments: [{ code: "dept", name: "department" }],
+                             description: "description", parent_folder: random_project_directory,
+                             project_folder: "project", project_id: "doi", quota: "500 GB",
+                             requested_by: "uid", user_roles: [])
     end
 
     let(:invalid_request) do
       described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
-                            data_sponsor:sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
-                            departments: [{ code: "dept", name: "department" }],
-                            description: "description", parent_folder: random_project_directory,
-                            project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
-                            requested_by: "uid", user_roles: [])
+                             data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
+                             departments: [{ code: "dept", name: "department" }],
+                             description: "description", parent_folder: random_project_directory,
+                             project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
+                             requested_by: "uid", user_roles: [])
     end
 
     it "creates a project from the request" do
