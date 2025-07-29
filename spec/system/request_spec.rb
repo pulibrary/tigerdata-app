@@ -3,6 +3,8 @@
 require "rails_helper"
 
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
+  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+
   before do
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:new_project_request_wizard, true)
@@ -16,11 +18,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-    let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:current_user) { sponsor_and_data_manager }
+    let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
     let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-    let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+    let!(:data_manager) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
     let(:request) { Request.create(request_title: "abc123", project_title: "project") }
     let(:full_request) do
       Request.create(
@@ -34,7 +36,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         departments:
           [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
-        parent_folder: "test_parent_folder",
+        parent_folder: "#{random_project_directory}",
         project_folder: "test_project_folder",
         project_id: nil,
         storage_size: nil,
@@ -57,7 +59,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           [{ "code" => "41000", "name" => "LIB-PU Library" }],
         description: "This collection contains important periodicals of the European avant-garde.",
         parent_folder: "pul",
-        project_folder: "bluemountain",
+        project_folder: "#{random_project_directory}-bluemountain",
         project_id: nil,
         storage_size: nil,
         requested_by: current_user.uid,

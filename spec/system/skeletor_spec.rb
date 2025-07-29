@@ -27,8 +27,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
 
   context "sysadmin" do
     let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:datasponsor) { FactoryBot.create(:project_sponsor) } # we grabbed this from project.rb
-    let(:datamanager) { FactoryBot.create(:data_manager) }
+    let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
+    let(:datamanager) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
     before do
       datasponsor
     end
@@ -45,7 +45,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :project_title, with: "She was a Fairy"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "Fairy"
-      fill_in :project_folder, with: "Pixie Dust"
+      fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
@@ -69,8 +69,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
 
   context "superuser" do
     let(:current_superuser) { FactoryBot.create(:superuser, uid: "superuser1", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:datasponsor) { FactoryBot.create(:project_sponsor) } # we grabbed this from project.rb
-    let(:datamanager) { FactoryBot.create(:data_manager) }
+    let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
+    let(:datamanager) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
     before do
       datasponsor
     end
@@ -87,7 +87,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :project_title, with: "She was a Fairy"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "Fairy"
-      fill_in :project_folder, with: "Pixie Dust"
+      fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
