@@ -8,10 +8,10 @@ This screen is a review of the request.  No project has been created yet.
 </div>
 
 <% if @request_model.nil? == false %>
-  <p>There was an error with this request</p>
-  <blockquote>
+  <p class="error-field">There was an error with this request</p>
+  <textarea class="disabled-field" rows="10" cols="50">
     <%= @request_model.error_message %>
-  </blockquote>
+  </textarea>
 <% end %>
 
 <ul class="request_model-fields">
