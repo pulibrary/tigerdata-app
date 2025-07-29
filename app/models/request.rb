@@ -71,9 +71,8 @@ class Request < ApplicationRecord
     # Create the project in the Rails database
     project = Project.create!({ metadata_json: project_metadata_json })
     project.draft_doi
-    project.save
-    # Create the project in Mediaflux
-    project.approve!(current_user: approver)
+    project.save!
+    create_in_mediaflux(project:, approver:)
     project
   end
 
