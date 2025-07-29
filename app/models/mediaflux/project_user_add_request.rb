@@ -14,7 +14,6 @@ module Mediaflux
       @xml_namespace_uri = self.class.default_xml_namespace_uri
 
       @all_data_users = @project.metadata_model.ro_users + @project.metadata_model.rw_users
-      @data_users = @all_data_users.join(",")
     end
 
     # Specifies the Mediaflux service to use when updating assets
@@ -44,17 +43,18 @@ module Mediaflux
       # OR FOR MULTIPLE USERS:
       # tigerdata.project.user.add \
       #   :id 1234 \
-      #  :data-user "md1908,md1909,md1910" \
+      #   :data-user "md1908" \
+      #   :data-user "md1909" \
+      #   :data-user "md1910" \
       #
       def build_http_request_body(name:)
         super do |xml|
           xml.args do
             xml.id @id
-            xml.send("data-user") do
-              if @data_users.blank?
-                xml.text("n/a")
-              else
-                xml.text(@data_users)
+            # send each user in the list
+            @all_data_users.each do |user|
+              xml.send("data-user") do
+                xml.text(user)
               end
             end
           end
