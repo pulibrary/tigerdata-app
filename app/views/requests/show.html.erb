@@ -7,7 +7,7 @@ This screen is a review of the request.  No project has been created yet.
 <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
 </div>
 
-<% if @request_model.nil? == false %>
+<% if @request_model.error_message.present? %>
   <p class="error-field">There was an error with this request</p>
   <textarea class="disabled-field" rows="10" cols="50">
     <%= @request_model.error_message %>

@@ -36,7 +36,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         departments:
           [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
-        parent_folder: "#{random_project_directory}",
+        parent_folder: random_project_directory,
         project_folder: "test_project_folder",
         project_id: nil,
         storage_size: nil,
