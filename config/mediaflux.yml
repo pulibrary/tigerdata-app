@@ -157,5 +157,5 @@ ci:
 
   api_domain: <%= ENV["MEDIAFLUX_DOMAIN"] || 'system' %>
   api_user: <%= ENV["MEDIAFLUX_USER"] || 'manager' %>
-  api_password: <%= ENV['MFLUX_CI_PASSWORD'] || 'change_me' %>
+  api_password: <%= ENV['MFLUX_CI_PASSWORD'] %>
   shared_files_location: <%= ENV["SHARED_FILES_MOUNT"] || './public/' %>
