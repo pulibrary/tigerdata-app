@@ -26,7 +26,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
       }
     end
 
-    it "redirects the client to the sign in path" do
+    # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+    xit "redirects the client to the sign in path" do
       post(projects_path, params: params)
 
       expect(response).to be_redirect
@@ -43,7 +44,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         sign_in user
       end
 
-      it "renders a successful response" do
+      # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+      xit "renders a successful response" do
         post(projects_path, params: params)
 
         expect(response).to be_redirect
@@ -52,14 +54,16 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         expect(response).to redirect_to(project_confirmation_path(new_project))
       end
 
-      it "drafts a DOI when the project is valid" do
+      # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+      xit "drafts a DOI when the project is valid" do
         post(projects_path, params: params)
         project = Project.last
 
         expect(project.metadata["project_id"]).to eq("10.34770/tbd")
       end
 
-      it "ensures that project status is set to 'pending'" do
+      # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+      xit "ensures that project status is set to 'pending'" do
         post(projects_path, params: params)
 
         expect(response).to be_redirect
@@ -71,7 +75,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
       context "when project is invalid" do
         let(:data_manager) { nil }
 
-        it "does not draft a DOI when the project is invalid" do
+        # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+        xit "does not draft a DOI when the project is invalid" do
           post(projects_path, params: params)
           expect(Project.count).to eq(0)
         end
@@ -117,7 +122,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
           }
         end
 
-        it "renders the data user names ordered by family name" do
+        # Project edit now implemented until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509
+        xit "renders the data user names ordered by family name" do
           post(projects_path, params: params)
 
           expect(response).to be_redirect

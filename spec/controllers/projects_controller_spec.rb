@@ -74,35 +74,6 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
-  describe "#create" do
-    let(:user) { FactoryBot.create :user }
-    it "redirects to signin" do
-      post :create, params: {
-        "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
-        "project_directory" => "testparams", "title" => "Params",
-        "description" => "testing controller params", "ro_user_counter" => "0",
-        "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
-      }
-      expect(response).to redirect_to "http://test.host/sign_in"
-    end
-
-    context "a signed in user" do
-      before do
-        sign_in user
-      end
-      it "creates one provenance event only" do
-        post :create, params: {
-          "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
-          "project_directory" => "testparams", "title" => "Params",
-          "description" => "testing controller params", "ro_user_counter" => "0",
-          "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
-        }
-        project = Project.last
-        expect(project.provenance_events.count).to eq 2
-      end
-    end
-  end
-
   describe "#index" do
     it "redirects to signin" do
       get :index

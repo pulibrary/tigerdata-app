@@ -176,14 +176,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     context "with the superuser role" do
       let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
 
-      it "shows the 'New Project' button" do
-        sign_in current_user
-        visit dashboard_path
-        expect(page).to have_content("Welcome, #{current_user.given_name}!")
-        expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Create new project"
-      end
-
       it "shows the 'Project Requests' button" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:new_project_request_wizard, true)
@@ -262,14 +254,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
     context "with the sysadmin role" do
       let(:current_user) { FactoryBot.create(:sysadmin, uid: "xxx999") }
-
-      it "does show the 'New Project' button" do
-        sign_in current_user
-        visit dashboard_path
-        expect(page).to have_content("Welcome, #{current_user.given_name}!")
-        expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Create new project"
-      end
 
       it "shows the system administrator dashboard" do
         sign_in current_user

@@ -29,13 +29,13 @@ Rails.application.routes.draw do
   post "dash_admin", to: "dashboard#dash_admin", as: :dash_admin
 
   resources :projects
-  get "projects/:id/approve", to: "projects#approve", as: :project_approve
+  # get "projects/:id/approve", to: "projects#approve", as: :project_approve
   get "projects/:id/confirmation", to: "projects#confirmation", as: :project_confirmation
   get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
-  get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
+  # get "projects/:id/approval_received", to: "projects#approval_received", as: :project_approval_received
   get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
   resources :requests do

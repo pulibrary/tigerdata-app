@@ -1,9 +1,5 @@
 
-<h2>Project Settings
-  <% if current_user.eligible_sysadmin? %>
-      <%= link_to "Edit", project_approve_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-    <% end %>
-</h2>
+<h2>Project Settings</h2>
 <dl>
   <dt>Project ID</dt><dd id="project_id"><%= @project_id %></dd>
   <dt>Storage Capacity</dt>
