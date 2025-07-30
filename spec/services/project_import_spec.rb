@@ -71,7 +71,7 @@ RSpec.describe ProjectImport do
       new_project_id = random_project_id
       new_project_directory = "tigerdata/rspec-import/#{random_project_directory}"
       new_project = FactoryBot.create(:approved_project, project_id: new_project_id, project_directory: new_project_directory)
-      ProjectMediaflux.create!(project: new_project, user:)
+      new_project.approve!(current_user: user)
 
       # ...and delete it from the Rails database
       # (but it still exists in Mediaflux)

@@ -52,6 +52,8 @@ class Project < ApplicationRecord
     # - another for changing the status of the project
     # - another with debug information from the create project service
     ProvenanceEvent.generate_approval_events(project: self, user: current_user, debug_output: debug_output)
+
+    self.mediaflux_id
   end
 
   def reload

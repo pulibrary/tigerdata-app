@@ -7,7 +7,7 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
 
   describe "#result" do
     before do
-      ProjectMediaflux.create!(project: approved_project, user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
