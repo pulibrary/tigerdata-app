@@ -171,10 +171,6 @@ class Project < ApplicationRecord
     metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
   end
 
-  def save_in_mediaflux(user:)
-    ProjectMediaflux.save(project: self, user: user)
-  end
-
   def created_by_user
     User.find_by(uid: metadata_model.created_by)
   end

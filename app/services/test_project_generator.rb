@@ -11,7 +11,7 @@ class TestProjectGenerator
 
   def generate
     project = create_project
-    project.save_in_mediaflux(user: user)
+    project.approve!(current_user: user)
     project.save!
     project
   end
