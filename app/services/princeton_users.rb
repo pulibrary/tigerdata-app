@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class PrincetonUsers
-  CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a
+  CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9)+'-'.to_a
 
   class << self
 
