@@ -10,19 +10,12 @@
 <div id="project-nav">
   <button id="project-content" class="tab-nav"> Content Preview </button>
   <button id="project-details" class="tab-nav"> Details </button>
-  <% if current_user.eligible_sysadmin? %>
-    <% if @project.pending? %>
-      <button id="project-approval" class="tab-nav"> Approval Setting </button>
-    <% end %>
-  <% end %>
 </div>
 
 <div class="details">
   <h2>Roles
-    <%# Per ticket #1114 only superusers have edit access %>
-    <% if @project_eligible_to_edit && current_user.superuser || current_user.sysadmin %>
-      <%= link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-    <% end %>
+    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
+    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
   </h2>
   <dl>
     <% if !@data_sponsor.nil? %>
@@ -53,10 +46,8 @@
 
 <div class="details">
   <h2>Project Description
-    <%# Per ticket #1114 only superusers have edit access %>
-    <% if @project_eligible_to_edit && current_user.superuser %>
-      <%= link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-    <% end %>
+    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
+    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
   </h2>
   <dl>
     <dt>Departments</dt>
@@ -109,5 +100,5 @@
 
 <script type="module">
   projectStyle('<%= @project_session %>');
-  projectTab("<%= project_path %>", "<%= project_details_path %>", "<%= project_approve_path %>");
+  projectTab("<%= project_path %>", "<%= project_details_path %>");
 </script>

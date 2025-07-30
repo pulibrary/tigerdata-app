@@ -135,7 +135,7 @@ export function projectStyle(railsSession) {
   });
 }
 
-export function projectTab(contentUrl, detailsUrl, approveUrl) {
+export function projectTab(contentUrl, detailsUrl) {
   $('#project-content').on('click', (element) => {
     element.preventDefault();
     $.ajax({
@@ -154,17 +154,6 @@ export function projectTab(contentUrl, detailsUrl, approveUrl) {
       url: detailsUrl,
       success() {
         window.location.href = detailsUrl; // update the browser's URL
-      },
-    });
-  });
-
-  $('#project-approval').on('click', (element) => {
-    element.preventDefault();
-    $.ajax({
-      type: 'GET',
-      url: approveUrl,
-      success() {
-        window.location.href = approveUrl; // update the browser's URL
       },
     });
   });
