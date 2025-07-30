@@ -1,4 +1,5 @@
-require 'rails_helper'
+# frozen_string_literal: true
+require "rails_helper"
 
 RSpec.describe "ProjectImports", type: :request do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
@@ -16,7 +17,7 @@ RSpec.describe "ProjectImports", type: :request do
       expect(flash[:alert]).to eq("You need to sign in or sign up before continuing.")
     end
 
-      context "a signed in user" do
+    context "a signed in user" do
       let(:user) { FactoryBot.create :user }
       before do
         sign_in(user)
@@ -36,7 +37,7 @@ RSpec.describe "ProjectImports", type: :request do
     end
 
     context "a sysadmin user" do
-      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor:true }
+      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true }
       before do
         sign_in(user)
       end
