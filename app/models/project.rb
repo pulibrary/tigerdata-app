@@ -60,25 +60,6 @@ class Project < ApplicationRecord
     self
   end
 
-  def activate!(collection_id:, current_user:)
-    response = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: collection_id)
-    mediaflux_metadata = response.metadata # get the metadata of the collection from mediaflux
-
-    return unless mediaflux_metadata[:collection] == true # If the collection id exists
-
-    # check if the project doi in rails matches the project doi in mediaflux
-    return unless mediaflux_metadata[:project_id] == self.metadata_model.project_id
-
-    # activate a project by setting the status to 'active'
-    self.metadata_model.status = Project::ACTIVE_STATUS
-
-    # also read in the actual project directory
-    self.metadata_model.project_directory = mediaflux_metadata[:project_directory]
-    self.save!
-
-    ProvenanceEvent.generate_active_events(project: self, user: current_user)
-  end
-
   def draft_doi(user: nil)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi

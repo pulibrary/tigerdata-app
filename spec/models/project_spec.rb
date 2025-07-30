@@ -331,47 +331,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(debug_event.event_details).to eq "Debug output"
     end
   end
-
-  describe "#activate!",
-  :integration do
-  let(:project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd")}
-  let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_metadata) {project.metadata_model}
-  after do
-    Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
-  end
-  it "activates a project" do
-    project.create!(initial_metadata: project.metadata_model, user: current_user)
-
-    # create a project in mediaflux
-    project.approve!(current_user: current_user)
-
-    #validate that the collection id exists in mediaflux
-    project.activate!(collection_id: project.mediaflux_id, current_user:)
-    expect(project.mediaflux_id).to eq(project.mediaflux_id)
-    expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
-
-    #activate the project by setting the status to active and creating the necessary provenance events
-    activate_event = project.provenance_events.select { |event| event.event_type == ProvenanceEvent::ACTIVE_EVENT_TYPE}.first  #testing the approval Event
-    expect(activate_event.event_type).to eq ProvenanceEvent::ACTIVE_EVENT_TYPE
-    expect(activate_event.event_person).to eq current_user.uid
-    expect(activate_event.event_details).to eq "Activated by Tigerdata Staff"
-  end
-
-  it "tries to activate a project that has a mismatched doi" do
-      project.create!(initial_metadata: project.metadata_model, user: current_user)
-
-      # create a project in mediaflux
-      project.approve!(current_user: current_user)
-
-      # change the doi so it will not match up when activated
-      project.metadata_model.project_id = "90.34770/xyz"
-      project.save!
-
-      #validate that the collection id exists in mediaflux
-      project.activate!(collection_id: project.mediaflux_id, current_user:)
-      expect(project.metadata_model.status).to_not eq Project::ACTIVE_STATUS
-  end
 end
 
   describe ".default_storage_unit" do
