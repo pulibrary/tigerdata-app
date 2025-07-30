@@ -5,7 +5,7 @@ class RequestProjectMetadata
       {
         title: request[:project_title],
         description: request[:description],
-        status: Project::APPROVED_STATUS,
+        status: Project::PENDING_STATUS,
         data_sponsor: request[:data_sponsor],
         data_manager: request[:data_manager],
         departments: departments(request),

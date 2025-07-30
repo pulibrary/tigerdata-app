@@ -46,14 +46,6 @@ class ProjectShowPresenter
     project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
   end
 
-  # This assumed that the storage usage is recorded in the same units as the units specified in the StorageCapacity metadata
-  def storage_usage(session_id:)
-    persisted = project.storage_usage_raw(session_id: session_id)
-    value = persisted.to_f
-
-    value*default_usage_divisor
-  end
-
   def storage_capacity(session_id: nil)
     return project_metadata.storage_capacity if session_id.nil?
 

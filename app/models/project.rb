@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
+
+  class ProjectCreateError < StandardError; end
+
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
   before_save do |project|
@@ -36,8 +39,12 @@ class Project < ApplicationRecord
     request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
     request.resolve
 
+    if request.mediaflux_id.to_i == 0
+      raise ProjectCreateError.new("Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}")
+    end
+
     self.mediaflux_id = request.mediaflux_id
-    self.metadata_model.status = Project::APPROVED_STATUS if self.mediaflux_id != 0
+    self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
 
     debug_output = if request.mediaflux_id == 0

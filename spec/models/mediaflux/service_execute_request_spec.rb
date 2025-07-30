@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, type: :model, integration: true do
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   subject(:request) { described_class.new(session_token: user.mediaflux_session, service_name: "asset.namespace.list") }
   let(:approved_project) { FactoryBot.create(:approved_project) }

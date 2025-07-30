@@ -23,91 +23,6 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
     system_admin
   end
 
-  it "allows the user fill in only valid users for roles" do
-    sign_in sponsor_user
-    visit dashboard_path
-    click_on "Create new project"
-
-    # Check data manager validations (invalid value, empty value, valid value)
-    expect(page.find("#non-editable-data-sponsor").text).to eq sponsor_user.uid
-    fill_in_and_out "data_manager", with: "xxx"
-    expect(page.find("#data_manager_error").text).to eq "Invalid value entered"
-    expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in_and_out "data_manager", with: ""
-    expect(page.find("button[value=Submit]")).to be_disabled
-    fill_in_and_out "data_manager", with: ""
-    expect(page.find("#data_manager_error").text).to eq "This field is required"
-    fill_in_and_out "data_manager", with: data_manager.uid
-    expect(page.find("#data_manager_error", visible: false).text).to eq ""
-    expect(page.find("button[value=Submit]").disabled?).to be false
-
-    # Adds a data user (read-only)
-    click_on "Add User(s)"
-    fill_in_and_out "data-user-uid-to-add", with: read_only.uid
-    click_on "Save changes"
-
-    page.find("#departments").find(:xpath, "option[3]").select_option
-
-    fill_in "project_directory", with: "test_project"
-    fill_in "title", with: "My test project"
-    expect(page).to have_content("#{Rails.configuration.mediaflux['api_root']}/")
-    expect(page.find_all("input:invalid").count).to eq(0)
-    expect do
-      click_button("Submit")
-    end.to have_enqueued_job(ActionMailer::MailDeliveryJob).exactly(1).times
-    expect(page).to have_content "New Project Request Received"
-    click_on "Return to Dashboard"
-    expect(page).to have_content("Welcome")
-    find(:xpath, "//a[text()='My test project']").click
-    click_on "Details"
-    expect(page).to have_content("This project has not been saved to Mediaflux")
-    expect(page).to have_content(read_only.display_name + " (read only)")
-  end
-
-  context "Data Sponsors and superusers are the only ones who can request a new project" do
-    let(:superuser) { FactoryBot.create(:superuser, mediaflux_session: SystemUser.mediaflux_session) }
-    it "allows Data Sponsors to request a new project" do
-      sign_in sponsor_user
-      visit dashboard_path
-      click_on "Create new project"
-      expect(page).to have_content "New Project Request"
-    end
-    it "allows superusers to request a new project" do
-      sign_in superuser
-      visit dashboard_path
-      click_on "Create new project"
-      expect(page).to have_content "New Project Request"
-    end
-    it "does not give the data manager the New Project button" do
-      sign_in data_manager
-      visit dashboard_path
-      expect(page).not_to have_content "Create new project"
-    end
-    it "only allows the Data Sponsor to load the New Projects page" do
-      sign_in data_manager
-      visit "/projects/new"
-      expect(current_path).to eq dashboard_path
-    end
-    it "does give the system admin New Project button" do
-      sign_in system_admin
-      visit dashboard_path
-      expect(page).to have_content "Create new project"
-    end
-    it "does not allow the system administrato to load New Projects page" do
-      sign_in system_admin
-      visit "/projects/new"
-      expect(current_path).to eq dashboard_path
-    end
-  end
-  context "The Data Sponsor who initiates the request is automatically assigned as the Data Sponsor for that project" do
-    let(:data_sponsor) { FactoryBot.create(:project_sponsor) }
-    it "only allows the user who initiated the request as the Data Sponsor" do
-      sign_in data_sponsor
-      visit "/projects/new"
-      expect(page.find("#non-editable-data-sponsor").text).to eq data_sponsor.uid
-    end
-  end
-
   context "Super Users can input a data sponsor and project id" do
     let(:superuser) { FactoryBot.create(:superuser) }
     let(:sponsor_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
@@ -192,44 +107,6 @@ RSpec.describe "Project Edit Page Roles Validation", type: :system, connect_to_m
       click_on "Submit"
       visit "/projects/#{project.id}/details"
       expect(page).to have_content "#{ro_data_user.display_name} (read only)"
-    end
-  end
-
-  context "only system admins and super users can approve a project" do
-    let(:project) { FactoryBot.create(:project, status: Project::PENDING_STATUS, project_id: "10.123/456") }
-
-    it "allows a system admins user to approve the project" do
-      sign_in system_admin
-      visit project_approve_path(project)
-      expect(page).to have_content "Metadata Highlights"
-      click_on "Approve"
-      expect(page).to have_content "Project Approval Received"
-    end
-
-    it "allows a super user to approve the project" do
-      sign_in superuser
-      visit project_approve_path(project)
-      expect(page).to have_content "Metadata Highlights"
-      click_on "Approve"
-      expect(page).to have_content "Project Approval Received"
-    end
-
-    it "does not allow a data sponsor to approve the project" do
-      sign_in sponsor_user
-      visit project_approve_path(project)
-      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
-    end
-
-    it "does not allow a data manager to approve the project" do
-      sign_in data_manager
-      visit project_approve_path(project)
-      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
-    end
-
-    it "does not allow a data user to approve the project" do
-      sign_in read_only
-      visit project_approve_path(project)
-      expect(page).not_to have_content "Approve this project by appending a mediaflux id"
     end
   end
 end

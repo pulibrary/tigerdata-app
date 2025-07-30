@@ -74,35 +74,6 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
-  describe "#create" do
-    let(:user) { FactoryBot.create :user }
-    it "redirects to signin" do
-      post :create, params: {
-        "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
-        "project_directory" => "testparams", "title" => "Params",
-        "description" => "testing controller params", "ro_user_counter" => "0",
-        "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
-      }
-      expect(response).to redirect_to "http://test.host/sign_in"
-    end
-
-    context "a signed in user" do
-      before do
-        sign_in user
-      end
-      it "creates one provenance event only" do
-        post :create, params: {
-          "data_sponsor" => user.uid, "data_manager" => user.uid, "departments" => ["RDSS"],
-          "project_directory" => "testparams", "title" => "Params",
-          "description" => "testing controller params", "ro_user_counter" => "0",
-          "rw_user_counter" => "0", "controller" => "projects", "action" => "create"
-        }
-        project = Project.last
-        expect(project.provenance_events.count).to eq 2
-      end
-    end
-  end
-
   describe "#index" do
     it "redirects to signin" do
       get :index
@@ -182,13 +153,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(response.body).to eq("")
         end
 
-        context "the project is saved to mediaflux", connect_to_mediaflux: true do
-          let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
-          let(:project) { FactoryBot.create :project_with_doi, data_sponsor: user.uid }
+        context "the project is saved to mediaflux", connect_to_mediaflux: true, integration: true do
+          let(:project) { FactoryBot.create :project_with_doi, data_sponsor: sponsor_and_data_manager.uid }
           before do
-            project.save_in_mediaflux(user: user)
+            project.approve!(current_user: sponsor_and_data_manager)
           end
           it "runs a query" do
+            sign_in sponsor_and_data_manager
             allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
 
             get :show, params: { id: project.id }

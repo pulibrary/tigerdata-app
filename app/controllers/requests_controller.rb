@@ -32,6 +32,7 @@ class RequestsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def approve
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
@@ -48,7 +49,11 @@ class RequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
+  rescue StandardError
+    flash[:notice] = "Error approving request #{@request_model.id}"
+    redirect_to request_path(@request_model)
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
