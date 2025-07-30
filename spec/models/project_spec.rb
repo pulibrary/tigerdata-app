@@ -256,14 +256,14 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       end
 
       it "does not mint a new DOI when the project has a project_id" do
-        project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+        project.metadata_model.update_with_params({ "project_id" => "123" }, current_user)
         doi = project.create!(initial_metadata: project.metadata_model, user: current_user)
         expect(datacite_stub).to_not have_received(:draft_doi)
         expect(doi).to eq "123"
       end
 
       it "mints a DOI when needed" do
-        project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED},  current_user)
+        project.metadata_model.update_with_params({ "project_id" => ProjectMetadata::DOI_NOT_MINTED }, current_user)
         project.create!(initial_metadata: project.metadata_model, user: current_user)
         expect(datacite_stub).to have_received(:draft_doi)
       end
@@ -271,16 +271,18 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     context "Provenance events" do
       it "creates the provenance events when creating a new project" do
-        project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED},  current_user)
+        project.metadata_model.update_with_params({ "project_id" => ProjectMetadata::DOI_NOT_MINTED }, current_user)
         project.create!(initial_metadata: project.metadata_model, user: current_user)
 
         expect(project.provenance_events.count).to eq 2
-        submission_event = project.provenance_events.first #testing the Submission Event
+        submission_event = project.provenance_events.first # testing the Submission Event
         expect(submission_event.event_type).to eq ProvenanceEvent::SUBMISSION_EVENT_TYPE
         expect(submission_event.event_person).to eq current_user.uid
         expect(submission_event.event_details).to eq "Requested by #{current_user.display_name_safe}"
 
-        status_update_event = project.provenance_events.last #testing the Status Update Event when the project is first submitted, #TODO: will need a separate test for when a project is approved by an admin
+        # testing the Status Update Event when the project is first submitted,
+        # TODO: will need a separate test for when a project is approved by an admin
+        status_update_event = project.provenance_events.last
         expect(status_update_event.event_type).to eq ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE
         expect(status_update_event.event_person).to eq current_user.uid
         expect(status_update_event.event_details).to eq "The Status of this project has been set to pending"
@@ -299,7 +301,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     it "Records the mediaflux id and sets the status to approved",
     :integration do
-      project.metadata_model.update_with_params({"project_id" => "123"},  current_user)
+      project.metadata_model.update_with_params({ "project_id" => "123" }, current_user)
       project.create!(initial_metadata: project.metadata_model, user: current_user)
 
       project.approve!(current_user: current_user)
@@ -311,7 +313,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     it "creates the provenance events when creating a new project",
     :integration do
-      project.metadata_model.update_with_params({"project_id" => ProjectMetadata::DOI_NOT_MINTED}, current_user)
+      project.metadata_model.update_with_params({ "project_id" => ProjectMetadata::DOI_NOT_MINTED }, current_user)
       project.create!(initial_metadata: project.metadata_model, user: current_user)
       project.approve!(current_user: current_user)
       project.reload
@@ -320,13 +322,13 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
 
       expect(project.provenance_events.count).to eq 5
-      approval_event = project.provenance_events.select { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE}.first
+      approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
 
       expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
       expect(approval_event.event_person).to eq current_user.uid
       expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
 
-      debug_event = project.provenance_events.select { |event| event.event_type == ProvenanceEvent::DEBUG_OUTPUT_TYPE}.first
+      debug_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::DEBUG_OUTPUT_TYPE }
       expect(debug_event.event_person).to eq current_user.uid
       expect(debug_event.event_details).to eq "Debug output"
     end
