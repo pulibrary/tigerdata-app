@@ -331,7 +331,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(debug_event.event_details).to eq "Debug output"
     end
   end
-end
 
   describe ".default_storage_unit" do
     it "returns the default storage unit of KB" do
