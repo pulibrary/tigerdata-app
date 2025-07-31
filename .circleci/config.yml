@@ -65,9 +65,8 @@ commands:
 jobs:
   test:
     working_directory: ~/tiger_data
-    machine:
-      image: ubuntu-2404:2024.05.1
-      docker_layer_caching: true
+    machine: true
+    resource_class: pulibrary/ruby-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
