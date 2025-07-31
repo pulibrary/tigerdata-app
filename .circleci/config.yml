@@ -27,7 +27,7 @@ executors:
 commands:
   install_dependencies:
     steps:
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev  && apt install -y
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
