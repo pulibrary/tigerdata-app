@@ -112,14 +112,23 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
   context "user" do
     let(:datasponsor) { FactoryBot.create(:project_sponsor) }
     let(:project) { FactoryBot.create(:project, data_sponsor: datasponsor.uid, data_manager: datamanager.uid) }
+    let(:project_2) { FactoryBot.create(:project, data_sponsor: datasponsor.uid, data_manager: datamanager.uid, data_user_read_write: [user_b.uid]) }
     let(:datamanager) { FactoryBot.create(:data_manager) }
     let(:user_a) { FactoryBot.create(:user) }
+    let(:user_b) { FactoryBot.create(:user) }
     it "does not allow a user to see someone elses project" do
       sign_in user_a
       visit "/projects/#{project.id}"
       expect(page).to have_content("Access Denied")
       visit "/projects/#{project.id}.xml"
       expect(page).to have_content("Access Denied")
+    end
+    it "allows a user to see a project they are affiliated with" do
+      sign_in user_b
+      visit "/projects/#{project_2.id}"
+      expect(page).to have_content(project_2.title)
+      visit "/projects/#{project_2.id}.xml"
+      expect(page.body).to include(project_2.title)
     end
   end
 end
