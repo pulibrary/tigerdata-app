@@ -10,16 +10,90 @@ class RequestWizardsController < ApplicationController
 
   attr_reader :request_model
 
+  def previous_steps_for(step_name:)
+    if step_name == "review_and_submit_controller"
+      return steps[..9]
+    end
+    if step_name == "additional_information_related_resources_controller"
+      return steps[..8]
+    end
+    if step_name == "additional_information_project_permissions_controller"
+      return steps[..7]
+    end
+    if step_name == "additional_information_grants_and_funding_controller"
+      return steps[..6]
+    end
+    if step_name == "storage_and_access_controller"
+      return steps[..5]
+    end
+    if step_name == "project_type_controller"
+      return steps[..4]
+    end
+    if step_name == "roles_and_people_controller"
+      return steps[..3]
+    end
+    if step_name == "project_information_dates_controller"
+      return steps[..2]
+    end
+    if step_name == "project_information_categories_controller"
+      return steps[..1]
+    end
+
+    []
+  end
+
+  def steps
+    [
+      "project_information_controller",
+      "project_information_categories_controller",
+      "project_information_dates_controller",
+      "roles_and_people_controller",
+      "project_type_controller",
+      "storage_and_access_controller",
+      "additional_information_grants_and_funding_controller",
+      "additional_information_project_permissions_controller",
+      "additional_information_related_resources_controller",
+      "review_and_submit_controller"
+    ]
+  end
+
   def find_step_class(step_name:)
-    controller_name == step_name ? 'step-number-current' : 'step-number-completed'
+    if controller_name == step_name
+      'step-number-current'
+    else
+      previous_steps = previous_steps_for(step_name: controller_name)
+      if previous_steps.include?(step_name)
+        'step-number-inactive'
+      else
+        'step-number-completed'
+      end
+    end
   end
 
   def find_substep_class(substep_name:)
-    controller_name == substep_name ? 'substep-indicator-current' : 'substep-indicator-completed'
+    if controller_name == substep_name
+      'substep-indicator-current'
+    else
+      previous_steps = previous_steps_for(step_name: controller_name)
+      if previous_steps.include?(substep_name)
+        'substep-indicator-inactive'
+      else
+        'substep-indicator-completed'
+      end
+    end
   end
 
   def find_substep_text_class(substep_name:)
-    controller_name == substep_name ? 'substep-text' : 'substep-text-current'
+    if controller_name == substep_name
+      'substep-text-current'
+    else
+      previous_steps = previous_steps_for(step_name: controller_name)
+      if previous_steps.include?(substep_name)
+        'substep-text-inactive'
+      else
+        'substep-text-completed'
+      end
+    end
   end
   helper_method :find_step_class, :find_substep_class, :find_substep_text_class
 

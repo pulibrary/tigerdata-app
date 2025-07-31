@@ -637,9 +637,9 @@
   background: $white;
 }
 
-.substep-text,
-.substep-text a:link,
-.substep-text a:visited {
+.substep-text-completed,
+.substep-text-completed a:link,
+.substep-text-completed a:visited {
   color: $black;
   font-size: 12px;
   font-family: $libre-franklin;
@@ -649,7 +649,7 @@
   text-decoration: none;
 }
 
-.substep-text a:hover {
+.substep-text-completed a:hover {
   text-decoration: underline;
 }
 
