@@ -13,13 +13,21 @@ class PrincetonUsers
     def create_users_from_ldap(current_uid_start: "", ldap_connection: default_ldap_connection)
       CHARS_AND_NUMS.each do |char|
         filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
-        people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]); 
+        people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
         if ldap_connection.get_operation_result.message == "Success"
           people.each{|person| user_from_ldap(person)}
         else
           create_users_from_ldap(current_uid_start: "#{current_uid_start}#{char}", ldap_connection:)
         end
       end
+    end
+
+    def create_user_from_ldap_by_uid(uid, ldap_connection: default_ldap_connection)
+      filter = Net::LDAP::Filter.eq('uid', uid)
+      person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
+      raise StandardError "More than one user matches supplied uid: #{uid}" if person.length > 1
+      raise StandardError "No user with uid #{uid} found" if person.empty?
+      user_from_ldap(person.first)
     end
 
     def user_from_ldap(ldap_person)
