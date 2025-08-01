@@ -73,14 +73,20 @@ You will also want to run the vite development server:
 
 `bin/vite dev`
 
-### Populate the authorized users table
-Authentication and authorization is restricted to a few selected users. Make sure to run the rake task to pre-populate your local database:
+### Creating users for development and testing
 
-```
-bundle exec rake load_users:from_registration_list
-```
+Users can be added one-by-one via an LDAP lookup of their net ID with the following rake task (example argument):
 
-If your name is not on the registration list see steps below under "User Registration List" for instructions on how to add yourself.
+`bundle exec rake load_users:load_single_user\["abc123"]`
+
+***In the non-production environments only***, elevate an existing user to superuser with the following rake task (example argument):
+
+`bundle exec rake user_roles:add_superuser\["abc123"]`
+
+Similarly, ***in the non-production environments only***, you can remove superuser from a user with the following rake task (example argument):
+
+`bundle exec rake user_roles:remove_superuser\["abc123"]`
+
 
 #### MediaFlux Server
 
