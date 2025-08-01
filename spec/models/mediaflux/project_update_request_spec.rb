@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
   describe "metadata values" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
     end
 
     it "passes the metadata values in the request" ,

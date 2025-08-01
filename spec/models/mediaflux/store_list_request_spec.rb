@@ -14,7 +14,7 @@ RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :m
     before do
       # create a real collection for the test to make a request to
       approved_project.mediaflux_id = nil
-      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      @mediaflux_id = approved_project.approve!(current_user: user)
     end
     it "parses a metadata response" do
       stores_request = described_class.new(session_token: user.mediaflux_session)

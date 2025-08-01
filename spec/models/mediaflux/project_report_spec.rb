@@ -7,7 +7,7 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
 
   describe "#result" do
     before do
-      ProjectMediaflux.create!(project: approved_project, user:)
+      approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
@@ -18,7 +18,7 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
 
       # the mediaflux command gets ALL the project in mediaflux
       #  since we have development and test in our single mediaflux instance we have to filter
-      test_project = mediaflux_projects.select{ |project| project["asset"].to_i == approved_project.mediaflux_id }
+      test_project = mediaflux_projects.select { |project| project["asset"].to_i == approved_project.mediaflux_id }
       expect(test_project.count).to eq(1)
       expect(test_project.first["projectID"]).to eq(approved_project.metadata_model.project_id)
     end

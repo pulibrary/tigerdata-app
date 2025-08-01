@@ -9,7 +9,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
   let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
 
   before do
-    ProjectMediaflux.create!(user: user, project: project_in_mediaflux)
+    project_in_mediaflux.approve!(current_user: user)
   end
 
   describe "#perform_later" do

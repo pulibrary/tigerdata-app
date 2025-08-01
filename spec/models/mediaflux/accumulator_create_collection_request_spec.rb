@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::AccumulatorCreateCollectionRequest, connect_to_mediafl
     before do
       # create a real collection for the test to create an accumulator for
       approved_project.mediaflux_id = nil
-      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      @mediaflux_id = approved_project.approve!(current_user: user)
     end
 
     it "parses a response" do

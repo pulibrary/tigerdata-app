@@ -52,6 +52,8 @@ class Project < ApplicationRecord
     # - another for changing the status of the project
     # - another with debug information from the create project service
     ProvenanceEvent.generate_approval_events(project: self, user: current_user, debug_output: debug_output)
+
+    self.mediaflux_id
   end
 
   def reload
@@ -167,10 +169,6 @@ class Project < ApplicationRecord
     return true if user.eligible_sysadmin?
     metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
     metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
-  end
-
-  def save_in_mediaflux(user:)
-    ProjectMediaflux.save(project: self, user: user)
   end
 
   def created_by_user

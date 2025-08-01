@@ -7,12 +7,12 @@ RSpec.describe ProjectImport do
 
   describe "#run" do
     it "flags the missing users" do
-      expect {
+      expect do
         output = subject.run
         expect(output[0]).to include("Error creating project for 4894926: Invalid netid: uid2 for role Data Manager")
         expect(output[1]).to include("Error creating project for 4894935: Invalid netid: uid1 for role Data Manager")
         expect(output[2]).to include("Error creating project for 4897938: Invalid netid: uid4 for role Data Manager")
-      }.to change { Project.count }.by(0)
+      end.to change { Project.count }.by(0)
     end
 
     context "when all users exist" do
@@ -24,15 +24,14 @@ RSpec.describe ProjectImport do
         FactoryBot.create :user, uid: "uid5"
       end
       it "creates test data" do
-        expect {
+        expect do
           output = subject.run
           expect(output[0]).to eq("Created project for 10.00000/1234-abcd")
           expect(output[1]).to eq("Created project for 10.00000/1234-efgh")
 
           # with liberal parsing we will try to create a record, but fail due to errors in the data
           expect(output[2]).to include("Error creating project for 4897938: Invalid netid: a dataset \\b\" for role Data Sponsor")
-
-        }.to change { Project.count }.by(2)
+        end.to change { Project.count }.by(2)
         project_metadata = Project.first.metadata_model
         expect(project_metadata.project_id).to eq("10.00000/1234-abcd")
         expect(project_metadata.data_sponsor).to eq("uid1")
@@ -56,7 +55,7 @@ RSpec.describe ProjectImport do
 
   describe "##run_with_report" do
     let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
-    let (:user) {FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session}
+    let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
 
     before do
       # Make sure we start with a clean slate
@@ -71,7 +70,7 @@ RSpec.describe ProjectImport do
       new_project_id = random_project_id
       new_project_directory = "tigerdata/rspec-import/#{random_project_directory}"
       new_project = FactoryBot.create(:approved_project, project_id: new_project_id, project_directory: new_project_directory)
-      ProjectMediaflux.create!(project: new_project, user:)
+      new_project.approve!(current_user: user)
 
       # ...and delete it from the Rails database
       # (but it still exists in Mediaflux)

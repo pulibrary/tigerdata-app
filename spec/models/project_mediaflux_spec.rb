@@ -9,7 +9,7 @@ RSpec.describe ProjectMediaflux, type: :model do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id",
       :integration do
-        mediaflux_id = described_class.create!(project: project, user: current_user)
+        mediaflux_id = project.approve!(current_user: current_user)
         mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
                               session_token: current_user.mediaflux_session,
                               id: mediaflux_id
@@ -28,7 +28,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "adds a quota when it creates a project in mediaflux",
         :integration do
           project = FactoryBot.create(:project_with_doi)
-          described_class.create!(project: project, user: current_user)
+          project.approve!(current_user: current_user)
           metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: current_user.mediaflux_session,
             id: project.mediaflux_id
@@ -42,12 +42,12 @@ RSpec.describe ProjectMediaflux, type: :model do
         it "raises an error",
         :integration do
           # Make the project once
-          described_class.create!(project: project, user: current_user)
+          project.approve!(current_user: current_user)
           duplicate_events = project.provenance_events.where(event_type: "Debug Output").find { |event| event.event_note.include?("Collection already exists") }
           expect(duplicate_events).to be nil
 
           # Raises an error if we try to create the same project again
-          expect { described_class.create!(project: project, user: current_user) }.to raise_error(Project::ProjectCreateError)
+          expect { project.approve!(current_user: current_user) }.to raise_error(Project::ProjectCreateError)
         end
       end
     end
@@ -75,7 +75,8 @@ RSpec.describe ProjectMediaflux, type: :model do
     before do
       described_class.create!(project: project, user: current_user)
     end
-    it "defaults updated_on/by when not provided",
+    # Project updates in MediaFlux are not supported yet
+    xit "defaults updated_on/by when not provided",
     :integration do
       project.metadata_model.updated_on = nil
       project.metadata_model.updated_by = nil
@@ -84,7 +85,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       expect(project.metadata_model.updated_by).not_to be nil
     end
 
-    it "honors updated_on/by values when provided",
+    # Project updates in MediaFlux are not supported yet
+    xit "honors updated_on/by values when provided",
     :integration do
       updated_on = Time.current.in_time_zone("America/New_York").iso8601
       project.metadata_model.updated_on = updated_on
