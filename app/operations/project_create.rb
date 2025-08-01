@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class CreateProject < Dry::Operation
-  def call(request:)
+  def call(request:, approver:)
     project = step create_project_from_request(request)
-    mediaflux_id = step persist_in_mediaflux(project, request.current_user)
+    mediaflux_id = step persist_in_mediaflux(project, approver)
     step persist_users_in_mediaflux(project, mediaflux_id)
     Success project
   end

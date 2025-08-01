@@ -67,13 +67,14 @@ class Request < ApplicationRecord
   end
 
   def approve(approver)
-    project_metadata_json = RequestProjectMetadata.convert(self)
-    # Create the project in the Rails database
-    project = Project.create!({ metadata_json: project_metadata_json })
-    project.draft_doi
-    project.save!
-    create_in_mediaflux(project:, approver:)
-    project
+    # project_metadata_json = RequestProjectMetadata.convert(self)
+    # # Create the project in the Rails database
+    # project = Project.create!({ metadata_json: project_metadata_json })
+    # project.draft_doi
+    # project.save!
+    # create_in_mediaflux(project:, approver:)
+    # project
+    Operations::ProjectCreate.new(request: self, approver: approver).call
   end
 
   private
