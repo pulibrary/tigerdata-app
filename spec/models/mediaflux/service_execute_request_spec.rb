@@ -12,7 +12,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
   before do
     # create a real collection as an example of a service execution
     approved_project.mediaflux_id = nil
-    @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+    @mediaflux_id = approved_project.approve!(current_user: user)
   end
 
   describe "#resolve" do
