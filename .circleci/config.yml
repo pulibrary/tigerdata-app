@@ -27,7 +27,7 @@ executors:
 commands:
   install_dependencies:
     steps:
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -65,9 +65,8 @@ commands:
 jobs:
   test:
     working_directory: ~/tiger_data
-    machine:
-      image: ubuntu-2404:2024.05.1
-      docker_layer_caching: true
+    machine: true
+    resource_class: pulibrary/ruby-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
