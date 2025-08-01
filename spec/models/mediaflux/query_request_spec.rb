@@ -9,7 +9,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
   describe "#result" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
     end
 
@@ -26,7 +26,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
   context "deep search" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project,  user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
   context "action get-name" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
     end
 
@@ -60,7 +60,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
   context "action get-values" do
     before do
       approved_project.mediaflux_id = nil
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      mediaflux_id = approved_project.approve!(current_user: user)
       Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
     end
 

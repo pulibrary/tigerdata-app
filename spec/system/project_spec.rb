@@ -234,13 +234,12 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       let(:approved_project) do
         project = FactoryBot.create(:approved_project, title: "project 111", data_sponsor: sponsor_user.uid)
         project.mediaflux_id = nil
+        project.approve!(current_user: sponsor_user)
         project
       end
 
       before do
         sign_in sponsor_user
-        # Save the project in mediaflux
-        approved_project.save_in_mediaflux(user: sponsor_user)
         # Create file(s) for the project in mediaflux using test asset create request
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
@@ -302,13 +301,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         let(:approved_project) do
           persisted = FactoryBot.create(:approved_project, metadata_model: metadata_model)
           persisted.mediaflux_id = nil
+          persisted.approve!(current_user: sponsor_user)
           persisted
-        end
-
-        before do
-          sign_in sponsor_user
-          # Save the project in mediaflux
-          approved_project.save_in_mediaflux(user: sponsor_user)
         end
 
         it "renders the storage capacity in the show view",

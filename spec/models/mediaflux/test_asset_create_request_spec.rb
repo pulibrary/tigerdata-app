@@ -12,7 +12,7 @@ RSpec.describe Mediaflux::TestAssetCreateRequest, connect_to_mediaflux: true, ty
     before do
       # create a collection for the test to create files under
       approved_project.mediaflux_id = nil
-      @mediaflux_id = ProjectMediaflux.create!(project: approved_project, user:)
+      @mediaflux_id = approved_project.approve!(current_user: user)
     end
 
     it "disconnects the session",
