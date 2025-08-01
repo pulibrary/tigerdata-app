@@ -2,8 +2,8 @@
 class CreateProject < Dry::Operation
   def call(request:, approver:)
     project = step create_project_from_request(request)
-    mediaflux_id = step persist_in_mediaflux(project, approver)
-    step persist_users_in_mediaflux(project, mediaflux_id)
+    step persist_in_mediaflux(project, approver)
+    step persist_users_in_mediaflux(project, approver)
     Success project
   end
 
@@ -48,13 +48,13 @@ class CreateProject < Dry::Operation
     end
     # rubocop:enable Metrics/MethodLength
 
-    def persist_users_in_mediaflux(_project, _mediaflux_id)
+    def persist_users_in_mediaflux(project, current_user)
       # Add the data users to the project in Mediaflux
       add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: project)
       add_users_request.resolve
 
       user_debug = add_users_request.debug_output.to_s
-      Rails.logger.error "Project #{id} users have been added to MediaFlux: #{user_debug}"
+      Rails.logger.debug { "Project #{project.id} users have been added to MediaFlux: #{user_debug}" }
 
       Success true
       # Return Success(true) or Failure(error)
