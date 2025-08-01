@@ -8,7 +8,7 @@ RSpec.describe Mediaflux::IteratorDestroyRequest, connect_to_mediaflux: true, ty
 
   describe "#result" do
     before do
-      mediaflux_id = ProjectMediaflux.create!(project: approved_project, session_id: user.mediaflux_session)
+      mediaflux_id = approved_project.approve!(current_user: user)
       query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: true)
       @iterator_id = query_req.result
     end
