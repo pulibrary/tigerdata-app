@@ -13,12 +13,12 @@ RSpec.describe ProjectCreate, type: :operation do
   end
 
   let(:invalid_request) do
-    described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
-                           data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
-                           departments: [{ code: "dept", name: "department" }],
-                           description: "description", parent_folder: random_project_directory,
-                           project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
-                           requested_by: "uid", user_roles: [])
+    Request.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
+                   data_sponsor: approver.uid, data_manager: approver.uid,
+                   departments: [{ code: "dept", name: "department" }],
+                   description: "description", parent_folder: random_project_directory,
+                   project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
+                   requested_by: "uid", user_roles: [])
   end
   subject { described_class.new } # Or initialize with dependencies if any
 
@@ -35,8 +35,7 @@ RSpec.describe ProjectCreate, type: :operation do
 
     context "Failure case" do
       it "raises an error if the project cannot be saved to Mediaflux" do
-        result = described_class.new.call(request: invalid_request, approver: approver)
-        expect(result).to be_failure
+        expect { described_class.new.call(request: invalid_request, approver: approver) }.to raise_error
         expect do
           described_class.new.call(request: invalid_request, approver: approver)
         end.to raise_error(ProjectCreate::ProjectCreateError, /Error saving project/)
