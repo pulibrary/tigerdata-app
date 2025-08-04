@@ -67,13 +67,17 @@ class Request < ApplicationRecord
   end
 
   def approve(approver)
-    project_metadata_json = RequestProjectMetadata.convert(self)
-    # Create the project in the Rails database
-    project = Project.create!({ metadata_json: project_metadata_json })
-    project.draft_doi
-    project.save!
-    create_in_mediaflux(project:, approver:)
-    project
+    create_project_operation = ProjectCreate.new
+    result = create_project_operation.call(request: self, approver: approver)
+    result = result.flatten while result.class != Project
+    result
+  rescue ProjectCreate::ProjectCreateError => ex
+    # Save the error within the Request object
+    self.error_message = { message: ex.message }
+    save!
+    # ..and get rid of the Rails project
+    project.destroy!
+    raise "Error approving request #{id}"
   end
 
   private
@@ -97,17 +101,5 @@ class Request < ApplicationRecord
       else
         true
       end
-    end
-
-    def create_in_mediaflux(project:, approver:)
-      # Create the project in Mediaflux
-      project.approve!(current_user: approver)
-    rescue Project::ProjectCreateError => ex
-      # Save the error within the Request object
-      self.error_message = { message: ex.message }
-      save!
-      # ..and get rid of the Rails project
-      project.destroy!
-      raise "Error approving request #{id}"
     end
 end
