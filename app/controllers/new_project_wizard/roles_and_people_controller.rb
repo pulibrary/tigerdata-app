@@ -8,10 +8,14 @@ class NewProjectWizard::RolesAndPeopleController < RequestWizardsController
     end
 
     def render_next
-      redirect_to new_project_project_type_path(request_model)
+      # TODO: forward to project type once that screen is implemented
+      # redirect_to new_project_project_type_path(request_model)
+      redirect_to new_project_storage_and_access_path(request_model)
     end
 
     def render_back
-      redirect_to new_project_project_info_dates_path(request_model)
+      # TODO: Redirect to dates once that screen is implemented
+      # redirect_to new_project_project_info_dates_path(request_model)
+      redirect_to new_project_project_info_path(request_model)
     end
 end

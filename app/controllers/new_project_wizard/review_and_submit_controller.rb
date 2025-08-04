@@ -21,6 +21,8 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
     end
 
     def render_back
-      redirect_to new_project_additional_information_related_resources_path(request_model)
+      # TODO: redirect back to additional information when that screen is implemented
+      # redirect_to new_project_additional_information_related_resources_path(request_model)
+      redirect_to new_project_storage_and_access_path(request_model)
     end
 end
