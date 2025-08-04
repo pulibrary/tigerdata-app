@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class PrincetonUsers
   CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a + ['-']
-  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37].freeze
+  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441].freeze
 
   class << self
       
