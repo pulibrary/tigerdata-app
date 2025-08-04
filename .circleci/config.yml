@@ -67,9 +67,11 @@ commands:
 
   cleanup_docker:
     steps:
-      - run: sudo podman stop mediaflux || true
       - run: podman stop postgres mediaflux || true
+      - run: podman stop mediaflux || true
+      - run: sudo podman stop mediaflux || true
       - run: podman system prune -a --volumes -f || true
+      - run: sudo podman system prune -a --volumes -f || true
 
 jobs:
   test:
