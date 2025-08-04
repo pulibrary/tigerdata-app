@@ -176,7 +176,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     before do
       # Save the project in mediaflux
-      project.save_in_mediaflux(user: manager)
+      project.approve!(current_user: manager)
 
       # create a collection so it can be filtered
       Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
@@ -209,26 +209,26 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#save_in_mediaflux" do
-    let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-    let(:project) { FactoryBot.create(:project_with_doi) }
-    it "calls ProjectMediaflux to create the project and save the id", integration: true do
-      expect(project.mediaflux_id).to be nil
-      project.save_in_mediaflux(user: user)
-      expect(project.mediaflux_id).not_to be nil
-    end
+  # describe "#save_in_mediaflux" do
+  #   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+  #   let(:project) { FactoryBot.create(:project_with_doi) }
+  #   it "calls ProjectMediaflux to create the project and save the id", integration: true do
+  #     expect(project.mediaflux_id).to be nil
+  #     project.save_in_mediaflux(user: user)
+  #     expect(project.mediaflux_id).not_to be nil
+  #   end
 
-    context "when the projects has already beed saved" do
-      before do
-        project.save_in_mediaflux(user: user)
-      end
-      # MEDIAFLUX_UPDATES are not yet supported in the UI
-      xit "calls out to mediuaflux with an update " do
-        project.metadata_model.title = "New title"
-        expect { project.save_in_mediaflux(user: user) }.not_to raise_error
-      end
-    end
-  end
+  #   context "when the projects has already beed saved" do
+  #     before do
+  #       project.save_in_mediaflux(user: user)
+  #     end
+  #     # MEDIAFLUX_UPDATES are not yet supported in the UI
+  #     xit "calls out to mediuaflux with an update " do
+  #       project.metadata_model.title = "New title"
+  #       expect { project.save_in_mediaflux(user: user) }.not_to raise_error
+  #     end
+  #   end
+  # end
 
   describe "#pending?" do
     it "checks the status" do

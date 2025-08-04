@@ -128,32 +128,6 @@ class User < ApplicationRecord
     !Rails.env.production? && (eligible_sponsor? && trainer?)
   end
 
-  # Parse the USER_REGISTRATION_LIST csv
-  # @return [CSV::Table]
-  def self.csv_data
-    CSV.parse(File.read(USER_REGISTRATION_LIST), headers: true)
-  end
-
-  # Load the user registration list from the CSV file.
-  # Select the file that matches the rails environment.
-  def self.load_registration_list
-    User.csv_data.each do |line|
-      user = User.find_by(uid: line["uid"]) || User.new
-      user.uid = line["uid"]
-      user.family_name = line["family_name"]
-      user.display_name = line["display_name"]
-      user.email = user.uid + "@princeton.edu"
-      # If we don't say that this is a cas user, they won't be able to log in with CAS
-      user.provider = "cas"
-      user.eligible_sponsor = line["eligible_sponsor"] == "TRUE"
-      user.eligible_manager = line["eligible_manager"] == "TRUE"
-      user.superuser = line["superuser"] == "TRUE"
-      user.sysadmin = line["sysadmin"] == "TRUE"
-      user.trainer = line["tester_trainer"] == "TRUE"
-      user.save
-    end
-  end
-
   # Methods serialize_into_session() and serialize_from_session() are called by Warden/Devise
   # to calculate what information will be stored in the session and to serialize an object
   # back from the session.
