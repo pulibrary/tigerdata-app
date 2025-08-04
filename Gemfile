@@ -57,7 +57,7 @@ gem "devise"
 gem "omniauth-cas", "~> 3.0"
 
 gem "csv"
-gem "datacite", github: "sul-dlss/datacite-ruby", branch: "main"
+gem "datacite", "~> 0.4.0"
 gem "dogstatsd-ruby"
 gem "flipflop"
 gem "google-protobuf", "~> 3.25"
