@@ -46,7 +46,20 @@ class Project < ApplicationRecord
     self.mediaflux_id = request.mediaflux_id
     self.metadata_model.status = Project::APPROVED_STATUS
     self.save!
-    debug_output = request.debug_output
+
+    debug_output = if request.mediaflux_id == 0
+                     "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+                   else
+                     "#{request.debug_output}"
+                   end
+    Rails.logger.error debug_output
+
+    add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: self)
+    add_users_request.resolve
+
+    user_debug = "#{add_users_request.debug_output}"
+    Rails.logger.error "Project #{self.id} users have been added to MediaFlux: #{user_debug}"
+
     # create provenance events:
     # - one for approving the project and
     # - another for changing the status of the project
