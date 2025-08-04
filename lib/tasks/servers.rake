@@ -18,7 +18,7 @@ namespace :servers do
     system("rake servers:install_mediaflux")
     system("rake servers:initialize")
     system("rake servers:initialize RAILS_ENV=test")
-    system("rake load_users:from_registration_list")
+    system("rake load_users:rdss_developers")
     system("rake load_affiliations:from_file[spec/fixtures/departments.csv]")
     system("rake servers:dev_admin_users") # TODO: remove when closing https://github.com/pulibrary/tigerdata-app/issues/1652
   end
