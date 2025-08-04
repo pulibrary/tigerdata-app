@@ -1,6 +1,6 @@
 class ProjectValidator < ActiveModel::Validator
-    def validate(project, user)
-        @schema = TigerdataSchema.new(session_token: user.session_token, namespace: "tigerdata", type: "tigerdata:project")
+    def validate(project)
+        @schema = TigerdataSchema.new(namespace: "tigerdata", type: "tigerdata:project")
 
         # we need this because this method references the metadata_json which is not updated until the project is saved
         project.metadata = project.metadata_model
@@ -38,11 +38,11 @@ class ProjectValidator < ActiveModel::Validator
     end
 
     def required_field_labels
-        schema.required_project_schema_fields.pluck(:label)
+        @schema.required_project_schema_fields.pluck(:name)
     end
 
     def required_keys
-        tableized = required_field_labels.map { |v| v.parameterize.underscore }
+        tableized = required_field_labels.map { |v| v.underscore }
         tableized
     end
 

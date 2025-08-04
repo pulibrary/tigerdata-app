@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Mediaflux
   class SchemaFetchRequest < Request
-
     def self.service
       "asset.doc.type.describe"
     end
@@ -14,30 +13,7 @@ module Mediaflux
 
     def fields
       elements = response_xml.xpath("/response/reply/result/type/definition/element")
-
-      field_list = elements.map do |element|
-        field = {
-          name: element.attributes["name"].value,
-          type: element.attributes["type"].value,
-          index: element.attributes["index"]&.value == "true",
-          "min-occurs" => 1,
-          label: element.attributes["label"].value,
-          description: element.xpath("description").text,
-          instructions: element.xpath("instructions").text,
-        }
-
-        if element.attributes["min-occurs"].present?
-          field["min-occurs"] = element.attributes["min-occurs"].value.to_i
-        end
-
-        if element.attributes["max-occurs"].present?
-          field["max-occurs"] = element.attributes["max-occurs"].value.to_i
-        end
-
-        field
-      end
-
-      field_list
+      elements.map { |element| field_from_element(element) }
     end
 
     private
@@ -50,5 +26,31 @@ module Mediaflux
           end
         end
       end
+
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      def field_from_element(element)
+        field = {
+          name: element.attributes["name"].value,
+          type: element.attributes["type"].value,
+          index: element.attributes["index"]&.value == "true",
+          "min-occurs" => 1,
+          label: element.attributes["label"].value,
+          description: element.xpath("description").text,
+          instructions: element.xpath("instructions").text
+        }
+
+        if element.attributes["min-occurs"].present?
+          field["min-occurs"] = element.attributes["min-occurs"].value.to_i
+        end
+
+        if element.attributes["max-occurs"].present?
+          field["max-occurs"] = element.attributes["max-occurs"].value.to_i
+        end
+
+        field
+      end
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
   end
 end
