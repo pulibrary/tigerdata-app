@@ -13,4 +13,10 @@ namespace :load_users do
     uid = args[:uid]
     PrincetonUsers.create_user_from_ldap_by_uid(uid)
   end
+
+  desc "Load RDSS developers from LDAP"
+  task rdss_developers: [:environment] do
+    PrincetonUsers.load_rdss_developers
+    puts "RDSS developers loaded from LDAP"
+  end
 end
