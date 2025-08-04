@@ -43,37 +43,5 @@ namespace :servers do
       puts "ERROR: #{grant_role_request.response_body}"
     end
   end
-
-  task schema_fields: :environment do
-    login = Mediaflux::LogonRequest.new
-    login.resolve
-
-    namespace = "tigerdata"
-    type = "tigerdata:project"
-    schema = TigerdataSchema.new(session_token: login.session_token, type:, namespace:)
-
-    puts schema.required_project_schema_fields.pluck(:label)
-
-    # puts "----"
-    # puts "old fields {"
-    # puts TigerdataSchema.required_project_schema_fields
-    # puts "}"
-
-    # new_fields = schema_request.fields.map { |f| f[:name] }
-    # old_fields = TigerdataSchema.required_project_schema_fields
-    # schema_request.fields.each do |f|
-    #   name = f[:name]
-    #   min = f['min-occurs']
-    #   max = f['max-occurs']
-    #   if old_fields.find {|x| x[:name] == name }
-    #     min_old = old_fields.find {|x| x[:name] == name }["min-occurs"]
-    #     max_old = old_fields.find {|x| x[:name] == name }["max-occurs"]
-    #   else
-    #     min_old = "-"
-    #     max_old = "-"
-    #   end
-    #   puts "#{name}, #{min} vs #{min_old}, #{max} vs #{max_old}"
-    # end
-  end
 end
 # :nocov:
