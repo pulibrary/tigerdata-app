@@ -58,7 +58,7 @@ commands:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | sudo podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io
       - run: sudo podman pull docker.io/pulibraryrdss/mediaflux_dev:v0.8.0
-      - run: sudo podman run -d --privileged --cgroups=disabled --name mediaflux --publish 0.0.0.0:8888:80 --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.8.0
+      - run: sudo podman run -d --privileged --cgroups=disabled --name mediaflux -p 8888:80 --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.8.0
 
   run_postgres:
     steps:
