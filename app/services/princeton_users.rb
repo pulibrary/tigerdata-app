@@ -1,15 +1,24 @@
 # frozen_string_literal: true
 class PrincetonUsers
   CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a + ['-']
+  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37].freeze
 
   class << self
-
+      
+    # Return the list of Users who are already in the database.
     def user_list
       Rails.cache.fetch("princeton_user_list", expires_in: 6.hours) do
         @user_list = User.all.map { |user| { uid: user.uid, name: user.display_name } }
       end
     end
 
+    def load_rdss_developers
+      RDSS_DEVELOPERS.each do |netid|
+        create_user_from_ldap_by_uid(netid)
+      end
+    end
+
+    # Creates users from LDAP data, starting with the given uid prefix.
     def create_users_from_ldap(current_uid_start: "", ldap_connection: default_ldap_connection)
       CHARS_AND_NUMS.each do |char|
         filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
