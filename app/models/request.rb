@@ -69,11 +69,11 @@ class Request < ApplicationRecord
   end
 
   def approve(approver)
-    create_project_operation = CreateProject.new
+    create_project_operation = ProjectCreate.new
     result = create_project_operation.call(request: self, approver: approver)
     result = result.flatten while result.class != Project
     result
-  rescue CreateProject::ProjectCreateError => ex
+  rescue ProjectCreate::ProjectCreateError => ex
     # Save the error within the Request object
     self.error_message = { message: ex.message }
     save!

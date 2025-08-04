@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateProject < Dry::Operation
+class ProjectCreate < Dry::Operation
   class ProjectCreateError < StandardError; end
 
   def call(request:, approver:)
