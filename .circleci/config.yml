@@ -81,6 +81,7 @@ jobs:
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
+      RAILS_ENV: test
     steps:
       - checkout
       - ruby/install:
