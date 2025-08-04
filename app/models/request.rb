@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-# Explicitly require the file from your model.
-require_relative "../operations/project_create"
 class Request < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
