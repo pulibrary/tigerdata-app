@@ -19,6 +19,12 @@ class TestProjectGenerator
   private
 
     def create_project
+      # create a duplicate copy of the configuration so we do not modify the rails defaults
+      capacity = Rails.configuration.project_defaults[:storage_capacity].deep_dup
+      # For testing purposes we use the same size as the requested values
+      capacity[:size][:approved] = capacity[:size][:requested]
+      capacity[:unit][:approved] = capacity[:unit][:requested]
+
       metadata = {
         created_on: Time.current.in_time_zone("America/New_York").iso8601,
         created_by: user.uid,
@@ -32,14 +38,11 @@ class TestProjectGenerator
         data_user_read_only: [],
         data_user_read_write: [],
         project_id: project_id,
-        storage_capacity: Rails.configuration.project_defaults[:storage_capacity],
+        storage_capacity: capacity,
         project_purpose: Rails.configuration.project_defaults[:project_purpose],
         storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
         status: Project::PENDING_STATUS
       }
-      # For testing purposes we use the same size as the requested values
-      metadata[:storage_capacity][:size][:approved] = metadata[:storage_capacity][:size][:requested]
-      metadata[:storage_capacity][:unit][:approved] = metadata[:storage_capacity][:unit][:requested]
       project = Project.new(metadata: )
       project.save!
       project
