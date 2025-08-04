@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectCreate, type: :operation do
+RSpec.describe ProjectCreate, type: :operation, integration: true do
   let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_request) do
     Request.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
