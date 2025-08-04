@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::NamespaceExistRequest, type: :model, connect_to_mediaf
       subject = described_class.new(session_token: session_token, namespace: namespace_non_existing)
       expect(subject.exist?).to be false
 
-      subject = described_class.new(session_token: session_token, namespace: namespace_root )
+      subject = described_class.new(session_token: session_token, namespace: namespace_root)
       expect(subject.exist?).to be true
     end
   end
