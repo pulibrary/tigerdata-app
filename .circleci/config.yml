@@ -16,6 +16,7 @@ parameters:
 orbs:
   coveralls: coveralls/coveralls@2.2.1
   ruby: circleci/ruby@2.5.3
+  node: circleci/node@7.1.0
 executors:
   basic-executor:
     docker:
@@ -77,6 +78,9 @@ jobs:
       - checkout
       - ruby/install:
           version: "3.3.0"
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
       - install_dependencies
       - run:
           name: Run rubocop
