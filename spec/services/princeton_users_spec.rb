@@ -91,7 +91,7 @@ RSpec.describe PrincetonUsers, type: :model do
       expect(described_class::RDSS_DEVELOPERS).to include("bs3097")
     end
 
-    it "creates users for rdss developers" do
+    it "creates users for rdss developers", integration: true do
       expect(User.count).to eq 0
       described_class.load_rdss_developers
       expect(User.count).to eq described_class::RDSS_DEVELOPERS.length

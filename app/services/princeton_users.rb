@@ -34,8 +34,8 @@ class PrincetonUsers
     def create_user_from_ldap_by_uid(uid, ldap_connection: default_ldap_connection)
       filter = Net::LDAP::Filter.eq('uid', uid)
       person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
-      raise StandardError "More than one user matches supplied uid: #{uid}" if person.length > 1
-      raise StandardError "No user with uid #{uid} found" if person.empty?
+      raise TigerData::LdapError, "More than one user matches supplied uid: #{uid}" if person.length > 1
+      raise TigerData::LdapError, "No user with uid #{uid} found" if person.empty?
       user_from_ldap(person.first)
     end
 
