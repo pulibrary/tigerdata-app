@@ -64,6 +64,11 @@ commands:
       - run: podman create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
       - run: podman start postgres
 
+  cleanup_docker:
+    steps:
+      - run: podman stop postgres mediaflux || true
+      - run: podman system prune -a --volumes -f || true
+
 jobs:
   test:
     working_directory: ~/tiger_data
@@ -95,6 +100,7 @@ jobs:
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
+      - cleanup_docker
       - run_mediaflux
       - run_postgres
       # wait for postgres and mediaflux
