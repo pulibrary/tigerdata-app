@@ -1,0 +1,12 @@
+<h2>User Information</h2>
+<p>NetID: <%= @user.uid %></p>
+<p>Give name: <%= @user.given_name %></p>
+<p>Family name: <%= @user.family_name %></p>
+<p>Display name: <%= @user.display_name %></p>
+<p>Elegible Sponsor? <%= @user.eligible_sponsor %></p>
+<p>Elegible Manager? <%= @user.eligible_manager %></p>
+<p>Super User? <%= @user.superuser %></p>
+<p>System Administrator? <%= @user.sysadmin %></p>
+<p>Trainer: <%= @user.trainer %></p>
+
+<button><%= link_to("Edit", edit_user_path(@user)) %></button>
