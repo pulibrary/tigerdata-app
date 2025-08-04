@@ -15,6 +15,7 @@ parameters:
 
 orbs:
   coveralls: coveralls/coveralls@2.2.1
+  ruby: circleci/ruby@2.5.3
 executors:
   basic-executor:
     docker:
@@ -74,6 +75,8 @@ jobs:
       ARCH: linux
     steps:
       - checkout
+      - ruby/install:
+          version: "3.3.0"
       - install_dependencies
       - run:
           name: Run rubocop
