@@ -61,8 +61,8 @@ commands:
 
   run_postgres:
     steps:
-      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:15.2-alpine
-      - run: docker start postgres
+      - run: podman create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
+      - run: podman start postgres
 
 jobs:
   test:
