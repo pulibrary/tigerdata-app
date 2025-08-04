@@ -58,7 +58,7 @@ commands:
     steps:
       - run: echo "$DOCKERHUB_PASSWORD" | sudo podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io
       - run: sudo podman pull docker.io/pulibraryrdss/mediaflux_dev:v0.8.0
-      - run: sudo podman run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80 --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.8.0
+      - run: sudo podman run -d --privileged --cgroups=disabled --name mediaflux --publish 0.0.0.0:8888:80 --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.8.0
 
   run_postgres:
     steps:
@@ -91,6 +91,9 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
+      - cleanup_docker
+      - run_mediaflux
+      - run_postgres
       - run:
           name: Run rubocop
           command: bundle exec rubocop
@@ -104,9 +107,6 @@ jobs:
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
-      - cleanup_docker
-      - run_mediaflux
-      - run_postgres
       # wait for postgres and mediaflux
       - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
