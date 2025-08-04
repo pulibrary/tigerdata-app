@@ -73,6 +73,13 @@ class Request < ApplicationRecord
     result = create_project_operation.call(request: self, approver: approver)
     result = result.flatten while result.class != Project
     result
+  rescue CreateProject::ProjectCreateError => ex
+    # Save the error within the Request object
+    self.error_message = { message: ex.message }
+    save!
+    # ..and get rid of the Rails project
+    project.destroy!
+    raise "Error approving request #{id}"
   end
 
   private

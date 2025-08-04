@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class CreateProject < Dry::Operation
+  class ProjectCreateError < StandardError; end
+
   def call(request:, approver:)
     project = step create_project_from_request(request)
     step persist_in_mediaflux(project, approver)
@@ -27,15 +29,14 @@ class CreateProject < Dry::Operation
       request.resolve
 
       if request.mediaflux_id.to_i == 0
-        raise ProjectCreateError, "Error saving project #{id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+        raise ProjectCreateError, "Error saving project #{project.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
       end
-
       project.mediaflux_id = request.mediaflux_id
       project.metadata_model.status = Project::APPROVED_STATUS
       project.save!
 
       debug_output = if request.mediaflux_id == 0
-                       "Error saving project #{id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
+                       "Error saving project #{project.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
                      else
                        request.debug_output.to_s
                      end
