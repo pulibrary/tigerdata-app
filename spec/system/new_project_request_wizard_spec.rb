@@ -157,7 +157,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # force a save and page reload to make sure all data is being saved to the model
       click_on "Next"
-      expect(page).to have_content "Categories (Optional)"
+      # TODO: when the wizard is fully functional the Categories should be next
+      # expect(page).to have_content "Categories (Optional)"
+      expect(page).to have_content "Roles and People"
       click_on("Back")
       expect(page).to have_content "Basic Details"
       expect(page).to have_field("project_title", with: "A basic Project")
@@ -167,10 +169,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
-      expect(page).to have_content "Categories (Optional)"
-      click_on "Next"
-      expect(page).to have_content "Dates (Optional)"
-      click_on "Next"
+      # TODO: when the wizard is fully functional the correct next step(s) are below
+      # expect(page).to have_content "Categories (Optional)"
+      # click_on "Next"
+      # expect(page).to have_content "Dates (Optional)"
+      # click_on "Next"
       expect(page).to have_content "Roles and People"
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
       select current_user_str, from: "request_data_sponsor"
@@ -184,7 +187,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # the javascript cleared the find to get ready for the next search
       expect(page).to have_field("user_find", with: "")
       click_on "Back"
-      expect(page).to have_content "Dates (Optional)"
+      # TODO: when the wizard is fully functional the Dates should be back
+      # expect(page).to have_content "Dates (Optional)"
+      expect(page).to have_content "Basic Details"
       click_on "Next"
       expect(page).to have_content "Roles and People"
       expect(page).to have_content "Data Manager"
