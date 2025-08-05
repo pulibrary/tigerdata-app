@@ -46,13 +46,14 @@ class PrincetonUsers
       if current_entries.empty?
         User.create(uid: , display_name: ldap_person[:pudisplayname].first, 
                     family_name: ldap_person[:sn].first, given_name: ldap_person[:givenname].first, 
-                    email: ldap_person[:edupersonprincipalname].first)
+                    email: ldap_person[:edupersonprincipalname].first, provider: "cas")
       else
         user = current_entries.first
         if user.display_name.blank?
           user.display_name = ldap_person[:pudisplayname].first
           user.family_name = ldap_person[:sn].first
           user.given_name = ldap_person[:givenname].first
+          user.provider = "cas"
           user.save
         end
       end
