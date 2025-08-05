@@ -33,11 +33,13 @@ RSpec.describe PrincetonUsers, type: :model do
         allow(entry).to receive(:[]).with(:givenname).and_return([])
 
         expect { described_class.create_users_from_ldap(current_uid_start: "gsj", ldap_connection: connection) }.to change { User.count }.by(1)
-        expect(User.last.uid).to eq("gsjobs")
-        expect(User.last.display_name).to eq("Graduate School Jobs, ")
-        expect(User.last.family_name).to eq("Graduate School Jobs")
-        expect(User.last.given_name).to be_blank
-        expect(User.last.email).to eq("email@princeton.edu")
+        user = User.last
+        expect(user.uid).to eq("gsjobs")
+        expect(user.display_name).to eq("Graduate School Jobs, ")
+        expect(user.family_name).to eq("Graduate School Jobs")
+        expect(user.given_name).to be_blank
+        expect(user.email).to eq("email@princeton.edu")
+        expect(user.provider).to eq("cas")
         PrincetonUsers::CHARS_AND_NUMS.each do |char|
           expect(connection).to have_received(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsj#{char}*"))
