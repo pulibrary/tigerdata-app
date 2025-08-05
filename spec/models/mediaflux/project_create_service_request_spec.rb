@@ -15,4 +15,11 @@ RSpec.describe Mediaflux::ProjectCreateServiceRequest, connect_to_mediaflux: tru
     mpcsr.resolve
     expect(mpcsr.resolved?).to eq true
   end
+
+  # When Mediaflux creates a project, it returns an xml snippet with the Mediaflux id.
+  # If the id is an integer, it is valid. If the id is anything else, then forcing it
+  # to be an integer will return zero.
+  it "parses an id number" do
+    expect(mpcsr.mediaflux_id.to_i).not_to eq 0
+  end
 end
