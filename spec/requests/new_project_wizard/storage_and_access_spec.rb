@@ -53,7 +53,9 @@ RSpec.describe "new-project/storage-access", type: :request do
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Next")
-          expect(response).to redirect_to(new_project_additional_information_grants_and_funding_url(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_additional_information_grants_and_funding_url(request))
+          expect(response).to redirect_to(new_project_review_and_submit_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
@@ -64,7 +66,9 @@ RSpec.describe "new-project/storage-access", type: :request do
           sign_in user
           put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "custom", storage_size: "60", storage_unit: "TB" },
                                                                   commit: "Back")
-          expect(response).to redirect_to(new_project_project_type_url(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_project_type_url(request))
+          expect(response).to redirect_to(new_project_roles_and_people_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")

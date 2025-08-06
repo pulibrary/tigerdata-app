@@ -11,7 +11,7 @@ namespace :mediaflux do
     Rails.logger.warn message
     Mediaflux::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_to_clean]).destroy
     [UserRequest, User, Project].each(&:delete_all)
-    # Now load the users for this environment from the registration list
-    Rake::Task["load_users:from_registration_list"].execute
+    puts "All users, projects, and mediaflux data deleted."
+    Rails.logger.warn "All users, projects, and mediaflux data deleted."
   end
 end

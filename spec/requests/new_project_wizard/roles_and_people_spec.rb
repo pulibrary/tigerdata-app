@@ -56,7 +56,9 @@ RSpec.describe "new-project/roles-people", type: :request do
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Next")
-          expect(response).to redirect_to(new_project_project_type_url(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_project_type_url(request))
+          expect(response).to redirect_to(new_project_storage_and_access_path(request))
           request.reload
           expect(request.data_sponsor).to eq("pul123")
           expect(request.data_manager).to eq("manager1")
@@ -66,7 +68,9 @@ RSpec.describe "new-project/roles-people", type: :request do
         it "renders a successful response for a back commit" do
           sign_in user
           put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Back")
-          expect(response).to redirect_to(new_project_project_info_dates_url(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_project_info_dates_url(request))
+          expect(response).to redirect_to(new_project_project_info_url(request))
           request.reload
           expect(request.data_sponsor).to eq("pul123")
           expect(request.data_manager).to eq("manager1")

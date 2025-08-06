@@ -86,7 +86,9 @@ RSpec.describe "new-project/review-submit", type: :request do
         it "renders a successful response for a back commit" do
           sign_in user
           put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
-          expect(response).to redirect_to(new_project_additional_information_related_resources_url(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_additional_information_related_resources_url(request))
+          expect(response).to redirect_to(new_project_storage_and_access_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")

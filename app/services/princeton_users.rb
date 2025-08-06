@@ -1,15 +1,24 @@
 # frozen_string_literal: true
 class PrincetonUsers
   CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a + ['-']
+  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441].freeze
 
   class << self
-
+      
+    # Return the list of Users who are already in the database.
     def user_list
       Rails.cache.fetch("princeton_user_list", expires_in: 6.hours) do
         @user_list = User.all.map { |user| { uid: user.uid, name: user.display_name } }
       end
     end
 
+    def load_rdss_developers
+      RDSS_DEVELOPERS.each do |netid|
+        create_user_from_ldap_by_uid(netid)
+      end
+    end
+
+    # Creates users from LDAP data, starting with the given uid prefix.
     def create_users_from_ldap(current_uid_start: "", ldap_connection: default_ldap_connection)
       CHARS_AND_NUMS.each do |char|
         filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
@@ -25,8 +34,8 @@ class PrincetonUsers
     def create_user_from_ldap_by_uid(uid, ldap_connection: default_ldap_connection)
       filter = Net::LDAP::Filter.eq('uid', uid)
       person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
-      raise StandardError "More than one user matches supplied uid: #{uid}" if person.length > 1
-      raise StandardError "No user with uid #{uid} found" if person.empty?
+      raise TigerData::LdapError, "More than one user matches supplied uid: #{uid}" if person.length > 1
+      raise TigerData::LdapError, "No user with uid #{uid} found" if person.empty?
       user_from_ldap(person.first)
     end
 
@@ -37,13 +46,14 @@ class PrincetonUsers
       if current_entries.empty?
         User.create(uid: , display_name: ldap_person[:pudisplayname].first, 
                     family_name: ldap_person[:sn].first, given_name: ldap_person[:givenname].first, 
-                    email: ldap_person[:edupersonprincipalname].first)
+                    email: ldap_person[:edupersonprincipalname].first, provider: "cas")
       else
         user = current_entries.first
         if user.display_name.blank?
           user.display_name = ldap_person[:pudisplayname].first
           user.family_name = ldap_person[:sn].first
           user.given_name = ldap_person[:givenname].first
+          user.provider = "cas"
           user.save
         end
       end

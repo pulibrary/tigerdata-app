@@ -33,11 +33,13 @@ RSpec.describe PrincetonUsers, type: :model do
         allow(entry).to receive(:[]).with(:givenname).and_return([])
 
         expect { described_class.create_users_from_ldap(current_uid_start: "gsj", ldap_connection: connection) }.to change { User.count }.by(1)
-        expect(User.last.uid).to eq("gsjobs")
-        expect(User.last.display_name).to eq("Graduate School Jobs, ")
-        expect(User.last.family_name).to eq("Graduate School Jobs")
-        expect(User.last.given_name).to be_blank
-        expect(User.last.email).to eq("email@princeton.edu")
+        user = User.last
+        expect(user.uid).to eq("gsjobs")
+        expect(user.display_name).to eq("Graduate School Jobs, ")
+        expect(user.family_name).to eq("Graduate School Jobs")
+        expect(user.given_name).to be_blank
+        expect(user.email).to eq("email@princeton.edu")
+        expect(user.provider).to eq("cas")
         PrincetonUsers::CHARS_AND_NUMS.each do |char|
           expect(connection).to have_received(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsj#{char}*"))
@@ -84,6 +86,17 @@ RSpec.describe PrincetonUsers, type: :model do
         expect { described_class.create_users_from_ldap(current_uid_start: "gsj", ldap_connection: connection) }
           .to change { User.count }.by(0)
       end
+    end
+  end
+  describe "#load_rdss_developers" do
+    it "returns the list of rdss developers" do
+      expect(described_class::RDSS_DEVELOPERS).to include("bs3097")
+    end
+
+    it "creates users for rdss developers", integration: true do
+      expect(User.count).to eq 0
+      described_class.load_rdss_developers
+      expect(User.count).to eq described_class::RDSS_DEVELOPERS.length
     end
   end
 end

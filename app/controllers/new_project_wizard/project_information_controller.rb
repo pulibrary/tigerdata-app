@@ -8,7 +8,9 @@ class NewProjectWizard::ProjectInformationController < RequestWizardsController
     end
 
     def render_next
-      redirect_to new_project_project_info_categories_path(request_model)
+      # TODO: when categories is implemented forward to it instead or roles
+      # redirect_to new_project_project_info_categories_path(request_model)
+      redirect_to new_project_roles_and_people_path(request_model)
     end
 
     def render_back
