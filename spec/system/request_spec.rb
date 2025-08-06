@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
-  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   before do
     test_strategy = Flipflop::FeatureSet.current.test!
