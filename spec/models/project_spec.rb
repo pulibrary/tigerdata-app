@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#sponsored_projects" do
     let(:sponsor) { sponsor_and_data_manager_user }
@@ -15,7 +15,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "returns projects for the sponsor" do
-      sponsored_projects = described_class.sponsored_projects("hc8719")
+      sponsored_projects = described_class.sponsored_projects("tigerdatatester")
       expect(sponsored_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
       expect(sponsored_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
       expect(sponsored_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
@@ -32,7 +32,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "returns projects for the manager" do
-      managed_projects = described_class.managed_projects("hc8719")
+      managed_projects = described_class.managed_projects("tigerdatatester")
       expect(managed_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
       expect(managed_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
       expect(managed_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
@@ -50,7 +50,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "returns projects for the data users" do
-      data_user_projects = described_class.data_user_projects("hc8719")
+      data_user_projects = described_class.data_user_projects("tigerdatatester")
       expect(data_user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
       expect(data_user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
       expect(data_user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
