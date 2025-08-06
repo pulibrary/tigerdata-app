@@ -1,0 +1,13 @@
+<div class="step-container">
+    <div data-state="Completed" data-type="Step" class="step">
+        <div data-size="Normal" data-state="Completed" class="step-number<%= indicator_class %>">
+            <div class="step-text"><%= step_number %></div>
+        </div>
+        <div class="step-text-container">
+            <div class="step-text"><a class="go-to-step" href="<%= step_url %>"><%= step_name %></a></div>
+        </div>
+    </div>
+    <div class="step-expanded-container">
+        <div class="step-expanded"></div>
+    </div>
+</div>

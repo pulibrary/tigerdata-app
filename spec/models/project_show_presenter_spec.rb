@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project }
   subject(:presenter) { ProjectShowPresenter.new(project) }
 
