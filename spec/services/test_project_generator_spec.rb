@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:subject) { described_class.new(user:, number: 1, project_prefix: "tigerdata/#{random_project_directory}" ) }
 
   before do
