@@ -48,7 +48,7 @@ class TestProjectGenerator
     end
 
     def sponsor
-      return User.where(uid: "hc8719").first
+      return User.where(uid: "tigerdatatester").first
     end
 
     def departments
