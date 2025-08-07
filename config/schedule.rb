@@ -28,3 +28,7 @@ end
 every :day, at: "01:00am", roles: [:rake] do
   rake "load_users:from_ldap"
 end
+
+every 1.day, roles: [:rake] do
+  rake "request:clean_up"
+end
