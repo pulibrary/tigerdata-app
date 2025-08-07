@@ -61,7 +61,9 @@ RSpec.describe "/new-project/project-info", type: :request do
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_project_info_save_url(request.id, request: { request_title: "new title" }, commit: "Next")
-          expect(response).to redirect_to(new_project_project_info_categories_path(request))
+          # TODO: when the wizard is fully functional the correct redirect is below
+          # expect(response).to redirect_to(new_project_project_info_categories_path(request))
+          expect(response).to redirect_to(new_project_roles_and_people_path(request))
           expect(request.reload.request_title).to eq("new title")
         end
 
