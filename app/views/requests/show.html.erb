@@ -23,14 +23,14 @@ This screen is a review of the request.  No project has been created yet.
   <li>Data manager: <%= @request_model.data_manager %></li>
   <li>Data user(s):
     <ul>
-      <% @request_model.user_roles.each do |data_user| %>
+      <% (@request_model.user_roles || []).each do |data_user| %>
         <li><%= "#{data_user["name"]} (#{data_user["uid"]})" %></li>
       <% end %> 
     </ul>
   </li>
   <li>Department(s):
     <ul>    
-      <% @request_model.departments.each do |department| %>
+      <% (@request_model.departments).each do |department| %>
         <li><%= "#{department["name"]} (#{department["code"]})" %></li>
       <% end %> 
     </ul>
