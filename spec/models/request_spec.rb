@@ -230,4 +230,72 @@ RSpec.describe Request, type: :model do
       expect(request.valid_to_submit?).to be_truthy
     end
   end
+
+  describe "#requested_quota_size" do
+    it "returns part of the quota" do
+      request = Request.new(quota: "23 GB")
+      expect(request.requested_quota_size).to eq(23.0)
+    end
+
+    it "returns the custom size" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      expect(request.requested_quota_size).to eq(2.0)
+    end
+  end
+
+  describe "#approved_quota_size" do
+    it "returns part of the requested quota when the approved is unset" do
+      request = Request.new(quota: "23 GB")
+      expect(request.approved_quota_size).to eq(23.0)
+    end
+
+    it "returns part of the approved quota" do
+      request = Request.new(quota: "23 GB", approved_quota: "1 TB")
+      expect(request.approved_quota_size).to eq(1.0)
+    end
+
+    it "returns the custom size of the requested when the approved is unset" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      expect(request.requested_quota_size).to eq(2.0)
+    end
+
+    it "returns the custom unit of the approved" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      expect(request.approved_quota_unit).to eq("GB")
+    end
+  end
+
+  describe "#requested_quota_unit" do
+    it "returns part of the quota" do
+      request = Request.new(quota: "23 GB")
+      expect(request.requested_quota_unit).to eq("GB")
+    end
+
+    it "returns the custom unit" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      expect(request.requested_quota_unit).to eq("TB")
+    end
+  end
+
+  describe "#approved_quota_unit" do
+    it "returns part of the requested quota when the approved is unset" do
+      request = Request.new(quota: "23 GB")
+      expect(request.approved_quota_unit).to eq("GB")
+    end
+
+    it "returns part of the approved quota" do
+      request = Request.new(quota: "23 GB", approved_quota: "1 TB")
+      expect(request.approved_quota_unit).to eq("TB")
+    end
+
+    it "returns the custom unit of the requested when the approved is unset" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      expect(request.approved_quota_unit).to eq("TB")
+    end
+
+    it "returns the custom unit of the approved" do
+      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      expect(request.approved_quota_unit).to eq("GB")
+    end
+  end
 end
