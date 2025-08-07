@@ -18,7 +18,7 @@
     <% @users.each do |user| %>
     <tr class="user-list-data-row">
       <td>
-        <%= user.uid %>
+        <%= link_to(user.uid, user_path(user)) %>
         <% if user.uid == current_user.uid %>
           &nbsp;(you)
         <% end %>
