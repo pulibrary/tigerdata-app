@@ -195,20 +195,6 @@ cap qa  mailcatcher:console
 ### Mail on Production
 Emails on production are sent via [Pony Express](https://github.com/pulibrary/pul-it-handbook/blob/f54dfdc7ada1ff993a721f6edb4aa1707bb3a3a5/services/smtp-mail-server.md).
 
-## User Registration List
-For local development, add yourself as a SuperUser to the TigerData preliminary registration list and follow these instructions:
-
-### Updating User Registration List
-To save updates and make changes to appointed users for early testing of the TigerData site:
-
-1. Make the requested changes to the [Google spreadsheet](https://docs.google.com/spreadsheets/d/169lfRTOSe6H66Iu2DK5g-QzqiVsfz5lHFHMaGmwNT7Y/edit#gid=0)
-2. Save those updated changes
-3. Download the file as a .CSV file
-4. Copy the downloaded .CSV file to `data` > `user_registration_list.csv`
-5. run SED to remove the ^M from the file `sed -e "s/\r//g" user_registration_list.csv > user_registration_list_production.csv`
-6. Open a PR to check the updated file into version control
-7. Once that PR is merged, release and deploy the code. This will automatically run the `load_users.rake` rake task.
-
 ## Sidekiq
 
 [Sidekiq](https://sidekiq.org/) is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
