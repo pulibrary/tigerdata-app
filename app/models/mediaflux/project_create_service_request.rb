@@ -41,8 +41,9 @@ module Mediaflux
     def mediaflux_id
       # Extract the <id>nnnn</id> value from the output and then extract the
       # numeric value inside of it.
-      id_xml = debug_output.match("\&lt\;id\&gt\;[0-9]*\&lt\;\/id\&gt\;").to_s
-      id_xml.gsub("&lt;id&gt;", "").gsub("&lt;/id&gt;", "").to_i
+      decoded_string = CGI.unescapeHTML(debug_output)
+      xml_doc  = Nokogiri::XML(decoded_string)
+      (xml_doc.xpath("result/result/id/text()").to_s).to_i
     end
 
     private
