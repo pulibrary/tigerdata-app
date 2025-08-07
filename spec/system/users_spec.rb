@@ -20,7 +20,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the error message" do
       sign_in current_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page."
+      expect(page).to have_content "You do not have access to this page (#{current_user.uid})"
     end
   end
 
@@ -51,10 +51,16 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   end
 
   context "data sponsor" do
-    it "shows the error message" do
+    it "shows the error message when visiting the users page" do
       sign_in sponsor_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page."
+      expect(page).to have_content "You do not have access to this page (#{sponsor_user.uid})"
+    end
+
+    it "shows the error message when visiting the user show page" do
+      sign_in sponsor_user
+      visit "/users/#{data_manager.id}"
+      expect(page).to have_content "You do not have access to this page (#{sponsor_user.uid})"
     end
   end
 
@@ -62,7 +68,25 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the error message" do
       sign_in data_manager
       visit "/users"
-      expect(page).to have_content "You do not have access to this page."
+      expect(page).to have_content "You do not have access to this page (#{data_manager.uid})"
+    end
+  end
+
+  context "edit user" do
+    let(:new_given_name) { FFaker::Name.name }
+    it "shows the user information" do
+      sign_in sysadmin_user
+      visit "/users/#{data_manager.id}"
+      expect(page).to have_content "NetID: #{data_manager.uid}"
+      expect(page).to have_button "Edit"
+    end
+
+    it "allows user to edit information" do
+      sign_in sysadmin_user
+      visit "/users/#{data_manager.id}/edit"
+      fill_in :user_given_name, with: new_given_name
+      click_on "Save"
+      expect(User.find(data_manager.id).given_name).to eq new_given_name
     end
   end
 end
