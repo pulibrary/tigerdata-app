@@ -30,7 +30,7 @@ This screen is a review of the request.  No project has been created yet.
   </li>
   <li>Department(s):
     <ul>    
-      <% (@request_model.departments).each do |department| %>
+      <% (@request_model.departments || []).each do |department| %>
         <li><%= "#{department["name"]} (#{department["code"]})" %></li>
       <% end %> 
     </ul>
