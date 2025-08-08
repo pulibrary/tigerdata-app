@@ -3,8 +3,13 @@
 This screen is a review of the request.  No project has been created yet.
 
 <div class="horizontal-frame">
-<%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-<%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+  <% if !@request_model.submitted? %>
+    <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+  <% end %>
+  <% if current_user.eligible_sysadmin? && @request_model.submitted? %>
+    <%= link_to "Edit submitted request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+    <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+  <% end %>
 </div>
 
 <% if @request_model.error_message.present? %>
