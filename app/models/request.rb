@@ -72,8 +72,7 @@ class Request < ApplicationRecord
     result = result.flatten while result.class != Project
     result
   rescue => ex
-    # Log the error and save it to the Request object...
-    Rails.logger.error "Error approving request #{id}: #{ex.message}"
+    # Save the error to the Request object...
     self.error_message = { message: ex.message }
     save!
     # ..and get rid of the Rails project
