@@ -47,7 +47,7 @@ RSpec.describe ProjectMediaflux, type: :model do
           expect(duplicate_events).to be nil
 
           # Raises an error if we try to create the same project again
-          expect { project.approve!(current_user: current_user) }.to raise_error(Project::ProjectCreateError)
+          expect { project.approve!(current_user: current_user) }.to raise_error(ProjectCreate::ProjectCreateError)
         end
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       it "should raise a error if any error occurs in mediaflux", integration: true do
-        expect { incomplete_project.approve!(current_user: current_user) }.to raise_error(Project::ProjectCreateError)
+        expect { incomplete_project.approve!(current_user: current_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       end
     end
   end
