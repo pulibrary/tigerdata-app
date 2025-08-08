@@ -41,8 +41,11 @@ class Project < ApplicationRecord
     # instead Request are approved (and that process creates the project)
     create_project_operation = ProjectCreate.new
     result = create_project_operation.call(request: nil, approver: current_user, project: self)
-    result = result.flatten while result.class != Project
-    self.mediaflux_id
+    if result.success?
+       self.mediaflux_id
+    else
+      raise ProjectCreate::ProjectCreateError, result.failure
+    end
   end
 
   def reload

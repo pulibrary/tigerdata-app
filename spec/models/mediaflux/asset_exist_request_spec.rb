@@ -5,7 +5,7 @@ RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux:
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.build :project_with_doi }
+  let(:project) { FactoryBot.create :project_with_doi }
 
   before do
     project.approve!(current_user: user)

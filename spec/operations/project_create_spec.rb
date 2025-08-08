@@ -27,18 +27,39 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
       it "creates a project and persists it in Mediaflux" do
         result = described_class.new.call(request: valid_request, approver: approver)
         expect(result).to be_success
-
-        result = result.flatten while result.class != Project
-        expect(result.mediaflux_id).not_to eq(0)
+        project = result.value!
+        expect(project.mediaflux_id).not_to eq(0)
       end
     end
 
-    context "Failure case" do
-      it "raises an error if the project cannot be saved to Mediaflux" do
-        expect { described_class.new.call(request: invalid_request, approver: approver) }.to raise_error
+    context "Failure cases" do
+      it "returns a failure if the project cannot be saved to Mediaflux" do
         expect do
-          described_class.new.call(request: invalid_request, approver: approver)
-        end.to raise_error(ProjectCreate::ProjectCreateError, /Error saving project/)
+          result = described_class.new.call(request: invalid_request, approver: approver)
+          expect(result).not_to be_success
+          error_message = result.failure
+          expect(error_message).to include("Error saving project")
+        end.not_to change { Project.count }
+      end
+
+      it "returns a failure if the doi can not be minted" do
+        allow(PULDatacite).to receive(:publish_test_doi?).and_raise("DOI error")
+        result = described_class.new.call(request: invalid_request, approver: approver)
+        expect(result).not_to be_success
+
+        error_message = result.failure
+        expect(error_message).to eq("Error creating the project: DOI error")
+      end
+
+      it "returns a failure if the project can not be updated" do
+        project = FactoryBot.create(:approved_project)
+        allow(Project).to receive(:"create!").and_return(project)
+        allow(project).to receive(:"mediaflux_id=").and_raise("Object issue")
+        result = described_class.new.call(request: invalid_request, approver: approver)
+        expect(result).not_to be_success
+
+        error_message = result.failure
+        expect(error_message).to include("Setting the mediaflux id the")
       end
     end
   end
