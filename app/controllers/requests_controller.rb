@@ -33,6 +33,7 @@ class RequestsController < ApplicationController
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def approve
     if current_user.superuser || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
@@ -49,10 +50,13 @@ class RequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
-  rescue StandardError
-    flash[:notice] = "Error approving request #{@request_model.id}"
+  rescue StandardError => ex
+    Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
+    Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+    flash[:notice] = "Error approving request #{params[:id]}"
     redirect_to request_path(@request_model)
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   private

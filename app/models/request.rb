@@ -71,13 +71,13 @@ class Request < ApplicationRecord
     result = create_project_operation.call(request: self, approver: approver)
     result = result.flatten while result.class != Project
     result
-  rescue ProjectCreate::ProjectCreateError => ex
-    # Save the error within the Request object
+  rescue => ex
+    # Save the error to the Request object...
     self.error_message = { message: ex.message }
     save!
     # ..and get rid of the Rails project
     project.destroy!
-    raise "Error approving request #{id}"
+    raise
   end
 
   def approved_quota_size
