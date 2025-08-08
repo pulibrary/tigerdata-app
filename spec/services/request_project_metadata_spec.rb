@@ -39,7 +39,7 @@ RSpec.describe RequestProjectMetadata do
       expect(project_metadata[:departments]).to eq(["LIB-PU Library"])
       expect(project_metadata[:data_user_read_only]).to eq([current_user.uid])
       expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
-      expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "500", requested: "500" })
+      expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "500.0", requested: "500.0" })
       expect(project_metadata[:storage_capacity][:unit]).to eq({ approved: "GB", requested: "GB" })
       expect(project_metadata[:storage_performance_expectations]).to eq({ requested: "Standard", approved: "Standard" })
       expect(project_metadata[:created_by]).to be_nil

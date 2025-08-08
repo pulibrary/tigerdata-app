@@ -80,6 +80,50 @@ class Request < ApplicationRecord
     raise
   end
 
+  def approved_quota_size
+    if approved_quota.present?
+      if approved_quota == "custom"
+        approved_storage_size.to_f
+      else
+        approved_quota.split.first.to_f
+      end
+    else
+      requested_quota_size
+    end
+  end
+
+  def requested_quota_size
+    if custom_quota?
+      storage_size.to_f
+    else
+      quota.split.first.to_f
+    end
+  end
+
+  def approved_quota_unit
+    if approved_quota.present?
+      if approved_quota == "custom"
+        approved_storage_unit
+      else
+        approved_quota.split.last
+      end
+    else
+      requested_quota_unit
+    end
+  end
+
+  def requested_quota_unit
+    if custom_quota?
+      storage_unit
+    else
+      quota.split.last
+    end
+  end
+
+  def submitted?
+    state == Request::SUBMITTED
+  end
+
   private
 
     def field_present?(value, name)
