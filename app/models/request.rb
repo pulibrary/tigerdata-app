@@ -71,13 +71,57 @@ class Request < ApplicationRecord
     result = create_project_operation.call(request: self, approver: approver)
     result = result.flatten while result.class != Project
     result
-  rescue ProjectCreate::ProjectCreateError => ex
-    # Save the error within the Request object
+  rescue => ex
+    # Save the error to the Request object...
     self.error_message = { message: ex.message }
     save!
     # ..and get rid of the Rails project
     project.destroy!
-    raise "Error approving request #{id}"
+    raise
+  end
+
+  def approved_quota_size
+    if approved_quota.present?
+      if approved_quota == "custom"
+        approved_storage_size.to_f
+      else
+        approved_quota.split.first.to_f
+      end
+    else
+      requested_quota_size
+    end
+  end
+
+  def requested_quota_size
+    if custom_quota?
+      storage_size.to_f
+    else
+      quota.split.first.to_f
+    end
+  end
+
+  def approved_quota_unit
+    if approved_quota.present?
+      if approved_quota == "custom"
+        approved_storage_unit
+      else
+        approved_quota.split.last
+      end
+    else
+      requested_quota_unit
+    end
+  end
+
+  def requested_quota_unit
+    if custom_quota?
+      storage_unit
+    else
+      quota.split.last
+    end
+  end
+
+  def submitted?
+    state == Request::SUBMITTED
   end
 
   private
