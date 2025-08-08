@@ -34,19 +34,14 @@ class RequestProjectMetadata
        end
 
        def storage_capacity(request)
-         size, unit = request.quota.split(" ")
-         if request.custom_quota?
-           size = request.storage_size.to_s
-           unit = request.storage_unit
-         end
          {
            size: {
-             approved: size,
-             requested: size
+             approved: request.approved_quota_size.to_s,
+             requested: request.requested_quota_size.to_s
            },
            unit: {
-             approved: unit,
-             requested: unit
+             approved: request.approved_quota_unit,
+             requested: request.requested_quota_unit
            }
          }
        end
