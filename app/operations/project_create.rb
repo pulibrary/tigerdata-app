@@ -2,8 +2,12 @@
 class ProjectCreate < Dry::Operation
   class ProjectCreateError < StandardError; end
 
-  def call(request:, approver:)
-    project = step create_project_from_request(request)
+  # TODO: Remove the optional project parameter once https://github.com/pulibrary/tigerdata-app/issues/1707
+  # has been completed. In practice the project is always created from the request.
+  def call(request:, approver:, project: nil)
+    if project.nil?
+      project = step create_project_from_request(request)
+    end
     step persist_in_mediaflux(project, approver)
     step persist_users_in_mediaflux(project, approver)
     Success project

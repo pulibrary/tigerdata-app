@@ -52,7 +52,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         request_title: nil,
         project_title: "Blue Mountain",
         created_at: Time.current.in_time_zone("America/New_York").iso8601,
-        state: "draft",
+        state: Request::SUBMITTED,
         data_sponsor: sponsor_user.uid,
         data_manager: data_manager.uid,
         departments:
@@ -124,15 +124,31 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/requests"
         expect(page).to have_content "New Project Requests"
       end
-      it "shows the approve button on a single request view for sysadmins" do
+      it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
         sign_in sysadmin_user
         put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
         expect(response).to redirect_to("#{requests_path}/#{request.id}")
         follow_redirect!
-        expect(response.body).to have_content("Approve request")
+        # it does not show a approve request unless the request is submitted
+        expect(response.body).not_to have_content("Approve request")
+        expect(response.body).to have_content("Edit request")
       end
+      it "shows the approve button on a single submitted request view for sysadmins" do
+        sign_in sysadmin_user
+        put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+        expect(response).to redirect_to("#{requests_path}/#{full_request.id}")
+        follow_redirect!
+        # it does not show a approve request unless the request is submitted
+        expect(response.body).to have_content("Approve request")
+        expect(response.body).not_to have_content("Edit request")
+        expect(response.body).to have_content("Edit submitted request")
+      end
+
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
+        # a request must be submitted before it can be approved
+        full_request.state = Request::SUBMITTED
+        full_request.save
         visit "#{requests_path}/#{full_request.id}"
         expect(page).to have_content("Approve request")
         click_on "Approve request"
@@ -157,9 +173,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "forwards back to the request review page when the request is not ready to submit" do
         sign_in sysadmin_user
-        visit "#{requests_path}/#{invalid_request.id}"
-        expect(page).to have_content("Approve request")
-        click_on "Approve request"
+        visit approve_request_path(invalid_request.id)
         expect(page).to have_content("Review")
         within(".project-title") do
           expect(page).to have_content("cannot be empty")
@@ -190,8 +204,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
       it "shows the approve button on a single request view for superusers" do
         sign_in superuser
-        put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
-        expect(response).to redirect_to("#{requests_path}/#{request.id}")
+        put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+        expect(response).to redirect_to("#{requests_path}/#{full_request.id}")
         follow_redirect!
         expect(response.body).to have_content("Approve request")
       end

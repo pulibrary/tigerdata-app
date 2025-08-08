@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render partial: 'shared/layout_head' %>
+
+  <body class="wizard-screen">
+    <%= render partial: 'shared/alternate_mediaflux' %>
+    <%= render partial: 'shared/banner' %>
+    <%= render partial: 'shared/header' %>
+    <%= render partial: 'shared/emulator' %>
+    <%= render partial: 'shared/alert' %>
+
+    <div class="wizard">
+      <%= render partial: 'shared/breadcrumbs' %>
+      <%= yield %>
+    </div>
+
+    <div class="welcome-footer"><%= render partial: 'shared/footer' %></div>
+  </body>
+</html>
