@@ -73,7 +73,7 @@ class Request < ApplicationRecord
     result
   rescue => ex
     # Log the error and save it to the Request object...
-    Rails.logger.error "Error approving request #{self.id}: #{ex.message}"
+    Rails.logger.error "Error approving request #{id}: #{ex.message}"
     self.error_message = { message: ex.message }
     save!
     # ..and get rid of the Rails project
