@@ -31,3 +31,5 @@
 
 en:
   access_denied: "Access Denied"
+  no_modify_submitted: "The request has already been submitted.  You can no longer modify the request."
+  successful_update: "The request was successfully updated."

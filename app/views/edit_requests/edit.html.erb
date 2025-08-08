@@ -1,0 +1,31 @@
+      <div class="heading-frame">
+        <div class="heading-text">
+          Edit request
+        </div>
+        <div class="deco-line"></div>
+      </div>
+      <div class="main-frame">
+        <%= form_with(url: admin_edit_request_url(@request_model.id), model: @request_model, 
+                      action: :save, method: :put, class: "form-panel") do |form| %>
+          <div class="scrollable-frame">
+            <div class="form-header">
+              <div class="form-title">
+                <div class="form-text">
+                  Edit Submitted Request
+                </div>
+              </div>
+              <div class="form-description">
+                Allow an administrator to edit a request before approving it
+              </div> 
+            </div>
+            <div class="form-frame">
+              <%= render '/new_project_wizard/review_and_submit_form' %>
+            </div>
+          </div>
+          <div class="button-frame">
+            <%= link_to "Cancel", request_url(@request_model) %>
+            <%= form.submit "Save", class: "button" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
