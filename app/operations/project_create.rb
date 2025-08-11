@@ -9,7 +9,7 @@ class ProjectCreate < Dry::Operation
       project = step create_project_from_request(request)
     end
     mediaflux_id = step persist_in_mediaflux(project, approver)
-    step update_project_with_medifalux_info(mediaflux_id:, project:)
+    step update_project_with_mediaflux_info(mediaflux_id:, project:)
     step persist_users_in_mediaflux(project, approver)
   end
 
@@ -40,7 +40,7 @@ class ProjectCreate < Dry::Operation
         Rails.logger.error debug_output
 
         # we do not want unsaved projects just hanging around
-        project.destroy! 
+        project.destroy!
         Failure debug_output
       else
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
@@ -48,7 +48,7 @@ class ProjectCreate < Dry::Operation
       end
     end
 
-    def update_project_with_medifalux_info(mediaflux_id:, project:)
+    def update_project_with_mediaflux_info(mediaflux_id:, project:)
       project.mediaflux_id = mediaflux_id
       project.metadata_model.status = Project::APPROVED_STATUS
       project.save!
