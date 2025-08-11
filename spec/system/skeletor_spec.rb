@@ -134,3 +134,43 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
 end
 
 # once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
+
+  describe "#file_list" do
+    let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:manager) { sponsor_and_data_manager_user }
+    let(:project) do
+      project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
+      project.mediaflux_id = nil
+      project
+    end
+
+    before do
+      # Save the project in mediaflux
+      project.approve!(current_user: manager)
+
+      # create a collection so it can be filtered
+      Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
+
+      # Create files for the project in mediaflux using test asset create request
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
+    end
+
+    it "fetches the file list",
+    :integration do
+      file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
+      expect(file_list[:files].count).to eq 8
+      expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
+      expect(file_list[:files][0].path).to eq "/princeton/#{project.project_directory}/Real_Among_Random.txt0"
+      expect(file_list[:files][0].size).to be 100
+      expect(file_list[:files][0].collection).to be false
+      expect(file_list[:files][0].last_modified).to_not be nil
+    end
+
+    it "allows a user to see the file list" do
+      sign_in manager
+      visit "/projects/#{project.id}"
+      click_on 'Download Complete List'
+      expect(page).to have_content "List Project Contents"
+    end
+  end
