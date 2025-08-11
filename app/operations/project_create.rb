@@ -24,7 +24,7 @@ class ProjectCreate < Dry::Operation
 
       # Return Success(attrs) or Failure(error)
       Success project
-    rescue Exception => ex
+    rescue => ex
       Failure("Error creating the project: #{ex}")
     end
 
@@ -46,6 +46,8 @@ class ProjectCreate < Dry::Operation
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
         Success(mediaflux_id)
       end
+    rescue => ex
+      Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
     end
 
     def update_project_with_mediaflux_info(mediaflux_id:, project:)
@@ -53,7 +55,7 @@ class ProjectCreate < Dry::Operation
       project.metadata_model.status = Project::APPROVED_STATUS
       project.save!
       Success(project)
-    rescue Exception => ex
+    rescue => ex
       # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
       Failure("Setting the mediaflux id the project(#{project.id}) : #{ex}")
     end
@@ -74,5 +76,7 @@ class ProjectCreate < Dry::Operation
         Rails.logger.debug { "Project #{project.id} users have been added to MediaFlux: #{user_debug}" }
         Success project
       end
+    rescue => ex
+      Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{ex}")
     end
 end
