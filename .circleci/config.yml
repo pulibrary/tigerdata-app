@@ -58,13 +58,15 @@ commands:
     steps:
       - run:
           name: Run Mediaflux in podman
-          command: podman run -t --rm --privileged -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.8.0"
+          command: podman run -t --name mediaflux --rm --privileged -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.8.0"
           background: true
 
   run_postgres:
     steps:
-      - run: podman create --cgroups=disabled --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
-      - run: podman start postgres
+      - run:
+          name: Run Postgres in podman
+          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
+          background: true
 
   cleanup_docker:
     steps:

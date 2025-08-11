@@ -11,6 +11,7 @@ Capybara.register_driver :chrome_headless do |app|
     "--enable-features=NetworkService,NetworkServiceInProcess"
   )
   options.add_argument("--profile-directory=Default")
+  options.add_argument("--disable-dev-shm-usage")
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, http_client: client)
 end
