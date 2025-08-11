@@ -61,10 +61,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         parent_folder: random_project_directory,
         project_folder: "test_project_folder",
         project_id: nil,
-        storage_size: nil,
+        storage_size: "1725",
         requested_by: current_user.uid,
         storage_unit: "TB",
-        quota: "1725 TB",
+        quota: "custom",
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
     end
@@ -223,6 +223,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         custom_quota_request.state = Request::SUBMITTED
         custom_quota_request.save
         visit "#{requests_path}/#{custom_quota_request.id}"
+        expext(custom_quota_request.quota).to eq("custom")
         expect(page).to have_content("Approve request")
         expect(page).to have_content("1725.0 TB")
       end
