@@ -131,7 +131,7 @@ test:
 
   api_domain: "system"
   api_user: "manager"
-  api_password: "change_me"
+  api_password: "<%= ENV['MEDIAFLUX_PASSWORD'] || 'change_me' %>"
   shared_files_location: "./public/"
 ci:
   api_root: "tigerdata"
