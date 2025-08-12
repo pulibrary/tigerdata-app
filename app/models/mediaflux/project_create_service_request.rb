@@ -78,7 +78,9 @@ module Mediaflux
               xml.text(@project_id)
             end
             xml.quota @quota
-            xml.store @store
+            unless Rails.env.production?
+              xml.store @store
+            end
             xml.title @title
           end
         end
