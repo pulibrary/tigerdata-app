@@ -1,36 +1,36 @@
 <h1><%= @request_model.project_title %></h1>
 
-This screen is a review of the request.  No project has been created yet.
+This screen is a review of the request. No project has been created yet.
 
 <div class="horizontal-frame">
-  <% if !@request_model.submitted? %>
+    <% if !@request_model.submitted? %>
     <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-  <% end %>
-  <% if current_user.eligible_sysadmin? && @request_model.submitted? %>
+    <% end %>
+    <% if current_user.eligible_sysadmin? && @request_model.submitted? %>
     <%= link_to "Edit submitted request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
     <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
-  <% end %>
+    <% end %>
 </div>
 
 <% if @request_model.error_message.present? %>
-  <p class="error-field">There was an error with this request</p>
-  <textarea class="disabled-field" rows="10" cols="50">
+<p class="error-field">There was an error with this request</p>
+<textarea class="disabled-field" rows="10" cols="50">
     <%= @request_model.error_message %>
   </textarea>
 <% end %>
 
 <ul class="request_model-fields">
-  <li>Request created at: <%= @request_model.created_at.strftime("%m/%d/%Y") %></li>
-  <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
-  <li>Project title: <%= @request_model.project_title %></li>
-  <li>Request state: <%= @request_model.state %></li>
-  <li>Data sponsor: <%= @request_model.data_sponsor %></li>
-  <li>Data manager: <%= @request_model.data_manager %></li>
-  <li>Department(s): <%= @request_model.departments %></li>
-  <li>Description: <%= @request_model.description %></li>
-  <li>Parent folder: <%= @request_model.parent_folder %></li>
-  <li>Project folder: <%= @request_model.project_folder %></li>
-  <li>Project ID: <%= @request_model.project_id %></li>
-  <li>Quota: <%= @request_model.quota %></li>
-  <li>Requested by: <%= @request_model.requested_by %></li>
+    <li>Request created at: <%= @request_model.created_at.strftime("%m/%d/%Y") %></li>
+    <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
+    <li>Project title: <%= @request_model.project_title %></li>
+    <li>Request state: <%= @request_model.state %></li>
+    <li>Data sponsor: <%= @request_model.data_sponsor %></li>
+    <li>Data manager: <%= @request_model.data_manager %></li>
+    <li>Department(s): <%= @request_model.departments %></li>
+    <li>Description: <%= @request_model.description %></li>
+    <li>Parent folder: <%= @request_model.parent_folder %></li>
+    <li>Project folder: <%= @request_model.project_folder %></li>
+    <li>Project ID: <%= @request_model.project_id %></li>
+    <li>Quota: <%= @request_model.requested_quota_size %> <%= @request_model.requested_quota_unit %></li>
+    <li>Requested by: <%= @request_model.requested_by %></li>
 </ul>
