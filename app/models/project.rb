@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
 
-  class ProjectCreateError < StandardError; end
-
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
   before_save do |project|
@@ -35,38 +33,19 @@ class Project < ApplicationRecord
     end
   end
 
+  # TODO: Remove this method https://github.com/pulibrary/tigerdata-app/issues/1707 has been completed
   def approve!(current_user:)
-    request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: self)
-    request.resolve
-
-    if request.mediaflux_id.to_i == 0
-      raise ProjectCreateError.new("Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}")
+    # This code is duplicated with Request.approve() and it should
+    # be removed. We keep it for now since we have way too many tests
+    # wired to it already. The goal is that projects won't be approved,
+    # instead Request are approved (and that process creates the project)
+    create_project_operation = ProjectCreate.new
+    result = create_project_operation.call(request: nil, approver: current_user, project: self)
+    if result.success?
+       self.mediaflux_id
+    else
+      raise ProjectCreate::ProjectCreateError, result.failure
     end
-
-    self.mediaflux_id = request.mediaflux_id
-    self.metadata_model.status = Project::APPROVED_STATUS
-    self.save!
-
-    debug_output = if request.mediaflux_id == 0
-                     "Error saving project #{self.id} to Mediaflux: #{request.response_error}. Debug output: #{request.debug_output}"
-                   else
-                     "#{request.debug_output}"
-                   end
-    Rails.logger.error debug_output
-
-    add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: self)
-    add_users_request.resolve
-
-    user_debug = "#{add_users_request.debug_output}"
-    Rails.logger.error "Project #{self.id} users have been added to MediaFlux: #{user_debug}"
-
-    # create provenance events:
-    # - one for approving the project and
-    # - another for changing the status of the project
-    # - another with debug information from the create project service
-    ProvenanceEvent.generate_approval_events(project: self, user: current_user, debug_output: debug_output)
-
-    self.mediaflux_id
   end
 
   def reload

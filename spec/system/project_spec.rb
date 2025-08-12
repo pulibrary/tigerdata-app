@@ -9,8 +9,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:read_only) { FactoryBot.create :user }
-  let(:read_write) { FactoryBot.create :user }
+  let(:read_only) { FactoryBot.create :user, uid: "cac9" }
+  let(:read_write) { FactoryBot.create :user, uid: "pp9425" }
   let(:pending_text) do
     "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
   end
