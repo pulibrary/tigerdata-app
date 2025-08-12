@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model do
-  let(:project) { FactoryBot.build :project_with_doi }
+  let(:project) { FactoryBot.create :project_with_doi }
   let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#create!", connect_to_mediaflux: true do
