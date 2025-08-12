@@ -129,8 +129,8 @@ test:
   api_alternate_host: "mediaflux-alt.example.com"
   api_alternate_port: "7777"
 
-  api_domain: "system"
-  api_user: "manager"
+  api_domain: "princeton"
+  api_user: "lib-tigerdata"
   api_password: "<%= ENV['MEDIAFLUX_PASSWORD'] || 'change_me' %>"
   shared_files_location: "./public/"
 ci:
