@@ -6,7 +6,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:random_directory) { random_project_directory }
-  let(:project) { FactoryBot.build :project_with_doi }
+  let(:project) { FactoryBot.create :project_with_doi }
 
   let(:create_response) do
     filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
