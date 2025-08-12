@@ -26,7 +26,20 @@ This screen is a review of the request. No project has been created yet.
     <li>Request state: <%= @request_model.state %></li>
     <li>Data sponsor: <%= @request_model.data_sponsor %></li>
     <li>Data manager: <%= @request_model.data_manager %></li>
-    <li>Department(s): <%= @request_model.departments %></li>
+    <li>Data user(s):
+      <ul id="request-data-users">
+        <% (@request_model.user_roles || []).each do |data_user| %>
+          <li><%= "#{data_user["name"]} (#{data_user["uid"]})" %></li>
+        <% end %> 
+      </ul>
+    </li>
+    <li>Department(s):
+      <ul id="request-data-departments">    
+        <% (@request_model.departments || []).each do |department| %>
+          <li><%= "#{department["name"]} (#{department["code"]})" %></li>
+        <% end %> 
+      </ul>
+  </li>
     <li>Description: <%= @request_model.description %></li>
     <li>Parent folder: <%= @request_model.parent_folder %></li>
     <li>Project folder: <%= @request_model.project_folder %></li>
