@@ -223,7 +223,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         custom_quota_request.state = Request::SUBMITTED
         custom_quota_request.save
         visit "#{requests_path}/#{custom_quota_request.id}"
-        expext(custom_quota_request.quota).to eq("custom")
+        expect(custom_quota_request.quota).to eq("custom")
         expect(page).to have_content("Approve request")
         expect(page).to have_content("1725.0 TB")
       end
