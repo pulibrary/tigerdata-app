@@ -8,6 +8,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user_without_provider) { FactoryBot.create(:data_manager, provider: "", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
@@ -78,7 +79,14 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       sign_in sysadmin_user
       visit "/users/#{data_manager.id}"
       expect(page).to have_content "NetID: #{data_manager.uid}"
+      expect(page).to have_content "Provider: cas"
       expect(page).to have_button "Edit"
+    end
+
+    it "warns if the authentication provider is not set" do
+      sign_in sysadmin_user
+      visit "/users/#{user_without_provider.id}"
+      expect(page).to have_content "Provider: not set"
     end
 
     it "allows user to edit information" do
