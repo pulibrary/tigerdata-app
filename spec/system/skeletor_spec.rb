@@ -172,5 +172,7 @@ describe "#file_list" do
     visit "/projects/#{project.id}"
     click_on "Download Complete List"
     expect(page).to have_content "List Project Contents"
+    execute_script('document.getElementById("request-list-contents").click();')
+    expect(page).to have_content "A link to the downloadable file list"
   end
 end
