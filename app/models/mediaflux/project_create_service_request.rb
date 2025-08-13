@@ -19,9 +19,6 @@ module Mediaflux
       @project_id = @project.metadata_model.project_id
       @department = departments_string(@project.metadata_model.departments)
       @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
-      # We set the datastore to "db" because the default is a store that
-      # only exists in the production Mediaflux.
-      @store = "db" unless Rails.env.production?
     end
 
     # Specifies the Mediaflux service to use when creating project
@@ -59,7 +56,6 @@ module Mediaflux
       #   :directory tigerdata/RC/td-testing/md1908/HectorProject2 \
       #   :project-id "fake.id" \
       #   :quota "10 TB" \
-      #   :store db \
       #   :title "Fake Study"
       #
       def build_http_request_body(name:)
@@ -78,7 +74,6 @@ module Mediaflux
               xml.text(@project_id)
             end
             xml.quota @quota
-            xml.store @store
             xml.title @title
           end
         end

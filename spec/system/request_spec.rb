@@ -46,6 +46,28 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
     end
+    let(:custom_quota_request) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "Custom Quota Project",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+        description: "Test project description",
+        parent_folder: random_project_directory,
+        project_folder: "test_project_folder",
+        project_id: nil,
+        storage_size: "1725",
+        requested_by: current_user.uid,
+        storage_unit: "TB",
+        quota: "custom",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
+    end
     let(:bluemountain) do
       Request.create(
         request_type: nil,
@@ -143,7 +165,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(response.body).not_to have_content("Edit request")
         expect(response.body).to have_content("Edit submitted request")
       end
-
+      it "shows the names of the data users on a single submitted request that includes data user(s)" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{full_request.id}"
+        expect(page).to have_css("#request-data-users")
+        expect(page).to have_content("tigerdatatester")
+      end
+      it "shows the departments on a single submitted request that includes departments" do
+        sign_in sysadmin_user
+        visit "#{requests_path}/#{full_request.id}"
+        expect(page).to have_css("#request-data-departments")
+        expect(page).to have_content("88888")
+        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
+      end
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
@@ -151,6 +185,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         full_request.save
         visit "#{requests_path}/#{full_request.id}"
         expect(page).to have_content("Approve request")
+        expect(page).to have_content("500.0 GB")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
         expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
@@ -193,6 +228,16 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         within(".project-folder") do
           expect(page).to have_content("cannot be empty")
         end
+      end
+
+      it "shows the custom quota on the request review page", integration: true do
+        sign_in sysadmin_user
+        custom_quota_request.state = Request::SUBMITTED
+        custom_quota_request.save
+        visit "#{requests_path}/#{custom_quota_request.id}"
+        expect(custom_quota_request.quota).to eq("custom")
+        expect(page).to have_content("Approve request")
+        expect(page).to have_content("1725.0 TB")
       end
     end
 
