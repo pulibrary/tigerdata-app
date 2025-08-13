@@ -167,7 +167,8 @@ describe "#file_list" do
     expect(file_list[:files][0].last_modified).to_not be nil
   end
 
-  it "allows a user to see the file list" do
+  it "allows a user to see the file list",
+  :integration do
     sign_in manager
     visit "/projects/#{project.id}"
     click_on "Download Complete List"
