@@ -7,9 +7,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     set_cas_session
 
     if @user.nil? && access_token&.provider == "cas"
+      Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: cas"
       redirect_to help_path
       flash.notice = "You can not be signed in at this time."
     elsif @user.nil?
+      Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: #{access_token&.provider}"
       redirect_to root_path
       flash.alert = "You are not a recognized CAS user."
     else
