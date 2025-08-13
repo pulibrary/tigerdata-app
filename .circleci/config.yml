@@ -65,7 +65,7 @@ commands:
     steps:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
-          command: update-crypto-policies --set LEGACY
+          command: sudo update-crypto-policies --set LEGACY
           background: true
 
   run_postgres:
