@@ -96,9 +96,6 @@ jobs:
       - checkout
       - cleanup_docker
       - run_mediaflux
-      # wait for postgres and mediaflux
-      - run: sleep 10
-      - update_crypto_policy
       - ruby/install:
           version: "3.3.0"
       - node/install:
@@ -121,6 +118,9 @@ jobs:
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
+      # wait for postgres and mediaflux
+      - run: sleep 10
+      - update_crypto_policy
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
