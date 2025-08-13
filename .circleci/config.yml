@@ -115,12 +115,12 @@ jobs:
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
-      - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
       # wait for postgres and mediaflux
       - run: sleep 10
       - update_crypto_policy
+      - persist_to_workspace:
+          root: &root "~/tiger_data"
+          paths: "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
