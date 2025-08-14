@@ -138,6 +138,7 @@ end
 describe "#file_list" do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
+  let(:user) { FactoryBot.create(:user) }
   let(:project) do
     project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
     project.mediaflux_id = nil
@@ -175,5 +176,11 @@ describe "#file_list" do
     expect(page).to have_content "List Project Contents"
     execute_script('document.getElementById("request-list-contents").click();')
     expect(page).to have_content "A link to the downloadable file list"
+  end
+  it "does not allow an unaffiliated user to see the file list",
+  :integration do
+    sign_in user
+    visit "/projects/#{project.id}"
+    expect(page).to have_content("Access Denied")
   end
 end
