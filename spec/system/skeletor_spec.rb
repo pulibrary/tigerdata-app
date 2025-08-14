@@ -183,4 +183,10 @@ describe "#file_list" do
     visit "/projects/#{project.id}"
     expect(page).to have_content("Access Denied")
   end
+  it "does not allow a user to approve a project",
+  :integration do
+    sign_in user
+    visit "/requests/#{project.id}" #this is the url a sysadmin can approve a project
+    expect(page).to have_content("You do not have access to this page.")
+  end
 end
