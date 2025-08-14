@@ -152,6 +152,10 @@ class ProjectsController < ApplicationController
         end
       end
     end
+  rescue => ex
+    Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{ex.message}"
+    flash[:alert] = "Error fetching Mediaflux XML for this project"
+    redirect_to project_path(project_id)
   end
 
   def project_job_service
