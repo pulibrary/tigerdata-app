@@ -28,6 +28,29 @@ RSpec.describe RequestProjectMetadata do
     )
   end
 
+  let(:request_without_parent_folder) do
+    Request.create(
+      request_type: nil,
+      request_title: nil,
+      project_title: "Blue Mountain",
+      created_at: Time.current.in_time_zone("America/New_York").iso8601,
+      state: "draft",
+      data_sponsor: sponsor_user.uid,
+      data_manager: data_manager.uid,
+      departments:
+        [{ "code" => "41000", "name" => "LIB-PU Library" }],
+      description: "This collection contains important periodicals of the European avant-garde.",
+      parent_folder: nil,
+      project_folder: "bluemountain",
+      project_id: nil,
+      storage_size: nil,
+      requested_by: nil,
+      storage_unit: nil,
+      quota: "500 GB",
+      user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+    )
+  end
+
   describe "##convert" do
     it "returns the correct metadata for the project" do
       project_metadata = RequestProjectMetadata.convert(request)
@@ -45,6 +68,11 @@ RSpec.describe RequestProjectMetadata do
       expect(project_metadata[:created_by]).to be_nil
       expect(project_metadata[:created_on]).to eq(request.created_at)
       expect(project_metadata[:project_id]).to eq(ProjectMetadata::DOI_NOT_MINTED)
+    end
+
+    it "handles correctly the directory for requests without a parent folder" do
+      project_metadata = RequestProjectMetadata.convert(request_without_parent_folder)
+      expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/bluemountain")
     end
 
     context "the storage is custom" do
