@@ -74,7 +74,7 @@ module Mediaflux
         @response_xml ||= Nokogiri::XML.parse(response_body)
         Rails.logger.debug(@response_xml)
         if @response_xml.xpath("//message").text == "session is not valid"
-          raise Mediaflux::SessionExpired, session_token
+          raise Mediaflux::SessionExpired, "Session expired for token #{session_token}"
         end
 
         @response_xml
