@@ -32,7 +32,7 @@ RSpec.describe VersionFooter do
         info = described_class.info
         expect(info[:stale]).to be false
         expect(info[:sha]).to eq "7a3b1d7c0f77db526963568ece3e0bb5a6399ce4"
-        expect(info[:branch]).to eq "v0.9.0"
+        expect(info[:branch]).to eq "v0.8.0"
         expect(info[:version]).to eq "10 December 2021"
         expect(info[:tagged_release]).to be true
       end
@@ -153,7 +153,7 @@ RSpec.describe VersionFooter do
       info = described_class.info
       expect(info[:stale]).to be false
       expect(info[:sha]).to eq "7a3b1d7c0f77db526963568ece3e0bb5a6399ce4"
-      expect(info[:branch]).to eq "v0.9.0"
+      expect(info[:branch]).to eq "v0.8.0"
       expect(info[:version]).to eq "10 December 2021"
       expect(info[:tagged_release]).to be true
     end
