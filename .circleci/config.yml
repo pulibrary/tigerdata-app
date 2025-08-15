@@ -74,7 +74,7 @@ commands:
     steps:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
-          command: sudo update-crypto-policies --set D
+          command: sudo update-crypto-policies --set DEFAULT
           background: true
 
   run_postgres:
