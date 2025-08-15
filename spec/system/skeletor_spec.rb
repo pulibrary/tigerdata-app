@@ -138,6 +138,7 @@ end
 describe "#file_list" do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
+  let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user) }
   let(:project) do
     project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
@@ -186,7 +187,14 @@ describe "#file_list" do
   it "does not allow a user to approve a project",
   :integration do
     sign_in user
-    visit "/requests/#{project.id}" #this is the url a sysadmin can approve a project
+    visit "/requests/#{project.id}" # this is the url a sysadmin can approve a project
     expect(page).to have_content("You do not have access to this page.")
+  end
+  it "only allows a sysadmin to approve a project",
+  :integration do
+    sign_in current_sysadmin
+    visit "/"
+    byebug
+    #on monday have sysadmin visit /request and have the user do the same
   end
 end
