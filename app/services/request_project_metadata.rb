@@ -22,7 +22,7 @@ class RequestProjectMetadata
      private
 
        def project_directory(request)
-         "#{Rails.configuration.mediaflux['api_root']}/#{request[:parent_folder]}/#{request[:project_folder]}"
+         [Rails.configuration.mediaflux["api_root"], request[:parent_folder], request[:project_folder]].compact_blank.join("/")
        end
 
        def data_users(request)

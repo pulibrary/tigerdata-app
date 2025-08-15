@@ -194,7 +194,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
-              expect { get :show, params: { id: project.id } }.to raise_error(Mediaflux::SessionExpired)
+              expect { get :show, params: { id: project.id } }.to raise_error(Mediaflux::SessionExpired, /Session expired for token/)
             end
           end
 

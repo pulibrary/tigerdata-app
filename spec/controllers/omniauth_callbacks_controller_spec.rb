@@ -13,9 +13,9 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
   end
 
-  context "uknown user" do
+  context "unknown user" do
     it "redirects to the help page with alert" do
-      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas")
+      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
       allow(User).to receive(:from_cas) { nil }
       get :cas
       expect(response).to redirect_to(help_path)
@@ -25,7 +25,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   context "non-CAS user" do
     it "redirects to the home page with alert" do
-      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "other")
+      controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "other", uid: nil)
       allow(User).to receive(:from_cas) { nil }
       get :cas
       expect(response).to redirect_to(root_path)
