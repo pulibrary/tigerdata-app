@@ -96,4 +96,11 @@ RSpec.describe ProjectMediaflux, type: :model do
       expect(project.metadata_model.updated_by).to eq "user123"
     end
   end
+
+  describe "#xml_payload" do
+    it "raises errors when project is not accessible", :integration do
+      # The project is not in mediaflux and therefore this will raise an exception
+      expect { described_class.xml_payload(project: project, user: current_user) }.to raise_error(StandardError)
+    end
+  end
 end

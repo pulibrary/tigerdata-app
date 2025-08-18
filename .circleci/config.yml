@@ -14,7 +14,10 @@ parameters:
     default: ""
 
 orbs:
+  browser-tools: circleci/browser-tools@1.4.8
   coveralls: coveralls/coveralls@2.2.1
+  ruby: circleci/ruby@2.5.3
+  node: circleci/node@7.1.0
 executors:
   basic-executor:
     docker:
@@ -27,11 +30,11 @@ executors:
 commands:
   install_dependencies:
     steps:
-      - run: sudo apt update && sudo apt install postgresql-client libmsgpack-dev libpq-dev
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata crypto-policies
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
-          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}
+          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}-2
       - run: bundle config set path './vendor/bundle'
       - run: bundle config set --local without production
       - run: bundle install --jobs=4 --retry=3
@@ -41,7 +44,7 @@ commands:
             - ./vendor/bundle
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --frozen-lockfile
@@ -53,29 +56,64 @@ commands:
 
   run_mediaflux:
     steps:
-      - run: echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker pull pulibraryrdss/mediaflux_dev:v0.8.0
-      - run: docker run -d --privileged --name mediaflux --publish 0.0.0.0:8888:80  --mac-address 02:42:ac:11:00:02 pulibraryrdss/mediaflux_dev:v0.8.0
+      - run:
+          name: Run Mediaflux in podman
+          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.9.0"
+          background: true
+
+  # Enable SHA1 for Mediaflux. Neccessary to run integration tests
+  enable_sha1_for_mediaflux:
+    steps:
+      - run:
+          name: Update the Crypto Policies of the Top Level Pod-Container
+          command: sudo update-crypto-policies --set LEGACY
+          background: true
+
+  # Disable SHA1 for security purposes
+  disable_sha1:
+    steps:
+      - run:
+          name: Update the Crypto Policies of the Top Level Pod-Container
+          command: sudo update-crypto-policies --set DEFAULT
+          background: true
 
   run_postgres:
     steps:
-      - run: docker create --name postgres --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user postgres:15.2-alpine
-      - run: docker start postgres
+      - run:
+          name: Run Postgres in podman
+          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
+          background: true
+
+  cleanup_docker:
+    steps:
+      - run: podman stop postgres || true
+      - run: podman stop mediaflux || true
+      - run: podman system prune -a --volumes -f || true
 
 jobs:
   test:
     working_directory: ~/tiger_data
-    machine:
-      image: ubuntu-2404:2024.05.1
-      docker_layer_caching: true
+    machine: true
+    resource_class: pulibrary/ruby-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
+      RAILS_ENV: test
     steps:
       - checkout
+      - cleanup_docker
+      - run_mediaflux
+      - ruby/install:
+          version: "3.3.0"
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - install_dependencies
+      - run_postgres
       - run:
           name: Run rubocop
           command: bundle exec rubocop
@@ -86,17 +124,17 @@ jobs:
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
+      # wait for postgres and mediaflux
+      - run: sleep 10
+      - enable_sha1_for_mediaflux
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
-      - run_mediaflux
-      - run_postgres
-      # wait for postgres and mediaflux
-      - run: sleep 10
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec --tag \~integration --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+      - disable_sha1
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
