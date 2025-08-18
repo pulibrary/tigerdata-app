@@ -135,7 +135,7 @@ end
 
 # once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
 
-describe "#file_list" do
+describe "#file_list", integration: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
   let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
@@ -158,8 +158,7 @@ describe "#file_list" do
     Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
   end
 
-  it "fetches the file list",
-  :integration do
+  it "fetches the file list" do
     file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
     expect(file_list[:files].count).to eq 8
     expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
@@ -169,8 +168,7 @@ describe "#file_list" do
     expect(file_list[:files][0].last_modified).to_not be nil
   end
 
-  it "allows a user to see the file list",
-  :integration do
+  it "allows a user to see the file list" do
     sign_in manager
     visit "/projects/#{project.id}"
     click_on "Download Complete List"
@@ -178,23 +176,14 @@ describe "#file_list" do
     execute_script('document.getElementById("request-list-contents").click();')
     expect(page).to have_content "A link to the downloadable file list"
   end
-  it "does not allow an unaffiliated user to see the file list",
-  :integration do
+  it "does not allow an unaffiliated user to see the file list" do
     sign_in user
     visit "/projects/#{project.id}"
     expect(page).to have_content("Access Denied")
   end
-  it "does not allow a user to approve a project",
-  :integration do
+  it "does not allow a user to approve a project" do
     sign_in user
     visit "/requests/#{project.id}" # this is the url a sysadmin can approve a project
     expect(page).to have_content("You do not have access to this page.")
-  end
-  it "only allows a sysadmin to approve a project",
-  :integration do
-    sign_in current_sysadmin
-    visit "/"
-    byebug
-    #on monday have sysadmin visit /request and have the user do the same
   end
 end
