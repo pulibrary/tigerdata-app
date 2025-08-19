@@ -4,7 +4,7 @@ class PrincetonUsers
   RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441].freeze
 
   class << self
-      
+
     # Return the list of Users who are already in the database.
     def user_list
       Rails.cache.fetch("princeton_user_list", expires_in: 6.hours) do
@@ -15,6 +15,8 @@ class PrincetonUsers
     def load_rdss_developers
       RDSS_DEVELOPERS.each do |netid|
         create_user_from_ldap_by_uid(netid)
+        rescue TigerData::LdapError
+        raise TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?"
       end
     end
 
@@ -44,8 +46,8 @@ class PrincetonUsers
       uid = ldap_person[:uid].first.downcase
       current_entries = User.where(uid:)
       if current_entries.empty?
-        User.create(uid: , display_name: ldap_person[:pudisplayname].first, 
-                    family_name: ldap_person[:sn].first, given_name: ldap_person[:givenname].first, 
+        User.create(uid: , display_name: ldap_person[:pudisplayname].first,
+                    family_name: ldap_person[:sn].first, given_name: ldap_person[:givenname].first,
                     email: ldap_person[:edupersonprincipalname].first, provider: "cas")
       else
         user = current_entries.first
