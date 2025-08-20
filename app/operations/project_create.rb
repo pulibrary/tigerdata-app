@@ -11,10 +11,10 @@ class ProjectCreate < Dry::Operation
     mediaflux_id = step persist_in_mediaflux(project, approver)
     step update_project_with_mediaflux_info(mediaflux_id:, project:)
     step persist_users_in_mediaflux(project, approver)
+    step activate_project(project, approver)
   end
 
   private
-
     def create_project_from_request(request)
       # Create the project in the Rails database
       project_metadata_json = RequestProjectMetadata.convert(request)
@@ -78,5 +78,12 @@ class ProjectCreate < Dry::Operation
       end
     rescue => ex
       Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{ex}")
+    end
+
+    def activate_project(project, approver)
+      project.activate(current_user: approver)
+      Success(project)
+    rescue => ex
+      Failure("Error activate project #{project.id}: #{ex}")
     end
 end
