@@ -158,12 +158,14 @@ jobs:
       ARCH: linux
     steps:
       - checkout
-      - install_dependencies
       - ruby/install:
           version: "3.3.0"
       - node/install:
           install-yarn: true
           node-version: "22.9"
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - install_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
