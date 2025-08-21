@@ -204,6 +204,8 @@ workflows:
                 - main
   ci_daily:
     when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
+      or:
+        - equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
+        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
     jobs:
       - mflux_ci

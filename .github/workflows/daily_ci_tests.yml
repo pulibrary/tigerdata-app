@@ -1,6 +1,7 @@
 ---
-name: Run test suite against Mflux-CI daily
+name: Run test suite against Mflux-CI
 on:
+  workflow_dispatch:
   schedule:
     - cron: 0 8 * * 1-5
 jobs:
