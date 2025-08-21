@@ -30,7 +30,7 @@ executors:
 commands:
   install_dependencies:
     steps:
-      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata crypto-policies
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
       - run: gem install bundler -v '2.5.6'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -53,6 +53,10 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+
+  install_crypto_policies:
+    steps:
+      - run: sudo apt update && sudo apt install -y crypto-policies
 
   run_mediaflux:
     steps:
@@ -113,6 +117,7 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
+      - install_crypto_policies
       - run_postgres
       - run:
           name: Run rubocop
