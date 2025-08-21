@@ -65,6 +65,13 @@ commands:
           command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.9.0"
           background: true
 
+  run_postgres:
+    steps:
+      - run:
+          name: Run Postgres in podman
+          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
+          background: true
+
   # Enable SHA1 for Mediaflux. Neccessary to run integration tests
   enable_sha1_for_mediaflux:
     steps:
@@ -79,13 +86,6 @@ commands:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
           command: sudo update-crypto-policies --set DEFAULT
-          background: true
-
-  run_postgres:
-    steps:
-      - run:
-          name: Run Postgres in podman
-          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
           background: true
 
   cleanup_docker:
@@ -159,7 +159,11 @@ jobs:
     steps:
       - checkout
       - install_dependencies
-      - install_crypto_policies
+      - ruby/install:
+          version: "3.3.0"
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
