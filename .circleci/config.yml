@@ -212,14 +212,14 @@ workflows:
             branches:
               only:
                 - main
-      - mflux_ci:
-          requires:
-            - test
-            - deploy
-          filters:
-            branches:
-              only:
-                - main
+      # - mflux_ci:
+      #     requires:
+      #       - test
+      #       - deploy
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
   # ci_daily:
   #   when:
   #     or:
