@@ -14,6 +14,6 @@ jobs:
         id: tigerdata_ci_trigger
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
         with:
-          GHA_Meta: "TigerData-Config"
+          GHA_Meta: "TigerData-App"
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}
