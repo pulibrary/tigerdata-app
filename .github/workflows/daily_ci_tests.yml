@@ -1,6 +1,7 @@
 ---
 name: Run test suite against Mflux-CI
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: 0 8 * * 1-5
@@ -12,5 +13,7 @@ jobs:
         if: github.event.schedule == '0 8 * * 1-5'
         id: tigerdata_ci_trigger
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
+        with:
+          GHA_Meta: "TigerData-Config"
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}

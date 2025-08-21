@@ -206,6 +206,7 @@ workflows:
     when:
       or:
         - equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
+        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
         - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
     jobs:
       - mflux_ci
