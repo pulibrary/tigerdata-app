@@ -159,6 +159,7 @@ jobs:
     steps:
       - checkout
       - install_dependencies
+      - install_crypto_policies
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
