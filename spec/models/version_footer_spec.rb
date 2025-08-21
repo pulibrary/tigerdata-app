@@ -7,8 +7,8 @@ RSpec.describe VersionFooter do
   describe "info" do
     context "with stale information" do
       before do
-        described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
-        described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_stale.log").to_s
+        described_class.revision_file = Pathname.new(fixture_paths.first).join("REVISION").to_s
+        described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_stale.log").to_s
         described_class.reset!
       end
 
@@ -24,8 +24,8 @@ RSpec.describe VersionFooter do
 
     context "with current information" do
       before do
-        described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
-        described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_current.log").to_s
+        described_class.revision_file = Pathname.new(fixture_paths.first).join("REVISION").to_s
+        described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_current.log").to_s
         described_class.reset!
       end
       it "detects current information" do
@@ -53,8 +53,8 @@ RSpec.describe VersionFooter do
 
     context "with stale information" do
       before do
-        described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
-        described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_stale.log").to_s
+        described_class.revision_file = Pathname.new(fixture_paths.first).join("REVISION").to_s
+        described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_stale.log").to_s
         described_class.reset!
       end
 
@@ -145,8 +145,8 @@ RSpec.describe VersionFooter do
 
   context "with rollback information" do
     before do
-      described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
-      described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_rollback.log").to_s
+      described_class.revision_file = Pathname.new(fixture_paths.first).join("REVISION").to_s
+      described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_rollback.log").to_s
       described_class.reset!
     end
     it "detects current information" do
@@ -161,8 +161,8 @@ RSpec.describe VersionFooter do
 
   context "with an exception" do
     before do
-      described_class.revision_file = Pathname.new(fixture_path).join("REVISION").to_s
-      described_class.revisions_logfile = Pathname.new(fixture_path).join("revisions_rollback.log").to_s
+      described_class.revision_file = Pathname.new(fixture_paths.first).join("REVISION").to_s
+      described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_rollback.log").to_s
       described_class.reset!
       allow(described_class).to receive(:log_line).and_raise("Error!!!")
     end
