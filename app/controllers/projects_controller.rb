@@ -70,36 +70,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def edit
-    add_breadcrumb(project.title, project_path)
-    add_breadcrumb("Edit")
-    project
-    if project.metadata_model.status != Project::APPROVED_STATUS
-      flash[:notice] = "Pending projects can not be edited."
-      redirect_to project
-    elsif project.metadata_model.status == Project::APPROVED_STATUS && !eligible_editor? #check if the current user is a sponsor or a manager
-      flash[:notice] = "Only data sponsors and data managers can revise this project."
-      redirect_to project
-    end
-  end
-
-  def update
-    @project = Project.find(params[:id])
-
-    #Edit action
-    if params.key?("title")
-      @project.metadata_model.status = @project.metadata_model.status || Project::PENDING_STATUS
-      @project.metadata_model.update_with_params(params, current_user)
-    end
-
-    # @todo ProjectMetadata should be refactored to implement ProjectMetadata.valid?(updated_metadata)
-    if project.save and params.key?("title")
-      redirect_to project_revision_confirmation_path(@project)
-    else
-      render :edit
-    end
-  end
-
   def index
     if current_user.eligible_sysadmin?
       @projects = Project.all
@@ -108,9 +78,6 @@ class ProjectsController < ApplicationController
       redirect_to dashboard_path
     end
   end
-
-  def confirmation; end
-  def revision_confirmation; end
 
   def show
 

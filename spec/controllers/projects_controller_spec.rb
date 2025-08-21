@@ -241,31 +241,4 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         .or(have_content("Princeton Plasma Physics Laboratory"))
     end
   end
-
-  context "when the project edit views are rendered for an existing project" do
-    # Views are stubbed by default for rspec-rails
-    # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
-    render_views
-    let(:current_user) { FactoryBot.create(:superuser, uid: "pul123") }
-    let(:approved_project) do
-      project = FactoryBot.create(:approved_project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111")
-      project.mediaflux_id = nil
-      project
-    end
-
-    before do
-      approved_project
-      sign_in(current_user)
-    end
-
-    it "shows the affiliation name (instead the internal code) on the project edit views" do
-      get :edit, params: { id: approved_project.id }
-      expect(response).to render_template("edit")
-      expect(response.body).to have_content("Astrophysical Sciences")
-        .or(have_content("High Performance Computing"))
-        .or(have_content("Research Data and Scholarship Services"))
-        .or(have_content("Princeton Research Data Service"))
-        .or(have_content("Princeton Plasma Physics Laboratory"))
-    end
-  end
 end
