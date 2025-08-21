@@ -44,23 +44,6 @@ namespace :projects do
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
 
-
-  task :query, [:data_sponsor, :department] => [:environment] do |_, args|
-    data_sponsor = args[:data_sponsor]
-    department = args[:department]
-    root_ns = Mediaflux::Connection.root_namespace
-
-    user = User.first
-
-    time_action("Getting counts by data_sponsor #{data_sponsor} department #{department} took") do
-      count_request = Mediaflux::CollectionCountRequest.new(
-        session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor, department: department
-      )
-      count_request.resolve
-      puts "#{count_request.count} records for #{data_sponsor} department #{department}"
-    end
-  end
-
   task :save_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
     netid = args[:netid]
     user = User.where(uid: netid).first
@@ -130,28 +113,6 @@ namespace :projects do
       break if iterate_request.complete?
     end
   end
-
-  # rubocop:disable Metrics/MethodLength
-  def query_test_projects(user, root_ns)
-    counts = []
-    ["zz001", "zz003", "zz007", nil].each do |data_sponsor|
-      time_action("Getting counts by data_sponsor #{data_sponsor}") do
-        count_request = Mediaflux::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: data_sponsor)
-        count_request.resolve
-        counts << { data_sponsor: data_sponsor || "total", count: count_request.count }
-      end
-    end
-    puts counts
-
-    total73 = 0
-    time_action("Getting counts by data_sponsor zz007 department THREE") do
-      count_request = Mediaflux::CollectionCountRequest.new(session_token: user.mediaflux_session, namespace: root_ns, data_sponsor: "zz007", department: "THREE")
-      count_request.resolve
-      total73 = count_request.count
-    end
-    puts "#{total73} records for data_sponsor zz007 department THREE"
-  end
-  # rubocop:enable Metrics/MethodLength
 
   def time_action(label)
     start_time = Time.current.in_time_zone("America/New_York").iso8601

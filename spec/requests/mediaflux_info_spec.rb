@@ -23,7 +23,6 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
     context "logged in user" do
       let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
-      let(:docker_response) { Mediaflux::EXPECTED_VERSION }
 
       before do
         sign_in user
@@ -32,7 +31,7 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
       it "renders a successful response" do
         get mediaflux_info_index_path
         expect(response).to be_successful
-        expect(response.parsed_body).to include(docker_response)
+        expect(response.body.match?(Mediaflux::EXPECTED_VERSION)).to eq true
       end
     end
   end
