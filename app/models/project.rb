@@ -50,10 +50,10 @@ class Project < ApplicationRecord
 
   def activate(current_user:)
     raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
-    metadata_request = Mediaflux::ProjectMetadataGetRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
     metadata_request.resolve
     raise metadata_request.response_error if metadata_request.error?
-    if self.title == metadata_request.title
+    if self.title == metadata_request.metadata[:title]
       self.metadata_model.status = Project::ACTIVE_STATUS
       self.save!
     else
