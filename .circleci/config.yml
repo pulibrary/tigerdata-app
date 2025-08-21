@@ -201,8 +201,8 @@ workflows:
     when:
       or:
         - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
-        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
-        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
+        # - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
+        # - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
     jobs:
       - test
       - deploy:
