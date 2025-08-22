@@ -10,7 +10,6 @@ class Project < ApplicationRecord
 
   # Valid project status described in ADR 7
   # See `architecture-decisions/0007-valid-project-statuses.md`
-  PENDING_STATUS = "pending"
   APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
 
@@ -119,10 +118,6 @@ class Project < ApplicationRecord
     metadata_model.status
   end
 
-  def pending?
-    status == PENDING_STATUS
-  end
-
   def in_mediaflux?
     mediaflux_id.present?
   end
@@ -154,12 +149,8 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_manager' = ?", manager)
   end
 
-  def self.pending_projects
-    Project.where("mediaflux_id IS NULL")
-  end
-
-  def self.approved_projects
-    Project.where("mediaflux_id IS NOT NULL")
+  def self.all_projects
+    Project.all
   end
 
   def self.data_user_projects(user)

@@ -3,8 +3,7 @@ class DashboardController < ApplicationController
   layout "welcome"
 
   def index # rubocop:disable Metrics/AbcSize
-    @pending_projects = Project.pending_projects.map { |project| ProjectDashboardPresenter.new(project) }
-    @approved_projects = Project.approved_projects.map { |project| ProjectDashboardPresenter.new(project) }
+    @all_projects = Project.all_projects.map { |project| ProjectDashboardPresenter.new(project) }
     @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
 
     @dashboard_projects = Project.users_projects(@current_user).map { |project| ProjectDashboardPresenter.new(project) }

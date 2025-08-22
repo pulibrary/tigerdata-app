@@ -30,12 +30,6 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
     end
   end
 
-  describe "#pending?" do
-    it "delegates to project" do
-      expect(presenter.pending?).to eq(project.pending?)
-    end
-  end
-
   describe "#project_directory" do
     it "hides the root project" do
       expect(presenter.project_directory).to eq(project.metadata_model.project_directory)
