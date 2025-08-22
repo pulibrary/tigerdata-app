@@ -163,7 +163,6 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
-      - cleanup_docker
       - ruby/install:
           version: "3.3.0"
       - node/install:
