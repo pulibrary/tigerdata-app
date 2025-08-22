@@ -419,11 +419,8 @@ In the rails console run something like:
 ```
 session_id = SystemUser.mediaflux_session
 project = Project.first
-project_name = project.project_directory
-project_namespace = "#{project_name}NS"
-store_name = Store.default(session_id: session_id).name
-namespace = Mediaflux::NamespaceCreateRequest.new(namespace: project_namespace, description: "Namespace for project #{project.title}", store: store_name, session_token: session_id)
-puts "\n\n #{namespace.xtoshell_xml}\n\n"
+metadata = Mediaflux::AssetMetadataRequest.new(id: project.mediaflux_id session_token: session_id)
+puts "\n\n #{metadata.xtoshell_xml}\n\n"
 ```
 
 Copy the output and in aterm run `service.execute` and paste the output
