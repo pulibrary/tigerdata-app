@@ -172,10 +172,37 @@
                 line-height: 1.3125rem; /* 150% */
               }
               .info {
-                width: 1.25rem;
-                height: 1.25rem;
+                width: 1.5rem;
+                height: 1.5rem;
                 aspect-ratio: 1/1;
                 background: url("info.svg") no-repeat;
+              }
+
+              .info {
+                position: relative; /* Required for the pseudo-element to be positioned relative to the div */
+                display: inline-block; /* Or block, depending on your layout */
+              }
+
+              .info::after {
+                content: attr(data-tooltip); /* Pulls the text from the data-tooltip attribute */
+                visibility: hidden;
+                position: relative;
+                bottom: 125%; /* Positions the tooltip above the div */
+                left: -500%;
+                transform: translateX(-50%);
+
+                /* Styling for the tooltip box */
+                background-color: #333;
+                color: #fff;
+                font-size: 12px;
+                padding: 8px 12px;
+                border-radius: 4px;
+                white-space: nowrap;
+                z-index: 1; /* Ensures the tooltip is on top of other content */
+              }
+
+              .info:hover::after {
+                visibility: visible;
               }
             }
 
