@@ -33,9 +33,6 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       datasponsor
     end
     it "allows the sysadmin to fill out the project" do
-      # this is the feature flipper
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
       expect(Project.count).to eq 0
       sign_in current_sysadmin
@@ -75,9 +72,6 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       datasponsor
     end
     it "allows the superuser to fill out the project" do
-      # this is the feature flipper
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
       expect(Project.count).to eq 0
       sign_in current_superuser
