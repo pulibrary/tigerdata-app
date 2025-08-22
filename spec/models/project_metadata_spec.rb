@@ -13,7 +13,7 @@ RSpec.describe ProjectMetadata, type: :model do
       project_directory: "dir",
       title: "title abc",
       description: "description 123",
-      status: "pending"
+      status: "approved"
     }.with_indifferent_access
   end
 
@@ -36,7 +36,7 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.project_directory).to eq("dir")
       expect(project_metadata.title).to eq("title abc")
       expect(project_metadata.description).to eq("description 123")
-      expect(project_metadata.status).to eq("pending")
+      expect(project_metadata.status).to eq("approved")
     end
 
     it "sets the default values when not given" do

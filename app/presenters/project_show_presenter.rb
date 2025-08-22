@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectShowPresenter
-  delegate "id", "in_mediaflux?", "mediaflux_id", "pending?", "status", "title", to: :project
+  delegate "id", "in_mediaflux?", "mediaflux_id", "status", "title", to: :project
   delegate "description", "project_id", "storage_performance_expectations", "project_purpose", to: :project_metadata
 
   attr_reader :project, :project_metadata
@@ -66,16 +66,10 @@ class ProjectShowPresenter
   end
 
   def quota_usage(session_id:)
-    if project.pending?
-      "0 KB out of 0 GB used"
-    else
-      "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
-    end
+    "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
   end
 
   def quota_percentage(session_id:)
-    return 0 if project.pending?
-
     storage_capacity = project.storage_capacity_raw(session_id:)
     return 0 if storage_capacity.zero?
 

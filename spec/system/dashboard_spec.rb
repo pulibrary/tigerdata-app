@@ -161,7 +161,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in no_projects_user
         visit dashboard_path
         expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
-        expect(page).to have_content("No pending projects")
+        expect(page).to have_content("No projects")
         click_link no_projects_user.uid.to_s
         expect(page).to have_content "Log out"
       end
@@ -194,7 +194,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         click_on "Administration"
         expect(page).to have_content "project 111"
         expect(page).to have_content "project 444"
-        expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
       end
 
@@ -260,7 +259,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         click_on "Administration"
         expect(page).to have_button("Import Mediaflux Projects")
-        expect(page).to have_content("Pending Projects")
         expect(page).to have_content("Approved Projects")
         expect(page).to have_content "project 111"
         expect(page).to have_content "project 444"
