@@ -1,1 +1,10 @@
-<%= link_to "New Project Request", new_project_project_info_path, class: "btn btn-dark btn-sm", id: "new-project-request-wizard-button"%>
+<div class="new-project-multi">
+    <div class="request-btn">
+        <%= link_to "New Project Request", new_project_project_info_path, class: "", id: "new-project-request-wizard-button"%>
+    </div>
+    <div class="request-options">
+        <button popovertarget="request-dropdown" class="down-arrow"></button>
+        <div popover="auto" id="request-dropdown" class="request-dropdown"><button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button></div>
+        <div popover="auto" id="draft-request-list" class="request-list"><ul><li>I should have the list of draft request for the user</li></ul></div>
+    </div>
+</div>
