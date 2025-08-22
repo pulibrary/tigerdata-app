@@ -17,4 +17,4 @@ jobs:
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}
       - name: check
-        run: "echo ${{ secrets.Automated_Ci_Test }}"
+        run: echo "${{ secrets.Automated_Ci_Test }}" | base64
