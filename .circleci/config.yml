@@ -196,7 +196,10 @@ workflows:
   version: 2
   build_accept_deploy:
     when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+      or:
+        - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
+        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
     jobs:
       - test
       - deploy:
@@ -206,11 +209,20 @@ workflows:
             branches:
               only:
                 - main
-  ci_daily:
-    when:
-      or:
-        - equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
-        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
-        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
-    jobs:
-      - mflux_ci
+      - mflux_ci:
+          requires:
+            - test
+            # - deploy
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
+  # ci_daily:
+  #   when:
+  #     or:
+  #       - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-App"]
+  #       - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"]
+  #   jobs:
+  #     - mflux_ci:
+  #         when:
+  #         equal: ["prod", << pipeline.parameters.environment >>]

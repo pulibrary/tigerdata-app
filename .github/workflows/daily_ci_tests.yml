@@ -2,16 +2,14 @@
 name: Run test suite against Mflux-CI
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
   workflow_dispatch:
-  schedule:
-    - cron: 0 8 * * 1-5
 jobs:
   daily_check:
     runs-on: ubuntu-latest
     steps:
-      - name: Every weekday morning at 8:00 AM
+      - name: Run CircleCI Pipeline after merging to main
         id: tigerdata_ci_trigger
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
         with:
