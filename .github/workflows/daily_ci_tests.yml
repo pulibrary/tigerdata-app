@@ -2,8 +2,6 @@
 name: Run test suite against Mflux-CI
 on:
   push:
-    branches:
-      - main
   workflow_dispatch:
   schedule:
     - cron: 0 8 * * 1-5
@@ -18,3 +16,5 @@ jobs:
           GHA_Meta: "TigerData-App"
         env:
           CCI_TOKEN: ${{ secrets.Automated_Ci_Test }}
+      - name: check
+        run: "echo ${{ secrets.Automated_Ci_Test }}"
