@@ -9,9 +9,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let(:data_manager) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
-  let(:pending_text) do
-    "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
-  end
 
   let(:metadata_model) do
     hash = {
@@ -23,7 +20,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       description: "hello world",
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
-      status: ::Project::PENDING_STATUS,
+      status: ::Project::APPROVED_STATUS,
       storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
       storage_performance_expectations: { "requested" => "standard" },
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
@@ -48,7 +45,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
 
-            expect(page).not_to have_content(pending_text)
             expect(page).to have_css ".approved"
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
@@ -73,33 +69,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           end
         end
       end
-
-      context "Pending projects" do
-        context "Sponsor user" do
-          it "Shows the correct nav buttons for a pending project" do
-            sign_in sponsor_user
-            visit "/projects/#{project_not_in_mediaflux.id}/details"
-            expect(page).to have_content(project_not_in_mediaflux.title)
-            expect(page).to have_content(pending_text)
-            expect(page).to have_css ".pending"
-            expect(page).not_to have_link("Edit")
-            expect(page).to have_selector(:link_or_button, "Content Preview")
-            click_on("Dashboard")
-            expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
-            find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
-          end
-        end
-        context "SysAdmin" do
-          it "Shows the correct nav buttons for a pending project" do
-            sign_in sysadmin_user
-            visit "/projects/#{project_not_in_mediaflux.id}/details"
-            expect(page).to have_content(project_not_in_mediaflux.title)
-            expect(page).to have_content(pending_text)
-            expect(page).to have_css ".pending"
-            # expect(page).to have_link("Edit")
-          end
-        end
-      end
     end
 
     context "Approved projects" do
@@ -115,7 +84,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).to have_content("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
         expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
-        expect(page).not_to have_content(pending_text)
       end
     end
 
@@ -132,7 +100,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_css ".pending"
+        expect(page).to have_css ".approved"
       end
     end
 
@@ -241,7 +209,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content "project 123"
         expect(page).to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
-        expect(page).not_to have_content pending_text
       end
 
       it "does not show the mediaflux id to the sponsor" do
@@ -250,16 +217,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content "project 123"
         expect(page).not_to have_content "1234"
         expect(page).not_to have_content "This project has not been saved to Mediaflux"
-        expect(page).not_to have_content pending_text
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")
-      end
-
-      it "shows the sysadmin buttons for a pending project" do
-        sign_in sysadmin_user
-        visit "/projects/#{project_not_in_mediaflux.id}/details"
-        expect(page).to have_content "This project has not been saved to Mediaflux"
-        expect(page).to have_content pending_text
       end
     end
   end

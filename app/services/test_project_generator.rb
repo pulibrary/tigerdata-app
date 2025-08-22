@@ -40,7 +40,7 @@ class TestProjectGenerator
         storage_capacity: capacity,
         project_purpose: Rails.configuration.project_defaults[:project_purpose],
         storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
-        status: Project::PENDING_STATUS
+        status: Project::APPROVED_STATUS
       }
       project = Project.new(metadata: )
       project.save!

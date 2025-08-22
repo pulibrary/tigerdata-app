@@ -11,9 +11,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user, uid: "cac9" }
   let(:read_write) { FactoryBot.create :user, uid: "pp9425" }
-  let(:pending_text) do
-    "Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu."
-  end
   let(:metadata_model) do
     hash = {
       data_sponsor: sponsor_user.uid,
@@ -23,7 +20,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       description: "hello world",
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
-      status: ::Project::PENDING_STATUS,
+      status: ::Project::APPROVED_STATUS,
       created_on: Time.current.in_time_zone("America/New_York").iso8601,
       created_by: FactoryBot.create(:user).uid,
       project_id: "10.123/456"
@@ -46,14 +43,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   end
 
   context "Show page" do
-    context "Before it is in MediaFlux" do
-      it "Shows the not yet approved (pending) project" do
-        sign_in sponsor_user
-        visit "/projects/#{project_not_in_mediaflux.id}/details"
-        expect(page).to have_content pending_text
-      end
-    end
-
     context "when the data user is empty" do
       let(:metadata_model) do
         hash = {
@@ -69,7 +58,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           storage_capacity: { size: { requested: "100" }, unit: { requested: "TB" } }.with_indifferent_access,
           storage_performance_expectations: { requested: "Standard" },
           project_purpose: "Research",
-          status: ::Project::PENDING_STATUS,
+          status: ::Project::APPROVED_STATUS,
           created_on: Time.current.in_time_zone("America/New_York").iso8601,
           created_by: FactoryBot.create(:user).uid
         }
@@ -80,12 +69,11 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         sign_in data_manager
         visit "/projects/#{project_not_in_mediaflux.id}/details"
         expect(page).to have_content "This project has not been saved to Mediaflux"
-        expect(page).to have_content pending_text
         expect(page).not_to have_button "Approve Project"
         expect(page).to have_content "Data Users\nNone"
         expect(page).to have_content "Project ID\nabc-123"
-        expect(page).to have_content "Storage Capacity (Requested)\n100 TB"
-        expect(page).to have_content "Storage Performance Expectations (Requested)\nStandard"
+        expect(page).to have_content "Storage Capacity\nRequested\n100 TB"
+        expect(page).to have_content "Storage Performance Expectations\nRequested\nStandard"
         expect(page).to have_content "Project Purpose\nResearch"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
