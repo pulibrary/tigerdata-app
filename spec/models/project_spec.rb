@@ -308,7 +308,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       project.reload
 
       expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
     end
 
     it "creates the provenance events when creating a new project",
@@ -319,7 +319,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       project.reload
 
       expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
 
       expect(project.provenance_events.count).to eq 5
       approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
