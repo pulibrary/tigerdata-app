@@ -153,16 +153,24 @@ jobs:
       - coveralls/upload
   mflux_ci:
     working_directory: ~/tiger_data
-    machine:
-      image: ubuntu-2404:2024.05.1
-      docker_layer_caching: true
+    machine: true
+    resource_class: pulibrary/ruby-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
+      RAILS_ENV: test
     steps:
       - checkout
+      - cleanup_docker
+      - ruby/install:
+          version: "3.3.0"
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - install_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
@@ -170,9 +178,7 @@ jobs:
       - run:
           name: Run vitest
           command: yarn run vitest run
-      - run_postgres_docker
-      # wait for postgres and mediaflux
-      - run: sleep 10
+      - run_postgres
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -200,19 +206,19 @@ workflows:
         - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
         - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
     jobs:
-      - test
-      - deploy:
-          requires: # Call the auto-deploy job after the main test job
-            - test
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
-      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
-          requires:
-            - test
-            - deploy
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
+      # - test
+      # - deploy:
+      #     requires: # Call the auto-deploy job after the main test job
+      #       - test
+      #     filters: # This job is only run on the main branch
+      #       branches:
+      #         only:
+      #           - main
+      - mflux_ci # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
+        # requires:
+        #   - test
+        #   - deploy
+        # filters: # This job is only run on the main branch
+        #   branches:
+        #     only:
+        #       - main
