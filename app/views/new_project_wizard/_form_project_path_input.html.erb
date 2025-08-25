@@ -1,12 +1,12 @@
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label", 
+  <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Project Directory", field_sub_label: "Required"} %>
   <div class="input-frame">
-    <div class="project-directory"> 
+    <div class="project-directory">
       <div class="parent-folder">
         <div class="input-label">
           <div class="label">Parent Folder</div>
-          <div class="info"></div>
+          <div class="info" data-tooltip="This is to help you organize all of your projects. It could be the name of a specific group, a research lab, or Data Sponsor."></div>
         </div>
         <div class="horizontal-frame">
           <div class="vertical-frame">
@@ -26,7 +26,7 @@
       <div class="project-folder">
         <div class="input-label">
           <div class="label">Project Folder</div>
-          <div class="info"></div>
+          <div class="info" data-tooltip="This is for navigating to the files and folders in your project. It should be unique from other projects in the parent folder."></div>
         </div>
         <div class="horizontal-frame">
           <div class="vertical-frame">
