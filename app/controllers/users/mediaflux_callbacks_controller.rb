@@ -9,7 +9,7 @@ class Users::MediafluxCallbacksController < ApplicationController
     ticket = params[:ticket]
     uri = URI.parse(session[:cas_validation_url])
     token = "#{uri.query}#{ticket}"
-    current_user.medaiflux_login(token, session)
+    current_user.mediaflux_login(token, session)
     redirect_to(session["original_path"] || dashboard_path)
   end
 end

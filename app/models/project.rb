@@ -10,7 +10,6 @@ class Project < ApplicationRecord
 
   # Valid project status described in ADR 7
   # See `architecture-decisions/0007-valid-project-statuses.md`
-  PENDING_STATUS = "pending"
   APPROVED_STATUS = "approved"
   ACTIVE_STATUS = "active"
 
@@ -45,6 +44,19 @@ class Project < ApplicationRecord
        self.mediaflux_id
     else
       raise ProjectCreate::ProjectCreateError, result.failure
+    end
+  end
+
+  def activate(current_user:)
+    raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
+    metadata_request.resolve
+    raise metadata_request.response_error if metadata_request.error?
+    if self.title == metadata_request.metadata[:title]
+      self.metadata_model.status = Project::ACTIVE_STATUS
+      self.save!
+    else
+      raise StandardError.new("Title mismatch: #{title} != #{metadata_request.title}")
     end
   end
 
@@ -106,10 +118,6 @@ class Project < ApplicationRecord
     metadata_model.status
   end
 
-  def pending?
-    status == PENDING_STATUS
-  end
-
   def in_mediaflux?
     mediaflux_id.present?
   end
@@ -141,12 +149,8 @@ class Project < ApplicationRecord
     Project.where("metadata_json->>'data_manager' = ?", manager)
   end
 
-  def self.pending_projects
-    Project.where("mediaflux_id IS NULL")
-  end
-
-  def self.approved_projects
-    Project.where("mediaflux_id IS NOT NULL")
+  def self.all_projects
+    Project.all
   end
 
   def self.data_user_projects(user)

@@ -123,33 +123,18 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#pending_projects" do
+  describe "#all_projects" do
     before do
       FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
       FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
       FactoryBot.create(:project, title: "project 333")
     end
 
-    it "returns projects that are not in mediaflux" do
-      pending_projects = described_class.pending_projects
-      expect(pending_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).to be nil
-      expect(pending_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).to be nil
-      expect(pending_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).not_to be nil
-    end
-  end
-
-  describe "#approved_projects" do
-    before do
-      FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
-      FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
-      FactoryBot.create(:project, title: "project 333")
-    end
-
-    it "returns projects that are not in mediaflux" do
-      approved_projects = described_class.approved_projects
-      expect(approved_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
-      expect(approved_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
-      expect(approved_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).to be nil
+    it "returns projects that are in mediaflux, which is all of them" do
+      all_projects = described_class.all_projects
+      expect(all_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
+      expect(all_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
+      expect(all_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).not_to be nil
     end
   end
 
@@ -230,15 +215,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   #   end
   # end
 
-  describe "#pending?" do
-    it "checks the status" do
-      project = FactoryBot.create(:project)
-      expect(project).to be_pending
-      project.metadata_model.status = Project::APPROVED_STATUS
-      expect(project).not_to be_pending
-    end
-  end
-
   describe "#create!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
     let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
@@ -308,7 +284,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       project.reload
 
       expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
     end
 
     it "creates the provenance events when creating a new project",
@@ -319,7 +295,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       project.reload
 
       expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::APPROVED_STATUS
+      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
 
       expect(project.provenance_events.count).to eq 5
       approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }

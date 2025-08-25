@@ -16,7 +16,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       request_date_time: Time.current.in_time_zone("America/New_York").iso8601
     }
   end
-  let(:status) { ::Project::PENDING_STATUS }
+  let(:status) { ::Project::APPROVED_STATUS }
   let(:globus_request) do
     {}
   end

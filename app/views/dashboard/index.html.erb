@@ -7,6 +7,7 @@
       <% if Flipflop.new_project_request_wizard? %>
         <div class="dashboard-admin-buttons">
           <% if current_user.eligible_sysadmin? %>
+          
             <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
             <%= render partial: "new_project_request_wizard_link" %>
           <% end %>
@@ -68,6 +69,5 @@
 
    // Setup the DataTables
    setupTable('#projects-listing');
-   setupTable('#projects-listing-pending');
    setupTable('#projects-listing-approved');
 </script>

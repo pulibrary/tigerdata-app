@@ -65,6 +65,13 @@ commands:
           command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.9.0"
           background: true
 
+  run_postgres:
+    steps:
+      - run:
+          name: Run Postgres in podman
+          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
+          background: true
+
   # Enable SHA1 for Mediaflux. Neccessary to run integration tests
   enable_sha1_for_mediaflux:
     steps:
@@ -79,13 +86,6 @@ commands:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
           command: sudo update-crypto-policies --set DEFAULT
-          background: true
-
-  run_postgres:
-    steps:
-      - run:
-          name: Run Postgres in podman
-          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
           background: true
 
   cleanup_docker:
@@ -149,16 +149,23 @@ jobs:
       - coveralls/upload
   mflux_ci:
     working_directory: ~/tiger_data
-    machine:
-      image: ubuntu-2404:2024.05.1
-      docker_layer_caching: true
+    machine: true
+    resource_class: pulibrary/ruby-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
+      RAILS_ENV: test
     steps:
       - checkout
+      - ruby/install:
+          version: "3.3.0"
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - install_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
@@ -167,8 +174,7 @@ jobs:
           name: Run vitest
           command: yarn run vitest run
       - run_postgres
-      # wait for postgres and mediaflux
-      - run: sleep 10
+      - run: sleep 10 # wait for postgres
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -192,18 +198,23 @@ workflows:
   version: 2
   build_accept_deploy:
     when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+      or:
+        - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
     jobs:
       - test
       - deploy:
-          requires:
+          requires: # Call the auto-deploy job after the main test job
             - test
-          filters:
+          filters: # This job is only run on the main branch
             branches:
               only:
                 - main
-  ci_daily:
-    when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", "schedule"]
-    jobs:
-      - mflux_ci
+      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
+          requires:
+            - test
+            - deploy
+          filters: # This job is only run on the main branch
+            branches:
+              only:
+                - main
