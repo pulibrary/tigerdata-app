@@ -184,7 +184,9 @@
               }
 
               .info::after {
-                content: attr(data-tooltip); /* Pulls the text from the data-tooltip attribute */
+                content: attr(
+                  data-tooltip
+                ); /* Pulls the text from the data-tooltip attribute */
                 visibility: hidden;
                 position: relative;
                 bottom: 125%; /* Positions the tooltip above the div */
