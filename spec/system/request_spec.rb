@@ -5,11 +5,6 @@ require "rails_helper"
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  before do
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:new_project_request_wizard, true)
-  end
-
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/requests"

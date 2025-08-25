@@ -140,8 +140,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "should not display the New Project Request even if the feature is activated" do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:new_project_request_wizard, true)
         sign_in current_user
         visit dashboard_path
         expect(page).not_to have_content("New Project Request")
@@ -153,6 +151,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
         expect(page).not_to have_content("New Project Request")
+        test_strategy.switch!(:new_project_request_wizard, true)
       end
     end
 
@@ -177,8 +176,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
 
       it "shows the 'Project Requests' button" do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:new_project_request_wizard, true)
         sign_in admin_user
         visit dashboard_path
         expect(page).to have_content("Welcome, #{admin_user.given_name}!")
