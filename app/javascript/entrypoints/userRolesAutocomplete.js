@@ -40,8 +40,9 @@ function addNewUser(value, uid) {
 // eslint-disable-next-line import/prefer-default-export
 export function userRolesAutocomplete() {
   $('#user_find').on('input', (event) => {
-    // We add a non-breaking space (HTML &nbsp; HEX A0) to each option to detect when a option has been entered
-    // into the textbox. We use this character as no user will input this character into the textbox.
+    // When populating the dataList for the user list we add a non-breaking space (HTML &nbsp; HEX A0)
+    // to each option. We use this special character here to detect when a user has selected an option
+    // from the dataList (since no user will manually enter a non-breaking space).
     // This solution was grabbed from https://stackoverflow.com/a/74598110/16862920
     const { value } = event.currentTarget;
     if (value.slice(-1) === '\xA0') {
