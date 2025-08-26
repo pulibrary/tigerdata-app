@@ -13,7 +13,7 @@
             <% user_roles.each do |user| %>
               <li class="selected-item"><%= "(#{user["uid"]}) #{user["name"]}" %>
                 <div tabindex="0" class="remove-user-role remove-item"></div>
-                <input type="hidden" name="request[user_roles][]" value="<%= user.uid %>"> </input>
+                <input type="hidden" name="request[user_roles][]" value="<%= user.to_json  %>"> </input>
               </li>
             <% end %>
           </ul>
@@ -35,7 +35,6 @@
     showNoSuggestionNotice: true,
     noSuggestionNotice: "No results found",
     lookup: function (query, done) {
-
       $.ajax({
         url: `<%= users_lookup_path %>?query=${query}`,
         success: function(result) {
@@ -44,21 +43,18 @@
           dataList.empty();
           // ...and repopulate the dataList with the results from the AJAX call
           for(var i = 0; i < result.suggestions.length; i +=1 ) {
-            var suggestion = result.suggestions[i];
-            var dataValue = {
-              "uid" : suggestion.data,
-              "name" : suggestion.value
-            };
-            dataList.append(`<option data-uid='${suggestion.data}' value="${suggestion.value} (${suggestion.data})\xa0"></option>`);
+            var uid = result.suggestions[i].data;
+            var userName = result.suggestions[i].value;
+            // ...the non-breaking space character (hex A0) is used to mark
+            // values coming from the datalist (see userRolesAutocomplete)
+            dataList.append(`<option data-uid='${uid}' value=" (${uid}) ${userName}\xA0"></option>`);
           };
-          console.log(`query ${query}, datalist count: ${dataList.length}`);
           // Always call the autocomplete done with an empty list
           // because we are using the dataList for the selections.
           var emptyResult = { suggestions: [] };
           done(emptyResult);
         }
       });
-
     },
     onSelect: function (suggestion) {
       console.log(`selected ${suggestion.data}`)
