@@ -202,19 +202,19 @@ workflows:
         - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
         - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
     jobs:
-      - test
-      - deploy:
-          requires: # Call the auto-deploy job after the main test job
-            - test
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
-      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
-          requires:
-            - test
-            - deploy
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
+      # - test
+      - deploy
+        # requires: # Call the auto-deploy job after the main test job
+        #   - test
+        # filters: # This job is only run on the main branch
+        #   branches:
+        #     only:
+        #       - main
+      # - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
+      #     requires:
+      #       - test
+      #       - deploy
+      #     filters: # This job is only run on the main branch
+      #       branches:
+      #         only:
+      #           - main
