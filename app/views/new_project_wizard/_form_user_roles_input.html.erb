@@ -7,7 +7,7 @@
         <div class="vertical-frame">
           <input class="form-input datalist" type="text" name="user_find" id="user_find"
                 list="princeton_users" placeholder="Enter name or netid to search for a user" autocomplete="off"></input>
-          <!-- This datalist is populated via AJAX, see below -->
+          <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
           <datalist id="princeton_users"></datalist>
           <ul class="selected-user-roles selected-items">
             <% user_roles.each do |user| %>

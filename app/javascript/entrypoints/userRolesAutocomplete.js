@@ -30,7 +30,7 @@ function addNewUser(value, uid) {
   li.appendChild(newDiv);
   const input = document.createElement('input');
   input.type = 'hidden';
-  input.value = JSON.stringify({uid: uid, name: value});
+  input.value = JSON.stringify({ uid: uid, name: value });
   input.name = 'request[user_roles][]';
   li.appendChild(input);
   ul.appendChild(li);
@@ -56,19 +56,21 @@ export function userRolesAutocomplete(usersLookupUrl) {
     } else {
       $.ajax({
         url: `${usersLookupUrl}?query=${value}`,
-        success: function(result) {
+        success: function (result) {
           // Clear the current list of values in the dataList...
           var dataList = $('#princeton_users');
           dataList.empty();
           // ...and repopulate the dataList with the results from the AJAX call
-          for(var i = 0; i < result.suggestions.length; i +=1 ) {
+          for (var i = 0; i < result.suggestions.length; i += 1) {
             var uid = result.suggestions[i].data;
             var userName = result.suggestions[i].value;
             // ...the non-breaking space character (hex A0) is used to mark
             // values coming from the datalist (see userRolesAutocomplete)
-            dataList.append(`<option data-uid='${uid}' value=" (${uid}) ${userName}\xA0"></option>`);
-          };
-        }
+            dataList.append(
+              `<option data-uid='${uid}' value=" (${uid}) ${userName}\xA0"></option>`,
+            );
+          }
+        },
       });
     }
   });
