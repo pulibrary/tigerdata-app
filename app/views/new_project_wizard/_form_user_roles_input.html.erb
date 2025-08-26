@@ -1,5 +1,5 @@
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label", 
+  <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Data User(s)", field_sub_label: ""} %>
   <div class="input-frame">
     <div class="text-input">
@@ -7,17 +7,13 @@
         <div class="vertical-frame">
           <input class="form-input datalist" type="text" name="user_find" id="user_find"
                 list="princeton_users" placeholder="Enter name or netid to search for a user" autocomplete="off"></input>
-          <datalist id="princeton_users">
-            <% @princeton_users.each do |user| %>
-                <!-- Non breaking space &nbsp; is at the end of every option to indicate an option was selected not just the user typing -->
-                <option data-value="<%= user.to_json %>" value="<%= "(#{user[:uid]}) #{user[:name]}" %>&nbsp;"></option>
-            <% end %>
-          </datalist>
+          <!-- This datalist is populated via AJAX, see below -->
+          <datalist id="princeton_users"></datalist>
           <ul class="selected-user-roles selected-items">
             <% user_roles.each do |user| %>
               <li class="selected-item"><%= "(#{user["uid"]}) #{user["name"]}" %>
                 <div tabindex="0" class="remove-user-role remove-item"></div>
-                <input type="hidden" name="request[user_roles][]" value="<%= user.to_json %>"> </input>
+                <input type="hidden" name="request[user_roles][]" value="<%= user.uid %>"> </input>
               </li>
             <% end %>
           </ul>
@@ -30,3 +26,43 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
+  $("#user_find").autocomplete({
+    minChars: 1,
+    autoSelectFirst: true,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: "No results found",
+    lookup: function (query, done) {
+
+      $.ajax({
+        url: `<%= users_lookup_path %>?query=${query}`,
+        success: function(result) {
+          // Clear the current list of values in the dataList...
+          var dataList = $('#princeton_users');
+          dataList.empty();
+          // ...and repopulate the dataList with the results from the AJAX call
+          for(var i = 0; i < result.suggestions.length; i +=1 ) {
+            var suggestion = result.suggestions[i];
+            var dataValue = {
+              "uid" : suggestion.data,
+              "name" : suggestion.value
+            };
+            dataList.append(`<option data-uid='${suggestion.data}' value="${suggestion.value} (${suggestion.data})\xa0"></option>`);
+          };
+          console.log(`query ${query}, datalist count: ${dataList.length}`);
+          // Always call the autocomplete done with an empty list
+          // because we are using the dataList for the selections.
+          var emptyResult = { suggestions: [] };
+          done(emptyResult);
+        }
+      });
+
+    },
+    onSelect: function (suggestion) {
+      console.log(`selected ${suggestion.data}`)
+    }
+  });
+
+</script>

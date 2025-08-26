@@ -25,6 +25,7 @@ class RequestWizardsController < ApplicationController
   # PUT /request_wizards/1/save
   def save
     # save and render dashboard
+    byebug
     save_request
     case params[:commit]
     when "Back"
@@ -84,7 +85,7 @@ class RequestWizardsController < ApplicationController
         request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
       end
       if request_params[:user_roles].present?
-        request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
+        request_params[:user_roles] = request_params[:user_roles].compact_blank
       end
       request_params
     end

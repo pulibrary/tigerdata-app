@@ -17,7 +17,7 @@ function registerRemove() {
   });
 }
 
-function addNewUser(value, dataValue) {
+function addNewUser(value, uid) {
   const ul = document.querySelector('.selected-user-roles');
   const li = document.createElement('li');
   li.classList.add('selected-item');
@@ -30,7 +30,7 @@ function addNewUser(value, dataValue) {
   li.appendChild(newDiv);
   const input = document.createElement('input');
   input.type = 'hidden';
-  input.value = JSON.stringify(dataValue);
+  input.value = uid;
   input.name = 'request[user_roles][]';
   li.appendChild(input);
   ul.appendChild(li);
@@ -47,8 +47,9 @@ export function userRolesAutocomplete() {
     if (value.slice(-1) === '\xa0') {
       const userRoleList = document.getElementById('request-user-roles');
       const cleanValue = value.slice(0, -1);
-      if (!userRoleList.value.includes(cleanValue))
-        addNewUser(cleanValue, $(`#princeton_users [value="${value}"]`).data('value'));
+      if (!userRoleList.value.includes(cleanValue)) {
+        addNewUser(cleanValue, $(`#princeton_users [value="${value}"]`).data('uid'));
+      }
       const current = event.currentTarget;
       current.value = '';
     }

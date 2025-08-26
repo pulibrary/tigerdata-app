@@ -28,6 +28,18 @@ class UsersController < ApplicationController
     redirect_to user_path(id: params[:id])
   end
 
+  def lookup
+    query = (params["query"] || "").strip.downcase
+    matches = []
+    if query != ""
+      matches = PrincetonUsers.user_list.select {|u| u[:uid].downcase.include?(query) || u[:name].downcase.include?(query) }
+    end
+    result = {
+      suggestions: matches.map { |match| { "value": match[:name], "data": match[:uid]} }
+    }
+    render :json => result
+  end
+
   private
 
     def set_breadcrumbs

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+
+  get "/users-lookup", to: "users#lookup", as: :users_lookup
   resources :users, except: [:new, :destroy, :create] do
     get "/users/:user", action: :index, on: :collection
   end
