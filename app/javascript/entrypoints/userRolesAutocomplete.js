@@ -38,7 +38,7 @@ function addNewUser(value, uid) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function userRolesAutocomplete() {
+export function userRolesAutocomplete(usersLookupUrl) {
   $('#user_find').on('input', (event) => {
     // When populating the dataList for the user list we add a non-breaking space (HTML &nbsp; HEX A0)
     // to each option. We use this special character here to detect when a user has selected an option
@@ -53,6 +53,23 @@ export function userRolesAutocomplete() {
       }
       const current = event.currentTarget;
       current.value = '';
+    } else {
+      $.ajax({
+        url: `${usersLookupUrl}?query=${value}`,
+        success: function(result) {
+          // Clear the current list of values in the dataList...
+          var dataList = $('#princeton_users');
+          dataList.empty();
+          // ...and repopulate the dataList with the results from the AJAX call
+          for(var i = 0; i < result.suggestions.length; i +=1 ) {
+            var uid = result.suggestions[i].data;
+            var userName = result.suggestions[i].value;
+            // ...the non-breaking space character (hex A0) is used to mark
+            // values coming from the datalist (see userRolesAutocomplete)
+            dataList.append(`<option data-uid='${uid}' value=" (${uid}) ${userName}\xA0"></option>`);
+          };
+        }
+      });
     }
   });
 

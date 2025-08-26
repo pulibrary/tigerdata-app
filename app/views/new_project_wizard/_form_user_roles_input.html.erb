@@ -27,38 +27,6 @@
   </div>
 </div>
 
-<script>
-  // Autocomplete documentation: https://github.com/devbridge/jQuery-Autocomplete
-  $("#user_find").autocomplete({
-    minChars: 1,
-    autoSelectFirst: true,
-    showNoSuggestionNotice: true,
-    noSuggestionNotice: "No results found",
-    lookup: function (query, done) {
-      $.ajax({
-        url: `<%= users_lookup_path %>?query=${query}`,
-        success: function(result) {
-          // Clear the current list of values in the dataList...
-          var dataList = $('#princeton_users');
-          dataList.empty();
-          // ...and repopulate the dataList with the results from the AJAX call
-          for(var i = 0; i < result.suggestions.length; i +=1 ) {
-            var uid = result.suggestions[i].data;
-            var userName = result.suggestions[i].value;
-            // ...the non-breaking space character (hex A0) is used to mark
-            // values coming from the datalist (see userRolesAutocomplete)
-            dataList.append(`<option data-uid='${uid}' value=" (${uid}) ${userName}\xA0"></option>`);
-          };
-          // Always call the autocomplete done with an empty list
-          // because we are using the dataList for the selections.
-          var emptyResult = { suggestions: [] };
-          done(emptyResult);
-        }
-      });
-    },
-    onSelect: function (suggestion) {
-      console.log(`selected ${suggestion.data}`)
-    }
-  });
-
+<script type="module">
+  userRolesAutocomplete("<%= users_lookup_url %>");
 </script>
