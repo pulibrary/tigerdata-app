@@ -30,12 +30,9 @@ class UsersController < ApplicationController
 
   def lookup
     query = (params["query"] || "").strip.downcase
-    matches = []
-    if query != ""
-      matches = PrincetonUsers.user_list.select { |user| user[:uid].downcase.include?(query) || user[:name].downcase.include?(query) }
-    end
+    matches = PrincetonUsers.user_list_query(query)
     result = {
-      suggestions: matches.take(20).map { |match| { "value": match[:name], "data": match[:uid] } }
+      suggestions: matches.take(20).map { |match| { "value": match[:name] || "", "data": match[:uid] } }
     }
     render json: result
   end
