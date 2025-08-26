@@ -178,6 +178,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
       select current_user_str, from: "request_data_sponsor"
       select current_user_str, from: "request_data_manager"
+      # Fill in a partial match to force the textbox to fetch a list of options to select from
+      fill_in :user_find, with: current_user.uid
+      sleep(0.5)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
       select current_user_str + "\u00A0", from: "user_find"
       # The user selected is visible on the page

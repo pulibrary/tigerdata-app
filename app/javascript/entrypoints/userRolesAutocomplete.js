@@ -68,7 +68,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
             const uid = result.suggestions[i].data;
             const userName = result.suggestions[i].value;
             dataList.append(
-              `<option data-uid="${uid}" data-name="${userName}" value=" (${uid}) ${userName}\xA0"></option>`,
+              `<option data-uid="${uid}" data-name="${userName}" value="(${uid}) ${userName}\xA0"></option>`,
             );
           }
         },
