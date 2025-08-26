@@ -2,15 +2,10 @@
 class DashboardController < ApplicationController
   layout "welcome"
 
-  def index # rubocop:disable Metrics/AbcSize
-    @all_projects = Project.all_projects.map { |project| ProjectDashboardPresenter.new(project) }
-    @eligible_data_user = true if !current_user.eligible_sponsor? && !current_user.eligible_manager?
+  def index
+    @presenter = DashboardPresenter.new(current_user: current_user)
 
-    @dashboard_projects = Project.users_projects(@current_user).map { |project| ProjectDashboardPresenter.new(project) }
-
-    @my_inventory_requests = current_user.user_requests.where(type: "FileInventoryRequest")
-    @dash_session = "project"
-    session[:dashtab] ||= @dash_session
+    session[:dashtab] ||= "project" # default the session tab to projects
     @dash_session = session[:dashtab]
     @session_id = current_user.mediaflux_session
     @emulation_role = session[:emulation_role] || "Not Emulating"
