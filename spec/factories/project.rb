@@ -13,7 +13,7 @@ FactoryBot.define do
       updated_on { Time.current.in_time_zone("America/New_York").iso8601 }
       updated_by { FactoryBot.create(:user).uid }
       project_id { random_project_id }
-      status { "pending" }
+      status { "approved" }
       storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }

@@ -3,11 +3,6 @@
 require "rails_helper"
 
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
-  before do
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:new_project_request_wizard, true)
-  end
-
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
@@ -18,8 +13,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true) }
     it "walks through the wizard if the feature is enabled" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       sign_in current_user
       visit "/"
       click_on "New Project Request"
@@ -70,8 +63,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
     it "can not submit if the request is not valid" do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       request = Request.create
       sign_in current_user
       visit "/"
@@ -130,11 +121,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).not_to have_content "Related Resources"
       visit "/new-project/review-submit/#{request.id}"
       expect(page).not_to have_content "Review and Submit"
+      test_strategy.switch!(:new_project_request_wizard, true)
     end
 
     it "Supports all the Skeletor fields on the basic information page" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
       sign_in current_user
@@ -202,8 +192,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
       sign_in current_user
@@ -220,8 +208,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     it "deletes departments when clicking on the X next to them" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
       sign_in current_user

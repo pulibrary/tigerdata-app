@@ -9,7 +9,6 @@ class ProjectXmlPresenter
     "id",
     "in_mediaflux?",
     "mediaflux_id",
-    "pending?",
     "title",
     to: :project
   )
@@ -108,8 +107,6 @@ class ProjectXmlPresenter
   def status
     project_status = project.status
     return if project_status.nil?
-
-    return "AdminReview" if project_status == Project::PENDING_STATUS
 
     project_status.capitalize
   end

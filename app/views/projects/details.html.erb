@@ -1,11 +1,6 @@
 <%= render partial: "project_details_heading" %>
 
 <show id="show">
-<% unless @project.in_mediaflux? %>
-  <div class="pending-project">
-    Your new project request is in the queue. Please allow 5 business days for our team to review your needs and set everything up. For assistance, please contact tigerdata@princeton.edu.
-  </div>
-<% end %>
 
 <div id="project-nav">
   <button id="project-content" class="tab-nav"> Content Preview </button>
@@ -73,11 +68,7 @@
 </div>
 
 <div class="details">
-  <%= if @project.pending?
-    render partial: "pending_details"
-  else
-    render partial: "approved_details"
-  end %>
+  <%= render partial: "approved_details" %>
 </div>
 
 <div class="details">

@@ -58,7 +58,7 @@ class User < ApplicationRecord
     @mediaflux_session = session[:mediaflux_session]
   end
 
-  def medaiflux_login(token, session)
+  def mediaflux_login(token, session)
     logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
     if logon_request.error?

@@ -2,13 +2,16 @@
    <div class="main-content">
       <div class="welcome-pane">
          <h1>Welcome, <%= current_user.given_name %>!</h1>
+          <% if current_user.eligible_sysadmin? && Flipflop.new_project_request_wizard? %>
+            <%= render partial: "new_project_request_wizard_link" %>
+         <% end %>
       </div>
 
       <% if Flipflop.new_project_request_wizard? %>
         <div class="dashboard-admin-buttons">
           <% if current_user.eligible_sysadmin? %>
+          
             <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
-            <%= render partial: "new_project_request_wizard_link" %>
           <% end %>
         </div>
       <% end %>
@@ -68,6 +71,5 @@
 
    // Setup the DataTables
    setupTable('#projects-listing');
-   setupTable('#projects-listing-pending');
    setupTable('#projects-listing-approved');
 </script>
