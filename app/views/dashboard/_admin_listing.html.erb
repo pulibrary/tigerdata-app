@@ -5,8 +5,8 @@
         <h2>Recently Approved Projects</h2> 
         <%= button_to "Import Mediaflux Projects", project_import_path, method: "put", class: "btn btn-dark btn-sm" %>
       </div>
-      <% if !@all_projects.empty? %>
-       <%= render partial: "projects_listing", locals: { projects: @all_projects.sort_by(&:updated_at).reverse,  table_id: "projects-listing-approved"} %>
+      <% if !@presenter.all_projects.empty? %>
+       <%= render partial: "projects_listing", locals: { projects: @presenter.all_projects,  table_id: "projects-listing-approved"} %>
       <% else %>
         <p> (none) </p>
       <% end %>
