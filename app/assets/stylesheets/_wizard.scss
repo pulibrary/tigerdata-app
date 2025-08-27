@@ -201,15 +201,15 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
-                  @supports (-webkit-line-clamp: 4) {
-                    overflow: hidden;
-                    width: 20rem;
-                    text-overflow: ellipsis;
-                    white-space: initial;
-                    display: -webkit-box;
-                    -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 4;
-                  }
+                @supports (-webkit-line-clamp: 4) {
+                  overflow: hidden;
+                  width: 20rem;
+                  text-overflow: ellipsis;
+                  white-space: initial;
+                  display: -webkit-box;
+                  -webkit-box-orient: vertical;
+                  -webkit-line-clamp: 4;
+                }
                 z-index: 1; /* Ensures the tooltip is on top of other content */
               }
 
