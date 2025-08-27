@@ -441,7 +441,7 @@
         background: $white;
       }
 
-      .request-dropdown::popover-open {
+      .request-dropdown:popover-open {
         display: flex;
       }
 
@@ -452,6 +452,63 @@
 
       .request-list::backdrop {
         background-color: $gray-100-transparent;
+      }
+
+      .request-list {
+        width: 50rem;
+        padding: 1.25rem;
+        border-radius: 0.5rem;
+        background: var(--Neutral-White, #FFF);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.25rem;
+
+        /* Shadow */
+        box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.10);
+        .draft-list-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+
+          p {
+            color: var(--Neutral-Black, #121212);
+
+            /* Body Bold */
+            font-family: "Libre Franklin";
+            font-size: 1.125rem;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 1.6875rem; /* 150% */
+          }
+          .request-close-button{
+            width: 1.5rem;
+            height: 1.5rem;
+            background: url("remove.svg") no-repeat;
+            border: none;
+          }
+        }
+        .draft-content {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+          align-self: stretch;
+
+          .draft-list {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            border-radius: 0.5rem;
+            border: 1px solid var(--Neutral-Medium-Gray, #D0D0D0);
+            background: var(--Neutral-White, #FFF);
+          }
+        }
+      }
+
+      .request-list:popover-open {
+        display: flex;
       }
     }
   }

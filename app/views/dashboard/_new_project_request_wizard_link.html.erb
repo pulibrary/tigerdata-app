@@ -5,6 +5,15 @@
     <div class="request-options">
         <button popovertarget="request-dropdown" class="down-arrow"></button>
         <div popover="auto" id="request-dropdown" class="request-dropdown"><button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button></div>
-        <div popover="auto" id="draft-request-list" class="request-list"><ul><li>I should have the list of draft request for the user</li></ul></div>
+        <div popover="auto" id="draft-request-list" class="request-list">
+          <div class="draft-list-header">
+            <div>Saved Draft Requests</div>
+              <button class="request-close-button" popovertarget="draft-request-list" popovertargetaction="hide"></button>
+          </div>
+          <div class="draft-content">
+            <div class="draft-list">
+            </div>
+          </div>
+        </div>
     </div>
 </div>
