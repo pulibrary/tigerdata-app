@@ -12,6 +12,11 @@ class PrincetonUsers
       end
     end
 
+    def user_list_query(query)
+      return [] if query == ""
+      user_list.select { |user| user[:uid].downcase.include?(query) || user[:name]&.downcase&.include?(query) }
+    end
+
     def load_rdss_developers
       RDSS_DEVELOPERS.each do |netid|
         create_user_from_ldap_by_uid(netid)

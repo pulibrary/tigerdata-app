@@ -17,11 +17,11 @@ function registerRemove() {
   });
 }
 
-function addNewUser(value, dataValue) {
+function addNewUser(uid, name) {
   const ul = document.querySelector('.selected-user-roles');
   const li = document.createElement('li');
   li.classList.add('selected-item');
-  li.appendChild(document.createTextNode(value));
+  li.appendChild(document.createTextNode(`(${uid}) ${name}`));
   const newDiv = document.createElement('div');
   newDiv.classList.add('remove-user-role');
   newDiv.classList.add('remove-item');
@@ -30,7 +30,7 @@ function addNewUser(value, dataValue) {
   li.appendChild(newDiv);
   const input = document.createElement('input');
   input.type = 'hidden';
-  input.value = JSON.stringify(dataValue);
+  input.value = JSON.stringify({ uid, name });
   input.name = 'request[user_roles][]';
   li.appendChild(input);
   ul.appendChild(li);
@@ -38,19 +38,41 @@ function addNewUser(value, dataValue) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function userRolesAutocomplete() {
+export function userRolesAutocomplete(usersLookupUrl) {
   $('#user_find').on('input', (event) => {
-    // We add a non-breaking back space to each option to see when a option has been entered into the text input as
-    //  no user would type a &nbsp; into the input.  When the HTML5 option is selected we can see clearly that it has;
-    //  This solution was grabbed from https://stackoverflow.com/a/74598110/16862920
+    // When populating the dataList for the user list we add a non-breaking space (HTML &nbsp; HEX A0)
+    // to each option. We use this special character here to detect when a user has selected an option
+    // from the dataList (since no user will manually enter a non-breaking space).
+    // This solution was grabbed from https://stackoverflow.com/a/74598110/16862920
     const { value } = event.currentTarget;
-    if (value.slice(-1) === '\xa0') {
+    const userSelectedValue = value.slice(-1) === '\xA0';
+    if (userSelectedValue === true) {
       const userRoleList = document.getElementById('request-user-roles');
       const cleanValue = value.slice(0, -1);
-      if (!userRoleList.value.includes(cleanValue))
-        addNewUser(cleanValue, $(`#princeton_users [value="${value}"]`).data('value'));
+      if (!userRoleList.value.includes(cleanValue)) {
+        const elementSelected = $(`#princeton_users [value="${value}"]`);
+        addNewUser(elementSelected.data('uid'), elementSelected.data('name'));
+      }
       const current = event.currentTarget;
       current.value = '';
+    } else {
+      // User is typing, fetch users that match the value entered so far
+      $.ajax({
+        url: `${usersLookupUrl}?query=${value}`,
+        success: (result) => {
+          // Clear the current list of values in the dataList...
+          const dataList = $('#princeton_users');
+          dataList.empty();
+          // ...and repopulate the dataList with the results from the AJAX call
+          for (let i = 0; i < result.suggestions.length; i += 1) {
+            const uid = result.suggestions[i].data;
+            const userName = result.suggestions[i].value;
+            dataList.append(
+              `<option data-uid="${uid}" data-name="${userName}" value="(${uid}) ${userName}\xA0"></option>`,
+            );
+          }
+        },
+      });
     }
   });
 
