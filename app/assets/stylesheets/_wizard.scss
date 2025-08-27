@@ -190,7 +190,6 @@
                 visibility: hidden;
                 position: relative;
                 bottom: 125%; /* Positions the tooltip above the div */
-                left: -500%;
                 transform: translateX(-50%);
 
                 /* Styling for the tooltip box */
@@ -200,6 +199,17 @@
                 padding: 8px 12px;
                 border-radius: 4px;
                 white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                @supports (-webkit-line-clamp: 4) {
+                  overflow: hidden;
+                  width: 20rem;
+                  text-overflow: ellipsis;
+                  white-space: initial;
+                  display: -webkit-box;
+                  -webkit-box-orient: vertical;
+                  -webkit-line-clamp: 4;
+                }
                 z-index: 1; /* Ensures the tooltip is on top of other content */
               }
 
