@@ -66,14 +66,14 @@ export function userRolesAutocomplete(usersLookupUrl) {
           // remove punctuation from the value displayed in the datalist so that
           // matches can be made without having to be super exact (makes the search
           // more forgiving in FireFox)
-          const cleanUserName = userName.replace(/[\,\.]/g, " ").replace(/\s\s/g, " ");
+          const cleanUserName = userName.replace(/[\,\.]/g, ' ').replace(/\s\s/g, ' ');
           dataList.append(
             `<option data-uid="${uid}" data-name="${userName}" value="(${uid}) ${cleanUserName}\xA0"></option>`,
           );
         }
       },
     });
-  }
+  };
 
   // Wraps the search function so that it is not called too frequently
   // if the user types the search value quickly. For example if the user
