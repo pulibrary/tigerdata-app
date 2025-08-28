@@ -97,7 +97,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
     // to each option. We use this special character here to detect when a user has selected an option
     // from the dataList (since no user will manually enter a non-breaking space).
     // This solution was grabbed from https://stackoverflow.com/a/74598110/16862920
-    const value = event.currentTarget.value;
+    const { value } = event.currentTarget;
     const userSelectedValue = value.slice(-1) === '\xA0';
     if (userSelectedValue === true) {
       const userRoleList = document.getElementById('request-user-roles');
@@ -106,7 +106,8 @@ export function userRolesAutocomplete(usersLookupUrl) {
         const elementSelected = $(`#princeton_users [value="${value}"]`);
         addNewUser(elementSelected.data('uid'), elementSelected.data('name'));
       }
-      event.currentTarget.value = '';
+      const current = event.currentTarget;
+      current.value = '';
     } else {
       // User is typing, fetch users that match the value entered so far
       debouncedSearch(value, '#princeton_users');
@@ -115,11 +116,12 @@ export function userRolesAutocomplete(usersLookupUrl) {
 
   // Wire the textbox for data sponsors to work as an autocomple textbox
   $('#request_data_sponsor').on('input', (event) => {
-    const value = event.currentTarget.value;
+    const { value } = event.currentTarget;
     const userSelectedValue = value.slice(-1) === '\xA0';
     if (userSelectedValue === true) {
       const elementSelected = $(`#data_sponsors [value="${value}"]`);
-      event.currentTarget.value = elementSelected.data('uid');
+      const current = event.currentTarget;
+      current.value = elementSelected.data('uid');
       event.preventDefault();
     } else {
       debouncedSearch(value, '#data_sponsors');
@@ -128,11 +130,12 @@ export function userRolesAutocomplete(usersLookupUrl) {
 
   // Wire the textbox for data managers to work as an autocomple textbox
   $('#request_data_manager').on('input', (event) => {
-    const value = event.currentTarget.value;
+    const { value } = event.currentTarget;
     const userSelectedValue = value.slice(-1) === '\xA0';
     if (userSelectedValue === true) {
       const elementSelected = $(`#data_managers [value="${value}"]`);
-      event.currentTarget.value = elementSelected.data('uid');
+      const current = event.currentTarget;
+      current.value = elementSelected.data('uid');
     } else {
       debouncedSearch(value, '#data_managers');
     }
