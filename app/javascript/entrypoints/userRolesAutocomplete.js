@@ -109,7 +109,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
       event.currentTarget.value = '';
     } else {
       // User is typing, fetch users that match the value entered so far
-      debouncedSearch(value, "#princeton_users");
+      debouncedSearch(value, '#princeton_users');
     }
   });
 
@@ -122,14 +122,9 @@ export function userRolesAutocomplete(usersLookupUrl) {
       event.currentTarget.value = elementSelected.data('uid');
       event.preventDefault();
     } else {
-      debouncedSearch(value, "#data_sponsors");
+      debouncedSearch(value, '#data_sponsors');
     }
   });
-
-  $().on('keydown', (e) => { if (e.key === 'Enter') {
-    console.log("prevented default");
-    e.preventDefault();
-  } });
 
   // Wire the textbox for data managers to work as an autocomple textbox
   $('#request_data_manager').on('input', (event) => {
@@ -139,7 +134,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
       const elementSelected = $(`#data_managers [value="${value}"]`);
       event.currentTarget.value = elementSelected.data('uid');
     } else {
-      debouncedSearch(value, "#data_managers");
+      debouncedSearch(value, '#data_managers');
     }
   });
 
