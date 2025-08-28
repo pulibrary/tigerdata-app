@@ -123,9 +123,9 @@ RSpec.describe PrincetonUsers, type: :model do
     end
 
     it "handles users with no names graciously" do
-      expect(described_class.user_match?(user, ["sms"])).to be true
-      expect(described_class.user_match?(user, ["abc"])).to be false
-      expect(described_class.user_match?(user, ["sms", "abc"])).to be false
+      expect(described_class.user_match?(user_no_name, ["sms"])).to be true
+      expect(described_class.user_match?(user_no_name, ["abc"])).to be false
+      expect(described_class.user_match?(user_no_name, ["sms", "abc"])).to be false
     end
   end
 end
