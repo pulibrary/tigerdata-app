@@ -106,5 +106,13 @@ context "When a request is created" do
     expect(mail.from).to eq ["no-reply@princeton.edu"]
     expect(mail.body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal")
   end
+
+  context "when the request ID is invalid or nil" do
+    let(:request_id) { "invalid" }
+
+    it "does not enqueue an e-mail message and raises an error" do
+      expect { described_class.with(request_id:).request_creation.deliver }.to raise_error(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{request_id}")
+    end
+  end
 end
 end
