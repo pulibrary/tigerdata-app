@@ -44,7 +44,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
   // see also: https://www.geeksforgeeks.org/javascript/debouncing-in-javascript/
   const debounce = (func, delay = 250) => {
     let timeout;
-    return function (...args) {
+    return (...args) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         func.apply(this, args);
@@ -66,7 +66,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
           // remove punctuation from the value displayed in the datalist so that
           // matches can be made without having to be super exact (makes the search
           // more forgiving in FireFox)
-          const cleanUserName = userName.replace(/[\,\.]/g, ' ').replace(/\s\s/g, ' ');
+          const cleanUserName = userName.replace(/[,.]/g, ' ').replace(/\s\s/g, ' ');
           dataList.append(
             `<option data-uid="${uid}" data-name="${userName}" value="(${uid}) ${cleanUserName}\xA0"></option>`,
           );
