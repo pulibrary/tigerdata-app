@@ -99,4 +99,33 @@ RSpec.describe PrincetonUsers, type: :model do
       expect(User.count).to eq described_class::RDSS_DEVELOPERS.length
     end
   end
+
+  describe "#user_match?" do
+    let(:user) { { uid: "sms98", name: "Sotomayor, Sonia" } }
+    let(:user_no_name) { { uid: "sms98" } }
+
+    it "detect matches by uid" do
+      expect(described_class.user_match?(user, ["sms"])).to be true
+      expect(described_class.user_match?(user, ["abc"])).to be false # not a match
+    end
+
+    it "detect matches by name, including partial matches out of order" do
+      expect(described_class.user_match?(user, ["sonia"])).to be true
+      expect(described_class.user_match?(user, ["sotomayor"])).to be true
+      expect(described_class.user_match?(user, ["son", "soto"])).to be true
+      expect(described_class.user_match?(user, ["soto", "son"])).to be true
+      expect(described_class.user_match?(user, ["sotomayor", "abc"])).to be false # not a match
+    end
+
+    it "detect matches by uid and name" do
+      expect(described_class.user_match?(user, ["sms", "soto"])).to be true
+      expect(described_class.user_match?(user, ["abc", "soto"])).to be false # not a match
+    end
+
+    it "handles users with no names graciously" do
+      expect(described_class.user_match?(user_no_name, ["sms"])).to be true
+      expect(described_class.user_match?(user_no_name, ["abc"])).to be false
+      expect(described_class.user_match?(user_no_name, ["sms", "abc"])).to be false
+    end
+  end
 end
