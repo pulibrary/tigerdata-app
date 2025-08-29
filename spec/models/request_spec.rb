@@ -112,6 +112,8 @@ RSpec.describe Request, type: :model do
     it "logs errors when the request is not valid" do
       expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error
       expect(invalid_request.error_message["message"]).to include("Error saving project")
+      # The project should not exist in the database
+      expect(Project.find_by_id(invalid_request.project_id)).to be nil
     end
   end
 

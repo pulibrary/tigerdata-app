@@ -34,12 +34,10 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
     context "Failure cases" do
       it "returns a failure if the project cannot be saved to Mediaflux" do
-        expect do
-          result = described_class.new.call(request: invalid_request, approver: approver)
-          expect(result).not_to be_success
-          error_message = result.failure
-          expect(error_message).to include("Error saving project")
-        end.not_to change { Project.count }
+        result = described_class.new.call(request: invalid_request, approver: approver)
+        expect(result).not_to be_success
+        error_message = result.failure
+        expect(error_message).to include("Error saving project")
       end
 
       it "returns a failure if the doi can not be minted" do

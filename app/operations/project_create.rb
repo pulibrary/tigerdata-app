@@ -22,6 +22,9 @@ class ProjectCreate < Dry::Operation
       project.draft_doi
       project.save!
 
+      # Link the request to the project
+      request.project_id = project.id
+
       # Return Success(attrs) or Failure(error)
       Success project
     rescue => ex
@@ -38,9 +41,6 @@ class ProjectCreate < Dry::Operation
       if mediaflux_id.to_i == 0
         debug_output = "Error saving project #{project.id} to Mediaflux: #{mediaflux_request.response_error}. Debug output: #{mediaflux_request.debug_output}"
         Rails.logger.error debug_output
-
-        # we do not want unsaved projects just hanging around
-        project.destroy!
         Failure debug_output
       else
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
