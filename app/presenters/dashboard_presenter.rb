@@ -20,4 +20,8 @@ class DashboardPresenter
   def my_inventory_requests
     @my_inventory_requests ||= current_user.user_requests.where(type: "FileInventoryRequest")
   end
+
+  def my_draft_requests
+    @my_draft_requests ||= Request.where(requested_by: current_user.uid)
+  end
 end
