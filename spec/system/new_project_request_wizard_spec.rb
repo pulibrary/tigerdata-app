@@ -88,8 +88,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
-      select current_user_str, from: "request_data_sponsor"
-      select current_user_str, from: "request_data_manager"
+
+      # Fill in a partial match to force the textbox to fetch a list of options to select from
+      fill_in :request_data_sponsor, with: current_user.uid
+      sleep(0.5)
+      select current_user_str + "\u00A0", from: "request_data_sponsor"
+
+      # Fill in a partial match to force the textbox to fetch a list of options to select from
+      fill_in :request_data_manager, with: current_user.uid
+      sleep(0.5)
+      select current_user_str + "\u00A0", from: "request_data_manager"
+
       click_on("Next")
       expect(page).to have_content("Request state: submitted")
     end
@@ -166,13 +175,23 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Next"
       expect(page).to have_content "Roles and People"
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
-      select current_user_str, from: "request_data_sponsor"
-      select current_user_str, from: "request_data_manager"
+
+      # Fill in a partial match to force the textbox to fetch a list of options to select from
+      fill_in :request_data_sponsor, with: current_user.uid
+      sleep(0.5)
+      select current_user_str + "\u00A0", from: "request_data_sponsor"
+
+      # Fill in a partial match to force the textbox to fetch a list of options to select from
+      fill_in :request_data_manager, with: current_user.uid
+      sleep(0.5)
+      select current_user_str + "\u00A0", from: "request_data_manager"
+
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :user_find, with: current_user.uid
       sleep(0.5)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
       select current_user_str + "\u00A0", from: "user_find"
+
       # The user selected is visible on the page
       expect(page).to have_content(current_user_str)
       # the javascript created the hidden form element
