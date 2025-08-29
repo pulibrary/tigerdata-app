@@ -74,6 +74,7 @@ class Request < ApplicationRecord
     else
       self.error_message = { message: result.failure }
       save!
+      cleanup_incomplete_project
       raise ProjectCreate::ProjectCreateError, result.failure
     end
   end
@@ -142,6 +143,17 @@ class Request < ApplicationRecord
         false
       else
         true
+      end
+    end
+
+    # If a request fails to be a approved we make sure there were not orphan
+    # project records left in our Rails database that do not have a matching
+    # project in Mediaflux (i.e. collection asset).
+    def cleanup_incomplete_project
+      project = Project.find_by_id(project_id)
+      if project && project.mediaflux_id.nil?
+        Rails.logger.warn("Deleting project #{project.id} because the approval for request #{id} failed and it was not created in Mediaflux.")
+        project.destroy!
       end
     end
 end
