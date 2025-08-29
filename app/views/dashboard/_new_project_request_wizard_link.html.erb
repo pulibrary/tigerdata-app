@@ -5,6 +5,24 @@
     <div class="request-options">
         <button popovertarget="request-dropdown" class="down-arrow"></button>
         <div popover="auto" id="request-dropdown" class="request-dropdown"><button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button></div>
-        <div popover="auto" id="draft-request-list" class="request-list"><ul><li>I should have the list of draft request for the user</li></ul></div>
+        <div popover="auto" id="draft-request-list" class="request-list">
+          <div class="draft-list-header">
+            <div>Saved Draft Requests</div>
+              <button class="request-close-button" popovertarget="draft-request-list" popovertargetaction="hide"></button>
+          </div>
+          <div class="draft-content">
+            <div class="draft-list">
+               <% @presenter.my_draft_requests.each do | request_model| %>
+                 <div class="draft-request">
+                    <div class="request-name"><%= request_model.project_title %></div>
+                    <div class="request-actions">
+                      <a href="<%= new_project_review_and_submit_path(request_model.id)%>" class="request-open"><div class="request-open-icon"></div><div>Open</div></a>
+                      <!--div class="request-remove"><div class="request-remove-icon"></div><div>Delete</div></div-->
+                    </div>
+                 </div>
+               <% end %>
+            </div>
+          </div>
+        </div>
     </div>
 </div>

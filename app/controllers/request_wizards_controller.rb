@@ -87,6 +87,7 @@ class RequestWizardsController < ApplicationController
       if request_params[:user_roles].present?
         request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
       end
+      request_params[:requested_by] ||= current_user.uid
       request_params
     end
 
