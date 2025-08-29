@@ -6,6 +6,15 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let(:project) { FactoryBot.create :project, project_id: "abc123/def" }
   let(:project_id) { project.id }
 
+  let(:valid_request) do
+    Request.create(project_title: "Valid Request", data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid, departments: ["RDSS"],
+                   quota: "500 GB", description: "A valid request",
+                   project_folder: "valid_folder")
+  end
+  let(:request_id) { valid_request.id }
+
+context "When a project is created" do
+
   it "Sends project creation requests" do
     expect { described_class.with(project_id:).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
@@ -83,4 +92,27 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect { described_class.with(project_id:).project_creation.deliver }.to raise_error(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{project_id}")
     end
   end
+
+end
+
+context "When a request is created" do
+  it "Sends project creation requests" do
+    expect { described_class.with(request_id:).request_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    mail = ActionMailer::Base.deliveries.last
+
+    expect(mail.subject).to eq "New Project Request Ready for Review"
+    expect(mail.to).to eq ["test@example.com"]
+    expect(mail.cc).to eq ["test_to@example.com"]
+    expect(mail.from).to eq ["no-reply@princeton.edu"]
+    expect(mail.body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal")
+  end
+
+  context "when the request ID is invalid or nil" do
+    let(:request_id) { "invalid" }
+
+    it "does not enqueue an e-mail message and raises an error" do
+      expect { described_class.with(request_id:).request_creation.deliver }.to raise_error(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{request_id}")
+    end
+  end
+end
 end
