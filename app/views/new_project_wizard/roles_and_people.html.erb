@@ -5,3 +5,7 @@
 <%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: "" } %>
 <%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: "" } %>
 <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: "" } %>
+
+<script type="module">
+  userRolesAutocomplete("<%= users_lookup_url %>");
+</script>
