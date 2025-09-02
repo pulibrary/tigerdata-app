@@ -99,7 +99,6 @@ jobs:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
-    parallelism: 3
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
@@ -139,8 +138,7 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: |
-            circleci tests glob "spec/**/*_spec.rb" | circleci tests run --command="xargs bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml" --verbose --split-by=timings
+          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
