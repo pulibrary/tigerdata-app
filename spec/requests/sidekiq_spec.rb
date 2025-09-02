@@ -18,7 +18,7 @@ RSpec.describe "/sidekiq", connect_to_mediaflux: false, type: :request do
       before do
         sign_in user
       end
-      it "redirects to the login page" do
+      it "shows a 404 page" do
         get "/sidekiq"
         expect(response.code).to eq "404"
       end
