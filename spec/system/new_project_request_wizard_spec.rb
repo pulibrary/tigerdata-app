@@ -255,5 +255,35 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       page.execute_script("document.getElementsByClassName('remove-department')[0].click()")
       expect(page).not_to have_content(department_to_test)
     end
+
+    it "allows for Exit without Saving" do
+      sign_in current_user
+      visit "/"
+      expect {
+        click_on "New Project Request"
+        expect(page).to have_content "Basic Details"
+        fill_in :project_title, with: "A basic Project"
+        click_on "Save and exit"
+        expect(page).to have_content "will be saved as draft"
+        click_on "Exit without Saving"
+        expect(page).to have_content("Welcome")
+      }.not_to change{ Request.count }
+    end
+
+    it "allows for save and exit" do
+      sign_in current_user
+      visit "/"
+      expect {
+        click_on "New Project Request"
+        expect(page).to have_content "Basic Details"
+        fill_in :project_title, with: "A basic Project"
+        click_on "Save and exit"
+        expect(page).to have_content "will be saved as draft"
+        within( ".save-and-exit" ) do
+          click_on "Save and exit"
+        end
+        expect(page).to have_content("This screen is a review")
+      }.to change{ Request.count }.by(1)
+    end
   end
 end

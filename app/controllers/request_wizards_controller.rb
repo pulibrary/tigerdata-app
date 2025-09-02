@@ -4,6 +4,7 @@ class RequestWizardsController < ApplicationController
   before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[save]
+  before_action :exit_without_saving, only: %i[save]
   before_action :set_or_create_request_model, only: %i[show]
 
   before_action :check_flipper
@@ -37,12 +38,23 @@ class RequestWizardsController < ApplicationController
         redirect_to params[:commit]
       else
         TigerdataMailer.with(request_id: @request_model.id).request_creation.deliver_now
-        redirect_to "#{requests_path}/#{@request_model.id}"
+        redirect_to request_path(@request_model)
       end
     end
   end
 
   private
+    def exit_without_saving
+      if params[:commit] =="Exit without Saving"
+        if request.referrer.include?("project-info") && !request_model.valid_title? 
+          request_model.valid_to_submit?
+          request_model.destroy if request_model.errors.count >= 6
+          redirect_to dashboard_path
+        else
+          redirect_to request_path(@request_model)
+        end
+      end
+    end
 
     def render_current
       raise "Must be implemented"

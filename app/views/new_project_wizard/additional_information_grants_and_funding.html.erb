@@ -4,4 +4,4 @@
 <% content_for :form_description, "If your project has funding, add grant details and related references here." %>
 
 <!-- TODO: render form fields for this page -->
-<%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "" } %>
+<%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "", input_id: "project_title" } %>
