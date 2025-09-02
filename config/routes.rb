@@ -99,6 +99,6 @@ Rails.application.routes.draw do
   put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", as: :new_project_review_and_submit_save
 
   # Catch any undefined path and render a 404 page not found
-  get "*path", to: "application#render_404"
+  get "*path", to: "application#render_not_found"
 end
 # rubocop:enable Metrics/BlockLength

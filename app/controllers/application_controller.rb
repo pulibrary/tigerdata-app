@@ -31,8 +31,8 @@ class ApplicationController < ActionController::Base
   end
 
   # Render a 404 page for any undefined route
-  def render_404
-    render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
+  def render_not_found
+    render file: "#{Rails.root.join('public', '404.html')}, layout: false, status: :not_found
   end
 
   private
