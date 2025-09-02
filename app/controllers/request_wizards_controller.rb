@@ -36,6 +36,7 @@ class RequestWizardsController < ApplicationController
         # Go directly to the step the user clicked on
         redirect_to params[:commit]
       else
+        TigerdataMailer.with(request_id: @request_model.id).request_creation.deliver_now
         redirect_to "#{requests_path}/#{@request_model.id}"
       end
     end
