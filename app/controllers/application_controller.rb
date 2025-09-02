@@ -30,6 +30,11 @@ class ApplicationController < ActionController::Base
     breadcrumbs << Breadcrumb.new(name, path)
   end
 
+  # Render a 404 page for any undefined route
+  def render_404
+    render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
+  end
+
   private
 
     def mediaflux_session
