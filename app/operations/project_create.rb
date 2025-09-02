@@ -18,12 +18,11 @@ class ProjectCreate < Dry::Operation
     def create_project_from_request(request)
       # Create the project in the Rails database
       project_metadata_json = RequestProjectMetadata.convert(request)
+      # Link the request to the project
+      request.project_id = project.id
       project = Project.create!({ metadata_json: project_metadata_json })
       project.draft_doi
       project.save!
-
-      # Link the request to the project
-      request.project_id = project.id
 
       # Return Success(attrs) or Failure(error)
       Success project
