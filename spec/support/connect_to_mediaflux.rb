@@ -12,4 +12,8 @@ RSpec.configure do |config|
     puts message # allow the message to show in CI output
     Rails.logger.error(message)
   end
+
+  config.after(:suite) do |_ex|
+    Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, namespace: "/princeton/tigerdataNS/rspecNS").resolve
+  end
 end
