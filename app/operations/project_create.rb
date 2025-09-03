@@ -19,8 +19,8 @@ class ProjectCreate < Dry::Operation
       # Create the project in the Rails database
       project_metadata_json = RequestProjectMetadata.convert(request)
       # Link the request to the project
-      request.project_id = project.id
       project = Project.create!({ metadata_json: project_metadata_json })
+      request.project_id = project.id
       project.draft_doi
       project.save!
 
