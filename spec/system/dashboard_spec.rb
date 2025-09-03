@@ -49,10 +49,10 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).not_to have_content "Sponsor"
-        expect(page).not_to have_content "project 111"
-        expect(page).not_to have_content "Data Manager"
-        expect(page).not_to have_content "project 222"
+        expect(page).to have_content "Sponsor"
+        expect(page).to have_content "project 111"
+        expect(page).to have_content "Data Manager"
+        expect(page).to have_content "project 222"
         expect(page).to have_content "Data User"
         expect(page).to have_content "project 333"
         # The current user has no access to this project so we don't expect to see it
@@ -86,8 +86,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
           visit dashboard_path
           expect(page).to have_content "Sponsor"
           expect(page).to have_content "project 111"
-          expect(page).not_to have_content "Data Manager"
-          expect(page).not_to have_content "project 222"
+          expect(page).to have_content "Data Manager"
+          expect(page).to have_content "project 222"
           expect(page).to have_content "Data User"
           expect(page).to have_content "project 333"
           # The current user has no access to this project so we don't expect to see it
@@ -105,8 +105,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
           sign_in current_user
           visit dashboard_path
-          expect(page).not_to have_content "Sponsor"
-          expect(page).not_to have_content "project 111"
+          expect(page).to have_content "Sponsor"
+          expect(page).to have_content "project 111"
           expect(page).to have_content "Data Manager"
           expect(page).to have_content "project 222"
           expect(page).to have_content "Data User"
@@ -128,7 +128,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         projects = (1..17).map { FactoryBot.create(:project, data_sponsor: other_user.uid, data_manager: other_user.uid, data_user_read_only: [current_user.uid]) }
         sign_in current_user
         visit dashboard_path
-        expect(page).to have_content("8 out of 18 shown")
+        expect(page).to have_content("8 out of 20 shown")
         find("a.paginate_button", text: 2).click
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse[8].title)
         find("a.paginate_button", text: 3).click
@@ -217,7 +217,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         select "Data Sponsor", from: "emulation_menu"
         within("#projects-listing") do
           expect(page).to have_content("Sponsor")
-          expect(page).not_to have_content("Data Manager")
+          expect(page).to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
       end
@@ -228,7 +228,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         select "Data Manager", from: "emulation_menu"
         within("#projects-listing") do
-          expect(page).not_to have_content("Sponsor")
+          expect(page).to have_content("Sponsor")
           expect(page).to have_content("Data Manager")
           expect(page).to have_content("Data User")
         end
