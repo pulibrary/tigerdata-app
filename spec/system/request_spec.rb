@@ -16,7 +16,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     let(:current_user) { sponsor_and_data_manager }
     let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
     let!(:data_manager) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
     let(:request) { Request.create(request_title: "abc123", project_title: "project") }
     let(:full_request) do
@@ -236,14 +236,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
     end
 
-    context "superuser" do
-      it "shows the New Project Requests page to superusers" do
-        sign_in superuser
+    context "developer" do
+      it "shows the New Project Requests page to developers" do
+        sign_in developer
         visit "/requests"
         expect(page).to have_content "New Project Requests"
       end
-      it "shows the approve button on a single request view for superusers" do
-        sign_in superuser
+      it "shows the approve button on a single request view for developers" do
+        sign_in developer
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
         expect(response).to redirect_to("#{requests_path}/#{full_request.id}")
         follow_redirect!

@@ -35,7 +35,7 @@ describe "features", type: :system, js: true do
   end
 
   context "super user" do
-    let(:current_user) { FactoryBot.create(:superuser, uid: "pul123") }
+    let(:current_user) { FactoryBot.create(:developer, uid: "pul123") }
 
     before do
       sign_in current_user

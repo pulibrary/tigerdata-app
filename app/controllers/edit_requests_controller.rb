@@ -6,7 +6,7 @@ class EditRequestsController < ApplicationController
 
   # GET /edit_requests/1/edit
   def edit
-    unless current_user.superuser || current_user.sysadmin || current_user.trainer
+    unless current_user.developer || current_user.sysadmin || current_user.trainer
       flash[:notice] = I18n.t(:no_modify_submitted)
       redirect_to request_path(@request_model)
     end
@@ -14,7 +14,7 @@ class EditRequestsController < ApplicationController
 
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
   def update
-    if current_user.superuser || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer
       respond_to do |format|
         if @request_model.update(request_params) && @request_model.valid_to_submit?
           format.html { redirect_to request_url(@request_model), notice: I18n.t(:successful_update) }

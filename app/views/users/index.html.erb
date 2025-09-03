@@ -1,41 +1,41 @@
 <h1>Current Users</h1>
 
 <table id="user-list-table">
-  <thead>
-    <tr class="user-list-header-row">
-      <th>Net ID</th>
-      <th>Given name</th>
-      <th>Family name</th>
-      <th>Full name</th>
-      <th>Eligible Sponsor</th>
-      <th>Eligible Manager</th>
-      <th>Super User</th>
-      <th>System Administrator</th>
-      <th>Tester-Trainer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
-    <tr class="user-list-data-row">
-      <td>
-        <%= link_to(user.uid, user_path(user)) %>
-        <% if user.uid == current_user.uid %>
-          &nbsp;(you)
-        <% end %>
-      </td>
+    <thead>
+        <tr class="user-list-header-row">
+            <th>Net ID</th>
+            <th>Given name</th>
+            <th>Family name</th>
+            <th>Full name</th>
+            <th>Eligible Sponsor</th>
+            <th>Eligible Manager</th>
+            <th>Super User</th>
+            <th>System Administrator</th>
+            <th>Tester-Trainer</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @users.each do |user| %>
+        <tr class="user-list-data-row">
+            <td>
+                <%= link_to(user.uid, user_path(user)) %>
+                <% if user.uid == current_user.uid %>
+                &nbsp;(you)
+                <% end %>
+            </td>
 
-      <td><%= user.given_name %></td>
-      <td><%= user.family_name %></td>
-      <td><%= user.display_name %></td>
-      <td class="<%= role_status_style(user.eligible_sponsor) %>"><%= user.eligible_sponsor %></td>
-      <td class="<%= role_status_style(user.eligible_manager) %>"><%= user.eligible_manager %></td>
-      <td class="<%= role_status_style(user.superuser) %>"><%= user.superuser %></td>
-      <td class="<%= role_status_style(user.sysadmin) %>"><%= user.sysadmin %></td>
-      <td class="<%= role_status_style(user.trainer) %>"><%= user.trainer %></td>
-    </tr>
-    <% end %>
-</tbody>
+            <td><%= user.given_name %></td>
+            <td><%= user.family_name %></td>
+            <td><%= user.display_name %></td>
+            <td class="<%= role_status_style(user.eligible_sponsor) %>"><%= user.eligible_sponsor %></td>
+            <td class="<%= role_status_style(user.eligible_manager) %>"><%= user.eligible_manager %></td>
+            <td class="<%= role_status_style(user.developer) %>"><%= user.developer %></td>
+            <td class="<%= role_status_style(user.sysadmin) %>"><%= user.sysadmin %></td>
+            <td class="<%= role_status_style(user.trainer) %>"><%= user.trainer %></td>
+        </tr>
+        <% end %>
+    </tbody>
 </table>
 <div id="users-pagination">
-  <%= paginate @users %>
+    <%= paginate @users %>
 </div>
