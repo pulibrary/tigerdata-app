@@ -109,6 +109,11 @@ class User < ApplicationRecord
     super
   end
 
+  def developer?
+    return true if developer
+    super
+  end
+
   # Is this user eligible to be a data user in this environment?
   # @return [Boolean]
   def eligible_data_user?

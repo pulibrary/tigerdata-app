@@ -113,6 +113,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "#developer?" do
+    it "should be true for a developer" do
+      user = FactoryBot.create(:developer)
+      expect(user).to be_developer
+    end
+  end
+
   describe "#sponsor_users" do
     it "should only show sponsers" do
       FactoryBot.create(:developer)
