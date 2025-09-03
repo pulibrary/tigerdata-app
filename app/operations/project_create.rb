@@ -18,7 +18,9 @@ class ProjectCreate < Dry::Operation
     def create_project_from_request(request)
       # Create the project in the Rails database
       project_metadata_json = RequestProjectMetadata.convert(request)
+      # Link the request to the project
       project = Project.create!({ metadata_json: project_metadata_json })
+      request.project_id = project.id
       project.draft_doi
       project.save!
 
@@ -38,9 +40,6 @@ class ProjectCreate < Dry::Operation
       if mediaflux_id.to_i == 0
         debug_output = "Error saving project #{project.id} to Mediaflux: #{mediaflux_request.response_error}. Debug output: #{mediaflux_request.debug_output}"
         Rails.logger.error debug_output
-
-        # we do not want unsaved projects just hanging around
-        project.destroy!
         Failure debug_output
       else
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
