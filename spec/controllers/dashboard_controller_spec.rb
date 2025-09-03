@@ -105,8 +105,8 @@ RSpec.describe DashboardController do
       end
     end
 
-    context "and the user is a superuser" do
-      let(:user) { FactoryBot.create :superuser, mediaflux_session: SystemUser.mediaflux_session }
+    context "and the user is a developer" do
+      let(:user) { FactoryBot.create :developer, mediaflux_session: SystemUser.mediaflux_session }
       render_views
 
       it "shows the admin tab" do

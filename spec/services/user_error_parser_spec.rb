@@ -80,7 +80,7 @@ RSpec.describe UserErrorParser do
   end
 
   describe "csv_users" do
-    let(:header_line) { "uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,superuser,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" }
+    let(:header_line) { "uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,developer,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" }
 
     it "produces a csv with a header" do
       csv = UserErrorParser.csv_users(data)

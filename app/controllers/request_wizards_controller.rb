@@ -12,7 +12,7 @@ class RequestWizardsController < ApplicationController
 
   # GET /request_wizards/1
   def show
-    if current_user.superuser || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer
       # create a request in the first step
       render_current
     else

@@ -4,7 +4,7 @@ class UserErrorParser
     def csv_users(errors_str)
       users = parse(errors_str)
       "uid,email,given_name,family_name,display_name,eligible_sponsor," \
-      "eligible_manager,superuser,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" \
+      "eligible_manager,developer,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" \
       "#{users.join("\n")}"
     end
 

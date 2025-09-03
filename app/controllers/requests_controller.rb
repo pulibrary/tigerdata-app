@@ -20,7 +20,7 @@ class RequestsController < ApplicationController
   end
 
   def show
-    if current_user.superuser || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
       add_breadcrumb("Requests", requests_path)
       add_breadcrumb(@request_model.project_title, request_path(@request_model))
@@ -35,7 +35,7 @@ class RequestsController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def approve
-    if current_user.superuser || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
       if @request_model.valid_to_submit?
         project = @request_model.approve(current_user)

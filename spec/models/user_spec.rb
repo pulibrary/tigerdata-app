@@ -95,8 +95,8 @@ RSpec.describe User, type: :model do
       expect(user).to be_eligible_sponsor
     end
 
-    it "should be true for a superuser" do
-      user = FactoryBot.create(:superuser)
+    it "should be true for a developer" do
+      user = FactoryBot.create(:developer)
       expect(user).to be_eligible_sponsor
     end
   end
@@ -107,27 +107,27 @@ RSpec.describe User, type: :model do
       expect(user).to be_eligible_manager
     end
 
-    it "should be true for a superuser" do
-      user = FactoryBot.create(:superuser)
+    it "should be true for a developer" do
+      user = FactoryBot.create(:developer)
       expect(user).to be_eligible_manager
     end
   end
 
   describe "#sponsor_users" do
     it "should only show sponsers" do
-      FactoryBot.create(:superuser)
+      FactoryBot.create(:developer)
       project_sponsor = FactoryBot.create(:project_sponsor)
       FactoryBot.create(:user)
       expect(User.sponsor_users.map(&:uid)).to eq([project_sponsor.uid])
     end
 
     context "in development" do
-      it "should only show sponsers and superusers" do
-        superuser = FactoryBot.create(:superuser)
+      it "should only show sponsers and developers" do
+        developer = FactoryBot.create(:developer)
         project_sponsor = FactoryBot.create(:project_sponsor)
         FactoryBot.create(:user)
         allow(Rails.env).to receive(:development?).and_return true
-        expect(User.sponsor_users.map(&:uid).sort).to eq([superuser.uid, project_sponsor.uid].sort)
+        expect(User.sponsor_users.map(&:uid).sort).to eq([developer.uid, project_sponsor.uid].sort)
       end
     end
   end
@@ -138,8 +138,8 @@ RSpec.describe User, type: :model do
       expect(user).to be_eligible_sysadmin
     end
 
-    it "should be true for a superuser" do
-      user = FactoryBot.create(:superuser)
+    it "should be true for a developer" do
+      user = FactoryBot.create(:developer)
       expect(user).to be_eligible_sysadmin
     end
   end
@@ -150,8 +150,8 @@ RSpec.describe User, type: :model do
       expect(user).to be_eligible_to_create_new
     end
 
-    it "should be true for a superuser" do
-      user = FactoryBot.create(:superuser)
+    it "should be true for a developer" do
+      user = FactoryBot.create(:developer)
       expect(user).to be_eligible_to_create_new
     end
 

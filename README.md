@@ -79,13 +79,13 @@ Users can be added one-by-one via an LDAP lookup of their net ID with the follow
 
 `bundle exec rake load_users:load_single_user\["abc123"]`
 
-***In the non-production environments only***, elevate an existing user to superuser with the following rake task (example argument):
+***In the non-production environments only***, elevate an existing user to developer with the following rake task (example argument):
 
-`bundle exec rake user_roles:add_superuser\["abc123"]`
+`bundle exec rake user_roles:add_developer\["abc123"]`
 
-Similarly, ***in the non-production environments only***, you can remove superuser from a user with the following rake task (example argument):
+Similarly, ***in the non-production environments only***, you can remove developer from a user with the following rake task (example argument):
 
-`bundle exec rake user_roles:remove_superuser\["abc123"]`
+`bundle exec rake user_roles:remove_developer\["abc123"]`
 
 
 #### MediaFlux Server

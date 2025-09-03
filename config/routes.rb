@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
 
-  authenticate :user, ->(user) { user.superuser || user.sysadmin } do
+  authenticate :user, ->(user) { user.developer || user.sysadmin } do
     mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
   end
 

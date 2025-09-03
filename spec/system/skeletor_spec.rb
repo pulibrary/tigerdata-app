@@ -64,17 +64,17 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
     end
   end
 
-  context "superuser" do
-    let(:current_superuser) { FactoryBot.create(:superuser, uid: "superuser1", mediaflux_session: SystemUser.mediaflux_session) }
+  context "developer" do
+    let(:current_developer) { FactoryBot.create(:developer, uid: "developer1", mediaflux_session: SystemUser.mediaflux_session) }
     let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
     let(:datamanager) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
     before do
       datasponsor
     end
-    it "allows the superuser to fill out the project" do
+    it "allows the developer to fill out the project" do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
       expect(Project.count).to eq 0
-      sign_in current_superuser
+      sign_in current_developer
       visit "/"
       click_on "New Project Request"
       expect(page).to have_content "Basic Details"
@@ -127,7 +127,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
   end
 end
 
-# once a sysadmin or superuser click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
+# once a sysadmin or developer click on approve request then it should take us to the details page and display the project ID. This is the fake DOI (10.34770/tbd)
 
 describe "#file_list", integration: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
