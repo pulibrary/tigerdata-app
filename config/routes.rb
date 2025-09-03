@@ -6,10 +6,13 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   mount Flipflop::Engine => "/features"
   mount HealthMonitor::Engine, at: "/"
-  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 
   resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+
+  authenticate :user, ->(user) { user.superuser || user.sysadmin } do
+    mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+  end
 
   get "/users-lookup", to: "users#lookup", as: :users_lookup
   resources :users, except: [:new, :destroy, :create] do
@@ -94,5 +97,8 @@ Rails.application.routes.draw do
 
   get "new-project/review-submit/:request_id", to: "new_project_wizard/review_and_submit#show", as: :new_project_review_and_submit
   put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", as: :new_project_review_and_submit_save
+
+  # Catch any undefined path and render a 404 page not found
+  get "*path", to: "application#render_not_found"
 end
 # rubocop:enable Metrics/BlockLength
