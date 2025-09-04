@@ -1,51 +1,51 @@
 <h2>Edit User Information</h2>
 
 <%= form_with model: @user do |form| %>
-<div>
-    NetID:
-    <%= form.text_field :uid, disabled: true %>
-</div>
+    <div>
+        NetID:
+        <%= form.text_field :uid, disabled: true %>
+    </div>
 
-<div>
-    Given name:
-    <%= form.text_field :given_name %>
-</div>
+    <div>
+        Given name:
+        <%= form.text_field :given_name %>
+    </div>
 
-<div>
-    Family name
-    <%= form.text_field :family_name %>
-</div>
+    <div>
+        Family name
+        <%= form.text_field :family_name %>
+    </div>
 
-<div>
-    Display name
-    <%= form.text_field :display_name %>
-</div>
+    <div>
+        Display name
+        <%= form.text_field :display_name %>
+    </div>
 
-<div>
-    Elegible Sponsor?
-    <%= form.check_box :eligible_sponsor %>
-</div>
+    <div>
+        Elegible Sponsor?
+        <%= form.check_box :eligible_sponsor %>
+    </div>
 
-<div>
-    Elegible Manager?
-    <%= form.check_box :eligible_manager %>
-</div>
+    <div>
+        Elegible Manager?
+        <%= form.check_box :eligible_manager %>
+    </div>
 
-<div>
-    Super User?
-    <%= form.check_box :developer %>
-</div>
+    <div>
+        Super User?
+        <%= form.check_box :developer %>
+    </div>
 
-<div>
-    System Administrator?
-    <%= form.check_box :sysadmin %>
-</div>
+    <div>
+        System Administrator?
+        <%= form.check_box :sysadmin %>
+    </div>
 
-<div>
-    Trainer?
-    <%= form.check_box :trainer %>
-</div>
+    <div>
+        Trainer?
+        <%= form.check_box :trainer %>
+    </div>
 
-<%= form.submit "Save" %>
-<%= form.button "Cancel" %>
+    <%= form.submit "Save" %>
+    <%= form.button "Cancel" %>
 <% end %>

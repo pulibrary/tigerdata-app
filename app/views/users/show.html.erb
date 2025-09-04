@@ -9,8 +9,8 @@
 <p>System Administrator? <%= @user.sysadmin %></p>
 <p>Trainer: <%= @user.trainer %></p>
 <% if @user.provider.blank? %>
-<p>Provider: not set (User will not be able to authenticate via CAS)</p>
+    <p>Provider: not set (User will not be able to authenticate via CAS)</p>
 <% else %>
-<p>Provider: <%= @user.provider %></p>
+    <p>Provider: <%= @user.provider %></p>
 <% end %>
 <button><%= link_to("Edit", edit_user_path(@user)) %></button>
