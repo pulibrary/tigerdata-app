@@ -69,6 +69,10 @@ Rails.application.configure do
     from: "noreply@tigerdata-staging.princeton.edu"
   }
 
+  config.action_mailer.default_url_options = {
+    host: "tigerdata-staging.lib.princeton.edu"
+  }
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "localhost",

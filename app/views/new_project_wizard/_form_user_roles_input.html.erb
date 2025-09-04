@@ -1,5 +1,5 @@
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label", 
+  <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Data User(s)", field_sub_label: ""} %>
   <div class="input-frame">
     <div class="text-input">
@@ -7,12 +7,8 @@
         <div class="vertical-frame">
           <input class="form-input datalist" type="text" name="user_find" id="user_find"
                 list="princeton_users" placeholder="Enter name or netid to search for a user" autocomplete="off"></input>
-          <datalist id="princeton_users">
-            <% @princeton_users.each do |user| %>
-                <!-- Non breaking space &nbsp; is at the end of every option to indicate an option was selected not just the user typing -->
-                <option data-value="<%= user.to_json %>" value="<%= "(#{user[:uid]}) #{user[:name]}" %>&nbsp;"></option>
-            <% end %>
-          </datalist>
+          <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
+          <datalist id="princeton_users"></datalist>
           <ul class="selected-user-roles selected-items">
             <% user_roles.each do |user| %>
               <li class="selected-item"><%= "(#{user["uid"]}) #{user["name"]}" %>

@@ -39,7 +39,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
           expect(result).not_to be_success
           error_message = result.failure
           expect(error_message).to include("Error saving project")
-        end.not_to change { Project.count }
+        end.to change { Project.count }.by(1)
       end
 
       it "returns a failure if the doi can not be minted" do

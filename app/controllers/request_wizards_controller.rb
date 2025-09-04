@@ -36,6 +36,7 @@ class RequestWizardsController < ApplicationController
         # Go directly to the step the user clicked on
         redirect_to params[:commit]
       else
+        TigerdataMailer.with(request_id: @request_model.id).request_creation.deliver_now
         redirect_to "#{requests_path}/#{@request_model.id}"
       end
     end
@@ -86,6 +87,7 @@ class RequestWizardsController < ApplicationController
       if request_params[:user_roles].present?
         request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
       end
+      request_params[:requested_by] ||= current_user.uid
       request_params
     end
 
