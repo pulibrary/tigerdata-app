@@ -11,7 +11,7 @@ FactoryBot.define do
     eligible_sponsor { false }
     eligible_manager { false }
     sysadmin { false }
-    superuser { false }
+    developer { false }
     trainer { false }
 
     trait :with_mediaflux_session do
@@ -44,8 +44,8 @@ FactoryBot.define do
 
     ##
     # A user who is allowed see all projects in the system
-    factory :superuser do
-      superuser { true }
+    factory :developer do
+      developer { true }
     end
 
     ##
