@@ -12,10 +12,10 @@ RSpec.describe MediafluxChannel, type: :channel, connect_to_mediaflux: true do
       identifier
     ]
   end
-  let(:superuser) { FactoryBot.create(:superuser, mediaflux_session: SystemUser.mediaflux_session) }
+  let(:developer) { FactoryBot.create(:developer, mediaflux_session: SystemUser.mediaflux_session) }
 
   before do
-    superuser
+    developer
     allow(connection).to receive(:identifiers).and_return([])
     allow(channel).to receive(:transmit)
     allow(channel).to receive(:update_state).and_call_original

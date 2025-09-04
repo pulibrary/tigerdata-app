@@ -26,7 +26,7 @@ class User < ApplicationRecord
   # Users that can be project sponsors
   def self.sponsor_users
     if Rails.env.development? || Rails.env.staging?
-      User.where(eligible_sponsor: true).or(User.where(superuser: true))
+      User.where(eligible_sponsor: true).or(User.where(developer: true))
     else
       User.where(eligible_sponsor: true)
     end
@@ -35,7 +35,7 @@ class User < ApplicationRecord
   # Users that can be data managers
   def self.manager_users
     if Rails.env.development? || Rails.env.staging?
-      User.where(eligible_manager: true).or(User.where(superuser: true))
+      User.where(eligible_manager: true).or(User.where(developer: true))
     else
       User.where(eligible_manager: true)
     end
@@ -98,28 +98,33 @@ class User < ApplicationRecord
   # Is this user eligible to be a data sponsor in this environment?
   # @return [Boolean]
   def eligible_sponsor?
-    return true if superuser
+    return true if developer
     super
   end
 
   # Is this user eligible to be a data manger in this environment?
   # @return [Boolean]
   def eligible_manager?
-    return true if superuser
+    return true if developer
+    super
+  end
+
+  def developer?
+    return true if developer
     super
   end
 
   # Is this user eligible to be a data user in this environment?
   # @return [Boolean]
   def eligible_data_user?
-    return true if superuser
+    return true if developer
     return true if !eligible_sponsor? && !eligible_manager
   end
 
   # Is this user eligible to be a sysadmin in this environment?
   # @return [Boolean]
   def eligible_sysadmin?
-    return true if superuser || sysadmin
+    return true if developer || sysadmin
   end
 
   def eligible_to_create_new?

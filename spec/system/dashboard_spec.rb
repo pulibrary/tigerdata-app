@@ -172,8 +172,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
     end
 
-    context "with the superuser role" do
-      let(:current_user) { FactoryBot.create(:superuser, uid: "xxx999") }
+    context "with the developer role" do
+      let(:current_user) { FactoryBot.create(:developer, uid: "xxx999") }
 
       it "shows the 'Project Requests' button" do
         sign_in admin_user

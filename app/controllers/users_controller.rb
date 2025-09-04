@@ -44,7 +44,7 @@ class UsersController < ApplicationController
     end
 
     def check_user_access
-      return if current_user.superuser || current_user.sysadmin || current_user.trainer
+      return if current_user.developer || current_user.sysadmin || current_user.trainer
       flash[:notice] = "You do not have access to this page (#{current_user.uid})"
       redirect_to dashboard_path
     end
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
       @user.display_name = params["user"]["display_name"]
       @user.eligible_sponsor = params["user"]["eligible_sponsor"] == "1"
       @user.eligible_manager = params["user"]["eligible_manager"] == "1"
-      @user.superuser = params["user"]["superuser"] == "1"
+      @user.developer = params["user"]["developer"] == "1"
       @user.sysadmin = params["user"]["sysadmin"] == "1"
       @user.trainer = params["user"]["trainer"] == "1"
       @user.save!

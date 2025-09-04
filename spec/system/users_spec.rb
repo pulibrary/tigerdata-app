@@ -6,7 +6,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:superuser) { FactoryBot.create(:superuser, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user_without_provider) { FactoryBot.create(:data_manager, provider: "", mediaflux_session: SystemUser.mediaflux_session) }
 
@@ -33,9 +33,9 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     end
   end
 
-  context "superuser" do
+  context "developer" do
     it "shows the Current Users page" do
-      sign_in superuser
+      sign_in developer
       visit "/users"
       expect(page).to have_content "Current Users"
     end
