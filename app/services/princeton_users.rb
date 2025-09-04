@@ -16,7 +16,12 @@ class PrincetonUsers
     def user_list_query(query)
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
       return [] if tokens.count == 0
-      user_list.select { |user| user_match?(user, tokens) }
+
+      user_query = tokens.inject(User.all) do |partial_query, token| 
+                     search_token = '%'+User.sanitize_sql_like(token)+'%'
+                     partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
+                   end
+      user_query.map{|user| { uid: user.uid, name: user.display_name } }
     end
 
     def load_rdss_developers
@@ -74,25 +79,6 @@ class PrincetonUsers
                                                     method: :simple_tls,
                                                     tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
                                                   }
-    end
-
-    # Compares a user hash to the tokens to detect whether the user uid or name matches
-    # Tokens must already be downcased
-    def user_match?(user, tokens)
-      uid = user[:uid].downcase
-      uid_matches = tokens.select { |token| uid.include?(token) }
-      return true if uid_matches.count == tokens.count  # match by uid
-
-      name = user[:name]&.downcase
-      return false if name.nil? # there is no name, nothing more to do
-
-      name_matches = tokens.select { |token| name.include?(token) }
-      return true if name_matches.count == tokens.count # match by name
-
-      combined_matches = (name_matches + uid_matches).sort
-      return true if combined_matches == tokens.sort # match by name and uid
-
-      false
     end
   end
 end

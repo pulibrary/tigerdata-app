@@ -160,7 +160,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # expect(page).to have_content "Categories (Optional)"
       expect(page).to have_content "Roles and People"
       click_on("Back")
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       expect(page).to have_field("project_title", with: "A basic Project")
       expect(page).to have_field("parent_folder", with: "abc_lab")
       expect(page).to have_field("project_folder", with: "skeletor")
@@ -173,22 +173,22 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Next"
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Next"
-      expect(page).to have_content "Roles and People"
+      expect(page).to have_content("Assign roles for your project")
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_sponsor"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_manager, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :user_find, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
       select current_user_str + "\u00A0", from: "user_find"
 
@@ -201,8 +201,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       click_on "Back"
       # TODO: when the wizard is fully functional the Dates should be back
       # expect(page).to have_content "Dates (Optional)"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       click_on "Next"
+      expect(page).to have_content("Assign roles for your project")
       expect(page).to have_content "Roles and People"
       expect(page).to have_content "Data Manager"
       expect(page).to have_field("request_data_sponsor", with: current_user.uid)
