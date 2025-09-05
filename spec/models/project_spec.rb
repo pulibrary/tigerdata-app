@@ -70,8 +70,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     it "returns projects for the data users" do
       user_projects = described_class.users_projects(test_user)
-      expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).to be nil
-      expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).to be nil
+      expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
+      expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
       expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
       expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
       expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
@@ -84,7 +84,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
       it "returns projects for the data users" do
         user_projects = described_class.users_projects(test_user)
-        expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).to be nil
+        expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
@@ -100,7 +100,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       it "returns projects for the data users" do
         user_projects = described_class.users_projects(test_user)
         expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).to be nil
+        expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
         expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
