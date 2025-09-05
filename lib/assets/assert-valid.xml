@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<!-- example from https://mukulgandhi.blogspot.com/2020/02/xml-schema-11-use-cases-with-and.html -->
+<X>
+    <b>some string</b>
+</X>
