@@ -16,19 +16,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       click_on "Next"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Categories (Optional)"
       # click_on "Next"
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Next"
-      expect(page).to have_content "Roles and People"
+      expect(page).to have_content "Assign roles for your project"
       click_on "Next"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Project Type"
       # click_on "Next"
-      expect(page).to have_content "Storage and Access"
+      expect(page).to have_content "Enter the storage and access needs"
       click_on "Next"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Funding Sources"
@@ -37,7 +37,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Next"
       # expect(page).to have_content "Related Resources"
       # click_on "Next"
-      expect(page).to have_content "Review and Submit"
+      expect(page).to have_content "Take a moment to review"
       click_on "Back"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Related Resources"
@@ -46,19 +46,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Back"
       # expect(page).to have_content "Funding Sources"
       # click_on "Back"
-      expect(page).to have_content "Storage and Access"
+      expect(page).to have_content "Enter the storage and access needs"
       click_on "Back"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Project Type"
       # click_on "Back"
-      expect(page).to have_content "Roles and People"
+      expect(page).to have_content "Assign roles for your project"
       click_on "Back"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Back"
       # expect(page).to have_content "Categories (Optional)"
       # click_on "Back"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
     end
 
     it "can not submit if the request is not valid" do
@@ -68,12 +68,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       visit "/"
       click_on "New Project Request"
       visit "/new-project/review-submit/#{request.id}"
-      expect(page).to have_content "Review and Submit"
+      expect(page).to have_content "Take a moment to review"
       click_on("Next")
       within(".project-title") do
         expect(page).to have_content("cannot be empty")
       end
-      expect(page.body).to include("Please resolve errors before submitting your request")
+      expect(page).to have_content("Please resolve errors before submitting your request")
       fill_in :project_title, with: "A basic Project"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "abc_lab"
@@ -91,12 +91,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_sponsor"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_manager, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       click_on("Next")
@@ -111,17 +111,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       visit "/"
       expect(page).not_to have_content("New Project Request")
       visit "/new-project/project-info/#{request.id}"
-      expect(page).not_to have_content "Basic Details"
+      expect(page).not_to have_content "Tell us a little about your project!"
       visit "/new-project/project-info-categories/#{request.id}"
       expect(page).not_to have_content "Categories (Optional)"
       visit "/new-project/project-info-dates/#{request.id}"
       expect(page).not_to have_content "Dates (Optional)"
       visit "/new-project/roles-people/#{request.id}"
-      expect(page).not_to have_content "Roles and People"
+      expect(page).not_to have_content "Assign roles for your project"
       visit "/new-project/project-type/#{request.id}"
       expect(page).not_to have_content "Project Type"
       visit "/new-project/storage-access/#{request.id}"
-      expect(page).not_to have_content "Storage and Access"
+      expect(page).not_to have_content "Enter the storage and access needs"
       visit "/new-project/additional-info-grants-funding/#{request.id}"
       expect(page).not_to have_content "Funding Sources"
       visit "/new-project/additional-info-project-permissions/#{request.id}"
@@ -129,7 +129,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       visit "/new-project/additional-info-related-resources/#{request.id}"
       expect(page).not_to have_content "Related Resources"
       visit "/new-project/review-submit/#{request.id}"
-      expect(page).not_to have_content "Review and Submit"
+      expect(page).not_to have_content "Take a moment to review"
       test_strategy.switch!(:new_project_request_wizard, true)
     end
 
@@ -139,7 +139,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       fill_in :project_title, with: "A basic Project"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "abc_lab"
@@ -158,9 +158,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       click_on "Next"
       # TODO: when the wizard is fully functional the Categories should be next
       # expect(page).to have_content "Categories (Optional)"
-      expect(page).to have_content "Roles and People"
+      expect(page).to have_content "Assign roles for your project"
       click_on("Back")
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       expect(page).to have_field("project_title", with: "A basic Project")
       expect(page).to have_field("parent_folder", with: "abc_lab")
       expect(page).to have_field("project_folder", with: "skeletor")
@@ -173,22 +173,22 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Next"
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Next"
-      expect(page).to have_content "Roles and People"
+      expect(page).to have_content("Assign roles for your project")
       current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_sponsor"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_manager, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :user_find, with: current_user.uid
-      sleep(0.5)
+      sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
       select current_user_str + "\u00A0", from: "user_find"
 
@@ -201,8 +201,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       click_on "Back"
       # TODO: when the wizard is fully functional the Dates should be back
       # expect(page).to have_content "Dates (Optional)"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       click_on "Next"
+      expect(page).to have_content("Assign roles for your project")
       expect(page).to have_content "Roles and People"
       expect(page).to have_content "Data Manager"
       expect(page).to have_field("request_data_sponsor", with: current_user.uid)
@@ -216,7 +217,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       random_title = "Project #{rand(100_000)} title"
       fill_in :project_title, with: random_title
 
@@ -232,7 +233,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
-      expect(page).to have_content "Basic Details"
+      expect(page).to have_content "Tell us a little about your project!"
       fill_in :project_title, with: "A basic Project"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "abc_lab"
