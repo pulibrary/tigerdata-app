@@ -64,7 +64,6 @@ class RequestWizardsController < ApplicationController
     # set if id is present or create request if not
     def set_or_create_request_model
       @princeton_departments = Affiliation.all
-      @princeton_users = PrincetonUsers.user_list
       if params[:request_id].blank?
         @request_model = Request.create
       else

@@ -100,32 +100,38 @@ RSpec.describe PrincetonUsers, type: :model do
     end
   end
 
-  describe "#user_match?" do
+  describe "#user_list_query" do
     let(:user) { { uid: "sms98", name: "Sotomayor, Sonia" } }
-    let(:user_no_name) { { uid: "sms98" } }
+    let(:user_no_name) { { uid: "sms99", name: nil } }
+
+    before do
+      FactoryBot.create(:user, uid: "sms98", display_name: "Sotomayor, Sonia")
+      FactoryBot.create(:user, uid: "sms99", display_name: nil, given_name: nil, family_name: nil)
+    end
 
     it "detect matches by uid" do
-      expect(described_class.user_match?(user, ["sms"])).to be true
-      expect(described_class.user_match?(user, ["abc"])).to be false # not a match
+      expect(described_class.user_list_query("sms")).to eq [user, user_no_name]
+      expect(described_class.user_list_query("ms9")).to eq [user, user_no_name]
+      expect(described_class.user_list_query("98")).to eq [user]
+      expect(described_class.user_list_query("99")).to eq [user_no_name]
+      expect(described_class.user_list_query("abc")).to eq []
+    end
+
+    it "does not query if no tokens are present" do
+      expect(described_class.user_list_query("")).to eq []
     end
 
     it "detect matches by name, including partial matches out of order" do
-      expect(described_class.user_match?(user, ["sonia"])).to be true
-      expect(described_class.user_match?(user, ["sotomayor"])).to be true
-      expect(described_class.user_match?(user, ["son", "soto"])).to be true
-      expect(described_class.user_match?(user, ["soto", "son"])).to be true
-      expect(described_class.user_match?(user, ["sotomayor", "abc"])).to be false # not a match
+      expect(described_class.user_list_query("sonia")).to eq [user]
+      expect(described_class.user_list_query("sotomayor")).to eq [user]
+      expect(described_class.user_list_query("son soto")).to eq [user]
+      expect(described_class.user_list_query("soto son")).to eq [user]
+      expect(described_class.user_list_query("sotomayor abc")).to eq []
     end
 
     it "detect matches by uid and name" do
-      expect(described_class.user_match?(user, ["sms", "soto"])).to be true
-      expect(described_class.user_match?(user, ["abc", "soto"])).to be false # not a match
-    end
-
-    it "handles users with no names graciously" do
-      expect(described_class.user_match?(user_no_name, ["sms"])).to be true
-      expect(described_class.user_match?(user_no_name, ["abc"])).to be false
-      expect(described_class.user_match?(user_no_name, ["sms", "abc"])).to be false
+      expect(described_class.user_list_query("sms soto")).to eq [user]
+      expect(described_class.user_list_query("sms jill")).to eq []
     end
   end
 end
