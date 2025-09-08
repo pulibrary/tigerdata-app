@@ -21,7 +21,7 @@ Grouper Groups:
 Role application and validation:
 
 - At login, check the user's Grouper data from LDAP
-- If the user is in the any of the three prviously defined Grouper groups, we ensure that they have the appropriate corresponding role in our application
+- If the user is in the any of the three previously defined Grouper groups, we ensure that they have the appropriate corresponding role in our application
 - If the user is NOT in the any Grouper group, we ensure that they do not have the corresponding role in our application
 
 Role names:
