@@ -15,7 +15,7 @@ module Mediaflux
 
     def roles
       xml_roles = response_xml.xpath("/response/reply/result/actor/role[@type='role']")
-      xml_roles.map { |xml_node| xml_node.text }
+      xml_roles.map(&:text)
     end
   end
 end
