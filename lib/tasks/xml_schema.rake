@@ -22,6 +22,7 @@ namespace :xml_schema do
     if errors.count == 0
       puts "OK! - XML example #{document_file} validates against schema #{schema_file}"
     else
+      puts "Invalid - XML example #{document_file} is not valid against schema #{schema_file}"
       errors.each do |error|
         puts error.message
       end
@@ -35,7 +36,7 @@ namespace :xml_schema do
   # For more information see: https://stackoverflow.com/a/18527198/446681
   def use_local_xml_xsd(xsd)
     local_xml_xsd = Pathname.new("./lib/assets/xml.xsd").realpath.to_s
-    xsd.sub!("https://www.w3.org/2001/xml.xsd", "file://#{local_xml_xsd}")
+    xsd.sub("https://www.w3.org/2001/xml.xsd", "file://#{local_xml_xsd}")
   end
 end
 # :nocov:
