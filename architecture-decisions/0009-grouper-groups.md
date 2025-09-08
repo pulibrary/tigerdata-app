@@ -36,8 +36,6 @@ The following role names and permission levels will be enforced via application 
 2. `System Administrators` can view, approve, and reject project requests
 3. `Developer` — Previously the `SuperUser` role in our application, grants the RDSS developers the full capabilities of all roles within the application. This allows us to develop and test the functionality of each individual role
 
-
-
 ## Consequences
 
 - Not all roles in Grouper is not in place yet, for now we be getting the roles for a user from two different sources. This will need to be updated later in the project.
