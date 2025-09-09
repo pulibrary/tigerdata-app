@@ -16,6 +16,9 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
       get project_url(project), params: { format: :xml }
       expect(response.content_type).to match "xml"
       expect(response.code).to eq "200"
+      xml = response.parsed_body
+      xml_doc = Nokogiri::XML(xml)
+      expect(xml_doc.xpath("//title/text()").to_s).to eq project.title
     end
   end
 end
