@@ -1,8 +1,14 @@
 <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Mediaflux::Connection.host %></b>
 <dl>
-    <dt>Mediaflux Port: </dt>
-    <dd><%= Mediaflux::Connection.port %></dd>
+  <dt>Mediaflux Port: </dt>
+  <dd><%= Mediaflux::Connection.port %></dd>
 
-    <dt>Roles:</dt>
-    <dd><%= @user_roles.join(", ") %></dd>
+  <% if current_user %>
+    <dt>Mediaflux Roles:</dt>
+    <dd>
+      <% current_user.current_user_mediaflux_roles(session_token: current_user.mediaflux_session).each do |role| %>
+        <%= role %><br/ >
+      <% end %>
+    </dd>
+  <% end %>
 </dl>

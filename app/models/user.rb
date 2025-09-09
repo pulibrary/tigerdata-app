@@ -69,6 +69,7 @@ class User < ApplicationRecord
     session[:mediaflux_session] = @mediaflux_session
     session[:active_web_user] = @active_web_user
     logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
+    check_if_current_user_is_developer(session_token: @mediaflux_session)
   end
 
   def terminate_mediaflux_session
@@ -159,5 +160,32 @@ class User < ApplicationRecord
   # Fetches the most recent download jobs for the user
   def latest_downloads(limit: 10)
     @latest_downloads ||= UserRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
+  end
+
+  def check_if_current_user_is_developer(session_token:)
+    roles = current_user_mediaflux_roles(session_token:)
+    # TODO: Figure out why the role name is different in staging from production:
+    #   staging:      "pu-smb-group:PU:tigerdata:librarydevelopers"
+    #   production:   "pu-oit-group:PU:tigerdata:librarydevelopers"
+    #   development:  "pu-lib:developer"
+    developer_now = roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
+      roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
+      roles.include?("pu-lib:developer")
+    if developer != developer_now
+      # Only update the record in the database if there is a change
+      Rails.logger.info("Updating developer role for user #{self.id} to #{developer_now}")
+      self.developer = developer_now
+      save!
+    end
+  rescue => ex
+    Rails.logger.error("Error determining if user is a developer (id: #{self.id}), error: #{ex.message}")
+  end
+
+  # Returns the roles in Mediaflux for the user in the session.
+  # This is meant to be used only for the current_user, hence the name.
+  def current_user_mediaflux_roles(session_token:)
+    request = Mediaflux::ActorSelfDescribeRequest.new(session_token:)
+    request.resolve
+    request.roles
   end
 end
