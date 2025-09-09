@@ -165,8 +165,8 @@ class User < ApplicationRecord
   def check_if_current_user_is_developer(session_token:)
     roles = current_user_mediaflux_roles(session_token:)
     # TODO: Figure out why the role name is different in staging from production:
-    #   staging:      "pu-smb-group:PU:tigerdata:librarydevelopers"
-    #   production:   "pu-oit-group:PU:tigerdata:librarydevelopers"
+    #   production:   "pu-smb-group:PU:tigerdata:librarydevelopers"
+    #   staging:      "pu-oit-group:PU:tigerdata:librarydevelopers"
     #   development:  "pu-lib:developer"
     developer_now = roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
       roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
