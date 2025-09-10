@@ -1,5 +1,16 @@
 <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Mediaflux::Connection.host %></b>
-<dl> 
-    <dt> Mediaflux Port: </dt> 
-    <dd> <%= Mediaflux::Connection.port %></dd>
-</dl> 
+<dl>
+  <dt>Mediaflux Port: </dt>
+  <dd><%= Mediaflux::Connection.port %></dd>
+
+  <% if @current_user_mediaflux_roles.count > 0 %>
+    <dt>Mediaflux Roles:</dt>
+    <dd>
+      <ul>
+        <% @current_user_mediaflux_roles.each do |role| %>
+          <li><%= role %>
+        <% end %>
+      <ul>
+    </dd>
+  <% end %>
+</dl>
