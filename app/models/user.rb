@@ -168,9 +168,11 @@ class User < ApplicationRecord
     #   production:   "pu-smb-group:PU:tigerdata:librarydevelopers"
     #   staging:      "pu-oit-group:PU:tigerdata:librarydevelopers"
     #   development:  "pu-lib:developer"
+    #   test:         "system-administrator"
     developer_now = roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
       roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
-      roles.include?("pu-lib:developer")
+      roles.include?("pu-lib:developer") ||
+      roles.include?("system-administrator")
     if developer != developer_now
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating developer role for user #{self.id} to #{developer_now}")

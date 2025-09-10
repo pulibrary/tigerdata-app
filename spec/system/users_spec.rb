@@ -97,4 +97,27 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       expect(User.find(data_manager.id).given_name).to eq new_given_name
     end
   end
+
+  # Notice that this is a system test because it requires an active Mediaflux session
+  describe "user#current_user_mediaflux_roles" do
+    it "detects mediaflux roles" do
+      sign_in sysadmin_user
+      roles = sysadmin_user.current_user_mediaflux_roles(session_token: sysadmin_user.mediaflux_session)
+      expect(roles.include?("system-administrator")).to be true
+    end
+  end
+
+  describe "user#check_if_current_user_is_developer" do
+    before do
+      sysadmin_user.developer = false
+      sysadmin_user.save!
+    end
+
+    it "mark as developer an admin user" do
+      expect(sysadmin_user.developer).to be false
+      sign_in sysadmin_user
+      sysadmin_user.check_if_current_user_is_developer(session_token: sysadmin_user.mediaflux_session)
+      expect(sysadmin_user.developer).to be true
+    end
+  end
 end
