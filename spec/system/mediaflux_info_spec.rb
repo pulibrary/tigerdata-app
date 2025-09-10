@@ -11,5 +11,7 @@ describe "mediaflux_info", type: :system, js: true, connect_to_mediaflux: true d
     visit "/mediaflux_info"
     expect(page).to have_content("Connected to MediaFlux")
     expect(page).to have_content("Mediaflux Port:\n#{mflux_port}\n")
+    expect(page).to have_content("Mediaflux Roles:")
+    expect(page).to have_content("system-administrator")  # Role of our user while running the tests
   end
 end
