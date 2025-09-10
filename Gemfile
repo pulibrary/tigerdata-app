@@ -73,7 +73,7 @@ gem "sidekiq"
 gem "whenever", require: false
 
 group :development, :test do
-  gem "rspec-rails", "~> 6.0.0"
+  gem "rspec-rails", "~> 7.0.1"
 
   gem "bixby"
   gem "byebug"
