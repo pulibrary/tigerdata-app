@@ -3,6 +3,12 @@
   <dt>Mediaflux Port: </dt>
   <dd><%= Mediaflux::Connection.port %></dd>
 
+  <dt>Sys Admin:</dt>
+  <dd><%= current_user.sysadmin %></dd>
+
+  <dt>Developer:</dt>
+  <dd><%= current_user.developer %></dd>
+
   <% if @current_user_mediaflux_roles.count > 0 %>
     <dt>Mediaflux Roles:</dt>
     <dd>
