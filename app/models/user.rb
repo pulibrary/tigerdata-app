@@ -70,7 +70,7 @@ class User < ApplicationRecord
     session[:active_web_user] = @active_web_user
     logger.debug "Login Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
 
-    update_current_user_status(session_token: @mediaflux_session)
+    User.update_user_roles(user: self)
   end
 
   def terminate_mediaflux_session
@@ -163,28 +163,31 @@ class User < ApplicationRecord
     @latest_downloads ||= UserRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
   end
 
-  # Updates the current user's status (sysadmin, developer) based on the information in
-  # Mediaflux for the current session.
-  # This method is meant to be used only for the current_user, hence the name.
-  def update_current_user_status(session_token:)
-    mediaflux_roles = current_user_mediaflux_roles(session_token:)
-    update_current_user_developer_status(mediaflux_roles:)
-    update_current_user_sysadmin_status(mediaflux_roles:)
+  # Updates the user's roles (sys admin, developer) depending on the information on Mediaflux.
+  # This method is meant to be used only for the current logged in user since the roles depend on the Mediaflux session.
+  def self.update_user_roles(user:)
+    raise "User.update_user_roles called with for a user without a Mediaflux session" if user.mediaflux_session.nil?
+
+    mediaflux_roles = mediaflux_roles(user:)
+    update_developer_status(user:, mediaflux_roles:)
+    update_sysadmin_status(user:, mediaflux_roles:)
   rescue => ex
-    Rails.logger.error("Error updating user (id: #{self.id}) status, error: #{ex.message}")
+    Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{ex.message}")
   end
 
   # Returns the roles in Mediaflux for the user in the session.
-  # This is meant to be used only for the current_user, hence the name.
-  def current_user_mediaflux_roles(session_token:)
-    request = Mediaflux::ActorSelfDescribeRequest.new(session_token:)
+  # This method is meant to be used only for the current logged in user since the roles depend on the Mediaflux session.
+  def self.mediaflux_roles(user:)
+    raise "User.mediaflux_roles called with for a user without a Mediaflux session" if user.mediaflux_session.nil?
+
+    request = Mediaflux::ActorSelfDescribeRequest.new(session_token: user.mediaflux_session)
     request.resolve
     request.roles
   end
 
   private
 
-  def update_current_user_developer_status(mediaflux_roles:)
+  def self.update_developer_status(user:, mediaflux_roles:)
     # TODO: Figure out why the role name is different in staging from production:
     #   production:   "pu-smb-group:PU:tigerdata:librarydevelopers"
     #   staging:      "pu-oit-group:PU:tigerdata:librarydevelopers"
@@ -194,21 +197,21 @@ class User < ApplicationRecord
       mediaflux_roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
       mediaflux_roles.include?("pu-lib:developer") ||
       mediaflux_roles.include?("system-administrator")
-    if developer != developer_now
+    if user.developer != developer_now
       # Only update the record in the database if there is a change
-      Rails.logger.info("Updating developer role for user #{self.id} to #{developer_now}")
-      self.developer = developer_now
-      save!
+      Rails.logger.info("Updating developer role for user #{user.id} to #{developer_now}")
+      user.developer = developer_now
+      user.save!
     end
   end
 
-  def update_current_user_sysadmin_status(mediaflux_roles:)
+  def self.update_sysadmin_status(user:, mediaflux_roles:)
     sysadmin_now = mediaflux_roles.include?("system-administrator")
-    if sysadmin != sysadmin_now
+    if user.sysadmin != sysadmin_now
       # Only update the record in the database if there is a change
-      Rails.logger.info("Updating sysadmin role for user #{self.id} to #{sysadmin_now}")
-      self.sysadmin = sysadmin_now
-      save!
+      Rails.logger.info("Updating sysadmin role for user #{user.id} to #{sysadmin_now}")
+      user.sysadmin = sysadmin_now
+      user.save!
     end
   end
 end

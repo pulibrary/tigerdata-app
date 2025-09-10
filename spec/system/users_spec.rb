@@ -107,7 +107,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     end
   end
 
-  describe "user#update_current_user_status" do
+  describe "user#update_user_roles" do
     before do
       sysadmin_user.developer = false
       sysadmin_user.sysadmin = false
@@ -118,7 +118,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       expect(sysadmin_user.sysadmin).to be false
       expect(sysadmin_user.developer).to be false
       sign_in sysadmin_user
-      sysadmin_user.update_current_user_status(session_token: sysadmin_user.mediaflux_session)
+      User.update_user_roles(user: sysadmin_user)
       expect(sysadmin_user.sysadmin).to be true
       expect(sysadmin_user.developer).to be true
     end
