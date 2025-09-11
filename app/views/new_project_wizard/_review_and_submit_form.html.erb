@@ -9,6 +9,7 @@
                                                                                 parent_folder: @request_model.parent_folder || "", parent_folder_error: @request_model.errors[:parent_folder].join(", ")} %>
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: @request_model.errors[:description].join(", ") } %>
     <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @request_model.departments || [], department_error: @request_model.errors[:departments].join(", ") } %>
+</div>
 <div class="section-line"></div>
 <div class="section">
     <div class="section-title">
