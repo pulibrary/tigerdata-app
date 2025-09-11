@@ -100,9 +100,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_03_182114) do
     t.string "display_name"
     t.boolean "eligible_sponsor", default: false
     t.boolean "eligible_manager", default: false
+    t.boolean "developer", default: false
     t.boolean "sysadmin", default: false
     t.boolean "trainer", default: false
-    t.boolean "developer"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

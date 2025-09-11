@@ -1,6 +1,6 @@
       <div class="heading-frame">
         <div class="heading-text">
-          Edit request
+          Edit Submitted Request
         </div>
         <div class="deco-line"></div>
       </div>
@@ -11,7 +11,7 @@
             <div class="form-header">
               <div class="form-title">
                 <div class="form-text">
-                  Edit Submitted Request
+                  <%= @request_model.project_title %>
                 </div>
               </div>
               <div class="form-description">
@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="button-frame">
-            <%= link_to "Cancel", request_url(@request_model) %>
+            <%= link_to "Cancel", request_url(@request_model), class: "button cancel" %>
             <%= form.submit "Save", class: "button" %>
           </div>
         <% end %>
