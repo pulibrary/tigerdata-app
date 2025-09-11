@@ -21,11 +21,11 @@ RSpec.describe "/edit_requests", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
-    context "when the client is authenticated is a regular user" do
+    context "when the client is authenticated and is a regular user" do
       let(:user) { FactoryBot.create(:user) }
       let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
 
-      it "renders a successful response" do
+      it "redirects them to the request path with a notice that they cannot modify the request" do
         sign_in user
         get admin_edit_request_url(request.id)
         expect(response).to be_redirect
@@ -34,11 +34,11 @@ RSpec.describe "/edit_requests", type: :request do
       end
     end
 
-    context "when the client is authenticated" do
+    context "when the client is authenticated and is a sysadmin" do
       let(:user) { FactoryBot.create(:sysadmin) }
       let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
 
-      it "renders a successful response" do
+      it "renders the Edit Submitted Request page" do
         sign_in user
         get admin_edit_request_url(request.id)
         expect(response).to be_successful
@@ -60,11 +60,11 @@ RSpec.describe "/edit_requests", type: :request do
         expect(response).to redirect_to(new_user_session_path)
       end
 
-      context "when the client is authenticated is a regular user" do
+      context "when the client is authenticated and is a regular user" do
         let(:user) { FactoryBot.create(:user) }
         let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
 
-        it "renders a successful response" do
+        it "redirects them to the request path with a notice that they cannot modify the request" do
           sign_in user
           put admin_edit_request_url(request.id), params: { request: { project_title: "changed_title" } }
           expect(response).to be_redirect
@@ -73,7 +73,7 @@ RSpec.describe "/edit_requests", type: :request do
         end
       end
 
-      context "when the client is authenticated" do
+      context "when the client is authenticated and is a sysadmin" do
         let(:user) { FactoryBot.create(:sysadmin) }
         let(:request) { Request.create(request_title: "abc123", project_title: "new project", quota: "500 GB") }
 
@@ -89,7 +89,7 @@ RSpec.describe "/edit_requests", type: :request do
           sign_in user
         end
 
-        it "renders a successful response" do
+        it "updates the request and conveys the success message" do
           put admin_edit_request_url(request.id), params: { request: valid_request_params }
           expect(response).to be_redirect
           expect(response).to redirect_to(request_path(request.id))
