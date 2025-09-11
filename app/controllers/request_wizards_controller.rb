@@ -4,7 +4,8 @@ class RequestWizardsController < ApplicationController
   before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[save]
-  before_action :set_or_create_request_model, only: %i[show]
+  before_action :exit_without_saving, only: %i[save]
+  before_action :set_or_init_request_model, only: %i[show]
 
   before_action :check_flipper
 
@@ -36,12 +37,22 @@ class RequestWizardsController < ApplicationController
         # Go directly to the step the user clicked on
         redirect_to params[:commit]
       else
-        redirect_to "#{requests_path}/#{@request_model.id}"
+        redirect_to request_path(@request_model)
       end
     end
   end
 
   private
+
+    def exit_without_saving
+      if params[:commit] == "Exit without Saving"
+        if @request_model.nil?
+          redirect_to dashboard_path
+        else
+          redirect_to request_path(@request_model)
+        end
+      end
+    end
 
     def render_current
       raise "Must be implemented"
@@ -57,17 +68,35 @@ class RequestWizardsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_request_model
-      @request_model = Request.find(params[:request_id])
+      # do nothing if we are bailing out without creating a request2
+      return if params[:request_id] == "0" && params[:commit] == "Exit without Saving"
+
+      @request_model = if params[:request_id] == "0"
+                         # on the first page with a brand new request that has not been created
+                         req = Request.create
+                         update_sidebar_url(req)
+                         req
+                       else
+                         # on a page when the request has already been created
+                         Request.find(params[:request_id])
+                       end
     end
 
-    # set if id is present or create request if not
-    def set_or_create_request_model
+    def update_sidebar_url(request_model)
+      return unless params[:commit].start_with?("http")
+
+      # take of the zero in the url and replace it with the real request id
+      params[:commit] = "#{params[:commit][0..-2]}#{request_model.id}"
+    end
+
+    # set if id is present or initialize a blank request if not
+    def set_or_init_request_model
       @princeton_departments = Affiliation.all
-      if params[:request_id].blank?
-        @request_model = Request.create
-      else
-        set_request_model
-      end
+      @request_model = if params[:request_id].blank?
+                         Request.new(id: 0)
+                       else
+                         Request.find(params[:request_id])
+                       end
     end
 
     def save_request

@@ -4,7 +4,7 @@
         Project Information - Basic Details
       </div>
     </div>
-    <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: @request_model.errors[:project_title].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: @request_model.errors[:project_title].join(", "), input_id: "project_title" } %>
     <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @request_model.project_folder || "", project_folder_error:  @request_model.errors[:project_folder].join(", "),
                                                                                 parent_folder: @request_model.parent_folder || "", parent_folder_error: @request_model.errors[:parent_folder].join(", ")} %>
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @request_model.description || "", description_error: @request_model.errors[:description].join(", ") } %>

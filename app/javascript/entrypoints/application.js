@@ -26,6 +26,7 @@ import { projectStyle, projectTab } from './projectTabs';
 import { userRolesAutocomplete } from './userRolesAutocomplete';
 import { storageInputs } from './storageInputs';
 import { validationClear } from './validation';
+import { titleCopySaveExit } from './titleCopySaveExit';
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
@@ -183,6 +184,7 @@ function initPage() {
   storageInputs();
   departmentAutocomplete();
   validationClear();
+  titleCopySaveExit();
 }
 
 window.addEventListener('load', () => initPage());

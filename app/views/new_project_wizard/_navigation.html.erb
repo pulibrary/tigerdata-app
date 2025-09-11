@@ -1,5 +1,23 @@
 <%= form.submit "Back", class: "button" %>
 <div class="right-frame" >
-    <%= form.submit "Save and exit", class: "button" %>
+   <input type="button" popovertarget="save-and-exit" value="Save and exit" class="button"></input>
     <%= form.submit "Next", class: "button" %>
 </div>
+<div popover="auto" id="save-and-exit" class="save-and-exit">
+  <div class="modal-content">
+     <div class="modal-title-frame"> 
+       <div class="model-title">Save Your Progress</div>
+       <input type=button popovertarget="save-and-exit" popovertargetaction="hide" class="save-and-exit-close"></input>
+     </div>
+     <div class="modal-body-text">Your project creation request will be saved as draft.</div>
+     <div class="modal-title-input">
+       <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "", input_id: "project_title_exit", field_sub_label: "(Required)" } %>
+     </div>
+  </div>
+  <div class="button-frame">
+    <%= form.submit "Exit without Saving", class: "button" %>
+    <%= form.submit "Confirm", class: "button", id: "save-exit-confirm" %>
+  </div>
+</div>
+
+
