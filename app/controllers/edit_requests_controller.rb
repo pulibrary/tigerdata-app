@@ -13,7 +13,6 @@ class EditRequestsController < ApplicationController
     end
     add_breadcrumb(@request_model.project_title, request_path(@request_model))
     add_breadcrumb("Edit Submitted Request")
-
   end
 
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
@@ -73,5 +72,4 @@ class EditRequestsController < ApplicationController
       add_breadcrumb("Dashboard", dashboard_path)
       add_breadcrumb("Requests", requests_path)
     end
-
 end
