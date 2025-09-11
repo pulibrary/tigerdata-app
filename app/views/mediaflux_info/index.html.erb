@@ -3,11 +3,17 @@
   <dt>Mediaflux Port: </dt>
   <dd><%= Mediaflux::Connection.port %></dd>
 
-  <% if @current_user_mediaflux_roles.count > 0 %>
+  <dt>Sys Admin:</dt>
+  <dd><%= @sysadmin %></dd>
+
+  <dt>Developer:</dt>
+  <dd><%= @developer %></dd>
+
+  <% if @mediaflux_roles.count > 0 %>
     <dt>Mediaflux Roles:</dt>
     <dd>
       <ul>
-        <% @current_user_mediaflux_roles.each do |role| %>
+        <% @mediaflux_roles.each do |role| %>
           <li><%= role %>
         <% end %>
       <ul>

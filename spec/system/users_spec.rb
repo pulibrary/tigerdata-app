@@ -100,23 +100,34 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   # Notice that this is a system test because it requires an active Mediaflux session
   describe "user#current_user_mediaflux_roles" do
+    let(:user_without_session) { FactoryBot.create(:user, uid: "nosession123") }
+
     it "detects mediaflux roles" do
       sign_in sysadmin_user
-      roles = sysadmin_user.current_user_mediaflux_roles(session_token: sysadmin_user.mediaflux_session)
+      roles = User.mediaflux_roles(user: sysadmin_user)
       expect(roles.include?("system-administrator")).to be true
+    end
+
+    it "raises an error if the user does not have a Mediaflux session" do
+      expect do
+        User.mediaflux_roles(user: user_without_session)
+      end.to raise_error(StandardError)
     end
   end
 
-  describe "user#check_if_current_user_is_developer" do
+  describe "user#update_user_roles" do
     before do
       sysadmin_user.developer = false
+      sysadmin_user.sysadmin = false
       sysadmin_user.save!
     end
 
-    it "mark as developer an admin user" do
+    it "mark as developer an admin and a developer user" do
+      expect(sysadmin_user.sysadmin).to be false
       expect(sysadmin_user.developer).to be false
       sign_in sysadmin_user
-      sysadmin_user.check_if_current_user_is_developer(session_token: sysadmin_user.mediaflux_session)
+      User.update_user_roles(user: sysadmin_user)
+      expect(sysadmin_user.sysadmin).to be true
       expect(sysadmin_user.developer).to be true
     end
   end
