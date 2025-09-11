@@ -32,21 +32,6 @@ class Project < ApplicationRecord
     end
   end
 
-  # TODO: Remove this method https://github.com/pulibrary/tigerdata-app/issues/1707 has been completed
-  def approve!(current_user:)
-    # This code is duplicated with Request.approve() and it should
-    # be removed. We keep it for now since we have way too many tests
-    # wired to it already. The goal is that projects won't be approved,
-    # instead Request are approved (and that process creates the project)
-    create_project_operation = ProjectCreate.new
-    result = create_project_operation.call(request: nil, approver: current_user, project: self)
-    if result.success?
-       self.mediaflux_id
-    else
-      raise ProjectCreate::ProjectCreateError, result.failure
-    end
-  end
-
   def activate(current_user:)
     raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
     metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
