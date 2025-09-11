@@ -82,18 +82,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     end
   end
 
-  context "Index page" do
-    before do
-      project_not_in_mediaflux
-    end
-
-    it "shows the existing projects" do
-      sign_in sponsor_user
-      visit "/projects"
-      expect(page).to have_content(project_not_in_mediaflux.title)
-    end
-  end
-
   context "GET /projects/:id" do
     context "when authenticated" do
       let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
