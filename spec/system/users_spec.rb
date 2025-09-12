@@ -93,7 +93,6 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       sign_in sysadmin_user
       visit "/users/#{data_manager.id}/edit"
       fill_in :user_given_name, with: new_given_name
-      byebug
       click_on "Save"
       expect(User.find(data_manager.id).given_name).to eq new_given_name
     end

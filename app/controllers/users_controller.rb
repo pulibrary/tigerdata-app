@@ -51,7 +51,6 @@ class UsersController < ApplicationController
 
     # rubocop:disable Metrics/AbcSize
     def update_user_with_params
-      byebug
       @user = User.find(params[:id])
       @user.given_name = params["user"]["given_name"]
       @user.family_name = params["user"]["family_name"]
@@ -62,9 +61,6 @@ class UsersController < ApplicationController
       @user.sysadmin = params["user"]["sysadmin"] == "1"
       @user.trainer = params["user"]["trainer"] == "1"
       @user.save!
-
-      puts "hello"
-
     end
   # rubocop:enable Metrics/AbcSize
 end
