@@ -145,14 +145,6 @@ class Project < ApplicationRecord
     Project.all
   end
 
-  def self.data_user_projects(user)
-    # See https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
-    # for information on the @> operator
-    query_ro = '{"data_user_read_only":["' + user + '"]}'
-    query_rw = '{"data_user_read_write":["' + user + '"]}'
-    Project.where("(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb)", query_ro, query_rw)
-  end
-
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
     metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
