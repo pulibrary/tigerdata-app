@@ -1,13 +1,19 @@
-<h1><%= @request_model.project_title %></h1>
+<div class="heading-frame">
+  <div class="heading-text">
+    <%= @request_model.project_title %>
+  </div>
+<div class="deco-line"></div>
 
-This screen is a review of the request. No project has been created yet.
+<div class="request-description">
+  This screen is a review of the request. No project has been created yet.
+</div> 
 
 <div class="horizontal-frame">
     <% if !@request_model.submitted? %>
     <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
     <% end %>
     <% if current_user.eligible_sysadmin? && @request_model.submitted? %>
-    <%= link_to "Edit submitted request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+    <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark btn-sm" %>
     <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
     <% end %>
 </div>

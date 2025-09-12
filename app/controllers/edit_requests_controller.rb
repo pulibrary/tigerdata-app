@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class EditRequestsController < ApplicationController
   layout "edit_request"
+  before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[edit update]
 
@@ -10,6 +11,8 @@ class EditRequestsController < ApplicationController
       flash[:notice] = I18n.t(:no_modify_submitted)
       redirect_to request_path(@request_model)
     end
+    add_breadcrumb(@request_model.project_title, request_path(@request_model))
+    add_breadcrumb("Edit Submitted Request")
   end
 
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
@@ -63,5 +66,10 @@ class EditRequestsController < ApplicationController
         request_params[:approved_storage_unit] = request_params.delete(:storage_unit)
       end
       request_params
+    end
+
+    def set_breadcrumbs
+      add_breadcrumb("Dashboard", dashboard_path)
+      add_breadcrumb("Requests", requests_path)
     end
 end
