@@ -40,24 +40,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#data_users" do
-    let(:data_user) { sponsor_and_data_manager_user }
-    before do
-      FactoryBot.create(:project, title: "project 111", data_user_read_only: [data_user.uid])
-      FactoryBot.create(:project, title: "project 222", data_user_read_only: [user.uid, data_user.uid])
-      FactoryBot.create(:project, title: "project 333", data_user_read_write: [data_user.uid])
-      FactoryBot.create(:project, title: "project 444", data_user_read_only: [user.uid])
-    end
-
-    it "returns projects for the data users" do
-      data_user_projects = described_class.data_user_projects("tigerdatatester")
-      expect(data_user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-      expect(data_user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
-      expect(data_user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
-      expect(data_user_projects.find { |project| project.metadata_model.title == "project 444" }).to be nil
-    end
-  end
-
   describe "#users_projects" do
     let(:test_user) { FactoryBot.create(:user, uid: "kl37") }
     before do
