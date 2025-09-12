@@ -3,26 +3,12 @@ class TigerdataMailer < ApplicationMailer
   def project_creation
     config = Rails.application.config.tigerdata_mail[:project_creation]
     @project_id = params[:project_id]
-
     raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
 
-    # attaching json response  to the mailer
-    json_content = project_metadata.to_json
-    attachments["#{filebase}.json"] = {
-      mime_type: "application/json",
-      content: json_content
-    }
-
-    # attaching xml response to the mailer
-    @xml_content = project.to_xml.html_safe
-
-    attachments["#{filebase}.xml"] = {
-      mime_type: "application/xml",
-      content: @xml_content
-    }
-
-    subject = "New Project Request Ready for Review"
-    mail(to: config[:to_email], cc: config[:cc_email], subject:)
+    admin_email = params[:approver].email || Rails.application.config.tigerdata_mail[:to_email]
+    title = project.title
+    subject = "Project: '#{title}' has been approved"
+    mail(to: admin_email, cc: config[:cc_email], subject:)
   end
 
   def request_creation
