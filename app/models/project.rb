@@ -41,7 +41,7 @@ class Project < ApplicationRecord
     create_project_operation = ProjectCreate.new
     result = create_project_operation.call(request: nil, approver: current_user, project: self)
     if result.success?
-        self.mediaflux_id
+      self.mediaflux_id
     else
       raise ProjectCreate::ProjectCreateError, result.failure
     end
