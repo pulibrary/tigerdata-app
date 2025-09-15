@@ -5,12 +5,6 @@ class PrincetonUsers
 
   class << self
 
-    # Return the list of Users who are already in the database.
-    def user_list
-      Rails.cache.fetch("princeton_user_list", expires_in: 6.hours) do
-        @user_list = User.all.map { |user| { uid: user.uid, name: user.display_name } }
-      end
-    end
 
     # Returns a list of Users that match the given query
     def user_list_query(query)
