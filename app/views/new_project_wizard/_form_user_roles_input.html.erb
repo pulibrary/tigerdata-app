@@ -18,8 +18,8 @@
           <% user_roles.each do |user| %>
             <div class="row">
               <div class="user-cell cell"><div class="content"><div class="user-heading"><%= "#{user["name"]} (#{user["uid"]})" %></div></div></div>
-              <div class="cell"><div class="content"><div class="user-heading"></div> <input type="radio" name="read_only" value="true" <%= user["read_only"] || user["read_only"].nil? ? "checked" : "" %>></input></div></div>
-              <div class="cell"><div class="content"><div class="user-heading"></div><input type="radio" name="read_only" value="false" <%= !(user["read_only"] || user["read_only"].nil?) ? "checked" : "" %>></input></div></div>
+              <div class="cell"><div class="content"><div class="user-heading"></div> <input type="radio" name="read_only_<%= user["uid"]%>" value="true" <%= user["read_only"] || user["read_only"].nil? ? "checked" : "" %>></input></div></div>
+              <div class="cell"><div class="content"><div class="user-heading"></div><input type="radio" name="read_only_<%= user["uid"]%>" value="false" <%= !(user["read_only"] || user["read_only"].nil?) ? "checked" : "" %>></input></div></div>
               <div class="cell"><div class="content"><div class="user-heading"></div><div tabindex="0" class="remove-user-role remove-item"></div></div></div>
               <input type="hidden" name="request[user_roles][]" value="<%= user.to_json %>"> </input>
             </div>
@@ -30,7 +30,7 @@
         Person(s) with access privileges to the project and its contents.
       </div>
       <div class="user-add-prompt">
-        <input type=button popovertarget="user-role" class="save-and-exit-close"></input>
+        <input type=button popovertarget="user-role" class="save-and-exit-close"> Add User(s) </input>
       </div>
     </div>
     <div popover="auto" id="user-role"  class="user-role">
