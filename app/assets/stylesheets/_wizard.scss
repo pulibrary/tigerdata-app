@@ -449,8 +449,101 @@
           cursor: pointer;
           background: url("remove.svg") no-repeat;
         }
-      }
+        .user-input-display {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+          align-self: stretch;
 
+          .user-table {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            align-self: stretch;
+            border-radius: 0.25rem;
+            border: 1px solid $gray-20;
+
+            .row {
+              align-self: stretch;
+            }
+
+            .no-users {
+             text-align: center; 
+            }
+
+            .user-heading {
+              display: flex;
+              padding: 0.25rem 0;
+              align-items: flex-start;
+              align-self: stretch;
+              background: var(--Neutral-Light-Gray, $gray-10);
+            }
+
+            .user-cell.cell {
+              width: 18.75rem;
+            }
+
+            .cell {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              flex: 1 0 0;
+              align-self: stretch;
+
+            }
+
+            .content {
+              display: flex;
+              padding: 0.25rem 0.75rem;
+              align-items: flex-start;
+
+              .no-users-text {
+                flex: auto;
+              }
+
+              .user-heading {
+                flex: 1 0 0;
+                color: var(--Neutral-Black, #121212);
+
+                /* Body S Bold */
+                font-family: "Libre Franklin";
+                font-size: 1rem;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 1.5rem; /* 150% */
+              }
+            }
+          }
+
+          .user-info {
+
+
+            color: $gray-60;
+
+            /* Body XS */
+            font-family: "Libre Franklin";
+            font-size: 0.875rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.3125rem; /* 150% */
+          }
+
+          .user-add-prompt {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            align-self: stretch;
+          }
+        }
+      }
+      .user-role:popover-open {
+        display: flex;
+      }
+      .user-roledownload nodejs version::backdrop {
+        background-color: $gray-100-transparent;
+      }
       .button-frame {
         display: flex;
         justify-content: space-between;
