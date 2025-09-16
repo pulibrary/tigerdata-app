@@ -10,9 +10,21 @@
           <div class="cell"><div class="content"><div class="user-heading"></div>Read / Write</div></div>
           <div class="cell"><div class="content"><div class="user-heading"></div>Action</div></div>
         </div>
-        <div class="row">
-          <div class="no-users"><div class="content"><div class="no-users-text">No Data User(s) added</div></div></div>
-        </div>
+        <% if user_roles.count == 0 %>
+          <div class="row">
+              <div class="no-users"><div class="content"><div class="no-users-text">No Data User(s) added</div></div></div>
+          </div>
+        <% else %>
+          <% user_roles.each do |user| %>
+            <div class="row">
+              <div class="user-cell cell"><div class="content"><div class="user-heading"><%= "(#{user["uid"]}) #{user["name"]}" %></div></div></div>
+              <div class="cell"><div class="content"><div class="user-heading"></div>Read Only</div></div>
+              <div class="cell"><div class="content"><div class="user-heading"></div>Read / Write</div></div>
+              <div class="cell"><div class="content"><div class="user-heading"></div><div tabindex="0" class="remove-user-role remove-item"></div></div></div>
+              <input type="hidden" name="request[user_roles][]" value="<%= user.to_json %>"> </input>
+            </div>
+          <% end %>
+        <% end %>
       </div>
       <div class="user-info">
         Person(s) with access privileges to the project and its contents.
@@ -30,12 +42,6 @@
             <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
             <datalist id="princeton_users"></datalist>
             <ul class="selected-user-roles selected-items">
-              <% user_roles.each do |user| %>
-                <li class="selected-item"><%= "(#{user["uid"]}) #{user["name"]}" %>
-                  <div tabindex="0" class="remove-user-role remove-item"></div>
-                  <input type="hidden" name="request[user_roles][]" value="<%= user.to_json %>"> </input>
-                </li>
-              <% end %>
             </ul>
             <div class="input-error">
                 <%= user_roles_error %>

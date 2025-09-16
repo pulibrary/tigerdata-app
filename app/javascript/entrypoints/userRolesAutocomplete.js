@@ -1,6 +1,6 @@
 function removeUserRole(event) {
-  const li = event.currentTarget.parentElement;
-  li.remove();
+  const row = event.currentTarget.parentElement.parentElement.parentElement;
+  row.remove();
 }
 
 function registerRemove() {
