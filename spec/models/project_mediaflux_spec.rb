@@ -27,6 +27,12 @@ RSpec.describe ProjectMediaflux, type: :model do
       describe "quota", connect_to_mediaflux: true do
         it "adds a quota when it creates a project in mediaflux",
         :integration do
+
+          request = Request.new(quota: "1 GB")
+          byebug
+          project2 = request.approve(current_user)
+          byebug
+
           project = FactoryBot.create(:project_with_doi)
           project.approve!(current_user: current_user)
           metadata = Mediaflux::AssetMetadataRequest.new(
