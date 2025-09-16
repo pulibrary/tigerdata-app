@@ -48,6 +48,7 @@ Rails.application.configure do
 
   # Uncomment the line below to send emails to mail catcher
   #  Note you must have mailcatcher running (see Mail section of the readme for setup instructions)
+  # config.action_mailer.perform_deliveries = true
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = {
   #   address: "localhost",

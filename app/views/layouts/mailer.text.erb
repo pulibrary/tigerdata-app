@@ -1,3 +1,10 @@
-The following project has been created in Tigerdata:
+The following project has been approved and created:
 
-Gratefully, the RDSS Team
+Project ID: <%= @project.id %>
+Mediaflux ID: <%= @project.mediaflux_id %>
+Title: <%= @project.title %>
+Project Directory: <%= @project.project_directory %>
+Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
+Data Manager: <%= @project.metadata_json["data_manager"] %>
+
+For more details, see <%= project_url(@project) %>
