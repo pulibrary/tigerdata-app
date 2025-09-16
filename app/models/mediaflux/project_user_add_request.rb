@@ -14,6 +14,9 @@ module Mediaflux
       @xml_namespace_uri = self.class.default_xml_namespace_uri
 
       @all_data_users = @project.metadata_model.ro_users + @project.metadata_model.rw_users
+      @ro_users = @project.metadata_model.ro_users
+      @rw_users = @project.metadata_model.rw_users
+      byebug
     end
 
     # Specifies the Mediaflux service to use when updating assets
@@ -52,8 +55,15 @@ module Mediaflux
           xml.args do
             xml.id @id
             # send each user in the list
-            @all_data_users.each do |user|
+            @ro_users.each do |user|
               xml.send("data-user") do
+                xml.parent.set_attribute("readonly", "true")
+                xml.text(user)
+              end
+            end
+            @rw_users.each do |user|
+              xml.send("data-user") do
+                xml.parent.set_attribute("readonly", "false")
                 xml.text(user)
               end
             end
