@@ -6,6 +6,7 @@ FactoryBot.find_definitions
 class TigerdataPreview < ActionMailer::Preview
   def welcome_email
     project = Project.last || FactoryBot.create(:project)
-    TigerdataMailer.with(project: project).project_creation
+    approver = User.find(id = 12)
+    TigerdataMailer.with(project_id: project.id, approver:).project_creation
   end
 end
