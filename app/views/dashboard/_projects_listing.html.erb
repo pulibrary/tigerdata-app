@@ -1,7 +1,7 @@
 <div class="table">
-   <table id="<%= table_id %>" width="100%"> <!-- width is needed to override datatables calculation -->
+   <table id="<%= table_id %>" width="100%" role="table"> <!-- width is needed to override datatables calculation -->
    <thead>
-      <tr class="project heading">
+      <tr class="project heading screenreader-only" role="rowheader">
          <th>display</th>
          <th>title</th>
          <th>status</th>
@@ -9,7 +9,7 @@
          <th>role</th>
          <th>download</th>
          <th>activity</th>
-         <th>quota_usage</th>
+         <th>quota usage</th>
       </tr>
    </thead>
    <tbody>
