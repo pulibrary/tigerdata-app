@@ -554,6 +554,12 @@
       }
       .user-role:popover-open {
         display: flex;
+        width: 50rem;
+        padding: 1.5rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
       }
 
       .user-role::backdrop {
@@ -598,79 +604,7 @@
         background: #fff;
         box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
 
-        .modal-content {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1.25rem;
-          align-self: stretch;
-          .modal-title-frame {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            align-self: stretch;
 
-            .model-title {
-              color: $black;
-
-              /* Heading 4 */
-              font-family: "Libre Franklin";
-              font-size: 1.5rem;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 1.75rem; /* 116.667% */
-            }
-          }
-
-          .modal-body-text {
-            color: $black;
-
-            /* Body S */
-            font-family: "Libre Franklin";
-            font-size: 1rem;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 1.5rem; /* 150% */
-          }
-          .modal-title-input {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-            align-self: stretch;
-            .form-field {
-              flex-direction: column;
-              display: flex;
-              align-items: flex-start;
-              gap: 1.25rem;
-              align-self: stretch;
-
-              .field-info {
-                width: auto;
-                flex-direction: row;
-                display: flex;
-                align-items: center;
-                gap: 0.25rem;
-                align-self: stretch;
-              }
-
-              .input-frame {
-                display: flex;
-                align-items: flex-start;
-                gap: 0.25rem;
-                align-self: stretch;
-
-                .text-input {
-                  align-self: stretch;
-
-                  .form-input {
-                    width: 100%;
-                  }
-                }
-              }
-            }
-          }
-        }
         .button-frame {
           display: flex;
           justify-content: flex-end;
@@ -681,6 +615,80 @@
       }
       .save-and-exit::backdrop {
         background-color: $gray-100-transparent;
+      }
+    }
+  }
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  align-self: stretch;
+  .modal-title-frame {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+
+    .model-title {
+      color: $black;
+
+      /* Heading 4 */
+      font-family: "Libre Franklin";
+      font-size: 1.5rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 1.75rem; /* 116.667% */
+    }
+  }
+
+  .modal-body-text {
+    color: $black;
+
+    /* Body S */
+    font-family: "Libre Franklin";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem; /* 150% */
+  }
+  .modal-title-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    align-self: stretch;
+    .form-field {
+      flex-direction: column;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      align-self: stretch;
+
+      .field-info {
+        width: auto;
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        align-self: stretch;
+      }
+
+      .input-frame {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.25rem;
+        align-self: stretch;
+
+        .text-input {
+          align-self: stretch;
+
+          .form-input {
+            width: 100%;
+          }
+        }
       }
     }
   }

@@ -34,23 +34,30 @@
       </span>
     </div>
     <div popover="auto" id="user-role"  class="user-role">
-      <input type="button" popovertarget="user-role" popovertargetaction="hide" class="pul-popover-close"></input>
-
-      <div class="text-input">
-        <div class="horizontal-frame">
-          <div class="vertical-frame">
-            <input class="form-input datalist" type="text" name="user_find" id="user_find"
-                  list="princeton_users" placeholder="Enter name or netid to search for a user" autocomplete="off"></input>
-            <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
-            <datalist id="princeton_users"></datalist>
-            <ul class="selected-user-roles selected-items">
-            </ul>
-            <div class="input-error">
-                <%= user_roles_error %>
+      <div class="modal-content">
+        <div class="modal-title-frame"> 
+          <div class="model-title">Select User</div>
+          <input type=button popovertarget="user-role" popovertargetaction="hide" class="pul-popover-close"></input>
+        </div>
+        <div class="text-input">
+          <div class="horizontal-frame">
+            <div class="vertical-frame">
+              <input class="form-input datalist" type="text" name="user_find" id="user_find"
+                    list="princeton_users" placeholder="Enter name or netid to search for a user" autocomplete="off"></input>
+              <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
+              <datalist id="princeton_users"></datalist>
+              <ul class="selected-user-roles selected-items">
+              </ul>
+              <div class="input-error">
+                  <%= user_roles_error %>
+              </div>
+              <input type="hidden" id="request-user-roles" name="request[user_roles][]" value="" />
             </div>
-            <input type="hidden" id="request-user-roles" name="request[user_roles][]" value="" />
           </div>
         </div>
+      </div>
+      <div class="button-frame">
+        <input type="button" popovertarget="user-role" popovertargetaction="hide" class="add-user-roles" value="Add Users"></input>
       </div>
     </div>
   </div>
