@@ -536,14 +536,30 @@
             gap: 0.75rem;
             align-self: stretch;
           }
+
+          .add-users {
+            padding-left: 2rem;
+          }
+
+          .user-add-prompt::before  {
+            align-self: center;
+            content: "";
+            background: url("add.svg") no-repeat;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            position: absolute;
+          }
         }
       }
       .user-role:popover-open {
         display: flex;
       }
-      .user-roledownload nodejs version::backdrop {
+
+      .user-role::backdrop {
         background-color: $gray-100-transparent;
       }
+
       .button-frame {
         display: flex;
         justify-content: space-between;
