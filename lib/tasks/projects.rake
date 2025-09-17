@@ -44,17 +44,6 @@ namespace :projects do
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
 
-  task :save_in_mediaflux, [:netid, :project_id] => [:environment] do |_, args|
-    netid = args[:netid]
-    user = User.where(uid: netid).first
-    raise "User #{netid} not found" if user.nil?
-
-    project_id = args[:project_id]
-    project = Project.find(project_id)
-    asset_id = project.approve!(current_user: user)
-    puts "Mediaflux asset #{asset_id} updated"
-  end
-
   task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
     netid = args[:netid]
     user = User.where(uid: netid).first

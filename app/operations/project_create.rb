@@ -5,7 +5,6 @@ class ProjectCreate < Dry::Operation
   # TODO: Remove the optional project parameter once https://github.com/pulibrary/tigerdata-app/issues/1707
   # has been completed. In practice the project is always created from the request.
   def call(request:, approver:, project: nil)
-    byebug
     if project.nil?
       project = step create_project_from_request(request)
     end

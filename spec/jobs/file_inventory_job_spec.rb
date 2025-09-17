@@ -6,10 +6,9 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
 
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
-
-  before do
-    project_in_mediaflux.approve!(current_user: user)
+  let(:project_in_mediaflux) do
+    request = FactoryBot.create(:request_project)
+    request.approve(sponsor_and_data_manager_user)
   end
 
   describe "#perform_later" do
@@ -25,7 +24,6 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
   end
 
   describe "#perform_now" do
-    # let(:file_inventory_job) { described_class.perform_now(user_id:, project_id:) }
     it "creates a file inventory request attached to the user and the project" do
       expect(FileInventoryRequest.count).to be 0
       FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)

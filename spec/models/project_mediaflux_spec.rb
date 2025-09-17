@@ -2,14 +2,18 @@
 require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model do
-  let(:project) { FactoryBot.create :project_with_doi }
+  let(:project) do
+    request = FactoryBot.create(:request_project)
+    request.approve(current_user)
+  end
+
   let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id",
       :integration do
-        mediaflux_id = project.approve!(current_user: current_user)
+        mediaflux_id = project.mediaflux_id
         mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
                               session_token: current_user.mediaflux_session,
                               id: mediaflux_id
@@ -27,14 +31,6 @@ RSpec.describe ProjectMediaflux, type: :model do
       describe "quota", connect_to_mediaflux: true do
         it "adds a quota when it creates a project in mediaflux",
         :integration do
-
-          request = Request.new(quota: "1 GB")
-          byebug
-          project2 = request.approve(current_user)
-          byebug
-
-          project = FactoryBot.create(:project_with_doi)
-          project.approve!(current_user: current_user)
           metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: current_user.mediaflux_session,
             id: project.mediaflux_id
@@ -43,26 +39,22 @@ RSpec.describe ProjectMediaflux, type: :model do
           expect(metadata[:quota_allocation]).to eq("500 GB")
         end
       end
-
-      context "when the name is already taken" do
-        it "raises an error",
-        :integration do
-          # Make the project once
-          project.approve!(current_user: current_user)
-          duplicate_events = project.provenance_events.where(event_type: "Debug Output").find { |event| event.event_note.include?("Collection already exists") }
-          expect(duplicate_events).to be nil
-
-          # Raises an error if we try to create the same project again
-          expect { project.approve!(current_user: current_user) }.to raise_error(ProjectCreate::ProjectCreateError)
-        end
-      end
     end
+
     context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
-      let(:incomplete_project) do
-        test_project = FactoryBot.build(:project_with_dynamic_directory, project_id: "")
-        test_project.metadata_model.project_id = nil
-        test_project
+      let(:incomplete_request) do
+        request = FactoryBot.create(:request_project)
+        request.project_title = nil
+        request
       end
+
+      let(:incomplete_project) do
+        request = FactoryBot.create(:request_project)
+        incomplete_project = request.approve(current_user)
+        incomplete_project.metadata_model.project_id = nil
+        incomplete_project
+      end
+
       it "should raise a MetadataError if project is invalid", integration: true do
         project.create!(initial_metadata: incomplete_project.metadata_model, user: current_user)
 
@@ -72,7 +64,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       it "should raise a error if any error occurs in mediaflux", integration: true do
-        expect { incomplete_project.approve!(current_user: current_user) }.to raise_error(ProjectCreate::ProjectCreateError)
+        expect { incomplete_request.approve(current_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       end
     end
   end
@@ -104,9 +96,11 @@ RSpec.describe ProjectMediaflux, type: :model do
   end
 
   describe "#xml_payload" do
+    let(:project_not_in_mediaflux) { FactoryBot.create :project_with_doi }
+
     it "raises errors when project is not accessible", :integration do
       # The project is not in mediaflux and therefore this will raise an exception
-      expect { described_class.xml_payload(project: project, user: current_user) }.to raise_error(StandardError)
+      expect { described_class.xml_payload(project: project_not_in_mediaflux, user: current_user) }.to raise_error(StandardError)
     end
   end
 end
