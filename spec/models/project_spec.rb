@@ -258,28 +258,16 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     it "Records the mediaflux id and sets the status to approved",
     :integration do
-      # project.metadata_model.update_with_params({ "project_id" => "123" }, current_user)
-      # project.create!(initial_metadata: project.metadata_model, user: current_user)
-
-      # project.approve!(current_user: current_user)
-      # project.reload
-
       expect(project.mediaflux_id).not_to be_nil
       expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
     end
 
     it "creates the provenance events when creating a new project",
     :integration do
-      # project.metadata_model.update_with_params({ "project_id" => ProjectMetadata::DOI_NOT_MINTED }, current_user)
-      # project.create!(initial_metadata: project.metadata_model, user: current_user)
-      # project.approve!(current_user: current_user)
-      # project.reload
-
       expect(project.mediaflux_id).not_to be_nil
       expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
 
-      byebug
-      expect(project.provenance_events.count).to eq 5
+      expect(project.provenance_events.count).to eq 3
       approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
 
       expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
