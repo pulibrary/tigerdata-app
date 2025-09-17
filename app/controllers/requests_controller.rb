@@ -41,6 +41,7 @@ class RequestsController < ApplicationController
         project = @request_model.approve(current_user)
         @request_model.destroy
         stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."
+        TigerdataMailer.with(project_id: project.id, approver: current_user).project_creation.deliver_later
         redirect_to project_path(project.id), notice: stub_message
       else
         redirect_to new_project_review_and_submit_path(@request_model)

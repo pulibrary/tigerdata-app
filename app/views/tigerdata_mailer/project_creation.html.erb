@@ -1,49 +1,19 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
-  <style>
-    dt {
-      font-weight: bold;
-    }
 
-    dt::after {
-      content: ":";
-    }
-  </style>
   <body>
-    <h1>Tigerdata Project Request</h1>
+    <p>The following project has been approved and created:</p>
 
-    <section>
-      <p>A Project was requested by <%= @project.created_by_user.display_name %> (<%= @project.created_by_user.uid %>)
-        <a href="mailto:<%= @project.created_by_user.email %>"><%= @project.created_by_user.email %></a>
-      </p>
-      <p>
-        <dl>
-          <dt>Project ID</dt>
-          <dd><%= @project.metadata[:project_id] %></dd>
-          <dt>Data Sponsor</dt>
-          <dd><%= @project.metadata[:data_sponsor] %></dd>
-          <dt>Data Manager</dt>
-          <dd><%= @project.metadata[:data_manager] %></dd>
-          <dt>Departments</dt>
-          <dd><%= @project.departments.join(", ") %></dd>
-          <dt>Project Directory</dt>
-          <dd><%= @project.project_directory %> </dd>
-          <dt>Title</dt>
-          <dd><%= @project.metadata[:title] %></dd>
-          <dt>Description</dt>
-          <dd><%= @project.metadata[:description] %></dd>
-          <dt>Status</dt>
-          <dd><%= @project.metadata[:status] %></dd>
-          <dt>Storage Capacity</dt>
-          <dd><%= "#{@project.metadata[:storage_capacity][:size][:requested]} #{@project.metadata[:storage_capacity][:unit][:requested]}" %></dd>
-          <dt>Storage Performance</dt>
-          <dd><%= @project.metadata[:storage_performance_expectations][:requested] %></dd>
-          <dt>Project Purpose</dt>
-          <dd><%= @project.metadata[:project_purpose] %></dd>
-        </dl>
-      </p>
-    </section>
+    Project ID: <%= @project.id %>
+    Mediaflux ID: <%= @project.mediaflux_id %>
+    Title: <%= @project.title %>
+    Project Directory: <%= @project.project_directory %>
+    Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
+    Data Manager: <%= @project.metadata_json["data_manager"] %>
+
+    <p>For more details, see <%= project_url(@project) %></p>
   </body>
 </html>

@@ -1,7 +1,10 @@
-The following project request is ready for review:
+The following project has been approved and created:
 
-<%= @xml_content %>
+Project ID: <%= @project.id %>
+Mediaflux ID: <%= @project.mediaflux_id %>
+Title: <%= @project.title %>
+Project Directory: <%= @project.project_directory %>
+Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
+Data Manager: <%= @project.metadata_json["data_manager"] %>
 
-Please log in to the Presentation Layer to view more details and approve the project.
-
-Gratefully, the RDSS Team
+For more details, see <%= project_url(@project) %>
