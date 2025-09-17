@@ -21,7 +21,7 @@ FactoryBot.define do
     approved_storage_size { "500" }
     approved_storage_unit { "GB" }
     project_title { FFaker::Movie.title }
-    departments { [{name: "RDSS"}, {name: "RC"}] }
+    departments { [{ name: "RDSS" }, { name: "RC" }] }
     description { "a random description" }
     project_folder { random_project_directory }
   end
