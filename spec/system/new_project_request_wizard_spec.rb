@@ -187,6 +187,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
+      click_on "Add User(s)"
       fill_in :user_find, with: current_user.uid
       sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
@@ -198,9 +199,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
       # the javascript cleared the find to get ready for the next search
       expect(page).to have_field("user_find", with: "")
+      click_on "Add Users"
+
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
+
       click_on "Back"
       # TODO: when the wizard is fully functional the Dates should be back
       # expect(page).to have_content "Dates (Optional)"
+      sleep(0.1)
       expect(page).to have_content "Tell us a little about your project!"
       click_on "Next"
       expect(page).to have_content("Assign roles for your project")
@@ -208,7 +215,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Data Manager"
       expect(page).to have_field("request_data_sponsor", with: current_user.uid)
       expect(page).to have_field("request_data_manager", with: current_user.uid)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\",\"read_only\":true}")
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do

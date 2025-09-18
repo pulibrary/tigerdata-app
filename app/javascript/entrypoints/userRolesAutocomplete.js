@@ -93,9 +93,9 @@ function newTableRow(table, input) {
   const newName = newCell(document.createTextNode(`${json.name} (${json.uid})`));
   newName.classList.add('user-cell');
   newRow.appendChild(newName);
-  const roCell = newCell(newRadio(`read_only_${json.uid}`, true, 'true'));
+  const roCell = newCell(newRadio(`request[read_only_${json.uid}]`, true, 'true'));
   newRow.appendChild(roCell);
-  const rwCell = newCell(newRadio(`read_only_${json.uid}`, false, 'false'));
+  const rwCell = newCell(newRadio(`request[read_only_${json.uid}]`, false, 'false'));
   newRow.appendChild(rwCell);
   const removeCell = newCell(newRemove());
   newRow.appendChild(removeCell);

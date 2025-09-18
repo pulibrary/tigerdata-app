@@ -112,7 +112,11 @@ class RequestWizardsController < ApplicationController
         request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
       end
       if request_params[:user_roles].present?
-        request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
+        request_params[:user_roles] = request_params[:user_roles].compact_blank.map do |role_str|
+          json = JSON.parse(role_str)
+          json["read_only"] = params[:request]["read_only_#{json['uid']}"] == "true"
+          json
+        end
       end
       request_params[:requested_by] ||= current_user.uid
       request_params
