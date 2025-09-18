@@ -107,6 +107,9 @@ RSpec.describe Request, type: :model do
       project = valid_request.approve(sponsor_and_data_manager_user)
       expect(project.id > 0).to be true
       expect(project.mediaflux_id > 0).to be true
+
+      # it raises an error if we try to create it again
+      expect { valid_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
     end
 
     it "logs errors when the request is not valid" do

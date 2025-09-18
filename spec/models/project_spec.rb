@@ -135,16 +135,12 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#file_list" do
     let(:manager) { sponsor_and_data_manager_user }
-    let(:project) do
-      project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
-      project.mediaflux_id = nil
-      project
+    let!(:project) do
+      request = FactoryBot.create(:request_project)
+      request.approve(manager)
     end
 
     before do
-      # Save the project in mediaflux
-      project.approve!(current_user: manager)
-
       # create a collection so it can be filtered
       Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
 
@@ -251,7 +247,10 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "#approve!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
     let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-    let(:project) { FactoryBot.create(:project) }
+    let!(:project) do
+      request = FactoryBot.create(:request_project)
+      request.approve(current_user)
+    end
 
     before do
       allow(PULDatacite).to receive(:new).and_return(datacite_stub)
@@ -259,27 +258,16 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     it "Records the mediaflux id and sets the status to approved",
     :integration do
-      project.metadata_model.update_with_params({ "project_id" => "123" }, current_user)
-      project.create!(initial_metadata: project.metadata_model, user: current_user)
-
-      project.approve!(current_user: current_user)
-      project.reload
-
       expect(project.mediaflux_id).not_to be_nil
       expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
     end
 
     it "creates the provenance events when creating a new project",
     :integration do
-      project.metadata_model.update_with_params({ "project_id" => ProjectMetadata::DOI_NOT_MINTED }, current_user)
-      project.create!(initial_metadata: project.metadata_model, user: current_user)
-      project.approve!(current_user: current_user)
-      project.reload
-
       expect(project.mediaflux_id).not_to be_nil
       expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
 
-      expect(project.provenance_events.count).to eq 5
+      expect(project.provenance_events.count).to eq 3
       approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
 
       expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE

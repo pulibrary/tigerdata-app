@@ -46,7 +46,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         end
 
         it "renders the project metadata as xml", :integration do
-          project.approve!(current_user: sponsor_and_data_manager)
+          request = FactoryBot.create(:request_project)
+          project = request.approve(sponsor_and_data_manager)
           get :details, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
           xml_doc = Nokogiri::XML(response.body)
@@ -59,7 +60,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         end
 
         it "renders the Mediaflux metadata as xml", :integration do
-          project.approve!(current_user: sponsor_and_data_manager)
+          request = FactoryBot.create(:request_project)
+          project = request.approve(sponsor_and_data_manager)
           get :show_mediaflux, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
           xml_doc = Nokogiri::XML(response.body)
@@ -154,9 +156,10 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         end
 
         context "the project is saved to mediaflux", connect_to_mediaflux: true, integration: true do
-          let(:project) { FactoryBot.create :project_with_doi, data_sponsor: sponsor_and_data_manager.uid }
-          before do
-            project.approve!(current_user: sponsor_and_data_manager)
+          let(:project) do
+            request = FactoryBot.create(:request_project)
+            project = request.approve(sponsor_and_data_manager)
+            project
           end
           it "runs a query" do
             sign_in sponsor_and_data_manager
