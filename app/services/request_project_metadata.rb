@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class RequestProjectMetadata
   class << self
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def convert(request)
       {
         title: request[:project_title],
@@ -9,7 +11,8 @@ class RequestProjectMetadata
         data_sponsor: request[:data_sponsor],
         data_manager: request[:data_manager],
         departments: departments(request),
-        data_user_read_only: data_users(request),
+        data_user_read_only: read_only_users(request),
+        data_user_read_write: read_write_users(request).compact,
         project_directory: project_directory(request),
         storage_capacity: storage_capacity(request),
         storage_performance_expectations: { requested: "Standard", approved: "Standard" },
@@ -18,6 +21,8 @@ class RequestProjectMetadata
         project_id: ProjectMetadata::DOI_NOT_MINTED
       }
     end
+     # rubocop:enable Metrics/AbcSize
+     # rubocop:enable Metrics/MethodLength
 
      private
 
@@ -25,8 +30,12 @@ class RequestProjectMetadata
          [Rails.configuration.mediaflux["api_root"], request[:parent_folder], request[:project_folder]].compact_blank.join("/")
        end
 
-       def data_users(request)
-         request[:user_roles].map { |u| u["uid"] }
+       def read_only_users(request)
+         request[:user_roles].map { |u| u["uid"] if u["read_only"] || u["read_only"].nil? }
+       end
+
+       def read_write_users(request)
+         request[:user_roles].map { |u| u["uid"] if u["read_only"] == false }
        end
 
        def departments(request)
