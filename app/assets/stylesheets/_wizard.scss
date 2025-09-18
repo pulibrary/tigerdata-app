@@ -532,6 +532,7 @@
             align-items: flex-start;
             gap: 0.75rem;
             align-self: stretch;
+            position: relative;
           }
 
           .add-users {
@@ -539,7 +540,7 @@
           }
 
           .user-add-prompt::before {
-            align-self: center;
+            align-self: flex-start;
             content: "";
             background: url("add.svg") no-repeat;
             width: 20px;
@@ -548,19 +549,6 @@
             position: absolute;
           }
         }
-      }
-      .user-role:popover-open {
-        display: flex;
-        width: 50rem;
-        padding: 1.5rem;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
-      }
-
-      .user-role::backdrop {
-        background-color: $gray-100-transparent;
       }
 
       .button-frame {
@@ -587,20 +575,7 @@
         }
       }
 
-      .save-and-exit:popover-open {
-        display: flex;
-      }
       .save-and-exit {
-        width: 50rem;
-        padding: 1.5rem;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
-        border-radius: 0.5rem;
-        background: #fff;
-        box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
-
         .button-frame {
           display: flex;
           justify-content: flex-end;
@@ -609,11 +584,28 @@
           align-self: stretch;
         }
       }
-      .save-and-exit::backdrop {
-        background-color: $gray-100-transparent;
-      }
     }
   }
+}
+
+.pul-popover {
+  width: 50rem;
+  padding: 1.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
+}
+
+.pul-popover::backdrop {
+  background-color: $gray-100-transparent;
+}
+
+.pul-popover:popover-open {
+  display: flex;
 }
 
 .modal-content {

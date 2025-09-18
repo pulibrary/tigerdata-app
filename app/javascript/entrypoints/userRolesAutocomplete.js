@@ -110,8 +110,8 @@ function moveNewUsers() {
   for (let i = 0; i < items.length; i += 1) {
     // do something with items[i], which is a <li> element
     newTableRow(table, items[i].getElementsByTagName('input')[0]);
-    items[i].remove();
   }
+  ul.replaceChildren();
   registerRemove();
 }
 
