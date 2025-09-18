@@ -38,6 +38,7 @@ class EditRequestsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_request_model
       @princeton_departments = Affiliation.all
+      @project_purposes = [["Research", "research"], ["Administrative", "administrative"], ["Teaching", "teaching"]]
       @request_model = Request.find(params[:id])
     end
 

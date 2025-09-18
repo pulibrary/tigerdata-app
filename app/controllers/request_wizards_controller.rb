@@ -92,6 +92,7 @@ class RequestWizardsController < ApplicationController
     # set if id is present or initialize a blank request if not
     def set_or_init_request_model
       @princeton_departments = Affiliation.all
+      @project_purposes = [["Research", "research"], ["Administrative", "administrative"], ["Teaching", "teaching"]]
       @request_model = if params[:request_id].blank?
                          Request.new(id: 0)
                        else
@@ -106,8 +107,8 @@ class RequestWizardsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def request_params
       request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager,
-                                        :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by,
-                                        :storage_size, :storage_unit, user_roles: [], departments: [])
+                                        :project_purpose, :description, :parent_folder, :project_folder, :project_id, :quota,
+                                        :requested_by, :storage_size, :storage_unit, user_roles: [], departments: [])
       if request_params[:departments].present?
         request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
       end
