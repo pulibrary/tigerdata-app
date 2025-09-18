@@ -32,7 +32,6 @@ function registerRemove() {
   $('.remove-user-role-in-table').keyup((event) => {
     if (event.keyCode === 13) removeUserRoleInTable(event);
   });
-
 }
 
 function addNewUser(uid, name) {
@@ -55,31 +54,31 @@ function addNewUser(uid, name) {
   registerRemove();
 }
 
-function newCell( content) {
-  const newCell = document.createElement('div');
-  newCell.classList.add('cell');
+function newCell(content) {
+  const cell = document.createElement('div');
+  cell.classList.add('cell');
   const newCellContent = document.createElement('div');
   newCellContent.classList.add('content');
-  newCell.appendChild(newCellContent);
+  cell.appendChild(newCellContent);
   newCellContent.appendChild(content);
-  return newCell;
+  return cell;
 }
 
-function newRadio( name, checked, value) {
-  var radioHtml = '<input type="radio" name="' + name + '" value="'+ value+'"';
-  if ( checked ) {
-      radioHtml += ' checked="checked"';
+function newRadio(name, checked, value) {
+  let radioHtml = `<input type="radio" name="${name}" value="${value}"`;
+  if (checked) {
+    radioHtml += ' checked="checked"';
   }
   radioHtml += '/>';
 
-  var radioFragment = document.createElement('div');
+  const radioFragment = document.createElement('div');
   radioFragment.innerHTML = radioHtml;
 
   return radioFragment.firstChild;
 }
 
-function newRemove(){
-  var newRemoveDiv = document.createElement('div');
+function newRemove() {
+  const newRemoveDiv = document.createElement('div');
   newRemoveDiv.classList.add('remove-user-role-in-table');
   newRemoveDiv.classList.add('remove-item');
   newRemoveDiv.focus = true;
@@ -88,17 +87,17 @@ function newRemove(){
 }
 
 function newTableRow(table, input) {
-  var json = JSON.parse(input.value);
-  var newRow = document.createElement('div');
+  const json = JSON.parse(input.value);
+  const newRow = document.createElement('div');
   newRow.classList.add('row');
-  var newName = newCell( document.createTextNode(`${json["name"]} (${json["uid"]})`))
+  const newName = newCell(document.createTextNode(`${json.name} (${json.uid})`));
   newName.classList.add('user-cell');
   newRow.appendChild(newName);
-  var roCell = newCell( newRadio(`read_only_${json["uid"]}`, true, "true"))
+  const roCell = newCell(newRadio(`read_only_${json.uid}`, true, 'true'));
   newRow.appendChild(roCell);
-  var rwCell = newCell( newRadio(`read_only_${json["uid"]}`, false, "false"))
+  const rwCell = newCell(newRadio(`read_only_${json.uid}`, false, 'false'));
   newRow.appendChild(rwCell);
-  var removeCell = newCell( newRemove())
+  const removeCell = newCell(newRemove());
   newRow.appendChild(removeCell);
   newRow.appendChild(input);
   table.appendChild(newRow);
@@ -107,10 +106,10 @@ function newTableRow(table, input) {
 function moveNewUsers() {
   const ul = document.querySelector('.selected-user-roles');
   const table = document.querySelector('.user-table');
-  var items = ul.getElementsByTagName("li");
-  for (var i = 0; i < items.length; ++i) {
+  const items = ul.getElementsByTagName('li');
+  for (let i = 0; i < items.length; i += 1) {
     // do something with items[i], which is a <li> element
-    newTableRow(table, items[i].getElementsByTagName("input")[0]);
+    newTableRow(table, items[i].getElementsByTagName('input')[0]);
     items[i].remove();
   }
   registerRemove();
@@ -228,11 +227,10 @@ export function userRolesAutocomplete(usersLookupUrl) {
 
   registerRemove();
 
-  $('#user-role').on("beforetoggle", (event) => {
-    if (event.originalEvent.newState === "open") {
-      console.log("Popover is about to be shown");
+  $('#user-role').on('beforetoggle', (event) => {
+    if (event.originalEvent.newState === 'open') {
+      // set focus here
     } else {
-      console.log("Popover is about to be "+event.originalEvent.newState);
       moveNewUsers();
     }
   });

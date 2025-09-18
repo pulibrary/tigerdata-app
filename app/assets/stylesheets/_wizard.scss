@@ -469,7 +469,7 @@
             }
 
             .no-users {
-             text-align: center; 
+              text-align: center;
             }
 
             .user-heading {
@@ -491,7 +491,6 @@
               align-items: flex-start;
               flex: 1 0 0;
               align-self: stretch;
-
             }
 
             .content {
@@ -518,8 +517,6 @@
           }
 
           .user-info {
-
-
             color: $gray-60;
 
             /* Body XS */
@@ -541,7 +538,7 @@
             padding-left: 2rem;
           }
 
-          .user-add-prompt::before  {
+          .user-add-prompt::before {
             align-self: center;
             content: "";
             background: url("add.svg") no-repeat;
@@ -603,7 +600,6 @@
         border-radius: 0.5rem;
         background: #fff;
         box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
-
 
         .button-frame {
           display: flex;
