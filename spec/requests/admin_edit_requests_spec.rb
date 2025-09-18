@@ -81,8 +81,8 @@ RSpec.describe "/edit_requests", type: :request do
           { request_title: "new title", project_title: "changed_title",
             state: "draft", data_sponsor: user.uid, data_manager: user.uid,
             departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
-            description: "descr", parent_folder: "parent", project_folder: "folder",
-            project_id: "doi", quota: "200 GB", requested_by: "uid" }
+            description: "descr", project_purpose: "research", parent_folder: "parent", 
+            project_folder: "folder", project_id: "doi", quota: "200 GB", requested_by: "uid" }
         end
 
         before do

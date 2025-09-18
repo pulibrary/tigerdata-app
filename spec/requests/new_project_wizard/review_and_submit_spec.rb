@@ -35,7 +35,7 @@ RSpec.describe "new-project/review-submit", type: :request do
         { request_title: "new title", project_title: "new project",
           state: "draft", data_sponsor: user.uid, data_manager: user.uid,
           departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
-          description: "descr", parent_folder: "parent", project_folder: "folder",
+          description: "descr", project_purpose: "research", parent_folder: "parent", project_folder: "folder",
           project_id: "doi", quota: "500 GB", requested_by: "uid" }
       end
 
@@ -53,6 +53,7 @@ RSpec.describe "new-project/review-submit", type: :request do
           expect(request.data_manager).to eq("pul123")
           expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, { "code" => "dept2", "name" => "two" }])
           expect(request.description).to eq("descr")
+          expect(request.project_purpose).to eq("research")
           expect(request.parent_folder).to eq("parent")
           expect(request.project_folder).to eq("folder")
           expect(request.project_id).to eq("doi")

@@ -38,7 +38,7 @@ class Request < ApplicationRecord
   end
 
   def valid_project_purpose?
-    field_present?(project_purpose, :project_purpose)
+    project_purpose_present?(project_purpose, :project_purpose)
   end
 
   def valid_description?
@@ -145,6 +145,15 @@ class Request < ApplicationRecord
         false
       elsif User.where(uid: uid).count == 0
         errors.add(field, :invalid, message: "must be a valid user")
+        false
+      else
+        true
+      end
+    end
+
+    def project_purpose_present?(project_purpose, field)
+      if project_purpose.blank?
+        errors.add(field, :blank, message: "select a project purpose")
         false
       else
         true
