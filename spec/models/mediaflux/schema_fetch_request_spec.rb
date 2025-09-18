@@ -14,7 +14,7 @@ RSpec.describe Mediaflux::SchemaFetchRequest, connect_to_mediaflux: true, type: 
   describe "#field_from_element" do
     it "handles fields without a label gracefully" do
       request = described_class.new(session_token: session_token, namespace: namespace, type: type)
-      field = request.send( :field_from_element, field_without_label)
+      field = request.send(:field_from_element, field_without_label)
       expect(field[:label]).to eq field[:name]
     end
   end
