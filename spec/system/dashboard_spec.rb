@@ -144,15 +144,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         expect(page).not_to have_content("New Project Request")
       end
-
-      it "should not display the New Project Request if the feature is not activated" do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:new_project_request_wizard, false)
-        sign_in current_user
-        visit dashboard_path
-        expect(page).not_to have_content("New Project Request")
-        test_strategy.switch!(:new_project_request_wizard, true)
-      end
     end
 
     context "for a user without any projects" do

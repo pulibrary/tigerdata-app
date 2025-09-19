@@ -2,19 +2,17 @@
    <div class="main-content">
       <div class="welcome-pane">
          <h1>Welcome, <%= current_user.given_name %>!</h1>
-          <% if current_user.eligible_sysadmin? && Flipflop.new_project_request_wizard? %>
+          <% if current_user.eligible_sysadmin? %>
             <%= render partial: "new_project_request_wizard_link" %>
          <% end %>
       </div>
 
-      <% if Flipflop.new_project_request_wizard? %>
-        <div class="dashboard-admin-buttons">
-          <% if current_user.eligible_sysadmin? %>
-          
-            <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
-          <% end %>
-        </div>
-      <% end %>
+      <div class="dashboard-admin-buttons">
+         <% if current_user.eligible_sysadmin? %>
+         
+         <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
+         <% end %>
+      </div>
 
       <div class="detail-pane">
          <div class="main">
