@@ -35,7 +35,7 @@ module Mediaflux
           type: element.attributes["type"].value,
           index: element.attributes["index"]&.value == "true",
           "min-occurs" => 1,
-          label: element.attributes["label"].value,
+          label: element.attributes["label"]&.value || element.attributes["name"].value,
           description: element.xpath("description").text,
           instructions: element.xpath("instructions").text
         }
