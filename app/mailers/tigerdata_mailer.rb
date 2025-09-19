@@ -15,7 +15,6 @@ class TigerdataMailer < ApplicationMailer
     config = Rails.application.config.tigerdata_mail[:request_creation]
     @request_id = params[:request_id]
     submitter_mail = params[:submitter].email
-
     raise(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{@request_id}") if request.nil?
 
     subject = "New Project Request Ready for Review"
