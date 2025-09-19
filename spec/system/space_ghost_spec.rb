@@ -12,6 +12,7 @@ RSpec.describe "The Space Ghost Epic", connect_to_mediaflux: true, js: true, int
       sign_in user
       visit "/"
       expect(page).to have_content("Welcome, #{user.given_name}!")
+      test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
   end
 end
