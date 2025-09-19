@@ -11,7 +11,7 @@ class RequestWizardsController < ApplicationController
 
   # GET /request_wizards/1
   def show
-    if current_user.developer || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer || Flipflop.allow_all_users_wizard_access?
       # create a request in the first step
       render_current
     else
