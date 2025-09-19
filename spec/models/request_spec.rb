@@ -5,17 +5,11 @@ RSpec.describe Request, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
-    described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
-<<<<<<< HEAD
-                           data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description",
-                           project_purpose: "research", parent_folder: "folder", project_folder: "project", project_id: "doi", quota: "500 GB",
-                           requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog" }])
-=======
+    described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project", project_purpose: "research",
                            data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
                            project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog",
                                                                                                                                                                   read_only: true },
                                                                                                                             { uid: "efg", name: "Erica Ferg", read_only: false }])
->>>>>>> main
   end
 
   describe "#request_type" do
