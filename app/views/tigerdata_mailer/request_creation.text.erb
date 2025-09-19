@@ -1,0 +1,11 @@
+A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= request_url(@request) %>
+Here is a preview of the request details:
+
+title: <%= request.project_title %>
+description: <%= request.description %>
+state: <%= request.state %>
+data_sponsor: <%= request.data_sponsor %>
+data_manager: <%= request.data_manager %>
+departments: <%= request.departments %>
+data_user: <%= request.user_roles %>
+storage_capacity: <%= request.quota%>
