@@ -103,34 +103,56 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("Request state: submitted")
     end
 
-    it "cannot walk through the wizard if the feature is disabled" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:new_project_request_wizard, false)
-      request = Request.create
-      sign_in current_user
-      visit "/"
-      expect(page).not_to have_content("New Project Request")
-      visit "/new-project/project-info/#{request.id}"
-      expect(page).not_to have_content "Tell us a little about your project!"
-      visit "/new-project/project-info-categories/#{request.id}"
-      expect(page).not_to have_content "Categories (Optional)"
-      visit "/new-project/project-info-dates/#{request.id}"
-      expect(page).not_to have_content "Dates (Optional)"
-      visit "/new-project/roles-people/#{request.id}"
-      expect(page).not_to have_content "Assign roles for your project"
-      visit "/new-project/project-type/#{request.id}"
-      expect(page).not_to have_content "Project Type"
-      visit "/new-project/storage-access/#{request.id}"
-      expect(page).not_to have_content "Enter the storage and access needs"
-      visit "/new-project/additional-info-grants-funding/#{request.id}"
-      expect(page).not_to have_content "Funding Sources"
-      visit "/new-project/additional-info-project-permissions/#{request.id}"
-      expect(page).not_to have_content "Project Permissions"
-      visit "/new-project/additional-info-related-resources/#{request.id}"
-      expect(page).not_to have_content "Related Resources"
-      visit "/new-project/review-submit/#{request.id}"
-      expect(page).not_to have_content "Take a moment to review"
-      test_strategy.switch!(:new_project_request_wizard, true)
+    context "non sysadmin user" do
+      let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+      it "cannot walk through the wizard if the feature is disabled" do
+        request = Request.create
+        sign_in current_user
+        visit "/"
+        expect(page).not_to have_content("New Project Request")
+        visit "/new-project/project-info/#{request.id}"
+        expect(page).not_to have_content "Tell us a little about your project!"
+        visit "/new-project/project-info-categories/#{request.id}"
+        expect(page).not_to have_content "Categories (Optional)"
+        visit "/new-project/project-info-dates/#{request.id}"
+        expect(page).not_to have_content "Dates (Optional)"
+        visit "/new-project/roles-people/#{request.id}"
+        expect(page).not_to have_content "Assign roles for your project"
+        visit "/new-project/project-type/#{request.id}"
+        expect(page).not_to have_content "Project Type"
+        visit "/new-project/storage-access/#{request.id}"
+        expect(page).not_to have_content "Enter the storage and access needs"
+        visit "/new-project/additional-info-grants-funding/#{request.id}"
+        expect(page).not_to have_content "Funding Sources"
+        visit "/new-project/additional-info-project-permissions/#{request.id}"
+        expect(page).not_to have_content "Project Permissions"
+        visit "/new-project/additional-info-related-resources/#{request.id}"
+        expect(page).not_to have_content "Related Resources"
+        visit "/new-project/review-submit/#{request.id}"
+        expect(page).not_to have_content "Take a moment to review"
+      end
+
+      it "allows users to walk through the wizard" do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:allow_all_users_wizard_access, true)
+        sign_in current_user
+        visit "/"
+        click_on "New Project Request"
+        expect(page).to have_content "Tell us a little about your project!"
+        click_on "Next"
+        expect(page).to have_content "Assign roles for your project"
+        click_on "Next"
+        expect(page).to have_content "Enter the storage and access needs"
+        click_on "Next"
+        expect(page).to have_content "Take a moment to review"
+        click_on "Back"
+        expect(page).to have_content "Enter the storage and access needs"
+        click_on "Back"
+        expect(page).to have_content "Assign roles for your project"
+        click_on "Back"
+        expect(page).to have_content "Tell us a little about your project!"
+        test_strategy.switch!(:allow_all_users_wizard_access, false)
+      end
     end
 
     it "Supports all the Skeletor fields on the basic information page" do

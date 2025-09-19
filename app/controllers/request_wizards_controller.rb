@@ -7,13 +7,11 @@ class RequestWizardsController < ApplicationController
   before_action :exit_without_saving, only: %i[save]
   before_action :set_or_init_request_model, only: %i[show]
 
-  before_action :check_flipper
-
   attr_reader :request_model
 
   # GET /request_wizards/1
   def show
-    if current_user.developer || current_user.sysadmin || current_user.trainer
+    if current_user.developer || current_user.sysadmin || current_user.trainer || Flipflop.allow_all_users_wizard_access?
       # create a request in the first step
       render_current
     else
@@ -120,10 +118,6 @@ class RequestWizardsController < ApplicationController
       end
       request_params[:requested_by] ||= current_user.uid
       request_params
-    end
-
-    def check_flipper
-      return head :forbidden unless Flipflop.new_project_request_wizard?
     end
 
     def set_breadcrumbs
