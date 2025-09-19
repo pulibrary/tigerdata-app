@@ -132,6 +132,28 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/new-project/review-submit/#{request.id}"
         expect(page).not_to have_content "Take a moment to review"
       end
+
+      it "allows users to walk through the wizard" do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:allow_all_users_wizard_access, true)
+        sign_in current_user
+        visit "/"
+        click_on "New Project Request"
+        expect(page).to have_content "Tell us a little about your project!"
+        click_on "Next"
+        expect(page).to have_content "Assign roles for your project"
+        click_on "Next"
+        expect(page).to have_content "Enter the storage and access needs"
+        click_on "Next"
+        expect(page).to have_content "Take a moment to review"
+        click_on "Back"
+        expect(page).to have_content "Enter the storage and access needs"
+        click_on "Back"
+        expect(page).to have_content "Assign roles for your project"
+        click_on "Back"
+        expect(page).to have_content "Tell us a little about your project!"
+        test_strategy.switch!(:allow_all_users_wizard_access, false)
+      end
     end
 
     it "Supports all the Skeletor fields on the basic information page" do
