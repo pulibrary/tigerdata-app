@@ -14,12 +14,11 @@ class TigerdataMailer < ApplicationMailer
   def request_creation
     config = Rails.application.config.tigerdata_mail[:request_creation]
     @request_id = params[:request_id]
-
+    submitter_mail = params[:submitter].email
     raise(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{@request_id}") if request.nil?
 
     subject = "New Project Request Ready for Review"
-    body = "A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: '#{request_url(request)}'"
-    mail(to: config[:to_email], cc: config[:cc_email], subject:, body:)
+    mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
   end
   private
 
