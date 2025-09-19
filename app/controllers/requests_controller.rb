@@ -4,7 +4,6 @@ class RequestsController < ApplicationController
 
   # GET /requests
   def index
-    return head :forbidden unless Flipflop.new_project_request_wizard?
     if current_user.eligible_sysadmin?
       add_breadcrumb("Project Requests - All")
       @draft_requests = Request.where(state: Request::DRAFT).map do |request|
@@ -61,37 +60,6 @@ class RequestsController < ApplicationController
   # rubocop:enable Metrics/MethodLength
 
   private
-
-    # rubocop:disable Metrics/MethodLength
-    def parse_request_metadata(request)
-      project_directory = "/tigerdata/#{request[:parent_folder]}/#{request[:project_folder]}"
-      departments = request[:departments].map { |d| d["name"] }
-      data_users = request[:user_roles].map { |u| u["uid"] }
-      {
-        title: request[:project_title],
-        description: request[:description],
-        status: Project::APPROVED_STATUS,
-        data_sponsor: request[:data_sponsor],
-        data_manager: request[:data_manager],
-        departments: departments,
-        data_user_read_only: data_users,
-        project_directory: project_directory,
-        storage_capacity: {
-          size: {
-            approved: request[:quota].split(" ").first,
-            requested: request[:quota].split(" ").first
-          },
-          unit: {
-            approved: request[:storage_unit],
-            requested: request[:storage_unit]
-          }
-        },
-        storage_performance_expectations: { requested: "Standard", approved: "Standard" },
-        created_by: nil,
-        created_on: request[:created_at]
-      }
-    end
-    # rubocop:enable Metrics/MethodLength
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)

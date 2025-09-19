@@ -136,16 +136,12 @@ describe "#file_list", integration: true do
   let(:manager) { sponsor_and_data_manager_user }
   let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user) }
-  let(:project) do
-    project = FactoryBot.create(:approved_project, title: "project 111", data_manager: manager.uid)
-    project.mediaflux_id = nil
-    project
+  let!(:project) do
+    request = FactoryBot.create(:request_project)
+    request.approve(manager)
   end
 
   before do
-    # Save the project in mediaflux
-    project.approve!(current_user: manager)
-
     # create a collection so it can be filtered
     Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
 

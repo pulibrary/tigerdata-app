@@ -89,14 +89,25 @@ RSpec.describe PrincetonUsers, type: :model do
     end
   end
   describe "#load_rdss_developers" do
-    it "returns the list of rdss developers" do
-      expect(described_class::RDSS_DEVELOPERS).to include("bs3097")
+    context "I am connected to the actual ldap (you must be on campus or VPN for this to work)" do
+      it "returns the list of rdss developers" do
+        expect(described_class::RDSS_DEVELOPERS).to include("bs3097")
+      end
+
+      it "creates users for rdss developers", integration: true do
+        expect(User.count).to eq 0
+        described_class.load_rdss_developers
+        expect(User.count).to eq described_class::RDSS_DEVELOPERS.length
+      end
     end
 
-    it "creates users for rdss developers", integration: true do
-      expect(User.count).to eq 0
-      described_class.load_rdss_developers
-      expect(User.count).to eq described_class::RDSS_DEVELOPERS.length
+    context "I am not connected to ldap" do
+      before do
+        allow(described_class).to receive(:create_user_from_ldap_by_uid).and_raise(TigerData::LdapError, "Could not connect to LDAP")
+      end
+      it "catches and reraises a TigerData::LDAP error to tell the user they are not on VPN" do
+        expect { described_class.load_rdss_developers }.to raise_error(TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?")
+      end
     end
   end
 

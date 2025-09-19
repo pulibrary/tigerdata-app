@@ -4,12 +4,11 @@ require "rails_helper"
 RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, integration: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_in_mediaflux) { FactoryBot.create(:project_with_doi) }
-  let(:eight_days_ago) { Time.current.in_time_zone("America/New_York") - 8.days }
-
-  before do
-    project_in_mediaflux.approve!(current_user: user)
+  let(:project_in_mediaflux) do
+    request = FactoryBot.create(:request_project)
+    request.approve(sponsor_and_data_manager_user)
   end
+  let(:eight_days_ago) { Time.current.in_time_zone("America/New_York") - 8.days }
 
   describe "#perform_now" do
     it "deletes any files older than 7 days" do
