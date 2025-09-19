@@ -2,7 +2,7 @@
    <div class="main-content">
       <div class="welcome-pane">
          <h1>Welcome, <%= current_user.given_name %>!</h1>
-          <% if current_user.eligible_sysadmin? && Flipflop.new_project_request_wizard? %>
+          <% if current_user && Flipflop.new_project_request_wizard? %>
             <%= render partial: "new_project_request_wizard_link" %>
          <% end %>
       </div>
