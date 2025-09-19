@@ -78,6 +78,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "abc_lab"
       fill_in :project_folder, with: "skeletor"
+      select "Teaching", from: :project_purpose
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")

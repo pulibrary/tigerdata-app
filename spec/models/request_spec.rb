@@ -5,7 +5,7 @@ RSpec.describe Request, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
-    described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
+    described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project", project_purpose: "research",
                            data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
                            project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog",
                                                                                                                                                                   read_only: true },
@@ -91,7 +91,7 @@ RSpec.describe Request, type: :model do
       described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                              data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
                              departments: [{ code: "dept", name: "department" }],
-                             description: "description", parent_folder: random_project_directory,
+                             description: "description", project_purpose: "teaching", parent_folder: random_project_directory,
                              project_folder: "project", project_id: "doi", quota: "500 GB",
                              requested_by: "uid", user_roles: [])
     end
@@ -100,7 +100,7 @@ RSpec.describe Request, type: :model do
       described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                              data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid,
                              departments: [{ code: "dept", name: "department" }],
-                             description: "description", parent_folder: random_project_directory,
+                             description: "description", project_purpose: "research", parent_folder: random_project_directory,
                              project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
                              requested_by: "uid", user_roles: [])
     end
@@ -232,6 +232,8 @@ RSpec.describe Request, type: :model do
       request.quota = "500 GB"
       expect(request.valid_to_submit?).to be_falsey
       request.requested_by = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.project_purpose = "abc"
       expect(request.valid_to_submit?).to be_falsey
       request.description = "abc"
       expect(request.valid_to_submit?).to be_truthy
