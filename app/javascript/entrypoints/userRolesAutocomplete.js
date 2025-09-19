@@ -1,3 +1,8 @@
+function removeUserRoleInTable(event) {
+  const row = event.currentTarget.parentElement.parentElement.parentElement;
+  row.remove();
+}
+
 function removeUserRole(event) {
   const li = event.currentTarget.parentElement;
   li.remove();
@@ -14,6 +19,18 @@ function registerRemove() {
 
   $('.remove-user-role').click((event) => {
     removeUserRole(event);
+  });
+
+  $('.remove-user-role-in-table').click((event) => {
+    removeUserRoleInTable(event);
+  });
+
+  $('.remove-user-role-in-table').on('input', (event) => {
+    removeUserRoleInTable(event);
+  });
+
+  $('.remove-user-role-in-table').keyup((event) => {
+    if (event.keyCode === 13) removeUserRoleInTable(event);
   });
 }
 
@@ -34,6 +51,67 @@ function addNewUser(uid, name) {
   input.name = 'request[user_roles][]';
   li.appendChild(input);
   ul.appendChild(li);
+  registerRemove();
+}
+
+function newCell(content) {
+  const cell = document.createElement('div');
+  cell.classList.add('cell');
+  const newCellContent = document.createElement('div');
+  newCellContent.classList.add('content');
+  cell.appendChild(newCellContent);
+  newCellContent.appendChild(content);
+  return cell;
+}
+
+function newRadio(name, checked, value) {
+  let radioHtml = `<input type="radio" name="${name}" value="${value}"`;
+  if (checked) {
+    radioHtml += ' checked="checked"';
+  }
+  radioHtml += '/>';
+
+  const radioFragment = document.createElement('div');
+  radioFragment.innerHTML = radioHtml;
+
+  return radioFragment.firstChild;
+}
+
+function newRemove() {
+  const newRemoveDiv = document.createElement('div');
+  newRemoveDiv.classList.add('remove-user-role-in-table');
+  newRemoveDiv.classList.add('remove-item');
+  newRemoveDiv.focus = true;
+  newRemoveDiv.tabIndex = 0;
+  return newRemoveDiv;
+}
+
+function newTableRow(table, input) {
+  const json = JSON.parse(input.value);
+  const newRow = document.createElement('div');
+  newRow.classList.add('row');
+  const newName = newCell(document.createTextNode(`${json.name} (${json.uid})`));
+  newName.classList.add('user-cell');
+  newRow.appendChild(newName);
+  const roCell = newCell(newRadio(`request[read_only_${json.uid}]`, true, 'true'));
+  newRow.appendChild(roCell);
+  const rwCell = newCell(newRadio(`request[read_only_${json.uid}]`, false, 'false'));
+  newRow.appendChild(rwCell);
+  const removeCell = newCell(newRemove());
+  newRow.appendChild(removeCell);
+  newRow.appendChild(input);
+  table.appendChild(newRow);
+}
+
+function moveNewUsers() {
+  const ul = document.querySelector('.selected-user-roles');
+  const table = document.querySelector('.user-table');
+  const items = ul.getElementsByTagName('li');
+  for (let i = 0; i < items.length; i += 1) {
+    // do something with items[i], which is a <li> element
+    newTableRow(table, items[i].getElementsByTagName('input')[0]);
+  }
+  ul.replaceChildren();
   registerRemove();
 }
 
@@ -148,4 +226,12 @@ export function userRolesAutocomplete(usersLookupUrl) {
   preventFormSubmit('#user_find');
 
   registerRemove();
+
+  $('#user-role').on('beforetoggle', (event) => {
+    if (event.originalEvent.newState === 'open') {
+      // set focus here
+    } else {
+      moveNewUsers();
+    }
+  });
 }

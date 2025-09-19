@@ -136,6 +136,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     it "Supports all the Skeletor fields on the basic information page" do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
+      other_user = FactoryBot.create(:user)
+      another_user = FactoryBot.create(:user)
+
       sign_in current_user
       visit "/"
       click_on "New Project Request"
@@ -187,6 +190,20 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
+      click_on "Add User(s)"
+      another_user_str = "(#{another_user.uid}) #{another_user.display_name}"
+      fill_in :user_find, with: another_user.uid
+      sleep(1.2)
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select another_user_str + "\u00A0", from: "user_find"
+
+      # The another user selected is visible on the page
+      expect(page).to have_content(another_user_str)
+      # the javascript created the hidden form element
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name}\"}")
+      page.find(".remove-user-role").click
+      expect(page).not_to have_content(another_user_str)
+
       fill_in :user_find, with: current_user.uid
       sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
@@ -198,9 +215,34 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
       # the javascript cleared the find to get ready for the next search
       expect(page).to have_field("user_find", with: "")
+
+      other_user_str = "(#{other_user.uid}) #{other_user.display_name}"
+      fill_in :user_find, with: other_user.uid
+      sleep(1.2)
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select other_user_str + "\u00A0", from: "user_find"
+
+      # The other user selected is visible on the page
+      expect(page).to have_content(other_user_str)
+      # the javascript created the hidden form element
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\"}")
+      # the javascript cleared the find to get ready for the next search
+      expect(page).to have_field("user_find", with: "")
+
+      click_on "Add Users"
+
+      expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+
+      expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\"}")
+
+      choose("request[read_only_#{current_user.uid}]", option: "false")
+
       click_on "Back"
       # TODO: when the wizard is fully functional the Dates should be back
       # expect(page).to have_content "Dates (Optional)"
+      sleep(0.1)
       expect(page).to have_content "Tell us a little about your project!"
       click_on "Next"
       expect(page).to have_content("Assign roles for your project")
@@ -208,7 +250,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Data Manager"
       expect(page).to have_field("request_data_sponsor", with: current_user.uid)
       expect(page).to have_field("request_data_manager", with: current_user.uid)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\",\"read_only\":false}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\",\"read_only\":true}")
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do
