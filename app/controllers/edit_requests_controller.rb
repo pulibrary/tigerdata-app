@@ -45,8 +45,8 @@ class EditRequestsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def request_params
       request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager,
-                                        :description, :parent_folder, :project_folder, :project_id, :quota, :requested_by,
-                                        :storage_size, :storage_unit, user_roles: [], departments: [])
+                                        :description, :project_purpose, :parent_folder, :project_folder, :project_id, :quota,
+                                        :requested_by, :storage_size, :storage_unit, user_roles: [], departments: [])
       if request_params[:departments].present?
         request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
       end
