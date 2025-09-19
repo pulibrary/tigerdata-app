@@ -1,10 +1,7 @@
-The following project has been approved and created:
-
-Project ID: <%= @project.id %>
-Mediaflux ID: <%= @project.mediaflux_id %>
-Title: <%= @project.title %>
-Project Directory: <%= @project.project_directory %>
-Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
-Data Manager: <%= @project.metadata_json["data_manager"] %>
-
-For more details, see <%= project_url(@project) %>
+<%
+=begin%>
+  Yield to the view template for the specific email being sent.
+  View templates are located in app/views/tigerdata_mailer/...
+<%
+=end%>
+<%= yield %>
