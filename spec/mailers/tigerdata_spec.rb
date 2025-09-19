@@ -50,21 +50,31 @@ end
 
 context "When a request is created" do
   it "Sends project creation requests" do
-    expect { described_class.with(request_id:).request_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    expect { described_class.with(request_id:, submitter: sponsor_and_data_manager_user).request_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
     expect(mail.subject).to eq "New Project Request Ready for Review"
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq ["test_to@example.com"]
-    expect(mail.from).to eq ["no-reply@princeton.edu"]
-    expect(mail.body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal")
+    expect(mail.from).to eq [sponsor_and_data_manager_user.email]
+
+    html_body = mail.html_part.body.to_s
+    expect(html_body).to have_content(valid_request.project_title)
+    expect(html_body).to have_content(valid_request.description)
+    expect(html_body).to have_content(valid_request.state)
+    expect(html_body).to have_content(valid_request.data_sponsor)
+    expect(html_body).to have_content(valid_request.data_manager)
+    expect(html_body).to have_content(valid_request.departments)
+    expect(html_body).to have_content(valid_request.user_roles)
+    expect(html_body).to have_content(valid_request.quota)
+    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
   end
 
   context "when the request ID is invalid or nil" do
     let(:request_id) { "invalid" }
 
     it "does not enqueue an e-mail message and raises an error" do
-      expect { described_class.with(request_id:).request_creation.deliver }.to raise_error(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{request_id}")
+      expect { described_class.with(request_id:, submitter: sponsor_and_data_manager_user).request_creation.deliver }.to raise_error(ArgumentError, "Invalid Request ID provided for the TigerdataMailer: #{request_id}")
     end
   end
 end

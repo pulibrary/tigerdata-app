@@ -5,15 +5,12 @@
   </head>
 
   <body>
-    <p>The following project has been approved and created:</p>
-
-    Project ID: <%= @project.id %>
-    Mediaflux ID: <%= @project.mediaflux_id %>
-    Title: <%= @project.title %>
-    Project Directory: <%= @project.project_directory %>
-    Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
-    Data Manager: <%= @project.metadata_json["data_manager"] %>
-
-    <p>For more details, see <%= project_url(@project) %></p>
+    <%
+=begin%>
+  Yield to the view template for the specific email being sent.
+  View templates are located in app/views/tigerdata_mailer/...
+<%
+=end%>
+    <%= yield %>
   </body>
 </html>
