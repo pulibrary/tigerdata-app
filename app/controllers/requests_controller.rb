@@ -4,7 +4,6 @@ class RequestsController < ApplicationController
 
   # GET /requests
   def index
-    return head :forbidden unless Flipflop.new_project_request_wizard?
     if current_user.eligible_sysadmin?
       add_breadcrumb("Project Requests - All")
       @draft_requests = Request.where(state: Request::DRAFT).map do |request|
