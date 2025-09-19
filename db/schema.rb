@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_03_182114) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_18_141614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,6 +71,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_03_182114) do
     t.string "approved_quota"
     t.string "approved_storage_unit"
     t.float "approved_storage_size"
+    t.string "number_files", default: "unknown"
+    t.string "hpc", default: "no"
+    t.string "network_share", default: "no"
+    t.string "globus", default: "no"
   end
 
   create_table "user_requests", force: :cascade do |t|
