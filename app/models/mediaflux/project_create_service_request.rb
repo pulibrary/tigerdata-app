@@ -23,6 +23,7 @@ module Mediaflux
       @hpc = @project.metadata_model.hpc
       @smb = @project.metadata_model.smb_request
       @globus = @project.metadata_model.globus_request
+      @project_purpose = @project.metadata_model.project_purpose
     end
 
     # Specifies the Mediaflux service to use when creating project
@@ -85,6 +86,11 @@ module Mediaflux
             xml.hpc @hpc
             xml.smb @smb
             xml.globus @globus
+            if @project_purpose.present?
+              xml.send("project-purpose") do
+                xml.text(@project_purpose)
+              end
+            end
           end
         end
       end

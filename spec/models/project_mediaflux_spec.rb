@@ -8,6 +8,7 @@ RSpec.describe ProjectMediaflux, type: :model do
     request.hpc = "Yes"
     request.smb = "Yes"
     request.globus = "Yes"
+    request.project_purpose = "administrative"
     request.approve(current_user)
   end
 
@@ -45,6 +46,7 @@ RSpec.describe ProjectMediaflux, type: :model do
           expect(metadata[:hpc]).to be true
           expect(metadata[:smb]).to be true
           expect(metadata[:globus]).to be true
+          expect(metadata[:project_purpose]).to eq("administrative")
         end
       end
     end

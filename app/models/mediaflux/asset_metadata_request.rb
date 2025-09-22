@@ -86,6 +86,7 @@ module Mediaflux
         }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first))
       end
 
+      # rubocop:disable Metrics/MethodLength
       def parse_project(project)
         return {} if project.blank?
         metadata = {
@@ -98,11 +99,13 @@ module Mediaflux
           ro_users: project.xpath("./DataUser[@ReadOnly]").map(&:text),
           rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
           submission: parse_submission(project),
-          title: project.xpath("./Title").text
+          title: project.xpath("./Title").text,
+          project_purpose: project.xpath("./ProjectPurpose").text
         }
         metadata.merge(parse_project_dates(project))
         metadata.merge(parse_storage_options(project))
       end
+      # rubocop:enable Metrics/MethodLength
 
       def parse_project_dates(project)
         {
