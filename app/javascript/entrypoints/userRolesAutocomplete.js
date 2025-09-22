@@ -8,6 +8,34 @@ function removeUserRole(event) {
   li.remove();
 }
 
+function removeNoDataUser(event) {
+  const row = event.currentTarget.parentElement;
+  row.remove();
+}
+
+function addNoDataUser(event) {
+  const table = event.currentTarget;
+  if (table.getElementsByClassName('row').length === 1) {
+    const row = document.createElement('div');
+    row.classList.add('row');
+
+    const noUser = document.createElement('div');
+    noUser.classList.add('no-users');
+    row.appendChild(noUser);
+
+    const content = document.createElement('div');
+    content.classList.add('content');
+    noUser.appendChild(content);
+
+    const noDataUser = document.createElement('div');
+    noDataUser.classList.add('no-users-text');
+    content.appendChild(noDataUser);
+
+    noDataUser.appendChild(document.createTextNode('No Data User(s) added'));
+    table.appendChild(row);
+  }
+}
+
 function registerRemove() {
   $('.remove-user-role').on('input', (event) => {
     removeUserRole(event);
@@ -23,6 +51,7 @@ function registerRemove() {
 
   $('.remove-user-role-in-table').click((event) => {
     removeUserRoleInTable(event);
+    addNoDataUser({ currentTarget: document.querySelector('.user-table') });
   });
 
   $('.remove-user-role-in-table').on('input', (event) => {
@@ -113,6 +142,7 @@ function moveNewUsers() {
   }
   ul.replaceChildren();
   registerRemove();
+  removeNoDataUser({ currentTarget: document.querySelector('.no-users') });
 }
 
 // eslint-disable-next-line import/prefer-default-export
