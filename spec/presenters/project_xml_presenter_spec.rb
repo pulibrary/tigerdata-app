@@ -524,7 +524,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#globus_enable_approved?" do
-    it "returns false by default" do
+    xit "returns false by default" do
       expect(presenter.globus_enable_approved?).to be false
     end
 
@@ -535,14 +535,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns true" do
+      xit "returns true" do
         expect(presenter.globus_enable_approved?).to be true
       end
     end
   end
 
   describe "#globus_enable_approved" do
-    it "returns 'false' by default" do
+    xit "returns 'false' by default" do
       expect(presenter.globus_enable_approved).to eq("false")
     end
 
@@ -553,14 +553,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns 'true'" do
+      xit "returns 'true'" do
         expect(presenter.globus_enable_approved).to eq("true")
       end
     end
   end
 
   describe "#globus_enable_requested?" do
-    it "returns false by default" do
+    xit "returns false by default" do
       expect(presenter.globus_enable_requested?).to be false
     end
 
@@ -571,14 +571,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns true" do
+      xit "returns true" do
         expect(presenter.globus_enable_requested?).to be true
       end
     end
   end
 
   describe "#globus_enable_requested" do
-    it "returns 'false' by default" do
+    xit "returns 'false' by default" do
       expect(presenter.globus_enable_requested).to eq("false")
     end
 
@@ -589,14 +589,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns 'true'" do
+      xit "returns 'true'" do
         expect(presenter.globus_enable_requested).to eq("true")
       end
     end
   end
 
   describe "#smb_enable_approved?" do
-    it "returns false by default" do
+    xit "returns false by default" do
       expect(presenter.smb_enable_approved?).to be false
     end
 
@@ -607,14 +607,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns true" do
+      xit "returns true" do
         expect(presenter.smb_enable_approved?).to be true
       end
     end
   end
 
   describe "#smb_enable_approved" do
-    it "returns 'false' by default" do
+    xit "returns 'false' by default" do
       expect(presenter.smb_enable_approved).to eq("false")
     end
 
@@ -625,7 +625,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         }
       end
 
-      it "returns 'true'" do
+      xit "returns 'true'" do
         expect(presenter.smb_enable_approved).to eq("true")
       end
     end

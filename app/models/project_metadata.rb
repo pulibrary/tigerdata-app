@@ -31,18 +31,12 @@ class ProjectMetadata
 
   # @return [Hash] The default globus request Hash entries
   def self.default_globus_request
-    {
-      requested: false,
-      approved: false
-    }
+    "No"
   end
 
   # @return [Hash] The default Samba/SMB request Hash entries
   def self.default_smb_request
-    {
-      requested: false,
-      approved: false
-    }
+    "No"
   end
 
   # @return [Boolean] The default value for whether a project is provisional
