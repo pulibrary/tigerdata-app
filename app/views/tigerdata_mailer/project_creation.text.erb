@@ -6,5 +6,6 @@ Title: <%= @project.title %>
 Project Directory: <%= @project.project_directory %>
 Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
 Data Manager: <%= @project.metadata_json["data_manager"] %>
+Project Purpose: <%= @project.metadata_json["project_purpose"] %>
 
 For more details, see <%= project_url(@project) %>

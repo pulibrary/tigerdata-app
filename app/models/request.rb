@@ -11,6 +11,7 @@ class Request < ApplicationRecord
     valid_data_manager?
     valid_departments?
     valid_quota?
+    valid_project_purpose?
     valid_description?
     # Is parent folder really required?  For Skeletor let's skip it.
     # valid_parent_folder?
@@ -34,6 +35,10 @@ class Request < ApplicationRecord
 
   def valid_departments?
     field_present?(departments, :departments)
+  end
+
+  def valid_project_purpose?
+    project_purpose_present?(project_purpose, :project_purpose)
   end
 
   def valid_description?
@@ -140,6 +145,15 @@ class Request < ApplicationRecord
         false
       elsif User.where(uid: uid).count == 0
         errors.add(field, :invalid, message: "must be a valid user")
+        false
+      else
+        true
+      end
+    end
+
+    def project_purpose_present?(project_purpose, field)
+      if project_purpose.blank?
+        errors.add(field, :blank, message: "select a project purpose")
         false
       else
         true
