@@ -98,7 +98,11 @@ module Mediaflux
           ro_users: project.xpath("./DataUser[@ReadOnly]").map(&:text),
           rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
           submission: parse_submission(project),
-          title: project.xpath("./Title").text
+          title: project.xpath("./Title").text,
+          number_of_files: project.xpath("./NumberofFiles").text,
+          hpc: project.xpath("./Hpc").text == "true",
+          smb: project.xpath("./Smb").text == "true",
+          globus: project.xpath("./Globus").text == "true"
         }.merge(parse_project_dates(project))
       end
 

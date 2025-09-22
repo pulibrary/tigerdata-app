@@ -20,9 +20,9 @@ class RequestProjectMetadata
         created_on: request[:created_at],
         project_id: ProjectMetadata::DOI_NOT_MINTED,
         number_of_files: request[:number_of_files],
-        hpc: request[:hpc] == "yes",
-        smb: request[:smb] == "yes",
-        globus: request[:globus] == "yes"
+        hpc: request[:hpc]&.downcase == "yes",
+        smb: request[:smb]&.downcase == "yes",
+        globus: request[:globus]&.downcase == "yes"
       }
     end
      # rubocop:enable Metrics/AbcSize

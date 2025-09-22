@@ -4,6 +4,10 @@ require "rails_helper"
 RSpec.describe ProjectMediaflux, type: :model do
   let(:project) do
     request = FactoryBot.create(:request_project)
+    request.number_of_files = "Between 100,000 and 1,000,000"
+    request.hpc = "Yes"
+    request.smb = "Yes"
+    request.globus = "Yes"
     request.approve(current_user)
   end
 
@@ -28,8 +32,8 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect(namespace_metadata[:path]).to end_with(project_directory_postfix + "NS")
       end
 
-      describe "quota", connect_to_mediaflux: true do
-        it "adds a quota when it creates a project in mediaflux",
+      describe "storage and access", connect_to_mediaflux: true do
+        it "adds a quota and other storage options when it creates a project in mediaflux",
         :integration do
           metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: current_user.mediaflux_session,
@@ -37,6 +41,10 @@ RSpec.describe ProjectMediaflux, type: :model do
           ).metadata
           expect(metadata[:quota_allocation]).not_to be_empty
           expect(metadata[:quota_allocation]).to eq("500 GB")
+          expect(metadata[:number_of_files]).to eq("Between 100,000 and 1,000,000")
+          expect(metadata[:hpc]).to be true
+          expect(metadata[:smb]).to be true
+          expect(metadata[:globus]).to be true
         end
       end
     end
