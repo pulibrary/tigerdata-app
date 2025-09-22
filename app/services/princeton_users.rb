@@ -11,7 +11,7 @@ class PrincetonUsers
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
       return [] if tokens.count == 0
 
-      user_query = tokens.inject(User.all) do |partial_query, token| 
+      user_query = tokens.inject(User.all) do |partial_query, token|
                      search_token = '%'+User.sanitize_sql_like(token)+'%'
                      partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
                    end
@@ -47,6 +47,9 @@ class PrincetonUsers
       user_from_ldap(person.first)
     end
 
+  # Creates or updates a User from an LDAP entry.
+  # @param ldap_person [Net::LDAP::Entry] an LDAP entry representing a person
+  # @return [User, nil] the created or updated User, or nil if the LDAP entry is missing a edupersonprincipalname
     def user_from_ldap(ldap_person)
       return if ldap_person[:edupersonprincipalname].blank?
       uid = ldap_person[:uid].first.downcase
@@ -64,6 +67,7 @@ class PrincetonUsers
           user.provider = "cas"
           user.save
         end
+        user
       end
     end
 
