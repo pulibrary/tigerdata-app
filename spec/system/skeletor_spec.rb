@@ -58,6 +58,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :request_data_manager, with: datamanager.uid
       click_on "Review and Submit"
       click_on "Next"
+      expect(page).to have_content("Your new project request is submitted")
+      visit "/requests/#{Request.last.id}"
       click_on "Approve request"
       expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
       visit "/projects/#{Project.last.id}.xml"
@@ -98,6 +100,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :request_data_manager, with: datamanager.uid
       click_on "Review and Submit"
       click_on "Next"
+      expect(page).to have_content("Your new project request is submitted")
+      visit "/requests/#{Request.last.id}"
       click_on "Approve request"
       expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
       visit "/projects/#{Project.last.id}.xml"

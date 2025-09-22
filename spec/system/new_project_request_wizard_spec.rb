@@ -101,7 +101,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       select current_user_str + "\u00A0", from: "request_data_manager"
 
       click_on("Next")
-      expect(page).to have_content("Request state: submitted")
+      expect(page).to have_content("Your new project request is submitted")
     end
 
     context "non sysadmin user" do
