@@ -31,6 +31,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         departments:
           [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
+        project_purpose: "research",
         parent_folder: random_project_directory,
         project_folder: "test_project_folder",
         project_id: nil,
@@ -53,6 +54,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         departments:
           [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
+        project_purpose: "research",
         parent_folder: random_project_directory,
         project_folder: "test_project_folder",
         project_id: nil,
@@ -75,6 +77,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         departments:
           [{ "code" => "41000", "name" => "LIB-PU Library" }],
         description: "This collection contains important periodicals of the European avant-garde.",
+        project_purpose: "teaching",
         parent_folder: "pul",
         project_folder: "#{random_project_directory}-bluemountain",
         project_id: nil,
@@ -210,6 +213,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
         within(".project-description") do
           expect(page).to have_content("cannot be empty")
+        end
+        within(".project-purpose") do
+          expect(page).to have_content("select a project purpose")
         end
         within(".departments") do
           expect(page).to have_content("cannot be empty")

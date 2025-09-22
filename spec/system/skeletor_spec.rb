@@ -44,6 +44,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :parent_folder, with: "Fairy"
       fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
+      select "Teaching", from: :project_purpose
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
@@ -83,6 +84,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :parent_folder, with: "Fairy"
       fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
+      select "Teaching", from: :project_purpose
       expect(page).to have_content "46/1000 characters"
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
