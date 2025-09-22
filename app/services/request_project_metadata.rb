@@ -18,7 +18,11 @@ class RequestProjectMetadata
         storage_performance_expectations: { requested: "Standard", approved: "Standard" },
         created_by: nil,
         created_on: request[:created_at],
-        project_id: ProjectMetadata::DOI_NOT_MINTED
+        project_id: ProjectMetadata::DOI_NOT_MINTED,
+        number_of_files: request[:number_files],
+        hpc: request[:hpc] == "yes",
+        network_share: request[:network_share] == "yes",
+        globus: request[:globus] == "yes"
       }
     end
      # rubocop:enable Metrics/AbcSize

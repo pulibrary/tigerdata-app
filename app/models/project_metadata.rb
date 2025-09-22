@@ -70,6 +70,7 @@ class ProjectMetadata
     :project_directory_protocol,
     :globus_request,
     :smb_request,
+    :number_of_files,
     :provisional
   )
 
@@ -129,6 +130,11 @@ class ProjectMetadata
     @smb_request = metadata_hash[:smb_request] || self.class.default_smb_request
 
     @provisional = metadata_hash[:provisional] || self.class.default_provisionality
+
+    @hpc = metadata_hash[:hpc] || false
+    @smb_request = metadata_hash[:network_share] || false
+    @globus_request = metadata_hash[:globus] || false
+    @number_of_files = metadata_hash[:number_of_files] || "Less than 10,000"
 
     set_defaults
   end

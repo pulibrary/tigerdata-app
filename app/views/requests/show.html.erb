@@ -6,7 +6,7 @@
 
 <div class="request-description">
   This screen is a review of the request. No project has been created yet.
-</div> 
+</div>
 
 <div class="horizontal-frame">
     <% if !@request_model.submitted? %>
@@ -36,20 +36,24 @@
       <ul id="request-data-users">
         <% (@request_model.user_roles || []).each do |data_user| %>
           <li><%= "#{data_user["name"]} (#{data_user["uid"]})" %></li>
-        <% end %> 
+        <% end %>
       </ul>
     </li>
     <li>Department(s):
-      <ul id="request-data-departments">    
+      <ul id="request-data-departments">
         <% (@request_model.departments || []).each do |department| %>
           <li><%= "#{department["name"]} (#{department["code"]})" %></li>
-        <% end %> 
+        <% end %>
       </ul>
-  </li>
+    </li>
     <li>Description: <%= @request_model.description %></li>
     <li>Parent folder: <%= @request_model.parent_folder %></li>
     <li>Project folder: <%= @request_model.project_folder %></li>
     <li>Project ID: <%= @request_model.project_id %></li>
     <li>Quota: <%= @request_model.requested_quota_size %> <%= @request_model.requested_quota_unit %></li>
+    <li>Number of files: <%= @request_model.number_files %></li>
+    <li>High Performance Computing: <%= @request_model.hpc %></li>
+    <li>Network file share: <%= @request_model.network_share %></li>
+    <li>Globus transfers: <%= @request_model.globus %></li>
     <li>Requested by: <%= @request_model.requested_by %></li>
 </ul>

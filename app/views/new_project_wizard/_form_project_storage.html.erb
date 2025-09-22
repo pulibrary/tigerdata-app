@@ -67,10 +67,10 @@
     locals: {field_label: "Estimated number of files", field_sub_label: ""} %>
   <div>
     <select name="request[number_files]" id="number_files">
-      <option value="less10K" <%= @request_model.number_files == "less10K" ? "selected" : "" %> >Less than 10,000</option>
-      <option value="10K" <%= @request_model.number_files == "10K" ? "selected" : "" %> >Between 10,000 and 100,000</option>
-      <option value="100K" <%= @request_model.number_files == "100K" ? "selected" : "" %> >Betweek 100,000 and 1,000,000</option>
-      <option value="1M" <%= @request_model.number_files == "1M" ? "selected" : "" %> >More than 1,000,000</option>
+      <option <%= @request_model.number_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
+      <option <%= @request_model.number_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
+      <option <%= @request_model.number_files == "Betweek 100,000 and 1,000,000" ? "selected" : "" %> >Betweek 100,000 and 1,000,000</option>
+      <option <%= @request_model.number_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
     </select>
     <br/>
     A rough estimate of the maximum file count for the project (this makes a difference for backend setup).
@@ -97,11 +97,11 @@
     <div>
       <p>Do you need a network file share?</p>
       <p>Select 'Yes' if anyone on the project will need to connect a personal computer or lab workstation (via SMB/CIFS).</p>
-      <input type="radio" id="network_yes" name="request[network_share]" value="yes">
+      <input type="radio" id="network_yes" name="request[network_share]" value="yes" <%= @request_model.network_share == "yes" ? "checked" : "" %> >
       <label for="network_yes">Yes</label><br>
-      <input type="radio" id="network_no" name="request[network_share]" value="no" checked>
+      <input type="radio" id="network_no" name="request[network_share]" value="no" <%= @request_model.network_share == "no" ? "checked" : "" %> >
       <label for="network_no">No</label><br>
-      <input type="radio" id="network_maybe" name="request[network_share]" value="maybe">
+      <input type="radio" id="network_maybe" name="request[network_share]" value="maybe" <%= @request_model.network_share == "maybe" ? "checked" : "" %> >
       <label for="network_maybe">Maybe</label>
     </div>
 </div>
@@ -110,11 +110,11 @@
     <div>
       <p>Do you need to enable Globus transfers?</p>
       <p>Select 'Yes' if the project will need its own Globus endpoint for high bandwidth data transfers.</p>
-      <input type="radio" id="globus_yes" name="request[globus]" value="yes">
+      <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @request_model.globus == "yes" ? "checked" : "" %> >
       <label for="globus_yes">Yes</label><br>
-      <input type="radio" id="globus_no" name="request[globus]" value="no" checked>
+      <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @request_model.globus == "no" ? "checked" : "" %> >
       <label for="hpc_no">No</label><br>
-      <input type="radio" id="globus_maybe" name="request[globus]" value="maybe">
+      <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @request_model.globus == "maybe" ? "checked" : "" %> >
       <label for="globus_maybe">Maybe</label>
     </div>
 </div>
