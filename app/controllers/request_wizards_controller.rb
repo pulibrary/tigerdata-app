@@ -106,7 +106,8 @@ class RequestWizardsController < ApplicationController
     def request_params
       request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager,
                                         :project_purpose, :description, :parent_folder, :project_folder, :project_id, :quota,
-                                        :requested_by, :storage_size, :storage_unit, user_roles: [], departments: [])
+                                        :requested_by, :storage_size, :storage_unit, :number_of_files, :hpc, :smb, :globus, user_roles: [], departments: [])
+
       if request_params[:departments].present?
         request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
       end

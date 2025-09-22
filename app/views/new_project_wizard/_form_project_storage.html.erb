@@ -1,5 +1,5 @@
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label", 
+  <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Storage Needed", field_sub_label: "Required"} %>
   <div class="storage-frame">
     <div class="options-frame">
@@ -60,4 +60,61 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="form-field">
+  <%= render partial: "/new_project_wizard/form_field_label",
+    locals: {field_label: "Estimated number of files", field_sub_label: ""} %>
+  <div>
+    <select name="request[number_of_files]" id="number_of_files">
+      <option <%= @request_model.number_of_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
+      <option <%= @request_model.number_of_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
+      <option <%= @request_model.number_of_files == "Betweek 100,000 and 1,000,000" ? "selected" : "" %> >Betweek 100,000 and 1,000,000</option>
+      <option <%= @request_model.number_of_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
+    </select>
+    <br/>
+    A rough estimate of the maximum file count for the project (this makes a difference for backend setup).
+  </div>
+</div>
+
+<div class="form-field">
+  <%= render partial: "/new_project_wizard/form_field_label",
+    locals: {field_label: "Connection Options", field_sub_label: "Required"} %>
+
+    <div>
+      <p>Do you need to connect to High Performance Computing?</p>
+      <p>Select 'Yes' if you are a Princeton Research Computing user and you expect to need access to this project from select HPC clusters.</p>
+      <input type="radio" id="hpc_yes" name="request[hpc]" value="yes" <%= @request_model.hpc == "yes" ? "checked" : "" %> >
+      <label for="hpc_yes">Yes</label><br>
+      <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >
+      <label for="hpc_no">No</label><br>
+      <input type="radio" id="hpc_maybe" name="request[hpc]" value="maybe" <%= @request_model.hpc == "maybe" ? "checked" : "" %>>
+      <label for="hpc_maybe">Maybe</label>
+    </div>
+</div>
+
+<div class="form-field">
+    <div>
+      <p>Do you need a network file share?</p>
+      <p>Select 'Yes' if anyone on the project will need to connect a personal computer or lab workstation (via SMB/CIFS).</p>
+      <input type="radio" id="network_yes" name="request[smb]" value="yes" <%= @request_model.smb == "yes" ? "checked" : "" %> >
+      <label for="network_yes">Yes</label><br>
+      <input type="radio" id="network_no" name="request[smb]" value="no" <%= @request_model.smb == "no" ? "checked" : "" %> >
+      <label for="network_no">No</label><br>
+      <input type="radio" id="network_maybe" name="request[smb]" value="maybe" <%= @request_model.smb == "maybe" ? "checked" : "" %> >
+      <label for="network_maybe">Maybe</label>
+    </div>
+</div>
+
+<div class="form-field">
+    <div>
+      <p>Do you need to enable Globus transfers?</p>
+      <p>Select 'Yes' if the project will need its own Globus endpoint for high bandwidth data transfers.</p>
+      <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @request_model.globus == "yes" ? "checked" : "" %> >
+      <label for="globus_yes">Yes</label><br>
+      <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @request_model.globus == "no" ? "checked" : "" %> >
+      <label for="hpc_no">No</label><br>
+      <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @request_model.globus == "maybe" ? "checked" : "" %> >
+      <label for="globus_maybe">Maybe</label>
+    </div>
 </div>

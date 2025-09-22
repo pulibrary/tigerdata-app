@@ -53,7 +53,10 @@ class ProjectsController < ApplicationController
     @approved_storage_expectations = @storage_expectations[:approved]
 
     @project_purpose = @project_metadata[:project_purpose]
-
+    @number_of_files = @project_metadata[:number_of_files]
+    @hpc = @project_metadata[:hpc]
+    @smb = @project_metadata[:smb_request]
+    @globus = @project_metadata[:globus_request]
 
     @project_session = "details"
 
