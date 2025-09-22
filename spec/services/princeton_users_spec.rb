@@ -88,6 +88,57 @@ RSpec.describe PrincetonUsers, type: :model do
       end
     end
   end
+
+  describe "#user_from_ldap" do
+    let(:ldap_person) do
+      {
+        uid: [],
+        sn: ["Smith"],
+        givenname: ["John"],
+        pudisplayname: [],
+        edupersonprincipalname: []
+      }
+    end
+    it "returns nil if edupersonprincipalname is blank" do
+      expect(described_class.user_from_ldap(ldap_person)).to be_nil
+    end
+    # TODO: What should we do if the uid is blank?
+    xit "returns nil if the uid is blank" do
+      expect(described_class.user_from_ldap(ldap_person)).to be_nil
+    end
+
+    context "the displayname is blank" do
+      let(:empty_ldap_person) do
+        {
+          uid: ["jsmith"],
+          sn: [],
+          givenname: [],
+          pudisplayname: [],
+          edupersonprincipalname: ["email@princeton.edu"]
+        }
+      end
+      let(:updated_ldap_person) do
+        {
+          uid: ["jsmith"],
+          sn: ["Smith"],
+          givenname: ["John"],
+          pudisplayname: ["Smith, John"],
+          edupersonprincipalname: ["email@princeton.edu"]
+        }
+      end
+      it "updates the user with the ldap info" do
+        user = described_class.user_from_ldap(empty_ldap_person)
+        expect(user.given_name).to be_nil
+        expect(user.display_name).to be_nil
+        expect(user.family_name).to be_nil
+        user = described_class.user_from_ldap(updated_ldap_person)
+        expect(user.display_name).to eq("Smith, John")
+        expect(user.family_name).to eq("Smith")
+        expect(user.given_name).to eq("John")
+      end
+    end
+  end
+
   describe "#load_rdss_developers" do
     context "I am connected to the actual ldap (you must be on campus or VPN for this to work)" do
       it "returns the list of rdss developers" do
