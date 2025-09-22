@@ -31,11 +31,11 @@ class RequestProjectMetadata
        end
 
        def read_only_users(request)
-         request[:user_roles].map { |u| u["uid"] if u["read_only"] || u["read_only"].nil? }
+         request[:user_roles].select { |u| u["read_only"] || u["read_only"].nil? }.map { |u| u["uid"] }
        end
 
        def read_write_users(request)
-         request[:user_roles].map { |u| u["uid"] if u["read_only"] == false }
+         request[:user_roles].select { |u| u["read_only"] == false }.map { |u| u["uid"] }
        end
 
        def departments(request)

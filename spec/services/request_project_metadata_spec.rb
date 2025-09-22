@@ -61,6 +61,7 @@ RSpec.describe RequestProjectMetadata do
       expect(project_metadata[:data_manager]).to eq(data_manager.uid)
       expect(project_metadata[:departments]).to eq(["LIB-PU Library"])
       expect(project_metadata[:data_user_read_only]).to eq([current_user.uid])
+      expect(project_metadata[:data_user_read_write]).to eq([])
       expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
       expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "500.0", requested: "500.0" })
       expect(project_metadata[:storage_capacity][:unit]).to eq({ approved: "GB", requested: "GB" })
@@ -95,7 +96,7 @@ RSpec.describe RequestProjectMetadata do
           requested_by: nil,
           storage_unit: "TB",
           quota: "custom",
-          user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+          user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name, "read_only" => false }]
         )
       end
 
@@ -107,7 +108,8 @@ RSpec.describe RequestProjectMetadata do
         expect(project_metadata[:data_sponsor]).to eq(sponsor_user.uid)
         expect(project_metadata[:data_manager]).to eq(data_manager.uid)
         expect(project_metadata[:departments]).to eq(["LIB-PU Library"])
-        expect(project_metadata[:data_user_read_only]).to eq([current_user.uid])
+        expect(project_metadata[:data_user_read_only]).to eq([])
+        expect(project_metadata[:data_user_read_write]).to eq([current_user.uid])
         expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
         expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "30.0", requested: "30.0" })
         expect(project_metadata[:storage_capacity][:unit]).to eq({ approved: "TB", requested: "TB" })
