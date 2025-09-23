@@ -64,7 +64,7 @@ RSpec.describe "new-project/review-submit", type: :request do
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_review_and_submit_save_url(request.id, request: valid_request_params, commit: "Next")
-          expect(response).to redirect_to(request_path(request.id))
+          expect(response).to redirect_to(request_submit_path)
           request.reload
           expect(request.request_title).to eq("new title")
           expect(request.project_title).to eq("new project")
