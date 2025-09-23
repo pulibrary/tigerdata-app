@@ -1,0 +1,27 @@
+<div class="main-frame">
+    <div class="review-submit">
+        <div class="scroll-frame">
+            <div class="review-info">
+                <div class="review-check"></div>
+                <h1>Your new project request is submitted</h1>
+                <div class="review-line"></div>
+                <div class="review-text"> 
+                <p>
+                Thank you for your submission.
+                </p>
+                <p>
+                Your request is in the queue. Please allow 5 business days for our team to review your needs and set  everything up.
+                </p>
+                <p>
+                You can check up on your project status and make revisions at any time from your TigerData dashboard. 
+                If your have questions, please contact the team at <a href="mailto:tigerdata@princeton.edu" class="mail-to">tigerdata@princeton.edu</a>
+                </p>
+                </div>
+            </div>
+        </div>
+        <div class="action-frame">
+            <%= link_to "Create New Project", new_project_project_info_path, class: "btn create-new-button", id: "new-project-request-wizard-button", tabindex: 0, focus: true  %>
+            <%= link_to "Return to Dashboard", dashboard_path, class: "btn return-button", tabindex: 0, focus: true %>
+        </div>
+    </div>
+</div>
