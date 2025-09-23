@@ -3,7 +3,7 @@
 require "rails_helper"
 require "open-uri"
 
-RSpec.describe "The Space Ghost Epic", connect_to_mediaflux: true, js: true, integration: true do
+RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: true, js: true, integration: true do
   context "user" do
     let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
@@ -46,6 +46,15 @@ RSpec.describe "The Space Ghost Epic", connect_to_mediaflux: true, js: true, int
       click_on "Roles and People"
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
+      expect(page).to have_content("Assign roles for your project")
+      another_user = FactoryBot.create(:user)
+      click_on "Add User(s)"
+      fill_in :user_find, with: another_user.uid
+      sleep(1.2)
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      # select another_user_str + "\u00A0", from: "user_find"
+      # click_on "Add Users"
+
       # next step is to click on "add user" then figure out how to load in the user for the druple
       test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
