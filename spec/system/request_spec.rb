@@ -251,6 +251,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/requests"
         expect(page).to have_content "New Project Requests"
       end
+
       it "shows the approve button on a single request view for developers" do
         sign_in developer
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
