@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_17_175134) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_22_121134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_175134) do
     t.string "approved_storage_unit"
     t.float "approved_storage_size"
     t.string "project_purpose"
+    t.string "number_of_files", default: "Less than 10,000"
+    t.string "hpc", default: "no"
+    t.string "smb", default: "no"
+    t.string "globus", default: "no"
   end
 
   create_table "user_requests", force: :cascade do |t|

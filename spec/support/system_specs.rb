@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 Capybara.configure do |config|
   config.default_driver = :chrome_headless
+
+  # Makes sure fields are blanked out before being repopulated when using `fill_in`
+  # https://github.com/teamcapybara/capybara/issues/2419#issuecomment-738798878
+  config.default_set_options = { clear: :backspace }
 end
 
 Capybara.register_driver :chrome_headless do |app|
