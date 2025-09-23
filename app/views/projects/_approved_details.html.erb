@@ -26,6 +26,18 @@
     </dd>
     <dt>Project Purpose</dt>
     <dd><%= @project_purpose %></dd>
+
+    <dt>Estimated number of files</dt>
+    <dd><%= @number_of_files %></dd>
+
+    <dt>High Performance Computing</dt>
+    <dd><%= @hpc %></dd>
+
+    <dt>Network File Share</dt>
+    <dd><%= @smb %></dd>
+
+    <dt>Globus Transfers</dt>
+    <dd><%= @globus %></dd>
 </dl>
 <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
 <dl>
