@@ -31,18 +31,12 @@ class ProjectMetadata
 
   # @return [Hash] The default globus request Hash entries
   def self.default_globus_request
-    {
-      requested: false,
-      approved: false
-    }
+    "No"
   end
 
   # @return [Hash] The default Samba/SMB request Hash entries
   def self.default_smb_request
-    {
-      requested: false,
-      approved: false
-    }
+    "No"
   end
 
   # @return [Boolean] The default value for whether a project is provisional
@@ -70,6 +64,7 @@ class ProjectMetadata
     :project_directory_protocol,
     :globus_request,
     :smb_request,
+    :number_of_files,
     :provisional
   )
 
@@ -118,15 +113,15 @@ class ProjectMetadata
     @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
 
     # NOTE: The following attributes are required by the 0.8 XML schema
+    @number_of_files = metadata_hash[:number_of_files] || "Less than 10,000"
     @hpc = metadata_hash[:hpc] || self.class.default_hpc
+    @globus_request = metadata_hash[:globus] || self.class.default_globus_request
+    @smb_request = metadata_hash[:smb] || self.class.default_smb_request
 
     @data_use_agreement = metadata_hash[:data_use_agreement] || self.class.default_data_use_agreement
 
     @project_visibility = metadata_hash[:project_visibility] || self.class.default_project_visibility
     @resource_type = metadata_hash[:resource_type] || self.class.default_resource_type
-
-    @globus_request = metadata_hash[:globus_request] || self.class.default_globus_request
-    @smb_request = metadata_hash[:smb_request] || self.class.default_smb_request
 
     @provisional = metadata_hash[:provisional] || self.class.default_provisionality
 

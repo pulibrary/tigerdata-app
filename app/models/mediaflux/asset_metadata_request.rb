@@ -86,9 +86,10 @@ module Mediaflux
         }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first))
       end
 
+      # rubocop:disable Metrics/MethodLength
       def parse_project(project)
         return {} if project.blank?
-        {
+        metadata = {
           description: project.xpath("./Description").text,
           data_sponsor: project.xpath("./DataSponsor").text,
           data_manager: project.xpath("./DataManager").text,
@@ -98,9 +99,13 @@ module Mediaflux
           ro_users: project.xpath("./DataUser[@ReadOnly]").map(&:text),
           rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
           submission: parse_submission(project),
-          title: project.xpath("./Title").text
-        }.merge(parse_project_dates(project))
+          title: project.xpath("./Title").text,
+          project_purpose: project.xpath("./ProjectPurpose").text
+        }
+        metadata.merge(parse_project_dates(project))
+        metadata.merge(parse_storage_options(project))
       end
+      # rubocop:enable Metrics/MethodLength
 
       def parse_project_dates(project)
         {
@@ -108,6 +113,15 @@ module Mediaflux
           created_on: project.xpath("./CreatedOn").text,
           updated_by: project.xpath("./UpdatedBy").text,
           updated_on: project.xpath("./UpdatedOn").text
+        }
+      end
+
+      def parse_storage_options(project)
+        {
+          number_of_files: project.xpath("./NumberofFiles").text,
+          hpc: project.xpath("./Hpc").text == "true",
+          smb: project.xpath("./Smb").text == "true",
+          globus: project.xpath("./Globus").text == "true"
         }
       end
 

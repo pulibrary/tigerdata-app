@@ -44,8 +44,7 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether the request for a Globus mount is approved
   def globus_enable_approved?
-    globus_request = project_metadata.globus_request
-    globus_request[:approved] || false
+    project_metadata.globus_request == "Yes"
   end
 
   # @return [String] Whether the request for a Globus mount is approved
@@ -59,8 +58,7 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether there is a request for a Globus mount
   def globus_enable_requested?
-    globus_request = project_metadata.globus_request
-    globus_request.present?
+    project_metadata.globus_request == "Yes"
   end
 
   # @return [String] Whether the request for a Globus mount is requested
@@ -74,8 +72,7 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether the request for the SMB mount is approved
   def smb_enable_approved?
-    smb_request = project_metadata.smb_request
-    smb_request[:approved] || false
+    project_metadata.smb_request == "Yes"
   end
 
   # @return [String] Whether the request for the SMB mount is approved
@@ -89,8 +86,7 @@ class ProjectXmlPresenter
 
   # @return [Boolean] Whether there is a request for SMB mount
   def smb_enable_requested?
-    smb_request = project_metadata.smb_request
-    smb_request.present?
+    project_metadata.smb_request == "Yes"
   end
 
   # @return [String] Whether the request for the SMB mount is requested

@@ -7,6 +7,7 @@ class RequestProjectMetadata
       {
         title: request[:project_title],
         description: request[:description],
+        project_purpose: request[:project_purpose],
         status: Project::APPROVED_STATUS,
         data_sponsor: request[:data_sponsor],
         data_manager: request[:data_manager],
@@ -18,7 +19,11 @@ class RequestProjectMetadata
         storage_performance_expectations: { requested: "Standard", approved: "Standard" },
         created_by: nil,
         created_on: request[:created_at],
-        project_id: ProjectMetadata::DOI_NOT_MINTED
+        project_id: ProjectMetadata::DOI_NOT_MINTED,
+        number_of_files: request[:number_of_files],
+        hpc: request[:hpc]&.downcase == "yes",
+        smb: request[:smb]&.downcase == "yes",
+        globus: request[:globus]&.downcase == "yes"
       }
     end
      # rubocop:enable Metrics/AbcSize
