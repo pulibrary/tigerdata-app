@@ -13,7 +13,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
         @request_model.state = Request::SUBMITTED
         @request_model.save
         TigerdataMailer.with(request_id: @request_model.id, submitter: current_user).request_creation.deliver_now
-        redirect_to request_path(@request_model.id)
+        redirect_to request_submit_path
       else
         stubbed_message = "Please resolve errors before submitting your request"
         flash[:notice] = stubbed_message

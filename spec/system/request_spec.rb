@@ -156,12 +156,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the approve button on a single submitted request view for sysadmins" do
         sign_in sysadmin_user
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-        expect(response).to redirect_to("#{requests_path}/#{full_request.id}")
+        expect(response).to redirect_to(request_submit_path)
         follow_redirect!
+        expect(response.body).to have_content("Your new project request is submitted")
+        sign_in sysadmin_user
+        visit "/requests/#{Request.last.id}"
         # it does not show a approve request unless the request is submitted
-        expect(response.body).to have_content("Approve request")
-        expect(response.body).not_to have_content("Edit request")
-        expect(response.body).to have_content("Edit submitted request")
+        expect(page).to have_link("Approve request")
+        expect(page).not_to have_content("Edit request")
+        expect(page).to have_content("Edit submitted request")
       end
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
         sign_in sysadmin_user
@@ -251,9 +254,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the approve button on a single request view for developers" do
         sign_in developer
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-        expect(response).to redirect_to("#{requests_path}/#{full_request.id}")
-        follow_redirect!
-        expect(response.body).to have_content("Approve request")
+        expect(response).to redirect_to(request_submit_path)
+        sign_in sysadmin_user
+        visit "/requests/#{Request.last.id}"
+        expect(page).to have_content("Approve request")
       end
     end
   end

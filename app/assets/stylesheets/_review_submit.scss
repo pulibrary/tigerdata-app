@@ -1,0 +1,91 @@
+@import "variables";
+
+.review-submit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+
+  .scroll-frame {
+    display: flex;
+    height: 31.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5rem;
+
+    .review-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2.5rem;
+      align-self: stretch;
+
+      .review-check {
+        width: 64px;
+        height: 64px;
+        aspect-ratio: 1/1;
+        background: url("check.svg") no-repeat;
+      }
+
+      .review-line {
+        width: 100%;
+        height: 1px;
+        background: $gray-10;
+      }
+
+      .review-text {
+        align-self: stretch;
+        color: $gray-100;
+
+        /* Body S */
+        font-family: "Libre Franklin";
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem; /* 150% */
+      }
+
+      .mail-to {
+        color: $princeton-orange;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .action-frame {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .create-new-button {
+      display: flex;
+      padding: 0.5rem 1.25rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 0.25rem;
+      border: 1px solid $gray-100;
+      background: $white;
+      text-decoration: none;
+      color: $gray-100;
+    }
+    .create-new-button:hover {
+      text-decoration: underline;
+    }
+    .btn:focus {
+      border-color: $princeton-orange !important;
+      border-width: 2px;
+      box-shadow: 0 0 0 0.2rem $bright-blue;
+    }
+    .return-button {
+      display: flex;
+      padding: 0.5rem 1.25rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 0.25rem;
+      background: $gray-100;
+      color: $white;
+    }
+  }
+}
