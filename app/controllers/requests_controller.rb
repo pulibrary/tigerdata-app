@@ -68,8 +68,9 @@ class RequestsController < ApplicationController
       elsif session_error_handler
         retry
       else
-        Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
-        Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+        # If a ProjectCreateError is not caused by a session expiry we want to log it and notify Honeybadger
+        Rails.logger.error "Error approving request #{params[:id]}. Details: #{e.message}"
+        Honeybadger.notify "Error approving request #{params[:id]}. Details: #{e.message}"
         flash[:notice] = "Error approving request #{params[:id]}"
         redirect_to request_path(@request_model)
       end
