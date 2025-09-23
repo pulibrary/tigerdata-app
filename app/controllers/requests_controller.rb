@@ -51,14 +51,7 @@ class RequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
-    # rescue StandardError => ex
-    #   Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
-    #   Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
-    #   flash[:notice] = "Error approving request #{params[:id]}"
-    #   redirect_to request_path(@request_model)
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -67,17 +60,23 @@ class RequestsController < ApplicationController
     end
 
     def mediaflux_session_errors
-      yield
-    rescue ActionView::Template::Error, Mediaflux::SessionExpired => e
-      raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired)
+      yield # Yield to the action, show & approve
+    rescue ActionView::Template::Error, Mediaflux::SessionExpired, ProjectCreate::ProjectCreateError => e # Catches all SessionExpired errors from Mediaflux calls
+      raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired) || e.is_a?(ProjectCreate::ProjectCreateError) || e.cause.is_a?(ProjectCreate::ProjectCreateError)
       if session[:active_web_user]
         redirect_to mediaflux_passthru_path(path: request.path)
       elsif session_error_handler
         retry
       else
-        raise
+        Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
+        Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+        flash[:notice] = "Error approving request #{params[:id]}"
+        redirect_to request_path(@request_model)
       end
     end
+
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def session_error_handler
       @retry_count ||= 0
