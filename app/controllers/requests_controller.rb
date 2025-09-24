@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class RequestsController < ApplicationController
   before_action :set_breadcrumbs
-  around_action :mediaflux_session_errors
+  # around_action :mediaflux_session_errors
 
   # GET /requests
   def index
@@ -51,33 +51,26 @@ class RequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
+  rescue StandardError => ex
+    if ex.is_a?(Mediaflux::SessionExpired) || ex.cause.is_a?(Mediaflux::SessionExpired) || ex.is_a?(ProjectCreate::ProjectCreateError) || ex.cause.is_a?(ProjectCreate::ProjectCreateError)
+      if session_error_handler
+        retry
+      end
+    else
+      Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
+      Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+      flash[:notice] = "Error approving request #{params[:id]}"
+      redirect_to request_path(@request_model)
+    end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
     end
-
-    def mediaflux_session_errors
-      yield # Yield to the action, show & approve
-    rescue ActionView::Template::Error, Mediaflux::SessionExpired, ProjectCreate::ProjectCreateError => e # Catches all SessionExpired errors from Mediaflux calls
-      raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired) || e.is_a?(ProjectCreate::ProjectCreateError) || e.cause.is_a?(ProjectCreate::ProjectCreateError)
-      if session[:active_web_user]
-        redirect_to mediaflux_passthru_path(path: request.path)
-      elsif session_error_handler
-        retry
-      else
-        # If a ProjectCreateError is not caused by a session expiry we want to log it and notify Honeybadger
-        Rails.logger.error "Error approving request #{params[:id]}. Details: #{e.message}"
-        Honeybadger.notify "Error approving request #{params[:id]}. Details: #{e.message}"
-        flash[:notice] = "Error approving request #{params[:id]}"
-        redirect_to request_path(@request_model)
-      end
-    end
-
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     def session_error_handler
       @retry_count ||= 0
