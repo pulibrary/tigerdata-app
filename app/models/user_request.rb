@@ -6,10 +6,15 @@ class UserRequest < ApplicationRecord
   PENDING = "pending"
   COMPLETED = "completed"
   STALE = "stale"
+  FAILED = "failed"
 
-  validates :state, inclusion: { in: [PENDING, COMPLETED, STALE] }
+  validates :state, inclusion: { in: [PENDING, COMPLETED, STALE, FAILED] }
 
   def complete?
     state == COMPLETED
+  end
+
+  def failed?
+    state == FAILED
   end
 end
