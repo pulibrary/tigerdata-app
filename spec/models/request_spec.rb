@@ -120,6 +120,20 @@ RSpec.describe Request, type: :model do
       # The project should not exist in the database
       expect(Project.find_by_id(invalid_request.project_id)).to be nil
     end
+
+    it "Captures Mediaflux Session errors and retries once" do
+      invalid_session = "invalid-session"
+      # Simulate an expired session
+      sponsor_and_data_manager_user.mediaflux_session = invalid_session
+      # StandardError is the parent of Mediaflux::SessionExpired and ProjectCreate::ProjectCreateError
+      expect { valid_request.approve(sponsor_and_data_manager_user) }.to raise_error(StandardError, /Session expired/)
+
+      # It should have tried to refresh the session and successfully approve the project
+      project = Project.find_by_id(valid_request.project_id)
+      expect(valid_request.project_id.to_i > 0).to be true
+      expect(project).to_not be nil
+      expect(project.mediaflux_id > 0).to be true
+    end
   end
 
   describe "#valid_data_sponsor?" do
