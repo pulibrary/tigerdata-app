@@ -90,21 +90,33 @@ RSpec.describe PrincetonUsers, type: :model do
   end
 
   describe "#user_from_ldap" do
-    let(:ldap_person) do
-      {
-        uid: [],
-        sn: ["Smith"],
-        givenname: ["John"],
-        pudisplayname: [],
-        edupersonprincipalname: []
-      }
+    context "the ldap entry is missing edupersonprincipalname" do
+      let(:ldap_person) do
+        {
+          uid: ["foo"],
+          sn: ["Smith"],
+          givenname: ["John"],
+          pudisplayname: [],
+          edupersonprincipalname: []
+        }
+      end
+      it "returns nil" do
+        expect(described_class.user_from_ldap(ldap_person)).to be_nil
+      end
     end
-    it "returns nil if edupersonprincipalname is blank" do
-      expect(described_class.user_from_ldap(ldap_person)).to be_nil
-    end
-    # TODO: What should we do if the uid is blank?
-    xit "returns nil if the uid is blank" do
-      expect(described_class.user_from_ldap(ldap_person)).to be_nil
+    context "the ldap entry is missing uid" do
+      let(:ldap_person) do
+        {
+          uid: [],
+          sn: ["Smith"],
+          givenname: ["John"],
+          pudisplayname: ["Smith, John"],
+          edupersonprincipalname: ["foo"]
+        }
+      end
+      it "returns nil" do
+        expect(described_class.user_from_ldap(ldap_person)).to be_nil
+      end
     end
 
     context "the displayname is blank" do
@@ -136,6 +148,24 @@ RSpec.describe PrincetonUsers, type: :model do
         expect(user.family_name).to eq("Smith")
         expect(user.given_name).to eq("John")
       end
+    end
+  end
+
+  describe "#check_for_malformed_ldap_entries" do
+    let(:ldap_person) do
+      {
+        uid: [],
+        sn: [],
+        givenname: [],
+        pudisplayname: [],
+        edupersonprincipalname: []
+      }
+    end
+    let(:honeybadger) { class_double("Honeybadger").as_stubbed_const }
+    it "sends an alert to honeybadger so we know how often it is happening" do
+      allow(honeybadger).to receive(:notify)
+      described_class.user_from_ldap(ldap_person)
+      expect(honeybadger).to have_received(:notify).with("LDAP entry missing edupersonprincipalname or uid", context: { ldap_person: })
     end
   end
 
