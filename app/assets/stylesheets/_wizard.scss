@@ -584,6 +584,157 @@
           align-self: stretch;
         }
       }
+
+      .form-field-label-vertical-container {
+        width: 183px; 
+        flex-direction: column; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        display: inline-flex;
+      }
+
+      .form-field-label-vertical-text {
+        align-self: stretch; 
+        justify-content: center; 
+        display: flex; 
+        flex-direction: column; 
+        color: $black; 
+        font-size: 18px; 
+        font-family: $libre-franklin; 
+        font-weight: 600; 
+        line-height: 27px; 
+        word-wrap: break-word;
+      }
+
+      .form-field-element-vertical-container {
+        flex-direction: column;
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 8px; 
+        display: inline-flex;
+      }
+
+      .estimated-files-dropdown {
+        align-self: stretch; 
+        flex-direction: column; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 10px; 
+        display: flex;
+      }
+
+      .estimated-files-dropdown-subcontainer {
+        align-self: stretch; 
+        flex-direction: column; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 4px; 
+        display: flex;
+      }
+
+      .estimated-files-inline-subcontainer {
+        align-self: stretch; 
+        padding-left: 12px; 
+        padding-right: 12px; 
+        padding-top: 8px; 
+        padding-bottom: 8px; 
+        background: var(--Neutral-White, white); 
+        border-radius: 8px; 
+        outline: 1px var(--Neutral-Medium-Gray, #D0D0D0) solid; 
+        outline-offset: -1px; 
+        justify-content: space-between; 
+        align-items: center; 
+        display: inline-flex;
+      }
+
+      .storage-form-field-text {
+        color: $black; 
+        font-size: 16px; 
+        font-family: $libre-franklin; 
+        font-weight: 400; 
+        line-height: 24px; 
+        word-wrap: break-word;
+      }
+
+      .storage-tooltip {
+        width: 100%; 
+        color: $gray-60; 
+        font-size: 14px; 
+        font-family: $libre-franklin; 
+        font-weight: 400; 
+        line-height: 21px; 
+        word-wrap: break-word;
+      }
+
+      .connection-options-text-container {
+        flex: 1 1 0; 
+        overflow: hidden; 
+        flex-direction: column; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 4px; 
+        display: inline-flex;
+      }
+      
+      .connection-options-text {
+        justify-content: center; 
+        display: flex; 
+        flex-direction: column; 
+        color: var(--Neutral-Black, #121212); 
+        font-size: 16px; 
+        font-family: Libre Franklin; 
+        font-weight: 600; 
+        line-height: 24px; 
+        word-wrap: break-word;
+      }
+
+      .connection-options-radio-buttons-container {
+        overflow: hidden; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: flex-start; 
+        gap: 20px; 
+        display: inline-flex;
+      }
+
+      .storage-options-section {
+        justify-content: flex-start; 
+        align-items: center; 
+        gap: 20px; 
+        display: inline-flex;
+      }
+
+      .storage-type-options {
+        align-self: stretch; 
+        flex-direction: column; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 40px; 
+        display: flex;
+      }
+
+      .storage-type-option-container {
+        width: 692px; 
+        overflow: hidden; 
+        justify-content: flex-start; 
+        align-items: flex-start; 
+        gap: 20px; 
+        display: inline-flex;
+      }
+
+      .storage-option-radio-button-container {
+        justify-content: flex-start; 
+        align-items: center; 
+        gap: 4px; 
+        display: flex;
+      }
+
+      .storage-option-radio-button {
+        width: 24px; 
+        height: 24px; 
+        position: relative; 
+        overflow: hidden;
+      }
     }
   }
 }

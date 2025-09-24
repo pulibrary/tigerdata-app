@@ -62,59 +62,116 @@
   </div>
 </div>
 
+
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label",
-    locals: {field_label: "Estimated number of files", field_sub_label: ""} %>
-  <div>
-    <select name="request[number_of_files]" id="number_of_files">
-      <option <%= @request_model.number_of_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
-      <option <%= @request_model.number_of_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
-      <option <%= @request_model.number_of_files == "Between 100,000 and 1,000,000" ? "selected" : "" %> >Between 100,000 and 1,000,000</option>
-      <option <%= @request_model.number_of_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
-    </select>
-    <br/>
-    A rough estimate of the maximum file count for the project (this makes a difference for backend setup).
-  </div>
+    <div class="form-field-label-vertical-container">
+        <div class="form-field-label-vertical-text">Estimated Number of Files</div>
+    </div>
+    <div style="form-field-element-vertical-container">
+        <div class="estimated-files-dropdown">
+            <div data-label?="false" data-state="Default" class="estimated-files-dropdown-subcontainer">
+            <select name="request[number_of_files]" id="number_of_files" class="estimated-files-inline-subcontainer">
+              <option class="storage-form-field-text" <%= @request_model.number_of_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
+              <option class="storage-form-field-text"  <%= @request_model.number_of_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
+              <option class="storage-form-field-text" <%= @request_model.number_of_files == "Between 100,000 and 1,000,000" ? "selected" : "" %> >Between 100,000 and 1,000,000</option>
+              <option class="storage-form-field-text" <%= @request_model.number_of_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
+            </select>
+            </div>
+        </div>
+        <div class="storage-tooltip">A rough estimate of the maximum file count for the project (this makes a difference for backend setup).</div>
+    </div>
 </div>
 
 <div class="form-field">
-  <%= render partial: "/new_project_wizard/form_field_label",
+    <%= render partial: "/new_project_wizard/form_field_label",
     locals: {field_label: "Connection Options", field_sub_label: "Required"} %>
 
-    <div>
-      <p>Do you need to connect to High Performance Computing?</p>
-      <p>Select 'Yes' if you are a Princeton Research Computing user and you expect to need access to this project from select HPC clusters.</p>
-      <input type="radio" id="hpc_yes" name="request[hpc]" value="yes" <%= @request_model.hpc == "yes" ? "checked" : "" %> >
-      <label for="hpc_yes">Yes</label><br>
-      <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >
-      <label for="hpc_no">No</label><br>
-      <input type="radio" id="hpc_maybe" name="request[hpc]" value="maybe" <%= @request_model.hpc == "maybe" ? "checked" : "" %>>
-      <label for="hpc_maybe">Maybe</label>
-    </div>
-</div>
-
-<div class="form-field">
-    <div>
-      <p>Do you need a network file share?</p>
-      <p>Select 'Yes' if anyone on the project will need to connect a personal computer or lab workstation (via SMB/CIFS).</p>
-      <input type="radio" id="network_yes" name="request[smb]" value="yes" <%= @request_model.smb == "yes" ? "checked" : "" %> >
-      <label for="network_yes">Yes</label><br>
-      <input type="radio" id="network_no" name="request[smb]" value="no" <%= @request_model.smb == "no" ? "checked" : "" %> >
-      <label for="network_no">No</label><br>
-      <input type="radio" id="network_maybe" name="request[smb]" value="maybe" <%= @request_model.smb == "maybe" ? "checked" : "" %> >
-      <label for="network_maybe">Maybe</label>
-    </div>
-</div>
-
-<div class="form-field">
-    <div>
-      <p>Do you need to enable Globus transfers?</p>
-      <p>Select 'Yes' if the project will need its own Globus endpoint for high bandwidth data transfers.</p>
-      <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @request_model.globus == "yes" ? "checked" : "" %> >
-      <label for="globus_yes">Yes</label><br>
-      <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @request_model.globus == "no" ? "checked" : "" %> >
-      <label for="hpc_no">No</label><br>
-      <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @request_model.globus == "maybe" ? "checked" : "" %> >
-      <label for="globus_maybe">Maybe</label>
+    <div style="flex: 1 1 0" class="form-field-element-vertical-container">
+        <div class="storage-type-options">
+            <div class="storage-type-option-container">
+                <div class="connection-options-text-container">
+                    <div class="connection-options-text">Do you need to connect to High Performance Computing?</div>
+                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if you are a Princeton Research Computing user and you expect to need access to this project from </span><span style="color: var(--Neutral-Dark-Gray, #717171); font-size: 14px; font-family: Libre Franklin; font-weight: 400; text-decoration: underline; line-height: 21px; word-wrap: break-word">select HPC clusters</span><span class="storage-tooltip">.</span></div>
+                </div>
+                <div data-selection="Default" class="connection-options-radio-buttons-container-container">
+                    <div class="storage-options-section">
+                        <div class="storage-option-radio-button-container">
+                            <label for="hpc_yes" class="storage-form-field-text">Yes</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                              <input type="radio" id="hpc_yes" name="request[hpc]" value="yes" <%= @request_model.hpc == "yes" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="hpc_no" class="storage-form-field-text">No</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                              <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >                            
+                            </div>
+                          </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="hpc_maybe" class="storage-form-field-text">Maybe</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                                <input type="radio" id="hpc_maybe" name="request[hpc]" value="maybe" <%= @request_model.hpc == "maybe" ? "checked" : "" %>>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="storage-type-option-container">
+                <div class="connection-options-text-container">
+                    <div class="connection-options-text">Do you need a network file share?</div>
+                    <div style="align-self: stretch;" class="storage-tooltip">Select 'Yes' if anyone on the project will need to connect a personal computer or lab workstation (via SMB/CIFS).</div>
+                </div>
+                <div data-selection="Default" class="connection-options-radio-buttons-container-container">
+                    <div class="storage-options-section">
+                        <div class="storage-option-radio-button-container">
+                            <label for="network_yes" class="storage-form-field-text">Yes</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                                <input type="radio" id="network_yes" name="request[smb]" value="yes" <%= @request_model.smb == "yes" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="network_no" class="storage-form-field-text">No</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                                <input type="radio" id="network_no" name="request[smb]" value="no" <%= @request_model.smb == "no" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="network_maybe" class="storage-form-field-text">Maybe</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                                <input type="radio" id="network_maybe" name="request[smb]" value="maybe" <%= @request_model.smb == "maybe" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="storage-type-option-container">
+                <div class="connection-options-text-container">
+                    <div class="connection-options-text">Do you need to enable Globus transfers?</div>
+                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if the project will need its own </span><span style="color: var(--Neutral-Dark-Gray, #717171); font-size: 14px; font-family: Libre Franklin; font-weight: 400; text-decoration: underline; line-height: 21px; word-wrap: break-word">Globus</span><span class="storage-tooltip"> endpoint for high bandwidth data transfers.</span></div>
+                </div>
+                <div data-selection="Default" class="connection-options-radio-buttons-container-container">
+                    <div class="storage-options-section">
+                        <div class="storage-option-radio-button-container">
+                            <label for="globus_yes" class="storage-form-field-text">Yes</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                              <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @request_model.globus == "yes" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="globus_no" class="storage-form-field-text">No</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                              <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @request_model.globus == "no" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                        <div class="storage-option-radio-button-container">
+                            <label for="globus_maybe" class="storage-form-field-text">Maybe</label>
+                            <div data-state="Default" class="storage-option-radio-button">
+                              <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @request_model.globus == "maybe" ? "checked" : "" %> >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
