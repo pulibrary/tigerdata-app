@@ -31,8 +31,10 @@ class RequestsController < ApplicationController
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if current_user.developer || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
@@ -51,13 +53,21 @@ class RequestsController < ApplicationController
       redirect_to dashboard_path
     end
   rescue StandardError => ex
-    Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
-    Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
-    flash[:notice] = "Error approving request #{params[:id]}"
-    redirect_to request_path(@request_model)
+    if ex.is_a?(Mediaflux::SessionExpired) || ex.cause.is_a?(Mediaflux::SessionExpired)
+      raise
+    elsif ex.is_a?(ProjectCreate::ProjectCreateError) && ex.message.include?("Session expired for token")
+      raise Mediaflux::SessionExpired
+    else
+      Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
+      Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+      flash[:notice] = "Error approving request #{params[:id]}"
+      redirect_to request_path(@request_model)
+    end
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
