@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 class RequestsController < ApplicationController
   before_action :set_breadcrumbs
-  # around_action :mediaflux_session_errors
 
   # GET /requests
   def index
@@ -54,10 +53,10 @@ class RequestsController < ApplicationController
       redirect_to dashboard_path
     end
   rescue StandardError => ex
-    if ex.is_a?(Mediaflux::SessionExpired) || ex.cause.is_a?(Mediaflux::SessionExpired) || ex.is_a?(ProjectCreate::ProjectCreateError) || ex.cause.is_a?(ProjectCreate::ProjectCreateError)
-      if session_error_handler
-        retry
-      end
+    if ex.is_a?(Mediaflux::SessionExpired) || ex.cause.is_a?(Mediaflux::SessionExpired)
+      raise
+    elsif ex.is_a?(ProjectCreate::ProjectCreateError) && ex.message.include?("Session expired for token")
+      raise Mediaflux::SessionExpired
     else
       Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
       Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
@@ -74,14 +73,5 @@ class RequestsController < ApplicationController
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
-    end
-
-    def session_error_handler
-      @retry_count ||= 0
-      @retry_count += 1
-
-      current_user.clear_mediaflux_session(session)
-      current_user.mediaflux_from_session(session)
-      @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
     end
 end
