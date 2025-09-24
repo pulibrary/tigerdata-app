@@ -9,18 +9,6 @@ RSpec.describe RequestsController, type: :controller do
   end
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
 
-  # context "When the session expires" do
-  #   it "gets a new session" do
-  #     sign_in current_user
-  #     Mediaflux::LogoutRequest.new(session_token: SystemUser.mediaflux_session).resolve
-  #     valid_request
-  #     allow(Request).to receive(:find).and_return(valid_request)
-  #     allow(valid_request).to receive(:approve).and_raise(Mediaflux::SessionExpired)
-
-  #     expect { get :approve, params: { id: valid_request.id } }.to raise_error(Mediaflux::SessionExpired, /Session expired for token/)
-  #   end
-  # end
-
   context "when a session expires" do
     let(:original_session) { SystemUser.mediaflux_session }
 
