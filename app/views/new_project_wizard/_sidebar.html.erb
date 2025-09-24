@@ -5,7 +5,7 @@
             <%= render partial: '/new_project_wizard/sidebar_multi_step', locals: { indicator_class: controller.controller_name.start_with?('project_information') ? '-current' : '-completed', 
                                                                                     step_number: 1, step_url: new_project_project_info_path(@request_model), step_name: 'Project Information'} %>
             <div data-count="3" class="substeps-container">
-                <div class="connector-line"></div>
+                <!-- <div class="connector-line"></div> -->
                 <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information' ? '-current' : '-completed', 
                                                                                       text_class: controller.controller_name == 'project_information' ? '' : '-current', 
                                                                                       step_url: new_project_project_info_path(@request_model), step_name: 'Basic Details'} %>
