@@ -204,7 +204,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
-      sleep(1.2)
+      sleep(1.5)
       select current_user_str + "\u00A0", from: "request_data_sponsor"
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
