@@ -51,7 +51,7 @@ class PrincetonUsers
   # @param ldap_person [Net::LDAP::Entry] an LDAP entry representing a person
   # @return [User, nil] the created or updated User, or nil if the LDAP entry is missing a edupersonprincipalname
     def user_from_ldap(ldap_person)
-      return if ldap_person[:edupersonprincipalname].blank?
+      return if check_for_malformed_ldap_entries(ldap_person)
       uid = ldap_person[:uid].first.downcase
       current_entries = User.where(uid:)
       if current_entries.empty?
@@ -69,6 +69,19 @@ class PrincetonUsers
         end
         user
       end
+    end
+
+    # If any required LDAP fields are missing, return true
+    # @param ldap_person [Net::LDAP::Entry] an LDAP entry representing a person
+    # @return [Boolean] true if the LDAP entry is missing required fields, false otherwise
+    def check_for_malformed_ldap_entries(ldap_person)
+      uid_blank = ldap_person[:uid].blank?
+      edupersonprincipalname_blank = ldap_person[:edupersonprincipalname].blank?
+      malformed = uid_blank || edupersonprincipalname_blank
+      if malformed
+        Honeybadger.notify("LDAP entry missing edupersonprincipalname or uid", context: { ldap_person: })
+      end
+      malformed
     end
 
     def default_ldap_connection
