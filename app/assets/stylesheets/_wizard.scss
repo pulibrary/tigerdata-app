@@ -306,7 +306,7 @@
             color: var(--Secondary-Red-Dark, #b00002);
 
             /* Body XXS */
-            font-family: "Libre Franklin";
+            font-family: $libre-franklin;
             font-size: 0.75rem;
             font-style: normal;
             font-weight: 400;
@@ -504,10 +504,10 @@
 
               .user-heading {
                 flex: 1 0 0;
-                color: var(--Neutral-Black, #121212);
+                color: $black;
 
                 /* Body S Bold */
-                font-family: "Libre Franklin";
+                font-family: $libre-franklin;
                 font-size: 1rem;
                 font-style: normal;
                 font-weight: 600;
@@ -520,7 +520,7 @@
             color: $gray-60;
 
             /* Body XS */
-            font-family: "Libre Franklin";
+            font-family: $libre-franklin;
             font-size: 0.875rem;
             font-style: normal;
             font-weight: 400;
@@ -586,7 +586,7 @@
       }
 
       .form-field-label-vertical-container {
-        width: 183px;
+        width: 11.438rem;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
@@ -599,10 +599,10 @@
         display: flex;
         flex-direction: column;
         color: $black;
-        font-size: 18px;
+        font-size: 1.125rem;
         font-family: $libre-franklin;
         font-weight: 600;
-        line-height: 27px;
+        line-height: 1.688rem;
         word-wrap: break-word;
       }
 
@@ -610,7 +610,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 8px;
+        gap: 0.5rem;
         display: inline-flex;
       }
 
@@ -619,7 +619,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 10px;
+        gap: 0.625rem;
         display: flex;
       }
 
@@ -628,19 +628,19 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 4px;
+        gap: 0.25rem;
         display: flex;
       }
 
       .estimated-files-inline-subcontainer {
         align-self: stretch;
-        padding-left: 12px;
-        padding-right: 12px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        background: var(--Neutral-White, white);
-        border-radius: 8px;
-        outline: 1px var(--Neutral-Medium-Gray, #d0d0d0) solid;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        background: $white;
+        border-radius: 0.5rem;
+        outline: 1px $gray-20 solid;
         outline-offset: -1px;
         justify-content: space-between;
         align-items: center;
@@ -649,20 +649,20 @@
 
       .storage-form-field-text {
         color: $black;
-        font-size: 16px;
+        font-size: 1rem;
         font-family: $libre-franklin;
         font-weight: 400;
-        line-height: 24px;
+        line-height: 1.5rem;
         word-wrap: break-word;
       }
 
       .storage-tooltip {
         width: 100%;
         color: $gray-60;
-        font-size: 14px;
+        font-size: 0.875rem;
         font-family: $libre-franklin;
         font-weight: 400;
-        line-height: 21px;
+        line-height: 1.313rem;
         word-wrap: break-word;
       }
 
@@ -672,7 +672,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 4px;
+        gap: 0.25rem;
         display: inline-flex;
       }
 
@@ -680,11 +680,11 @@
         justify-content: center;
         display: flex;
         flex-direction: column;
-        color: var(--Neutral-Black, #121212);
-        font-size: 16px;
+        color: $black;
+        font-size: 1rem;
         font-family: Libre Franklin;
         font-weight: 600;
-        line-height: 24px;
+        line-height: 1.5rem;
         word-wrap: break-word;
       }
 
@@ -693,14 +693,14 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        gap: 20px;
+        gap: 1.25rem;
         display: inline-flex;
       }
 
       .storage-options-section {
         justify-content: flex-start;
         align-items: center;
-        gap: 20px;
+        gap: 1.25rem;
         display: inline-flex;
       }
 
@@ -709,29 +709,29 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 40px;
+        gap: 2.5rem;
         display: flex;
       }
 
       .storage-type-option-container {
-        width: 692px;
+        width: 43.25rem;
         overflow: hidden;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 20px;
+        gap: 1.25rem;
         display: inline-flex;
       }
 
       .storage-option-radio-button-container {
         justify-content: flex-start;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         display: flex;
       }
 
       .storage-option-radio-button {
-        width: 24px;
-        height: 24px;
+        width: 1.5rem;
+        height: 1.5rem;
         position: relative;
         overflow: hidden;
       }
@@ -775,7 +775,7 @@
       color: $black;
 
       /* Heading 4 */
-      font-family: "Libre Franklin";
+      font-family: $libre-franklin;
       font-size: 1.5rem;
       font-style: normal;
       font-weight: 600;
@@ -787,7 +787,7 @@
     color: $black;
 
     /* Body S */
-    font-family: "Libre Franklin";
+    font-family: $libre-franklin;
     font-size: 1rem;
     font-style: normal;
     font-weight: 400;
