@@ -65,6 +65,12 @@ describe UserRequest, type: :model do
       expect(user_request.state).to eq(UserRequest::STALE)
     end
 
+    it "can be failed" do
+      user_request.state = UserRequest::FAILED
+      expect(user_request.save).to be(true)
+      expect(user_request.state).to eq(UserRequest::FAILED)
+    end
+
     it "has an error if set to a non-standard value" do
       user_request.state = "foobar"
       expect(user_request.save).to be(false)

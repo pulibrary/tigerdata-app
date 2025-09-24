@@ -1,11 +1,11 @@
 <div class="download-item" >
   <div class="title">
-    <%= link_to(download.request_details["project_title"], project_file_list_download_path(job_id: download.job_id, target: "_blank")) %>
+    <%= user_request.download_link %>
   </div>
   <div class="details">
-    <div class="expiration">Expires in <%= time_ago_in_words(download.completion_time + 7.days)%></div>
+    <div class="expiration"><%= user_request.expiration %></div>
     <div class="size">
-      <%= number_to_human_size(download.request_details["file_size"]) %>
+      <%= user_request.size %>
     </div>
   </div>
 </div>
