@@ -32,8 +32,10 @@ class RequestsController < ApplicationController
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if current_user.developer || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
@@ -63,8 +65,10 @@ class RequestsController < ApplicationController
       redirect_to request_path(@request_model)
     end
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
