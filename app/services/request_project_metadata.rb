@@ -36,10 +36,12 @@ class RequestProjectMetadata
        end
 
        def read_only_users(request)
+         return [] if request[:user_roles].blank?
          request[:user_roles].select { |u| u["read_only"] || u["read_only"].nil? }.map { |u| u["uid"] }
        end
 
        def read_write_users(request)
+         return [] if request[:user_roles].blank?
          request[:user_roles].select { |u| u["read_only"] == false }.map { |u| u["uid"] }
        end
 
