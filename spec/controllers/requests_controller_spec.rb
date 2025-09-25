@@ -1,13 +1,31 @@
 # frozen_string_literal: true
 require "rails_helper"
 RSpec.describe RequestsController, type: :controller do
-  let!(:current_user) { FactoryBot.create(:sysadmin) }
+  let!(:current_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
   let(:valid_request) do
-    Request.create(project_title: "Valid Request", data_sponsor: current_user.uid, data_manager: current_user.uid, departments: ["RDSS"],
+    Request.create(project_title: "Valid Request", data_sponsor: current_user.uid, data_manager: current_user.uid, departments: [{ code: "dept", name: "department" }],
                    quota: "500 GB", description: "A valid request",
                    project_folder: "valid_folder", project_purpose: "research")
   end
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
+
+  describe "#approve" do
+    it "redirects to sign in if no user is logged in" do
+      get :approve, params: { id: valid_request.id }
+      expect(response).to redirect_to "http://test.host/sign_in"
+    end
+
+    context "a signed in user" do
+      before do
+        sign_in current_user
+      end
+
+      it "approves the request" do
+        valid_request # make sure the request exists before we start the count
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
+      end
+    end
+  end
 
   context "when a session expires" do
     let(:original_session) { SystemUser.mediaflux_session }
