@@ -84,6 +84,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).to have_content("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
         expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
+        expect(page).to have_content("RDSS")
       end
     end
 

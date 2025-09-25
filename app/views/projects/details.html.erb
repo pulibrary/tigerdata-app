@@ -50,13 +50,7 @@
       <dd><strong class="px-0">None</strong></dd>
     <% else %>
       <dd>
-        <% @project.project.metadata_json["departments"].each do |department_code| %>
-          <% Affiliation.all.each do |hash| %>
-            <% if hash[:code] == department_code %>
-            <%= hash[:name] %>
-            <% end %>
-          <% end %>
-        <% end %>
+        <%= @departments %>
       </dd>
     <% end %>
     <dt>Project Directory</dt>
