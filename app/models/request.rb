@@ -23,8 +23,7 @@ class Request < ApplicationRecord
   end
 
   def valid_title?
-    field_present?(project_title, :project_title)
-    title_within_limit?(project_title, :project_title)
+    valid_title_present?(project_title, :project_title)
   end
 
   def valid_data_sponsor?
@@ -44,8 +43,7 @@ class Request < ApplicationRecord
   end
 
   def valid_description?
-    field_present?(description, :description)
-    description_within_limit?(description, :description)
+    valid_description_present?(description, :description)
   end
 
   def valid_parent_folder?
@@ -163,9 +161,11 @@ class Request < ApplicationRecord
       end
     end
 
-    def description_within_limit?(description, field)
-      true if description.blank?
-      if description.length > 1000
+    def valid_description_present?(description, field)
+      if description.blank?
+        errors.add(field, :blank, message: "cannot be empty")
+        false
+      elsif description.length > 1000
         errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
         false
       else
@@ -173,9 +173,11 @@ class Request < ApplicationRecord
       end
     end
 
-    def title_within_limit?(project_title, field)
-      true if project_title.blank?
-      if project_title.length > 200
+    def valid_title_present?(project_title, field)
+      if project_title.blank?
+        errors.add(field, :blank, message: "cannot be empty")
+        false
+      elsif project_title.length > 200
         errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
         false
       else
