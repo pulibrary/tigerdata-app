@@ -36,11 +36,11 @@ class RequestsController < ApplicationController
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def approve
-    if current_user.developer || current_user.sysadmin || current_user.trainer
+    if eligible_to_approve
       @request_model = Request.find(params[:id])
       if @request_model.valid_to_submit?
         project = @request_model.approve(current_user)
-        @request_model.destroy
+        @request_model.destroy!
         stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."
         TigerdataMailer.with(project_id: project.id, approver: current_user).project_creation.deliver_later
         redirect_to project_path(project.id), notice: stub_message
@@ -73,5 +73,9 @@ class RequestsController < ApplicationController
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
+    end
+
+    def eligible_to_approve
+      current_user.sysadmin || (current_user.developer && !Rails.env.production?)
     end
 end
