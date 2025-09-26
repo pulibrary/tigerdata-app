@@ -36,6 +36,9 @@ class FileInventoryJob < ApplicationJob
 
     # Update the job record as completed
     update_inventory_request(user_id: user.id, project: project, job_id: @job_id, filename: filename)
+  rescue Mediaflux::SessionExpired => e
+    # do not retry we can not continue if the session is expired
+    fail_inventory_request(user_id: user.id, project: project, job_id: @job_id)
   end
 
   private
@@ -49,6 +52,18 @@ class FileInventoryJob < ApplicationJob
       raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
       pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
       pathname.join("#{job_id}.csv").to_s
+    end
+
+    def fail_inventory_request(user_id:, project:, job_id: )
+      inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
+      request_details = { project_title: project.title, error: "Mediaflux session expired" }
+      inventory_request.update(state: UserRequest::FAILED, request_details: request_details,
+                                completion_time: Time.current.in_time_zone("America/New_York"))
+      inventory_request
+    rescue ActiveRecord::StatementInvalid
+      Rails.logger.info "Export - failing inventory request details for project #{project.id} job_id: #{job_id} failed, about to retry"
+      ActiveRecord::Base.connection_pool.release_connection
+      retry
     end
 
     def update_inventory_request(user_id:, project:, job_id:, filename: )

@@ -1,0 +1,11 @@
+<div class="download-item" >
+  <div class="title failed">
+    <%= user_request.title %>
+  </div>
+  <div class="details">
+    <div class="expiration">The download failed to complete</div>
+    <div class="size">
+      <%= link_to "retry", user_request.list_contents_url, target: "_blank" %>
+    </div>
+  </div>
+</div>

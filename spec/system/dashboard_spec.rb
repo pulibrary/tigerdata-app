@@ -62,12 +62,16 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       it "shows the latests downloads available" do
         approved_project = Project.users_projects(current_user).first
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
+        FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
+                                    request_details: { project_title: approved_project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
         sign_in current_user
         visit dashboard_path
 
         expect(page).to have_content "Latest Downloads"
+        expect(page).to have_link approved_project.title
         expect(page).to have_content "Expires in 7 days"
         expect(page).to have_content "1.18 MB"
+        expect(page).to have_content "The download failed to complete"
       end
 
       it "hides the 'Administration' tab" do

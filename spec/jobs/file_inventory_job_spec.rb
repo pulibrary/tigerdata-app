@@ -85,5 +85,46 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
         expect(file_inventory_request.state).to eq "completed"
       end
     end
+
+    context "when an Mediaflux::SessionExpired error occurs" do
+      before do
+        project_in_mediaflux # be sure the project is instantiated
+        allow(Project).to receive(:find).with(project_in_mediaflux.id).and_return(project_in_mediaflux)
+        allow(project_in_mediaflux).to receive(:file_list_to_file).and_raise(Mediaflux::SessionExpired)
+      end
+
+      it "it handles the Mediaflux::SessionExpired exception and fails the job" do
+        described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+        file_inventory_request = FileInventoryRequest.first
+        expect(file_inventory_request.state).to eq "failed"
+        expect(file_inventory_request.completion_time).to be_instance_of(ActiveSupport::TimeWithZone)
+        expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
+        expect(file_inventory_request.request_details["error"]).to eq("Mediaflux session expired")
+      end
+
+      context "when an ActiveRecord::StatementInvalid error occurs" do
+        before do
+          @error_count = 0
+          allow_any_instance_of(FileInventoryRequest).to receive(:update).and_wrap_original do |original_method, *args|
+            if @error_count == 0
+              # Force an error the first time to make sure the retry is invoked in the code
+              @error_count = 1
+              raise ActiveRecord::StatementInvalid, "error"
+            else
+              original_method.call(*args)
+            end
+          end
+        end
+
+        it "it handles the retry for ActiveRecord::StatementInvalid exception" do
+          described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+          file_inventory_request = FileInventoryRequest.first
+          expect(file_inventory_request.state).to eq "failed"
+          expect(file_inventory_request.completion_time).to be_instance_of(ActiveSupport::TimeWithZone)
+          expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
+          expect(file_inventory_request.request_details["error"]).to eq("Mediaflux session expired")
+        end
+      end
+    end
   end
 end

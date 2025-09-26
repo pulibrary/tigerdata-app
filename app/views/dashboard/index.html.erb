@@ -45,7 +45,9 @@
                                  <% if current_user.latest_downloads.count == 0 %>
                                  <div class="download-item">No downloads available</div>
                                  <% else %>
-                                 <%= render partial: "download_item", collection: current_user.latest_downloads, as: "download" %>
+                                   <% current_user.latest_downloads.each do |user_request| %>
+                                     <%= render partial: user_request.partial_name, locals: { user_request: } %>
+                                   <% end %>
                                  <% end %>
                               </div>
                            </div>
