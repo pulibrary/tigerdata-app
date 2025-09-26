@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 class Request < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
@@ -22,7 +23,7 @@ class Request < ApplicationRecord
   end
 
   def valid_title?
-    field_present?(project_title, :project_title)
+    valid_title_present?(project_title, :project_title)
   end
 
   def valid_data_sponsor?
@@ -42,7 +43,7 @@ class Request < ApplicationRecord
   end
 
   def valid_description?
-    field_present?(description, :description)
+    valid_description_present?(description, :description)
   end
 
   def valid_parent_folder?
@@ -160,6 +161,30 @@ class Request < ApplicationRecord
       end
     end
 
+    def valid_description_present?(description, field)
+      if description.blank?
+        errors.add(field, :blank, message: "cannot be empty")
+        false
+      elsif description.length > 1000
+        errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
+        false
+      else
+        true
+      end
+    end
+
+    def valid_title_present?(project_title, field)
+      if project_title.blank?
+        errors.add(field, :blank, message: "cannot be empty")
+        false
+      elsif project_title.length > 200
+        errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
+        false
+      else
+        true
+      end
+    end
+
     # If a request fails to be a approved we make sure there were not orphan
     # project records left in our Rails database that do not have a matching
     # project in Mediaflux (i.e. collection asset).
@@ -171,3 +196,4 @@ class Request < ApplicationRecord
       end
     end
 end
+# rubocop:enable Metrics/ClassLength

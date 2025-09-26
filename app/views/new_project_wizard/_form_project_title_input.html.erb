@@ -6,15 +6,15 @@
     <div class="text-input">
       <div class="horizontal-frame">
         <div class="vertical-frame">
-          <input class="form-input counted-input" type="text" name="request[project_title]" id="<%= input_id %>"
-                value="<%= project_title %>" placeholder="Give your project a proper name for display throughout the Web Portal"
-                maxlength="200"></input>
+          <input class="form-input counted-input" character-limit="200" type="text" name="request[project_title]" id="<%= input_id %>"
+                value="<%= project_title %>" placeholder="Give your project a proper name for display throughout the Web Portal">
+              </input>
           <div class="horizontal-frame error-and-count">
             <div class="input-error">
                 <%= project_title_error %>
             </div>
             <div class="char-limit">
-              <div class="char-limit-text current-count">
+              <div id="project-title-char-limit" class="char-limit-text current-count">
                 <%= project_title.size %>/200 characters
               </div>
             </div>
