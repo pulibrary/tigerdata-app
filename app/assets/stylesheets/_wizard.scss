@@ -294,6 +294,9 @@
                     line-height: 1.125rem; /* 150% */
                   }
                 }
+                .counted-input-error {
+                  color: $red-dark !important;
+                }
                 .error-and-count {
                   .input-error {
                     flex-basis: 80%;

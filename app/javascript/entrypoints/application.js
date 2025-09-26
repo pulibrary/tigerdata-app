@@ -164,10 +164,16 @@ function showValidationError() {
 }
 
 function charCount() {
+  const charLimit = $('#description').attr('character-limit');
   $('.counted-input').on('keyup', (event) => {
     const element = event.currentTarget;
     element.parentNode.querySelector('.current-count').innerHTML =
-      `${element.value.length}/${element.maxLength} characters`;
+      `${element.value.length}/${charLimit} characters`;
+    if (element.value.length > charLimit) {
+      $('#description-char-limit').addClass('counted-input-error');
+    } else if (element.value.length < charLimit) {
+      $('#description-char-limit').removeClass('counted-input-error');
+    }
   });
 }
 
