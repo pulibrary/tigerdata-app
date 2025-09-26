@@ -5,14 +5,12 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project) { create_project_in_mediaflux(current_user: user) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "#metadata" do
     before do
-      approved_project.mediaflux_id = nil
-      @mediaflux_id = approved_project.approve!(current_user: user)
-      asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: @mediaflux_id)
+      asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]
       @asset_id = asset_response.split("<")[0].to_i
       asset_req.resolve
@@ -33,7 +31,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
     context "A collection" do
       it "parses a metadata response",
       :integration do
-        metadata_request = described_class.new(session_token: user.mediaflux_session, id: @mediaflux_id)
+        metadata_request = described_class.new(session_token: user.mediaflux_session, id: approved_project.mediaflux_id)
         metadata = metadata_request.metadata
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("a random description")
@@ -42,7 +40,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("200 bytes")
         expect(metadata[:total_file_count]).to eq("2")
-        expect(metadata[:quota_allocation]).to eq("600 KB")
+        expect(metadata[:quota_allocation]).to eq("500 GB")
         expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
         expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
       end
@@ -50,13 +48,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
 
     context "actual mediaflux connection" do
       let(:current_user) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:valid_project) { FactoryBot.create(:project_with_dynamic_directory, project_id: "10.34770/tbd") }
+      let(:valid_project) {  create_project_in_mediaflux(current_user: current_user) }
       let(:session_token) { current_user.mediaflux_session }
-
-      before do
-        # create a project in mediaflux
-        valid_project.mediaflux_id = valid_project.approve!(current_user:)
-      end
 
       it "parses the resonse",
       :integration do

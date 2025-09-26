@@ -4,18 +4,13 @@ require "rails_helper"
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model, integration: true do
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project) { create_project_in_mediaflux(current_user: user) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
   # Docker and Ansible responses are the same, but may be different in the future
   let(:docker_response_store) { { id: "1", name: "db", tag: "", type: "database" } }
   let(:ansible_response_store) { { id: "1", name: "db", tag: "", type: "database" } }
 
   describe "#metadata" do
-    before do
-      # create a real collection for the test to make a request to
-      approved_project.mediaflux_id = nil
-      @mediaflux_id = approved_project.approve!(current_user: user)
-    end
     it "parses a metadata response" do
       stores_request = described_class.new(session_token: user.mediaflux_session)
       stores = stores_request.stores

@@ -5,14 +5,10 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:session_token) { SystemUser.mediaflux_session }
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project) { create_project_in_mediaflux(current_user: user) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "metadata values" do
-    before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
-    end
 
     it "passes the metadata values in the request" ,
     :integration do

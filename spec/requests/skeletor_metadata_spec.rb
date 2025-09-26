@@ -23,12 +23,12 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
   end
 
   context "retrieves xml from mediaflux for a project" do
+    let(:project) { create_project_in_mediaflux(current_user: data_sponsor) }
     before do
       sign_in data_sponsor
     end
 
     it "provides the xml metadata from mediaflux for a project" do
-      project.approve!(current_user: data_sponsor)
       get project_show_mediaflux_url(project), params: { format: :xml } # this is an example of project xml from mediaflux {project.id}-mf.xml
       expect(response.content_type).to match "xml"
       expect(response.code).to eq "200"
