@@ -146,7 +146,9 @@ jobs:
           path: coverage
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
-      - coveralls/upload
+      - coveralls/upload:
+          coverage_reporter_version: "v0.6.17"
+
   mflux_ci:
     working_directory: ~/tiger_data
     machine: true
