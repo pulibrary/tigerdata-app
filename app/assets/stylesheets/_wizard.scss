@@ -586,6 +586,9 @@
           gap: 0.75rem;
           align-self: stretch;
         }
+        #project-title-char-limit {
+          display: none;
+        }
       }
 
       .form-field-label-vertical-container {

@@ -88,6 +88,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
     end
+    # rubocop:disable Layout/LineLength
     let(:title_too_long) do
       Request.create(
         request_type: nil,
@@ -134,6 +135,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
     end
+    # rubocop:enable Layout/LineLength
     let(:invalid_request) do
       Request.create
     end
@@ -280,7 +282,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
       end
 
-      it "reports an error if the title is too long" do 
+      it "reports an error if the title is too long" do
         sign_in sysadmin_user
         visit approve_request_path(title_too_long.id)
         expect(page).to have_content("Review")
@@ -289,14 +291,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
       end
 
-      it "reports an error if the description is too long" do 
+      it "reports an error if the description is too long" do
         sign_in sysadmin_user
         visit approve_request_path(description_too_long.id)
         expect(page).to have_content("Review")
         within(".project-description") do
           expect(page).to have_content("description cannot exceed 1000 characters")
         end
-      end 
+      end
 
       it "shows the custom quota on the request review page", integration: true do
         sign_in sysadmin_user

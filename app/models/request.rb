@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 class Request < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
@@ -166,18 +167,18 @@ class Request < ApplicationRecord
       if description.length > 1000
         errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
         false
-      else 
+      else
         true
-      end 
+      end
     end
 
     def title_within_limit?(project_title, field)
       if project_title.length > 200
         errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
         false
-      else 
+      else
         true
-      end 
+      end
     end
 
     # If a request fails to be a approved we make sure there were not orphan
@@ -191,3 +192,4 @@ class Request < ApplicationRecord
       end
     end
 end
+# rubocop:enable Metrics/ClassLength
