@@ -164,6 +164,7 @@ class Request < ApplicationRecord
     end
 
     def description_within_limit?(description, field)
+      true if description.blank?
       if description.length > 1000
         errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
         false
@@ -173,6 +174,7 @@ class Request < ApplicationRecord
     end
 
     def title_within_limit?(project_title, field)
+      true if project_title.blank?
       if project_title.length > 200
         errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
         false
@@ -192,4 +194,4 @@ class Request < ApplicationRecord
       end
     end
 end
-# rubocop:enable Metrics/ClassLength
+#rubocop:enable Metrics/ClassLength
