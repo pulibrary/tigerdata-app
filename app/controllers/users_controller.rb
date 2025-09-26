@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class UsersController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :check_user_access
+  before_action :check_user_access, only: %i[index show edit update]
 
   def index
     @users = User.order("uid ASC NULLS LAST").page params[:page]
