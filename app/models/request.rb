@@ -23,6 +23,7 @@ class Request < ApplicationRecord
 
   def valid_title?
     field_present?(project_title, :project_title)
+    title_within_limit?(project_title, :project_title)
   end
 
   def valid_data_sponsor?
@@ -43,6 +44,7 @@ class Request < ApplicationRecord
 
   def valid_description?
     field_present?(description, :description)
+    description_within_limit?(description, :description)
   end
 
   def valid_parent_folder?
@@ -158,6 +160,24 @@ class Request < ApplicationRecord
       else
         true
       end
+    end
+
+    def description_within_limit?(description, field)
+      if description.length > 1000
+        errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
+        false
+      else 
+        true
+      end 
+    end
+
+    def title_within_limit?(project_title, field)
+      if project_title.length > 200
+        errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
+        false
+      else 
+        true
+      end 
     end
 
     # If a request fails to be a approved we make sure there were not orphan
