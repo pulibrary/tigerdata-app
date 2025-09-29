@@ -244,42 +244,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#approve!" do
-    let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
-    let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-    let!(:project) do
-      request = FactoryBot.create(:request_project)
-      request.approve(current_user)
-    end
-
-    before do
-      allow(PULDatacite).to receive(:new).and_return(datacite_stub)
-    end
-
-    it "Records the mediaflux id and sets the status to approved",
-    :integration do
-      expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
-    end
-
-    it "creates the provenance events when creating a new project",
-    :integration do
-      expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
-
-      expect(project.provenance_events.count).to eq 3
-      approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
-
-      expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
-      expect(approval_event.event_person).to eq current_user.uid
-      expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
-
-      debug_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::DEBUG_OUTPUT_TYPE }
-      expect(debug_event.event_person).to eq current_user.uid
-      expect(debug_event.event_details).to eq "Debug output"
-    end
-  end
-
   describe ".default_storage_unit" do
     it "returns the default storage unit of KB" do
       expect(described_class.default_storage_unit).to eq("KB")

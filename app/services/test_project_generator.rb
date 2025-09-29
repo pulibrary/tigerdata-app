@@ -48,10 +48,6 @@ class TestProjectGenerator
     end
     # rubocop:enable Metrics/MethodLength
 
-    def sponsor
-      User.where(uid: "tigerdatatester").first
-    end
-
     def departments
       ldepartments = []
       ldepartments << Affiliation.all[3] if (number % 7) == 0
@@ -59,13 +55,5 @@ class TestProjectGenerator
       ldepartments << Affiliation.all[1] if (number % 5) == 0
       ldepartments << Affiliation.all[0] if ldepartments.count == 0
       ldepartments
-    end
-
-    def project_id
-      part1 = rand(1...99).to_s.rjust(2, "0")
-      part2 = rand(1...99_999).to_s.rjust(5, "0")
-      part3 = rand(1...9999).to_s.rjust(4, "0")
-      part4 = rand(1...9999).to_s.rjust(4, "0")
-      "#{part1}.#{part2}/#{part3}-#{part4}"
     end
 end

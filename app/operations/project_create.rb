@@ -2,12 +2,8 @@
 class ProjectCreate < Dry::Operation
   class ProjectCreateError < StandardError; end
 
-  # TODO: Remove the optional project parameter once https://github.com/pulibrary/tigerdata-app/issues/1707
-  # has been completed. In practice the project is always created from the request.
-  def call(request:, approver:, project: nil)
-    if project.nil?
-      project = step create_project_from_request(request)
-    end
+  def call(request:, approver:)
+    project = step create_project_from_request(request)
     mediaflux_id = step persist_in_mediaflux(project, approver)
     step update_project_with_mediaflux_info(mediaflux_id:, project:)
     step persist_users_in_mediaflux(project, approver)
@@ -45,6 +41,8 @@ class ProjectCreate < Dry::Operation
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
         Success(mediaflux_id)
       end
+    # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
+    #        I could not figure out a way in tests to hit this error...
     rescue => ex
       Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
     end
@@ -75,6 +73,8 @@ class ProjectCreate < Dry::Operation
         Rails.logger.debug { "Project #{project.id} users have been added to MediaFlux: #{user_debug}" }
         Success project
       end
+    # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
+    #        I could not figure out a way in tests to hit this error...
     rescue => ex
       Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{ex}")
     end
