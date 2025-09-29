@@ -23,8 +23,8 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:allow_all_users_wizard_access, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-      expect(Project.count).to eq 0
       another_user = FactoryBot.create(:user)
+      expect(Project.count).to eq 0
       sign_in user
       visit "/"
       expect(page).to have_content("Welcome, #{user.given_name}!")
@@ -45,6 +45,8 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
+
+      # This part of the test is filling out out the data manager and sponsor and adding users in the drupal form
       expect(page).to have_content("Assign roles for your project")
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
@@ -56,7 +58,13 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       select another_user_str + "\u00A0", from: "user_find"
       click_on "Add Users"
 
-      # next step is to click on "add user" then figure out how to load in the user for the druple
+      # This part of the code is going through the rest of the fields of the drupal form to review and submit the project request
+      click_on "Next"
+      expect(page).to have_content("Storage and Access")
+      click_on "Next"
+      expect(page).to have_content("Review")
+      click_on "Next"
+      expect(page).to have_content("Your new project request is submitted")
       test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
   end
