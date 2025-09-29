@@ -4,13 +4,11 @@ require "rails_helper"
 RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model, integration: true do
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
-  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project) { create_project_in_mediaflux(current_user: user) }
 
   describe "#result" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
-      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
     it "returns an iterator" do
@@ -25,9 +23,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
 
   context "deep search" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
-      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
     it "honors the deep search parameter" do
@@ -42,9 +38,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
 
   context "action get-name" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
-      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
     it "honors the get-name action" do
@@ -59,9 +53,7 @@ RSpec.describe Mediaflux::QueryRequest, connect_to_mediaflux: true, type: :model
 
   context "action get-values" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
-      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
     end
 
     it "request the custom fields when using get-values" do

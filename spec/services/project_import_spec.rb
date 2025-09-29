@@ -67,10 +67,8 @@ RSpec.describe ProjectImport do
     :integration do
       # Create a project in Mediaflux...
       # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
-      new_project_id = random_project_id
-      new_project_directory = "tigerdata/rspec-import/#{random_project_directory}"
-      new_project = FactoryBot.create(:approved_project, project_id: new_project_id, project_directory: new_project_directory)
-      new_project.approve!(current_user: user)
+      new_project = create_project_in_mediaflux(current_user: user)
+      new_project_id = new_project.metadata_model.project_id
 
       # ...and delete it from the Rails database
       # (but it still exists in Mediaflux)

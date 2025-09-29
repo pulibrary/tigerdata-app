@@ -5,11 +5,7 @@ RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux:
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.create :project_with_doi }
-
-  before do
-    project.approve!(current_user: user)
-  end
+  let(:project) { create_project_in_mediaflux(current_user: user) }
 
   describe "#exist" do
     it "validates that an asset exist or not", :integration do

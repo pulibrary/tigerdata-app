@@ -5,17 +5,15 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  let(:approved_project) { FactoryBot.create(:approved_project) }
+  let(:approved_project) { create_project_in_mediaflux(current_user: user) }
 
   describe "#result" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
+      mediaflux_id = approved_project.mediaflux_id
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
-      asset_response = asset_req.response_body.split("<id>")[1]
-      @asset_id = asset_response.split("<")[0].to_i
-      asset_req.resolve
+      @asset_id = asset_req.response_xml.xpath("/response/reply/result/id").text
+      asset_req.resolve # intentionally making a second asset
 
       query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: true)
       @iterator_id = query_req.result
@@ -38,13 +36,10 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
 
   describe "action get-names" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
+      mediaflux_id = approved_project.mediaflux_id
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
-      asset_response = asset_req.response_body.split("<id>")[1]
-      @asset_id = asset_response.split("<")[0].to_i
-      asset_req.resolve
+      @asset_id = asset_req.response_xml.xpath("/response/reply/result/id").text
 
       query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: true)
       @iterator_id = query_req.result
@@ -64,8 +59,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
 
   describe "#action get-meta" do
     before do
-      approved_project.mediaflux_id = nil
-      mediaflux_id = approved_project.approve!(current_user: user)
+      mediaflux_id = approved_project.mediaflux_id
 
       asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]

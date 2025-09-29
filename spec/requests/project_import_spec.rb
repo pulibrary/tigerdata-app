@@ -46,8 +46,7 @@ RSpec.describe "ProjectImports", type: :request do
       :integration do
         # Create the project in the Rails database and in Mediaflux
         # (and then delete it from the Rails database)
-        new_project = FactoryBot.create(:approved_project)
-        new_project.approve!(current_user: user)
+        new_project = create_project_in_mediaflux(current_user: user)
         new_project.destroy
 
         # The new project will be imported because we deleted it from the Rail database
@@ -60,8 +59,7 @@ RSpec.describe "ProjectImports", type: :request do
       it "renders a successful response with any errors",
       :integration do
         # Create the project in the Rails database and in Mediaflux
-        new_project = FactoryBot.create(:approved_project)
-        new_project.approve!(current_user: user)
+        new_project = create_project_in_mediaflux(current_user: user)
 
         # The import will detect that the project is already in the database
         put project_import_path

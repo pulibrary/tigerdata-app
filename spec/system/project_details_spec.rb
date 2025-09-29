@@ -30,9 +30,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     ProjectMetadata.new_from_hash(hash)
   end
 
-  let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata_model: metadata_model) }
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
   context "Details page" do
+    let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 8888, metadata_model: metadata_model) }
+    let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
     context "Navigation Buttons" do
       context "Approved projects" do
         context "Sponsor user" do
@@ -106,15 +106,15 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Project Contents", connect_to_mediaflux: true, integration: true do
-      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
+      let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+      let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
 
       before do
-        # Create a project in mediaflux and generate assests for the collection
-        project.approve!(current_user: sponsor_and_data_manager_user)
+        # Create a project in mediaflux and generate assets for the collection
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
       end
 
