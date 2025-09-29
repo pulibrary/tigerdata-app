@@ -294,6 +294,9 @@
                     line-height: 1.125rem; /* 150% */
                   }
                 }
+                .counted-input-error {
+                  color: $red-dark !important;
+                }
                 .error-and-count {
                   .input-error {
                     flex-basis: 80%;
@@ -582,6 +585,9 @@
           align-items: center;
           gap: 0.75rem;
           align-self: stretch;
+        }
+        #project-title-char-limit {
+          display: none;
         }
       }
 

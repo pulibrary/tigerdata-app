@@ -88,6 +88,54 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
       )
     end
+    # rubocop:disable Layout/LineLength
+    let(:title_too_long) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tempus tellus sed orci placerat varius. Cras eu pretium justo. Suspendisse accumsan, libero nec placerat pharetra, nunc mi sollicitudin elit, nec mattis nisi tortor a ipsum.",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+        description: "Test project description",
+        project_purpose: "research",
+        parent_folder: random_project_directory,
+        project_folder: "test_project_folder",
+        project_id: nil,
+        storage_size: nil,
+        requested_by: current_user.uid,
+        storage_unit: "GB",
+        quota: "500 GB",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
+    end
+    let(:description_too_long) do
+      Request.create(
+        request_type: nil,
+        request_title: nil,
+        project_title: "Description Too Long",
+        created_at: Time.current.in_time_zone("America/New_York").iso8601,
+        state: "draft",
+        data_sponsor: sponsor_user.uid,
+        data_manager: data_manager.uid,
+        departments:
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+        description: "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+        project_purpose: "research",
+        parent_folder: random_project_directory,
+        project_folder: "test_project_folder",
+        project_id: nil,
+        storage_size: nil,
+        requested_by: current_user.uid,
+        storage_unit: "GB",
+        quota: "500 GB",
+        user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      )
+    end
+    # rubocop:enable Layout/LineLength
     let(:invalid_request) do
       Request.create
     end
@@ -231,6 +279,24 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
         within(".project-folder") do
           expect(page).to have_content("cannot be empty")
+        end
+      end
+
+      it "reports an error if the title is too long" do
+        sign_in sysadmin_user
+        visit approve_request_path(title_too_long.id)
+        expect(page).to have_content("Review")
+        within(".project-title") do
+          expect(page).to have_content("project title cannot exceed 200 characters")
+        end
+      end
+
+      it "reports an error if the description is too long" do
+        sign_in sysadmin_user
+        visit approve_request_path(description_too_long.id)
+        expect(page).to have_content("Review")
+        within(".project-description") do
+          expect(page).to have_content("description cannot exceed 1000 characters")
         end
       end
 

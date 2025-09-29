@@ -163,11 +163,31 @@ function showValidationError() {
   });
 }
 
-function charCount() {
-  $('.counted-input').on('keyup', (event) => {
+function descriptionValidation() {
+  const descriptionCharLimit = $('#description').attr('character-limit');
+  $('#description').on('keyup', (event) => {
     const element = event.currentTarget;
-    element.parentNode.querySelector('.current-count').innerHTML =
-      `${element.value.length}/${element.maxLength} characters`;
+    element.parentNode.querySelector('#description-char-limit').innerHTML =
+      `${element.value.length}/${descriptionCharLimit} characters`;
+    if (element.value.length > descriptionCharLimit) {
+      $('#description-char-limit').addClass('counted-input-error');
+    } else if (element.value.length < descriptionCharLimit) {
+      $('#description-char-limit').removeClass('counted-input-error');
+    }
+  });
+}
+
+function projectTitleValidation() {
+  const projectTitleCharLimit = $('#project_title').attr('character-limit');
+  $('#project_title').on('keyup', (event) => {
+    const element = event.currentTarget;
+    element.parentNode.querySelector('#project-title-char-limit').innerHTML =
+      `${element.value.length}/${projectTitleCharLimit} characters`;
+    if (element.value.length > projectTitleCharLimit) {
+      $('#project-title-char-limit').addClass('counted-input-error');
+    } else if (element.value.length < projectTitleCharLimit) {
+      $('#project-title-char-limit').removeClass('counted-input-error');
+    }
   });
 }
 
@@ -180,7 +200,8 @@ function initPage() {
   showMoreLessSysAdmin();
   emulate();
   showValidationError();
-  charCount();
+  descriptionValidation();
+  projectTitleValidation();
   storageInputs();
   departmentAutocomplete();
   validationClear();
