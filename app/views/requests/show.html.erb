@@ -9,12 +9,13 @@
 </div>
 
 <div class="horizontal-frame">
-    <% if !@request_model.submitted? %>
-    <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-    <% end %>
-    <% if current_user.eligible_sysadmin? && @request_model.submitted? %>
-    <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-    <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+    <% if @request_presenter.eligible_to_edit?(current_user)%>
+      <% if !@request_model.submitted?%>
+        <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+      <% else %>
+        <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+        <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+      <% end %>
     <% end %>
 </div>
 
