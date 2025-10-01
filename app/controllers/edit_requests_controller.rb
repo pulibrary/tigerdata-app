@@ -4,32 +4,24 @@ class EditRequestsController < ApplicationController
   before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[edit update]
+  before_action :check_access
 
   # GET /edit_requests/1/edit
   def edit
-    unless current_user.developer || current_user.sysadmin || current_user.trainer
-      flash[:notice] = I18n.t(:no_modify_submitted)
-      redirect_to request_path(@request_model)
-    end
     add_breadcrumb(@request_model.project_title, request_path(@request_model))
     add_breadcrumb("Edit Submitted Request")
   end
 
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
   def update
-    if current_user.developer || current_user.sysadmin || current_user.trainer
-      respond_to do |format|
-        if @request_model.update(request_params) && @request_model.valid_to_submit?
-          format.html { redirect_to request_url(@request_model), notice: I18n.t(:successful_update) }
-          format.json { render :show, status: :ok, location: @request_model }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @request_model.errors, status: :unprocessable_entity }
-        end
+    respond_to do |format|
+      if @request_model.update(request_params) && @request_model.valid_to_submit?
+        format.html { redirect_to request_url(@request_model), notice: I18n.t(:successful_update) }
+        format.json { render :show, status: :ok, location: @request_model }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @request_model.errors, status: :unprocessable_entity }
       end
-    else
-      flash[:notice] = I18n.t(:no_modify_submitted)
-      redirect_to request_path(@request_model)
     end
   end
 
@@ -74,5 +66,22 @@ class EditRequestsController < ApplicationController
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
       add_breadcrumb("Requests", requests_path)
+    end
+
+    def check_access
+      return if user_eligible_to_modify_request?
+
+      # request can not be modified by this user, redirect to the request
+      flash[:notice] = I18n.t(:no_modify_submitted)
+      redirect_to request_path(@request_model)
+    end
+
+    def user_eligible_to_modify_request?
+      # elevated privs for the current user
+      if current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+        true
+      else
+        false
+      end
     end
 end
