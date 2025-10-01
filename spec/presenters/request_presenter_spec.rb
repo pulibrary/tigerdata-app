@@ -71,7 +71,11 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
       end
     end
   end
-
+describe "#data_sponsor" do
+    it "returns the full name of the data sponsor" do
+      expect(presenter.data_sponsor).to eq(current_user.display_name)
+    end
+ end
   describe "#full_name" do
     let(:current_user) { FactoryBot.create :user }
     it "returns the full name for a valid uid" do
