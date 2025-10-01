@@ -111,8 +111,11 @@ group :test do
   gem "rails-controller-testing"
   gem "rspec_junit_formatter"
   gem "rspec-retry"
+  gem "ruby-prof"
   gem "selenium-webdriver"
   gem "simplecov", require: false
+  gem "stackprof", ">= 0.2.9", require: false
+  gem "test-prof", "~> 1.0"
   gem "webmock"
 end
 
