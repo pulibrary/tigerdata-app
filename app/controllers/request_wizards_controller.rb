@@ -6,7 +6,7 @@ class RequestWizardsController < ApplicationController
   before_action :set_request_model, only: %i[save]
   before_action :exit_without_saving, only: %i[save]
   before_action :set_or_init_request_model, only: %i[show]
-  before_action :user_eligible_to_modify_request
+  before_action :check_access
 
   attr_reader :request_model
 
@@ -37,7 +37,7 @@ class RequestWizardsController < ApplicationController
 
   private
 
-    def user_eligible_to_modify_request
+    def check_access
       return if user_eligible_to_modify_request?
 
       # request can not be modified by this user, redirect to dashboard
@@ -75,7 +75,7 @@ class RequestWizardsController < ApplicationController
 
       @request_model = if params[:request_id] == "0"
                          # on the first page with a brand new request that has not been created
-                         req = Request.create
+                         req = Request.create(requested_by: current_user.uid)
                          update_sidebar_url(req)
                          req
                        else
@@ -96,7 +96,7 @@ class RequestWizardsController < ApplicationController
       @princeton_departments = Affiliation.all
       @project_purposes = [["Research", "research"], ["Administrative", "administrative"], ["Teaching", "teaching"]]
       @request_model = if params[:request_id].blank?
-                         Request.new(id: 0)
+                         Request.new(id: 0, requested_by: current_user.uid)
                        else
                          Request.find(params[:request_id])
                        end
@@ -122,7 +122,6 @@ class RequestWizardsController < ApplicationController
           json
         end
       end
-      request_params[:requested_by] ||= current_user.uid
       request_params
     end
 
@@ -131,12 +130,24 @@ class RequestWizardsController < ApplicationController
     end
 
     def user_eligible_to_modify_request?
-      return true if current_user.sysadmin
-
-      if @request_model.submitted?
-        current_user.developer && !Rails.env.production?
+      # elevated privs for the current user
+      if current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+        true
+      # allow access for regular users
+      elsif Flipflop.allow_all_users_wizard_access?
+        # current user is the requestor
+        if (@request_model.requested_by == current_user.uid) && !@request_model.submitted?
+          true
+        # a brand new request
+        elsif params[:request_id].blank?
+          true
+        # no access for any other reason
+        else
+          false
+        end
+      # no access for regular users
       else
-        (current_user.developer && !Rails.env.production?) || Flipflop.allow_all_users_wizard_access?
+        false
       end
     end
 end

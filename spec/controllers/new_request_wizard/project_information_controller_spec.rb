@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "rails_helper"
-RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
+RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller do
   let!(:current_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
   let(:valid_request) do
     Request.create(project_title: "Valid Request", data_sponsor: current_user.uid, data_manager: current_user.uid, departments: [{ code: "dept", name: "department" }],
@@ -45,6 +45,12 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
           get :show, params: { request_id: valid_request.id }
           expect(response).to redirect_to "http://test.host/dashboard"
         end
+
+        it "redirects to the dashboard when the request id is blank" do
+          get :show, params: {}
+          expect(response).to redirect_to "http://test.host/dashboard"
+        end
+
         context "the flipper is turned on" do
           before do
             test_strategy = Flipflop::FeatureSet.current.test!
@@ -66,6 +72,11 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
             valid_request.save
             get :show, params: { request_id: valid_request.id }
             expect(response).to redirect_to "http://test.host/dashboard"
+          end
+
+          it "shows the form when the request id is blank" do
+            get :show, params: {}
+            expect(response).not_to have_http_status(:redirect)
           end
         end
 
