@@ -32,7 +32,7 @@
     <li>Project title: <%= @request_model.project_title %></li>
     <li>Request state: <%= @request_model.state %></li>
     <li>Data sponsor: <%= @request_presenter.full_name(@request_model.data_sponsor) %></li>
-    <li>Data manager: <%= @request_presenter.full_name(@request_model.data_manager) %></li>
+    <li>Data manager: <%= @request_presenter.data_manager %></li>
     <li>Data user(s):
       <ul id="request-data-users">
         <% (@request_model.user_roles || []).each do |data_user| %>
