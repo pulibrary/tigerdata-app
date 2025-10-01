@@ -31,8 +31,8 @@
     <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
     <li>Project title: <%= @request_model.project_title %></li>
     <li>Request state: <%= @request_model.state %></li>
-    <li>Data sponsor: <%= @request_model.data_sponsor %></li>
-    <li>Data manager: <%= @request_model.data_manager %></li>
+    <li>Data sponsor: <%= @request_presenter.data_sponsor %></li>
+    <li>Data manager: <%= @request_presenter.data_manager %></li>
     <li>Data user(s):
       <ul id="request-data-users">
         <% (@request_model.user_roles || []).each do |data_user| %>
