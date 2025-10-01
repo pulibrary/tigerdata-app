@@ -105,6 +105,7 @@ jobs:
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
       RAILS_ENV: test
+      VITE_RUBY_AUTO_BUILD: false
     steps:
       - checkout
       - cleanup_docker
@@ -129,6 +130,9 @@ jobs:
       - run:
           name: Run eslint
           command: yarn run eslint 'app/javascript/**'
+      - run:
+          name: Precompile assets
+          command: bundle exec rake assets:precompile
       # wait for postgres and mediaflux
       - run: sleep 10
       - enable_sha1_for_mediaflux
