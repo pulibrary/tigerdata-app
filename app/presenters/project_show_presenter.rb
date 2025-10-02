@@ -79,23 +79,9 @@ class ProjectShowPresenter
 
   private
 
-    def default_usage_divisor
-      1.0/(1000.0**1)
-    end
-
     # Capacity is in bytes
     def default_capacity_divisor
       1.0/(1000.0**3)
-    end
-
-    def storage_remaining(session_id:)
-      capacity = storage_capacity(session_id: session_id)
-      return 0.0 if capacity.zero?
-
-      usage = storage_usage(session_id: session_id)
-
-      remaining = (capacity/default_capacity_divisor) - usage
-      remaining*default_capacity_divisor
     end
 
     def xml_presenter_args
