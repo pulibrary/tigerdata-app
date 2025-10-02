@@ -968,8 +968,11 @@
 .step-expanded-container {
   width: 16px;
   height: 16px;
-  position: relative;
   overflow: hidden;
+  background: url("expanded-icon.svg") no-repeat;
+  border: none;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 .step-expanded {
