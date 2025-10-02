@@ -58,9 +58,9 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       select another_user_str + "\u00A0", from: "user_find"
       click_on "Add Users"
 
-      # This part of the code is going through the rest of the fields of the drupal form to review and submit the project request
+      # This part of the code is going through the rest of the fields of the wizard form to review and submit the project request
       click_on "Next"
-      expect(page).to have_content("Storage and Access")
+      expect(page).to have_content("Enter the storage and access needs for your project.")
       click_on "Next"
       expect(page).to have_content("Review")
       click_on "Next"
