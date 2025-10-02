@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::IteratorDestroyRequest, connect_to_mediaflux: true, type: :model do
-  let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
+  let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
 
