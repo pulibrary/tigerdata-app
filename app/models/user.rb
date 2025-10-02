@@ -126,7 +126,7 @@ class User < ApplicationRecord
   # Is this user eligible to be a sysadmin in this environment?
   # @return [Boolean]
   def eligible_sysadmin?
-    return true if (!Rails.env.production? && (developer || sysadmin)) || (Rails.env.production? && sysadmin)
+    (!Rails.env.production? && (developer || sysadmin)) || (Rails.env.production? && sysadmin)
   end
 
   def eligible_to_create_new?

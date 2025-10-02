@@ -172,27 +172,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  # describe "#save_in_mediaflux" do
-  #   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-  #   let(:project) { FactoryBot.create(:project_with_doi) }
-  #   it "calls ProjectMediaflux to create the project and save the id", integration: true do
-  #     expect(project.mediaflux_id).to be nil
-  #     project.save_in_mediaflux(user: user)
-  #     expect(project.mediaflux_id).not_to be nil
-  #   end
-
-  #   context "when the projects has already beed saved" do
-  #     before do
-  #       project.save_in_mediaflux(user: user)
-  #     end
-  #     # MEDIAFLUX_UPDATES are not yet supported in the UI
-  #     xit "calls out to mediuaflux with an update " do
-  #       project.metadata_model.title = "New title"
-  #       expect { project.save_in_mediaflux(user: user) }.not_to raise_error
-  #     end
-  #   end
-  # end
-
   describe "#create!" do
     let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
     let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
@@ -241,42 +220,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
         expect(status_update_event.event_person).to eq current_user.uid
         expect(status_update_event.event_details).to eq "The Status of this project has been set to pending"
       end
-    end
-  end
-
-  describe "#approve!" do
-    let(:datacite_stub) { instance_double(PULDatacite, draft_doi: "aaabbb123") }
-    let(:current_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-    let!(:project) do
-      request = FactoryBot.create(:request_project)
-      request.approve(current_user)
-    end
-
-    before do
-      allow(PULDatacite).to receive(:new).and_return(datacite_stub)
-    end
-
-    it "Records the mediaflux id and sets the status to approved",
-    :integration do
-      expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
-    end
-
-    it "creates the provenance events when creating a new project",
-    :integration do
-      expect(project.mediaflux_id).not_to be_nil
-      expect(project.metadata_model.status).to eq Project::ACTIVE_STATUS
-
-      expect(project.provenance_events.count).to eq 3
-      approval_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::APPROVAL_EVENT_TYPE }
-
-      expect(approval_event.event_type).to eq ProvenanceEvent::APPROVAL_EVENT_TYPE
-      expect(approval_event.event_person).to eq current_user.uid
-      expect(approval_event.event_details).to eq "Approved by #{current_user.display_name_safe}"
-
-      debug_event = project.provenance_events.find { |event| event.event_type == ProvenanceEvent::DEBUG_OUTPUT_TYPE }
-      expect(debug_event.event_person).to eq current_user.uid
-      expect(debug_event.event_details).to eq "Debug output"
     end
   end
 

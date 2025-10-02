@@ -6,19 +6,14 @@ class RequestWizardsController < ApplicationController
   before_action :set_request_model, only: %i[save]
   before_action :exit_without_saving, only: %i[save]
   before_action :set_or_init_request_model, only: %i[show]
+  before_action :check_access
 
   attr_reader :request_model
 
   # GET /request_wizards/1
   def show
-    if current_user.developer || current_user.sysadmin || current_user.trainer || Flipflop.allow_all_users_wizard_access?
-      # create a request in the first step
-      render_current
-    else
-      error_message = "You do not have access to this page."
-      flash[:notice] = error_message
-      redirect_to dashboard_path
-    end
+    # show the current wizard step form
+    render_current
   end
 
   # PUT /request_wizards/1/save
@@ -41,6 +36,15 @@ class RequestWizardsController < ApplicationController
   end
 
   private
+
+    def check_access
+      return if user_eligible_to_modify_request?
+
+      # request can not be modified by this user, redirect to dashboard
+      error_message = "You do not have access to this page."
+      flash[:notice] = error_message
+      redirect_to dashboard_path
+    end
 
     def exit_without_saving
       if params[:commit] == "Exit without Saving"
@@ -71,7 +75,7 @@ class RequestWizardsController < ApplicationController
 
       @request_model = if params[:request_id] == "0"
                          # on the first page with a brand new request that has not been created
-                         req = Request.create
+                         req = Request.create(requested_by: current_user.uid)
                          update_sidebar_url(req)
                          req
                        else
@@ -92,7 +96,7 @@ class RequestWizardsController < ApplicationController
       @princeton_departments = Affiliation.all
       @project_purposes = [["Research", "research"], ["Administrative", "administrative"], ["Teaching", "teaching"]]
       @request_model = if params[:request_id].blank?
-                         Request.new(id: 0)
+                         Request.new(id: 0, requested_by: current_user.uid)
                        else
                          Request.find(params[:request_id])
                        end
@@ -118,11 +122,32 @@ class RequestWizardsController < ApplicationController
           json
         end
       end
-      request_params[:requested_by] ||= current_user.uid
       request_params
     end
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
+    end
+
+    def user_eligible_to_modify_request?
+      # elevated privs for the current user
+      if current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+        true
+      # allow access for regular users
+      elsif Flipflop.allow_all_users_wizard_access?
+        # current user is the requestor
+        if (@request_model.requested_by == current_user.uid) && !@request_model.submitted?
+          true
+        # a brand new request
+        elsif params[:request_id].blank?
+          true
+        # no access for any other reason
+        else
+          false
+        end
+      # no access for regular users
+      else
+        false
+      end
     end
 end

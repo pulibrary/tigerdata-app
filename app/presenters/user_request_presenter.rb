@@ -2,7 +2,7 @@
 class UserRequestPresenter
   attr_reader :user_request
 
-  delegate :request_details, :job_id, :completion_time, to: :user_request
+  delegate :request_details, :job_id, :completion_time, :expiration_date, to: :user_request
 
   def initialize(user_request)
     @user_request = user_request
@@ -29,7 +29,7 @@ class UserRequestPresenter
   end
 
   def expiration
-    "Expires in #{helpers.time_ago_in_words(completion_time + 7.days)}"
+    "Expires in #{helpers.time_ago_in_words(expiration_date)}"
   end
 
   def size

@@ -12,6 +12,15 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
                    requested_by: "uid", user_roles: [])
   end
 
+  let(:valid_request_with_roles) do
+    Request.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
+                   data_sponsor: approver.uid, data_manager: approver.uid,
+                   departments: [{ code: "dept", name: "department" }],
+                   description: "description", parent_folder: random_project_directory,
+                   project_folder: "project", project_id: "doi", quota: "500 GB",
+                   requested_by: "uid", user_roles: [{ uid: "cac9", read_only: true }])
+  end
+
   let(:invalid_request) do
     Request.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                    data_sponsor: approver.uid, data_manager: approver.uid,
@@ -26,6 +35,14 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
     context "Success case" do
       it "creates a project and persists it in Mediaflux" do
         result = described_class.new.call(request: valid_request, approver: approver)
+        expect(result).to be_success
+        project = result.value!
+        expect(project.mediaflux_id).not_to eq(0)
+      end
+
+      it "creates a project and persists it in Mediaflux with the user roles" do
+        FactoryBot.create(:user, uid: "cac9")
+        result = described_class.new.call(request: valid_request_with_roles, approver: approver)
         expect(result).to be_success
         project = result.value!
         expect(project.mediaflux_id).not_to eq(0)
@@ -60,6 +77,17 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
         error_message = result.failure
         expect(error_message).to include("Setting the mediaflux id the")
+      end
+
+      it "returns a failure if the project can not be activated" do
+        project = FactoryBot.create(:approved_project)
+        allow(Project).to receive(:"create!").and_return(project)
+        allow(project).to receive(:activate).and_raise("Object issue")
+        result = described_class.new.call(request: invalid_request, approver: approver)
+        expect(result).not_to be_success
+
+        error_message = result.failure
+        expect(error_message).to include("Error activate project")
       end
     end
   end
