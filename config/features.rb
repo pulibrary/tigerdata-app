@@ -25,4 +25,6 @@ Flipflop.configure do
   feature :alternate_mediaflux, default: false
 
   feature :allow_all_users_wizard_access, default: false
+
+  feature :disable_login, default: false, description: "Disable login to the web portal."
 end
