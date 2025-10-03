@@ -3,6 +3,7 @@
       <div class="welcome-left">
         <div class="welcome-text">
           <div class="welcome-heading">
+              <%= render partial: "login_disabled" if Flipflop.disable_login? %>
               <h3>Welcome to</h3>
               <h1>TigerData Web Portal</h1>
           </div>
