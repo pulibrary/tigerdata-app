@@ -1,0 +1,29 @@
+
+<% content_for :title, "Aql query for mediaflux" %>
+
+<h1>Type a query into the box and see what mediaflux spits out</h1>
+
+<h2>Example queries </h2>
+ <ul>
+  <li> xpath(tigerdata:project/Title) contains-all ignore-case 'juice apple' </li>
+  <li> xpath(tigerdata:project/Title) matches ignore-case '*juice apple*' </li>
+  <li> xpath(tigerdata:project/Title) starts with ignore-case 'bottle' </li>
+  <li> xpath(tigerdata:project/Title) contains-any ignore-case 'bottle can' </li>
+ <ul>
+
+
+<h2>Search </h2>
+<%= form_with url: aql_queries_path, method: :get do |form| %>
+  <%= form.label :query, "Search Mediaflux for:" %>
+  <%= form.search_field :aql_query, value: @aql_query, style: "width: 100%" %>
+  <%= form.submit "Search" %>
+<% end %>
+<p/>
+<h2> Results </h2>
+<ul>
+  <% @results.each do |result| %>
+    <li>
+     <%= result.to_json %>
+    </li>
+  <% end %>
+</ul>
