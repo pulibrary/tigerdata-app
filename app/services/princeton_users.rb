@@ -78,9 +78,6 @@ class PrincetonUsers
       uid_blank = ldap_person[:uid].blank?
       edupersonprincipalname_blank = ldap_person[:edupersonprincipalname].blank?
       malformed = uid_blank || edupersonprincipalname_blank
-      if malformed
-        Honeybadger.notify("LDAP entry missing edupersonprincipalname or uid", context: { ldap_person: })
-      end
       malformed
     end
 
