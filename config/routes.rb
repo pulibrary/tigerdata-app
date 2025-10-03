@@ -100,6 +100,8 @@ Rails.application.routes.draw do
 
   get "request_submit", to: "request_submit#index"
 
+  get "aql_queries", to: "aql_queries#index"
+
   # Catch any undefined path and render a 404 page not found
   get "*path", to: "application#render_not_found"
 end
