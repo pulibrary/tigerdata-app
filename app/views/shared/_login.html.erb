@@ -1,0 +1,20 @@
+    <% if current_user %>
+      <li class="navbar-item dropdown">
+          <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">
+            <%= current_user.uid%>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to "Log out", main_app.destroy_user_session_path, class: "dropdown-item", tabindex: 0 %>
+          </div>
+        </li>
+    <% else %>
+      <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
+    <% end %>
+  </ul>
+<script>
+  $(document).ready(function (){
+    $('#dropdownMenuButton').click(function () {
+      $('.dropdown-toggle').dropdown('toggle');
+    });
+  });
+</script>

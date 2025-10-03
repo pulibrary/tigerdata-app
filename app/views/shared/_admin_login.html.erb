@@ -1,0 +1,18 @@
+    <% if current_user && current_user.eligible_sysadmin? %>
+      <li class="navbar-item dropdown">
+          <a class="dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">
+            <%= current_user.uid %> (public login disabled)
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to "Log out (public login disabled)", main_app.destroy_user_session_path, class: "dropdown-item", tabindex: 0 %>
+          </div>
+        </li>
+    <% end %>
+  </ul>
+<script>
+  $(document).ready(function (){
+    $('#dropdownMenuButton').click(function () {
+      $('.dropdown-toggle').dropdown('toggle');
+    });
+  });
+</script>
