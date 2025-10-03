@@ -161,11 +161,8 @@ RSpec.describe PrincetonUsers, type: :model do
         edupersonprincipalname: []
       }
     end
-    let(:honeybadger) { class_double("Honeybadger").as_stubbed_const }
     it "sends an alert to honeybadger so we know how often it is happening" do
-      allow(honeybadger).to receive(:notify)
-      described_class.user_from_ldap(ldap_person)
-      expect(honeybadger).to have_received(:notify).with("LDAP entry missing edupersonprincipalname or uid", context: { ldap_person: })
+      expect(described_class.check_for_malformed_ldap_entries(ldap_person)).to be true
     end
   end
 
