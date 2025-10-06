@@ -46,10 +46,12 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
 
-      # This part of the test is filling out out the data manager and sponsor and adding users in the drupal form
+      # This part of the test is filling out the data manager and sponsor
       expect(page).to have_content("Assign roles for your project")
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
+
+      # This part of the test is filling out the data users
       click_on "Add User(s)"
       fill_in :user_find, with: another_user.uid
       sleep(1.2)
