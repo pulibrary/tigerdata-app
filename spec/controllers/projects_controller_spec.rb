@@ -94,18 +94,52 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in sysadmin user" do
-      let(:user) { FactoryBot.create :sysadmin }
+      let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop") }
+      let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
+      let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda") }
+
+      let!(:project1) { create_project_in_mediaflux(request: request1, current_user: sponsor_and_data_manager) }
+      let!(:project2) { create_project_in_mediaflux(request: request2, current_user: sponsor_and_data_manager) }
+      let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sponsor_and_data_manager) }
+
+      let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       before do
-        sign_in user
+        sign_in sponsor_and_data_manager
       end
-      it "redirects to root" do
+
+      after do
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+      end
+
+      it "Shows all the project" do
         get :index
         expect(response).to render_template("index")
+        expect(assigns[:projects].count).to eq(3)
+        expect(assigns[:projects]).to include project1
+        expect(assigns[:projects]).to include project2
+        expect(assigns[:projects]).to include project3
+      end
+
+      it "Shows the queried project(s)" do
+        get :index, params: { title_query: "orange pop" }
+        expect(response).to render_template("index")
+        expect(assigns[:projects]).to eq([project2])
+
+        # doing a second search in one test so we do not have to setup all the projects yet another time
+        get :index, params: { title_query: "*soda*" }
+        expect(response).to render_template("index")
+        expect(assigns[:projects].count).to eq(2)
+        expect(assigns[:projects]).to include project1
+        expect(assigns[:projects]).not_to include project2
+        expect(assigns[:projects]).to include project3
       end
     end
   end
 
   describe "#list_contents" do
+    include ActiveJob::TestHelper
     it "renders an error when requesting json" do
       get :list_contents, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
@@ -121,6 +155,22 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       it "redirects to the root when the user does not have access " do
         get :list_contents, params: { id: project.id, format: :json }
         expect(response).to redirect_to "http://test.host/dashboard"
+      end
+    end
+
+    context "a user with access" do
+      let(:user) { User.find_by(uid: project.metadata_model.data_manager) }
+      before do
+        sign_in user
+      end
+
+      it "enqueues a job and tells the user" do
+        get :list_contents, params: { id: project.id, format: :json }
+        expect(enqueued_jobs.size).to eq(1)
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response.body).to eq("{\"message\":\"File list for \\\"#{project.title}\\\" is being generated in the background. " \
+                                    "A link to the downloadable file list will be available in the \\\"Recent Activity\\\" section " \
+                                    "of your dashboard when it is available. You may safely navigate away from this page or close this tab.\"}")
       end
     end
   end

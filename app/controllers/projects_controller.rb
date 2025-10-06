@@ -4,10 +4,6 @@ class ProjectsController < ApplicationController
   before_action :set_breadcrumbs
   before_action :authenticate_user!
 
-  def project_params
-    params.dup
-  end
-
   def details
     return if project.blank?
 
@@ -75,7 +71,7 @@ class ProjectsController < ApplicationController
 
   def index
     if current_user.eligible_sysadmin?
-      @projects = Project.all
+      search_projects
     else
       flash[:alert] = I18n.t(:access_denied)
       redirect_to dashboard_path
@@ -112,24 +108,15 @@ class ProjectsController < ApplicationController
   def show_mediaflux
     project_id = params[:id]
     project = Project.find(project_id)
-    if project.mediaflux_id == 0
-      flash[:alert] = "Project has not been created in Mediaflux"
-      redirect_to project_path(project_id)
-    else
-      respond_to do |format|
-        format.xml do
-          render xml: project.mediaflux_meta_xml(user: current_user)
-        end
+    respond_to do |format|
+      format.xml do
+        render xml: project.mediaflux_meta_xml(user: current_user)
       end
     end
   rescue => ex
     Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{ex.message}"
     flash[:alert] = "Error fetching Mediaflux XML for this project"
     redirect_to project_path(project_id)
-  end
-
-  def project_job_service
-    @project_job_service ||= ProjectJobService.new(project:)
   end
 
   def list_contents
@@ -162,6 +149,11 @@ class ProjectsController < ApplicationController
 
   private
 
+    def project_job_service
+      @project_job_service ||= ProjectJobService.new(project:)
+    end
+
+
     def build_new_project
       @project ||= Project.new
     end
@@ -183,13 +175,24 @@ class ProjectsController < ApplicationController
       return true if current_user.eligible_sponsor? or current_user.eligible_manager?
     end
 
-    def shared_file_location(filename)
-      raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
-      location = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
-      location.join(filename).to_s
-    end
-
     def set_breadcrumbs
       add_breadcrumb("Dashboard",dashboard_path)
+    end
+
+    def search_projects
+      @title_query = params[:title_query]
+      if @title_query.blank?
+        @projects = Project.all
+        flash[:notice] = nil
+      else
+        result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
+        if result.success?
+          flash[:notice] = nil
+          @projects = result.value!
+        else
+          @projects = []
+          flash[:notice] = "Error reaching projects for #{@title_query}.  Error: #{result.failure}"
+        end
+      end
     end
 end
