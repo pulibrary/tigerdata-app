@@ -27,7 +27,8 @@ import { userRolesAutocomplete } from './userRolesAutocomplete';
 import { storageInputs } from './storageInputs';
 import { validationClear } from './validation';
 import { titleCopySaveExit } from './titleCopySaveExit';
-import { plausible } from './plausible';
+import { logPlausibleNewProject } from './plausible';
+
 
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
