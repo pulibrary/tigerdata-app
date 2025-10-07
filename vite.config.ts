@@ -17,9 +17,9 @@ export default ({ command, mode }) => {
         clientFiles: [
           // List files you want to be pre-bundled here for faster dev server start
           // List frequently used components across multiple entry points
-          'app/javascript/entrypoints/pulDataTables.js'
-        ]
-      }
+          'app/javascript/entrypoints/pulDataTables.js',
+        ],
+      },
     },
     build: {
       minify: minifySetting,
