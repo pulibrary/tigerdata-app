@@ -21,7 +21,6 @@
       <%= render partial: '/new_project_wizard/sidebar' %>
       <%= form_with(url: @form_url, model: @request_model, 
                     action: :save, method: :put, class: "form-panel") do |form| %>
-                    <% byebug %>
         <div class="scrollable-frame">
           <div class="form-header">
             <div class="form-title">
