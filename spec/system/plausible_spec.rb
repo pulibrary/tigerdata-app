@@ -21,16 +21,16 @@ describe "Plausible custom properties", type: :system, connect_to_mediaflux: fal
       visit "/"
       click_on "New Project Request"
       expect(page).to have_content "Tell us a little about your project!"
-      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard\/project_information/)
+      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard_project_information/)
       click_on "Next"
       expect(page).to have_content "Assign roles for your project"
-      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard\/roles_and_people/)
+      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard_roles_and_people/)
       click_on "Next"
       expect(page).to have_content "Enter the storage and access needs"
-      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard\/storage_and_access/)
+      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard_storage_and_access/)
       click_on "Next"
       expect(page).to have_content "Take a moment to review"
-      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard\/review_and_submit/)
+      expect(page.find("#next-button")[:class]).to match(/plausible-event-name=new_project_wizard_review_and_submit/)
     end
   end
 end
