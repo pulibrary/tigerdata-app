@@ -3,8 +3,8 @@
    <input type="button" popovertarget="save-and-exit" value="Save and exit" class="button"></input>
 
    <!-- The Next button takes you to the next screen, depending on the current step -->
-   <!-- We want to attach a plausible event to this button -->
-    <%= form.submit "Next", class: "button plausible-event-name=Request+Wizard" %>
+   <!-- Send the current controller step to plausible.io -->
+    <%= form.submit "Next", id: "next-button", class: "button plausible-event-name=#{params['controller']}" %>
 </div>
 <div popover="auto" id="save-and-exit" class="save-and-exit pul-popover">
   <div class="modal-content">
