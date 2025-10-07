@@ -10,25 +10,26 @@ import 'bootstrap/js/src/scrollspy';
 // import 'bootstrap/js/src/toast'
 // import 'bootstrap/js/src/tooltip'
 
-import * as bootstrap from 'bootstrap';
+// import * as bootstrap from 'bootstrap'; // avoid importing barrel file to reduce bundle size
+import { Modal } from 'bootstrap';
 
 // ActionCable Channels
 import '../channels';
 
-import { setTargetHtml } from './helper';
-import { displayMediafluxVersion } from './mediafluxVersion';
-import { showCreateScript } from './atermScripts';
-import { dashStyle, dashTab } from './dashboardTabs';
-import { departmentAutocomplete } from './departmentAutocomplete';
-import { setupTable } from './pulDataTables';
-import { showMoreLess } from './showMoreLess';
-import { projectStyle, projectTab } from './projectTabs';
-import { userRolesAutocomplete } from './userRolesAutocomplete';
-import { storageInputs } from './storageInputs';
-import { validationClear } from './validation';
-import { titleCopySaveExit } from './titleCopySaveExit';
+import { setTargetHtml } from './helper.js';
+import { displayMediafluxVersion } from './mediafluxVersion.js';
+import { showCreateScript } from './atermScripts.js';
+import { dashStyle, dashTab } from './dashboardTabs.js';
+import { departmentAutocomplete } from './departmentAutocomplete.js';
+import { setupTable } from './pulDataTables.js';
+import { showMoreLess } from './showMoreLess.js';
+import { projectStyle, projectTab } from './projectTabs.js';
+import { userRolesAutocomplete } from './userRolesAutocomplete.js';
+import { storageInputs } from './storageInputs.js';
+import { validationClear } from './validation.js';
+import { titleCopySaveExit } from './titleCopySaveExit.js';
 
-window.bootstrap = bootstrap;
+window.Modal = Modal;
 window.displayMediafluxVersion = displayMediafluxVersion;
 window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
@@ -63,8 +64,8 @@ function initListContentsModal() {
             $alert.textContent = response.message;
             $alert.classList.remove('d-none');
 
-            const modal = bootstrap.Modal.getInstance(listContentsModal);
-            modal.hide();
+            const modal1 = Modal.getInstance(listContentsModal);
+            modal1.hide();
           }
         });
       });
