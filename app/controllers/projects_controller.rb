@@ -187,11 +187,11 @@ class ProjectsController < ApplicationController
       else
         result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
         if result.success?
-          flash[:notice] = nil
+          flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
           @projects = result.value!
         else
           @projects = []
-          flash[:notice] = "Error reaching projects for #{@title_query}.  Error: #{result.failure}"
+          flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
         end
       end
     end
