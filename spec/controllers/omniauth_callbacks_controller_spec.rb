@@ -32,4 +32,52 @@ RSpec.describe Users::OmniauthCallbacksController do
       expect(flash.alert).to eq("You are not a recognized CAS user.")
     end
   end
+
+  describe "Disabled login for the public", type: :system, connect_to_mediaflux: false, js: true do
+
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
+
+    context "unauthenticated user" do 
+      it "does not show the log in button but shows the maintenance message" do 
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+        visit "/"
+        expect(page).not_to have_css("#homepage-login")
+        expect(page).to have_content("TigerData is temporarily unavailable")
+        test_strategy.switch!(:disable_login, false)
+      end 
+    end
+
+    context "sysadmin user" do 
+      it "allowed to log in when login is disabled" do 
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+        sign_in sysadmin_user
+        visit "/dashboard"
+        expect(page).to have_content("puladmin (public login disabled)")
+        test_strategy.switch!(:disable_login, false)
+      end
+      it "shows the user menu with warning for logged in sysadmin" do
+        sign_in sysadmin_user
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+        visit "/dashboard"
+        expect(page).to have_content("puladmin (public login disabled)")
+        test_strategy.switch!(:disable_login, false)
+      end 
+    end
+
+    context "public user" do 
+      it "not allowed to log in when login is disabled" do 
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+        sign_in current_user
+        expect(page).to have_content("TigerData is temporarily unavailable")
+        test_strategy.switch!(:disable_login, false)
+      end
+    end 
+  end
 end
