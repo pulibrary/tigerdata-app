@@ -15,7 +15,7 @@ import { Modal } from 'bootstrap';
 
 // ActionCable Channels
 import '../channels/index.js';
-import '../channels/consumer.js'
+import '../channels/consumer.js';
 
 import { setTargetHtml } from './helper.js';
 import { displayMediafluxVersion } from './mediafluxVersion.js';
