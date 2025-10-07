@@ -64,8 +64,8 @@ function initListContentsModal() {
             $alert.textContent = response.message;
             $alert.classList.remove('d-none');
 
-            const modal1 = Modal.getInstance(listContentsModal);
-            modal1.hide();
+            const modal = Modal.getInstance(listContentsModal);
+            modal.hide();
           }
         });
       });
