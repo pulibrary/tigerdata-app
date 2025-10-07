@@ -8,7 +8,7 @@
           </div>
         </li>
     <% else %>
-      <li class="navbar-item"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
+      <li class="navbar-item" id="homepage-login"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
     <% end %>
   </ul>
 <script>
