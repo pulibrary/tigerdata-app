@@ -340,6 +340,7 @@ GEM
     pg (1.6.2-arm64-darwin)
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
+    plausible_api (0.4.2)
     popper_js (2.11.8)
     pp (0.6.2)
       prettyprint
@@ -629,6 +630,7 @@ DEPENDENCIES
   net-ldap
   omniauth-cas (~> 3.0)
   pg
+  plausible_api
   pry-byebug
   pry-rails
   puma (~> 5.6)

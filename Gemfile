@@ -68,8 +68,8 @@ gem "kaminari"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
+gem "plausible_api"
 gem "sidekiq"
-
 gem "whenever", require: false
 
 group :development, :test do

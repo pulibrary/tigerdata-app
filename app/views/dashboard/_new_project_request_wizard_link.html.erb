@@ -1,6 +1,11 @@
 <div class="new-project-multi">
     <div class="request-btn">
-        <%= link_to "New Project Request", new_project_project_info_path, class: "", id: "new-project-request-wizard-button", tabindex: 0 %>
+        <%= link_to "New Project Request", 
+          new_project_project_info_path, 
+          class: "", 
+          id: "new-project-request-wizard-button",
+          onclick: "log_plausible_new_project();", 
+          tabindex: 0 %>
     </div>
     <div class="request-options">
         <button popovertarget="request-dropdown" class="down-arrow"></button>
