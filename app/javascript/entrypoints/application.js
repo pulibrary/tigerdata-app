@@ -208,6 +208,7 @@ function initPage() {
   departmentAutocomplete();
   validationClear();
   titleCopySaveExit();
+  $("#new-project-request-wizard-button").on('click', () => logPlausibleNewProject());
 }
 
 window.addEventListener('load', () => initPage());
