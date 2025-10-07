@@ -23,8 +23,8 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:allow_all_users_wizard_access, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-      expect(Project.count).to eq 0
       another_user = FactoryBot.create(:user)
+      expect(Project.count).to eq 0
       sign_in user
       visit "/"
       expect(page).to have_content("Welcome, #{user.given_name}!")
@@ -45,9 +45,13 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
+
+      # This part of the test is filling out the data manager and sponsor
       expect(page).to have_content("Assign roles for your project")
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
+
+      # This part of the test is filling out the data users
       click_on "Add User(s)"
       fill_in :user_find, with: another_user.uid
       sleep(1.2)
@@ -56,7 +60,13 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       select another_user_str + "\u00A0", from: "user_find"
       click_on "Add Users"
 
-      # next step is to click on "add user" then figure out how to load in the user for the druple
+      # This part of the code is going through the rest of the fields of the wizard form to review and submit the project request
+      click_on "Next"
+      expect(page).to have_content("Enter the storage and access needs for your project.")
+      click_on "Next"
+      expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
+      click_on "Next"
+      expect(page).to have_content("Your new project request is submitted")
       test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
   end

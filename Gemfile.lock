@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: https://gem.coop/
   specs:
     actioncable (7.2.2.2)
       actionpack (= 7.2.2.2)
@@ -360,7 +360,7 @@ GEM
     puma (5.6.9)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (2.2.17)
+    rack (2.2.18)
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
@@ -463,6 +463,8 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     rubocop-rspec (2.11.1)
       rubocop (~> 1.19)
+    ruby-prof (1.7.2)
+      base64
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (3.1.0)
@@ -519,6 +521,7 @@ GEM
       net-sftp (>= 2.1.2)
       net-ssh (>= 2.8.0)
       ostruct
+    stackprof (0.2.27)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.7)
@@ -527,6 +530,7 @@ GEM
       tins (~> 1.0)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
+    test-prof (1.4.4)
     thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -634,11 +638,14 @@ DEPENDENCIES
   rspec-rails (~> 7.0.1)
   rspec-retry
   rspec_junit_formatter
+  ruby-prof
   selenium-webdriver
   sidekiq
   simplecov
   sprockets-rails
+  stackprof (>= 0.2.9)
   stimulus-rails
+  test-prof (~> 1.0)
   turbo-rails
   tzinfo-data
   vite_rails

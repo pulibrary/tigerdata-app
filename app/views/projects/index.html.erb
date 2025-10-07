@@ -1,5 +1,12 @@
 <h1>Projects</h1>
 
+<h2>Search</h2>
+<p> This feild searches the title of the projects.  It is case insensitive and you can add wild cards (eg. pop*). </p>
+<%= form_with url: projects_path, method: :get do |form| %>
+  <%= form.label :query, "Mediaflux Projects whose title matches:" %>
+  <%= form.search_field :title_query, value: @title_query, style: "width: 100%" %>
+  <%= form.submit "Search" %>
+<% end %>
 <div>
   <% @projects.each do |project| %>
     <%= link_to(project.title, project) %> <br/>
