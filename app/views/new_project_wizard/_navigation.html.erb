@@ -4,7 +4,7 @@
 
    <!-- The Next button takes you to the next screen, depending on the current step -->
    <!-- Send the current controller step to plausible.io -->
-    <%= form.submit "Next", id: "next-button", class: "button plausible-event-name=#{params['controller']}" %>
+    <%= form.submit "Next", id: "next-button", class: "button plausible-event-name=#{params['controller'].gsub("/", "_")}" %>
 </div>
 <div popover="auto" id="save-and-exit" class="save-and-exit pul-popover">
   <div class="modal-content">
