@@ -29,7 +29,6 @@ import { validationClear } from './validation';
 import { titleCopySaveExit } from './titleCopySaveExit';
 import { logPlausibleNewProject } from './plausible';
 
-
 window.bootstrap = bootstrap;
 window.displayMediafluxVersion = displayMediafluxVersion;
 window.showCreateScript = showCreateScript;
@@ -208,7 +207,7 @@ function initPage() {
   departmentAutocomplete();
   validationClear();
   titleCopySaveExit();
-  $("#new-project-request-wizard-button").on('click', () => logPlausibleNewProject());
+  $('#new-project-request-wizard-button').on('click', () => logPlausibleNewProject());
 }
 
 window.addEventListener('load', () => initPage());
