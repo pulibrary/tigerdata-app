@@ -23,7 +23,7 @@ class RequestPresenter
   end
 
   def full_name(uid)
-    return "" if uid.nil?
+    return "" if uid.blank?
     user = User.find_by(uid: uid)
     user.display_name_safe.to_s
   end

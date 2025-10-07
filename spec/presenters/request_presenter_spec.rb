@@ -88,6 +88,14 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
     end
   end
 
+  describe "#data_manager empty" do
+    let(:current_user) { FactoryBot.create :user }
+    let(:request) { FactoryBot.create :request, data_manager: "" }
+    it "handles empty users correctly" do
+      expect(presenter.data_manager).to eq("")
+    end
+  end
+
   describe "#full_name" do
     let(:current_user) { FactoryBot.create :user }
     it "returns the full name for a valid uid" do
