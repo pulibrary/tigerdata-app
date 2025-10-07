@@ -19,7 +19,7 @@ class ProjectSearch < Dry::Operation
 
     def query_mediaflux(search_string:, requestor:, field_name:)
         aql_query = "xpath(tigerdata:project/#{field_name}) matches ignore-case '#{search_string}'"
-        query = Mediaflux::QueryRequest.new(session_token: requestor.mediaflux_session, aql_query: , iterator: false)
+        query = Mediaflux::QueryRequest.new(session_token: requestor.mediaflux_session, aql_query: , iterator: false, collection: "'princeton/#{Mediaflux::Connection.root}'")
         if query.error?
           Failure("Error querying mediaflux: #{query.response_error[:message]}")
         else
