@@ -11,9 +11,6 @@ export default ({ command, mode }) => {
     minifySetting = 'esbuild';
   }
 
-
-
-
   return {
     server: {
       warmup: {
