@@ -8,13 +8,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     set_cas_session
 
-    if Flipflop.disable_login? && !@user.eligible_sysadmin?
+    if Flipflop.disable_login? && (@user.present? && !@user.eligible_sysadmin?)
       Rails.logger.warn "User from CAS with netid #{access_token&.uid} tried to log in with login disabled"
       redirect_to root_path
       flash.alert = "TigerData is temporarily unavailable."
     elsif @user.nil? && access_token&.provider == "cas"
       Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: cas"
-      redirect_to help_path
+      redirect_to root_path
       flash.notice = "You can not be signed in at this time."
     elsif @user.nil?
       Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: #{access_token&.provider}"
