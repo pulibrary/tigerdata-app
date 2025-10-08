@@ -7,7 +7,7 @@ import {
   it,
 } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { setTargetHtml } from '../entrypoints/helper';
+import { setTargetHtml } from '../entrypoints/helper.js';
 
 describe('helper', () => {
   it('has a window', () => {
