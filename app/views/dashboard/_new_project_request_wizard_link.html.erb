@@ -36,17 +36,19 @@
 
         <!-- submitted requests popup -->
         <div popover="auto" id="submitted-request-list" class="request-list">
-          <div class="submitted-list-header">
+          <div class="draft-list-header">
             <div>Submitted Requests</div>
               <button class="request-close-button" popovertarget="submitted-request-list" popovertargetaction="hide"></button>
           </div>
-          <div class="submitted-content">
-            <div class="submitted-list">
+          <div class="draft-content">
+            <div class="draft-list">
                <% @presenter.my_submitted_requests.each do | request_model| %>
-                 <div class="submitted-request">
+                 <div class="draft-request">
                     <div class="request-name"><%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %></div>
                     <div class="request-actions">
-                      <a href="<%= request_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %> Open"><div class="request-open-icon"></div><div>Open</div></a>
+                      <a href="<%= request_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %> Open">
+                        <div>Open</div>
+                      </a>
                     </div>
                  </div>
                <% end %>
