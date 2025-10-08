@@ -54,8 +54,14 @@ RSpec.describe "Project Index Page", type: :system do
       expect(page).not_to have_content("Access Denied")
       expect(page).to have_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
+      expect(page).to have_content(project1.metadata_model.project_directory)
+      expect(page).to have_content(project1.mediaflux_id)
       expect(page).to have_link(project2.title)
+      expect(page).to have_content(project2.metadata_model.project_directory)
+      expect(page).to have_content(project2.mediaflux_id)
       expect(page).to have_link(project3.title)
+      expect(page).to have_content(project3.metadata_model.project_directory)
+      expect(page).to have_content(project3.mediaflux_id)
       fill_in "title_query", with: "*pop*"
       click_on "Search"
       expect(page).to have_content("Successful search in Mediaflux for *pop*")
