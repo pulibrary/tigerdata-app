@@ -25,7 +25,7 @@
                  <div class="draft-request">
                     <div class="request-name"><%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %></div>
                     <div class="request-actions">
-                      <a href="<%= new_project_review_and_submit_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %> Open"><div class="request-open-icon"></div><div>Open</div></a>
+                      <a href="<%= new_project_review_and_submit_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %> Open"><div>Open</div></a>
                       <!--div class="request-remove"><div class="request-remove-icon"></div><div>Delete</div></div-->
                     </div>
                  </div>
