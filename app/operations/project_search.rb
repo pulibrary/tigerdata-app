@@ -18,15 +18,20 @@ class ProjectSearch < Dry::Operation
     end
 
     def query_mediaflux(search_string:, requestor:, field_name:)
-        aql_query = "xpath(tigerdata:project/#{field_name}) matches ignore-case '#{search_string}'"
-        query = Mediaflux::QueryRequest.new(session_token: requestor.mediaflux_session, aql_query: , iterator: false, collection: "'princeton/#{Mediaflux::Connection.root}'")
-        if query.error?
-          Failure("Error querying mediaflux: #{query.response_error[:message]}")
-        else
-          result_ids = query.result_items.map{|result| result[:id]}
-          Success(result_ids)
-        end
+      query = mediaflux_query(search_string:, requestor:, field_name:)
+      if query.error?
+        Failure("Error querying mediaflux: #{query.response_error[:message]}")
+      else
+        result_ids = query.result_items.map{|result| result[:id]}
+        Success(result_ids)
+      end
     end
+
+    def mediaflux_query(search_string:, requestor:, field_name:)
+      aql_query = "xpath(tigerdata:project/#{field_name}) matches ignore-case '#{search_string}'"
+      Mediaflux::QueryRequest.new(session_token: requestor.mediaflux_session, aql_query: , iterator: false )
+    end
+
 
     def convert_results(result_ids)
         errors = []
