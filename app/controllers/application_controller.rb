@@ -128,7 +128,13 @@ class ApplicationController < ActionController::Base
     end
 
     def downtime_check
-     byebug
-      # redirect_to root_path if Flipflop.disable_login?
+      if Flipflop.disable_login?
+        if current_user.eligible_sysadmin?
+          flash[:notice] = "System is only enabled for administrators currently"
+        else            
+          redirect_to root_path 
+          flash[:notice] = "You can not be signed in at this time."
+        end
+      end
     end
 end

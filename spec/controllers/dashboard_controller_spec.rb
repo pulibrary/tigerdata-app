@@ -17,6 +17,24 @@ RSpec.describe DashboardController do
       get :index
       expect(response).to render_template("index")
     end
+    context "disable_login is true" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, false)
+      end
+
+      it "redirects to root" do
+        get :index
+        expect(response).to redirect_to root_path
+        expect(flash.notice).to eq("You can not be signed in at this time.")
+      end
+    end
+
 
     it "accepts a post to change the emulation role" do
       user.trainer = true
@@ -103,6 +121,25 @@ RSpec.describe DashboardController do
         get :index
         expect(response.body).to include("Administration")
       end
+
+      context "disable_login is true" do
+        before do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:disable_login, true)
+        end
+
+        after do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:disable_login, false)
+        end
+
+        it "shows the admin tab" do
+          get :index
+          expect(response.body).to include("Administration")
+          expect(flash.notice).to eq("System is only enabled for administrators currently")
+        end
+      end
+
     end
 
     context "and the user is a developer" do
@@ -112,6 +149,24 @@ RSpec.describe DashboardController do
       it "shows the admin tab" do
         get :index
         expect(response.body).to include("Administration")
+      end
+
+      context "disable_login is true" do
+        before do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:disable_login, true)
+        end
+
+        after do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:disable_login, false)
+        end
+
+        it "shows the admin tab" do
+          get :index
+          expect(response.body).to include("Administration")
+          expect(flash.notice).to eq("System is only enabled for administrators currently")
+        end
       end
     end
   end
