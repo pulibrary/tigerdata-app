@@ -134,3 +134,46 @@ h6 {
 .autocomplete-error {
   color: $red-dark;
 }
+
+.pul-button {
+  display: flex;
+  padding: 0.5rem 1.25rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.pul-button:focus {
+  border-color: $princeton-orange !important;
+  border-width: 2px;
+  box-shadow: 0 0 0 0.2rem $bright-blue;
+}
+
+.pul-button:hover {
+  text-decoration: underline !important;
+}
+
+.pul-button-primary {
+  background: $gray-100;
+  color: $white;
+  text-decoration: none;
+}
+
+.pul-button-primary:hover {
+  text-decoration-color: $white !important;
+  color: $white;
+  background-color: $black-hover;
+}
+
+.pul-button-secondary {
+  border: 1px solid $gray-100;
+  background: $white;
+  text-decoration: none;
+  color: $gray-100;
+}
+
+.pul-button-secondary:hover {
+  text-decoration-color: $gray-100 !important;
+  color: $gray-100;
+}

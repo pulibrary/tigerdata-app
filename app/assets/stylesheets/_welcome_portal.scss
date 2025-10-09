@@ -66,26 +66,12 @@
             }
           }
           button {
-            display: flex;
-            padding: 0.5rem 1.25rem;
-            justify-content: center;
-            align-items: center;
-            gap: 0.25rem;
-
-            border-radius: 0.25rem;
-            background: $gray-100;
-            color: $white;
-            text-align: center;
-
             /* Body S Bold */
             font-family: $libre-franklin;
             font-size: 1rem;
             font-style: normal;
             font-weight: 600;
             line-height: 1.5rem; /* 150% */
-          }
-          button:hover {
-            background-color: $black-hover;
           }
 
           .welcome-warn {
