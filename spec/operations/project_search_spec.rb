@@ -4,13 +4,13 @@ require "rails_helper"
 RSpec.describe ProjectSearch, type: :operation, integration: true do
   let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop") }
+  let(:request1) { FactoryBot.create(:request_project, project_title: "soda Pop") }
   let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
 
   # TODO: The below line will actually create a title with a quote in it (well actually `\"`) and that can be searched for like a single quote
   #       The issue is the project can not be activated because the title in mediaflux is `grape soda < > ' \"` and the local title is the one below
   # let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda < > ' \\\\\\\\\\\\\\\"") }
-  let(:request3) { FactoryBot.create(:request_project, project_title: "z grape soda < ' > \\ ") }
+  let(:request3) { FactoryBot.create(:request_project, project_title: "z gRape soda < ' > \\ ") }
   let!(:project1) { create_project_in_mediaflux(request: request1, current_user: approver) }
   let!(:project2) { create_project_in_mediaflux(request: request2, current_user: approver) }
   let!(:project3) { create_project_in_mediaflux(request: request3, current_user: approver) }
