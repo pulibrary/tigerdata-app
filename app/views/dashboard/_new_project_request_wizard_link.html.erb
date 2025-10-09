@@ -1,14 +1,19 @@
 <div class="new-project-multi">
     <div class="request-btn">
-        <%= link_to "New Project Request", 
-          new_project_project_info_path, 
-          class: "plausible-event-name=New+Project+Request", 
-          id: "new-project-request-wizard-button", 
+        <%= link_to "New Project Request",
+          new_project_project_info_path,
+          class: "plausible-event-name=New+Project+Request",
+          id: "new-project-request-wizard-button",
           tabindex: 0 %>
     </div>
     <div class="request-options">
         <button popovertarget="request-dropdown" class="down-arrow"></button>
-        <div popover="auto" id="request-dropdown" class="request-dropdown"><button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button></div>
+        <div popover="auto" id="request-dropdown" class="request-dropdown">
+          <button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button>
+          <button class="request-button" popovertarget="submitted-request-list">Submitted Requests</button>
+        </div>
+
+        <!-- draft requests popup -->
         <div popover="auto" id="draft-request-list" class="request-list">
           <div class="draft-list-header">
             <div>Saved Draft Requests</div>
@@ -28,5 +33,28 @@
             </div>
           </div>
         </div>
+
+        <!-- submitted requests popup -->
+        <div popover="auto" id="submitted-request-list" class="request-list">
+          <div class="draft-list-header">
+            <div>Submitted Requests</div>
+              <button class="request-close-button" popovertarget="submitted-request-list" popovertargetaction="hide"></button>
+          </div>
+          <div class="draft-content">
+            <div class="draft-list">
+               <% @presenter.my_submitted_requests.each do | request_model| %>
+                 <div class="draft-request">
+                    <div class="request-name"><%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %></div>
+                    <div class="request-actions">
+                      <a href="<%= request_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.project_title.empty? ? "(no title entered)" : request_model.project_title %> Open">
+                        <div>Open</div>
+                      </a>
+                    </div>
+                 </div>
+               <% end %>
+            </div>
+          </div>
+        </div>
+
     </div>
 </div>

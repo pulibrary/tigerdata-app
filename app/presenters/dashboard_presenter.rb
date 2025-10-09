@@ -22,6 +22,10 @@ class DashboardPresenter
   end
 
   def my_draft_requests
-    @my_draft_requests ||= Request.where(requested_by: current_user.uid)
+    @my_draft_requests ||= Request.where(requested_by: current_user.uid, state: Request::DRAFT)
+  end
+
+  def my_submitted_requests
+    @my_submitted_requests ||= Request.where(requested_by: current_user.uid, state: Request::SUBMITTED)
   end
 end

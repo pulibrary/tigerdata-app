@@ -51,6 +51,18 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
       expect(presenter.my_inventory_requests.count).to eq(2)
       expect(presenter.my_inventory_requests.map(&:id)).to eq([inv_req.id, inv_req2.id])
     end
+  end
 
+  describe "requests" do
+    before do
+      FactoryBot.create :request, requested_by: "tigerdatatester"
+      FactoryBot.create :request, requested_by: "tigerdatatester"
+      FactoryBot.create :request, requested_by: "tigerdatatester", state: Request::SUBMITTED
+    end
+
+    it "filters draft and submitted requests" do
+      expect(presenter.my_draft_requests.count).to eq(2)
+      expect(presenter.my_submitted_requests.count).to eq(1)
+    end
   end
 end
