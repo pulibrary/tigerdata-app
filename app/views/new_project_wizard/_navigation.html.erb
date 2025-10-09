@@ -1,11 +1,17 @@
-<%= form.submit "Back", class: "pul-button pul-button-secondary" %>
+<% if @wizard_first_step %>
+  <!-- This empty HTML SPAN is needed to preserve the layout of the buttons at the bottom of the page -->
+  <span>&nbsp;</span>
+<% else %>
+  <%= form.submit "Back", class: "pul-button pul-button-secondary" %>
+<% end %>
+
 <div class="right-frame" >
    <input type="button" popovertarget="save-and-exit" value="Save and exit" class="pul-button pul-button-secondary"></input>
     <%= form.submit "Next", class: "pul-button pul-button-primary" %>
 </div>
 <div popover="auto" id="save-and-exit" class="save-and-exit pul-popover">
   <div class="modal-content">
-     <div class="modal-title-frame"> 
+     <div class="modal-title-frame">
        <div class="model-title">Save Your Progress</div>
        <input type="button" popovertarget="save-and-exit" popovertargetaction="hide" class="pul-popover-close"></input>
      </div>
