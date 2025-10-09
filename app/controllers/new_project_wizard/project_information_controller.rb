@@ -3,6 +3,7 @@ class NewProjectWizard::ProjectInformationController < RequestWizardsController
   protected
 
     def render_current
+      @wizard_first_step = true
       @form_url = new_project_project_info_save_path(@request_model)
       render "/new_project_wizard/project_information"
     end

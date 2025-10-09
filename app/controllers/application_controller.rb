@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   around_action :mediaflux_session_errors
   around_action :mediaflux_login_errors
   before_action :emulate_user
+  before_action :downtime_check
 
   helper_method :breadcrumbs
 
@@ -124,5 +125,16 @@ class ApplicationController < ActionController::Base
       current_user.eligible_sponsor = false
       current_user.eligible_manager = false
       current_user.sysadmin = false
+    end
+
+    def downtime_check
+      if Flipflop.disable_login?
+        if current_user.eligible_sysadmin?
+          flash[:notice] = I18n.t(:only_sysadmin_users)
+        else
+          redirect_to root_path
+          flash[:notice] = I18n.t(:no_login_currently)
+        end
+      end
     end
 end
