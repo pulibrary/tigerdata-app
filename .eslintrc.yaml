@@ -16,3 +16,7 @@ rules:
   no-console: # OK: console.log is fine for debugging, but we don't want to keep it around indefinitely.
     - error # Also make sure that warnings and errors are marked as such.
     - { allow: ["warn", "error"] }
+  import/extensions:
+    - error
+    - ignorePackages
+    - js: always

@@ -64,15 +64,22 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     end
 
     it "shows the new request multi button to sysadmin users" do
-      FactoryBot.create(:request, project_title: "A new request", requested_by: admin_user.uid)
+      FactoryBot.create(:request, project_title: "A new draft request", requested_by: admin_user.uid)
+      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: admin_user.uid, state: Request::SUBMITTED)
       sign_in admin_user
       visit "/"
 
       expect(page).to have_content "New Project Request"
       find(".request-options").click
+
+      expect(page).to have_content "Submitted Requests"
+      click_on "Submitted Requests"
+      expect(page).to have_content "A new submitted request"
+      expect(page).to have_link("Open")
+
       expect(page).to have_content "Saved Draft Requests"
       click_on "Saved Draft Requests"
-      expect(page).to have_content "A new request"
+      expect(page).to have_content "A new draft request"
       click_on "Open"
       expect(page).to have_content("New Project Request")
       expect(page).to have_content("Review")

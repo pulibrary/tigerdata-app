@@ -58,34 +58,10 @@
     gap: 1rem;
 
     .create-new-button {
-      display: flex;
-      padding: 0.5rem 1.25rem;
-      justify-content: center;
-      align-items: center;
-      gap: 0.25rem;
-      border-radius: 0.25rem;
       border: 1px solid $gray-100;
       background: $white;
       text-decoration: none;
       color: $gray-100;
-    }
-    .create-new-button:hover {
-      text-decoration: underline;
-    }
-    .btn:focus {
-      border-color: $princeton-orange !important;
-      border-width: 2px;
-      box-shadow: 0 0 0 0.2rem $bright-blue;
-    }
-    .return-button {
-      display: flex;
-      padding: 0.5rem 1.25rem;
-      justify-content: center;
-      align-items: center;
-      gap: 0.25rem;
-      border-radius: 0.25rem;
-      background: $gray-100;
-      color: $white;
     }
   }
 }

@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { JSDOM } from 'jsdom';
-import Mediaflux from '../components/mediaflux';
+import Mediaflux from '../components/mediaflux.js';
 
 describe('Mediaflux', () => {
   const dom = new JSDOM('<!DOCTYPE html><div class="mediaflux-status"></div></html>');

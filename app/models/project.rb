@@ -41,7 +41,7 @@ class Project < ApplicationRecord
       self.metadata_model.status = Project::ACTIVE_STATUS
       self.save!
     else
-      raise StandardError.new("Title mismatch: #{title} != #{metadata_request.title}")
+      raise StandardError.new("Title mismatch: #{self.title} != #{metadata_request.metadata[:title]}")
     end
   end
 

@@ -8,7 +8,15 @@
   <%= form.submit "Search" %>
 <% end %>
 <div>
+<br/>
+<h2>Results</h2>
+  <ul>
   <% @projects.each do |project| %>
-    <%= link_to(project.title, project) %> <br/>
+    <li>
+     <div><%= link_to(project.title, project) %></div>
+     <div>mediaflux id: <%= project.mediaflux_id %></div>
+     <div><%= project.metadata_model.project_directory %></div>
+    </li>
   <% end %>
+  </ul>
 </div>

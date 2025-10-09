@@ -560,17 +560,6 @@
         align-items: center;
         align-self: stretch;
 
-        .button {
-          display: flex;
-          padding: 0.5rem 1.25rem;
-          justify-content: center;
-          align-items: center;
-          gap: 0.25rem;
-          border-radius: 0.25rem;
-          border: 1px solid $gray-60;
-          background: $white;
-        }
-
         .right-frame {
           display: flex;
           align-items: center;
