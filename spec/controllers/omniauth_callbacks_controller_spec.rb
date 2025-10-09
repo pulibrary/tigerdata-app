@@ -42,9 +42,11 @@ RSpec.describe Users::OmniauthCallbacksController do
       it "does not show the log in button but shows the maintenance message" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:disable_login, true)
-        visit "/"
-        expect(page).not_to have_css("#homepage-login")
-        expect(page).to have_content("TigerData is temporarily unavailable")
+        controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
+        allow(User).to receive(:from_cas) { nil }
+        get :cas
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash.notice).to eq("You can not be signed in at this time.")
         test_strategy.switch!(:disable_login, false)
       end
     end
@@ -53,17 +55,11 @@ RSpec.describe Users::OmniauthCallbacksController do
       it "allowed to log in when login is disabled" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:disable_login, true)
-        sign_in sysadmin_user
-        visit "/dashboard"
-        expect(page).to have_content("puladmin (public login disabled)")
-        test_strategy.switch!(:disable_login, false)
-      end
-      it "shows the user menu with warning for logged in sysadmin" do
-        sign_in sysadmin_user
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:disable_login, true)
-        visit "/dashboard"
-        expect(page).to have_content("puladmin (public login disabled)")
+        controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
+        allow(User).to receive(:from_cas) { sysadmin_user }
+        get :cas
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash.notice).to eq("You can not be signed in at this time.")
         test_strategy.switch!(:disable_login, false)
       end
     end
@@ -72,17 +68,23 @@ RSpec.describe Users::OmniauthCallbacksController do
       it "allowed to log in when login is disabled" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:disable_login, true)
-        sign_in developer
-        visit "/dashboard"
-        expect(page).to have_content("root (public login disabled)")
+        controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
+        allow(User).to receive(:from_cas) { developer }
+        get :cas
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash.notice).to eq("You can not be signed in at this time.")
         test_strategy.switch!(:disable_login, false)
       end
-      it "shows the user menu with warning for logged in sysadmin" do
-        sign_in developer
+    end
+    context "regular user" do
+      it "allowed to log in when login is disabled" do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:disable_login, true)
-        visit "/dashboard"
-        expect(page).to have_content("root (public login disabled)")
+        controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
+        allow(User).to receive(:from_cas) { current_user }
+        get :cas
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash.notice).to eq("You can not be signed in at this time.")
         test_strategy.switch!(:disable_login, false)
       end
     end
