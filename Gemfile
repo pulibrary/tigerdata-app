@@ -69,6 +69,8 @@ gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
 gem "sidekiq"
+gem "sinatra", ">= 4.1.0" # Mailcatcher dependency, please see https://github.com/advisories/GHSA-hxx2-7vcw-mqr3
+gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 
 gem "whenever", require: false
 
