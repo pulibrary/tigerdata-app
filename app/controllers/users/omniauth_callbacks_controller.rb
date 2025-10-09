@@ -5,7 +5,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def cas
     access_token = request.env["omniauth.auth"]
     @user = User.from_cas(access_token)
-
     set_cas_session
 
     if Flipflop.disable_login? && (@user.present? && !@user.eligible_sysadmin?)
