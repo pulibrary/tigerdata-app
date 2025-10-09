@@ -365,7 +365,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (5.6.9)
+    puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.17)
@@ -649,7 +649,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
-  puma (~> 5.6)
+  puma (~> 6.6)
   rails (~> 7.1)
   rails-controller-testing
   redis (~> 4.0)
