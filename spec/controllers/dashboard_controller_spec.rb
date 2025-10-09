@@ -35,7 +35,6 @@ RSpec.describe DashboardController do
       end
     end
 
-
     it "accepts a post to change the emulation role" do
       user.trainer = true
       user.save!
@@ -139,7 +138,6 @@ RSpec.describe DashboardController do
           expect(flash.notice).to eq("System is only enabled for administrators currently")
         end
       end
-
     end
 
     context "and the user is a developer" do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   def cas
     access_token = request.env["omniauth.auth"]
     @user = User.from_cas(access_token)
@@ -17,11 +15,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to root_path
       flash.alert = "You are not a recognized CAS user."
     else
-      sign_in_and_redirect @user, event: :authentication
+      sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
     end
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   private
 
