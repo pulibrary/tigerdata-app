@@ -14,14 +14,14 @@ parameters:
     default: ""
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.8
-  coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.5.3
-  node: circleci/node@7.1.0
+  browser-tools: circleci/browser-tools@1.4
+  coveralls: coveralls/coveralls@2.2
+  ruby: circleci/ruby@2.5
+  node: circleci/node@7.1
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.4.1-browsers
+      - image: cimg/ruby:3.4-browsers
         environment:
           RAILS_ENV: ci
     resource_class: small
@@ -31,7 +31,7 @@ commands:
   install_dependencies:
     steps:
       - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
-      - run: gem install bundler -v '2.5.6'
+      - run: gem install bundler -v '2.5.9'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}-2
@@ -42,12 +42,18 @@ commands:
           key: *gem_key
           paths:
             - ./vendor/bundle
+
+  install_yarn_dependencies:
+    steps:
+      - node/install:
+          install-yarn: true
+          node-version: "22.9"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
       - run:
           name: Install NPM Dependencies via Yarn
-          command: yarn install --frozen-lockfile
+          command: yarn install --immutable
       - save_cache:
           name: Save Yarn Package Cache
           key: *yarn_key
@@ -95,40 +101,55 @@ commands:
       - run: podman system prune -a --volumes -f || true
 
 jobs:
+  bundler_lint:
+    docker:
+      - image: cimg/ruby:3.3
+    working_directory: ~/tiger_data
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop
+
+  bundler_audit:
+    docker:
+      - image: cimg/ruby:3.3
+    working_directory: ~/tiger_data
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Run bundle audit
+          command: bundle exec bundle-audit check --update
+      - run:
+          name: Run gem list
+          command: gem list
+
   test:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
     environment:
+      ARCH: linux
+      COVERALLS_PARALLEL: true
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
-      ARCH: linux
       RAILS_ENV: test
+      SPEC_OPTS: "--format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
     steps:
       - checkout
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
           version: "3.3.0"
-      - node/install:
-          install-yarn: true
-          node-version: "22.9"
+      - install_yarn_dependencies
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
       - install_crypto_policies
       - run_postgres
-      - run:
-          name: Run rubocop
-          command: bundle exec rubocop
-          paths: "*"
-      - run:
-          name: Run prettier
-          command: yarn run prettier --check .
-      - run:
-          name: Run eslint
-          command: yarn run eslint 'app/javascript/**'
       # wait for postgres and mediaflux
       - run: sleep 10
       - enable_sha1_for_mediaflux
@@ -138,16 +159,41 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
-          path: coverage
-      - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
+
+  yarn_lint_format:
+    docker:
+      - image: cimg/node:22.20
+    steps:
+      - checkout
+      - install_yarn_dependencies
+      - run:
+          name: Run eslint
+          command: yarn run eslint 'app/javascript/**'
+      - run:
+          name: Run prettier
+          command: yarn run prettier --check .
+
+  yarn_test:
+    docker:
+      - image: cimg/node:22.20
+    steps:
+      - checkout
+      - install_yarn_dependencies
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - run:
+          name: Run vitest
+          command: yarn test
+      - store_artifacts:
+          path: coverage
 
   mflux_ci:
     working_directory: ~/tiger_data
@@ -169,6 +215,7 @@ jobs:
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
+      - install_yarn_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
           paths: "*"
@@ -188,6 +235,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload
+
   deploy:
     executor: basic-executor
     steps:
@@ -204,7 +252,11 @@ workflows:
         - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
         - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
     jobs:
+      - bundler_lint
+      - bundler_audit
       - test
+      - yarn_lint_format
+      - yarn_test
       - deploy:
           requires: # Call the auto-deploy job after the main test job
             - test

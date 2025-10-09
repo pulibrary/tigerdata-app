@@ -2,7 +2,7 @@
 source "https://gem.coop"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.0"
+ruby "~> 3.3"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1"
@@ -14,7 +14,7 @@ gem "sprockets-rails"
 gem "pg"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.6"
+gem "puma", "~> 6.6" # Releases lower than 6.0 are not compatible with Rack 3.y releases
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -68,7 +68,10 @@ gem "kaminari"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
+gem "rack", ">= 3.1.18" # Please see https://github.com/rack/rack/security/advisories/GHSA-r657-rxjc-j557
 gem "sidekiq"
+gem "sinatra", ">= 4.1.0" # Mailcatcher dependency, please see https://github.com/advisories/GHSA-hxx2-7vcw-mqr3
+gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 
 gem "whenever", require: false
 
@@ -76,6 +79,7 @@ group :development, :test do
   gem "rspec-rails", "~> 7.0.1"
 
   gem "bixby"
+  gem "bundle-audit", require: false
   gem "byebug"
   gem "pry-rails"
 
