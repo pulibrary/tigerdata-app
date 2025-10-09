@@ -28,4 +28,6 @@ Flipflop.configure do
   feature :allow_all_users_wizard_access,
     default: true,
     description: "Allow all users to access the wizard"
+
+  feature :disable_login, default: false, description: "Disable login to the web portal."
 end
