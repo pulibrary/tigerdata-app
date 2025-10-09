@@ -142,9 +142,7 @@ jobs:
       - run_mediaflux
       - ruby/install:
           version: "3.3.0"
-      - node/install:
-          install-yarn: true
-          node-version: "22.9"
+      - install_yarn_dependencies
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
