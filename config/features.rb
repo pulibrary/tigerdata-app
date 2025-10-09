@@ -24,5 +24,8 @@ Flipflop.configure do
 
   feature :alternate_mediaflux, default: false
 
-  feature :allow_all_users_wizard_access, default: false
+  # Deploying this will launch SpaceGhost in production
+  feature :allow_all_users_wizard_access,
+    default: true,
+    description: "Allow all users to access the wizard"
 end
