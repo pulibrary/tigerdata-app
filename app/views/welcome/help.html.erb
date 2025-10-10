@@ -1,11 +1,3 @@
 <p>TigerData is still under construction, and you are not registered as a tester at this time.</p>
 
 <p>If you have any questions, please contact the team at <%= link_to("tigerdata@princeton.edu", "mailto:tigerdata@princeton.edu") %>.</p>
-
-<% if current_user %>
-  <h3>HTTP headers test</h3>
-  <p>Custom HTTP headers: <%= @test_http_headers %> </p>
-  <p>User: <%= current_user.uid %> </p>
-  <p>Path: <%= @test_path %></p>
-  <p>Exist?: <%= @test_path_exist %></p>
-<% end %>
