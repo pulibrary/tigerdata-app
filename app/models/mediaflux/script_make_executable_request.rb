@@ -4,8 +4,8 @@ module Mediaflux
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param path [String] full path to the script to mark as executable
-    def initialize(session_token:, path:, session_user: nil)
-      super(session_token: session_token, session_user: session_user)
+    def initialize(session_token:, path:)
+      super(session_token: session_token)
       @path = path
     end
 
