@@ -57,6 +57,32 @@
     width: 10em;
     margin-left: auto;
     margin-right: 2em;
+    color: #000 !important;
+    background-color: #f1f1f1 !important;
+  }
+
+  .w3-round-small {
+    border-radius: 2px;
+  }
+  .w3-round,
+  .w3-round-medium {
+    border-radius: 4px;
+  }
+  .w3-round-large {
+    border-radius: 8px;
+  }
+
+  .w3-round-xlarge {
+    border-radius: 16px;
+  }
+  .w3-round-xxlarge {
+    border-radius: 32px;
+  }
+
+  .w3-orange,
+  .w3-hover-orange:hover {
+    color: #000 !important;
+    background-color: #ff9800 !important;
   }
 
   .quota-usage {
