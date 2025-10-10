@@ -4,6 +4,7 @@ class FileInventoryCleanupJob < ApplicationJob
 
   def perform
     FileInventoryRequest.where(["completion_time < ?", 7.days.ago]).each do |req|
+      next if req.output_file.nil?
       File.delete(req.output_file) if File.exist?(req.output_file)
       req.state = UserRequest::STALE
       req.save
