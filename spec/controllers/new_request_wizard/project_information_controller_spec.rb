@@ -488,17 +488,6 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             valid_request.reload
             expect(valid_request.project_title).to eq("Valid Request")
           end
-
-          it "does not update the request even if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
-            put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
-            valid_request.reload
-            expect(valid_request.project_title).to eq("Valid Request")
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
-          end
         end
 
         context "a tester trainer" do

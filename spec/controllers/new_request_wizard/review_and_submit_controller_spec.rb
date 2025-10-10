@@ -209,16 +209,6 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
               get :show, params: { request_id: valid_request.id }
               expect(response).to redirect_to "http://test.host/dashboard"
             end
-
-            it "redirects to the dashboard even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
-              get :show, params: { request_id: valid_request.id }
-              expect(response).to redirect_to "http://test.host/dashboard"
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
-            end
           end
         end
 
