@@ -14,14 +14,14 @@ parameters:
     default: ""
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.8
-  coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.5.3
-  node: circleci/node@7.1.0
+  browser-tools: circleci/browser-tools@1.4
+  coveralls: coveralls/coveralls@2.2
+  ruby: circleci/ruby@2.5
+  node: circleci/node@7.1
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.4.1-browsers
+      - image: cimg/ruby:3.4-browsers
         environment:
           RAILS_ENV: ci
     resource_class: small
@@ -131,11 +131,13 @@ jobs:
     machine: true
     resource_class: pulibrary/ruby-deploy
     environment:
+      ARCH: linux
+      COVERALLS_PARALLEL: true
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
-      ARCH: linux
       RAILS_ENV: test
+      SPEC_OPTS: "--format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
     steps:
       - checkout
       - cleanup_docker
@@ -157,7 +159,7 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
@@ -168,7 +170,7 @@ jobs:
 
   yarn_lint_format:
     docker:
-      - image: cimg/node:22.9
+      - image: cimg/node:22.20
     steps:
       - checkout
       - install_yarn_dependencies
@@ -181,7 +183,7 @@ jobs:
 
   yarn_test:
     docker:
-      - image: cimg/node:22.9
+      - image: cimg/node:22.20
     steps:
       - checkout
       - install_yarn_dependencies
