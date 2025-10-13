@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "Current Users page", type: :system, connect_to_mediaflux: false, js: true do
-  let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:current_user) { FactoryBot.create(:user, uid: "tigerdatatester") }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }

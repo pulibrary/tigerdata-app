@@ -11,7 +11,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:current_user) { FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
     let(:other_user) { FactoryBot.create(:user, uid: "zz123") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }

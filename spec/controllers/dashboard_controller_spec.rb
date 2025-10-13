@@ -8,7 +8,7 @@ RSpec.describe DashboardController do
   end
 
   context "when a user is logged in", connect_to_mediaflux: true do
-    let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+    let(:user) { FactoryBot.create :user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session }
     before do
       sign_in user
     end
