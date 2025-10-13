@@ -77,9 +77,17 @@ class ApplicationController < ActionController::Base
       @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/MethodLength
     def emulate_user
       return if Rails.env.production?
       return if current_user.blank? || !current_user.trainer
+
+      if session[:emulation_role] != "System Administrator"
+        revoke_request if grant_request
+      end
 
       if session[:emulation_role]
         if session[:emulation_role] == "Eligible Data Sponsor"
@@ -95,6 +103,10 @@ class ApplicationController < ActionController::Base
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength
 
     def emulate_sponsor
       current_user.eligible_sponsor = true
@@ -112,6 +124,7 @@ class ApplicationController < ActionController::Base
       current_user.sysadmin = true
       current_user.eligible_manager = false
       current_user.eligible_sponsor = false
+      grant_request
     end
 
     def emulate_data_user
@@ -125,6 +138,22 @@ class ApplicationController < ActionController::Base
       current_user.eligible_sponsor = false
       current_user.eligible_manager = false
       current_user.sysadmin = false
+    end
+
+    def grant_request
+      @granted ||= true
+      grant_role_request = Mediaflux::ActorGrantRoleRequest.new(session_token: SystemUser.mediaflux_session, user: current_user, type: "user", role: "pu-lib:developer")
+      grant_role_request.resolve
+      raise grant_role_request.response_error[:message] if grant_role_request.error?
+      @granted
+    end
+
+    def revoke_request
+      revoke_role_request = Mediaflux::ActorRevokeRoleRequest.new(session_token: SystemUser.mediaflux_session, user: current_user, type: "user", role: "pu-lib:developer")
+      revoke_role_request.resolve
+      @granted = false
+      raise revoke_role_request.response_error[:message] if revoke_role_request.error?
+      @granted
     end
 
     def downtime_check
