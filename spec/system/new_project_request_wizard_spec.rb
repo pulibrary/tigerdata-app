@@ -69,7 +69,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       click_on "New Project Request"
       visit "/new-project/review-submit/#{request.id}"
       expect(page).to have_content "Take a moment to review"
-      click_on("Next")
+      click_on("Submit")
       within(".project-title") do
         expect(page).to have_content("cannot be empty")
       end
@@ -100,7 +100,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sleep(1.2)
       select current_user_str + "\u00A0", from: "request_data_manager"
 
-      click_on("Next")
+      click_on("Submit")
       expect(page).to have_content("Your new project request is submitted")
     end
 
