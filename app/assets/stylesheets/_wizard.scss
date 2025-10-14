@@ -923,6 +923,16 @@
   background: $white;
 }
 
+.step-number-incomplete {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  background: $gray-20;
+}
 .step-number-value {
   color: $black;
   font-size: 14px;

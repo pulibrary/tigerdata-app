@@ -2,52 +2,52 @@
 <div id="new-project-wizard-sidebar">
     <div class="sidebar-container">
         <div data-state="Expanded" class="expanded-state">
-            <%= render partial: '/new_project_wizard/sidebar_multi_step', locals: { indicator_class: controller.controller_name.start_with?('project_information') ? '-current' : '-completed', 
+            <%= render partial: '/new_project_wizard/sidebar_multi_step', locals: { indicator_class: @request_model.sidebar_progress(controller, 1),
                                                                                     step_number: 1, step_url: new_project_project_info_path(@request_model), step_name: 'Project Information'} %>
             <div data-count="3" class="substeps-container">
                 <!-- <div class="connector-line"></div> -->
-                <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information' ? '-current' : '-completed', 
-                                                                                      text_class: controller.controller_name == 'project_information' ? '' : '-current', 
+                <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information' ? '-current' : '-incomplete',
+                                                                                      text_class: controller.controller_name == 'project_information' ? '' : '-current',
                                                                                       step_url: new_project_project_info_path(@request_model), step_name: 'Basic Details'} %>
                 <% if false # skip steps until they are implemented %>
-                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information_categories' ? '-current' : '-completed', 
-                                                                                        text_class: controller.controller_name == 'project_information_categories' ? '' : '-current', 
+                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information_categories' ? '-current' : '-incomplete',
+                                                                                        text_class: controller.controller_name == 'project_information_categories' ? '' : '-current',
                                                                                         step_url: new_project_project_info_categories_path(@request_model), step_name: 'Categories (Optional)'} %>
-                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information_dates' ? '-current' : '-completed', 
-                                                                                        text_class: controller.controller_name == 'project_information_dates' ? '' : '-current', 
+                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information_dates' ? '-current' : '-incomplete',
+                                                                                        text_class: controller.controller_name == 'project_information_dates' ? '' : '-current',
                                                                                         step_url: new_project_project_info_dates_path(@request_model), step_name: 'Dates (Optional)'} %>
                 <% end %>
             </div>
         </div>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'roles_and_people' ? '-current' : '-completed', 
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: @request_model.sidebar_progress(controller, 2),
                                                                           step_number: 2, step_url: new_project_roles_and_people_path(@request_model), step_name: 'Roles and People'} %>
 
         <% if false # skip steps until they are implemented %>
-            <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'project_type' ? '-current' : '-completed', 
+            <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'project_type' ? '-current' : '-incomplete',
                                                                           step_number: 3, step_url: new_project_project_type_path(@request_model), step_name: 'Project Type'} %>
         <% end %>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'storage_and_access' ? '-current' : '-completed', 
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'storage_and_access' ? '-current' : '-incomplete',
                                                                           step_number: 3, step_url: new_project_storage_and_access_path(@request_model), step_name: 'Storage and Access'} %>
-        
+
         <% if false # skip steps until they are implemented %>
             <div data-state="Expanded" class="expanded-state">
-                <%= render partial: '/new_project_wizard/sidebar_multi_step_optional', locals: { indicator_class: controller.controller_name.start_with?('additional_information') ? '-current' : '-completed', 
+                <%= render partial: '/new_project_wizard/sidebar_multi_step_optional', locals: { indicator_class: controller.controller_name.start_with?('additional_information') ? '-current' : '-incomplete',
                                                                                         step_number: 5, step_url: new_project_additional_information_grants_and_funding_path(@request_model), step_name: 'Additional Information'} %>
                 <div data-count="3" class="substeps-container">
                     <div class="connector-line"></div>
-                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_grants_and_funding' ? '-current' : '-completed', 
-                                                                            text_class: controller.controller_name == 'additional_information_grants_and_funding' ? '' : '-current', 
+                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_grants_and_funding' ? '-current' : '-incomplete',
+                                                                            text_class: controller.controller_name == 'additional_information_grants_and_funding' ? '' : '-current',
                                                                             step_url: new_project_additional_information_grants_and_funding_path(@request_model), step_name: 'Funding Sources'} %>
-                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_project_permissions' ? '-current' : '-completed', 
-                                                                            text_class: controller.controller_name == 'additional_information_project_permissions' ? '' : '-current', 
+                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_project_permissions' ? '-current' : '-incomplete',
+                                                                            text_class: controller.controller_name == 'additional_information_project_permissions' ? '' : '-current',
                                                                             step_url: new_project_additional_information_project_permissions_path(@request_model), step_name: 'Project Permissions'} %>
-                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_related_resources' ? '-current' : '-completed', 
-                                                                            text_class: controller.controller_name == 'additional_information_related_resources' ? '' : '-current', 
+                    <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'additional_information_related_resources' ? '-current' : '-incomplete',
+                                                                            text_class: controller.controller_name == 'additional_information_related_resources' ? '' : '-current',
                                                                             step_url: new_project_additional_information_related_resources_path(@request_model), step_name: 'Related Resources'} %>
                 </div>
             </div>
         <% end %>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'review_and_submit' ? '-current' : '-completed', 
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'review_and_submit' ? '-current' : '-incomplete',
                                                                     step_number: 4, step_url: new_project_review_and_submit_path(@request_model), step_name: 'Review and Submit'} %>
 
     </div>
