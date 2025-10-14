@@ -1,0 +1,16 @@
+<div popover="auto" id="save-and-exit" class="save-and-exit pul-popover">
+  <div class="modal-content">
+     <div class="modal-title-frame">
+       <div class="model-title">Save Your Progress</div>
+       <input type="button" popovertarget="save-and-exit" popovertargetaction="hide" class="pul-popover-close"></input>
+     </div>
+     <div class="modal-body-text">Your project creation request will be saved as draft.</div>
+     <div class="modal-title-input">
+       <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "", input_id: "project_title_exit", field_sub_label: "(Required)" } %>
+     </div>
+  </div>
+  <div class="button-frame">
+    <%= form.submit "Exit without Saving", class: "pul-button pul-button-secondary" %>
+    <%= form.submit "Confirm", class: "pul-button pul-button-primary", id: "save-exit-confirm" %>
+  </div>
+</div>
