@@ -129,10 +129,9 @@ class ApplicationController < ActionController::Base
 
     def downtime_check
       if Flipflop.disable_login?
-        if current_user.eligible_sysadmin?
+        if current_user && current_user.eligible_sysadmin?
           flash[:notice] = I18n.t(:only_sysadmin_users)
         else
-          redirect_to root_path
           flash[:notice] = I18n.t(:no_login_currently)
         end
       end
