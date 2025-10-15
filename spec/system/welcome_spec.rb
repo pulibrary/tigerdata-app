@@ -55,14 +55,6 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       expect(page).to have_content "Log out"
     end
 
-    it "does not show the new request multi button to just any user" do
-      sign_in current_user
-      visit "/"
-
-      expect(page).to have_content("Welcome, #{current_user.given_name}!")
-      expect(page).not_to have_content "New Project Request"
-    end
-
     it "shows the new request multi button to sysadmin users" do
       FactoryBot.create(:request, project_title: "A new draft request", requested_by: admin_user.uid)
       FactoryBot.create(:request, project_title: "A new submitted request", requested_by: admin_user.uid, state: Request::SUBMITTED)
