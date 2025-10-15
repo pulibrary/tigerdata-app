@@ -443,7 +443,7 @@
         right: anchor(right);
         margin-block-start: 0.25rem;
 
-        width: 13.5rem;
+        width: min-content;
         padding: 0.5rem;
         flex-direction: column;
         align-items: center;
@@ -454,12 +454,18 @@
       }
 
       .request-dropdown:popover-open {
-        display: flex;
+        display: block;
       }
 
       .request-button {
         border: none;
         background: $white;
+        width: 12rem;
+        text-align: start;
+        border-radius: 5px;
+        &:hover {
+          background: $gray-15;
+        }
       }
 
       .request-list::backdrop {
