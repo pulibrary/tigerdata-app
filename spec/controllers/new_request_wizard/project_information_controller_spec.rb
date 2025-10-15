@@ -41,14 +41,26 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
       context "a non elevated user" do
         let!(:current_user) { FactoryBot.create(:user) }
 
-        it "redirects to the dashboard" do
-          get :show, params: { request_id: valid_request.id }
-          expect(response).to redirect_to "http://test.host/dashboard"
-        end
+        context "the flipper is turned off" do
+          before do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
+          end
 
-        it "redirects to the dashboard when the request id is blank" do
-          get :show, params: {}
-          expect(response).to redirect_to "http://test.host/dashboard"
+          after do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
+          end
+
+          it "redirects to the dashboard" do
+            get :show, params: { request_id: valid_request.id }
+            expect(response).to redirect_to "http://test.host/dashboard"
+          end
+
+          it "redirects to the dashboard when the request id is blank" do
+            get :show, params: {}
+            expect(response).to redirect_to "http://test.host/dashboard"
+          end
         end
 
         context "the flipper is turned on" do
@@ -85,19 +97,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "redirects to the dashboard" do
-            get :show, params: { request_id: valid_request.id }
-            expect(response).to redirect_to "http://test.host/dashboard"
-          end
-
-          it "shows the form if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "shows the form" do
             get :show, params: { request_id: valid_request.id }
             expect(response).not_to have_http_status(:redirect)
+          end
 
+          it "redirects to the dashboard when the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
             test_strategy.switch!(:allow_all_users_wizard_access, false)
+            get :show, params: { request_id: valid_request.id }
+            expect(response).to redirect_to "http://test.host/dashboard"
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
         end
       end

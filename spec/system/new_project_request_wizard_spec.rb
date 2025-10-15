@@ -107,6 +107,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "non sysadmin user" do
       let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
       it "cannot walk through the wizard if the feature is disabled" do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:allow_all_users_wizard_access, false)
         request = Request.create
         sign_in current_user
         visit "/"
@@ -131,11 +133,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).not_to have_content "Related Resources"
         visit "/new-project/review-submit/#{request.id}"
         expect(page).not_to have_content "Take a moment to review"
+        test_strategy.switch!(:allow_all_users_wizard_access, true)
       end
 
       it "allows users to walk through the wizard" do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:allow_all_users_wizard_access, true)
         sign_in current_user
         visit "/"
         click_on "New Project Request"
@@ -155,7 +156,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Assign roles for your project"
         click_on "Back"
         expect(page).to have_content "Tell us a little about your project!"
-        test_strategy.switch!(:allow_all_users_wizard_access, false)
       end
     end
 
