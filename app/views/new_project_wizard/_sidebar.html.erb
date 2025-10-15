@@ -62,6 +62,9 @@
     // ...and instead submit the form but indicating via the submit's button value property
     // what step we want to go after saving the data
     var submitButton = document.querySelectorAll('input[type=submit][value=Next]')[0];
+    if (submitButton === undefined) {
+        submitButton = document.querySelectorAll('input[type=submit][value=Submit]')[0];
+    }
     var stepToGoTo = event.target.href;
     submitButton.value = stepToGoTo;
     submitButton.click();
