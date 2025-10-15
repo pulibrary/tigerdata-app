@@ -178,6 +178,12 @@
           color: $gray-100;
         }
 
+        &:hover {
+          text-decoration: underline;
+          text-decoration-thickness: 2px;
+          text-underline-offset: 3px;
+        }
+
         overflow: hidden;
         text-overflow: ellipsis;
 
@@ -404,6 +410,9 @@
           color: white;
           text-decoration: none;
         }
+        &:hover {
+          background: $gray-60;
+        }
       }
 
       .request-options {
@@ -422,6 +431,9 @@
           background: url("frame.svg") no-repeat;
           border: none;
         }
+        &:hover {
+          background: $gray-60;
+        }
       }
 
       .request-dropdown {
@@ -431,7 +443,7 @@
         right: anchor(right);
         margin-block-start: 0.25rem;
 
-        width: 13.5rem;
+        width: min-content;
         padding: 0.5rem;
         flex-direction: column;
         align-items: center;
@@ -442,12 +454,18 @@
       }
 
       .request-dropdown:popover-open {
-        display: flex;
+        display: block;
       }
 
       .request-button {
         border: none;
         background: $white;
+        width: 12rem;
+        text-align: start;
+        border-radius: 5px;
+        &:hover {
+          background: $gray-15;
+        }
       }
 
       .request-list::backdrop {

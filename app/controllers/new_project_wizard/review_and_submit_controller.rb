@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
+  layout "wizard_last"
+
   protected
 
     def render_current

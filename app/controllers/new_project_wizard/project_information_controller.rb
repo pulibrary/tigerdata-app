@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class NewProjectWizard::ProjectInformationController < RequestWizardsController
+  layout "wizard_first"
+
   protected
 
     def render_current
