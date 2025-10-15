@@ -116,8 +116,11 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
         let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
 
         it "redirects to the dashboard" do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:allow_all_users_wizard_access, false)
           get :show, params: { request_id: valid_request.id }
           expect(response).to redirect_to "http://test.host/dashboard"
+          test_strategy.switch!(:allow_all_users_wizard_access, true)
         end
 
         it "shows the form if they are emulating a sysadmin" do
@@ -132,19 +135,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "redirects to the dashboard" do
+          it "redirects to the dashboard if the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
             get :show, params: { request_id: valid_request.id }
             expect(response).to redirect_to "http://test.host/dashboard"
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "shows the form if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "shows the form" do
             get :show, params: { request_id: valid_request.id }
             expect(response).not_to have_http_status(:redirect)
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
           end
         end
       end
@@ -162,19 +163,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "redirects to the dashboard" do
+          it "redirects to the dashboard if the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
             get :show, params: { request_id: valid_request.id }
             expect(response).to redirect_to "http://test.host/dashboard"
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "shows the form if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "shows the form" do
             get :show, params: { request_id: valid_request.id }
             expect(response).not_to have_http_status(:redirect)
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
           end
         end
       end
@@ -226,19 +225,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
               allow(Rails.env).to receive(:production?).and_return(true)
             end
 
+            it "redirects to the dashboard even if the flipper is off" do
+              test_strategy = Flipflop::FeatureSet.current.test!
+              test_strategy.switch!(:allow_all_users_wizard_access, false)
+              get :show, params: { request_id: valid_request.id }
+              expect(response).to redirect_to "http://test.host/dashboard"
+              test_strategy.switch!(:allow_all_users_wizard_access, true)
+            end
+
             it "redirects to the dashboard" do
               get :show, params: { request_id: valid_request.id }
               expect(response).to redirect_to "http://test.host/dashboard"
-            end
-
-            it "redirects to the dashboard even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
-              get :show, params: { request_id: valid_request.id }
-              expect(response).to redirect_to "http://test.host/dashboard"
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
             end
           end
         end
@@ -263,19 +260,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
               allow(Rails.env).to receive(:production?).and_return(true)
             end
 
+            it "redirects to the dashboard even if the flipper is off" do
+              test_strategy = Flipflop::FeatureSet.current.test!
+              test_strategy.switch!(:allow_all_users_wizard_access, false)
+              get :show, params: { request_id: valid_request.id }
+              expect(response).to redirect_to "http://test.host/dashboard"
+              test_strategy.switch!(:allow_all_users_wizard_access, true)
+            end
+
             it "redirects to the dashboard" do
               get :show, params: { request_id: valid_request.id }
               expect(response).to redirect_to "http://test.host/dashboard"
-            end
-
-            it "redirects to the dashboard even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
-              get :show, params: { request_id: valid_request.id }
-              expect(response).to redirect_to "http://test.host/dashboard"
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
             end
           end
         end
@@ -293,19 +288,17 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
               allow(Rails.env).to receive(:production?).and_return(true)
             end
 
+            it "redirects to the dashboard even if the flipper is off" do
+              test_strategy = Flipflop::FeatureSet.current.test!
+              test_strategy.switch!(:allow_all_users_wizard_access, false)
+              get :show, params: { request_id: valid_request.id }
+              expect(response).to redirect_to "http://test.host/dashboard"
+              test_strategy.switch!(:allow_all_users_wizard_access, true)
+            end
+
             it "redirects to the dashboard" do
               get :show, params: { request_id: valid_request.id }
               expect(response).to redirect_to "http://test.host/dashboard"
-            end
-
-            it "redirects to the dashboard even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
-              get :show, params: { request_id: valid_request.id }
-              expect(response).to redirect_to "http://test.host/dashboard"
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
             end
           end
         end
@@ -344,23 +337,21 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
         end
       end
 
-      context "a non elevated user" do
+      context "a non elevated user if the flipper is off" do
         let!(:current_user) { FactoryBot.create(:user) }
 
         it "redirects to the dashboard" do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:allow_all_users_wizard_access, false)
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           expect(response).to redirect_to "http://test.host/dashboard"
+          test_strategy.switch!(:allow_all_users_wizard_access, true)
         end
 
-        it "updates the request if the flipper is flipped" do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+        it "updates the request" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           valid_request.reload
           expect(valid_request.project_title).to eq("Updated title")
-
-          test_strategy.switch!(:allow_all_users_wizard_access, false)
         end
 
         context "the production environment" do
@@ -368,22 +359,22 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "redirects to the dashboard" do
+          it "redirects to the dashboard if the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
+
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             expect(response).to redirect_to "http://test.host/dashboard"
             valid_request.reload
             expect(valid_request.project_title).to eq("Valid Request")
+
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "updates the request if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "updates the request " do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
             expect(valid_request.project_title).to eq("Updated title")
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
           end
         end
       end
@@ -392,10 +383,13 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
         let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
 
         it "redirects to the dashboard" do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:allow_all_users_wizard_access, false)
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           expect(response).to redirect_to "http://test.host/dashboard"
           valid_request.reload
           expect(valid_request.project_title).to eq("Valid Request")
+          test_strategy.switch!(:allow_all_users_wizard_access, true)
         end
 
         it "updates the request if they are emulating a sysadmin" do
@@ -411,22 +405,22 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "redirects to the dashboard" do
+          it "redirects to the dashboard if the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
+
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             expect(response).to redirect_to "http://test.host/dashboard"
             valid_request.reload
             expect(valid_request.project_title).to eq("Valid Request")
+
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "updates the request if if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "updates the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
             expect(valid_request.project_title).to eq("Updated title")
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
           end
         end
       end
@@ -445,21 +439,21 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             allow(Rails.env).to receive(:production?).and_return(true)
           end
 
-          it "does not update the request" do
+          it "does not update the request if the flipper is off" do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
+
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
             expect(valid_request.project_title).to eq("Valid Request")
+
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "updates the request if the flipper is flipped" do
-            test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+          it "updates the request " do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
             expect(valid_request.project_title).to eq("Updated title")
-
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
           end
         end
       end
@@ -522,21 +516,21 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
               allow(Rails.env).to receive(:production?).and_return(true)
             end
 
-            it "does not update the request" do
+            it "does not update the request even if the flipper is off" do
+              test_strategy = Flipflop::FeatureSet.current.test!
+              test_strategy.switch!(:allow_all_users_wizard_access, false)
+
               put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
+
+              test_strategy.switch!(:allow_all_users_wizard_access, true)
             end
 
-            it "does not update even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+            it "does not update" do
               put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
             end
           end
         end
@@ -555,21 +549,19 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
               allow(Rails.env).to receive(:production?).and_return(true)
             end
 
-            it "does not update the request" do
+            it "does not update the request even if the flipper is off" do
+              test_strategy = Flipflop::FeatureSet.current.test!
+              test_strategy.switch!(:allow_all_users_wizard_access, false)
               put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
+              test_strategy.switch!(:allow_all_users_wizard_access, true)
             end
 
-            it "does not update even if the flipper is flipped" do
-              test_strategy = Flipflop::FeatureSet.current.test!
-              test_strategy.switch!(:allow_all_users_wizard_access, true)
-
+            it "does not update" do
               put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
-
-              test_strategy.switch!(:allow_all_users_wizard_access, false)
             end
           end
         end
