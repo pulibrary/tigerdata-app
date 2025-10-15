@@ -210,14 +210,14 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
             expect(response).to redirect_to "http://test.host/dashboard"
           end
 
-          it "redirects to the dashboard" do
+          it "redirects to the dashboard even if the flipper is off" do
             test_strategy = Flipflop::FeatureSet.current.test!
-            test_strategy.switch!(:allow_all_users_wizard_access, true)
+            test_strategy.switch!(:allow_all_users_wizard_access, false)
 
             get :show, params: { request_id: valid_request.id }
             expect(response).to redirect_to "http://test.host/dashboard"
 
-            test_strategy.switch!(:allow_all_users_wizard_access, false)
+            test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
           context "the production environment" do
