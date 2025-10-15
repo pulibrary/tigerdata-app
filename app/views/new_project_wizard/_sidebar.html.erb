@@ -2,11 +2,11 @@
 <div id="new-project-wizard-sidebar">
     <div class="sidebar-container">
         <div data-state="Expanded" class="expanded-state">
-            <%= render partial: '/new_project_wizard/sidebar_multi_step', locals: { indicator_class: @request_model.sidebar_progress(controller, 1),
+            <%= render partial: '/new_project_wizard/sidebar_multi_step', locals: { indicator_class: @request_presenter.sidebar_progress(controller, 1),
                                                                                     step_number: 1, step_url: new_project_project_info_path(@request_model), step_name: 'Project Information'} %>
             <div data-count="3" class="substeps-container">
                 <!-- <div class="connector-line"></div> -->
-                <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: controller.controller_name == 'project_information' ? '-current' : '-incomplete',
+                <%= render partial: '/new_project_wizard/sidebar_sub_step', locals: { indicator_class: @request_presenter.sidebar_progress(controller, 1, "Basic Details"),
                                                                                       text_class: controller.controller_name == 'project_information' ? '' : '-current',
                                                                                       step_url: new_project_project_info_path(@request_model), step_name: 'Basic Details'} %>
                 <% if false # skip steps until they are implemented %>
@@ -19,14 +19,14 @@
                 <% end %>
             </div>
         </div>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: @request_model.sidebar_progress(controller, 2),
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: @request_presenter.sidebar_progress(controller, 2),
                                                                           step_number: 2, step_url: new_project_roles_and_people_path(@request_model), step_name: 'Roles and People'} %>
 
         <% if false # skip steps until they are implemented %>
             <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'project_type' ? '-current' : '-incomplete',
                                                                           step_number: 3, step_url: new_project_project_type_path(@request_model), step_name: 'Project Type'} %>
         <% end %>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'storage_and_access' ? '-current' : '-incomplete',
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: @request_presenter.sidebar_progress(controller, 3),
                                                                           step_number: 3, step_url: new_project_storage_and_access_path(@request_model), step_name: 'Storage and Access'} %>
 
         <% if false # skip steps until they are implemented %>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         <% end %>
-        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: controller.controller_name == 'review_and_submit' ? '-current' : '-incomplete',
+        <%= render partial: '/new_project_wizard/sidebar_step', locals: { indicator_class: @request_presenter.sidebar_progress(controller, 4),
                                                                     step_number: 4, step_url: new_project_review_and_submit_path(@request_model), step_name: 'Review and Submit'} %>
 
     </div>

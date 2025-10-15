@@ -129,36 +129,6 @@ class Request < ApplicationRecord
     state == Request::SUBMITTED
   end
 
-  def sidebar_progress(controller, step, substep = nil)
-    controller_name = controller.controller_name
-
-    if step == 1
-      if controller_name.start_with?('project_information')
-        return "-current"
-      else
-        if self.project_title.blank?
-          return "-incomplete"
-        else
-          return "-completed"
-        end
-      end
-    end
-
-    if step == 2
-      if controller_name == 'roles_and_people'
-        return "-current"
-      else
-        if self.data_manager.blank? || self.data_sponsor.blank?
-          return "-incomplete"
-        else
-          return "-completed"
-        end
-      end
-    end
-
-    return "-incomplete"
-  end
-
   private
 
     def field_present?(value, name)

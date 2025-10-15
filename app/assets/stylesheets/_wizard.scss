@@ -933,6 +933,7 @@
   border-radius: 14px;
   background: $gray-20;
 }
+
 .step-number-value {
   color: $black;
   font-size: 14px;
@@ -1044,6 +1045,16 @@
   border-radius: 14px;
   border: 2px solid $princeton-orange-80;
   background: $white;
+}
+
+.substep-indicator-incomplete {
+  width: 20px;
+  height: 20px;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  background: $gray-20;
+  border-radius: 9999px;
 }
 
 .substep-text,
