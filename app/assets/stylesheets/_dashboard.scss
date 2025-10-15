@@ -505,6 +505,10 @@
             height: 1.5rem;
             background: url("remove.svg") no-repeat;
             border: none;
+            background-size: cover;
+            &:hover {
+              background-color: $gray-15;
+            }
           }
         }
         .draft-content {
