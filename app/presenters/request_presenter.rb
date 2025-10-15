@@ -28,6 +28,8 @@ class RequestPresenter
     user.display_name_safe.to_s
   end
 
+  # Returns the correct CSS class suffix for the sidebar navigation progress for a given
+  # step/substep.
   def sidebar_progress(controller, step, substep = nil)
     controller_name = controller.controller_name
 
@@ -71,8 +73,11 @@ class RequestPresenter
       if controller_name == 'storage_and_access'
         return "-current"
       else
-        # TODO: We should return incomplete unless the user has at least visited this step
-        return "-completed"
+        if valid_step3?
+          return "-completed"
+        else
+          return "-incomplete"
+        end
       end
     end
 
@@ -104,6 +109,7 @@ class RequestPresenter
     end
 
     def valid_step3?
+      return false if request.storage_size.nil?
       true
     end
 
