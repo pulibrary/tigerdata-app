@@ -186,7 +186,7 @@ export function userRolesAutocomplete(usersLookupUrl) {
           // more forgiving in FireFox)
           const cleanUserName = userName.replace(/[,.]/g, ' ').replace(/\s\s/g, ' ');
           dataList.append(
-            `<option data-uid="${uid}" data-name="${userName}" value="(${uid}) ${cleanUserName}\xA0"></option>`,
+            `<option data-uid="${uid}" data-name="${userName}" value="${cleanUserName}\xA0"></option>`,
           );
         }
       },

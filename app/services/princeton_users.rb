@@ -13,9 +13,9 @@ class PrincetonUsers
 
       user_query = tokens.inject(User.all) do |partial_query, token|
                      search_token = '%'+User.sanitize_sql_like(token)+'%'
-                     partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
+                     partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token).order(:display_name)
                    end
-      user_query.map{|user| { uid: user.uid, name: user.display_name } }
+      user_query.map{|user| { uid: user.uid, name: user.display_name, display_name: user.display_name_safe } }
     end
 
     def load_rdss_developers

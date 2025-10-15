@@ -190,12 +190,12 @@ RSpec.describe PrincetonUsers, type: :model do
   end
 
   describe "#user_list_query" do
-    let(:user) { { uid: "sms98", name: "Sotomayor, Sonia" } }
-    let(:user_no_name) { { uid: "sms99", name: nil } }
+    let(:user) { { uid: "sms98", name: "Sotomayor, Sonia", display_name: "Sotomayor, Sonia (sms98)" } }
+    let(:user_no_name) { { uid: "sms99", name: nil, display_name: "sms99" } }
 
     before do
-      FactoryBot.create(:user, uid: "sms98", display_name: "Sotomayor, Sonia")
       FactoryBot.create(:user, uid: "sms99", display_name: nil, given_name: nil, family_name: nil)
+      FactoryBot.create(:user, uid: "sms98", display_name: "Sotomayor, Sonia")
     end
 
     it "detect matches by uid" do
@@ -204,6 +204,11 @@ RSpec.describe PrincetonUsers, type: :model do
       expect(described_class.user_list_query("98")).to eq [user]
       expect(described_class.user_list_query("99")).to eq [user_no_name]
       expect(described_class.user_list_query("abc")).to eq []
+    end
+
+    it "detect matches by uid" do
+      FactoryBot.create(:user, uid: "asms99", display_name: "anna", given_name: nil, family_name: nil)
+      expect(described_class.user_list_query("sms")).to eq [{ display_name: "anna (asms99)", name: "anna", uid: "asms99" }, user, user_no_name]
     end
 
     it "does not query if no tokens are present" do
