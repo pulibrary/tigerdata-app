@@ -22,6 +22,8 @@ label {
 
 input[type="text"] {
   border-radius: 8px;
+  border-width: 1px;
+  border-color: $gray-20;
 }
 
 input[type="text"]::placeholder {
