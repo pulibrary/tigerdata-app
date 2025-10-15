@@ -6,8 +6,8 @@ module Mediaflux
     # @param namespace [String] namespace where the script will be saved
     # @param name [String] name of the script
     # @param url [String] URL where the content of the script will be fetched from
-    def initialize(session_token:, namespace:, name:, url:, session_user: nil)
-      super(session_token: session_token, session_user: session_user)
+    def initialize(session_token:, namespace:, name:, url:)
+      super(session_token: session_token)
       @namespace = namespace
       @name = name
       @url = url

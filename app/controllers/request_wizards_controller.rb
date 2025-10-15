@@ -23,7 +23,7 @@ class RequestWizardsController < ApplicationController
     case params[:commit]
     when "Back"
       render_back
-    when "Next"
+    when "Next", "Submit"
       render_next
     else
       if params[:commit].start_with?("http")

@@ -4,8 +4,8 @@ module Mediaflux
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param iterator [Int] the iterator returned by ScriptFileListInitRequest
-    def initialize(session_token:, iterator:, session_user: nil)
-      super(session_token: session_token, session_user: session_user)
+    def initialize(session_token:, iterator:)
+      super(session_token: session_token)
       @iterator = iterator
     end
 

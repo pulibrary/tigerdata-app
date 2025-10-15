@@ -65,7 +65,7 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       expect(page).to have_content("Enter the storage and access needs for your project.")
       click_on "Next"
       expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
-      click_on "Next"
+      click_on "Submit"
       expect(page).to have_content("Your new project request is submitted")
       test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
