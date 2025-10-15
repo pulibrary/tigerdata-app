@@ -32,88 +32,81 @@ class RequestPresenter
   # step/substep.
   def sidebar_progress(controller, step, substep = nil)
     controller_name = controller.controller_name
-
-    if step == 1 && substep.nil?
-      if controller_name.start_with?('project_information')
-        return "-current"
-      else
-        if valid_step1?
-          return "-completed"
-        else
-          return "-incomplete"
-        end
-      end
+    case step
+    when 1
+      step1_css_suffix(controller_name, substep)
+    when 2
+      step2_css_suffix(controller_name)
+    when 3
+      step3_css_suffix(controller_name)
+    when 4
+      step4_css_suffix(controller_name)
+    else
+      "-incomplete"
     end
-
-    if step == 1 && substep == "Basic Details"
-      if controller.controller_name == 'project_information'
-        return "-current"
-      else
-        if valid_step1?
-          return "-completed"
-        else
-          return "-incomplete"
-        end
-      end
-    end
-
-    if step == 2
-      if controller_name == 'roles_and_people'
-        return "-current"
-      else
-        if valid_step2?
-          return "-completed"
-        else
-          return "-incomplete"
-        end
-      end
-    end
-
-    if step == 3
-      if controller_name == 'storage_and_access'
-        return "-current"
-      else
-        if valid_step3?
-          return "-completed"
-        else
-          return "-incomplete"
-        end
-      end
-    end
-
-    if step == 4
-      if controller_name == 'review_and_submit'
-        return "-current"
-      else
-        if valid_step4?
-          return "-completed"
-        else
-          return "-incomplete"
-        end
-      end
-    end
-
-    return "-incomplete"
   end
 
   private
 
-    def valid_step1?
+    def step1_css_suffix(controller_name, substep = nil)
+      css_suffix = "-incomplete"
+      if substep.nil?
+        return "-current" if controller_name.start_with?("project_information")
+        if step1_valid?
+          css_suffix = "-completed"
+        end
+      elsif substep == "Basic Details"
+        return "-current" if controller_name == "project_information"
+        if step1_valid?
+          css_suffix = "-completed"
+        end
+      end
+      css_suffix
+    end
+
+    def step2_css_suffix(controller_name)
+      return "-current" if controller_name == "roles_and_people"
+      if step2_valid?
+        "-completed"
+      else
+        "-incomplete"
+      end
+    end
+
+    def step3_css_suffix(controller_name)
+      return "-current" if controller_name == "storage_and_access"
+      if step3_valid?
+        "-completed"
+      else
+        "-incomplete"
+      end
+    end
+
+    def step4_css_suffix(controller_name)
+      return "-current" if controller_name == "review_and_submit"
+      if step4_valid?
+        "-completed"
+      else
+        "-incomplete"
+      end
+    end
+
+    def step1_valid?
       return false if request.project_title.blank? || request.project_folder.blank? || request.project_purpose.blank? || request.description.blank? || request.departments.blank?
       true
     end
 
-    def valid_step2?
+    def step2_valid?
       return false if request.data_manager.blank? || request.data_sponsor.blank?
       true
     end
 
-    def valid_step3?
+    def step3_valid?
       return false if request.storage_size.nil?
       true
     end
 
-    def valid_step4?
-      valid_step1? && valid_step2? && valid_step3?
+    def step4_valid?
+      step1_valid? && step2_valid? && step3_valid?
     end
 end
