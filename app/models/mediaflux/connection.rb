@@ -4,79 +4,43 @@ module Mediaflux
     # The host nome for the Mediaflux server
     # @return [String]
     def self.host
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_host"]
-      else
-        Rails.configuration.mediaflux["api_host"]
-      end
+      Rails.configuration.mediaflux["api_host"]
     end
 
     # The host port for the Mediaflux server
     # @return [Integer]
     def self.port
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_port"].to_i
-      else
-        Rails.configuration.mediaflux["api_port"].to_i
-      end
+      Rails.configuration.mediaflux["api_port"].to_i
     end
 
     # The host transport for the Mediaflux server
     # @return [String]
     def self.transport
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_transport"]
-      else
-        Rails.configuration.mediaflux["api_transport"]
-      end
+      Rails.configuration.mediaflux["api_transport"]
     end
 
     def self.root
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_root"]
-      else
-        Rails.configuration.mediaflux["api_root"]
-      end
+      Rails.configuration.mediaflux["api_root"]
     end
 
     def self.root_collection
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_root_collection"]
-      else
-        Rails.configuration.mediaflux["api_root_collection"]
-      end
+      Rails.configuration.mediaflux["api_root_collection"]
     end
 
     def self.root_collection_namespace
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_root_collection_namespace"]
-      else
-        Rails.configuration.mediaflux["api_root_collection_namespace"]
-      end
+      Rails.configuration.mediaflux["api_root_collection_namespace"]
     end
 
     def self.root_collection_name
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_root_collection_name"]
-      else
-        Rails.configuration.mediaflux["api_root_collection_name"]
-      end
+      Rails.configuration.mediaflux["api_root_collection_name"]
     end
 
     def self.root_namespace
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_root_ns"]
-      else
-        Rails.configuration.mediaflux["api_root_ns"]
-      end
+      Rails.configuration.mediaflux["api_root_ns"]
     end
 
     def self.hidden_root
-      if Flipflop.alternate_mediaflux?
-        Rails.configuration.mediaflux["api_alternate_hidden_root"]
-      else
-        Rails.configuration.mediaflux["api_hidden_root"]
-      end
+      Rails.configuration.mediaflux["api_hidden_root"]
     end
   end
 end
