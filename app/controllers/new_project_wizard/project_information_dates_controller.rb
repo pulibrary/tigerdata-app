@@ -3,6 +3,7 @@ class NewProjectWizard::ProjectInformationDatesController < RequestWizardsContro
   protected
 
     def render_current
+      @request_presenter = RequestPresenter.new(@request_model)
       @form_url = new_project_project_info_dates_save_path(@request_model)
       render "/new_project_wizard/project_information_dates"
     end
