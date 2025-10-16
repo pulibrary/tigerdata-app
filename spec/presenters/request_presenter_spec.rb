@@ -76,7 +76,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
     let(:current_user) { FactoryBot.create :user }
     let(:request) { FactoryBot.create :request, data_sponsor: current_user.uid }
     it "returns the full name of the data sponsor" do
-      expect(presenter.data_sponsor).to eq(current_user.display_name)
+      expect(presenter.data_sponsor).to eq(current_user.display_name_safe)
     end
   end
 
@@ -84,7 +84,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
     let(:current_user) { FactoryBot.create :user }
     let(:request) { FactoryBot.create :request, data_manager: current_user.uid }
     it "returns the full name of the data manager" do
-      expect(presenter.data_manager).to eq(current_user.display_name)
+      expect(presenter.data_manager).to eq(current_user.display_name_safe)
     end
   end
 
@@ -99,7 +99,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   describe "#full_name" do
     let(:current_user) { FactoryBot.create :user }
     it "returns the full name for a valid uid" do
-      expect(presenter.full_name(current_user.uid)).to eq(current_user.display_name)
+      expect(presenter.full_name(current_user.uid)).to eq(current_user.display_name_safe)
     end
 
     it "returns the uid if the full name is not found" do

@@ -88,7 +88,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
-      current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
+      current_user_str = current_user.display_name_safe
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
@@ -214,7 +214,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Next"
       expect(page).to have_content("Assign roles for your project")
-      current_user_str = "(#{current_user.uid}) #{current_user.display_name}"
+      current_user_str = current_user.display_name_safe
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       fill_in :request_data_sponsor, with: current_user.uid
@@ -228,7 +228,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       click_on "Add User(s)"
-      another_user_str = "(#{another_user.uid}) #{another_user.display_name}"
+      another_user_str = another_user.display_name_safe
       fill_in :user_find, with: another_user.uid
       sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
@@ -237,7 +237,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # The another user selected is visible on the page
       expect(page).to have_content(another_user_str)
       # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
       page.find(".remove-user-role").click
       expect(page).not_to have_content(another_user_str)
 
@@ -249,11 +249,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # The user selected is visible on the page
       expect(page).to have_content(current_user_str)
       # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
       # the javascript cleared the find to get ready for the next search
       expect(page).to have_field("user_find", with: "")
 
-      other_user_str = "(#{other_user.uid}) #{other_user.display_name}"
+      other_user_str = other_user.display_name_safe
       fill_in :user_find, with: other_user.uid
       sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
@@ -262,17 +262,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # The other user selected is visible on the page
       expect(page).to have_content(other_user_str)
       # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
       # the javascript cleared the find to get ready for the next search
       expect(page).to have_field("user_find", with: "")
 
       click_on "Add Users"
 
       expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
 
       expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\"}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
 
       choose("request[read_only_#{current_user.uid}]", option: "false")
 
@@ -287,8 +287,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Data Manager"
       expect(page).to have_field("request_data_sponsor", with: current_user.uid)
       expect(page).to have_field("request_data_manager", with: current_user.uid)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name}\",\"read_only\":false}")
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name}\",\"read_only\":true}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\",\"read_only\":false}")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do
