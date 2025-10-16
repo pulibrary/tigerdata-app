@@ -168,6 +168,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       sign_in current_user
       visit "/"
       click_on "New Project Request"
+
+      # Check that the current step (1) is marked as such and the next one (2) is be marked as incomplete
+      expect(find(".step-number-current .step-text").text).to eq "1"
+      expect(all(".step-number-incomplete .step-text")[0].text).to eq "2"
+
       expect(page).to have_content "Tell us a little about your project!"
       fill_in :project_title, with: "A basic Project"
       expect(page).to have_content "15/200 characters"
@@ -178,6 +183,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
       select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
+      select "Research", from: "project_purpose"
       # This is triggering the html5 element like it would normally if the page has focus
       page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
@@ -185,6 +191,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # force a save and page reload to make sure all data is being saved to the model
       click_on "Next"
+
+      # Check that the current step (2) is marked as such and the previous one (1) has been marked as completed
+      expect(find(".step-number-current .step-text").text).to eq "2"
+      expect(all(".step-number-completed .step-text")[0].text).to eq "1"
+
       # TODO: when the wizard is fully functional the Categories should be next
       # expect(page).to have_content "Categories (Optional)"
       expect(page).to have_content "Assign roles for your project"
