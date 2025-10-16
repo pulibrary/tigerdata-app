@@ -41,7 +41,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who")
       expect(user.given_name).to eq("guess")
       expect(user.family_name).to eq("who")
-      expect(user.display_name_safe).to eq("Guess Who?")
+      expect(user.display_name_safe).to eq("Guess Who? (who)")
     end
     it "testing a uid" do
       FactoryBot.create(:user, uid: "who2", given_name: nil)
@@ -62,21 +62,21 @@ RSpec.describe User, type: :model do
       user = described_class.from_cas(access_token4)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who4")
-      expect(user.display_name_safe).to eq("Guess McWho")
+      expect(user.display_name_safe).to eq("Guess McWho (who4)")
     end
     it "testing a last name with hyphen" do
       FactoryBot.create(:user, uid: "who5", given_name: nil)
       user = described_class.from_cas(access_token5)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who5")
-      expect(user.display_name_safe).to eq("Guess Who-You")
+      expect(user.display_name_safe).to eq("Guess Who-You (who5)")
     end
     it "testing a last name with quote" do
       FactoryBot.create(:user, uid: "who6", given_name: nil)
       user = described_class.from_cas(access_token6)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who6")
-      expect(user.display_name_safe).to eq("Guess Y'Who")
+      expect(user.display_name_safe).to eq("Guess Y'Who (who6)")
     end
   end
 
