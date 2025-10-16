@@ -57,6 +57,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
       click_on "Review and Submit"
+      expect(page).to have_content "Take a moment to review"
       click_on "Submit"
       expect(page).to have_content("Your new project request is submitted")
       visit "/requests/#{Request.last.id}"
@@ -99,6 +100,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :request_data_sponsor, with: datasponsor.uid
       fill_in :request_data_manager, with: datamanager.uid
       click_on "Review and Submit"
+      expect(page).to have_content "Take a moment to review"
       click_on "Submit"
       expect(page).to have_content("Your new project request is submitted")
       visit "/requests/#{Request.last.id}"

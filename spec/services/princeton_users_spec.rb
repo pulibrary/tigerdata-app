@@ -207,8 +207,8 @@ RSpec.describe PrincetonUsers, type: :model do
     end
 
     it "detect matches by uid" do
-      FactoryBot.create(:user, uid: "asms99", display_name: "anna", given_name: nil, family_name: nil)
-      expect(described_class.user_list_query("sms")).to eq [{ display_name: "anna (asms99)", name: "anna", uid: "asms99" }, user, user_no_name]
+      FactoryBot.create(:user, uid: "asms99", display_name: "Anna", given_name: nil, family_name: nil)
+      expect(described_class.user_list_query("sms")).to eq [{ display_name: "Anna (asms99)", name: "Anna", uid: "asms99" }, user, user_no_name]
     end
 
     it "does not query if no tokens are present" do
