@@ -755,6 +755,45 @@
           }
         }
       }
+      .contact-us{
+        display: flex;
+        width: 17.8125rem;
+        height: 8.4375rem;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+
+        border-radius: 0.75rem;
+        background: $princeton-orange-20;
+
+        .header {
+          color: #000;
+          text-align: center;
+          font-family: "Libre Franklin";
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 1.125rem; /* 112.5% */
+          padding-top: 1.87rem;
+          padding-bottom: 1.88rem;
+        }
+
+        .contact-content {
+          .btn {
+            display: flex;
+            width: 7.6875rem;
+            height: 2.125rem;
+            padding: 0.5rem 1.25rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+            border-radius: 0.25rem;
+            background: $princeton-orange;
+            color: #fff;
+          }
+        }
+      }
     }
   }
 }
