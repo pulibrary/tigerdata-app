@@ -10,8 +10,8 @@
       <div class="col-sm-2 file-inventory">File Inventory:</div>
       <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
       <div class="col-sm-8 text-end divider">
-        <form name="project-contents-preview">
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#list-contents-modal">Download Complete List</button>
+        <div name="project-contents-preview">
+          <button class="btn btn-secondary" popovertarget="list-contents-modal">Download Complete List</button>
         </form>
       </div>
     </div>
@@ -26,23 +26,24 @@
     </section>
   </content>
 
-  <!-- Bootstrap Modal -->
-  <div class="modal fade" id="list-contents-modal" tabindex="-1" aria-labelledby="list the project contents" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="list-contents-modal-title">List Project Contents</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          This will generate a list of <%= @num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
+</div>
 
-          <span class="latest-download-link"><%= render partial: "latest_download_link", locals: { project: @project } if @latest_completed_download %></span>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="request-list-contents" class="btn btn-success" data-list-contents-path="<%= project_list_contents_path %>" >Yes</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
-        </div>
+<div popover="auto" id="list-contents-modal" class="pul-popover">
+  <div class="modal-content">
+    <div class="modal-title-frame"> 
+      <div class="model-title">List Project Contents</div>
+      <input type=button popovertarget="list-contents-modal" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+    </div>
+    <div class="draft-content">
+      <div class="modal-body">
+        This will generate a list of <%= @num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
+
+        <span class="latest-download-link"><%= render partial: "latest_download_link", locals: { project: @project } if @latest_completed_download %></span>
+      </div>
+      <div class="button-frame">
+        <button type="button" id="request-list-contents" class="btn btn-success" data-list-contents-path="<%= project_list_contents_path %>"
+                popovertarget="list-contents-modal" popovertargetaction="hide" >Yes</button>
+        <button type="button" class="btn btn-danger" popovertarget="list-contents-modal" popovertargetaction="hide">No</button>
       </div>
     </div>
   </div>
