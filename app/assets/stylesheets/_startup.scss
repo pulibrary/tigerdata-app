@@ -4,6 +4,7 @@
 
 .startup-page {
   width: 100%;
+
   h1 {
     color: $black;
     text-align: center;
@@ -12,13 +13,15 @@
     font-style: normal;
     font-weight: 600;
     line-height: 36px;
+    
   }
 
   .startup-page-image {
-    width: 823px;
-    height: 582px;
-    flex-shrink: 0;
-    background: url("startup_image.svg") no-repeat;
+    img {
+        max-width: 582px;
+        margin-left: auto;
+        margin-right: auto;
+    }
   }
 
   .startup-prompt {
