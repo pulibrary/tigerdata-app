@@ -56,7 +56,7 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       fill_in :user_find, with: another_user.uid
       sleep(1.2)
       # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      another_user_str = "(#{another_user.uid}) #{another_user.display_name}"
+      another_user_str = another_user.display_name_safe
       select another_user_str + "\u00A0", from: "user_find"
       click_on "Add Users"
 

@@ -94,7 +94,7 @@ class User < ApplicationRecord
   def display_name_safe
     return uid if display_name.blank?
 
-    display_name
+    "#{display_name} (#{uid})"
   end
 
   # Is this user eligible to be a data sponsor in this environment?

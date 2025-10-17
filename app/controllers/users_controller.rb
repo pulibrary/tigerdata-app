@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     query = (params["query"] || "").strip.downcase
     matches = PrincetonUsers.user_list_query(query)
     result = {
-      suggestions: matches.take(20).map { |match| { "value": match[:name] || "", "data": match[:uid] } }
+      suggestions: matches.take(30).map { |match| { "value": match[:display_name] || "", "data": match[:uid] } }
     }
     render json: result
   end
