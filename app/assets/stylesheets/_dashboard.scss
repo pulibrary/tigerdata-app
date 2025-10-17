@@ -386,6 +386,7 @@
 }
 
 .main-content {
+  width: 100%;
   .welcome-pane {
     display: flex;
     justify-content: space-between;
@@ -758,9 +759,12 @@
     }
   }
 
-  .startup-page {
-    width: 100%;
+  .startup-content {
+    width: 50%;
+  }
 
+  .startup-page {
+    text-align: center;
     h1 {
       color: $black;
       text-align: center;
@@ -772,9 +776,10 @@
     }
 
     .startup-page-image {
-      width: 823px;
-      height: 582px;
-      background: url("startup_image.svg") no-repeat;
+      img {
+        width: 823px;
+        height: 582px;
+      }
     }
 
     .startup-prompt {
