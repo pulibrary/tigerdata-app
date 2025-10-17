@@ -154,11 +154,12 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     end
 
     context "for a user without any projects" do
-      it "shows the 'Log out' button" do
+      it "shows the startup page" do
         sign_in no_projects_user
         visit dashboard_path
         expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
-        expect(page).to have_content("No projects")
+        expect(page).to have_css(".startup_page")
+        expect(page).to have_content("No Projects Yet")
         click_link no_projects_user.uid.to_s
         expect(page).to have_content "Log out"
       end

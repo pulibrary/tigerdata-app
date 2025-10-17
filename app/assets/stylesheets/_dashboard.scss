@@ -757,4 +757,36 @@
       }
     }
   }
+
+  .startup-page {
+    width: 100%;
+
+    h1 {
+      color: $black;
+      text-align: center;
+      font-family: $libre-franklin;
+      font-size: 48px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 36px;
+    }
+
+    .startup-page-image {
+      width: 823px;
+      height: 582px;
+      background: url("startup_image.svg") no-repeat;
+    }
+
+    .startup-prompt {
+      color: $black;
+      font-family: $libre-franklin;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      a {
+        color: $blue !important;
+      }
+    }
+  }
 }
