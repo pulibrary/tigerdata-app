@@ -17,7 +17,8 @@ module Mediaflux
 
     def initialize
       @http_client = Net::HTTP::Persistent.new
-      Rails.logger.debug "created http"
+      @http_client.read_timeout = 240 # seconds
+      Rails.logger.debug "created http with 240 seconds timeout"
       # https is not working correctly on td-meta1 we should not need this, but we do...
       @http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
