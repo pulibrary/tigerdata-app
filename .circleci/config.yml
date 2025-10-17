@@ -129,6 +129,7 @@ jobs:
   test:
     working_directory: ~/tiger_data
     machine: true
+    parallelism: 4
     resource_class: pulibrary/ruby-deploy
     environment:
       ARCH: linux
