@@ -3,6 +3,7 @@ class NewProjectWizard::StorageAndAccessController < RequestWizardsController
   protected
 
     def render_current
+      @request_presenter = RequestPresenter.new(@request_model)
       @form_url = new_project_storage_and_access_save_path(@request_model)
       render "/new_project_wizard/storage_and_access"
     end

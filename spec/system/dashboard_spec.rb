@@ -74,6 +74,14 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "The download failed to complete"
       end
 
+      it "shows the contact us side panel" do
+        sign_in current_user
+        visit dashboard_path
+
+        expect(page).to have_content "Don't see what your're looking for?"
+        expect(page).to have_css(".contact-content", text: "Contact us")
+      end
+
       it "hides the 'Administration' tab" do
         sign_in current_user
         visit dashboard_path

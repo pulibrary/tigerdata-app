@@ -3,6 +3,7 @@ class NewProjectWizard::RolesAndPeopleController < RequestWizardsController
   protected
 
     def render_current
+      @request_presenter = RequestPresenter.new(@request_model)
       @form_url = new_project_roles_and_people_save_path(@request_model)
       render "/new_project_wizard/roles_and_people"
     end

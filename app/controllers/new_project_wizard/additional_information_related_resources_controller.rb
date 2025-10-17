@@ -3,6 +3,7 @@ class NewProjectWizard::AdditionalInformationRelatedResourcesController < Reques
   protected
 
     def render_current
+      @request_presenter = RequestPresenter.new(@request_model)
       @form_url = new_project_additional_information_related_resources_save_path(@request_model)
       render "/new_project_wizard/additional_information_related_resources"
     end
