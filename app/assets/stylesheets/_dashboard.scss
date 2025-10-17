@@ -386,6 +386,7 @@
 }
 
 .main-content {
+  width: 100%;
   .welcome-pane {
     display: flex;
     justify-content: space-between;
@@ -793,6 +794,42 @@
             color: #fff;
           }
         }
+      }
+    }
+  }
+
+  .startup-content {
+    width: 50%;
+  }
+
+  .startup-page {
+    text-align: center;
+    h1 {
+      color: $black;
+      text-align: center;
+      font-family: $libre-franklin;
+      font-size: 48px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 36px;
+    }
+
+    .startup-page-image {
+      img {
+        width: 823px;
+        height: 582px;
+      }
+    }
+
+    .startup-prompt {
+      color: $black;
+      font-family: $libre-franklin;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      a {
+        color: $blue !important;
       }
     }
   }
