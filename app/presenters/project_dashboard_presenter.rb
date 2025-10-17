@@ -1,36 +1,45 @@
 # frozen_string_literal: true
-class ProjectDashboardPresenter < ProjectShowPresenter
+class ProjectDashboardPresenter
   include ActionView::Helpers::DateHelper
 
-  delegate :to_model, :updated_at, to: :project
+  def initialize(project)
+    @project = project
+  end
 
-  delegate :data_sponsor, :data_manager, to: :project_metadata
+  def title
+    @project[:title]
+  end
+
+  def data_sponsor
+    @project[:data_sponsor]
+  end
+
+  def data_manager
+    @project[:data_manager]
+  end
+
+  def id
+    "123"
+  end
+
+  def status
+    "approved"
+  end
+
+  def updated_at
+    "TODO"
+  end
 
   def type
-    if storage_performance_expectations["approved"].nil?
-      "Requested #{storage_performance_expectations['requested']}"
-    else
-      storage_performance_expectations["approved"]
-    end
+    "TODO"
   end
 
   def latest_file_list_time
-    requests = FileInventoryRequest.where(project_id: project.id).order(completion_time: :desc)
-    if requests.empty?
-      "No Downloads"
-    elsif requests.first.completion_time
-      "Prepared #{time_ago_in_words(requests.first.completion_time)} ago"
-    else
-      "Preparing now"
-    end
+    "No Downloads"
   end
 
   def last_activity
-    if project_metadata.updated_on.nil?
-      "Not yet active"
-    else
-      "#{remove_about time_ago_in_words(project_metadata.updated_on)} ago"
-    end
+    "Not yet active"
   end
 
   def role(user)
@@ -41,6 +50,14 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     else
       "Data User"
     end
+  end
+
+  def quota_percentage(session_id:)
+    0.50
+  end
+
+  def quota_usage(session_id:)
+    "3 GB"
   end
 
   # Removes "about" (as in "about 1 month ago") from time_ago_in_words
