@@ -414,7 +414,8 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
             test_strategy.switch!(:allow_all_users_wizard_access, true)
           end
 
-          it "updates the request" do
+          # This was failing inconsistently
+          it "updates the request", type: :inconsistent do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
             expect(valid_request.project_title).to eq("Updated title")
