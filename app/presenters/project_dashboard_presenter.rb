@@ -2,24 +2,32 @@
 class ProjectDashboardPresenter
   include ActionView::Helpers::DateHelper
 
-  def initialize(project)
-    @project = project
+  def initialize(project_mf)
+    @project_mf = project_mf
   end
 
   def title
-    @project[:title]
+    @project_mf[:title]
   end
 
   def data_sponsor
-    @project[:data_sponsor]
+    @project_mf[:data_sponsor]
   end
 
   def data_manager
-    @project[:data_manager]
+    @project_mf[:data_manager]
+  end
+
+  def mediaflux_id
+    @project_mf[:mediaflux_id]
+  end
+
+  def project
+    @project ||= Project.where(mediaflux_id: mediaflux_id).first
   end
 
   def id
-    "123"
+    project.id
   end
 
   def status
@@ -27,7 +35,7 @@ class ProjectDashboardPresenter
   end
 
   def updated_at
-    "TODO"
+    project.updated_at
   end
 
   def type

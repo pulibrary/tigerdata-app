@@ -32,11 +32,11 @@ module Mediaflux
       assets.map do |asset|
         metadata = asset.xpath("./meta//tigerdata:project", "tigerdata" => "tigerdata")
         {
-          mediaflux_id: assets[0].xpath("@id").first.value,
+          mediaflux_id: asset.xpath("@id").first.value,
           title: metadata.xpath("./Title").text,
           data_sponsor: metadata.xpath("./DataSponsor").text,
           data_manager: metadata.xpath("./DataManager").text,
-          data_users: []
+          data_users: [] # TODO
         }
       end
     end
@@ -50,10 +50,6 @@ module Mediaflux
             xml.action action if action.present?
           end
         end
-      end
-
-      def asset_metadata(asset)
-        asset.xpath("./meta//tigerdata:project", "tigerdata" => "tigerdata")
       end
   end
 end
