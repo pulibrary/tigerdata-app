@@ -228,23 +228,17 @@
                 align-items: flex-start;
                 gap: 0.25rem;
                 flex: 1 0 0;
+                datalist {
+                  overflow-y: auto;  /* Add a vertical scrollbar if content exceeds max-height */
+                  display: block;    /* Ensure the datalist behaves like a block-level element for overflow to work */
+                  scrollbar-color: #651a1a rgba(238, 238, 238, 0.6);
+                }
                 .form-input {
                   display: flex;
                   width: 36.875rem;
                   flex-direction: column;
                   align-items: flex-start;
                   gap: 0.25rem;
-                  select {
-                    /* For Firefox */
-                    scrollbar-width: thin;
-                    scrollbar-color: #c1c1c1 transparent;
-                  }
-
-                  /* For WebKit browsers (Chrome, Safari, Edge) */
-                  select::-webkit-scrollbar {
-                    width: 10px;
-                    background-color: transparent;
-                  }
                 }
                 .char-limit {
                   display: flex;
@@ -789,17 +783,6 @@
 
           .form-input {
             width: 100%;
-            select {
-              /* For Firefox */
-              scrollbar-width: thin;
-              scrollbar-color: #c1c1c1 transparent;
-            }
-
-            /* For WebKit browsers (Chrome, Safari, Edge) */
-            select::-webkit-scrollbar {
-              width: 10px;
-              background-color: transparent;
-            }
           }
         }
       }
