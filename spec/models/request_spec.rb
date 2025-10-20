@@ -78,10 +78,38 @@ RSpec.describe Request, type: :model do
   end
 
   describe "#valid_title?" do
+    let(:long_title) do
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. " \
+      "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
+      "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel "
+    end
+
     it "requires a title" do
       request = Request.new(project_title: "")
       expect(request.valid_title?).to be_falsey
-      request.project_title = "abc"
+      expect(request.errors[:project_title].join(", ")).to eq("cannot be empty")
+    end
+
+    it "validates the title length" do
+      request = Request.new(project_title: long_title)
+      expect(request.valid_title?).to be_falsey
+      expect(request.errors[:project_title].join(", ")).to eq("cannot exceed 200 characters")
+    end
+
+    it "does not allow quotes" do
+      request = Request.new(project_title: "abc\"123")
+      expect(request.valid_title?).to be_falsey
+      expect(request.errors[:project_title].join(", ")).to eq("cannot include quotes")
+    end
+
+    it "validates the title length and quotes" do
+      request = Request.new(project_title: long_title.gsub("vitae", "\"vitae\""))
+      expect(request.valid_title?).to be_falsey
+      expect(request.errors[:project_title].join(", ")).to eq("cannot exceed 200 characters, cannot include quotes")
+    end
+
+    it "validates a title" do
+      request = Request.new(project_title: "abc")
       expect(request.valid_title?).to be_truthy
     end
   end
@@ -115,7 +143,7 @@ RSpec.describe Request, type: :model do
     end
 
     it "logs errors when the request is not valid" do
-      expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error
+      expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       expect(invalid_request.error_message["message"]).to include("Error saving project")
       # The project should not exist in the database
       expect(Project.find_by_id(invalid_request.project_id)).to be nil
@@ -154,10 +182,50 @@ RSpec.describe Request, type: :model do
   end
 
   describe "#valid_description?" do
+    let(:long_description) do
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. " \
+      "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
+      "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel " \
+      "class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet " \
+      "consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus " \
+      "duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. " \
+      "Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad " \
+      "litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque " \
+      "faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean " \
+      "sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia " \
+      "integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra " \
+      "inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque " \
+      "sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus " \
+      "fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit " \
+      "semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos."
+    end
     it "requires a description" do
       request = Request.new(description: "")
       expect(request.valid_description?).to be_falsey
+      expect(request.errors[:description].join(", ")).to eq("cannot be empty")
+    end
+
+    it "does not allow quotes" do
+      request.description = "abc\""
+      expect(request.valid_description?).to be_falsey
+      expect(request.errors[:description].join(", ")).to eq("cannot include quotes")
+    end
+
+    it "errors if too long" do
+      request.description = long_description
+      expect(request.valid_description?).to be_falsey
+      expect(request.errors[:description].join(", ")).to eq("cannot exceed 1000 characters")
+    end
+
+    it "errors if too long and has a quote" do
+      request.description = long_description.gsub("elit", "\"elit\"")
+      expect(request.valid_description?).to be_falsey
+      expect(request.errors[:description].join(", ")).to eq("cannot exceed 1000 characters, cannot include quotes")
+    end
+
+    it "validates a description" do
       request.description = "abc"
+      expect(request.errors[:description]).to be_blank
       expect(request.valid_description?).to be_truthy
     end
   end
@@ -175,7 +243,17 @@ RSpec.describe Request, type: :model do
     it "requires a project_folder" do
       request = Request.new(project_folder: "")
       expect(request.valid_project_folder?).to be_falsey
-      request.project_folder = "abc"
+      expect(request.errors[:project_folder].join(", ")).to eq("cannot be empty")
+    end
+
+    it "requires the project_folder to not include quotes" do
+      request = Request.new(project_folder: "abc\"123")
+      expect(request.valid_project_folder?).to be_falsey
+      expect(request.errors[:project_folder].join(", ")).to eq("cannot include quotes")
+    end
+
+    it "validates a project_folder" do
+      request = Request.new(project_folder: "abc")
       expect(request.valid_project_folder?).to be_truthy
     end
   end
