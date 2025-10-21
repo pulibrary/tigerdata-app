@@ -74,7 +74,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   end
 
   context "edit user" do
-    let(:new_given_name) { FFaker::Name.name }
+    let(:new_given_name) { FFaker::Name.first_name + "yy" } # Ensure a change
     it "shows the user information" do
       sign_in sysadmin_user
       visit "/users/#{data_manager.id}"
@@ -89,12 +89,13 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       expect(page).to have_content "Provider: not set"
     end
 
-    it "allows user to edit information" do
+    it "allows sysadmin to edit user information" do
       sign_in sysadmin_user
       visit "/users/#{data_manager.id}/edit"
       fill_in :user_given_name, with: new_given_name
       click_on "Save"
-      expect(User.find(data_manager.id).given_name).to eq new_given_name
+      expect(page).to have_content "User Information"
+      expect(page).to have_content new_given_name
     end
   end
 
