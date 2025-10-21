@@ -25,6 +25,9 @@ namespace :servers do
   desc "Stop development dependencies"
   task stop: :environment do
     system "lando stop"
+    system("docker stop mediaflux")
+    puts "docker ps:"
+    system("docker ps")
   end
 end
 # :nocov:
