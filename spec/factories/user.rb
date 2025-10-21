@@ -7,7 +7,7 @@ FactoryBot.define do
     given_name { display_name.split(" ").first }
     family_name { display_name.split(" ").last }
     provider { :cas }
-    email { "#{uid}@example.com" }
+    sequence(:email) { |n| "#{uid}@example#{n}.com" } # Ensure unique emails
     eligible_sponsor { false }
     eligible_manager { false }
     sysadmin { false }
