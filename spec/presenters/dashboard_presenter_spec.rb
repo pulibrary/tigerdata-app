@@ -4,18 +4,18 @@ require "rails_helper"
 describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(current_user:) }
 
-  let(:current_user) { FactoryBot.create :user, uid: "tigerdatatester" }
-  let(:other_user) { FactoryBot.create :user }
-  let(:project1) { FactoryBot.create :project, data_manager: other_user.uid, data_sponsor: other_user.uid }
-  let(:project2) { FactoryBot.create :project, data_user_read_only: ["tigerdatatester"], updated_at:  ActiveSupport::TimeZone.new("America/New_York").yesterday }
+  let(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:other_user) { FactoryBot.create :user, uid: "kl37" }
+  let(:request1) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid }
+  let(:request2) { FactoryBot.create :request_project, user_roles: [{"uid" => "tigerdatatester", "read_only" => true}] }
 
-  before do
-    # make sure the database is setup before the tests
-    current_user
-    other_user
-    project1
-    project2
-  end
+  let!(:project1) { request1.approve(current_user) }
+  let!(:project2) {
+    project = request2.approve(current_user)
+    project.updated_at = ActiveSupport::TimeZone.new("America/New_York").yesterday
+    project.save!
+    project
+  }
 
   describe "#all_projects" do
     it "returns an empty array for a normal user" do
@@ -36,6 +36,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
       it "returns the list of all of the user's projects in sorted order" do
         project3 = FactoryBot.create :project, data_user_read_only: ["tigerdatatester"], updated_at:  ActiveSupport::TimeZone.new("America/New_York").tomorrow
         expect(presenter.dashboard_projects.count).to eq(2)
+        byebug
         expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project2.id])
       end
   end
