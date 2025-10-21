@@ -469,22 +469,12 @@
         }
       }
 
-      .request-list::backdrop {
-        background-color: $gray-100-transparent;
-      }
-
       .request-list {
-        width: 50rem;
         padding: 1.25rem;
+        width: 50rem;
         border-radius: 0.5rem;
-        background: var(--Neutral-White, #fff);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         gap: 1.25rem;
 
-        /* Shadow */
-        box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
         .draft-list-header {
           display: flex;
           justify-content: space-between;
