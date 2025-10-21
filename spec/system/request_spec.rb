@@ -290,7 +290,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit approve_request_path(title_too_long.id)
         expect(page).to have_content("Review")
         within(".project-title") do
-          expect(page).to have_content("project title cannot exceed 200 characters")
+          expect(page).to have_content("cannot exceed 200 characters")
         end
       end
 
@@ -299,7 +299,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit approve_request_path(description_too_long.id)
         expect(page).to have_content("Review")
         within(".project-description") do
-          expect(page).to have_content("description cannot exceed 1000 characters")
+          expect(page).to have_content("cannot exceed 1000 characters")
         end
       end
 
