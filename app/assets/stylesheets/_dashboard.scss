@@ -789,7 +789,8 @@
   }
 
   .startup-content {
-    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .startup-page {
@@ -806,8 +807,11 @@
 
     .startup-page-image {
       img {
-        width: 823px;
-        height: 582px;
+        max-width: 36.375rem;
+        max-height: 100%;
+        object-fit: contain;
+        width: auto;
+        height: auto;
       }
     }
 
