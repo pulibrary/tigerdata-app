@@ -34,9 +34,11 @@ module Mediaflux
         {
           mediaflux_id: asset.xpath("@id").first.value,
           title: metadata.xpath("./Title").text,
+          description: metadata.xpath("./Description").text,
+          project_purpose: metadata.xpath("./ProjectPurpose").text,
           data_sponsor: metadata.xpath("./DataSponsor").text,
           data_manager: metadata.xpath("./DataManager").text,
-          data_users: [] # TODO
+          data_users: data_users_from_string(metadata.xpath("./DataUser").text)
         }
       end
     end
@@ -50,6 +52,11 @@ module Mediaflux
             xml.action action if action.present?
           end
         end
+      end
+
+      def data_users_from_string(users)
+        return [] if users.blank?
+        users.split(",")
       end
   end
 end

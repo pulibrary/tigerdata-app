@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ProjectShowPresenter
-  delegate "id", "in_mediaflux?", "mediaflux_id", "status", "title", to: :project
-  delegate "description", "project_id", "storage_performance_expectations", "project_purpose", to: :project_metadata
+  delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
+  delegate "project_id", "storage_performance_expectations", "project_purpose", to: :project_metadata
 
   attr_reader :project, :project_metadata
 
@@ -10,12 +10,43 @@ class ProjectShowPresenter
     ProjectXmlPresenter
   end
 
+  # `project` can be a Project model or a Hash with the project data straight from Mediaflux.
+  # It is a Project model when used from the Project show page but it is a Hash when used
+  # from the Dashboard.
   def initialize(project)
-    @project = project
-    @project_metadata = @project.metadata_model
+    if project.is_a?(Hash)
+      # If the project is a Hash we assume it contains the raw data about the project from Mediaflux.
+      @project_mf = project
+      # Fetch the Rails project from our database since we still need some of its values.
+      @project = Project.where(mediaflux_id: @project_mf[:mediaflux_id]).first
+      if @project.nil?
+        Rails.logger.warn("Mediaflux project with ID #{@project_mf[:mediaflux_id]} is not in the Rails database (title: #{@project_mf[:title]})")
+        Honeybadger.notify("Mediaflux project with ID #{@project_mf[:mediaflux_id]} is not in the Rails database (title: #{@project_mf[:title]})")
+      end
+    else
+      @project_mf = nil
+      @project = project
+    end
+    @project_metadata = @project&.metadata_model
   end
 
-  # @return [String] the XML for the project Document 
+  def title
+    if @project_mf.nil?
+      @project.title
+    else
+      @project_mf[:title]
+    end
+  end
+
+  def description
+    if @project_mf.nil?
+      @project.metadata_model.description
+    else
+      @project_mf[:description]
+    end
+  end
+
+  # @return [String] the XML for the project Document
   def to_xml
     xml_document.to_xml
   end
@@ -34,11 +65,27 @@ class ProjectShowPresenter
   end
 
   def data_sponsor
-    User.find_by(uid: @project.metadata["data_sponsor"]).uid
+    if @project_mf.nil?
+      User.find_by(uid: @project.metadata["data_sponsor"]).uid
+    else
+      User.find_by(uid: @project_mf[:data_sponsor])&.uid
+    end
   end
 
   def data_manager
-    User.find_by(uid: @project.metadata["data_manager"]).uid
+    if @project_mf.nil?
+      User.find_by(uid: @project.metadata["data_manager"]).uid
+    else
+      User.find_by(uid: @project_mf[:data_manager])&.uid
+    end
+  end
+
+  def project_purpose
+    if @project_mf.nil?
+      project.project_metadata.project_purpose
+    else
+      @project_mf[:project_purpose]
+    end
   end
 
   # used to hide the project root that is not visible to the end user

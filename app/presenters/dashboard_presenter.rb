@@ -13,7 +13,11 @@ class DashboardPresenter
   end
 
   def dashboard_projects
-    @dashboard_projects ||= Project.users_projects(current_user).map { |project| ProjectDashboardPresenter.new(project) }.sort_by(&:updated_at).reverse
+    @dashboard_projects ||= Project.users_projects(current_user)
+      .map { |project| ProjectDashboardPresenter.new(project) }
+      .select { |presenter| presenter.project_in_rails? }
+      .sort_by(&:updated_at)
+      .reverse
     @dashboard_projects
   end
 
