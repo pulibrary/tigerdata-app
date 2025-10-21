@@ -1,31 +1,24 @@
-<div class="table">
-   <table id="<%= table_id %>" width="100%" role="table"> <!-- width is needed to override datatables calculation -->
-   <thead>
-      <tr class="project heading screenreader-only" role="rowheader">
-         <th>display</th>
-         <th>title</th>
-         <th>status</th>
-         <th>type</td>
-         <th>role</th>
-         <th>download</th>
-         <th>activity</th>
-         <th>quota usage</th>
-      </tr>
-   </thead>
-   <tbody>
-      <% if projects.count == 0 %>
-         <tr class="project" >
-            <td class="project-row">
-               <div class="project-details">
-                  <div class="title">
-                     No projects
-                  </div>
-               </div>
-            </td>
-         </tr>
-      <% else %>
-         <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
-      <% end %>
-   </tbody>
-   </table>
-</div>
+<% if projects.count == 0 %>
+  <%= render :partial => "startup_page" %>
+<% else %>
+  <div class="table">
+    <table id="<%= table_id %>" width="100%" role="table"> <!-- width is needed to override datatables calculation -->
+      <thead>
+        <tr class="project heading screenreader-only" role="rowheader">
+          <th>display</th>
+          <th>title</th>
+          <th>status</th>
+          <th>type</td>
+          <th>role</th>
+          <th>download</th>
+          <th>activity</th>
+          <th>quota usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render :partial => "project_list_view", :collection => projects, :as => :project %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
