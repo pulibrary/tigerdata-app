@@ -41,10 +41,6 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     end
   end
 
-  def project_in_rails?
-    project != nil
-  end
-
   # Removes "about" (as in "about 1 month ago") from time_ago_in_words
   def remove_about(time_ago)
     time_ago.gsub("about ", "")

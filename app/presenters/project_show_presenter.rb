@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ProjectShowPresenter
   delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
-  delegate "project_id", "storage_performance_expectations", "project_purpose", to: :project_metadata
+  delegate "project_id", "storage_performance_expectations", to: :project_metadata
 
   attr_reader :project, :project_metadata
 
@@ -10,19 +10,13 @@ class ProjectShowPresenter
     ProjectXmlPresenter
   end
 
-  # `project` can be a Project model or a Hash with the project data straight from Mediaflux.
-  # It is a Project model when used from the Project show page but it is a Hash when used
-  # from the Dashboard.
+  # While we are transitioning to fetching the data straight from Mediaflux `project`` can be
+  # an ActiveRecord Project model (when used from the Project show page) or a Hash with the
+  # data from Mediaflux (when used from the Dashboard).
   def initialize(project)
     if project.is_a?(Hash)
-      # If the project is a Hash we assume it contains the raw data about the project from Mediaflux.
       @project_mf = project
-      # Fetch the Rails project from our database since we still need some of its values.
-      @project = Project.where(mediaflux_id: @project_mf[:mediaflux_id]).first
-      if @project.nil?
-        Rails.logger.warn("Mediaflux project with ID #{@project_mf[:mediaflux_id]} is not in the Rails database (title: #{@project_mf[:title]})")
-        Honeybadger.notify("Mediaflux project with ID #{@project_mf[:mediaflux_id]} is not in the Rails database (title: #{@project_mf[:title]})")
-      end
+      @project = rails_project(@project_mf)
     else
       @project_mf = nil
       @project = project
@@ -124,6 +118,10 @@ class ProjectShowPresenter
     (storage_usage.to_f / storage_capacity.to_f) * 100
   end
 
+  def project_in_rails?
+    project != nil
+  end
+
   private
 
     # Capacity is in bytes
@@ -137,5 +135,14 @@ class ProjectShowPresenter
 
     def xml_presenter
       @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
+    end
+
+    def rails_project(project_mf)
+      database_record = Project.where(mediaflux_id:project_mf[:mediaflux_id]).first
+      if database_record.nil?
+        Rails.logger.warn("Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})")
+        Honeybadger.notify("Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})")
+      end
+      database_record
     end
 end
