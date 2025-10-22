@@ -94,6 +94,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       visit "/users/#{data_manager.id}/edit"
       fill_in :user_given_name, with: new_given_name
       click_on "Save"
+      expect(page).to have_content("Give name: #{new_given_name}")
       expect(User.find(data_manager.id).given_name).to eq new_given_name
     end
   end
