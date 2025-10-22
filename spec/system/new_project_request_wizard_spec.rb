@@ -163,13 +163,16 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # force a save and page reload to make sure all data is being saved to the model
       click_on "Next"
 
+      # TODO: when the wizard is fully functional the Categories should be next
+      # expect(page).to have_content "Categories (Optional)"
+      # click_on "Next"
+
+      expect(page).to have_content "Assign roles for your project"
+
       # Check that the current step (2) is marked as such and the previous one (1) has been marked as completed
       expect(find(".step-number-current .step-text").text).to eq "2"
       expect(all(".step-number-completed .step-text")[0].text).to eq "1"
 
-      # TODO: when the wizard is fully functional the Categories should be next
-      # expect(page).to have_content "Categories (Optional)"
-      expect(page).to have_content "Assign roles for your project"
       click_on("Back")
       expect(page).to have_content "Tell us a little about your project!"
       expect(page).to have_field("project_title", with: "A basic Project")
