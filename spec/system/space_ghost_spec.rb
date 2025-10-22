@@ -6,24 +6,12 @@ require "open-uri"
 RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: false, js: true do
   context "user" do
     let(:user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
-    let(:datamanager) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
-    before do
-      datasponsor
-    end
-    it "displays the new project wizard on the dashboard" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:allow_all_users_wizard_access, true)
-      sign_in user
-      visit "/"
-      expect(page).to have_content("Welcome, #{user.given_name}!")
-      test_strategy.switch!(:allow_all_users_wizard_access, false)
-    end
+
     it "contains the fields of the drupal form when creating a project" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:allow_all_users_wizard_access, true)
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
       another_user = FactoryBot.create(:user)
+      datasponsor = FactoryBot.create(:project_sponsor)
+      datamanager = FactoryBot.create(:data_manager)
       expect(Project.count).to eq 0
       sign_in user
       visit "/"
@@ -67,7 +55,6 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
       click_on "Submit"
       expect(page).to have_content("Your new project request is submitted")
-      test_strategy.switch!(:allow_all_users_wizard_access, false)
     end
   end
 end
