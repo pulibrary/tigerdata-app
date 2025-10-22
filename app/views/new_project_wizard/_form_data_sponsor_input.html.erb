@@ -8,7 +8,7 @@
           <input class="form-input data_sponsor" type="text" name="request[data_sponsor]" id="request_data_sponsor"
                 list="data_sponsors" placeholder="Select a Data Sponsor" autocomplete="off" value="<%=data_sponsor%>"></input>
           <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
-          <datalist id="data_sponsors"></datalist>
+          <datalist class="datalist scrollable" id="data_sponsors"></datalist>
           <div class="input-error">
                <%= data_sponsor_error %>
           </div>

@@ -272,10 +272,8 @@
                 align-items: flex-start;
                 gap: 0.25rem;
                 flex: 1 0 0;
-                datalist {
-                  overflow-y: auto;  /* Add a vertical scrollbar if content exceeds max-height */
-                  display: block;    /* Ensure the datalist behaves like a block-level element for overflow to work */
-                  scrollbar-color: #651a1a rgba(238, 238, 238, 0.6);
+                .scrollable {
+                  overflow-y: auto !important;  // Use !important only if there is already an overflow style rule for this element and you want to override
                 }
                 .form-input {
                   display: flex;

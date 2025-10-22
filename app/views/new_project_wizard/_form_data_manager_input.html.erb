@@ -8,7 +8,7 @@
           <input class="form-input data_manager" type="text" name="request[data_manager]" id="request_data_manager"
                 list="data_managers" placeholder="Select a Data Manager" autocomplete="off" value="<%=data_manager%>"></input>
           <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
-          <datalist id="data_managers"></datalist>
+          <datalist class="datalist scrollable" id="data_managers"></datalist>
           <div class="input-error">
                <%= data_manager_error %>
           </div>

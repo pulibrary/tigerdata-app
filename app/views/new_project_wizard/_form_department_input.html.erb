@@ -7,7 +7,7 @@
         <div class="vertical-frame">
           <input class="form-input datalist" type="text" name="department_find" id="department_find"
                 list="princeton_departments" placeholder="Search using department code or name" autocomplete="off"></input>
-          <datalist id="princeton_departments">
+          <datalist class="datalist scrollable" id="princeton_departments">
             <% @princeton_departments.each do |department| %>
                 <!-- Non breaking space &nbsp; is at the end of every option to indicate an option was selected not just the user typing -->
                 <option data-value="<%= {code: department.code, name: department.name}.to_json %>" value="<%= "(#{department.code}) #{department.name}" %>&nbsp;"></option>
