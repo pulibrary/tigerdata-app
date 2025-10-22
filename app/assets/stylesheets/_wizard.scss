@@ -229,7 +229,7 @@
                 gap: 0.25rem;
                 flex: 1 0 0;
                 .scrollable {
-                  overflow-y: auto !important;  // Use !important only if there is already an overflow style rule for this element and you want to override
+                  overflow-y: auto !important; // Use !important only if there is already an overflow style rule for this element and you want to override
                 }
                 .form-input {
                   display: flex;
