@@ -76,7 +76,7 @@ class ProjectShowPresenter
 
   def project_purpose
     if @project_mf.nil?
-      project.project_metadata.project_purpose
+      project_metadata.project_purpose
     else
       @project_mf[:project_purpose]
     end

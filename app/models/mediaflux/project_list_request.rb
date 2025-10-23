@@ -38,7 +38,8 @@ module Mediaflux
           project_purpose: metadata.xpath("./ProjectPurpose").text,
           data_sponsor: metadata.xpath("./DataSponsor").text,
           data_manager: metadata.xpath("./DataManager").text,
-          data_users: data_users_from_string(metadata.xpath("./DataUser").text)
+          data_users: data_users_from_string(metadata.xpath("./DataUser").text),
+          directory: metadata.xpath("./ProjectDirectory").text
         }
       end
     end

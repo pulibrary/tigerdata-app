@@ -7,9 +7,11 @@ class DashboardPresenter
 
   def all_projects
     return [] unless current_user&.eligible_sysadmin?
-
-    @all_projects ||= Project.all_projects.map { |project| ProjectDashboardPresenter.new(project) }.sort_by(&:updated_at).reverse
-    @all_projects
+    # Since we are now fetching the projects from Mediaflux the projects
+    # that the user has access to is controlled by Mediaflux and therefore
+    # "all" projects is the same as the projects shown to the user in the
+    # dashboard.
+    dashboard_projects
   end
 
   def dashboard_projects

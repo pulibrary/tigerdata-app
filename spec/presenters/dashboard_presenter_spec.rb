@@ -7,12 +7,20 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   let(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:other_user) { FactoryBot.create :user, uid: "kl37" }
   let(:request1) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid }
-  let(:request2) { FactoryBot.create :request_project, user_roles: [{"uid" => "tigerdatatester", "read_only" => true}] }
+  let(:request2) { FactoryBot.create :request_project, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
+  let(:request3) { FactoryBot.create :request_project, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
 
   let!(:project1) { request1.approve(current_user) }
   let!(:project2) {
     project = request2.approve(current_user)
     project.updated_at = ActiveSupport::TimeZone.new("America/New_York").yesterday
+    project.save!
+    project
+  }
+
+  let!(:project3) {
+    project = request3.approve(current_user)
+    project.updated_at = ActiveSupport::TimeZone.new("America/New_York").tomorrow
     project.save!
     project
   }
@@ -23,21 +31,26 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     context "for a sysadmin" do
-      let(:current_user) { FactoryBot.create :sysadmin, uid: "tigerdatatester" }
+      before do
+        current_user.developer = true # so that is detected as a sysadmin
+      end
 
       it "returns the list of all projects in sorted order" do
-        expect(presenter.all_projects.count).to eq(2)
-        expect(presenter.all_projects.map(&:id)).to eq([project1.id, project2.id])
+        expect(presenter.all_projects.count).to eq(3)
+        expect(presenter.all_projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
       end
     end
   end
 
   describe "dashboard_projects" do
       it "returns the list of all of the user's projects in sorted order" do
-        project3 = FactoryBot.create :project, data_user_read_only: ["tigerdatatester"], updated_at:  ActiveSupport::TimeZone.new("America/New_York").tomorrow
-        expect(presenter.dashboard_projects.count).to eq(2)
-        byebug
-        expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project2.id])
+        expect(presenter.dashboard_projects.count).to eq(3)
+        expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
+
+        # It does not include a project that the user has no access
+        # (This is a special project that cbentler created in Mediaflux and comes built-in the Docker
+        # image, but we have no record of it in the Rails database and therefore we don't display it.)
+        expect(presenter.dashboard_projects.find { |p| p.project.project_directory == "tigerdata/RDSS/testing-project" }).to be nil
       end
   end
 
