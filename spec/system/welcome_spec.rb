@@ -17,6 +17,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       visit "/"
       expect(page).to have_button "Learn More"
       click_button "Learn More"
+      expect(page).to have_content("Powerful software meets scalable storage")
       assert_current_path("https://tigerdata.princeton.edu")
     end
 
