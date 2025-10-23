@@ -5,6 +5,7 @@
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
             <div class="summary">
+                <div class="path"> <%= project.path %></div>
                <div class="status <%= project.status.downcase %>"><%= project.status %></div>
                <div class="type"><%= project.type %></div>
                <div class="role"><%= project.role(current_user) %></div>
