@@ -4,8 +4,6 @@ class ProjectDashboardPresenter < ProjectShowPresenter
 
   delegate :to_model, :updated_at, to: :project
 
-  delegate :data_sponsor, :data_manager, to: :project_metadata
-
   def type
     if storage_performance_expectations["approved"].nil?
       "Requested #{storage_performance_expectations['requested']}"
