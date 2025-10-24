@@ -7,9 +7,9 @@ RSpec.describe Request, type: :model do
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project", project_purpose: "research",
                            data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
-                           project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: "uid", user_roles: [{ uid: "abc123", name: "Abe Cat" }, { uid: "ddd", name: "Dandy Dog",
-                                                                                                                                                                  read_only: true },
-                                                                                                                            { uid: "efg", name: "Erica Ferg", read_only: false }])
+                           project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: valid_user.uid, user_roles: [{ uid: "abc123", name: "Abe Cat" },
+                                                                                                                                     { uid: "ddd", name: "Dandy Dog", read_only: true },
+                                                                                                                                     { uid: "efg", name: "Erica Ferg", read_only: false }])
   end
 
   describe "#request_type" do
@@ -69,12 +69,22 @@ RSpec.describe Request, type: :model do
 
   describe "#requested_by" do
     subject(:requested_by) { request.requested_by }
-    it { should eq("uid") }
+    it { should eq(valid_user.uid) }
   end
 
   describe "#user_roles" do
     subject(:user_roles) { request.user_roles }
     it { should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, { "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
+  end
+
+  describe "#project_path" do
+    subject(:project_path) { request.project_path }
+    it { should eq("folder/project") }
+  end
+
+  describe "#requestor" do
+    subject(:requestor) { request.requestor }
+    it { should eq(valid_user.display_name_safe) }
   end
 
   describe "#valid_title?" do
