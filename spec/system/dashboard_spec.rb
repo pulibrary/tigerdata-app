@@ -13,7 +13,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
-    let(:other_user) { FactoryBot.create(:user, uid: "kl37") }
+    let(:other_user) { FactoryBot.create(:developer, uid: "kl37") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { Mediaflux::EXPECTED_VERSION }
@@ -141,7 +141,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "paginates the projects; 8 per page" do
         projects = (1..17).map do
-          request_nnn = FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid
+          request_nnn = FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid
           project = request_nnn.approve(current_user)
           project.save!
           project
@@ -180,18 +180,18 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     end
 
     context "with the developer role" do
-      let(:dev_user) { FactoryBot.create(:developer, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:developer_user) { other_user }
 
       it "shows the 'Project Requests' button" do
-        sign_in admin_user
+        sign_in developer_user
         visit dashboard_path
-        expect(page).to have_content("Welcome, #{admin_user.given_name}!")
+        expect(page).to have_content("Welcome, #{developer_user.given_name}!")
         expect(page).not_to have_content "Please log in"
         expect(page).to have_content "Requests"
       end
 
       it "shows the system administrator dashboard", js: true do
-        sign_in dev_user
+        sign_in developer_user
         visit dashboard_path
         expect(page).to have_content "project 111"
         expect(page).to have_content "project 222"
@@ -204,7 +204,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "renders the 'Administration' tab" do
-        sign_in dev_user
+        sign_in developer_user
         visit dashboard_path
         expect(page).to have_content "Administration"
       end
