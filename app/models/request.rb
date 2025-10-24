@@ -143,6 +143,17 @@ class Request < ApplicationRecord
     state == Request::SUBMITTED
   end
 
+  def project_path
+    return project_folder if parent_folder.blank?
+
+    [parent_folder, project_folder].join("/")
+  end
+
+  def requestor
+    return "missing" if requested_by.blank?
+    User.find_by(uid: requested_by).display_name_safe
+  end
+
   private
 
     def check_errors?
