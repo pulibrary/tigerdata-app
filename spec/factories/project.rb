@@ -62,6 +62,10 @@ FactoryBot.define do
       end
     end
 
+    factory :project_with_apostrophe_in_title, class: "Project" do
+      title { "Research Project's Title" }
+    end
+
     factory :project_with_dynamic_directory, class: "Project" do
       transient do
         sequence :project_directory do |n|

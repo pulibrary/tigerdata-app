@@ -157,33 +157,25 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         find("a.paginate_button", text: "<").click
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse.first.title)
       end
-
-      it "should not display the New Project Request if the feature is disabled" do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:allow_all_users_wizard_access, false)
-        sign_in current_user
-        visit dashboard_path
-        expect(page).not_to have_content("New Project Request")
-        test_strategy.switch!(:allow_all_users_wizard_access, true)
-      end
     end
 
-    # context "for a user without any projects" do
-    #   it "shows the 'Log out' button" do
-    #     sign_in no_projects_user
-    #     visit dashboard_path
-    #     expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
-    #     expect(page).to have_content("No projects")
-    #     click_link no_projects_user.uid.to_s
-    #     expect(page).to have_content "Log out"
-    #   end
+    context "for a user without any projects" do
+      it "shows the startup page" do
+        sign_in no_projects_user
+        visit dashboard_path
+        expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
+        expect(page).to have_css(".startup-page")
+        expect(page).to have_content("No Projects Yet")
+        click_link no_projects_user.uid.to_s
+        expect(page).to have_content "Log out"
+      end
 
-    #   it "shows no downloads available" do
-    #     sign_in no_projects_user
-    #     visit dashboard_path
-    #     expect(page).to have_content("No downloads available")
-    #   end
-    # end
+      it "shows no downloads available" do
+        sign_in no_projects_user
+        visit dashboard_path
+        expect(page).to have_content("No downloads available")
+      end
+    end
 
     context "with the developer role" do
       let(:dev_user) { FactoryBot.create(:developer, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }

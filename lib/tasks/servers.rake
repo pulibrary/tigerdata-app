@@ -3,7 +3,7 @@
 
 namespace :servers do
   task install_mediaflux: :environment do
-    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.14.0")
+    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.16.0")
     system("docker start mediaflux")
   end
 
@@ -25,6 +25,9 @@ namespace :servers do
   desc "Stop development dependencies"
   task stop: :environment do
     system "lando stop"
+    system("docker stop mediaflux")
+    puts "docker ps:"
+    system("docker ps")
   end
 end
 # :nocov:

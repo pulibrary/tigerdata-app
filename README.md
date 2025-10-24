@@ -61,13 +61,13 @@ bundle install
 
 We use lando to run services required for both test and development environments.
 
-Start and initialize database services with:
+Start and initialize database and mediaflux services with:
 
 `bundle exec rake servers:start`
 
-To stop database services:
+To stop database and mediaflux services:
 
-`bundle exec rake servers:stop` or `lando stop`
+`bundle exec rake servers:stop`
 
 You will also want to run the vite development server:
 
@@ -90,7 +90,8 @@ Similarly, ***in the non-production environments only***, you can remove develop
 
 #### MediaFlux Server
 
-Documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
+You should no longer have to start mediaflux separately. `bundle exec rake servers:start` includes spinning up mediaflux in docker.
+Additional documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
 
 
 ##### Authentication

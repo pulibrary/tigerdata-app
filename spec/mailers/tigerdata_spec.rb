@@ -7,9 +7,20 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let(:project_id) { project.id }
 
   let(:valid_request) do
-    Request.create(project_title: "Valid Request", data_sponsor: sponsor_and_data_manager_user.uid, data_manager: sponsor_and_data_manager_user.uid, departments: ["RDSS"],
-                   quota: "500 GB", description: "A valid request",
-                   project_folder: "valid_folder")
+    Request.create(
+      project_title: "Valid Request", 
+      data_sponsor: sponsor_and_data_manager_user.uid, 
+      data_manager: sponsor_and_data_manager_user.uid, 
+      departments: ["RDSS"],
+      quota: "500 GB", 
+      description: "A valid request",
+      project_folder: "valid_folder",
+      user_roles: [
+        { uid: "abc123", name: "Abe Cat" }, 
+        { uid: "ddd", name: "Dandy Dog", read_only: true },
+        { uid: "efg", name: "Fern Frog", read_only: false }
+      ]
+    )
   end
   let(:request_id) { valid_request.id }
 

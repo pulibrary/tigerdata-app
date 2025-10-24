@@ -16,8 +16,9 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "shows the 'Learn More' button, which goes to the TigerData service page" do
       visit "/"
       expect(page).to have_button "Learn More"
-      click_button "Learn More"
-      assert_current_path("https://tigerdata.princeton.edu")
+      primary_button = find("#learn-more-button")
+      expect(primary_button).to have_text "Learn More"
+      expect(find(".welcome-text > .button_to")[:action]).to eq "https://tigerdata.princeton.edu/"
     end
 
     it "forwards to login page" do
