@@ -10,12 +10,25 @@ class PrincetonUsers
     def user_list_query(query)
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
       return [] if tokens.count == 0
+      if (tokens.count == 1)
+        # if I have a single token I might be trying a uid search, so put all the uid matches at the top
+        uid_query(tokens[0]) | name_query(tokens)
+      else
+        name_query(tokens)
+      end.map{|user| { uid: user.uid, name: user.display_name, display_name: user.display_name_safe } }
+    end
 
-      user_query = tokens.inject(User.all) do |partial_query, token|
-                     search_token = '%'+User.sanitize_sql_like(token)+'%'
-                     partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
-                   end.order(:display_name)
-      user_query.map{|user| { uid: user.uid, name: user.display_name, display_name: user.display_name_safe } }
+    def uid_query(token)
+      order_sql = User.sanitize_sql_for_order("LENGTH(uid)-LENGTH('#{token}')")
+      search_token = User.sanitize_sql_like(token)+'%'
+      User.where("(uid like ?)",search_token).order(Arel.sql(order_sql)).order(:uid)
+    end
+
+    def name_query(tokens)
+      tokens.inject(User.all) do |partial_query, token|
+        search_token = '%'+User.sanitize_sql_like(token)+'%'
+        partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
+      end.order(:given_name).order(:family_name)
     end
 
     def load_rdss_developers

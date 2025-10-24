@@ -190,12 +190,12 @@ RSpec.describe PrincetonUsers, type: :model do
   end
 
   describe "#user_list_query" do
-    let(:user) { { uid: "sms98", name: "Sotomayor, Sonia", display_name: "Sotomayor, Sonia (sms98)" } }
+    let(:user) { { uid: "sms98", name: "Sotomayor, Asonia", display_name: "Sotomayor, Asonia (sms98)" } }
     let(:user_no_name) { { uid: "sms99", name: nil, display_name: "sms99" } }
 
     before do
       FactoryBot.create(:user, uid: "sms99", display_name: nil, given_name: nil, family_name: nil)
-      FactoryBot.create(:user, uid: "sms98", display_name: "Sotomayor, Sonia")
+      FactoryBot.create(:user, uid: "sms98", display_name: "Sotomayor, Asonia")
     end
 
     it "detect matches by uid" do
@@ -206,9 +206,10 @@ RSpec.describe PrincetonUsers, type: :model do
       expect(described_class.user_list_query("abc")).to eq []
     end
 
-    it "detect matches by uid" do
-      FactoryBot.create(:user, uid: "asms99", display_name: "Anna", given_name: nil, family_name: nil)
-      expect(described_class.user_list_query("sms")).to eq [{ display_name: "Anna (asms99)", name: "Anna", uid: "asms99" }, user, user_no_name]
+    it "detect matches by uid and puts them first" do
+      FactoryBot.create(:user, uid: "oto99", display_name: "Anna Smsath", given_name: "Anna", family_name: "Smsath")
+      expect(described_class.user_list_query("sms")).to eq [user, user_no_name, { display_name: "Anna Smsath (oto99)", name: "Anna Smsath", uid: "oto99" }]
+      expect(described_class.user_list_query("oto")).to eq [{ display_name: "Anna Smsath (oto99)", name: "Anna Smsath", uid: "oto99" }, user]
     end
 
     it "does not query if no tokens are present" do
