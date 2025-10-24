@@ -201,6 +201,21 @@
         align-items: center;
         gap: 1rem;
 
+        .path {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .path::before {
+          content: "";
+          display: inline-flex;
+          background: url("folder.svg") no-repeat;
+          width: 16px;
+          height: 16px;
+          vertical-align: top;
+        }
+
         .status {
           display: flex;
           align-items: center;
