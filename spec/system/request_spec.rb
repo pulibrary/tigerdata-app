@@ -195,9 +195,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
     context "sysadmin_user" do
       it "shows the New Project Requests page to sysadmin users" do
+        request # make sure the request exists before loading the index page
         sign_in sysadmin_user
         visit "/requests"
         expect(page).to have_content "New Project Requests"
+        expect(page).to have_content request.requested_by
+        expect(page).to have_content request.project_path
       end
       it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
         sign_in sysadmin_user
