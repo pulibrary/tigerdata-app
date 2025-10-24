@@ -47,17 +47,17 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       request1.approve(sponsor_and_data_manager_user)
       request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
       request2.approve(sponsor_and_data_manager_user)
-      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{"uid" => user.uid, "read_only" => true}, {"uid" => test_user.uid, "read_only" => true}])
+      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => test_user.uid, "read_only" => true }])
       request3.approve(sponsor_and_data_manager_user)
-      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{"uid" => test_user.uid, "read_only" => false}])
+      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => test_user.uid, "read_only" => false }])
       request4.approve(sponsor_and_data_manager_user)
-      request5 = FactoryBot.create(:request_project, project_title: "project 555", user_roles: [{"uid" => user.uid, "read_only" => true}])
+      request5 = FactoryBot.create(:request_project, project_title: "project 555", user_roles: [{ "uid" => user.uid, "read_only" => true }])
       request5.approve(sponsor_and_data_manager_user)
     end
 
     it "returns projects for the data users" do
       # Filter to only tests projects (i.e. tigerdata/rspec) to prevent getting development projects
-      user_projects = described_class.users_projects(test_user).select { |project| project[:directory].start_with?("tigerdata/rspec/")}
+      user_projects = described_class.users_projects(test_user).select { |project| project[:directory].start_with?("tigerdata/rspec/") }
       expect(user_projects.count).to be 5
       expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil

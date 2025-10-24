@@ -24,7 +24,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:request_222) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222" }
     let!(:project_222) { request_222.approve(current_user) }
 
-    let(:request_333) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
+    let(:request_333) do
+      FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
+    end
     let!(:project_333) { request_333.approve(current_user) }
 
     before do
@@ -61,7 +63,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "shows the latests downloads available" do
-        approved_project = DashboardPresenter.new(current_user:current_user).dashboard_projects.first.project
+        approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
                                     request_details: { project_title: approved_project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
@@ -138,7 +140,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "paginates the projects; 8 per page" do
-        projects = (1..17).map do |i|
+        projects = (1..17).map do
           request_nnn = FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid
           project = request_nnn.approve(current_user)
           project.save!
