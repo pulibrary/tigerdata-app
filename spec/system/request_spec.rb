@@ -320,7 +320,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         submitted_request.state = Request::SUBMITTED
         submitted_request.approved_quota = "300 TB"
         submitted_request.save
-
         visit "#{requests_path}/#{submitted_request.id}"
         expect(page).to have_content("Approve request")
         expect(page).to have_content("300.0 TB")
