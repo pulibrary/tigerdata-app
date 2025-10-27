@@ -9,7 +9,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
 
   let(:request1) { FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: other_user.uid }
   let(:request2) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: current_user.uid }
-  let(:request3) { FactoryBot.create :request_project, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
+  let(:request3) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
   let(:request4) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid }
 
   let!(:project1) { request1.approve(current_user) }
@@ -50,6 +50,16 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
         expect(presenter.dashboard_projects.count).to eq(3)
         expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
       end
+  end
+
+  describe "#role" do
+    it "detects the proper roles for each project" do
+      projects = presenter.dashboard_projects
+      expect(projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
+      expect(projects[0].role(current_user)).to be "Data User"
+      expect(projects[1].role(current_user)).to be "Data Manager"
+      expect(projects[2].role(current_user)).to be "Sponsor"
+    end
   end
 
   describe "my_inventory_requests" do

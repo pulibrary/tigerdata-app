@@ -10,9 +10,12 @@ class ProjectShowPresenter
     ProjectXmlPresenter
   end
 
-  # While we are transitioning to fetching the data straight from Mediaflux `project`` can be
+  # While we are transitioning to fetching the data straight from Mediaflux `project` can be
   # an ActiveRecord Project model (when used from the Project show page) or a Hash with the
   # data from Mediaflux (when used from the Dashboard).
+  # This branching can be refactored (elimitated?) once we implement ticket
+  # https://github.com/pulibrary/tigerdata-app/issues/2039 and the project data will always
+  # come from Mediaflux.
   def initialize(project)
     if project.is_a?(Hash)
       @project_mf = project

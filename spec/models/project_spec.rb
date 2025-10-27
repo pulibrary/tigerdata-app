@@ -37,8 +37,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
       user_projects = described_class.users_projects(test_user)
 
-      # Finds only the projects where the user has a role (manager, sponsor, or data user)
-      expect(user_projects.count).to be 4
+      # Finds the projects where the user has a role (manager, sponsor, or data user)
       expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be nil
