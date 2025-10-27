@@ -337,6 +337,7 @@ GEM
       addressable (~> 2.8)
       nokogiri (~> 1.12)
       omniauth (~> 2.1)
+    openssl (3.3.2)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
     parallel (1.27.0)
@@ -646,6 +647,7 @@ DEPENDENCIES
   net-http-persistent
   net-ldap
   omniauth-cas (~> 3.0)
+  openssl (>= 3.3.1)
   pg
   pry-byebug
   pry-rails
