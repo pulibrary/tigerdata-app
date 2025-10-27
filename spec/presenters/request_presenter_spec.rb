@@ -104,6 +104,8 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
 
     it "returns the uid if the full name is not found" do
       current_user.display_name = nil
+      current_user.given_name = nil
+      current_user.family_name = nil
       current_user.save!
       expect(presenter.full_name(current_user.uid)).to eq(current_user.uid)
     end

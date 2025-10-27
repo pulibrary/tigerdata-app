@@ -5,12 +5,25 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(user_request) }
 
   let(:user_request) do
-    FileInventoryRequest.create(user_id: current_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::COMPLETED,
-                                request_details: { project_title: project.title, file_size: 1_000_000 }, completion_time: Time.current.in_time_zone("America/New_York"))
+    FileInventoryRequest.create(
+      user_id: current_user.id,
+      project_id: project.id,
+      job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
+      state: UserRequest::COMPLETED,
+      request_details: {
+        project_title: project.title,
+        file_size: 1_000_000
+      },
+      completion_time: Time.current.in_time_zone("America/New_York")
+    )
   end
 
   let(:current_user) { FactoryBot.create :user, uid: "tigerdatatester" }
-  let(:project) { FactoryBot.create :project, data_manager: current_user.uid, data_sponsor: current_user.uid }
+  let(:project) do
+    FactoryBot.create :project_with_apostrophe_in_title,
+    data_manager: current_user.uid,
+    data_sponsor: current_user.uid
+  end
 
   describe "#title" do
     it "returns the project title" do
@@ -26,7 +39,10 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
 
   describe "#download_link" do
     it "returns the project download_link" do
-      expect(presenter.download_link).to eq("<a href=\"/projects/file_list_download/ccbb63c0-a8cd-47b7-8445-5d85e9c80977\">#{project.title}</a>")
+      # Note that we have to html escape the title, because that's what rails will do, and when
+      # we get sample data with special characters in the title, we want to make sure the test still passes.
+      html_escaped_title = CGI.escapeHTML(project.title)
+      expect(presenter.download_link).to eq("<a href=\"/projects/file_list_download/ccbb63c0-a8cd-47b7-8445-5d85e9c80977\">#{html_escaped_title}</a>")
     end
   end
 

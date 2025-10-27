@@ -195,9 +195,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
     context "sysadmin_user" do
       it "shows the New Project Requests page to sysadmin users" do
+        request # make sure the request exists before loading the index page
         sign_in sysadmin_user
         visit "/requests"
         expect(page).to have_content "New Project Requests"
+        expect(page).to have_content request.requested_by
+        expect(page).to have_content request.project_path
       end
       it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
         sign_in sysadmin_user
@@ -311,6 +314,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(custom_quota_request.quota).to eq("custom")
         expect(page).to have_content("Approve request")
         expect(page).to have_content("1725.0 TB")
+      end
+      it "shows the approved quota on the request review page" do
+        sign_in sysadmin_user
+        submitted_request.state = Request::SUBMITTED
+        submitted_request.approved_quota = "300 TB"
+        submitted_request.save
+        visit "#{requests_path}/#{submitted_request.id}"
+        expect(page).to have_content("Approve request")
+        expect(page).to have_content("300.0 TB")
       end
     end
 

@@ -1,0 +1,18 @@
+<table>
+  <thead>
+    <tr>
+      <th>Path</th>
+      <th>Requestor</th>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% request_list.each do |request| %> 
+        <tr>
+        <td><%=request.project_path %> </td>
+        <td><%=request.requestor %> </td>
+        <td><%= link_to request.project_title, request_path(request.id) %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

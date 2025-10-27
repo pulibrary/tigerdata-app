@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  let(:access_token) { OmniAuth::AuthHash.new(provider: "cas", uid: "who", extra: { mail: "who@princeton.edu", givenname: "guess", sn: "who", pudisplayname: "Guess Who?" }) }
+  let(:access_token) { OmniAuth::AuthHash.new(provider: "cas", uid: "who", extra: { mail: "who@princeton.edu", givenname: "Guess", sn: "Who?", pudisplayname: "Guess Who?" }) }
   let(:access_token2) { OmniAuth::AuthHash.new(provider: "cas", uid: "who2", extra: { mail: "who2@princeton.edu" }) }
   let(:access_token3) { OmniAuth::AuthHash.new(provider: "cas", uid: "who3", extra: { mail: "who3@princeton.edu", givenname: "", sn: "", pudisplayname: "" }) }
   let(:access_token4) { OmniAuth::AuthHash.new(provider: "cas", uid: "who4", extra: { mail: "who4@princeton.edu", givenname: "Guess", sn: "McWho", pudisplayname: "Guess McWho" }) }
@@ -28,8 +28,8 @@ RSpec.describe User, type: :model do
       user = described_class.from_cas(access_token)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who")
-      expect(user.given_name).to eq("guess")
-      expect(user.family_name).to eq("who")
+      expect(user.given_name).to eq("Guess")
+      expect(user.family_name).to eq("Who?")
       expect(user.display_name).to eq("Guess Who?")
     end
   end
@@ -39,8 +39,8 @@ RSpec.describe User, type: :model do
       user = described_class.from_cas(access_token)
       expect(user).to be_a described_class
       expect(user.uid).to eq("who")
-      expect(user.given_name).to eq("guess")
-      expect(user.family_name).to eq("who")
+      expect(user.given_name).to eq("Guess")
+      expect(user.family_name).to eq("Who?")
       expect(user.display_name_safe).to eq("Guess Who? (who)")
     end
     it "testing a uid" do
