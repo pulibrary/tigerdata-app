@@ -112,14 +112,6 @@ class Project < ApplicationRecord
     end
   end
 
-  def self.sponsored_projects(sponsor)
-    Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
-  end
-
-  def self.managed_projects(manager)
-    Project.where("metadata_json->>'data_manager' = ?", manager)
-  end
-
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
     metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||

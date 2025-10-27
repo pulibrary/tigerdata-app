@@ -5,41 +5,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  describe "#sponsored_projects" do
-    let(:sponsor) { sponsor_and_data_manager_user }
-    before do
-      FactoryBot.create(:project, title: "project 111", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 222", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 333", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 444", data_sponsor: user.uid)
-    end
-
-    it "returns projects for the sponsor" do
-      sponsored_projects = described_class.sponsored_projects("tigerdatatester")
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
-    end
-  end
-  describe "#managed_projects" do
-    let(:manager) { sponsor_and_data_manager_user }
-    before do
-      FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 222", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 333", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 444", data_manager: user.uid)
-    end
-
-    it "returns projects for the manager" do
-      managed_projects = described_class.managed_projects("tigerdatatester")
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
-    end
-  end
-
   describe "#users_projects" do
     let(:test_user) { sponsor_and_data_manager_user }
     before do
