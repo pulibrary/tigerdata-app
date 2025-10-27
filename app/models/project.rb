@@ -96,12 +96,6 @@ class Project < ApplicationRecord
     mediaflux_id.present?
   end
 
-  # Returns the projects that the current user has access in Mediaflux given their credentials
-  def self.all_projects(user)
-    request = Mediaflux::ProjectListRequest.new(session_token: user.mediaflux_session, aql_query: "xpath(tigerdata:project/ProjectID) has value")
-    request.results
-  end
-
   # This method narrows the list down returned by `all_projects` to only those projects where the user has
   # been given a role (e.g. sponsor, manager, or data user.) For most users `all_projects` and `user_projects`
   # are identical, but for administrators the lists can be very different since they are not part of most
@@ -110,6 +104,12 @@ class Project < ApplicationRecord
     all_projects(user).select do |project|
       project[:data_manager] == user.uid || project[:data_sponsor] == user.uid || project[:data_users].include?(user.uid)
     end
+  end
+
+  # Returns the projects that the current user has access in Mediaflux given their credentials
+  def self.all_projects(user)
+    request = Mediaflux::ProjectListRequest.new(session_token: user.mediaflux_session, aql_query: "xpath(tigerdata:project/ProjectID) has value")
+    request.results
   end
 
   def user_has_access?(user:)
