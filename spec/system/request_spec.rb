@@ -315,6 +315,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         expect(page).to have_content("1725.0 TB")
       end
+      it "shows the approved quota on the request review page" do
+        sign_in sysadmin_user
+        submitted_request.state = Request::SUBMITTED
+        submitted_request.approved_quota = "300 TB"
+        submitted_request.save
+        visit "#{requests_path}/#{submitted_request.id}"
+        expect(page).to have_content("Approve request")
+        expect(page).to have_content("300.0 TB")
+      end
     end
 
     context "developer" do
