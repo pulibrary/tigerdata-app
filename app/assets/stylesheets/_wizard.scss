@@ -204,50 +204,6 @@
             font-weight: 600;
             line-height: 1.3125rem; /* 150% */
           }
-          .info {
-            width: 1.5rem;
-            height: 1.5rem;
-            aspect-ratio: 1/1;
-            background: url("info.svg") no-repeat;
-          }
-
-          .info {
-            position: relative; /* Required for the pseudo-element to be positioned relative to the div */
-            display: inline-block; /* Or block, depending on your layout */
-          }
-
-          .info::after {
-            content: attr(data-tooltip); /* Pulls the text from the data-tooltip attribute */
-            visibility: hidden;
-            position: absolute;
-            left: 750%; /* Positions the tooltip to the right div */
-            bottom: -100%; /* Positions the tooltip above the div */
-            transform: translateX(-50%);
-
-            /* Styling for the tooltip box */
-            background-color: #333;
-            color: #fff;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            @supports (-webkit-line-clamp: 4) {
-              overflow: hidden;
-              width: 20rem;
-              text-overflow: ellipsis;
-              white-space: initial;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 4;
-            }
-            z-index: 1; /* Ensures the tooltip is on top of other content */
-          }
-
-          .info:hover::after {
-            visibility: visible;
-          }
         }
 
         .input-frame {
@@ -1095,4 +1051,54 @@
 
 .substep-text-current a:hover {
   text-decoration: underline;
+}
+
+/* Tooltip container */
+.pul-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1/1;
+  background: url("info.svg") no-repeat;
+}
+
+/* Tooltip text */
+.pul-tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #333 transparent transparent;
+}
+
+.pul-tooltiptext {
+  visibility: hidden; /* Hidden by default */
+  width: 20rem;
+  background-color: #333;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  z-index: 1; /* Ensure tooltip is displayed above content */
+  top: -100%;
+  left: 105%;
+  @supports (-webkit-line-clamp: 4) {
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+}
+
+/* Show the tooltip text on hover */
+.pul-tooltip:hover .pul-tooltiptext {
+  visibility: visible;
 }

@@ -133,19 +133,13 @@ class RequestWizardsController < ApplicationController
       # elevated privs for the current user
       if current_user.sysadmin || (current_user.developer && !Rails.env.production?)
         true
-      # allow access for regular users
-      elsif Flipflop.allow_all_users_wizard_access?
-        # current user is the requestor
-        if (@request_model.requested_by == current_user.uid) && !@request_model.submitted?
-          true
-        # a brand new request
-        elsif params[:request_id].blank?
-          true
-        # no access for any other reason
-        else
-          false
-        end
-      # no access for regular users
+      # current user is the requestor
+      elsif (@request_model.requested_by == current_user.uid) && !@request_model.submitted?
+        true
+      # a brand new request
+      elsif params[:request_id].blank?
+        true
+      # no access for any other reason
       else
         false
       end

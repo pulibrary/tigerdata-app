@@ -3,7 +3,6 @@
     <%= render partial: 'shared/emulator' %>
     <%= render partial: 'shared/header' %>
     <%= render partial: 'shared/alert' %>
-
     <div class="wizard">
       <%= render partial: 'shared/breadcrumbs' %>
       <div class="heading-frame">
@@ -14,7 +13,7 @@
       </div>
       <div class="main-frame">
       <%= render partial: '/new_project_wizard/sidebar' %>
-      <%= form_with(url: @form_url, model: @request_model, 
+      <%= form_with(url: @form_url, model: @request_model,
                     action: :save, method: :put, class: "form-panel") do |form| %>
         <div class="scrollable-frame">
           <div class="form-header">
@@ -28,7 +27,7 @@
             </div>
             <div class="form-description">
               <%= yield :form_description %>
-            </div> 
+            </div>
           </div>
           <div class="form-frame">
             <%= yield %>

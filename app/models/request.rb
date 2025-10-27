@@ -23,35 +23,49 @@ class Request < ApplicationRecord
   end
 
   def valid_title?
-    valid_title_present?(project_title, :project_title)
+    check_errors? do
+      field_present?(project_title, :project_title)
+      valid_length(project_title, 200, :project_title)
+      no_quotes(project_title, :project_title)
+    end
   end
 
   def valid_data_sponsor?
-    valid_uid?(data_sponsor, :data_sponsor)
+    check_errors? { validate_uid(data_sponsor, :data_sponsor) }
   end
 
   def valid_data_manager?
-    valid_uid?(data_manager, :data_manager)
+    check_errors? { validate_uid(data_manager, :data_manager) }
   end
 
   def valid_departments?
-    field_present?(departments, :departments)
+    check_errors? { field_present?(departments, :departments) }
   end
 
   def valid_project_purpose?
-    project_purpose_present?(project_purpose, :project_purpose)
+    check_errors? { project_purpose_present?(project_purpose, :project_purpose) }
   end
 
   def valid_description?
-    valid_description_present?(description, :description)
+    check_errors? do
+      field_present?(description, :description)
+      valid_length(description, 1000, :description)
+      no_quotes(description, :description)
+    end
   end
 
   def valid_parent_folder?
-    field_present?(parent_folder, :parent_folder)
+    check_errors? do
+      field_present?(parent_folder, :parent_folder)
+      no_quotes(project_title, :parent_folder)
+    end
   end
 
   def valid_project_folder?
-    field_present?(project_folder, :project_folder)
+    check_errors? do
+      field_present?(project_folder, :project_folder)
+      no_quotes(project_folder, :project_folder)
+    end
   end
 
   def valid_quota?
@@ -69,7 +83,7 @@ class Request < ApplicationRecord
   end
 
   def valid_requested_by?
-    field_present?(requested_by, :requested_by)
+    check_errors? { field_present?(requested_by, :requested_by) }
   end
 
   def approve(approver)
@@ -131,57 +145,43 @@ class Request < ApplicationRecord
 
   private
 
+    def check_errors?
+      original_error_count = errors.count
+      yield
+      original_error_count == errors.count
+    end
+
     def field_present?(value, name)
-      if value.present?
-        true
-      else
+      if value.blank?
         errors.add(name, :invalid, message: "cannot be empty")
-        false
       end
     end
 
-    def valid_uid?(uid, field)
+    def validate_uid(uid, field)
       if uid.blank?
         errors.add(field, :blank, message: "cannot be empty")
-        false
       elsif User.where(uid: uid).count == 0
         errors.add(field, :invalid, message: "must be a valid user")
-        false
-      else
-        true
       end
     end
 
     def project_purpose_present?(project_purpose, field)
       if project_purpose.blank?
         errors.add(field, :blank, message: "select a project purpose")
-        false
-      else
-        true
       end
     end
 
-    def valid_description_present?(description, field)
-      if description.blank?
-        errors.add(field, :blank, message: "cannot be empty")
-        false
-      elsif description.length > 1000
-        errors.add(field, :invalid, message: "description cannot exceed 1000 characters")
-        false
-      else
-        true
+    def valid_length(value, length, field)
+      return if value.blank?
+      if value.length > length
+        errors.add(field, :invalid, message: "cannot exceed #{length} characters")
       end
     end
 
-    def valid_title_present?(project_title, field)
-      if project_title.blank?
-        errors.add(field, :blank, message: "cannot be empty")
-        false
-      elsif project_title.length > 200
-        errors.add(field, :invalid, message: "project title cannot exceed 200 characters")
-        false
-      else
-        true
+    def no_quotes(value, field)
+      return if value.blank?
+      if value.include?('"')
+        errors.add(field, :invalid, message: "cannot include quotes")
       end
     end
 

@@ -68,7 +68,7 @@ commands:
     steps:
       - run:
           name: Run Mediaflux in podman
-          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.14.0"
+          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.16.0"
           background: true
 
   run_postgres:
@@ -130,6 +130,7 @@ jobs:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
+    parallelism: 4
     environment:
       ARCH: linux
       COVERALLS_PARALLEL: true
@@ -137,7 +138,47 @@ jobs:
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       RAILS_ENV: test
-      SPEC_OPTS: "--format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
+      SPEC_OPTS: "--tag ~type:system --format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
+    steps:
+      - checkout
+      - cleanup_docker
+      - run_mediaflux
+      - ruby/install:
+          version: "3.3.0"
+      - install_yarn_dependencies
+      - install_dependencies
+      - install_crypto_policies
+      - run_postgres
+      # wait for postgres and mediaflux
+      - run: sleep 10
+      - enable_sha1_for_mediaflux
+      - persist_to_workspace:
+          root: &root "~/tiger_data"
+          paths: "*"
+      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run:
+          name: Run Rspec
+          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - disable_sha1
+      - store_test_results:
+          path: /tmp/rspec
+      - store_artifacts:
+          path: /home/circleci/tiger_data/tmp/capybara
+      - coveralls/upload:
+          coverage_reporter_version: "v0.6.17"
+
+  test_browser:
+    working_directory: ~/tiger_data
+    machine: true
+    resource_class: pulibrary/ruby-deploy
+    environment:
+      ARCH: linux
+      COVERALLS_PARALLEL: true
+      POSTGRES_USER: tiger_data_user
+      POSTGRES_DB: test_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+      RAILS_ENV: test
+      SPEC_OPTS: "--tag type:system --format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
     steps:
       - checkout
       - cleanup_docker
@@ -159,7 +200,7 @@ jobs:
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
-          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+          command: bundle exec rspec
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
@@ -255,6 +296,7 @@ workflows:
       - bundler_lint
       - bundler_audit
       - test
+      - test_browser
       - yarn_lint_format
       - yarn_test
       - deploy:
