@@ -12,6 +12,9 @@
                 list="data_managers" placeholder="Select a Data Manager" autocomplete="off" value="<%=data_manager%>"></input>
           <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
           <datalist class="datalist scrollable" id="data_managers"></datalist>
+          <select class="select_data_managers" id="select_data_managers">
+            <option> -- Select a Data Manager (Populated via AJAX in userRolesAutocomplete) --</option>
+          </select>
           <div class="input-error">
                <%= data_manager_error %>
           </div>
