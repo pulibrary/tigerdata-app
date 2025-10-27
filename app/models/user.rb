@@ -92,9 +92,9 @@ class User < ApplicationRecord
   # Return the display name if it exists, otherwise return the uid
   # @return [String]
   def display_name_safe
-    return uid if display_name.blank?
+    return uid if given_name.blank? && family_name.blank?
 
-    "#{display_name} (#{uid})"
+    [given_name, family_name, "(#{uid})"].compact.join(" ")
   end
 
   # Is this user eligible to be a data sponsor in this environment?
