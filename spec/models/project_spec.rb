@@ -5,7 +5,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  describe "#users_projects" do
+  describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
     before do
       request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid
@@ -16,19 +16,40 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       request3.approve(sponsor_and_data_manager_user)
       request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => test_user.uid, "read_only" => false }])
       request4.approve(sponsor_and_data_manager_user)
-      request5 = FactoryBot.create(:request_project, project_title: "project 555", user_roles: [{ "uid" => user.uid, "read_only" => true }])
+      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user.uid, "read_only" => true }])
       request5.approve(sponsor_and_data_manager_user)
     end
 
-    it "returns projects for the data users" do
-      # Filter to only tests projects (i.e. tigerdata/rspec) to prevent getting development projects
-      user_projects = described_class.users_projects(test_user).select { |project| project[:directory].start_with?("tigerdata/rspec/") }
-      expect(user_projects.count >= 4).to be true
+    it "returns _all_ projects for the logged in user" do
+      all_projects = described_class.all_projects(test_user)
+
+      # Finds ALL the projects we added...
+      expect(all_projects.find { |project| project[:title] == "project 111" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 222" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 333" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 444" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
+
+      # ...plus a project that comes predefined in the Docker image
+      expect(all_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+    end
+
+    it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
+      user_projects = described_class.users_projects(test_user)
+
+      # Finds only the projects where the user has a role (manager, sponsor, or data user)
+      expect(user_projects.count).to be 4
       expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be nil
       expect(user_projects.find { |project| project[:title] == "project 444" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 555" }).not_to be nil
+
+      # make sure we don't get the project where the user does not have a role
+      expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
+
+      # ...and make sure it excludes the predefined project in the Docker image because we know
+      # for sure our user does not have a role on it.
+      expect(user_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).to be nil
     end
   end
 
