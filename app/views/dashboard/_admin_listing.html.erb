@@ -2,7 +2,7 @@
    <% if current_user.eligible_sysadmin?%>
    <div class="section">
       <div class="import">
-        <h2>Recently Approved Projects</h2>
+        <h2>Recently Approved Projects</h2> 
         <%= button_to "Import Mediaflux Projects", project_import_path, method: "put", class: "btn btn-dark btn-sm" %>
       </div>
       <% if !@presenter.all_projects.empty? %>
