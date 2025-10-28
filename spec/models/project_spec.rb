@@ -2,121 +2,53 @@
 require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  describe "#sponsored_projects" do
-    let(:sponsor) { sponsor_and_data_manager_user }
+  describe "project lists" do
+    let(:test_user) { sponsor_and_data_manager_user }
     before do
-      FactoryBot.create(:project, title: "project 111", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 222", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 333", data_sponsor: sponsor.uid)
-      FactoryBot.create(:project, title: "project 444", data_sponsor: user.uid)
+      request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid
+      request1.approve(sponsor_and_data_manager_user)
+      request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
+      request2.approve(sponsor_and_data_manager_user)
+      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => test_user.uid, "read_only" => true }])
+      request3.approve(sponsor_and_data_manager_user)
+      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => test_user.uid, "read_only" => false }])
+      request4.approve(sponsor_and_data_manager_user)
+      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user.uid, "read_only" => true }])
+      request5.approve(sponsor_and_data_manager_user)
     end
 
-    it "returns projects for the sponsor" do
-      sponsored_projects = described_class.sponsored_projects("tigerdatatester")
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
-      expect(sponsored_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
-    end
-  end
-  describe "#managed_projects" do
-    let(:manager) { sponsor_and_data_manager_user }
-    before do
-      FactoryBot.create(:project, title: "project 111", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 222", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 333", data_manager: manager.uid)
-      FactoryBot.create(:project, title: "project 444", data_manager: user.uid)
+    it "returns _all_ projects for the logged in user" do
+      all_projects = described_class.all_projects(test_user)
+
+      # Finds ALL the projects we added...
+      expect(all_projects.find { |project| project[:title] == "project 111" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 222" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 333" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 444" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
+
+      # ...plus a project that comes predefined in the Docker image
+      expect(all_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
     end
 
-    it "returns projects for the manager" do
-      managed_projects = described_class.managed_projects("tigerdatatester")
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 111" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 222" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 333" }).not_to be nil
-      expect(managed_projects.find { |project| project.metadata[:title] == "project 444" }).to be nil
-    end
-  end
-
-  describe "#users_projects" do
-    let(:test_user) { FactoryBot.create(:user, uid: "kl37") }
-    before do
-      FactoryBot.create(:project, title: "project 111", data_manager: test_user.uid)
-      FactoryBot.create(:project, title: "project 222", data_sponsor: test_user.uid)
-      FactoryBot.create(:project, title: "project 333", data_user_read_only: [user.uid, test_user.uid])
-      FactoryBot.create(:project, title: "project 444", data_user_read_write: [test_user.uid])
-      FactoryBot.create(:project, title: "project 555", data_user_read_only: [user.uid])
-    end
-
-    it "returns projects for the data users" do
+    it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
       user_projects = described_class.users_projects(test_user)
-      expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-      expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
-      expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
-      expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
-      expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
-    end
 
-    context "user is eligible sponsor" do
-      before do
-        test_user.update(eligible_sponsor: true)
-      end
+      # Finds the projects where the user has a role (manager, sponsor, or data user)
+      expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
+      expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil
+      expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be nil
+      expect(user_projects.find { |project| project[:title] == "project 444" }).not_to be nil
 
-      it "returns projects for the data users" do
-        user_projects = described_class.users_projects(test_user)
-        expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
-      end
-    end
+      # make sure we don't get the project where the user does not have a role
+      expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
 
-    context "user is eligible manager" do
-      before do
-        test_user.update(eligible_manager: true)
-      end
-
-      it "returns projects for the data users" do
-        user_projects = described_class.users_projects(test_user)
-        expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
-      end
-    end
-
-    context "user is eligible sponsor and manager" do
-      before do
-        test_user.update(eligible_manager: true, eligible_sponsor: true)
-      end
-
-      it "returns projects for the data users" do
-        user_projects = described_class.users_projects(test_user)
-        expect(user_projects.find { |project| project.metadata_model.title == "project 111" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 222" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 333" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 444" }).not_to be nil
-        expect(user_projects.find { |project| project.metadata_model.title == "project 555" }).to be nil
-      end
-    end
-  end
-
-  describe "#all_projects" do
-    before do
-      FactoryBot.create(:project, title: "project 111", mediaflux_id: 1111)
-      FactoryBot.create(:project, title: "project 222", mediaflux_id: 2222)
-      FactoryBot.create(:project, title: "project 333")
-    end
-
-    it "returns projects that are in mediaflux, which is all of them" do
-      all_projects = described_class.all_projects
-      expect(all_projects.find { |project| project.metadata_model.title == "project 111" and project.mediaflux_id == 1111 }).not_to be nil
-      expect(all_projects.find { |project| project.metadata_model.title == "project 222" and project.mediaflux_id == 2222 }).not_to be nil
-      expect(all_projects.find { |project| project.metadata_model.title == "project 333" and project.mediaflux_id.nil? }).not_to be nil
+      # ...and make sure it excludes the predefined project in the Docker image because we know
+      # for sure our user does not have a role on it.
+      expect(user_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).to be nil
     end
   end
 

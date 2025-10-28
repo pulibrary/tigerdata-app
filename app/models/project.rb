@@ -96,27 +96,20 @@ class Project < ApplicationRecord
     mediaflux_id.present?
   end
 
+  # This method narrows the list down returned by `all_projects` to only those projects where the user has
+  # been given a role (e.g. sponsor, manager, or data user.) For most users `all_projects` and `user_projects`
+  # are identical, but for administrators the lists can be very different since they are not part of most
+  # projects even though they have access to them in Mediaflux.
   def self.users_projects(user)
-    # See https://scalegrid.io/blog/using-jsonb-in-postgresql-how-to-effectively-store-index-json-data-in-postgresql/
-    # for information on the @> operator
-    uid = user.uid
-    query_ro = '{"data_user_read_only":["' + uid + '"]}'
-    query_rw = '{"data_user_read_write":["' + uid + '"]}'
-    query = "(metadata_json @> ? :: jsonb) OR (metadata_json @> ? :: jsonb) OR (metadata_json->>'data_sponsor' = ?) OR (metadata_json->>'data_manager' = ?)"
-    args = [query_ro, query_rw, uid, uid]
-    Project.where( query, *args)
+    all_projects(user).select do |project|
+      project[:data_manager] == user.uid || project[:data_sponsor] == user.uid || project[:data_users].include?(user.uid)
+    end
   end
 
-  def self.sponsored_projects(sponsor)
-    Project.where("metadata_json->>'data_sponsor' = ?", sponsor)
-  end
-
-  def self.managed_projects(manager)
-    Project.where("metadata_json->>'data_manager' = ?", manager)
-  end
-
-  def self.all_projects
-    Project.all
+  # Returns the projects that the current user has access in Mediaflux given their credentials
+  def self.all_projects(user)
+    request = Mediaflux::ProjectListRequest.new(session_token: user.mediaflux_session, aql_query: "xpath(tigerdata:project/ProjectID) has value")
+    request.results
   end
 
   def user_has_access?(user:)
