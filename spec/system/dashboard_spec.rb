@@ -226,6 +226,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in admin_user
         visit dashboard_path
         click_on "Administration"
+        sleep(1)
         expect(page).to have_button("Import Mediaflux Projects")
         expect(page).to have_content("Approved Projects")
         expect(page).to have_content "project 111"
