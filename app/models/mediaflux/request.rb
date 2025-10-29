@@ -56,7 +56,10 @@ module Mediaflux
       # Resolves the HTTP request against the Mediaflux API
       # @return [Net::HTTP]
       def resolve
+        start_time = ::Time.zone.now
         @http_response = @http_client.request self.class.uri, http_request
+        log_elapsed(start_time)
+        @http_response
       end
 
       # Determines whether or not the request has been resolved
@@ -176,6 +179,19 @@ module Mediaflux
         else
           # Don't log the password
           Rails.logger.debug(xml_payload.gsub(password_element.to_s, "<password>***</password>"))
+        end
+      end
+
+      # Logs as warning Mediaflux requests that take longer than 3 seconds.
+      #
+      # We could eventually also send to Honeybadger long requests but
+      # let's wait until we have a benchmark of what is considered slow
+      # in Mediaflux.
+      def log_elapsed(start_time)
+        elapsed_time = ::Time.zone.now - start_time
+        timing_info = "#{format('%.2f', elapsed_time)} s"
+        if elapsed_time > 3.0
+          Rails.logger.warn "Slow Mediaflux request: #{self.class}, #{timing_info}"
         end
       end
     end
