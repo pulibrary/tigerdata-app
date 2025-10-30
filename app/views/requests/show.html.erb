@@ -26,61 +26,73 @@
   </textarea>
 <% end %>
 
-<ul class="request_model-fields">
-    <%
-=begin%>
-      Basic Info
-      Project Title
-      Project Directory
-      Project Purpose
-      Project Description
-      Departments
-      LINE BREAK
+<ul class="request-fields">
+  <div class="detail-heading">Basic Info</div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Title</li>
+    <p class="detail-value"><%= @request_model.project_title %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Directory</li>
+    <p class="detail-value"><%= @request_presenter.project_directory %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Purpose</li>
+    <p class="detail-value"><%= @request_model.project_purpose %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Description</li>
+    <p class="detail-value"><%=@request_model.description %></p>
+  </div>
+  <div class="detail-pair">
+      <li class="detail-subheading">Department(s)</li>
+      <p class="detail-value"><%=@request_presenter.departments_list %></p>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+    <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+  </svg>
 
-      Roles and People
-      Data Sponsor
-      Data Manager
-      Data Users
-      LINE BREAK
+  <div class="detail-heading">Roles and People(s)</div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Data Sponsor</li>
+    <p class="detail-value"> <%= @request_presenter.data_sponsor %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Data Manager</li>
+    <p class="detail-value"><%= @request_presenter.data_manager %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Data Users(s)</li>
+    <p class="detail-value"><%=@request_presenter.user_list %></p>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+    <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+  </svg>
 
-      Storage and Access
-      Storage Needed
-      Estimated Number of Files
-      Connection Options:
-      Do you need to connect to HPC?
-      Do you need SMB (network file share)?
-      Do you need to enable Globus transfers?
-<%
-=end%>
-    <li>Request created at: <%= @request_model.created_at.strftime("%m/%d/%Y") %></li>
-    <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
-    <li>Project title: <%= @request_model.project_title %></li>
-    <li>Request state: <%= @request_model.state %></li>
-    <li>Data sponsor: <%= @request_presenter.data_sponsor %></li>
-    <li>Data manager: <%= @request_presenter.data_manager %></li>
-    <li>Data user(s):
-      <ul id="request-data-users">
-        <% (@request_model.user_roles || []).each do |data_user| %>
-          <li><%= "#{data_user["name"]} (#{data_user["uid"]})" %></li>
-        <% end %>
-      </ul>
-    </li>
-    <li>Department(s):
-      <ul id="request-data-departments">
-        <% (@request_model.departments || []).each do |department| %>
-          <li><%= "#{department["name"]} (#{department["code"]})" %></li>
-        <% end %>
-      </ul>
-  </li>
-    <li>Project Purpose: <%= @request_model.project_purpose %></li>
-    <li>Description: <%= @request_model.description %></li>
-    <li>Parent folder: <%= @request_model.parent_folder %></li>
-    <li>Project folder: <%= @request_model.project_folder %></li>
-    <li>Project ID: <%= @request_model.project_id %></li>
-    <li>Quota: <%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></li>
-    <li>Number of files: <%= @request_model.number_of_files %></li>
-    <li>High Performance Computing: <%= @request_model.hpc %></li>
-    <li>Network file share: <%= @request_model.smb %></li>
-    <li>Globus transfers: <%= @request_model.globus %></li>
-    <li>Requested by: <%= @request_model.requested_by %></li>
+  <div class="detail-heading">Storage and Access</div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Storage Needed</li>
+    <p class="detail-value"><%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="detail-subheading">Estimated Number of Files</li>
+    <p class="detail-value"><%= @request_model.number_of_files %></p>
+  </div>
+
+  <div class="detail-heading">Connection Options</div>
+  <div class="detail-pair">
+    <li class="storage-heading">Do you need to connect to HPC?</li>
+    <p class="detail-value"><%= @request_model.hpc %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="storage-heading">Do you need SMB (network file share)?</li>
+    <p class="detail-value"><%= @request_model.smb %></p>
+  </div>
+  <div class="detail-pair">
+    <li class="storage-heading">Do you need to enable Globus transfers?</li>
+    <p class="detail-value"> <%= @request_model.globus %></p>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+    <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+  </svg>
 </ul>
