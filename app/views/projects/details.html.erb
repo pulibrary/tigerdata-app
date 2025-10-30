@@ -13,16 +13,16 @@
     <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
   </h2>
   <dl>
-    <% if !@data_sponsor.nil? %>
+    <% if !@presenter.data_sponsor.nil? %>
       <dt>Data Sponsor</dt>
       <dd id="data_sponsor">
-        <%= @data_sponsor.display_name_safe %>
+        <%= @presenter.data_sponsor.display_name_safe %>
       </dd>
     <% end %>
-    <% if !@data_manager.nil? %>
+    <% if !@presenter.data_manager.nil? %>
       <dt>Data Manager</dt>
       <dd id="data_manager">
-        <%= @data_manager.display_name_safe %>
+        <%= @presenter.data_manager.display_name_safe %>
       </dd>
     <% end %>
 
@@ -46,18 +46,18 @@
   </h2>
   <dl>
     <dt>Departments</dt>
-    <% if @departments.empty? %>
+    <% if @presenter.departments.empty? %>
       <dd><strong class="px-0">None</strong></dd>
     <% else %>
       <dd>
-        <%= @departments %>
+        <%= @presenter.departments.join(", ") %>
       </dd>
     <% end %>
     <dt>Project Directory</dt>
-    <dd><%= @project.project_directory %></dd>
+    <dd><%= @presenter.project_directory %></dd>
     <dt>Title</dt>
-    <dd><%= @project.title %></dd>
-    <dt>Description:<dt/> <dd><%= @project.description %></dd>
+    <dd><%= @presenter.title %></dd>
+    <dt>Description:<dt/> <dd><%= @presenter.description %></dd>
   </dl>
 </div>
 

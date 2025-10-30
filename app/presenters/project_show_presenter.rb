@@ -4,6 +4,7 @@ class ProjectShowPresenter
   delegate "project_id", "storage_performance_expectations", to: :project_metadata
 
   attr_reader :project, :project_metadata
+  attr_reader :project_mf
 
   # @return [Class] The presenter class for building XML Documents from Projects
   def self.xml_presenter_class
@@ -16,13 +17,13 @@ class ProjectShowPresenter
   # This branching can be refactored (elimitated?) once we implement ticket
   # https://github.com/pulibrary/tigerdata-app/issues/2039 and the project data will always
   # come from Mediaflux.
-  def initialize(project)
+  def initialize(project, current_user = nil)
     if project.is_a?(Hash)
       @project_mf = project
       @project = rails_project(@project_mf)
     else
-      @project_mf = nil
       @project = project
+      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session) if current_user.present?
     end
     @project_metadata = @project&.metadata_model
   end
@@ -63,17 +64,17 @@ class ProjectShowPresenter
 
   def data_sponsor
     if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_sponsor"]).uid
+      User.find_by(uid: @project.metadata["data_sponsor"])
     else
-      User.find_by(uid: @project_mf[:data_sponsor])&.uid
+      User.find_by(uid: @project_mf[:data_sponsor])
     end
   end
 
   def data_manager
     if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_manager"]).uid
+      User.find_by(uid: @project.metadata["data_manager"])
     else
-      User.find_by(uid: @project_mf[:data_manager])&.uid
+      User.find_by(uid: @project_mf[:data_manager])
     end
   end
 
@@ -87,7 +88,36 @@ class ProjectShowPresenter
 
   # used to hide the project root that is not visible to the end user
   def project_directory
-    project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
+    if @project.nil?
+      project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
+    else
+      # This value comes from Mediaflux without the extra hidden root
+      @project_mf[:project_directory]
+    end
+  end
+
+  def hpc
+    @project_mf[:hpc] == true ? "Yes" : "No"
+  end
+
+  def globus
+    @project_mf[:globus] == true ? "Yes" : "No"
+  end
+
+  def smb
+    @project_mf[:smb] == true ? "Yes" : "No"
+  end
+
+  def number_of_files
+    @project_mf[:number_of_files]
+  end
+
+  def departments
+    @project_mf[:departments] || []
+  end
+
+  def project_id
+    @project_mf[:project_id]
   end
 
   def storage_capacity(session_id: nil)

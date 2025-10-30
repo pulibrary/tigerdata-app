@@ -134,8 +134,8 @@ class Project < ApplicationRecord
 
   def mediaflux_metadata(session_id:)
     @mediaflux_metadata ||= begin
-      accum_req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
-      accum_req.metadata
+      metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+      metadata_request.metadata
     end
     @mediaflux_metadata
   end

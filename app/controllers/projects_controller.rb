@@ -7,14 +7,12 @@ class ProjectsController < ApplicationController
   def details
     return if project.blank?
 
-    add_breadcrumb(project.title, project_path)
+    @presenter = ProjectShowPresenter.new(project, current_user)
+
+    add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
-    @departments = project.departments.join(", ")
     @project_metadata = project.metadata_model
-
-    @data_sponsor = User.find_by(uid: @project_metadata.data_sponsor)
-    @data_manager = User.find_by(uid: @project_metadata.data_manager)
 
     read_only_uids = @project_metadata.ro_users
     data_read_only_users = read_only_uids.map { |uid| ReadOnlyUser.find_by(uid:) }.reject(&:blank?)
@@ -33,7 +31,6 @@ class ProjectsController < ApplicationController
     @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?
 
     @project_metadata = @project.metadata
-    @project_id = @project_metadata[:project_id] || {}
     @storage_capacity = @project_metadata[:storage_capacity]
     @size = @storage_capacity[:size]
     @unit = @storage_capacity[:unit]
@@ -48,17 +45,11 @@ class ProjectsController < ApplicationController
     @requested_storage_expectations = @storage_expectations[:requested]
     @approved_storage_expectations = @storage_expectations[:approved]
 
-    @project_purpose = @project_metadata[:project_purpose]
-    @number_of_files = @project_metadata[:number_of_files]
-    @hpc = @project_metadata[:hpc]
-    @smb = @project_metadata[:smb_request]
-    @globus = @project_metadata[:globus_request]
-
     @project_session = "details"
 
     respond_to do |format|
       format.html do
-        @project = ProjectShowPresenter.new(project)
+        render
       end
       format.json do
         render json: project.to_json
@@ -79,9 +70,11 @@ class ProjectsController < ApplicationController
   end
 
   def show
-
     return if project.blank?
-    add_breadcrumb(project.title, project_path)
+
+    @presenter = ProjectShowPresenter.new(project, current_user)
+
+    add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
 
     @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
@@ -93,7 +86,6 @@ class ProjectsController < ApplicationController
     @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 100)
     @files = @file_list[:files]
     @files.sort_by!(&:path)
-    @project = ProjectShowPresenter.new(project)
 
     @project_session = "content"
     respond_to do |format|
