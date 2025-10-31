@@ -92,7 +92,8 @@ class ProjectShowPresenter
       project_metadata.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
     else
       # This value comes from Mediaflux without the extra hidden root
-      @project_mf[:project_directory]
+      directory = @project_mf[:project_directory] || ""
+      directory.start_with?("/") ? directory : "/" + directory
     end
   end
 
