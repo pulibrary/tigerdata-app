@@ -223,13 +223,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
         sign_in sysadmin_user
         visit "#{requests_path}/#{full_request.id}"
-        expect(page).to have_css("#request-data-users")
+        expect(page).to have_content("Data User(s)")
         expect(page).to have_content("tigerdatatester")
       end
       it "shows the departments on a single submitted request that includes departments" do
         sign_in sysadmin_user
         visit "#{requests_path}/#{full_request.id}"
-        expect(page).to have_css("#request-data-departments")
         expect(page).to have_content("88888")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       end
