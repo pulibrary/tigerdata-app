@@ -55,7 +55,7 @@ module Mediaflux
           xml.args do
             xml.where aql_query if aql_query.present?
             xml.action action if action.present?
-            xml.size size if size.present
+            xml.size size if size.present?
           end
         end
       end
