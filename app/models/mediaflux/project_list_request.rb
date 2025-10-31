@@ -19,7 +19,7 @@ module Mediaflux
       @deep_search = deep_search
       # For now we hard-code the size to infinity since only Administrators will fetch a large
       # number of projects and they should get them all. At some point in the future we might
-      # want to implement pagination for this list but not now.
+      # want to implement pagination for this list but not now..
       @size = "infinity"
     end
 
