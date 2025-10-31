@@ -89,7 +89,7 @@ class ProjectShowPresenter
   # used to hide the project root that is not visible to the end user
   def project_directory
     if @project.nil?
-      project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
+      project_metadata.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
     else
       # This value comes from Mediaflux without the extra hidden root
       @project_mf[:project_directory]

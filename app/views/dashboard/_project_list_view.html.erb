@@ -5,7 +5,7 @@
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
             <div class="summary">
-                <div class="path"> <%= project.path %></div>
+                <div class="path"> <%= project.project_directory %></div>
             </div>
             <div class="summary">
                <div class="status <%= project.status.downcase %>"><%= project.status %></div>
