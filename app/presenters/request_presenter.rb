@@ -27,6 +27,7 @@ class RequestPresenter
   end
 
   def departments_list
+    return "" if request.departments.blank?
     dept_list = []
     request.departments.each do |dept|
       dept_list << "#{dept['name']} (#{dept['code']})"
@@ -35,6 +36,7 @@ class RequestPresenter
   end
 
   def user_list
+    return "" if request.user_roles.blank?
     usr_list = []
     request.user_roles.each do |usr|
       usr_list << "#{full_name(usr['uid'])} #{usr['role']}"

@@ -96,6 +96,42 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
     end
   end
 
+  describe "#user_list" do
+    let(:current_user) { FactoryBot.create :user }
+    let(:request) { FactoryBot.create :request, user_roles: [{ "uid" => current_user.uid.to_s, "name" => current_user.display_name_safe, "read_only" => true }] }
+    it "returns a list of the full names of the data users and their uids" do
+      expect(presenter.user_list).to eq("#{current_user.display_name_safe} ")
+    end
+  end
+
+  describe "#user_list empty" do
+    let(:current_user) { FactoryBot.create :user }
+    let(:request) { FactoryBot.create :request, user_roles: [] }
+    it "handles empty users correctly" do
+      expect(presenter.user_list).to eq("")
+    end
+  end
+
+  describe "#departments_list" do
+    let(:current_user) { FactoryBot.create :user }
+    let(:request) do
+      FactoryBot.create :request, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }]
+    end
+    it "returns a list of the full names of the data users and their uids" do
+      expect(presenter.departments_list).to eq("RDSS-Research Data and Scholarship Services (77777), PRDS-Princeton Research Data Service (88888)")
+    end
+  end
+
+  describe "#departments_list empty" do
+    let(:current_user) { FactoryBot.create :user }
+    let(:request) do
+      FactoryBot.create :request, departments: []
+    end
+    it "handles empty departments correctly" do
+      expect(presenter.departments_list).to eq("")
+    end
+  end
+
   describe "#full_name" do
     let(:current_user) { FactoryBot.create :user }
     it "returns the full name for a valid uid" do
