@@ -58,11 +58,9 @@
   width: 75rem;
   height: 0;
   stroke-width: 1px;
-  stroke: var(--Neutral-Light-Gray, #EEE);
+  stroke: var(--Neutral-Light-Gray, #eee);
   background: url("stroke.svg") no-repeat;
 }
-
-
 
 .horizontal-frame {
   display: flex;
