@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mediaflux
   class ProjectListRequest < Request
-    attr_reader :aql_query, :collection, :action, :deep_search, :iterator
+    attr_reader :aql_query, :collection, :action, :deep_search, :iterator, :size
 
     # Constructor
     # @param session_token [String] the API token for the authenticated session
@@ -17,6 +17,10 @@ module Mediaflux
       @collection = collection
       @action = action
       @deep_search = deep_search
+      # For now we hard-code the size to infinity since only Administrators will fetch a large
+      # number of projects and they should get them all. At some point in the future we might
+      # want to implement pagination for this list but not now.
+      @size = "infinity"
     end
 
     # Specifies the Mediaflux service to use when running a query
@@ -51,6 +55,7 @@ module Mediaflux
           xml.args do
             xml.where aql_query if aql_query.present?
             xml.action action if action.present?
+            xml.size size if size.present
           end
         end
       end
