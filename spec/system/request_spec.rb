@@ -172,7 +172,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/requests/#{submitted_request.id}"
         expect(page).to have_content request.project_title
         expect(page).not_to have_content("Approve request")
-        expect(page).not_to have_content("Edit request")
+        expect(page).not_to have_content("Continue Editing")
         expect(page).not_to have_content("Edit submitted request")
       end
     end
@@ -188,7 +188,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/requests/#{submitted_request.id}"
         expect(page).to have_content request.project_title
         expect(page).not_to have_content("Approve request")
-        expect(page).not_to have_content("Edit request")
+        expect(page).not_to have_content("Continue Editing")
         expect(page).not_to have_content("Edit submitted request")
       end
     end
@@ -208,16 +208,16 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # it does not show a approve request unless the request is submitted
         expect(page).not_to have_content("Approve request")
         expect(page).not_to have_link("Approve request")
-        expect(page).to have_content("Edit request")
+        expect(page).to have_content("This new project request has not been submitted.")
+        expect(page).to have_content("Continue Editing")
         expect(page).not_to have_content("Edit submitted request")
-        expect(page).to have_content("Edit request")
       end
       it "shows the approve button on a single submitted request view for sysadmins" do
         sign_in sysadmin_user
         visit "/requests/#{submitted_request.id}"
         # it does not show a approve request unless the request is submitted
         expect(page).to have_link("Approve request")
-        expect(page).not_to have_content("Edit request")
+        expect(page).not_to have_content("Continue Editing")
         expect(page).to have_content("Edit submitted request")
       end
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
