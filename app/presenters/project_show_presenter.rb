@@ -17,19 +17,7 @@ class ProjectShowPresenter
   # This branching can be refactored (elimitated?) once we implement ticket
   # https://github.com/pulibrary/tigerdata-app/issues/2039 and the project data will always
   # come from Mediaflux.
-  def initialize(project, current_user = nil)
-
-    # ======================================================================
-    # ======================================================================
-    # ======================================================================
-    # TODO: REMOVE THIS CHECK AND MAKE THE current_user PARAMETER MANDATORY
-    # ======================================================================
-    # ======================================================================
-    # ======================================================================
-    if current_user == nil
-      raise "need to pass a user"
-    end
-
+  def initialize(project, current_user)
     if project.is_a?(Hash)
       @project_mf = project
       @project = rails_project(@project_mf)

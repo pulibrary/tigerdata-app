@@ -31,7 +31,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
 
       # ...plus a project that comes predefined in the Docker image
-      expect(all_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+      expect(all_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
     end
 
     it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
@@ -48,7 +48,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
       # ...and make sure it excludes the predefined project in the Docker image because we know
       # for sure our user does not have a role on it.
-      expect(user_projects.find { |project| project[:directory] == "tigerdata/RDSS/testing-project" }).to be nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).to be nil
     end
   end
 

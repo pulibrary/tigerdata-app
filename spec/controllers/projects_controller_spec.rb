@@ -277,10 +277,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
     let(:current_user) { sponsor_and_data_manager }
-    let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
+    let!(:project) do
+      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: current_user.uid, data_sponsor: current_user.uid
+      request.approve(sponsor_and_data_manager)
+    end
 
     before do
-      project
       sign_in(current_user)
     end
 

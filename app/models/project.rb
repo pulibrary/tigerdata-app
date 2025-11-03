@@ -122,10 +122,6 @@ class Project < ApplicationRecord
     User.find_by(uid: metadata_model.created_by)
   end
 
-  def to_xml
-    ProjectShowPresenter.new(self).to_xml
-  end
-
   # @return [String] XML representation of the <meta> element
   def mediaflux_meta_xml(user:)
     doc = ProjectMediaflux.document(project: self, user: user)

@@ -41,7 +41,7 @@ class ProjectsController < ApplicationController
         render json: project.to_json
       end
       format.xml do
-        render xml: project.to_xml
+        render xml: @presenter.to_xml
       end
     end
   end
@@ -76,7 +76,8 @@ class ProjectsController < ApplicationController
     @project_session = "content"
     respond_to do |format|
       format.html { render }
-      format.xml { render xml: @project.to_xml }
+      format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
+    }
     end
   end
 
