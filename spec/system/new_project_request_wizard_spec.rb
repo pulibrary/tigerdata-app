@@ -225,6 +225,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # The user selected is visible on the page
       expect(page).to have_content(current_user_str)
+      expect(page).not_to have_content("(#{current_user.uid}) #{current_user_str}")
       # the javascript created the hidden form element
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
       # the javascript cleared the find to get ready for the next search
@@ -247,9 +248,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
+      expect(page).to have_content(current_user_str)
+      expect(page).not_to have_content("#{current_user_str} (#{current_user.uid})")
 
       expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
+      expect(page).to have_content(other_user_str)
 
       choose("request[read_only_#{current_user.uid}]", option: "false")
 
@@ -266,6 +270,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request_data_manager", with: current_user.uid)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\",\"read_only\":false}")
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
+      expect(page).not_to have_content("#{current_user_str} (#{current_user.uid})")
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do

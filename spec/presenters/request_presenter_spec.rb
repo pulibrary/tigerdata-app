@@ -97,10 +97,14 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#user_list" do
-    let(:current_user) { FactoryBot.create :user }
-    let(:request) { FactoryBot.create :request, user_roles: [{ "uid" => current_user.uid.to_s, "name" => current_user.display_name_safe, "read_only" => true }] }
+    let(:current_user) { FactoryBot.create :user, family_name: "Smith", given_name: "Sally", uid: "ss123" }
+    let(:other_user) { FactoryBot.create :user, family_name: "Doe", given_name: "John", uid: "jd123" }
+    let(:request) do
+      FactoryBot.create :request, user_roles: [{ "uid" => current_user.uid.to_s, "name" => current_user.display_name_safe, "read_only" => true },
+                                               { "uid" => other_user.uid.to_s, "name" => other_user.display_name_safe, "read_only" => false }]
+    end
     it "returns a list of the full names of the data users and their uids" do
-      expect(presenter.user_list).to eq("#{current_user.display_name_safe} ")
+      expect(presenter.user_list).to eq("Sally Smith (ss123) read only, John Doe (jd123)")
     end
   end
 

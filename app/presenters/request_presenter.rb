@@ -39,7 +39,9 @@ class RequestPresenter
     return "" if request.user_roles.blank?
     usr_list = []
     request.user_roles.each do |usr|
-      usr_list << "#{full_name(usr['uid'])} #{usr['role']}"
+      name = full_name(usr["uid"])
+      name += " read only" if usr["read_only"]
+      usr_list << name
     end
     usr_list.join(", ")
   end

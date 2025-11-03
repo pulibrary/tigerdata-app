@@ -67,7 +67,7 @@ function addNewUser(uid, name) {
   const ul = document.querySelector('.selected-user-roles');
   const li = document.createElement('li');
   li.classList.add('selected-item');
-  li.appendChild(document.createTextNode(`(${uid}) ${name}`));
+  li.appendChild(document.createTextNode(name));
   const newDiv = document.createElement('div');
   newDiv.classList.add('remove-user-role');
   newDiv.classList.add('remove-item');
@@ -119,7 +119,7 @@ function newTableRow(table, input) {
   const json = JSON.parse(input.value);
   const newRow = document.createElement('div');
   newRow.classList.add('row');
-  const newName = newCell(document.createTextNode(`${json.name} (${json.uid})`));
+  const newName = newCell(document.createTextNode(json.name));
   newName.classList.add('user-cell');
   newRow.appendChild(newName);
   const roCell = newCell(newRadio(`request[read_only_${json.uid}]`, true, 'true'));
