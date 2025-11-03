@@ -2,6 +2,59 @@
 @import "typography";
 @import "bootstrap";
 
+.black-circle {
+  width: 4rem;
+  height: 4rem;
+  background: url("black_circle.svg") no-repeat;
+}
+
+.floppy-disk {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  background: url("floppy_disk.svg") no-repeat;
+}
+
+.request-heading {
+  color: #111827;
+  font-family: "Libre Franklin";
+  font-size: 2.25rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2.5rem; /* 111.111% */
+  padding-top: 2.06;
+  padding-bottom: 1.13rem;
+}
+
+.request-subheading {
+  color: #4B5563;
+  text-align: center;
+  font-family: "Libre Franklin";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.75rem; /* 140% */
+  padding-bottom: 2.06rem;
+
+}
+
+.return-dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding-bottom: 1rem;
+
+  .btn {
+    height: 2.5rem;
+  }
+}
+
 .saved-summary {
   width: 14.0625rem;
   height: 2rem;
@@ -124,14 +177,6 @@
 .detail-pair {
   display: flex;
   gap: 0.5rem;
-}
-
-.line-break {
-  width: 75rem;
-  height: 0;
-  stroke-width: 1px;
-  stroke: var(--Neutral-Light-Gray, #eee);
-  background: url("stroke.svg") no-repeat;
 }
 
 .horizontal-frame {
