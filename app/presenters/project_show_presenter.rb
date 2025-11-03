@@ -63,11 +63,11 @@ class ProjectShowPresenter
   end
 
   def data_read_only_users
-    @project_mf[:ro_users].map { |uid| ReadOnlyUser.find_by(uid:) }.compact
+    (@project_mf[:ro_users] || []).map { |uid| ReadOnlyUser.find_by(uid:) }.compact
   end
 
   def data_read_write_users
-    @project_mf[:rw_users].map { |uid| User.find_by(uid:) }.compact
+    (@project_mf[:rw_users] || []).map { |uid| User.find_by(uid:) }.compact
   end
 
   def data_users
@@ -145,6 +145,11 @@ class ProjectShowPresenter
 
     storage_usage = project.storage_usage_raw(session_id:)
     (storage_usage.to_f / storage_capacity.to_f) * 100
+  end
+
+  def user_has_access?(user:)
+    return true if user.eligible_sysadmin?
+    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.include?(user.uid)
   end
 
   def project_in_rails?
