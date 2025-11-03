@@ -10,9 +10,7 @@
 
 <div class="horizontal-frame">
     <% if @request_presenter.eligible_to_edit?(current_user)%>
-      <% if !@request_model.submitted?%>
-        <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-      <% else %>
+      <% if @request_model.submitted?%>
         <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark btn-sm" %>
         <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
       <% end %>
@@ -24,6 +22,26 @@
 <textarea class="disabled-field" rows="10" cols="50">
     <%= @request_model.error_message %>
   </textarea>
+<% end %>
+
+<div class="saved-summary">Saved Summary</div>
+<% if @request_presenter.eligible_to_edit?(current_user)%>
+  <% if !@request_model.submitted?%>
+    <div class="blue-box">
+      <div class="box-heading">
+          <div class="pul-container">
+            <div class="pul-info"> </div>
+            <div class="pul-info-text">This new project request has not been submitted.</div>
+          </div>
+          <div class="box-subheading">
+            <div class="pul-info-subheading">Continue editing your request to submit it.</div>
+          </div>
+      </div>
+        <div class="continue-edit">
+          <%= link_to "Continue Editing", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+        </div>
+    </div>
+  <% end %>
 <% end %>
 
 <ul class="request-fields">
