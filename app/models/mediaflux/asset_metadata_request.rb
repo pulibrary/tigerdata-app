@@ -149,21 +149,21 @@ module Mediaflux
 
       def data_users_from_string(users)
         return [] if users.blank?
-        users.split(",").reject(&:blank?)
+        users.split(",").compact_blank
       end
 
       # Calculates which of the `data_users` listed in the metadata have
       # write access in Mediaflux for the given asset.
       def parse_read_write_users(asset, data_users)
         users = asset.xpath("./acl").map do |acl|
-          uid = acl.xpath("./actor").text.gsub("princeton:","")
+          uid = acl.xpath("./actor").text.gsub("princeton:", "")
           if data_users.include?(uid) && acl.xpath("./metadata").map(&:text).include?("write")
             uid
           else
             ""
           end
         end
-        users.reject(&:blank?)
+        users.compact_blank
       end
   end
 end
