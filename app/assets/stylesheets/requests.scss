@@ -2,6 +2,78 @@
 @import "typography";
 @import "bootstrap";
 
+.saved-summary {
+  width: 14.0625rem;
+  height: 2rem;
+  flex-shrink: 0;
+  color: #111827;
+  font-family: "Libre Franklin";
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2rem; /* 133.333% */
+}
+
+.blue-box {
+  width: 75.1875rem;
+  padding: 1rem 1.5rem;
+  align-items: center;
+  border-radius: 0.75rem;
+  background: var(--Status-Info, #e6eef8);
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.pul-container {
+  display: flex;
+}
+
+/* Tooltip container */
+.pul-info {
+  position: relative;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1/1;
+  background: url("info.svg") no-repeat;
+}
+
+.pul-info-text {
+  color: var(--Neutral-Black, #121212);
+
+  /* Heading 6 */
+  font-family: "Libre Franklin";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.25rem; /* 125% */
+}
+
+.box-subheading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pul-info-subheading {
+  color: var(--Neutral-Black, #121212);
+
+  /* Body XS */
+  font-family: "Libre Franklin";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3125rem; /* 150% */
+  padding-left: 25px;
+}
+
+.continue-edit {
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.25rem;
+}
+
 .request-fields {
   padding-top: 30px;
   list-style-type: none;
