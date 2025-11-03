@@ -12,20 +12,6 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
-    @project_metadata = project.metadata_model
-
-    read_only_uids = @project_metadata.ro_users
-    data_read_only_users = read_only_uids.map { |uid| ReadOnlyUser.find_by(uid:) }.reject(&:blank?)
-
-    read_write_uids = @project_metadata.rw_users
-    data_read_write_users = read_write_uids.map { |uid| User.find_by(uid:) }.reject(&:blank?)
-
-    unsorted_data_users = data_read_only_users + data_read_write_users
-    sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
-    @data_users = sorted_data_users.uniq { |u| u.uid }
-    user_model_names = @data_users.map(&:display_name_safe)
-    @data_user_names = user_model_names.join(", ")
-
     @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
 
     @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?

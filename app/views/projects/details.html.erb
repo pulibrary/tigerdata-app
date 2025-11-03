@@ -27,9 +27,9 @@
     <% end %>
 
     <dt>Data Users</dt>
-    <% if @data_users.present? %>
+    <% if @presenter.data_users.count > 0 %>
       <dd>
-        <%= @data_user_names %>
+        <%= @presenter.data_user_names %>
       </dd>
     <% else %>
       <dd>

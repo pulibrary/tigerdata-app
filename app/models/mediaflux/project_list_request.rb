@@ -57,7 +57,7 @@ module Mediaflux
 
       def data_users_from_string(users)
         return [] if users.blank?
-        users.split(",")
+        users.split(",").reject(&:blank?)
       end
   end
 end

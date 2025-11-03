@@ -29,19 +29,11 @@ class ProjectShowPresenter
   end
 
   def title
-    if @project_mf.nil?
-      @project.title
-    else
-      @project_mf[:title]
-    end
+    @project_mf[:title]
   end
 
   def description
-    if @project_mf.nil?
-      @project.metadata_model.description
-    else
-      @project_mf[:description]
-    end
+    @project_mf[:description]
   end
 
   # @return [String] the XML for the project Document
@@ -63,38 +55,41 @@ class ProjectShowPresenter
   end
 
   def data_sponsor
-    if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_sponsor"])
-    else
-      User.find_by(uid: @project_mf[:data_sponsor])
-    end
+    User.find_by(uid: @project_mf[:data_sponsor])
   end
 
   def data_manager
-    if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_manager"])
-    else
-      User.find_by(uid: @project_mf[:data_manager])
-    end
+    User.find_by(uid: @project_mf[:data_manager])
+  end
+
+  def data_read_only_users
+    @project_mf[:ro_users].map { |uid| ReadOnlyUser.find_by(uid:) }
+  end
+
+  def data_read_write_users
+    @project_mf[:rw_users].map { |uid| User.find_by(uid:) }
+  end
+
+  def data_users
+    unsorted_data_users = data_read_only_users + data_read_write_users
+    sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
+    sorted_data_users.uniq { |u| u.uid }
+  end
+
+  def data_user_names
+    user_model_names = data_users.map(&:display_name_safe)
+    user_model_names.join(", ")
   end
 
   def project_purpose
-    if @project_mf.nil?
-      project_metadata.project_purpose
-    else
-      @project_mf[:project_purpose]
-    end
+    @project_mf[:project_purpose]
   end
 
   # used to hide the project root that is not visible to the end user
   def project_directory
-    if @project.nil?
-      project_metadata.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
-    else
-      # This value comes from Mediaflux without the extra hidden root
-      directory = @project_mf[:project_directory] || ""
-      directory.start_with?("/") ? directory : "/" + directory
-    end
+    # This value comes from Mediaflux without the extra hidden root
+    directory = @project_mf[:project_directory] || ""
+    directory.start_with?("/") ? directory : "/" + directory
   end
 
   def hpc
