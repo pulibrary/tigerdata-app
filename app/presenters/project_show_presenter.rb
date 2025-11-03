@@ -63,11 +63,11 @@ class ProjectShowPresenter
   end
 
   def data_read_only_users
-    @project_mf[:ro_users].map { |uid| ReadOnlyUser.find_by(uid:) }
+    @project_mf[:ro_users].map { |uid| ReadOnlyUser.find_by(uid:) }.compact
   end
 
   def data_read_write_users
-    @project_mf[:rw_users].map { |uid| User.find_by(uid:) }
+    @project_mf[:rw_users].map { |uid| User.find_by(uid:) }.compact
   end
 
   def data_users
