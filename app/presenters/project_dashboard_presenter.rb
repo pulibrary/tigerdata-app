@@ -32,9 +32,9 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def role(user)
-    if data_sponsor == user.uid
+    if data_sponsor.uid == user.uid
       "Sponsor"
-    elsif data_manager == user.uid
+    elsif data_manager.uid == user.uid
       "Data Manager"
     else
       "Data User"
