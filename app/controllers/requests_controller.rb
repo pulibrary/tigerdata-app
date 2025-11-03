@@ -22,7 +22,7 @@ class RequestsController < ApplicationController
     if current_user.developer || current_user.sysadmin || current_user.trainer
       @request_model = Request.find(params[:id])
       @request_presenter = RequestPresenter.new(@request_model)
-      add_breadcrumb("New Project Request", new_project_request_wizard_link)
+      add_breadcrumb("New Project Request", new_project_project_info_path)
       render :show
     else
       error_message = "You do not have access to this page."
