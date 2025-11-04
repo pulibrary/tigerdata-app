@@ -1,0 +1,18 @@
+  <div class="input-frame">
+    <div class="text-input">
+      <div class="horizontal-frame">
+        <div class="vertical-frame">
+          <div class="pul-tooltip">
+            <span class="pul-tooltiptext"><%= tooltip %></span>
+          </div>
+          <input class="form-input <%= field_name %>" type="text" name="request[<%= field_name %>]" id="request_<%= field_name %>"
+                list="<%= field_name %>s" placeholder="Select a Data Manager" autocomplete="off" value="<%= field_value %>"></input>
+          <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
+          <datalist id="<%= field_name %>s"></datalist>
+          <div class="input-error">
+               <%= field_error %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
