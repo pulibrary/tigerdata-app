@@ -323,6 +323,25 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         expect(page).to have_content("300.0 TB")
       end
+
+      it "shows the edit buttons on the request fields section for a draft request" do
+        sign_in sysadmin_user
+        visit "/requests/#{full_request.id}"
+        expect(page).to have_css(".basic-info", text: "Edit")
+        expect(page).to have_css(".roles-people", text: "Edit")
+        expect(page).to have_css(".storage-access", text: "Edit")
+        expect(page).to have_link("Edit", count: 4)
+      end
+
+      it "shows the edit buttons on the request fields section for a submitted request" do
+        sign_in sysadmin_user
+        visit "/requests/#{submitted_request.id}"
+        expect(page).to_not have_css(".basic-info", text: "Edit")
+        expect(page).to_not have_css(".roles-people", text: "Edit")
+        expect(page).to_not have_css(".storage-access", text: "Edit")
+        expect(page).to have_link("Edit", count: 1)
+        expect(page).to have_link "Edit submitted request"
+      end
     end
 
     context "developer" do
