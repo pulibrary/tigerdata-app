@@ -149,7 +149,24 @@
 
 .detail-heading {
   @include heading-style;
+  display: flex;
 }
+
+.heading-text {
+  padding-right: 63.5rem;
+}
+
+.edit-link {
+  @include heading-style;
+  margin-bottom: 0rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.basic-info {
+  padding-left: 5rem;
+}
+
 
 .detail-subheading {
   @include heading-style;
