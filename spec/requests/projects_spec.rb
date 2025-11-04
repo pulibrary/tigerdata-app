@@ -5,8 +5,9 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "GET /projects" do
-    let(:data_manager) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
-    let(:project) { FactoryBot.create(:approved_project, data_manager: data_manager.uid) }
+    let(:data_manager) { sponsor_and_data_manager_user }
+    let(:request) { FactoryBot.create :request_project, data_manager: data_manager.uid }
+    let(:project) { request.approve(sponsor_and_data_manager_user) }
 
     context "when the user is authenticated" do
       before do
