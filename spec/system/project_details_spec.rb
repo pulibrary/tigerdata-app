@@ -46,6 +46,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
+            expect(page).to have_link "Request More", href: "https://tigerdata.princeton.edu/form/quota-increase-request"
 
             expect(page).to have_css ".approved"
             # Per ticket #1114 sponsor users no longer have edit access
