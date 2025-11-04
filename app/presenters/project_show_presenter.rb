@@ -4,7 +4,6 @@ class ProjectShowPresenter
   delegate "project_id", "storage_performance_expectations", to: :project_metadata
 
   attr_reader :project, :project_metadata
-  attr_reader :project_mf
 
   # @return [Class] The presenter class for building XML Documents from Projects
   def self.xml_presenter_class

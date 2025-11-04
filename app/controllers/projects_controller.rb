@@ -6,7 +6,6 @@ class ProjectsController < ApplicationController
 
   def details
     return if project.blank?
-    @presenter = ProjectShowPresenter.new(project, current_user)
 
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
@@ -56,8 +55,6 @@ class ProjectsController < ApplicationController
 
   def show
     return if project.blank?
-
-    @presenter = ProjectShowPresenter.new(project, current_user)
 
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
@@ -139,7 +136,8 @@ class ProjectsController < ApplicationController
     def project
       @project ||= begin
         project = Project.find(params[:id])
-        if project.user_has_access?(user: current_user) && project.mediaflux_id != nil
+        @presenter = ProjectShowPresenter.new(project, current_user)
+        if project&.mediaflux_id != nil && @presenter.user_has_access?(user: current_user)
           project
         else
           flash[:alert] = I18n.t(:access_denied)
