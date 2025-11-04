@@ -165,7 +165,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
-          coverage_reporter_version: "v0.6.18"
+          coverage_reporter_version: "v0.6.17"
 
   test_browser:
     working_directory: ~/tiger_data
@@ -207,7 +207,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
-          coverage_reporter_version: "v0.6.18"
+          coverage_reporter_version: "v0.6.17"
 
   yarn_lint_format:
     docker:
