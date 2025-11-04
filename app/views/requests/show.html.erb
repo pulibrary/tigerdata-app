@@ -50,7 +50,14 @@
   </div>
 
   <ul class="request-fields">
-    <div class="detail-heading">Basic Info</div>
+    <div class="detail-heading">
+      <div class="heading-text">Basic Info </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+          <%= link_to "Edit", new_project_project_info_path(@request_model.id), class: "edit-link basic-info"%>
+        <% end %>
+      <% end %>
+    </div>
     <div class="detail-pair">
       <li class="detail-subheading">Project Title</li>
       <p class="detail-value"><%= @request_model.project_title %></p>
@@ -75,7 +82,14 @@
       <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
     </svg>
 
-    <div class="detail-heading">Roles and People(s)</div>
+    <div class="detail-heading">
+      <div class="heading-text">Roles and People(s) </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+         <%= link_to "Edit", new_project_roles_and_people_path(@request_model.id), class: "edit-link roles-people"%>
+        <% end %>
+      <% end %>
+    </div>
     <div class="detail-pair">
       <li class="detail-subheading">Data Sponsor</li>
       <p class="detail-value"> <%= @request_presenter.data_sponsor %></p>
@@ -92,7 +106,14 @@
       <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
     </svg>
 
-    <div class="detail-heading">Storage and Access</div>
+    <div class="detail-heading">
+      <div class="heading-text">Storage and Access </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+          <%= link_to "Edit", new_project_storage_and_access_path(@request_model.id), class: "edit-link storage-access"%>
+        <% end %>
+      <% end %>
+    </div>
     <div class="detail-pair">
       <li class="detail-subheading">Storage Needed</li>
       <p class="detail-value"><%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></p>
