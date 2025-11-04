@@ -344,7 +344,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("project_title_exit", with: "A basic Project")
         fill_in :project_title_exit, with: "A basic Project updated"
         click_on "Confirm"
-        expect(page).to have_content("This screen is a review")
+        expect(page).to have_content("Your new project request has been saved")
         expect(page).to have_content("A basic Project updated")
       end.to change { Request.count }.by(1)
     end
