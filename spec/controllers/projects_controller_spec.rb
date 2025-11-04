@@ -14,6 +14,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     context "not signed in" do
       # TODO: Figure out why this test is now throwing
       #       NoMethodError: undefined method `env' for an instance of Request
+      #       see https://github.com/pulibrary/tigerdata-app/issues/2142
       xit "renders an error when requesting json" do
         get :details, params: { id: project.id, format: :json }
         expect(response.content_type).to eq("application/json; charset=utf-8")
@@ -80,6 +81,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   describe "#index" do
     # TODO: Figure out why this test is now throwing
     #       NoMethodError: undefined method `env' for an instance of Request
+    #       see https://github.com/pulibrary/tigerdata-app/issues/2142
     xit "redirects to signin" do
       get :index
       expect(response).to redirect_to "http://test.host/sign_in"
@@ -145,6 +147,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     include ActiveJob::TestHelper
     # TODO: Figure out why this test is now throwing
     #       NoMethodError: undefined method `env' for an instance of Request
+    #       see https://github.com/pulibrary/tigerdata-app/issues/2142
     xit "renders an error when requesting json" do
       get :list_contents, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
