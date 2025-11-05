@@ -3,8 +3,8 @@ require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
-  let(:project) { request.approve(sponsor_and_data_manager) }
+  let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
@@ -12,10 +12,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
   describe "#details" do
     context "not signed in" do
-      # TODO: Figure out why this test is now throwing
-      #       NoMethodError: undefined method `env' for an instance of Request
-      #       see https://github.com/pulibrary/tigerdata-app/issues/2142
-      xit "renders an error when requesting json" do
+      it "renders an error when requesting json" do
         get :details, params: { id: project.id, format: :json }
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
@@ -79,10 +76,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   end
 
   describe "#index" do
-    # TODO: Figure out why this test is now throwing
-    #       NoMethodError: undefined method `env' for an instance of Request
-    #       see https://github.com/pulibrary/tigerdata-app/issues/2142
-    xit "redirects to signin" do
+    it "redirects to signin" do
       get :index
       expect(response).to redirect_to "http://test.host/sign_in"
     end
@@ -145,10 +139,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
   describe "#list_contents" do
     include ActiveJob::TestHelper
-    # TODO: Figure out why this test is now throwing
-    #       NoMethodError: undefined method `env' for an instance of Request
-    #       see https://github.com/pulibrary/tigerdata-app/issues/2142
-    xit "renders an error when requesting json" do
+    it "renders an error when requesting json" do
       get :list_contents, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
       expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
@@ -184,9 +175,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   end
 
   describe "#content" do
-    # TODO: Figure out why this test is now throwing
-    #       NoMethodError: undefined method `env' for an instance of Request
-    xit "renders an error when requesting json" do
+    it "renders an error when requesting json" do
       get :show, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
       expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
