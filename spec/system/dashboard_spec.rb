@@ -12,6 +12,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
   context "authenticated user" do
     let(:current_user) { FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    # VersionRequest is needed to force Ruby to load the Mediaflux::EXPECTED_VERSION constant
+    let!(:version_req) { Mediaflux::VersionRequest.new(session_token: current_user.mediaflux_session) }
     let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
     let(:other_user) { FactoryBot.create(:developer, uid: "kl37") }
     let(:no_projects_user) { FactoryBot.create(:user, uid: "qw999") }

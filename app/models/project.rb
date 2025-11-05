@@ -112,18 +112,8 @@ class Project < ApplicationRecord
     request.results
   end
 
-  def user_has_access?(user:)
-    return true if user.eligible_sysadmin?
-    metadata_model.data_sponsor == user.uid || metadata_model.data_manager == user.uid ||
-    metadata_model.data_user_read_only.include?(user.uid) || metadata_model.data_user_read_write.include?(user.uid)
-  end
-
   def created_by_user
     User.find_by(uid: metadata_model.created_by)
-  end
-
-  def to_xml
-    ProjectShowPresenter.new(self).to_xml
   end
 
   # @return [String] XML representation of the <meta> element
@@ -134,8 +124,8 @@ class Project < ApplicationRecord
 
   def mediaflux_metadata(session_id:)
     @mediaflux_metadata ||= begin
-      accum_req = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
-      accum_req.metadata
+      metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+      metadata_request.metadata
     end
     @mediaflux_metadata
   end
