@@ -24,11 +24,12 @@
             </div>
         </dl>
     </dd>
+    <!-- The HTML &nbsp; is to make sure the `dd` element aligns with the proper `dt` when is empty -->
     <dt>Project Purpose</dt>
-    <dd><%= @presenter.project_purpose %></dd>
+    <dd><%= @presenter.project_purpose %>&nbsp;</dd>
 
     <dt>Estimated number of files</dt>
-    <dd><%= @presenter.number_of_files %></dd>
+    <dd><%= @presenter.number_of_files %>&nbsp;</dd>
 
     <dt>High Performance Computing</dt>
     <dd><%= @presenter.hpc %></dd>
