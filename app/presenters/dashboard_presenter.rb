@@ -11,7 +11,7 @@ class DashboardPresenter
     return [] unless current_user&.eligible_sysadmin?
 
     @all_projects ||= Project.all_projects(current_user)
-                             .map { |project| ProjectDashboardPresenter.new(project) }
+                             .map { |project| ProjectDashboardPresenter.new(project, current_user) }
                              .select(&:project_in_rails?)
                              .sort_by(&:updated_at)
                              .reverse
@@ -20,7 +20,7 @@ class DashboardPresenter
 
   def dashboard_projects
     @dashboard_projects ||= Project.users_projects(current_user)
-                                   .map { |project| ProjectDashboardPresenter.new(project) }
+                                   .map { |project| ProjectDashboardPresenter.new(project, current_user) }
                                    .select(&:project_in_rails?)
                                    .sort_by(&:updated_at)
                                    .reverse

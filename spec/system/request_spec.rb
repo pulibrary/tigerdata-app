@@ -18,7 +18,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
     let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
     let!(:data_manager) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:request) { Request.create(request_title: "abc123", project_title: "project") }
+    let(:request) { Request.create(request_title: "abc123", project_title: "project", requested_by: current_user.uid, project_folder: "folder123") }
     let(:full_request) do
       Request.create(
         request_type: nil,
@@ -322,6 +322,25 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "#{requests_path}/#{submitted_request.id}"
         expect(page).to have_content("Approve request")
         expect(page).to have_content("300.0 TB")
+      end
+
+      it "shows the edit buttons on the request fields section for a draft request" do
+        sign_in sysadmin_user
+        visit "/requests/#{full_request.id}"
+        expect(page).to have_css(".basic-info", text: "Edit")
+        expect(page).to have_css(".roles-people", text: "Edit")
+        expect(page).to have_css(".storage-access", text: "Edit")
+        expect(page).to have_link("Edit", count: 4)
+      end
+
+      it "shows the edit buttons on the request fields section for a submitted request" do
+        sign_in sysadmin_user
+        visit "/requests/#{submitted_request.id}"
+        expect(page).to_not have_css(".basic-info", text: "Edit")
+        expect(page).to_not have_css(".roles-people", text: "Edit")
+        expect(page).to_not have_css(".storage-access", text: "Edit")
+        expect(page).to have_link("Edit", count: 1)
+        expect(page).to have_link "Edit submitted request"
       end
     end
 

@@ -2,12 +2,12 @@
 
   <div class="row">
     <div class="col-6 col-md-8">
-      <h1><%= @project.title %></h1>
+      <h1><%= @presenter.title %></h1>
     <div class="heading-decoration"></div>
     </div>
     <div class="col-6 col-md-4">
-      <div class="status <%= @project.status.downcase %>">
-        <%= @project.status %>
+      <div class="status <%= @presenter.status.downcase %>">
+        <%= @presenter.status %>
       </div>
     </div>
   </div><!-- .row -->
@@ -17,7 +17,7 @@
 
       <div id="project-description">
         <div id="description-text" class="truncate">
-          <%= @project.description %>
+          <%= @presenter.description %>
         </div>
         <a id="show-more-less-link" class="show-more" href="#"><span>more</span></a>
       </div><!-- #project-description -->
@@ -26,8 +26,8 @@
         <div class="col-12">
           <div class="date-and-data-info">
             <ul>
-              <li><span class="label">Date Created:</span> <%= @project.created %></li>
-              <li><span class="label">Last updated:</span> <%= @project.updated %></li>
+              <li><span class="label">Date Created:</span> <%= @presenter.created %></li>
+              <li><span class="label">Last updated:</span> <%= @presenter.updated %></li>
             </ul>
           </div>
         </div>
@@ -37,8 +37,8 @@
         <div class="col-12">
           <div class="date-and-data-info">
             <ul>
-              <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @project.data_sponsor %></span></li>
-              <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @project.data_manager %></span></li>
+              <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @presenter.data_sponsor&.uid %></span></li>
+              <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @presenter.data_manager&.uid %></span></li>
             </ul>
           </div>
         </div><!-- .col-12 -->
@@ -50,19 +50,19 @@
         <div class="storage-quota container-fluid px-3 py-2 border border-secondary me-0">
           <div class="row mt-2 mb-4">
             <div class="col-6">
-              <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @project.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
+              <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @presenter.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
             </div>
             <div class="col-6 text-end">
               <%= link_to "Request More", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank" %>
             </div>
           </div>
           <div class="row my-2">
-            <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @project.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: <%= @project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
+            <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: <%= @presenter.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
             </div>
           </div>
           <div class="row my-2">
-            <%= @project.quota_usage(session_id: current_user.mediaflux_session) %>
+            <%= @presenter.quota_usage(session_id: current_user.mediaflux_session) %>
           </div>
         </div>
       </div><!-- .row -->

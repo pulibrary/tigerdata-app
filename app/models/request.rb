@@ -154,7 +154,25 @@ class Request < ApplicationRecord
     User.find_by(uid: requested_by).display_name_safe
   end
 
+  def data_manager_name
+    user_name(data_manager)
+  end
+
+  def data_sponsor_name
+    user_name(data_sponsor)
+  end
+
   private
+
+    def user_name(uid)
+      return "" if uid.blank?
+      user = User.find_by(uid: uid)
+      if user.present?
+        user.display_name_safe
+      else
+        uid
+      end
+    end
 
     def check_errors?
       original_error_count = errors.count

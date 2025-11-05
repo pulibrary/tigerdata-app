@@ -16,31 +16,23 @@ class ProjectShowPresenter
   # This branching can be refactored (elimitated?) once we implement ticket
   # https://github.com/pulibrary/tigerdata-app/issues/2039 and the project data will always
   # come from Mediaflux.
-  def initialize(project)
+  def initialize(project, current_user)
     if project.is_a?(Hash)
       @project_mf = project
       @project = rails_project(@project_mf)
     else
-      @project_mf = nil
       @project = project
+      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session) if current_user.present?
     end
     @project_metadata = @project&.metadata_model
   end
 
   def title
-    if @project_mf.nil?
-      @project.title
-    else
-      @project_mf[:title]
-    end
+    @project_mf[:title]
   end
 
   def description
-    if @project_mf.nil?
-      @project.metadata_model.description
-    else
-      @project_mf[:description]
-    end
+    @project_mf[:description]
   end
 
   # @return [String] the XML for the project Document
@@ -62,32 +54,65 @@ class ProjectShowPresenter
   end
 
   def data_sponsor
-    if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_sponsor"]).uid
-    else
-      User.find_by(uid: @project_mf[:data_sponsor])&.uid
-    end
+    User.find_by(uid: @project_mf[:data_sponsor])
   end
 
   def data_manager
-    if @project_mf.nil?
-      User.find_by(uid: @project.metadata["data_manager"]).uid
-    else
-      User.find_by(uid: @project_mf[:data_manager])&.uid
-    end
+    User.find_by(uid: @project_mf[:data_manager])
+  end
+
+  def data_read_only_users
+    (@project_mf[:ro_users] || []).map { |uid| ReadOnlyUser.find_by(uid:) }.compact
+  end
+
+  def data_read_write_users
+    (@project_mf[:rw_users] || []).map { |uid| User.find_by(uid:) }.compact
+  end
+
+  def data_users
+    unsorted_data_users = data_read_only_users + data_read_write_users
+    sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
+    sorted_data_users.uniq { |u| u.uid }
+  end
+
+  def data_user_names
+    user_model_names = data_users.map(&:display_name_safe)
+    user_model_names.join(", ")
   end
 
   def project_purpose
-    if @project_mf.nil?
-      project_metadata.project_purpose
-    else
-      @project_mf[:project_purpose]
-    end
+    @project_mf[:project_purpose]
   end
 
   # used to hide the project root that is not visible to the end user
   def project_directory
-    project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
+    # This value comes from Mediaflux without the extra hidden root
+    directory = @project_mf[:project_directory] || ""
+    directory.start_with?("/") ? directory : "/" + directory
+  end
+
+  def hpc
+    @project_mf[:hpc] == true ? "Yes" : "No"
+  end
+
+  def globus
+    @project_mf[:globus] == true ? "Yes" : "No"
+  end
+
+  def smb
+    @project_mf[:smb] == true ? "Yes" : "No"
+  end
+
+  def number_of_files
+    @project_mf[:number_of_files]
+  end
+
+  def departments
+    @project_mf[:departments] || []
+  end
+
+  def project_id
+    @project_mf[:project_id]
   end
 
   def storage_capacity(session_id: nil)
@@ -119,6 +144,11 @@ class ProjectShowPresenter
 
     storage_usage = project.storage_usage_raw(session_id:)
     (storage_usage.to_f / storage_capacity.to_f) * 100
+  end
+
+  def user_has_access?(user:)
+    return true if user.eligible_sysadmin?
+    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.include?(user.uid)
   end
 
   def project_in_rails?

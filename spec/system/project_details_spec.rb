@@ -10,26 +10,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
 
-  let(:metadata_model) do
-    hash = {
-      data_sponsor: sponsor_user.uid,
-      data_manager: data_manager.uid,
-      project_directory: "rspec-#{Time.now.utc.iso8601.tr(':', '-')}-#{rand(1..100_000)}",
-      title: "project 123",
-      departments: ["RDSS"],
-      description: "hello world",
-      data_user_read_only: [read_only.uid],
-      data_user_read_write: [read_write.uid],
-      status: ::Project::APPROVED_STATUS,
-      storage_capacity: { "size" => { "requested" => 500 }, "unit" => { "requested" => "GB" } },
-      storage_performance_expectations: { "requested" => "standard" },
-      created_on: Time.current.in_time_zone("America/New_York").iso8601,
-      created_by: FactoryBot.create(:user).uid,
-      project_id: "10.123/456"
-    }
-    ProjectMetadata.new_from_hash(hash)
-  end
-
   context "Details page" do
     let(:project_in_mediaflux) do
       request = FactoryBot.create :request_project, data_manager: sponsor_user.uid, storage_size: 500, storage_unit: "GB"
@@ -92,7 +72,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Provenance Events" do
-      let(:project) { FactoryBot.create(:project, data_sponsor: sponsor_user.uid) }
+      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid }
+      let!(:project) { request.approve(sponsor_and_data_manager_user) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       it "shows provenance events" do
         submission_event
@@ -104,7 +85,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}"
-        expect(page).to have_css ".approved"
+        expect(page).to have_css ".active"
       end
     end
 
@@ -203,24 +184,25 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "system administrator" do
-      let(:project_in_mediaflux) { FactoryBot.create(:project, mediaflux_id: 1234, status: Project::APPROVED_STATUS, metadata_model: metadata_model) }
-      let(:project_not_in_mediaflux) { FactoryBot.create(:project) }
+      let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+      let!(:project) { request.approve(sponsor_and_data_manager_user) }
+
       it "shows the sysadmin buttons for an approved project" do
         sign_in sysadmin_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
+        visit "/projects/#{project.id}/details"
 
-        expect(page).to have_content project_in_mediaflux.project_directory
-        expect(page).to have_content "project 123"
-        expect(page).to have_content "1234"
-        expect(page).not_to have_content "This project has not been saved to Mediaflux"
+        expect(page).to have_content project.project_directory
+        expect(page).to have_content project.title
+        expect(page).to have_content "Mediaflux id"
+        expect(page).to have_content project.mediaflux_id
       end
 
       it "does not show the mediaflux id to the sponsor" do
         sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page).to have_content "project 123"
-        expect(page).not_to have_content "1234"
-        expect(page).not_to have_content "This project has not been saved to Mediaflux"
+        visit "/projects/#{project.id}/details"
+        expect(page).to have_content project.project_directory
+        expect(page).to have_content project.title
+        expect(page).not_to have_content "Mediaflux id"
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")
       end

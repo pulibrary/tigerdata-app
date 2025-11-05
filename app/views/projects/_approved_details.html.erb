@@ -1,7 +1,7 @@
 <h2>Project Settings</h2>
 <dl>
     <dt>Project ID</dt>
-    <dd id="project_id"><%= @project_id %></dd>
+    <dd id="project_id"><%= @presenter.project_id %></dd>
     <dt>Storage Capacity</dt>
     <dd>
         <dl>
@@ -25,19 +25,19 @@
         </dl>
     </dd>
     <dt>Project Purpose</dt>
-    <dd><%= @project_purpose %></dd>
+    <dd><%= @presenter.project_purpose %></dd>
 
     <dt>Estimated number of files</dt>
-    <dd><%= @number_of_files %></dd>
+    <dd><%= @presenter.number_of_files %></dd>
 
     <dt>High Performance Computing</dt>
-    <dd><%= @hpc %></dd>
+    <dd><%= @presenter.hpc %></dd>
 
     <dt>Network File Share</dt>
-    <dd><%= @smb %></dd>
+    <dd><%= @presenter.smb %></dd>
 
     <dt>Globus Transfers</dt>
-    <dd><%= @globus %></dd>
+    <dd><%= @presenter.globus %></dd>
 </dl>
 <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
 <dl>

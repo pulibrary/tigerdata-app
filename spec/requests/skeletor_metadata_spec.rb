@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: true, type: :request do
   let(:data_manager) { FactoryBot.create(:data_manager, uid: "pp9425", mediaflux_session: SystemUser.mediaflux_session) }
   let(:data_sponsor) { FactoryBot.create(:project_sponsor, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.create(:approved_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid) }
+  let(:request) { FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid }
+  let(:project) { request.approve(data_manager) }
 
   context "retrieves xml from rails for a project" do
     before do

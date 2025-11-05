@@ -43,42 +43,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   end
 
   context "Show page" do
-    context "when the data user is empty" do
-      let(:metadata_model) do
-        hash = {
-          data_sponsor: sponsor_user.uid,
-          data_manager: data_manager.uid,
-          project_directory: "project-123",
-          title: "project 123",
-          departments: ["RDSS"],
-          description: "hello world",
-          data_user_read_only: [],
-          data_user_read_write: [],
-          project_id: "abc-123",
-          storage_capacity: { size: { requested: "100" }, unit: { requested: "TB" } }.with_indifferent_access,
-          storage_performance_expectations: { requested: "Standard" },
-          project_purpose: "Research",
-          status: ::Project::APPROVED_STATUS,
-          created_on: Time.current.in_time_zone("America/New_York").iso8601,
-          created_by: FactoryBot.create(:user).uid
-        }
-        ProjectMetadata.new_from_hash(hash)
-      end
-
-      it "shows none when the data user is empty" do
-        sign_in data_manager
-        visit "/projects/#{project_not_in_mediaflux.id}/details"
-        expect(page).to have_content "This project has not been saved to Mediaflux"
-        expect(page).not_to have_button "Approve Project"
-        expect(page).to have_content "Data Users\nNone"
-        expect(page).to have_content "Project ID\nabc-123"
-        expect(page).to have_content "Storage Capacity\nRequested\n100 TB"
-        expect(page).to have_content "Storage Performance Expectations\nRequested\nStandard"
-        expect(page).to have_content "Project Purpose\nResearch"
-        expect(page).to be_axe_clean
-          .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-          .skipping(:'color-contrast')
-      end
+    it "shows access denied for Projects not in Mediaflux" do
+      sign_in data_manager
+      visit "/projects/#{project_not_in_mediaflux.id}/details"
+      expect(page).to have_content "Access Denied"
     end
   end
 
