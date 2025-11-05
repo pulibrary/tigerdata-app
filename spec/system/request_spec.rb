@@ -18,7 +18,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
     let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
     let!(:data_manager) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:request) { Request.create(request_title: "abc123", project_title: "project") }
+    let(:request) { Request.create(request_title: "abc123", project_title: "project", requested_by: current_user.uid, project_folder: "folder123") }
     let(:full_request) do
       Request.create(
         request_type: nil,

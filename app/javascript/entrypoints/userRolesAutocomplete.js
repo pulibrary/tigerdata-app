@@ -199,6 +199,21 @@ export function userRolesAutocomplete(usersLookupUrl) {
   // three times ("a", then "ab", and then "abc").
   const debouncedSearch = debounce(search);
 
+  function handleUserInput(element, event) {
+    const { value } = event.currentTarget;
+    const userSelectedValue = value.slice(-1) === '\xA0';
+    if (userSelectedValue === true) {
+      const elementSelected = $(`${element} [value="${value}"]`);
+      const current = event.currentTarget;
+      const currentHidden = $(`#${current.id}_uid`)[0];
+      current.value = elementSelected.data('name');
+      currentHidden.value = elementSelected.data('uid');
+      event.preventDefault();
+    } else {
+      debouncedSearch(value, element);
+    }
+  }
+
   // Wire the textbox for data users to work as an autocomple textbox
   $('#user_find').on('input', (event) => {
     // When populating the dataList for the user list we add a non-breaking space (HTML &nbsp; HEX A0)
@@ -224,29 +239,12 @@ export function userRolesAutocomplete(usersLookupUrl) {
 
   // Wire the textbox for data sponsors to work as an autocomple textbox
   $('#request_data_sponsor').on('input', (event) => {
-    const { value } = event.currentTarget;
-    const userSelectedValue = value.slice(-1) === '\xA0';
-    if (userSelectedValue === true) {
-      const elementSelected = $(`#data_sponsors [value="${value}"]`);
-      const current = event.currentTarget;
-      current.value = elementSelected.data('uid');
-      event.preventDefault();
-    } else {
-      debouncedSearch(value, '#data_sponsors');
-    }
+    handleUserInput('#data_sponsors', event);
   });
 
   // Wire the textbox for data managers to work as an autocomple textbox
   $('#request_data_manager').on('input', (event) => {
-    const { value } = event.currentTarget;
-    const userSelectedValue = value.slice(-1) === '\xA0';
-    if (userSelectedValue === true) {
-      const elementSelected = $(`#data_managers [value="${value}"]`);
-      const current = event.currentTarget;
-      current.value = elementSelected.data('uid');
-    } else {
-      debouncedSearch(value, '#data_managers');
-    }
+    handleUserInput('#data_managers', event);
   });
 
   // Prevent the HTML form from being submitted when the user press enter
