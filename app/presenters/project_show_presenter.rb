@@ -87,7 +87,7 @@ class ProjectShowPresenter
 
   # used to hide the project root that is not visible to the end user
   def project_directory
-    project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")
+    "/#{project.project_directory.gsub(Mediaflux::Connection.hidden_root, "")}"
   end
 
   def storage_capacity(session_id: nil)

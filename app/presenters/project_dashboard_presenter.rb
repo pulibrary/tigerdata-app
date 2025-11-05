@@ -42,7 +42,7 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def path
-    "/#{project_metadata.project_directory}"
+    "/#{project_metadata.project_directory.gsub(Mediaflux::Connection.hidden_root, '')}"
   end
 
   # Removes "about" (as in "about 1 month ago") from time_ago_in_words
