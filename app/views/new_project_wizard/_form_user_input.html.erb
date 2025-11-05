@@ -5,8 +5,10 @@
           <div class="pul-tooltip">
             <span class="pul-tooltiptext"><%= tooltip %></span>
           </div>
-          <input class="form-input <%= field_name %>" type="text" name="request[<%= field_name %>]" id="request_<%= field_name %>"
-                list="<%= field_name %>s" placeholder="Select a Data Manager" autocomplete="off" value="<%= field_value %>"></input>
+          <input class="form-input <%= field_name %>" type="text" id="request_<%= field_name %>"
+                list="<%= field_name %>s" placeholder="Select a Data Manager" autoComplete="off" value="<%= field_value %>">
+          </input>
+          <input type="hidden" name="request[<%= field_name %>]" id="request_<%= field_name %>_uid" value="<%= field_id_value %>"></input>
           <!-- This datalist is populated via AJAX in userRolesAutocomplete() -->
           <datalist id="<%= field_name %>s"></datalist>
           <div class="input-error">

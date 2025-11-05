@@ -36,8 +36,8 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
 
       # This part of the test is filling out the data manager and sponsor
       expect(page).to have_content("Assign roles for your project")
-      fill_in :request_data_sponsor, with: datasponsor.uid
-      fill_in :request_data_manager, with: datamanager.uid
+      select_user(datasponsor, "request_data_sponsor", "request[data_sponsor]")
+      select_user(datamanager, "request_data_manager", "request[data_manager]")
 
       # This part of the test is filling out the data users
       click_on "Add User(s)"

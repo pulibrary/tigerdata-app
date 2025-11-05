@@ -205,7 +205,9 @@ export function userRolesAutocomplete(usersLookupUrl) {
     if (userSelectedValue === true) {
       const elementSelected = $(`${element} [value="${value}"]`);
       const current = event.currentTarget;
-      current.value = elementSelected.data('uid');
+      const currentHidden = $(`#${current.id}_uid`)[0];
+      current.value = elementSelected.data('name');
+      currentHidden.value = elementSelected.data('uid');
       event.preventDefault();
     } else {
       debouncedSearch(value, element);
