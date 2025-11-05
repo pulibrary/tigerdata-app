@@ -191,17 +191,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # expect(page).to have_content "Dates (Optional)"
       # click_on "Next"
       expect(page).to have_content("Assign roles for your project")
-      current_user_str = current_user.display_name_safe
 
-      # Fill in a partial match to force the textbox to fetch a list of options to select from
-      fill_in :request_data_sponsor, with: current_user.uid
-      sleep(1.5)
-      select current_user_str + "\u00A0", from: "request_data_sponsor"
-
-      # Fill in a partial match to force the textbox to fetch a list of options to select from
-      fill_in :request_data_manager, with: current_user.uid
-      sleep(1.2)
-      select current_user_str + "\u00A0", from: "request_data_manager"
+      select_user(current_user, "request_data_sponsor", "request[data_sponsor]")
+      select_user(current_user, "request_data_manager", "request[data_manager]")
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       click_on "Add User(s)"
@@ -217,6 +209,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
       page.find(".remove-user-role").click
       expect(page).not_to have_content(another_user_str)
+
+      current_user_str = current_user.display_name_safe
 
       fill_in :user_find, with: current_user.uid
       sleep(1.2)
@@ -266,11 +260,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("Assign roles for your project")
       expect(page).to have_content "Roles and People"
       expect(page).to have_content "Data Manager"
-      expect(page).to have_field("request_data_sponsor", with: current_user.uid)
-      expect(page).to have_field("request_data_manager", with: current_user.uid)
+      expect(page).to have_field("request_data_sponsor", with: current_user.display_name_safe)
+      expect(page).to have_field("request[data_sponsor]", type: :hidden, with: current_user.uid)
+      expect(page).to have_field("request_data_manager", with: current_user.display_name_safe)
+      expect(page).to have_field("request[data_manager]", type: :hidden, with: current_user.uid)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\",\"read_only\":false}")
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
-      expect(page).not_to have_content("#{current_user_str} (#{current_user.uid})")
+      expect(page).not_to have_content("#{current_user.display_name_safe} (#{current_user.uid})")
     end
 
     it "saves work in progress if user jumps to another step in the wizard" do

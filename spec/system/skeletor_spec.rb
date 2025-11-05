@@ -54,8 +54,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Roles and People"
-      fill_in :request_data_sponsor, with: datasponsor.uid
-      fill_in :request_data_manager, with: datamanager.uid
+      select_user(datasponsor, "request_data_sponsor", "request[data_sponsor]")
+      select_user(datamanager, "request_data_manager", "request[data_manager]")
       click_on "Review and Submit"
       expect(page).to have_content "Take a moment to review"
       click_on "Submit"
@@ -97,8 +97,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Roles and People"
-      fill_in :request_data_sponsor, with: datasponsor.uid
-      fill_in :request_data_manager, with: datamanager.uid
+      select_user(datasponsor, "request_data_sponsor", "request[data_sponsor]")
+      select_user(datamanager, "request_data_manager", "request[data_manager]")
       click_on "Review and Submit"
       expect(page).to have_content "Take a moment to review"
       click_on "Submit"
