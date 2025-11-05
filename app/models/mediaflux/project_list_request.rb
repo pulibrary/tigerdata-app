@@ -43,7 +43,7 @@ module Mediaflux
           data_sponsor: metadata.xpath("./DataSponsor").text,
           data_manager: metadata.xpath("./DataManager").text,
           data_users: data_users_from_string(metadata.xpath("./DataUser").text),
-          directory: metadata.xpath("./ProjectDirectory").text
+          project_directory: metadata.xpath("./ProjectDirectory").text
         }
       end
     end
@@ -62,7 +62,7 @@ module Mediaflux
 
       def data_users_from_string(users)
         return [] if users.blank?
-        users.split(",")
+        users.split(",").compact_blank
       end
   end
 end
