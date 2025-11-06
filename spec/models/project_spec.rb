@@ -50,6 +50,13 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       # for sure our user does not have a role on it.
       expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).to be nil
     end
+
+    it "handles Mediaflux errors" do
+      allow(Rails.logger).to receive(:error)
+      all_projects = described_class.all_projects(test_user, "xpath(tigerdata:bad-namespace/ProjectID) has value")
+      expect(all_projects.count).to be 0
+      expect(Rails.logger).to have_received(:error).with(/Error fetching project list for user tigerdatatester/)
+    end
   end
 
   describe "#provenance_events" do
