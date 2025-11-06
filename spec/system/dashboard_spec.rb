@@ -136,6 +136,13 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Log out"
       end
 
+      it "user can start a new project from the startup link" do
+        sign_in no_projects_user
+        visit dashboard_path
+        click_link "Start a new project"
+        expect(page).to have_content "New Project Request"
+      end
+
       it "shows no downloads available" do
         sign_in no_projects_user
         visit dashboard_path
