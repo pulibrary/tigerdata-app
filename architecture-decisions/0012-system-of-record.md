@@ -1,10 +1,10 @@
-# 11. Definition of the TigerData systems of record.
+# 12. Definition of the TigerData systems of record.
 
 Date: 2025-10-27
 
 ## Status
 
-Draft
+Accepted
 
 ## Context
 Like many systems on campus, the TigerData is comprised of entities that contain metadata generated and stored in various applications and databases.  A simple example of this may be that a data sponsor is associated with a TigerData project, but the details of that sponsor originate from an external system such as LDAP (ultimately from the university's ERP). 
