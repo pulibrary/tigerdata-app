@@ -2,9 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
   "env": {
     "DEVBOX_COREPACK_ENABLED": "true",
-    "TMPDIR":                  "/private/tmp/tigerdata",
-    "LD_LIBRARY_PATH":         "$PWD/.devbox/nix/profile/default/lib",
-    "FONTCONFIG_PATH":         "$PWD/.devbox/nix/profile/default/etc/fonts"
+    "TMPDIR": "/private/tmp/tigerdata",
+    "LD_LIBRARY_PATH": "$PWD/.devbox/nix/profile/default/lib",
+    "FONTCONFIG_PATH": "$PWD/.devbox/nix/profile/default/etc/fonts"
   },
   "packages": {
     "ruby": "3.3.0",
@@ -17,7 +17,7 @@
       "outputs": ["out", "libv8"]
     },
     "jdk": {
-      "version":        "19",
+      "version": "19",
       "allow_insecure": ["zulu-ca-jdk-19.0.2"]
     },
     "yarn": "1.22.22",
@@ -29,14 +29,14 @@
       "version": "latest",
       "outputs": ["out", "dev"]
     },
-    "pkg-config":   "latest",
+    "pkg-config": "latest",
     "chromedriver": "latest",
     "lastpass-cli": "latest",
-    "prettier":     "latest",
-    "gnupg":        "latest",
-    "msgpack":      "latest",
-    "tzdata":       "latest",
-    "git":          "latest"
+    "prettier": "latest",
+    "gnupg": "latest",
+    "msgpack": "latest",
+    "tzdata": "latest",
+    "git": "latest"
   },
   "shell": {
     "init_hook": ["mkdir -p $TMPDIR"],
