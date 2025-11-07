@@ -8,6 +8,4 @@
             locals: {data_manager: @request_model.data_manager || "", data_manager_name: @request_model.data_manager_name, data_manager_error: @request_model.errors[:data_manager].join(", ") } %>
 <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: "" } %>
 
-<script type="module">
-  userRolesAutocomplete("<%= users_lookup_url %>");
-</script>
+<input id="users_lookup_url" type="hidden" value="<%= users_lookup_url %>"/>

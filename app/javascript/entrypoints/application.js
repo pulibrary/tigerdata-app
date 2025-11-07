@@ -40,10 +40,6 @@ window.showMoreLess = showMoreLess;
 window.projectStyle = projectStyle;
 window.projectTab = projectTab;
 
-// This makes userRolesAutocomplete available as a script module which allows us
-// to pass Rails parameters from the view to the JavaScript code.
-window.userRolesAutocomplete = userRolesAutocomplete;
-
 async function fetchListContents(listContentsPath) {
   const response = await fetch(listContentsPath);
 
@@ -208,6 +204,7 @@ function initPage() {
   departmentAutocomplete();
   validationClear();
   titleCopySaveExit();
+  userRolesAutocomplete();
 }
 
 window.addEventListener('load', () => initPage());

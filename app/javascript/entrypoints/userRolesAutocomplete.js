@@ -146,7 +146,8 @@ function moveNewUsers() {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function userRolesAutocomplete(usersLookupUrl) {
+export function userRolesAutocomplete() {
+  const usersLookupUrl = document.querySelector('#users_lookup_url').value;
   // Debounce is used to limit the number of times a function is called in a short period of time.
   // source: https://github.com/jrrio/datalist-autocomplete-ajax/blob/main/main.js#L159C3-L166C5
   // see also: https://www.geeksforgeeks.org/javascript/debouncing-in-javascript/
