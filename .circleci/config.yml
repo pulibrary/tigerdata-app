@@ -21,7 +21,7 @@ orbs:
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.0-browsers
+      - image: cimg/ruby:3.4.7-browsers
         environment:
           RAILS_ENV: ci
     resource_class: small
