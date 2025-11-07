@@ -12,8 +12,7 @@ RSpec.describe Mediaflux::StringReverse, connect_to_mediaflux: true, type: :mode
   describe "#resolve" do
     it "reverses a string using a service provided by mediaflux" do
       request.resolve
-
-      expect(request).to eq("!xulafideM ,olleH")
+      expect(request.response_body).to match(/!xulfaideM ,olleH/)
     end
   end
 end
