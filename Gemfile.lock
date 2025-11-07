@@ -264,6 +264,11 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    libv8-node (24.1.0.0)
+    libv8-node (24.1.0.0-aarch64-linux)
+    libv8-node (24.1.0.0-arm64-darwin)
+    libv8-node (24.1.0.0-x86_64-darwin)
+    libv8-node (24.1.0.0-x86_64-linux)
     logger (1.7.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
@@ -288,6 +293,8 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
+    mini_racer (0.19.1)
+      libv8-node (~> 24.1.0.0)
     minitest (5.25.5)
     msgpack (1.8.0)
     mustermann (3.0.4)
@@ -643,6 +650,7 @@ DEPENDENCIES
   jbuilder
   kaminari
   mailcatcher
+  mini_racer
   mutex_m (~> 0.2.0)
   net-http-persistent
   net-ldap
@@ -660,6 +668,7 @@ DEPENDENCIES
   rspec-retry
   rspec_junit_formatter
   ruby-prof
+  sassc-rails
   selenium-webdriver
   sidekiq
   simplecov
