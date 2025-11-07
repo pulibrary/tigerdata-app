@@ -4,18 +4,29 @@ require "rails_helper"
 describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(current_user:) }
 
-  let(:current_user) { FactoryBot.create :user, uid: "tigerdatatester" }
-  let(:other_user) { FactoryBot.create :user }
-  let(:project1) { FactoryBot.create :project, data_manager: other_user.uid, data_sponsor: other_user.uid }
-  let(:project2) { FactoryBot.create :project, data_user_read_only: ["tigerdatatester"], updated_at:  ActiveSupport::TimeZone.new("America/New_York").yesterday }
+  let(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:other_user) { FactoryBot.create :user, uid: "kl37" }
 
-  before do
-    # make sure the database is setup before the tests
-    current_user
-    other_user
-    project1
-    project2
-  end
+  let(:request1) { FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: other_user.uid }
+  let(:request2) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: current_user.uid }
+  let(:request3) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
+  let(:request4) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid }
+
+  let!(:project1) { request1.approve(current_user) }
+  let!(:project2) {
+    project = request2.approve(current_user)
+    project.updated_at = ActiveSupport::TimeZone.new("America/New_York").yesterday
+    project.save!
+    project
+  }
+
+  let!(:project3) {
+    project = request3.approve(current_user)
+    project.updated_at = ActiveSupport::TimeZone.new("America/New_York").tomorrow
+    project.save!
+    project
+  }
+  let!(:project4) { request4.approve(current_user) }
 
   describe "#all_projects" do
     it "returns an empty array for a normal user" do
@@ -23,21 +34,32 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     context "for a sysadmin" do
-      let(:current_user) { FactoryBot.create :sysadmin, uid: "tigerdatatester" }
+      before do
+        current_user.developer = true # so that is detected as a sysadmin
+      end
 
-      it "returns the list of all projects in sorted order" do
-        expect(presenter.all_projects.count).to eq(2)
-        expect(presenter.all_projects.map(&:id)).to eq([project1.id, project2.id])
+      it "returns the list of all projects, sorted" do
+        expect(presenter.all_projects.count).to eq(4)
+        expect(presenter.all_projects.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
       end
     end
   end
 
   describe "dashboard_projects" do
-      it "returns the list of all of the user's projects in sorted order" do
-        project3 = FactoryBot.create :project, data_user_read_only: ["tigerdatatester"], updated_at:  ActiveSupport::TimeZone.new("America/New_York").tomorrow
-        expect(presenter.dashboard_projects.count).to eq(2)
-        expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project2.id])
+      it "returns the list of the user's projects, sorted" do
+        expect(presenter.dashboard_projects.count).to eq(3)
+        expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
       end
+  end
+
+  describe "#role" do
+    it "detects the proper roles for each project" do
+      projects = presenter.dashboard_projects
+      expect(projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
+      expect(projects[0].role(current_user)).to be "Data User"
+      expect(projects[1].role(current_user)).to be "Data Manager"
+      expect(projects[2].role(current_user)).to be "Sponsor"
+    end
   end
 
   describe "my_inventory_requests" do

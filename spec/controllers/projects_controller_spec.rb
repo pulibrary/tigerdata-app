@@ -3,17 +3,20 @@ require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.create :project }
+  let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
   end
 
   describe "#details" do
-    it "renders an error when requesting json" do
-      get :details, params: { id: project.id, format: :json }
-      expect(response.content_type).to eq("application/json; charset=utf-8")
-      expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
+    context "not signed in" do
+      it "renders an error when requesting json" do
+        get :details, params: { id: project.id, format: :json }
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
+      end
     end
 
     context "a signed in user" do
@@ -38,11 +41,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
         it "shows affiliation code as being saved to the project" do
           get :details, params: { id: project.id, format: :json }
-          expect(JSON.parse(response.body)["departments"]).to include("55555")
-            .or(include("66666"))
-            .or(include("77777"))
-            .or(include("88888"))
-            .or(include("99999"))
+          expect(JSON.parse(response.body)["departments"]).to include("RDSS").or(include("RC"))
         end
 
         it "renders the project metadata as xml", :integration do
@@ -196,12 +195,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       context "a user who has project access" do
         let(:user) { User.find_by(uid: project.metadata_model.data_sponsor) }
 
-        it "does not contact mediaflux" do
+        it "does contact mediaflux" do
           allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
 
           get :show, params: { id: project.id }
 
-          expect(Mediaflux::QueryRequest).not_to have_received(:new)
+          expect(Mediaflux::QueryRequest).to have_received(:new)
           expect(response.body).to eq("")
         end
 
@@ -277,10 +276,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
     let(:current_user) { sponsor_and_data_manager }
-    let(:project) { FactoryBot.create(:project, data_sponsor: current_user.uid, data_manager: current_user.uid, title: "project 111") }
+    let!(:project) do
+      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: current_user.uid, data_sponsor: current_user.uid
+      request.approve(sponsor_and_data_manager)
+    end
 
     before do
-      project
       sign_in(current_user)
     end
 

@@ -2,8 +2,196 @@
 @import "typography";
 @import "bootstrap";
 
+.black-circle {
+  width: 4rem;
+  height: 4rem;
+  background: url("black_circle.svg") no-repeat;
+}
+
+.floppy-disk {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  background: url("floppy_disk.svg") no-repeat;
+}
+
+.request-heading {
+  color: #111827;
+  font-family: "Libre Franklin";
+  font-size: 2.25rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2.5rem; /* 111.111% */
+  padding-top: 2.06;
+  padding-bottom: 1.13rem;
+}
+
+.request-subheading {
+  color: #4b5563;
+  text-align: center;
+  font-family: "Libre Franklin";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.75rem; /* 140% */
+  padding-bottom: 2.06rem;
+}
+
+.return-dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding-bottom: 1rem;
+
+  .btn {
+    height: 2.5rem;
+  }
+}
+
+.saved-summary {
+  width: 14.0625rem;
+  height: 2rem;
+  flex-shrink: 0;
+  color: #111827;
+  font-family: "Libre Franklin";
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2rem; /* 133.333% */
+}
+
+.blue-box {
+  width: 75.1875rem;
+  padding: 1rem 1.5rem;
+  align-items: center;
+  border-radius: 0.75rem;
+  background: var(--Status-Info, #e6eef8);
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.pul-container {
+  display: flex;
+}
+
+/* Tooltip container */
+.pul-info {
+  position: relative;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1/1;
+  background: url("info.svg") no-repeat;
+}
+
+.pul-info-text {
+  color: var(--Neutral-Black, #121212);
+
+  /* Heading 6 */
+  font-family: "Libre Franklin";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.25rem; /* 125% */
+}
+
+.box-subheading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pul-info-subheading {
+  color: var(--Neutral-Black, #121212);
+
+  /* Body XS */
+  font-family: "Libre Franklin";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3125rem; /* 150% */
+  padding-left: 25px;
+}
+
+.continue-edit {
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.25rem;
+}
+
 .request-fields {
   padding-top: 30px;
+  list-style-type: none;
+  width: 75rem;
+  height: auto;
+  flex-shrink: 0;
+  padding-left: 0rem;
+}
+
+@mixin heading-style {
+  color: var(--Neutral-Black, #121212);
+
+  /* Body Bold */
+  font-family: "Libre Franklin";
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6875rem; /* 150% */
+  margin-bottom: 1.5rem;
+}
+
+.detail-heading {
+  @include heading-style;
+  display: flex;
+}
+
+.heading-text {
+  padding-right: 63.5rem;
+}
+
+.edit-link {
+  @include heading-style;
+  margin-bottom: 0rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.basic-info {
+  padding-left: 5rem;
+}
+
+.detail-subheading {
+  @include heading-style;
+  font-size: 1rem;
+  line-height: 1.5rem; /* 150% */
+  width: 11.5rem;
+  margin-right: 1.25rem;
+}
+
+.storage-heading {
+  @include heading-style;
+  font-weight: 400;
+  width: 11.5rem;
+  margin-right: 1.25rem;
+}
+
+.detail-value {
+  @include heading-style;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem; /* 150% */
+}
+
+.detail-pair {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .horizontal-frame {

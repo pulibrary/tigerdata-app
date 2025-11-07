@@ -22,6 +22,30 @@ class RequestPresenter
     full_name(request.data_manager)
   end
 
+  def project_directory
+    request.parent_folder.present? ? File.join(request.parent_folder, request.project_folder) : request.project_folder
+  end
+
+  def departments_list
+    return "" if request.departments.blank?
+    dept_list = []
+    request.departments.each do |dept|
+      dept_list << "#{dept['name']} (#{dept['code']})"
+    end
+    dept_list.join(", ")
+  end
+
+  def user_list
+    return "" if request.user_roles.blank?
+    usr_list = []
+    request.user_roles.each do |usr|
+      name = full_name(usr["uid"])
+      name += " read only" if usr["read_only"]
+      usr_list << name
+    end
+    usr_list.join(", ")
+  end
+
   def full_name(uid)
     return "" if uid.blank?
     user = User.find_by(uid: uid)

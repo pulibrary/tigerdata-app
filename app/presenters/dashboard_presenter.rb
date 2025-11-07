@@ -6,14 +6,24 @@ class DashboardPresenter
   end
 
   def all_projects
+    # Short-cut to prevent an extra call to Mediaflux for non-admins
+    # which are the large majority of our users.
     return [] unless current_user&.eligible_sysadmin?
 
-    @all_projects ||= Project.all_projects.map { |project| ProjectDashboardPresenter.new(project) }.sort_by(&:updated_at).reverse
+    @all_projects ||= Project.all_projects(current_user)
+                             .map { |project| ProjectDashboardPresenter.new(project, current_user) }
+                             .select(&:project_in_rails?)
+                             .sort_by(&:updated_at)
+                             .reverse
     @all_projects
   end
 
   def dashboard_projects
-    @dashboard_projects ||= Project.users_projects(current_user).map { |project| ProjectDashboardPresenter.new(project) }.sort_by(&:updated_at).reverse
+    @dashboard_projects ||= Project.users_projects(current_user)
+                                   .map { |project| ProjectDashboardPresenter.new(project, current_user) }
+                                   .select(&:project_in_rails?)
+                                   .sort_by(&:updated_at)
+                                   .reverse
     @dashboard_projects
   end
 

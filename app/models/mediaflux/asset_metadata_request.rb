@@ -83,11 +83,11 @@ module Mediaflux
           type: asset.xpath("./type").text,
           namespace: asset.xpath("./namespace").text,
           accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
-        }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first))
+        }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first, asset))
       end
 
       # rubocop:disable Metrics/MethodLength
-      def parse_project(project)
+      def parse_project(project, asset)
         return {} if project.blank?
         metadata = {
           description: project.xpath("./Description").text,
@@ -96,16 +96,28 @@ module Mediaflux
           departments: project.xpath("./Department").children.map(&:text),
           project_directory: project.xpath("./ProjectDirectory").text,
           project_id: project.xpath("./ProjectID").text,
-          ro_users: project.xpath("./DataUser[@ReadOnly]").map(&:text),
-          rw_users: project.xpath("./DataUser[not(@ReadOnly)]").map(&:text),
           submission: parse_submission(project),
           title: project.xpath("./Title").text,
           project_purpose: project.xpath("./ProjectPurpose").text
         }
-        metadata.merge(parse_project_dates(project))
-        metadata.merge(parse_storage_options(project))
+        metadata.merge!(parse_data_users(asset, project))
+        metadata.merge!(parse_project_dates(project))
+        metadata.merge!(parse_storage_options(project))
       end
       # rubocop:enable Metrics/MethodLength
+
+      # NOTE: We are still using the "DataUser" attribute in the Project Metadata
+      # to drive the list of users who can read and/or write to the Mediaflux
+      # asset. In the future we could go by the ACL information in the asset
+      # alone (and bypass the DataUser attribute) and that will be more accurate.
+      def parse_data_users(asset, project)
+        data_users = data_users_from_string(project.xpath("./DataUser").text)
+        rw_users = parse_read_write_users(asset, data_users)
+        {
+          rw_users: rw_users,
+          ro_users: data_users - rw_users
+        }
+      end
 
       def parse_project_dates(project)
         {
@@ -133,6 +145,25 @@ module Mediaflux
           approved_by: submission.xpath("./ApprovedBy").text,
           approved_on: submission.xpath("./ApprovalDateTime").text
         }
+      end
+
+      def data_users_from_string(users)
+        return [] if users.blank?
+        users.split(",").compact_blank
+      end
+
+      # Calculates which of the `data_users` listed in the metadata have
+      # write access in Mediaflux for the given asset.
+      def parse_read_write_users(asset, data_users)
+        users = asset.xpath("./acl").map do |acl|
+          uid = acl.xpath("./actor").text.gsub("princeton:", "")
+          if data_users.include?(uid) && acl.xpath("./metadata").map(&:text).include?("write")
+            uid
+          else
+            ""
+          end
+        end
+        users.compact_blank
       end
   end
 end

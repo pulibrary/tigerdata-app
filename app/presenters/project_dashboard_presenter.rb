@@ -4,8 +4,6 @@ class ProjectDashboardPresenter < ProjectShowPresenter
 
   delegate :to_model, :updated_at, to: :project
 
-  delegate :data_sponsor, :data_manager, to: :project_metadata
-
   def type
     if storage_performance_expectations["approved"].nil?
       "Requested #{storage_performance_expectations['requested']}"
@@ -34,9 +32,9 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def role(user)
-    if data_sponsor == user.uid
+    if data_sponsor.uid == user.uid
       "Sponsor"
-    elsif data_manager == user.uid
+    elsif data_manager.uid == user.uid
       "Data Manager"
     else
       "Data User"
@@ -44,7 +42,7 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   end
 
   def path
-    "/#{project_metadata.project_directory}"
+    project_directory
   end
 
   # Removes "about" (as in "about 1 month ago") from time_ago_in_words

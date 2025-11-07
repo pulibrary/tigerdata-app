@@ -54,8 +54,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Roles and People"
-      fill_in :request_data_sponsor, with: datasponsor.uid
-      fill_in :request_data_manager, with: datamanager.uid
+      select_user(datasponsor, "request_data_sponsor", "request[data_sponsor]")
+      select_user(datamanager, "request_data_manager", "request[data_manager]")
       click_on "Review and Submit"
       expect(page).to have_content "Take a moment to review"
       click_on "Submit"
@@ -97,8 +97,8 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Roles and People"
-      fill_in :request_data_sponsor, with: datasponsor.uid
-      fill_in :request_data_manager, with: datamanager.uid
+      select_user(datasponsor, "request_data_sponsor", "request[data_sponsor]")
+      select_user(datamanager, "request_data_manager", "request[data_manager]")
       click_on "Review and Submit"
       expect(page).to have_content "Take a moment to review"
       click_on "Submit"
@@ -112,25 +112,26 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
   end
 
   context "user" do
-    let(:datasponsor) { FactoryBot.create(:project_sponsor) }
-    let(:project) { FactoryBot.create(:project, data_sponsor: datasponsor.uid, data_manager: datamanager.uid) }
-    let(:project_2) { FactoryBot.create(:project, data_sponsor: datasponsor.uid, data_manager: datamanager.uid, data_user_read_write: [user_b.uid]) }
-    let(:datamanager) { FactoryBot.create(:data_manager) }
-    let(:user_a) { FactoryBot.create(:user) }
-    let(:user_b) { FactoryBot.create(:user) }
+    let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:user_a) { FactoryBot.create(:user, uid: "cac9") }
+    let(:user_b) { FactoryBot.create(:user, uid: "jrg5") }
+    let(:request1) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester" }
+    let(:project1) { request1.approve(sponsor_and_data_manager_user) }
+    let(:request2) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }] }
+    let(:project2) { request2.approve(sponsor_and_data_manager_user) }
     it "does not allow a user to see someone elses project" do
       sign_in user_a
-      visit "/projects/#{project.id}"
+      visit "/projects/#{project1.id}"
       expect(page).to have_content("Access Denied")
-      visit "/projects/#{project.id}.xml"
+      visit "/projects/#{project1.id}.xml"
       expect(page).to have_content("Access Denied")
     end
     it "allows a user to see a project they are affiliated with" do
       sign_in user_b
-      visit "/projects/#{project_2.id}"
-      expect(page).to have_content(project_2.title)
-      visit "/projects/#{project_2.id}.xml"
-      expect(page.body).to include(project_2.title)
+      visit "/projects/#{project2.id}"
+      expect(page).to have_content(project2.title)
+      visit "/projects/#{project2.id}.xml"
+      expect(page.body).to include(project2.title)
     end
   end
 end

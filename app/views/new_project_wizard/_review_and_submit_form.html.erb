@@ -18,8 +18,10 @@
       Roles and People
       </div>
     </div>
-    <%= render partial: "/new_project_wizard/form_data_sponsor_input", locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_error: @request_model.errors[:data_sponsor].join(", ") } %>
-    <%= render partial: "/new_project_wizard/form_data_manager_input", locals: {data_manager: @request_model.data_manager || "", data_manager_error: @request_model.errors[:data_manager].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_data_sponsor_input", 
+               locals: {data_sponsor: @request_model.data_sponsor || "", data_sponsor_name: @request_model.data_sponsor_name, data_sponsor_error: @request_model.errors[:data_sponsor].join(", ") } %>
+    <%= render partial: "/new_project_wizard/form_data_manager_input", 
+               locals: {data_manager: @request_model.data_manager || "", data_manager_name: @request_model.data_manager_name, data_manager_error: @request_model.errors[:data_manager].join(", ") } %>
     <%= render partial: "/new_project_wizard/form_user_roles_input", locals: {user_roles: @request_model.user_roles || [], user_roles_error: @request_model.errors[:user_roles].join(", ") } %>
 </div>
 <div class="section-line"></div>
@@ -35,6 +37,4 @@
 </div>
 <div class="section-line"></div>
 
-<script type="module">
-  userRolesAutocomplete("<%= users_lookup_url %>");
-</script>
+<input id="users_lookup_url" type="hidden" value="<%= users_lookup_url %>"/>

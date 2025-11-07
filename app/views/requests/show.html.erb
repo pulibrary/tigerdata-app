@@ -1,61 +1,143 @@
 <div class="heading-frame">
-  <div class="heading-text">
-    <%= @request_model.project_title %>
+  <% if @request_model.error_message.present? %>
+  <p class="error-field">There was an error with this request</p>
+  <textarea class="disabled-field" rows="10" cols="50">
+      <%= @request_model.error_message %>
+    </textarea>
+  <% end %>
+
+  <div class="black-circle">
+    <div class="floppy-disk">
+    </div>
   </div>
-<div class="deco-line"></div>
 
-<div class="request-description">
-  This screen is a review of the request. No project has been created yet.
-</div>
+  <div class="request-heading">Your new project request has been saved</div>
+  <div class="request-subheading">Your project has been saved and may be edited</div>
+  <div class="return-dashboard">
+    <%= link_to "Return to Dashboard", dashboard_path, class: "btn btn-dark" %>
+    <div class="horizontal-frame">
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if @request_model.submitted?%>
+          <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark" %>
+          <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+    <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+  </svg>
 
-<div class="horizontal-frame">
+  <div class="saved-summary">Saved Summary</div>
     <% if @request_presenter.eligible_to_edit?(current_user)%>
       <% if !@request_model.submitted?%>
-        <%= link_to "Edit request", new_project_review_and_submit_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-      <% else %>
-        <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark btn-sm" %>
-        <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+        <div class="blue-box">
+          <div class="box-heading">
+              <div class="pul-container">
+                <div class="pul-info"> </div>
+                <div class="pul-info-text">This new project request has not been submitted.</div>
+              </div>
+              <div class="box-subheading">
+                <div class="pul-info-subheading">Continue editing your request to submit it.</div>
+              </div>
+          </div>
+          <div class="continue-edit">
+            <%= link_to "Continue Editing", new_project_project_info_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+          </div>
+        </div>
       <% end %>
     <% end %>
+  </div>
+
+  <ul class="request-fields">
+    <div class="detail-heading">
+      <div class="heading-text">Basic Info </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+          <%= link_to "Edit", new_project_project_info_path(@request_model.id), class: "edit-link basic-info"%>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Project Title</li>
+      <p class="detail-value"><%= @request_model.project_title %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Project Directory</li>
+      <p class="detail-value"><%= @request_presenter.project_directory %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Project Purpose</li>
+      <p class="detail-value"><%= @request_model.project_purpose %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Project Description</li>
+      <p class="detail-value"><%=@request_model.description %></p>
+    </div>
+    <div class="detail-pair">
+        <li class="detail-subheading">Department(s)</li>
+        <p class="detail-value"><%=@request_presenter.departments_list %></p>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+      <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+    </svg>
+
+    <div class="detail-heading">
+      <div class="heading-text">Roles and People(s) </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+         <%= link_to "Edit", new_project_roles_and_people_path(@request_model.id), class: "edit-link roles-people"%>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Data Sponsor</li>
+      <p class="detail-value"> <%= @request_presenter.data_sponsor %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Data Manager</li>
+      <p class="detail-value"><%= @request_presenter.data_manager %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Data User(s)</li>
+      <p class="detail-value"><%=@request_presenter.user_list %></p>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+      <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+    </svg>
+
+    <div class="detail-heading">
+      <div class="heading-text">Storage and Access </div>
+      <% if @request_presenter.eligible_to_edit?(current_user)%>
+        <% if !@request_model.submitted?%>
+          <%= link_to "Edit", new_project_storage_and_access_path(@request_model.id), class: "edit-link storage-access"%>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Storage Needed</li>
+      <p class="detail-value"><%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="detail-subheading">Estimated Number of Files</li>
+      <p class="detail-value"><%= @request_model.number_of_files %></p>
+    </div>
+
+    <div class="detail-heading">Connection Options</div>
+    <div class="detail-pair">
+      <li class="storage-heading">Do you need to connect to HPC?</li>
+      <p class="detail-value"><%= @request_model.hpc %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="storage-heading">Do you need SMB (network file share)?</li>
+      <p class="detail-value"><%= @request_model.smb %></p>
+    </div>
+    <div class="detail-pair">
+      <li class="storage-heading">Do you need to enable Globus transfers?</li>
+      <p class="detail-value"> <%= @request_model.globus %></p>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+      <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+    </svg>
+  </ul>
 </div>
-
-<% if @request_model.error_message.present? %>
-<p class="error-field">There was an error with this request</p>
-<textarea class="disabled-field" rows="10" cols="50">
-    <%= @request_model.error_message %>
-  </textarea>
-<% end %>
-
-<ul class="request_model-fields">
-    <li>Request created at: <%= @request_model.created_at.strftime("%m/%d/%Y") %></li>
-    <li>Request updated at: <%= @request_model.updated_at.strftime("%m/%d/%Y") %></li>
-    <li>Project title: <%= @request_model.project_title %></li>
-    <li>Request state: <%= @request_model.state %></li>
-    <li>Data sponsor: <%= @request_presenter.data_sponsor %></li>
-    <li>Data manager: <%= @request_presenter.data_manager %></li>
-    <li>Data user(s):
-      <ul id="request-data-users">
-        <% (@request_model.user_roles || []).each do |data_user| %>
-          <li><%= "#{data_user["name"]} (#{data_user["uid"]})" %></li>
-        <% end %>
-      </ul>
-    </li>
-    <li>Department(s):
-      <ul id="request-data-departments">
-        <% (@request_model.departments || []).each do |department| %>
-          <li><%= "#{department["name"]} (#{department["code"]})" %></li>
-        <% end %>
-      </ul>
-  </li>
-    <li>Project Purpose: <%= @request_model.project_purpose %></li>
-    <li>Description: <%= @request_model.description %></li>
-    <li>Parent folder: <%= @request_model.parent_folder %></li>
-    <li>Project folder: <%= @request_model.project_folder %></li>
-    <li>Project ID: <%= @request_model.project_id %></li>
-    <li>Quota: <%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></li>
-    <li>Number of files: <%= @request_model.number_of_files %></li>
-    <li>High Performance Computing: <%= @request_model.hpc %></li>
-    <li>Network file share: <%= @request_model.smb %></li>
-    <li>Globus transfers: <%= @request_model.globus %></li>
-    <li>Requested by: <%= @request_model.requested_by %></li>
-</ul>
