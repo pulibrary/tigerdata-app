@@ -32,7 +32,10 @@
     "pkg-config": "latest",
     "chromedriver": "latest",
     "lastpass-cli": "latest",
-    "prettier": "latest"
+    "prettier": "latest",
+    "gnupg": "latest",
+    "msgpack": "latest",
+    "tzdata": "latest"
   },
   "shell": {
     "init_hook": ["mkdir -p $TMPDIR"],
