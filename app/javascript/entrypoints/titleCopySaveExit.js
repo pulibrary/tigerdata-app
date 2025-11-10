@@ -2,7 +2,7 @@
 export function titleCopySaveExit() {
   // Disable or enable the confirm button depending on if the title is empty
   function verify() {
-    if (document.getElementById('project_title_exit').value.trim() === "") {
+    if (document.getElementById('project_title_exit').value.trim() === '') {
       document.getElementById('save-exit-confirm').disabled = true;
     } else {
       document.getElementById('save-exit-confirm').disabled = false;
