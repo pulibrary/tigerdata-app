@@ -148,7 +148,7 @@ class ProjectShowPresenter
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
-    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.include?(user.uid)
+    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.map(&:uid).include?(user.uid)
   end
 
   def project_in_rails?

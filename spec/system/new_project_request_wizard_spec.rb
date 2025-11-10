@@ -38,6 +38,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # expect(page).to have_content "Related Resources"
       # click_on "Next"
       expect(page).to have_content "Take a moment to review"
+      expect(page).to have_button "Submit"
       click_on "Back"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Related Resources"
