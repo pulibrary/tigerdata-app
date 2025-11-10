@@ -22,5 +22,19 @@ RSpec.describe ProjectShowPresenter do
       expect(presenter.user_has_access?(user: rw_user)).to be true
       expect(presenter.user_has_access?(user: other_user)).to be false
     end
+
+    context "handles errors fetching metadata" do
+      before do
+        allow(project).to receive(:mediaflux_metadata).and_return({})
+      end
+
+      it "always prevent access if we don't have access to the metadata" do
+        expect(presenter.user_has_access?(user: data_sponsor)).to be false
+        expect(presenter.user_has_access?(user: data_manager)).to be false
+        expect(presenter.user_has_access?(user: ro_user)).to be false
+        expect(presenter.user_has_access?(user: rw_user)).to be false
+        expect(presenter.user_has_access?(user: other_user)).to be false
+      end
+    end
   end
 end
