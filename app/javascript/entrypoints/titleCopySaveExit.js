@@ -1,5 +1,14 @@
 // eslint-disable-next-line import/prefer-default-export
 export function titleCopySaveExit() {
+  // Disable or enable the confirm button depending on if the title is empty
+  function verify() {
+    if (document.getElementById('project_title_exit').value === '') {
+      document.getElementById('save-exit-confirm').disabled = true;
+    } else {
+      document.getElementById('save-exit-confirm').disabled = false;
+    }
+  }
+
   // copy the project title to the save and exit pop up so we show the user the latest
   $('#project_title').on('change', () => {
     const currentTitleValue = $('#project_title')[0].value;
@@ -15,15 +24,4 @@ export function titleCopySaveExit() {
   $('#project_title_exit').on('input', () => {
     verify();
   });
-
-  // Disable or enable the confirm button depending on if the title is empty
-  function verify() {
-    if (document.getElementById('project_title_exit').value === '') {
-      document.getElementById('save-exit-confirm').disabled = true;
-      return;
-    } else {
-      document.getElementById('save-exit-confirm').disabled = false;
-      return;
-    }
-  }
 }
