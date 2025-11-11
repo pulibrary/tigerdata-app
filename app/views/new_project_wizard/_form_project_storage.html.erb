@@ -91,7 +91,10 @@
             <div class="storage-type-option-container">
                 <div class="connection-options-text-container">
                     <div class="connection-options-text">Do you need to connect to High Performance Computing?</div>
-                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if you are a Princeton Research Computing user and you expect to need access to this project from </span><span style="color: var(--Neutral-Dark-Gray, #717171); font-size: 14px; font-family: Libre Franklin; font-weight: 400; text-decoration: underline; line-height: 21px; word-wrap: break-word">select HPC clusters</span><span class="storage-tooltip">.</span></div>
+                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if you are a Princeton Research Computing user and you expect to need access to this project from </span>
+                      <a class="storage-tooltip-link" href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Welcome-to-TigerData" target="_blank">select HPC clusters</a>
+                      <%= image_tag "open-icon.svg", alt: "" %>
+                    <span class="storage-tooltip">.</span></div>
                 </div>
                 <div data-selection="Default" class="connection-options-radio-buttons-container-container">
                     <div class="storage-options-section">
@@ -104,7 +107,7 @@
                         <div class="storage-option-radio-button-container">
                             <label for="hpc_no" class="storage-form-field-text">No</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >                            
+                              <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >
                             </div>
                           </div>
                         <div class="storage-option-radio-button-container">
@@ -147,7 +150,10 @@
             <div class="storage-type-option-container">
                 <div class="connection-options-text-container">
                     <div class="connection-options-text">Do you need to enable Globus transfers?</div>
-                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if the project will need its own </span><span style="color: var(--Neutral-Dark-Gray, #717171); font-size: 14px; font-family: Libre Franklin; font-weight: 400; text-decoration: underline; line-height: 21px; word-wrap: break-word">Globus</span><span class="storage-tooltip"> endpoint for high bandwidth data transfers.</span></div>
+                    <div style="align-self: stretch"><span class="storage-tooltip">Select 'Yes' if the project will need its own </span>
+                      <a class="storage-tooltip-link" href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Transfer-Tools" target="_blank">Globus</a>
+                      <%= image_tag "open-icon.svg", alt: "" %>
+                    <span class="storage-tooltip"> endpoint for high bandwidth data transfers.</span></div>
                 </div>
                 <div data-selection="Default" class="connection-options-radio-buttons-container-container">
                     <div class="storage-options-section">
