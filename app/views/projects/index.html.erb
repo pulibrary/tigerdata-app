@@ -1,7 +1,7 @@
 <h1>Projects</h1>
 
 <h2>Search</h2>
-<p> This feild searches the title of the projects.  It is case insensitive and you can add wild cards (eg. pop*). </p>
+<p> This field searches the title of the projects.  It is case insensitive and you can add wild cards (eg. pop*). </p>
 <%= form_with url: projects_path, method: :get do |form| %>
   <%= form.label :query, "Mediaflux Projects whose title matches:" %>
   <%= form.search_field :title_query, value: @title_query, style: "width: 100%" %>
@@ -11,11 +11,11 @@
 <br/>
 <h2>Results</h2>
   <ul>
-  <% @projects.each do |project| %>
+  <% @project_presentors.each do |presentor| %>
     <li>
-     <div><%= link_to(project.title, project) %></div>
-     <div>mediaflux id: <%= project.mediaflux_id %></div>
-     <div><%= project.metadata_model.project_directory %></div>
+     <div><%= link_to(presentor.title, presentor.project) %></div>
+     <div>Mediaflux id: <%= presentor.mediaflux_id %></div>
+     <div><%= presentor.project_directory %></div>
     </li>
   <% end %>
   </ul>

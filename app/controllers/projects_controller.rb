@@ -156,19 +156,22 @@ class ProjectsController < ApplicationController
     end
 
     def search_projects
-      @title_query = params[:title_query]
-      if @title_query.blank?
-        @projects = Project.all
-        flash[:notice] = nil
+      @title_query = if params[:title_query].present?
+        params[:title_query]
       else
-        result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
-        if result.success?
-          flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
-          @projects = result.value!
-        else
-          @projects = []
-          flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
-        end
+        "*" # default to all projects
+      end
+      result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
+      if result.success?
+        flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
+        # As of today the search results and the Dashboard show similar information (a list of projects)
+        # and it makes sense to use the same presenter. If once we flesh out the search feature the
+        # results becomes too different from each other we can create a specific presenter for the search
+        # results.
+        @project_presentors = result.value!.map { |project| ProjectDashboardPresenter.new(project, current_user) }
+      else
+        @project_presentors = []
+        flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
       end
     end
 end
