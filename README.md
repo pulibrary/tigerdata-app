@@ -26,7 +26,13 @@ The system will eventually have many roles.  Please refer to the [docs for a des
 
 ## Local development
 
-### Setup
+### Setup (Devbox)
+
+1. Install devbox (./bin/first-time-setup.sh)
+1. `devbox shell`
+1. `devbox run setup`
+
+### Setup (Manual)
 
 1. Check out code and `cd`
 1. Install tool dependencies; If you've worked on other PUL projects they will already be installed.

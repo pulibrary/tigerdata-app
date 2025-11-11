@@ -38,6 +38,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # expect(page).to have_content "Related Resources"
       # click_on "Next"
       expect(page).to have_content "Take a moment to review"
+      expect(page).to have_button "Submit"
       click_on "Back"
       # TODO: when the wizard is fully functional the correct next step(s) are below
       # expect(page).to have_content "Related Resources"
@@ -326,6 +327,42 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Exit without Saving"
         expect(page).to have_content("Welcome")
       end.not_to change { Request.count }
+    end
+
+    it "does not allow save and exit for a request with missing titles" do
+      sign_in current_user
+      visit "new-project/project-info"
+      expect do
+        expect(page).to have_content "Basic Details"
+        fill_in :project_title, with: ""
+        click_on "Save and exit"
+        expect(page).to have_content "will be saved as draft"
+        expect(page).to have_field("project_title_exit", with: "")
+        expect(page).to have_button("Confirm", disabled: true)
+        fill_in :project_title_exit, with: "A basic Project updated"
+        expect(page).to have_button("Confirm", disabled: false)
+        click_on "Confirm"
+        expect(page).to have_content("Your new project request has been saved")
+        expect(page).to have_content("A basic Project updated")
+      end.to change { Request.count }.by(1)
+    end
+
+    it "does not allow save and exit for a request with an empty titles with spaces" do
+      sign_in current_user
+      visit "new-project/project-info"
+      expect do
+        expect(page).to have_content "Basic Details"
+        fill_in :project_title, with: "   "
+        click_on "Save and exit"
+        expect(page).to have_content "will be saved as draft"
+        expect(page).to have_field("project_title_exit", with: "   ")
+        expect(page).to have_button("Confirm", disabled: true)
+        fill_in :project_title_exit, with: "A basic Project updated"
+        expect(page).to have_button("Confirm", disabled: false)
+        click_on "Confirm"
+        expect(page).to have_content("Your new project request has been saved")
+        expect(page).to have_content("A basic Project updated")
+      end.to change { Request.count }.by(1)
     end
 
     it "allows for save and exit" do
