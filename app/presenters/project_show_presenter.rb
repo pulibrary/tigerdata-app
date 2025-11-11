@@ -22,7 +22,7 @@ class ProjectShowPresenter
       @project = rails_project(@project_mf)
     else
       @project = project
-      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session) if current_user.present?
+      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     end
     @project_metadata = @project&.metadata_model
   end
@@ -148,7 +148,7 @@ class ProjectShowPresenter
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
-    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.map(&:uid).include?(user.uid)
+    data_sponsor&.uid == user.uid || data_manager&.uid == user.uid || data_users.map(&:uid).include?(user.uid)
   end
 
   def project_in_rails?
