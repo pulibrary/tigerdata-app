@@ -166,12 +166,12 @@ class ProjectsController < ApplicationController
         flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
         # As of today the search results and the Dashboard show similar information (a list of projects)
         # and it makes sense to use the same presenter. If once we flesh out the search feature the
-        # results becomes too different from each other we can create a specific presenter for the search
+        # results become too different from each other we can create a specific presenter for the search
         # results.
-        @project_presentors = result.value!.map { |project| ProjectDashboardPresenter.new(project, current_user) }
+        @project_presenters = result.value!.map { |project| ProjectDashboardPresenter.new(project, current_user) }
       else
-        @project_presentors = []
         flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
+        @project_presenters = []
       end
     end
 end

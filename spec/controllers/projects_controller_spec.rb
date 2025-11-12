@@ -93,9 +93,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in sysadmin user" do
-      let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop") }
-      let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
-      let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda") }
+      let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop", data_sponsor: sponsor_and_data_manager.uid) }
+      let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop", data_sponsor: sponsor_and_data_manager.uid) }
+      let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda", data_sponsor: sponsor_and_data_manager.uid) }
 
       let!(:project1) { create_project_in_mediaflux(request: request1, current_user: sponsor_and_data_manager) }
       let!(:project2) { create_project_in_mediaflux(request: request2, current_user: sponsor_and_data_manager) }
@@ -115,24 +115,24 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       it "Shows all the project" do
         get :index
         expect(response).to render_template("index")
-        expect(assigns[:projects].count).to eq(3)
-        expect(assigns[:projects]).to include project1
-        expect(assigns[:projects]).to include project2
-        expect(assigns[:projects]).to include project3
+        expect(assigns[:project_presenters].count).to eq(3)
+        expect(assigns[:project_presenters].map(&:id)).to include project1.id
+        expect(assigns[:project_presenters].map(&:id)).to include project2.id
+        expect(assigns[:project_presenters].map(&:id)).to include project3.id
       end
 
       it "Shows the queried project(s)" do
         get :index, params: { title_query: "orange pop" }
         expect(response).to render_template("index")
-        expect(assigns[:projects]).to eq([project2])
+        expect(assigns[:project_presenters].first.id).to eq(project2.id)
 
         # doing a second search in one test so we do not have to setup all the projects yet another time
         get :index, params: { title_query: "*soda*" }
         expect(response).to render_template("index")
-        expect(assigns[:projects].count).to eq(2)
-        expect(assigns[:projects]).to include project1
-        expect(assigns[:projects]).not_to include project2
-        expect(assigns[:projects]).to include project3
+        expect(assigns[:project_presenters].count).to eq(2)
+        expect(assigns[:project_presenters].map(&:id)).to include project1.id
+        expect(assigns[:project_presenters].map(&:id)).not_to include project2.id
+        expect(assigns[:project_presenters].map(&:id)).to include project3.id
       end
     end
   end

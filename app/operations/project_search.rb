@@ -34,18 +34,20 @@ class ProjectSearch < Dry::Operation
 
 
     def convert_results(result_ids)
-        errors = []
-        projects = result_ids.map do |mediaflux_id|
-          project = Project.find_by(mediaflux_id: )
-          if project.blank?
-            errors << mediaflux_id
-          end
-          project
-        end
-        if errors.count > 0
-          Failure("The following Mediaflux Projects were not found in the Rails database: #{errors.join(', ')}")
+      projects_not_found = []
+      projects = []
+      result_ids.map do |mediaflux_id|
+        project = Project.find_by(mediaflux_id: )
+        if project.blank?
+          projects_not_found << mediaflux_id
         else
-          Success(projects)
+          projects << project
         end
+      end
+      if projects_not_found.count > 0
+        Rails.logger.error("The following Mediaflux Projects were not found in the Rails database: #{projects_not_found.join(', ')}")
+        Honeybadger.notify("The following Mediaflux Projects were not found in the Rails database: #{projects_not_found.join(', ')}")
+      end
+      Success(projects)
     end
 end

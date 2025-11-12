@@ -51,7 +51,7 @@ RSpec.describe "Project Index Page", type: :system do
     it "shows the existing projects" do
       visit "/projects"
       expect(page).not_to have_content("Access Denied")
-      expect(page).to have_link(project_not_in_mediaflux.title)
+      expect(page).not_to have_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
       expect(page).to have_content(project1.metadata_model.project_directory)
       expect(page).to have_content(project1.mediaflux_id)
