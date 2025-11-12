@@ -1,8 +1,8 @@
 <div class="form-field data-manager">
   <%= render partial: "/new_project_wizard/form_field_label",
-           locals: {field_label: "Data Manager", field_sub_label: "Required"} %>
+           locals: {field_label: "Data Manager", field_sub_label: "Required",
+           tooltip: "The steward of a TigerData project; responsible for project data management, metadata entry, policy compliance, data movement, and more."} %>
   <%= render partial: "/new_project_wizard/form_user_input",
-           locals: {field_name: "data_manager", field_value: data_manager_name, field_error: data_manager_error, field_id_value: data_manager,
-                    tooltip: "The steward of a TigerData project; responsible for project data management, metadata entry, policy compliance, data movement, and more."
+           locals: {field_name: "data_manager", field_value: data_manager_name, field_error: data_manager_error, field_id_value: data_manager
                     } %>
 </div>

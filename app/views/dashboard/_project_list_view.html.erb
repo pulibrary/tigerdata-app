@@ -18,7 +18,7 @@
         <div class="storage-details">
           <div class="storage">
             <div class="w3-light-grey w3-round-xlarge">
-                <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
+                <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session, dashboard: true) %>%"></div>
             </div>
             <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
           </div>
