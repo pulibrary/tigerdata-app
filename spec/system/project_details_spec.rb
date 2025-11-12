@@ -193,16 +193,16 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
         expect(page).to have_content project.project_directory
         expect(page).to have_content project.title
-        expect(page).to have_content "Mediaflux id"
+        expect(page).to have_content "Mediaflux ID"
         expect(page).to have_content project.mediaflux_id
       end
 
-      it "does not show the mediaflux id to the sponsor" do
+      it "does not show the Mediaflux ID to the sponsor" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
         expect(page).to have_content project.project_directory
         expect(page).to have_content project.title
-        expect(page).not_to have_content "Mediaflux id"
+        expect(page).not_to have_content "Mediaflux ID"
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")
       end
