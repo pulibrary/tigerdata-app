@@ -8,7 +8,34 @@
 </div>
 
 <div class="details">
-  <h2>Roles
+  <h2>Basic Details
+    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
+    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
+  </h2>
+  <dl>    
+    <dt>Project Title</dt>
+    <dd><%= @presenter.title %></dd>
+    <dt>Project ID</dt>
+    <dd id="project_id"><%= @presenter.project_id %></dd>
+    <dt>Project Directory</dt>
+    <dd><%= @presenter.project_directory %></dd>
+    <dt>Project Purpose</dt>
+    <dd><%= @presenter.project_purpose %></dd>
+    <dt>Project Description:<dt/> 
+    <dd><%= @presenter.description %></dd>
+    <dt>Department(s)</dt>
+    <% if @presenter.departments.empty? %>
+      <dd><strong class="px-0">None</strong></dd>
+    <% else %>
+      <dd>
+        <%= @presenter.departments.join(", ") %>
+      </dd>
+    <% end %>
+  </dl>
+</div>
+
+<div class="details">
+  <h2>Roles and People
     <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
     <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
   </h2>
@@ -26,7 +53,7 @@
       </dd>
     <% end %>
 
-    <dt>Data Users</dt>
+    <dt>Data User(s)</dt>
     <% if @presenter.data_users.count > 0 %>
       <dd>
         <%= @presenter.data_user_names %>
@@ -40,29 +67,47 @@
 </div>
 
 <div class="details">
-  <h2>Project Description
-    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
-    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-  </h2>
-  <dl>
-    <dt>Departments</dt>
-    <% if @presenter.departments.empty? %>
-      <dd><strong class="px-0">None</strong></dd>
-    <% else %>
-      <dd>
-        <%= @presenter.departments.join(", ") %>
-      </dd>
-    <% end %>
-    <dt>Project Directory</dt>
-    <dd><%= @presenter.project_directory %></dd>
-    <dt>Title</dt>
-    <dd><%= @presenter.title %></dd>
-    <dt>Description:<dt/> <dd><%= @presenter.description %></dd>
-  </dl>
-</div>
+  <h2>Storage and Access</h2>
+<dl>
+    <dt>Storage Capacity</dt>
+    <dd>
+        <dl>
+            <div class="approved-details">
+                <dt>Requested</dt>
+                <dd><%= "#{@requested_size} #{@requested_unit}" %></dd>
+                <dt>Approved</dt>
+                <dd><%= "#{@approved_size} #{@approved_unit}" %></dd>
+            </div>
+        </dl>
+    </dd>
+    <!-- The HTML &nbsp; is to make sure the `dd` element aligns with the proper `dt` when is empty -->
+    <dt>Estimated Number of Files</dt>
+    <dd><%= @presenter.number_of_files %>&nbsp;</dd>
 
-<div class="details">
-  <%= render partial: "approved_details" %>
+    <dt>Connection Options</dt>
+    <dd>
+        <dl>
+            <div>
+              <dt>High Performance Computing</dt>
+              <dd><%= @presenter.hpc %></dd>
+
+              <dt>Network File Share</dt>
+              <dd><%= @presenter.smb %></dd>
+
+              <dt>Globus Transfers</dt>
+              <dd><%= @presenter.globus %></dd>
+            </div>
+        </dl>
+    </dd>
+</dl>
+<% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
+<dl>
+    <dt>Mediaflux id:</dt>
+    <dd><%= @project.mediaflux_id %></dd>
+</dl>
+<% elsif !@project.in_mediaflux? %>
+  <p>This project has not been saved to Mediaflux</p>
+<% end %>
 </div>
 
 <div class="details">
