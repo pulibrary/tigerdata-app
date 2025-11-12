@@ -7,113 +7,150 @@
   <button id="project-details" class="tab-nav"> Details </button>
 </div>
 
-<div class="details">
-  <h2>Basic Details
+<ul class="details request-fields">
+  <div class="detail-heading">
+      <div class="heading-text" id="basic-details-section">Basic Details
     <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
     <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-  </h2>
-  <dl>    
-    <dt>Project Title</dt>
-    <dd><%= @presenter.title %></dd>
-    <dt>Project ID</dt>
-    <dd id="project_id"><%= @presenter.project_id %></dd>
-    <dt>Project Directory</dt>
-    <dd><%= @presenter.project_directory %></dd>
-    <dt>Project Purpose</dt>
-    <dd><%= @presenter.project_purpose %></dd>
-    <dt>Project Description:<dt/> 
-    <dd><%= @presenter.description %></dd>
-    <dt>Department(s)</dt>
-    <% if @presenter.departments.empty? %>
-      <dd><strong class="px-0">None</strong></dd>
-    <% else %>
-      <dd>
+  </div>
+  </div>
+  
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Title</li>
+    <p class="detail-value"><%= @presenter.title %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Project ID</li>
+    <p class="detail-value"><%= @presenter.project_id %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Directory</li>
+    <p class="detail-value"><%= @presenter.project_directory %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Project Purpose</li>
+    <p class="detail-value"><%= @presenter.project_purpose %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Department(s)</li>
+    <p class="detail-value">
+      <% if @presenter.departments.empty? %>
+        <strong class="px-0">&mdash;</strong>
+      <% else %>
         <%= @presenter.departments.join(", ") %>
-      </dd>
-    <% end %>
-  </dl>
-</div>
+      <% end %>
+    </p>
+  </div>
 
-<div class="details">
-  <h2>Roles and People
+
+</ul>
+
+<ul class="details request-fields">
+  <div class="detail-heading">
+      <div class="heading-text" id="roles-and-people-section">Roles and People
     <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
     <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-  </h2>
-  <dl>
-    <% if !@presenter.data_sponsor.nil? %>
-      <dt>Data Sponsor</dt>
-      <dd id="data_sponsor">
-        <%= @presenter.data_sponsor.display_name_safe %>
-      </dd>
-    <% end %>
-    <% if !@presenter.data_manager.nil? %>
-      <dt>Data Manager</dt>
-      <dd id="data_manager">
-        <%= @presenter.data_manager.display_name_safe %>
-      </dd>
-    <% end %>
+  </div>
+  </div>
 
-    <dt>Data User(s)</dt>
-    <% if @presenter.data_users.count > 0 %>
-      <dd>
+  <div class="detail-pair">
+    <li class="detail-subheading">Data Sponsor</li>
+    <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Data Manager</li>
+    <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+  </div>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Data User(s)</li>
+    <p class="detail-value">
+      <% if @presenter.data_user_names == 0 %>
+        <strong class="px-0">&mdash;</strong>
+      <% else %>
         <%= @presenter.data_user_names %>
-      </dd>
-    <% else %>
-      <dd>
-        <p>None</p>
-      </dd>
-    <% end %>
-  </dl>
-</div>
+      <% end %>
+    </p>
+  </div>
+</ul>
 
-<div class="details">
-  <h2>Storage and Access</h2>
-<dl>
-    <dt>Storage Capacity</dt>
-    <dd>
-        <dl>
-            <div class="approved-details">
-                <dt>Requested</dt>
-                <dd><%= "#{@requested_size} #{@requested_unit}" %></dd>
-                <dt>Approved</dt>
-                <dd><%= "#{@approved_size} #{@approved_unit}" %></dd>
-            </div>
-        </dl>
-    </dd>
-    <!-- The HTML &nbsp; is to make sure the `dd` element aligns with the proper `dt` when is empty -->
-    <dt>Estimated Number of Files</dt>
-    <dd><%= @presenter.number_of_files %>&nbsp;</dd>
+<ul class="details request-fields">
+  <div class="detail-heading">
+    <div class="heading-text" id="storange-and-access-section">Storage and Access</div>
+  </div>
 
-    <dt>Connection Options</dt>
-    <dd>
-        <dl>
-            <div>
-              <dt>High Performance Computing</dt>
-              <dd><%= @presenter.hpc %></dd>
+  <ul class="sub-details request-fields">
+    <div class="detail-sub-heading">
+      <div class="heading-text">Storage Capacity</div>
+    </div>
 
-              <dt>Network File Share</dt>
-              <dd><%= @presenter.smb %></dd>
+    <div class="detail-pair">
+    <li class="detail-subheading">Requested</li>
+    <p class="detail-value"><%= "#{@requested_size} #{@requested_unit}" %></p>
+    </div>
 
-              <dt>Globus Transfers</dt>
-              <dd><%= @presenter.globus %></dd>
-            </div>
-        </dl>
-    </dd>
-</dl>
+    <div class="detail-pair">
+    <li class="detail-subheading">Approved</li>
+    <p class="detail-value"><%= "#{@approved_size} #{@approved_unit}" %></p>
+    </div>
+  </ul>
+
+  <div class="detail-pair">
+    <li class="detail-subheading">Estimated Number of Files</li>
+    <p class="detail-value"><%= @presenter.number_of_files %></p>
+  </div>
+
+
+
+  <ul class="sub-details request-fields">
+    <div class="detail-sub-heading">
+      <div class="heading-text">Connection Options</div>
+    </div>
+
+    <div class="detail-pair">
+    <li class="detail-subheading">High Performance Computing</li>
+    <p class="detail-value"><%= @presenter.hpc %></p>
+    </div>
+
+    <div class="detail-pair">
+    <li class="detail-subheading">Network File Share</li>
+    <p class="detail-value"><%= @presenter.smb %></p>
+    </div>
+
+    <div class="detail-pair">
+    <li class="detail-subheading">Globus Transfer Access</li>
+    <p class="detail-value"><%= @presenter.globus %></p>
+    </div>
+  </ul>
+
+   
 <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
-<dl>
-    <dt>Mediaflux id:</dt>
-    <dd><%= @project.mediaflux_id %></dd>
-</dl>
-<% elsif !@project.in_mediaflux? %>
-  <p>This project has not been saved to Mediaflux</p>
-<% end %>
-</div>
 
-<div class="details">
-  <h2> Provenance </h2>
-  <p class="provenance-header"> Submission </p>
-  <ul class>
+  <div class="detail-pair">
+  <li class="detail-subheading">Mediaflux ID</li>
+  <p class="detail-value"><%= @project.mediaflux_id %></p>
+  </div>
+<% elsif !@project.in_mediaflux? %>
+  <li class="detail-subheading">Mediaflux ID</li>
+  <p class="detail-value">This project has not been saved to Mediaflux</p>
+  </div>
+<% end %>
+</ul>
+
+<ul class="details request-fields">
+  <div class="detail-heading">
+    <div class="heading-text" id="provenance-section">Provenance</div>
+  </div>
+
+  <ul class="sub-details request-fields">
+    <div class="detail-sub-heading">
+      <div class="heading-text">Submission</div>
+    </div>
     <% @provenance_events.each do |event| %>
       <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
       <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
@@ -123,10 +160,7 @@
       <% end %>
     <% end %>
   </ul>
-</div>
-
-<div class="details">
-</div>
+</ul>
 
 <script type="module">
   projectStyle('<%= @project_session %>');
