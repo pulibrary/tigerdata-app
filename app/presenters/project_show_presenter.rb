@@ -138,12 +138,16 @@ class ProjectShowPresenter
     "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
   end
 
-  def quota_percentage(session_id:)
+  def quota_percentage(session_id:, dashboard: false)
     storage_capacity = project.storage_capacity_raw(session_id:)
     return 0 if storage_capacity.zero?
-
     storage_usage = project.storage_usage_raw(session_id:)
-    (storage_usage.to_f / storage_capacity.to_f) * 100
+    return 0 if storage_usage == 0
+    storage_value = (storage_usage.to_f / storage_capacity.to_f) * 100
+    minimum_storage_used = true if storage_value > 0 && storage_value < 1
+    storage_value = 1 if minimum_storage_used
+    storage_value += 1 if minimum_storage_used && dashboard
+    storage_value
   end
 
   def user_has_access?(user:)
