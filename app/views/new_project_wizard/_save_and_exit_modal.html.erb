@@ -11,6 +11,6 @@
   </div>
   <div class="button-frame">
     <%= form.submit "Exit without Saving", class: "pul-button pul-button-secondary" %>
-    <%= form.submit "Confirm", class: "pul-button pul-button-primary", id: "save-exit-confirm" %>
+    <%= form.submit "Confirm", class: "pul-button pul-button-primary", id: "save-exit-confirm", disabled: !@request_model.valid_title? %>
   </div>
 </div>

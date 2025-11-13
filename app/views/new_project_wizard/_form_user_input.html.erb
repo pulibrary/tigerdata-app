@@ -2,9 +2,11 @@
     <div class="text-input">
       <div class="horizontal-frame">
         <div class="vertical-frame">
+        <% if defined?(tooltip) %>
           <div class="pul-tooltip">
             <span class="pul-tooltiptext"><%= tooltip %></span>
           </div>
+          <% end %> 
           <input class="form-input <%= field_name %>" type="text" id="request_<%= field_name %>"
                 list="<%= field_name %>s" placeholder="Select a Data Manager" autoComplete="off" value="<%= field_value %>">
           </input>

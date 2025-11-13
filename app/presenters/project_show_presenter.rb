@@ -22,7 +22,7 @@ class ProjectShowPresenter
       @project = rails_project(@project_mf)
     else
       @project = project
-      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session) if current_user.present?
+      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     end
     @project_metadata = @project&.metadata_model
   end
@@ -138,17 +138,21 @@ class ProjectShowPresenter
     "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
   end
 
-  def quota_percentage(session_id:)
+  def quota_percentage(session_id:, dashboard: false)
     storage_capacity = project.storage_capacity_raw(session_id:)
     return 0 if storage_capacity.zero?
-
     storage_usage = project.storage_usage_raw(session_id:)
-    (storage_usage.to_f / storage_capacity.to_f) * 100
+    return 0 if storage_usage == 0
+    storage_value = (storage_usage.to_f / storage_capacity.to_f) * 100
+    minimum_storage_used = true if storage_value > 0 && storage_value < 1
+    storage_value = 1 if minimum_storage_used
+    storage_value += 1 if minimum_storage_used && dashboard
+    storage_value
   end
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
-    data_sponsor.uid == user.uid || data_manager.uid == user.uid || data_users.map(&:uid).include?(user.uid)
+    data_sponsor&.uid == user.uid || data_manager&.uid == user.uid || data_users.map(&:uid).include?(user.uid)
   end
 
   def project_in_rails?

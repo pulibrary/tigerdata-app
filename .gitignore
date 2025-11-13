@@ -78,3 +78,5 @@ project_create_8.txt
 /spec/fixtures/failed_tests.txt
 package-lock.json
 .devbox/
+
+princeton-ldap.yml
