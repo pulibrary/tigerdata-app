@@ -81,12 +81,12 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
       expect(error_message).to include("Search String cannot be empty")
     end
 
-    it "returns a failure if one of the projects do not match up" do
+    it "logs projects not found in the Rails database" do
+      allow(Rails.logger).to receive(:error)
       project1.destroy # make sure the project is not on the rails side
       result = described_class.new.call(search_string: "*pop", requestor: approver)
-      expect(result).not_to be_success
-      error_message = result.failure
-      expect(error_message).to include("The following Mediaflux Projects were not found in the Rails database: #{project1.mediaflux_id}")
+      expect(result).to be_success
+      expect(Rails.logger).to have_received(:error).with("The following Mediaflux Projects were not found in the Rails database: #{project1.mediaflux_id}")
     end
 
     it "returns a failure if the search query has bad characters" do
