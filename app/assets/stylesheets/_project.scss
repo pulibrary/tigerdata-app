@@ -105,6 +105,24 @@
   outline: none;
 }
 
+.basic-details-fields {
+  padding-top: 30px;
+  list-style-type: none;
+  width: 75rem;
+  height: auto;
+  flex-shrink: 0;
+  padding-left: 0rem;
+}
+
+.detail-sub-heading {
+  color: $black;
+  font-family: $libre-franklin;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
 .data-users-section {
   /* frame-218 in Figma */
   display: inline-flex;
