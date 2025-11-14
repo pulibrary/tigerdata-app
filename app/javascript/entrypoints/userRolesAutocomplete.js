@@ -115,39 +115,47 @@ function newRemove() {
   return newRemoveDiv;
 }
 
-function newTableRow(table, input) {
-  const json = JSON.parse(input.value);
+function newInput(json) {
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.value = JSON.stringify({ uid: json.id, name: json.label });
+  input.name = 'request[user_roles][]';
+  return input;
+}
+
+function newTableRow(table, json) {
   const newRow = document.createElement('div');
   newRow.classList.add('row');
-  const newName = newCell(document.createTextNode(json.name));
+  const newName = newCell(document.createTextNode(json.label));
   newName.classList.add('user-cell');
   newRow.appendChild(newName);
-  const roCell = newCell(newRadio(`request[read_only_${json.uid}]`, true, 'true'));
+  const roCell = newCell(newRadio(`request[read_only_${json.id}]`, true, 'true'));
   newRow.appendChild(roCell);
-  const rwCell = newCell(newRadio(`request[read_only_${json.uid}]`, false, 'false'));
+  const rwCell = newCell(newRadio(`request[read_only_${json.id}]`, false, 'false'));
   newRow.appendChild(rwCell);
   const removeCell = newCell(newRemove());
   newRow.appendChild(removeCell);
+  const input = newInput(json);
   newRow.appendChild(input);
   table.appendChild(newRow);
 }
 
 function moveNewUsers() {
-  const ul = document.querySelector('.selected-user-roles');
+  const newUsers = JSON.parse($('.all_selected')[0].value);
+  const ul = document.querySelector('.modal-content .selected-items');
   const table = document.querySelector('.user-table');
   const items = ul.getElementsByTagName('li');
-  for (let i = 0; i < items.length; i += 1) {
-    // do something with items[i], which is a <li> element
-    newTableRow(table, items[i].getElementsByTagName('input')[0]);
+  for (let i = 0; i < newUsers.length; i += 1) {
+    newTableRow(table, newUsers[i]);
+    items[i].lastChild.click();
   }
-  ul.replaceChildren();
   registerRemove();
-  removeNoDataUser({ currentTarget: document.querySelector('.no-users') });
+  if (newUsers.length > 0)
+    removeNoDataUser({ currentTarget: document.querySelector('.no-users') });
 }
 
 // eslint-disable-next-line import/prefer-default-export
 export function userRolesAutocomplete() {
-  const usersLookupUrl = document.querySelector('#users_lookup_url').value;
   // Debounce is used to limit the number of times a function is called in a short period of time.
   // source: https://github.com/jrrio/datalist-autocomplete-ajax/blob/main/main.js#L159C3-L166C5
   // see also: https://www.geeksforgeeks.org/javascript/debouncing-in-javascript/
@@ -173,6 +181,8 @@ export function userRolesAutocomplete() {
   // Performs a user lookup via AJAX, the results are
   // used to populate the indicated datalist
   const search = (searchValue, datalistId) => {
+    const usersLookupUrl = document.querySelector('#users_lookup_url').value;
+
     $.ajax({
       url: `${usersLookupUrl}?query=${searchValue}`,
       success: (result) => {

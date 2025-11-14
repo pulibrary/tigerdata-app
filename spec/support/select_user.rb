@@ -27,3 +27,19 @@ def wait_for_option(option_string)
     puts page.driver.browser.logs.get(:browser)
   end
 end
+
+def select_data_user(user, user_list)
+  user_str = user.display_name_safe
+
+  page.find(".data-users.lux input").fill_in with: user.uid
+  expect(page).to have_content user_str
+  find(".lux-autocomplete-result").click
+
+  # The user selected is visible on the page
+  expect(page).to have_content(user.given_name)
+  # the hidden input has all the users
+  expect(page).to have_field("all_selected", type: :hidden, with: user_list.to_json)
+
+  # the javascript cleared the find to get ready for the next search
+  expect(page.find(".data-users.lux input").value).to eq("")
+end

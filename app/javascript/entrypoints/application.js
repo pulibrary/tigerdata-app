@@ -1,3 +1,7 @@
+import { createApp } from 'vue';
+import 'lux-design-system/dist/style.css';
+import { LuxBadge, LuxInputMultiselect, LuxAutocompleteInput } from 'lux-design-system';
+
 // import 'bootstrap/js/src/alert'
 // import 'bootstrap/js/src/button'
 // import 'bootstrap/js/src/carousel'
@@ -29,6 +33,40 @@ import { userRolesAutocomplete } from './userRolesAutocomplete.js';
 import { storageInputs } from './storageInputs.js';
 import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
+
+const app = createApp({});
+
+async function searchUsers(query) {
+  if (query.length === 0) return [];
+  if ($('#users_lookup_url').length === 0) return [];
+  const userUrl = $('#users_lookup_url')[0].value;
+  const result = await fetch(`${userUrl}?query=${query}`);
+  const json = await result.json();
+  if (json.suggestions) {
+    return json.suggestions.map((user) => ({ label: user.value, id: user.data }));
+  }
+  return [];
+}
+
+// If you are not running a full Vue application, just embedding the component into a static HTML,
+// ruby web app, or similar: one way to bind your logic to the async-load-items-function prop is
+// to add it to the vue application's globalProperties.
+const createMyApp = () => {
+  const myapp = createApp(app);
+  myapp.config.globalProperties.searchUsers = (query) => searchUsers(query);
+  return myapp;
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const elements = document.getElementsByClassName('lux');
+  for (let i = 0; i < elements.length; i += 1) {
+    createMyApp()
+      .component('lux-badge', LuxBadge)
+      .component('lux-input-multiselect', LuxInputMultiselect)
+      .component('lux-autocomplete-input', LuxAutocompleteInput)
+      .mount(elements[i]);
+  }
+});
 
 window.Modal = Modal;
 window.displayMediafluxVersion = displayMediafluxVersion;
