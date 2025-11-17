@@ -81,7 +81,7 @@ class ProjectShowPresenter
   end
 
   def project_purpose
-    @project_mf[:project_purpose]
+    ProjectPurpose.label_for(@project_mf[:project_purpose])
   end
 
   # used to hide the project root that is not visible to the end user
