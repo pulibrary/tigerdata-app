@@ -47,7 +47,9 @@
       <% if @presenter.departments.empty? %>
         <strong class="px-0">&mdash;</strong>
       <% else %>
-        <%= @presenter.departments.join(", ") %>
+        <div class="departments-container">
+          <%= @presenter.departments.join(", ") %>
+        </div>
       <% end %>
     </p>
   </div>

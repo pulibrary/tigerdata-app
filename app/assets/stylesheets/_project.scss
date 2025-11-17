@@ -123,6 +123,15 @@
   line-height: 1.5rem;
 }
 
+.departments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 6px;
+  background: $gray-10;
+  background-size: 75% auto;
+}
+
 .data-users-section {
   /* frame-218 in Figma */
   display: inline-flex;
