@@ -151,6 +151,11 @@
             background: $gray-10;
           }
         }
+
+        .modal-content .text-input,
+        .lux {
+          width: 100%;
+        }
       }
 
       .form-field {

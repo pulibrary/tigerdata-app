@@ -159,6 +159,35 @@ h6 {
   text-decoration: none;
 }
 
+input[type="submit"]:enabled.pul-button-primary {
+  /* Outline properties */
+  outline-style: solid;
+  outline-color: black;
+  outline-width: 1px; /* Adjust outline thickness */
+
+  /* Space between button and outline */
+  outline-offset: 2px; /* Adjust the offset as needed */
+}
+
+input[type="submit"]:enabled.pul-button-secondary {
+  /* Outline properties */
+  outline-style: solid;
+  outline-color: black;
+  outline-width: 1px; /* Adjust outline thickness */
+
+  /* Space between button and outline */
+  outline-offset: 2px; /* Adjust the offset as needed */
+}
+input[type="button"]:enabled.pul-button-secondary {
+  /* Outline properties */
+  outline-style: solid;
+  outline-color: black;
+  outline-width: 1px; /* Adjust outline thickness */
+
+  /* Space between button and outline */
+  outline-offset: 2px; /* Adjust the offset as needed */
+}
+
 .pul-button-primary:hover {
   text-decoration-color: $white !important;
   color: $white;
