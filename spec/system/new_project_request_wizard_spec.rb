@@ -198,57 +198,28 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       click_on "Add User(s)"
-      another_user_str = another_user.display_name_safe
-      fill_in :user_find, with: another_user.uid
-      sleep(1.2)
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select another_user_str + "\u00A0", from: "user_find"
 
-      # The another user selected is visible on the page
-      expect(page).to have_content(another_user_str)
-      # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
-      page.find(".remove-user-role").click
-      expect(page).not_to have_content(another_user_str)
+      select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
 
-      current_user_str = current_user.display_name_safe
+      # we can remove the user
+      page.find(".lux-button.remove-item").click
+      expect(page).not_to have_content(another_user.given_name)
+      expect(page).to have_field("all_selected", type: :hidden, with: "[]")
 
-      fill_in :user_find, with: current_user.uid
-      sleep(1.2)
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select current_user_str + "\u00A0", from: "user_find"
-
-      # The user selected is visible on the page
-      expect(page).to have_content(current_user_str)
-      expect(page).not_to have_content("(#{current_user.uid}) #{current_user_str}")
-      # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
-      # the javascript cleared the find to get ready for the next search
-      expect(page).to have_field("user_find", with: "")
-
-      other_user_str = other_user.display_name_safe
-      fill_in :user_find, with: other_user.uid
-      sleep(1.2)
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select other_user_str + "\u00A0", from: "user_find"
-
-      # The other user selected is visible on the page
-      expect(page).to have_content(other_user_str)
-      # the javascript created the hidden form element
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
-      # the javascript cleared the find to get ready for the next search
-      expect(page).to have_field("user_find", with: "")
+      select_data_user(current_user, [{ label: current_user.display_name_safe, id: current_user.uid }])
+      select_data_user(other_user, [{ label: current_user.display_name_safe, id: current_user.uid },
+                                    { label: other_user.display_name_safe, id: other_user.uid }])
 
       click_on "Add Users"
 
       expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
-      expect(page).to have_content(current_user_str)
-      expect(page).not_to have_content("#{current_user_str} (#{current_user.uid})")
+      expect(page).to have_content(current_user.display_name_safe)
+      expect(page).not_to have_content("#{current_user.display_name_safe} (#{current_user.uid})")
 
       expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
-      expect(page).to have_content(other_user_str)
+      expect(page).to have_content(other_user.display_name_safe)
 
       choose("request[read_only_#{current_user.uid}]", option: "false")
 

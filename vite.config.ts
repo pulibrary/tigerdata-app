@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
-import ViteRails from 'vite-plugin-rails';
+import RubyPlugin from 'vite-plugin-ruby';
+import vue from '@vitejs/plugin-vue';
 import inject from '@rollup/plugin-inject';
 
 export default ({ command, mode }) => {
@@ -25,12 +26,18 @@ export default ({ command, mode }) => {
       minify: minifySetting,
       skipCompatibilityCheck: true,
     },
+    resolve: {
+      alias: {
+        vue: 'vue/dist/vue.esm-bundler',
+      },
+    },
     plugins: [
       inject({
         $: 'jquery',
         jQuery: 'jquery',
       }),
-      ViteRails(),
+      RubyPlugin(),
+      vue(),
     ],
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
   };
