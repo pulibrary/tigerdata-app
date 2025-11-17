@@ -94,7 +94,6 @@ class RequestWizardsController < ApplicationController
     # set if id is present or initialize a blank request if not
     def set_or_init_request_model
       @princeton_departments = Affiliation.all
-      @project_purposes = [["Research", "research"], ["Administrative", "administrative"], ["Teaching", "teaching"]]
       @request_model = if params[:request_id].blank?
                          Request.new(id: 0, requested_by: current_user.uid)
                        else
