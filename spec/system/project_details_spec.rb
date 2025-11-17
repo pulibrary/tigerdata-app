@@ -55,9 +55,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Approved projects" do
-    before do
-      allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return("")
-    end
       it "Shows the approved values" do
         sign_in sponsor_user
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
@@ -73,7 +70,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("RDSS")
         expect(page).to have_content("Research")
       end
+    end
 
+    context "Empty Project Purpose field" do
+      before do
+        allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return("")
+      end
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
