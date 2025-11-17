@@ -7,7 +7,7 @@
 
       <div class="dashboard-admin-buttons">
          <% if current_user.eligible_sysadmin? %>
-         <%= link_to "Requests", requests_path(), class: "btn btn-dark btn-sm", id: "requests-listing-button" %>
+         <%= link_to "Requests", requests_path(), class: "pul-button pul-button-primary", id: "requests-listing-button" %>
          <% end %>
       </div>
 
