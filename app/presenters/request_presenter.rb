@@ -26,6 +26,10 @@ class RequestPresenter
     request.parent_folder.present? ? File.join(request.parent_folder, request.project_folder) : request.project_folder
   end
 
+  def project_purpose
+    ProjectPurpose.label_for(request.project_purpose)
+  end
+
   def departments_list
     return "" if request.departments.blank?
     dept_list = []

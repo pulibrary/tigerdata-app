@@ -68,6 +68,18 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
         expect(page).to have_content("RDSS")
+        expect(page).to have_content("Research")
+      end
+    end
+
+    context "Empty Project Purpose field" do
+      before do
+        allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return("")
+      end
+      it "displays a standard indicator for empty fields of an approved project" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        expect(page.find("#project-purpose-value").text).to eq "—"
       end
     end
 

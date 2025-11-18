@@ -73,6 +73,10 @@ module Mediaflux
                 xml.text(@identity_token)
               end
             end
+            # Include the "app" parameter in the login information.
+            # This information shows when analyzing sessions via `system.session.all.describe`
+            # but sadly it does NOT show when running `licence.holder.list`
+            xml.app "TDWEB"
           end
         end
       end

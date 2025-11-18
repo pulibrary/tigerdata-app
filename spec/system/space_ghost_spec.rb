@@ -41,12 +41,9 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
 
       # This part of the test is filling out the data users
       click_on "Add User(s)"
-      fill_in :user_find, with: another_user.uid
-      sleep(1.2)
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      another_user_str = another_user.display_name_safe
-      select another_user_str + "\u00A0", from: "user_find"
+      select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
       click_on "Add Users"
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
 
       # This part of the code is going through the rest of the fields of the wizard form to review and submit the project request
       click_on "Next"
