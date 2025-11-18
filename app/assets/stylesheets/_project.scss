@@ -115,9 +115,14 @@
 }
 
 .basic-details-navigation {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
+  width: 25%;
+  height: 100vh;
+  min-height: 200px;
+  overflow: auto;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+  font-size: 25px;
 
   li {
     padding-top: 1.875rem;
@@ -137,7 +142,7 @@
       color: $black;
     }
     a:hover {
-      text-decoration: underline;
+      color: $gray-60;
     }
   }
 }
