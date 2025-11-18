@@ -59,6 +59,9 @@ module Mediaflux
         start_time = ::Time.zone.now
         @http_response = @http_client.request self.class.uri, http_request
         log_elapsed(start_time)
+        if response_error.present?
+          Rails.logger.error "Mediaflux error: #{response_error[:title]}, #{response_error[:message]}"
+        end
         @http_response
       end
 
@@ -98,7 +101,6 @@ module Mediaflux
           title: xml.xpath("/response/reply/error").text,
           message: xml.xpath("/response/reply/message").text
         }
-        Rails.logger.error "MediaFlux error: #{error[:title]}, #{error[:message]}"
         error
       end
 
