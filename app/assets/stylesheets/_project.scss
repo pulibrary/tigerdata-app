@@ -125,11 +125,24 @@
 
 .departments-container {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding-top: 6px;
+  flex-direction: row;
+  gap: 1em;
+  align-items: center;
   background: $gray-10;
-  background-size: 75% auto;
+  border: 2px solid black;
+  border-radius: 8px;
+  width: -webkit-fill-available;
+  margin-left: 25px;
+}
+
+.departments-name {
+  width: -webkit-fill-available;
+}
+
+.lux-badge-green.departments {
+  background: white;
+  color: black;
+  margin-left: 1em;
 }
 
 .data-users-section {

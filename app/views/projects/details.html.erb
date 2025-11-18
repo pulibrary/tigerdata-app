@@ -48,7 +48,12 @@
         <strong class="px-0">&mdash;</strong>
       <% else %>
         <div class="departments-container">
-          <%= @presenter.departments.join(", ") %>
+          <% @presenter.department_codes.each do |dept|%>
+            <lux-badge class="lux-badge lux-badge-green departments">
+              <div class="badge-text"><%= dept.second %></div>
+            </lux-badge>
+            <div class="departments-name"><%= dept.first %> </div>
+          <%end%>
         </div>
       <% end %>
     </p>
