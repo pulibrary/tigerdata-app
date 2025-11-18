@@ -114,6 +114,10 @@
   flex-shrink: 0;
 }
 
+.active-header {
+  color: $gray-60 !important;
+}
+
 .basic-details-navigation {
   width: 25%;
   height: 100vh;

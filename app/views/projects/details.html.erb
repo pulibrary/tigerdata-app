@@ -8,10 +8,10 @@
 <div class="basic-details-container">
 <div class="basic-details-navigation">
 <ul>
-  <li><a href="#basic-details-section">Basic Details</a></li>
-  <li><a href="#roles-and-people-section">Roles and People</a></li>
-  <li><a href="#storage-and-access-section">Storage and Access</a></li>
-  <li><a href="#provenance-section">Provenance</a></li>
+  <li><a id="basic-details-link" href="#basic-details-section">Basic Details</a></li>
+  <li><a id="roles-and-people-link" href="#roles-and-people-section">Roles and People</a></li>
+  <li><a id="storage-and-access-link" href="#storage-and-access-section">Storage and Access</a></li>
+  <li><a id="provenance-link" href="#provenance-section">Provenance</a></li>
 </ul>
 </div>
 <div class="basic-details-panel">
@@ -148,4 +148,50 @@
 <script type="module">
    projectStyle('<%= @project_session %>');
    projectTab("<%= project_path %>", "<%= project_details_path %>");
+
+   $(window).scroll(function() {
+    var storage_hT = $('#basic-details-section').offset().top,
+      storage_hH = $('#basic-details-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").addClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#roles-and-people-section').offset().top,
+      storage_hH = $('#roles-and-people-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").addClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#storage-and-access-section').offset().top,
+      storage_hH = $('#storage-and-access-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").addClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#provenance-section').offset().top,
+      storage_hH = $('#provenance-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").addClass("active-header");
+     }
+  });
 </script>
