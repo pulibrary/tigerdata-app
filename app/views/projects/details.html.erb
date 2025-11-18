@@ -14,7 +14,7 @@
     <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
   </div>
   </div>
-  
+
   <div class="detail-pair">
     <li class="detail-subheading">Project Title</li>
     <p class="detail-value"><%= @presenter.title %></p>
@@ -32,7 +32,13 @@
 
   <div class="detail-pair">
     <li class="detail-subheading">Project Purpose</li>
-    <p class="detail-value"><%= @presenter.project_purpose %></p>
+    <p class="detail-value" id="project-purpose-value">
+      <% if @presenter.project_purpose.empty? %>
+        <strong class="px-0">&mdash;</strong>
+      <% else %>
+        <%= @presenter.project_purpose %>
+      <% end %>
+    </p>
   </div>
 
   <div class="detail-pair">
@@ -128,7 +134,7 @@
     </div>
   </ul>
 
-   
+
 <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
 
   <div class="detail-pair">
