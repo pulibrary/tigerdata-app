@@ -70,6 +70,7 @@ RSpec.describe "Project Index Page", type: :system do
       expect(page).not_to have_link(project3.title)
       fill_in "title_query", with: "soda*"
       click_on "Search"
+      sleep(0.2)
       expect(page).to have_content("Successful search in Mediaflux for soda*")
       expect(page).not_to have_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
