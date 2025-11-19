@@ -153,7 +153,7 @@
 <script type="module">
    projectStyle('<%= @project_session %>');
    projectTab("<%= project_path %>", "<%= project_details_path %>");
-   
+
    $(window).scroll(function() {
     var storage_hT = $('#basic-details-section').offset().top,
       storage_hH = $('#basic-details-section').outerHeight(),
@@ -165,7 +165,7 @@
       $("#roles-and-people-link").removeClass("active-header");
       $("#provenance-link").removeClass("active-header");
      }
-   
+
      var storage_hT = $('#roles-and-people-section').offset().top,
       storage_hH = $('#roles-and-people-section').outerHeight(),
       wH = $(window).height(),
@@ -176,7 +176,7 @@
       $("#roles-and-people-link").addClass("active-header");
       $("#provenance-link").removeClass("active-header");
      }
-   
+
      var storage_hT = $('#storage-and-access-section').offset().top,
       storage_hH = $('#storage-and-access-section').outerHeight(),
       wH = $(window).height(),
@@ -187,7 +187,7 @@
       $("#roles-and-people-link").removeClass("active-header");
       $("#provenance-link").removeClass("active-header");
      }
-   
+
      var storage_hT = $('#provenance-section').offset().top,
       storage_hH = $('#provenance-section').outerHeight(),
       wH = $(window).height(),
