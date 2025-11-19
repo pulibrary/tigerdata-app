@@ -123,6 +123,10 @@
   line-height: 1.5rem;
 }
 
+.departments-group {
+  margin-left: -9px;
+}
+
 .departments-container {
   display: flex;
   flex-direction: row;
@@ -131,12 +135,8 @@
   background: $gray-10;
   border: 2px solid black;
   border-radius: 8px;
-  width: -webkit-fill-available;
-  margin-left: 25px;
-}
-
-.departments-name {
-  width: -webkit-fill-available;
+  width: 40em;
+  margin-bottom: 2px;
 }
 
 .lux-badge-green.departments {
