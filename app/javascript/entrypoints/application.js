@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import 'lux-design-system/dist/style.css';
-import { LuxBadge, LuxInputMultiselect, LuxAutocompleteInput } from 'lux-design-system';
+import { LuxBadge, LuxInputMultiselect, LuxInputAsyncSelect } from 'lux-design-system';
 
 // import 'bootstrap/js/src/alert'
 // import 'bootstrap/js/src/button'
@@ -37,8 +37,8 @@ import { titleCopySaveExit } from './titleCopySaveExit.js';
 const app = createApp({});
 
 async function searchUsers(query) {
-  if (query.length === 0) return [];
-  if ($('#users_lookup_url').length === 0) return [];
+  if (query.length === 0) return null;
+  if ($('#users_lookup_url').length === 0) return null;
   const userUrl = $('#users_lookup_url')[0].value;
   const result = await fetch(`${userUrl}?query=${query}`);
   const json = await result.json();
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createMyApp()
       .component('lux-badge', LuxBadge)
       .component('lux-input-multiselect', LuxInputMultiselect)
-      .component('lux-autocomplete-input', LuxAutocompleteInput)
+      .component('lux-input-async-select', LuxInputAsyncSelect)
       .mount(elements[i]);
   }
 });
