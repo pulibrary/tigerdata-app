@@ -83,6 +83,17 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
+    context "Nil Project Purpose field" do
+      before do
+        allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return(nil)
+      end
+      it "displays a standard indicator for empty fields of an approved project" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        expect(page.find("#project-purpose-value").text).to eq "—"
+      end
+    end
+
     context "Provenance Events" do
       let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }

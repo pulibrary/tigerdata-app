@@ -517,6 +517,11 @@
         }
       }
 
+      .data-manager .text-input,
+      .data-sponsor .text-input {
+        width: 95%;
+      }
+
       .button-frame {
         display: flex;
         justify-content: space-between;
