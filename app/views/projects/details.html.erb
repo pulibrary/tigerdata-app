@@ -1,174 +1,202 @@
 <%= render partial: "project_details_heading" %>
-
 <show id="show">
-
 <div id="project-nav">
-  <button id="project-content" class="tab-nav"> Content Preview </button>
-  <button id="project-details" class="tab-nav"> Details </button>
+   <button id="project-content" class="tab-nav"> Content Preview </button>
+   <button id="project-details" class="tab-nav"> Details </button>
 </div>
-
-<ul class="details basic-details-fields">
-  <div class="detail-heading">
-      <div class="heading-text" id="basic-details-section">Basic Details
-    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
-    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-  </div>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Project Title</li>
-    <p class="detail-value"><%= @presenter.title %></p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Project ID</li>
-    <p class="detail-value"><%= @presenter.project_id %></p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Project Directory</li>
-    <p class="detail-value"><%= @presenter.project_directory %></p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Project Purpose</li>
-    <p class="detail-value" id="project-purpose-value">
-      <% if @presenter.project_purpose.blank? %>
-        <strong class="px-0">&mdash;</strong>
-      <% else %>
-        <%= @presenter.project_purpose %>
-      <% end %>
-    </p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Department(s)</li>
-    <p class="detail-value">
-      <% if @presenter.departments.empty? %>
-        <strong class="px-0">&mdash;</strong>
-      <% else %>
-        <%= @presenter.departments.join(", ") %>
-      <% end %>
-    </p>
-  </div>
-
-
-</ul>
-
-<ul class="details basic-details-fields">
-  <div class="detail-heading">
-      <div class="heading-text" id="roles-and-people-section">Roles and People
-    <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
-    <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
-  </div>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Data Sponsor</li>
-    <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Data Manager</li>
-    <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
-  </div>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Data User(s)</li>
-    <p class="detail-value">
-      <% if @presenter.data_user_names == 0 %>
-        <strong class="px-0">&mdash;</strong>
-      <% else %>
-        <%= @presenter.data_user_names %>
-      <% end %>
-    </p>
-  </div>
-</ul>
-
-<ul class="details basic-details-fields">
-  <div class="detail-heading">
-    <div class="heading-text" id="storange-and-access-section">Storage and Access</div>
-  </div>
-
-  <ul class="sub-details basic-details-fields">
-    <div class="detail-sub-heading">
-      <div class="heading-text">Storage Capacity</div>
-    </div>
-
-    <div class="detail-pair">
-    <li class="detail-subheading">Requested</li>
-    <p class="detail-value"><%= "#{@requested_size} #{@requested_unit}" %></p>
-    </div>
-
-    <div class="detail-pair">
-    <li class="detail-subheading">Approved</li>
-    <p class="detail-value"><%= "#{@approved_size} #{@approved_unit}" %></p>
-    </div>
-  </ul>
-
-  <div class="detail-pair">
-    <li class="detail-subheading">Estimated Number of Files</li>
-    <p class="detail-value"><%= @presenter.number_of_files %></p>
-  </div>
-
-
-
-  <ul class="sub-details basic-details-fields">
-    <div class="detail-sub-heading">
-      <div class="heading-text">Connection Options</div>
-    </div>
-
-    <div class="detail-pair">
-    <li class="detail-subheading">High Performance Computing</li>
-    <p class="detail-value"><%= @presenter.hpc %></p>
-    </div>
-
-    <div class="detail-pair">
-    <li class="detail-subheading">Network File Share</li>
-    <p class="detail-value"><%= @presenter.smb %></p>
-    </div>
-
-    <div class="detail-pair">
-    <li class="detail-subheading">Globus Transfer Access</li>
-    <p class="detail-value"><%= @presenter.globus %></p>
-    </div>
-  </ul>
-
-
-<% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
-
-  <div class="detail-pair">
-  <li class="detail-subheading">Mediaflux ID</li>
-  <p class="detail-value"><%= @project.mediaflux_id %></p>
-  </div>
-<% elsif !@project.in_mediaflux? %>
-  <li class="detail-subheading">Mediaflux ID</li>
-  <p class="detail-value">This project has not been saved to Mediaflux</p>
-  </div>
-<% end %>
-</ul>
-
-<ul class="details basic-details-fields">
-  <div class="detail-heading">
-    <div class="heading-text" id="provenance-section">Provenance</div>
-  </div>
-
-  <ul class="sub-details basic-details-fields">
-    <div class="detail-sub-heading">
-      <div class="heading-text">Submission</div>
-    </div>
-    <% @provenance_events.each do |event| %>
-      <li class="provenance"> <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
-      <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
-        <blockquote>
-          <%= event.event_note %>
-        </blockquote>
-      <% end %>
-    <% end %>
-  </ul>
-</ul>
-
+<div class="basic-details-container">
+   <div class="basic-details-navigation">
+      <ul>
+         <li><a id="basic-details-link" href="#basic-details-section">Basic Details</a></li>
+         <li><a id="roles-and-people-link" href="#roles-and-people-section">Roles and People</a></li>
+         <li><a id="storage-and-access-link" href="#storage-and-access-section">Storage and Access</a></li>
+         <li><a id="provenance-link" href="#provenance-section">Provenance</a></li>
+      </ul>
+   </div>
+   <div class="basic-details-panel">
+      <ul class="details basic-details-fields">
+         <div class="detail-heading">
+            <div class="heading-text" id="basic-details-section">Basic Details
+               <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
+               <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
+            </div>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Project Title</li>
+            <p class="detail-value"><%= @presenter.title %></p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Project ID</li>
+            <p class="detail-value"><%= @presenter.project_id %></p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Project Directory</li>
+            <p class="detail-value"><%= @presenter.project_directory %></p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Project Purpose</li>
+            <p class="detail-value" id="project-purpose-value">
+               <% if @presenter.project_purpose.blank? %>
+               <strong class="px-0">&mdash;</strong>
+               <% else %>
+               <%= @presenter.project_purpose %>
+               <% end %>
+            </p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Department(s)</li>
+            <p class="detail-value">
+               <% if @presenter.departments.empty? %>
+               <strong class="px-0">&mdash;</strong>
+               <% else %>
+               <%= @presenter.departments.join(", ") %>
+               <% end %>
+            </p>
+         </div>
+      </ul>
+      <ul class="details basic-details-fields">
+         <div class="detail-heading">
+            <div class="heading-text" id="roles-and-people-section">Roles and People
+               <% # Removing edit until SpaceGhost https://github.com/pulibrary/tigerdata-app/issues/1509 %>
+               <% # link_to "Edit", edit_project_path(@project.id), id:"revisible-heading", class: "btn btn-primary btn-sm" %>
+            </div>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Data Sponsor</li>
+            <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Data Manager</li>
+            <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+         </div>
+         <div class="detail-pair">
+            <li class="detail-subheading">Data User(s)</li>
+            <p class="detail-value">
+               <% if @presenter.data_user_names == 0 %>
+               <strong class="px-0">&mdash;</strong>
+               <% else %>
+               <%= @presenter.data_user_names %>
+               <% end %>
+            </p>
+         </div>
+      </ul>
+      <ul class="details basic-details-fields">
+         <div class="detail-heading">
+            <div class="heading-text" id="storage-and-access-section">Storage and Access</div>
+         </div>
+         <ul class="sub-details basic-details-fields">
+            <div class="detail-sub-heading">
+               <div class="heading-text">Storage Capacity</div>
+            </div>
+            <div class="detail-pair">
+               <li class="detail-subheading">Requested</li>
+               <p class="detail-value"><%= "#{@requested_size} #{@requested_unit}" %></p>
+            </div>
+            <div class="detail-pair">
+               <li class="detail-subheading">Approved</li>
+               <p class="detail-value"><%= "#{@approved_size} #{@approved_unit}" %></p>
+            </div>
+         </ul>
+         <div class="detail-pair">
+            <li class="detail-subheading">Estimated Number of Files</li>
+            <p class="detail-value"><%= @presenter.number_of_files %></p>
+         </div>
+         <ul class="sub-details basic-details-fields">
+            <div class="detail-sub-heading">
+               <div class="heading-text">Connection Options</div>
+            </div>
+            <div class="detail-pair">
+               <li class="detail-subheading">High Performance Computing</li>
+               <p class="detail-value"><%= @presenter.hpc %></p>
+            </div>
+            <div class="detail-pair">
+               <li class="detail-subheading">Network File Share</li>
+               <p class="detail-value"><%= @presenter.smb %></p>
+            </div>
+            <div class="detail-pair">
+               <li class="detail-subheading">Globus Transfer Access</li>
+               <p class="detail-value"><%= @presenter.globus %></p>
+            </div>
+         </ul>
+         <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
+         <div class="detail-pair">
+            <li class="detail-subheading">Mediaflux ID</li>
+            <p class="detail-value"><%= @project.mediaflux_id %></p>
+         </div>
+         <% elsif !@project.in_mediaflux? %>
+         <li class="detail-subheading">Mediaflux ID</li>
+         <p class="detail-value">This project has not been saved to Mediaflux</p>
+   </div>
+   <% end %>
+   </ul>
+   <ul class="details basic-details-fields">
+      <div class="detail-heading">
+         <div class="heading-text" id="provenance-section">Provenance</div>
+      </div>
+      <ul class="sub-details basic-details-fields">
+         <div class="detail-sub-heading">
+            <div class="heading-text">Submission</div>
+         </div>
+         <% @provenance_events.each do |event| %>
+         <li class="provenance">
+            <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
+            <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
+            <blockquote>
+               <%= event.event_note %>
+            </blockquote>
+            <% end %>
+            <% end %>
+      </ul>
+   </ul>
+</div>
+</div>
 <script type="module">
-  projectStyle('<%= @project_session %>');
-  projectTab("<%= project_path %>", "<%= project_details_path %>");
+   projectStyle('<%= @project_session %>');
+   projectTab("<%= project_path %>", "<%= project_details_path %>");
+
+   $(window).scroll(function() {
+    var storage_hT = $('#basic-details-section').offset().top,
+      storage_hH = $('#basic-details-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").addClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#roles-and-people-section').offset().top,
+      storage_hH = $('#roles-and-people-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").addClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#storage-and-access-section').offset().top,
+      storage_hH = $('#storage-and-access-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").addClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").removeClass("active-header");
+     }
+
+     var storage_hT = $('#provenance-section').offset().top,
+      storage_hH = $('#provenance-section').outerHeight(),
+      wH = $(window).height(),
+      wS = $(this).scrollTop();
+    if (wS > (storage_hT+storage_hH-wH)){
+      $("#storage-and-access-link").removeClass("active-header");
+      $("#basic-details-link").removeClass("active-header");
+      $("#roles-and-people-link").removeClass("active-header");
+      $("#provenance-link").addClass("active-header");
+     }
+   });
 </script>
