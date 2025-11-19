@@ -29,7 +29,7 @@
     "browserslist": "^4.21.5",
     "datatables": "^1.10.18",
     "jquery": "^3.6.3",
-    "lux-design-system": "^7.1.0",
+    "lux-design-system": "^7.2.0",
     "nanoid": ">=3.3.8",
     "vite-plugin-rails": "^0.5.0",
     "vue": "^3.5.22",

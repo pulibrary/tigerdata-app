@@ -3419,16 +3419,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lux-design-system@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "lux-design-system@npm:7.1.0"
+"lux-design-system@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "lux-design-system@npm:7.2.0"
   dependencies:
     core-js: "npm:^3.8.3"
     register-service-worker: "npm:^1.7.2"
     v-calendar: "npm:^3.1.2"
     vue-draggable-plus: "npm:^0.3.5"
     vue3-cookies: "npm:^1.0.6"
-  checksum: 10c0/810757cd1daee6e8ffb9d791537ddecc720d3b559f98bd29fe0a88757379fd7cafec70a4010f34a194df9424b775b7a2f80981de31d070c6ed7c9b920bc81947
+  checksum: 10c0/4a8e396a259a065448380fafd96fe38f7bd48b4d50eb7b8631c5c7a3a5b7571cae85651e9c7cd3601a737354df391cac959f6031a0b3e8fd3f29763dd151c29b
   languageName: node
   linkType: hard
 
@@ -4694,7 +4694,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.27.5"
     jquery: "npm:^3.6.3"
     jsdom: "npm:^21.1.0"
-    lux-design-system: "npm:^7.1.0"
+    lux-design-system: "npm:^7.2.0"
     nanoid: "npm:>=3.3.8"
     prettier: "npm:3.4.2"
     rollup: "npm:^4.24.0"
