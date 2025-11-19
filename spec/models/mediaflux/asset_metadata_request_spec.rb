@@ -71,5 +71,23 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         # expect(metadata[:updated_by]).to be_blank # we have not updted the project so no updated by is available
       end
     end
+
+    context "mediaflux errors" do
+      it "logs errors automatically" do
+        allow(Rails.logger).to receive(:error)
+        metadata_request = described_class.new(session_token: user.mediaflux_session, id: "")
+        metadata_request.resolve
+        expect(metadata_request.error?).to be true
+        expect(Rails.logger).to have_received(:error)
+      end
+
+      it "does not log if there are no errors" do
+        allow(Rails.logger).to receive(:error)
+        metadata_request = described_class.new(session_token: user.mediaflux_session, id: approved_project.mediaflux_id)
+        metadata_request.resolve
+        expect(metadata_request.error?).to be false
+        expect(Rails.logger).to_not have_received(:error)
+      end
+    end
   end
 end
