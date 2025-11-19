@@ -417,6 +417,14 @@
       gap: 1px;
 
       .request-btn {
+        /* Outline properties */
+        outline-style: solid;
+        outline-color: black;
+        outline-width: 1px; /* Adjust outline thickness */
+
+        /* Space between button and outline */
+        outline-offset: 2px; /* Adjust the offset as needed */
+
         display: flex;
         padding: 0.5rem 1.25rem;
         align-items: flex-start;
@@ -434,6 +442,14 @@
       }
 
       .request-options {
+        /* Outline properties */
+        outline-style: solid;
+        outline-color: black;
+        outline-width: 1px; /* Adjust outline thickness */
+
+        /* Space between button and outline */
+        outline-offset: 2px; /* Adjust the offset as needed */
+
         display: flex;
         padding: 0.5rem 0.25rem;
         align-items: flex-start;
