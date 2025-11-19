@@ -89,17 +89,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
       expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
-      current_user_str = current_user.display_name_safe
 
-      # Fill in a partial match to force the textbox to fetch a list of options to select from
-      fill_in :request_data_sponsor, with: current_user.uid
-      sleep(1.2)
-      select current_user_str + "\u00A0", from: "request_data_sponsor"
-
-      # Fill in a partial match to force the textbox to fetch a list of options to select from
-      fill_in :request_data_manager, with: current_user.uid
-      sleep(1.2)
-      select current_user_str + "\u00A0", from: "request_data_manager"
+      select_user(current_user, "data_sponsor", "request[data_sponsor]")
+      select_user(current_user, "data_manager", "request[data_manager]")
 
       click_on("Submit")
       expect(page).to have_content("Your new project request is submitted")
@@ -193,8 +185,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       # click_on "Next"
       expect(page).to have_content("Assign roles for your project")
 
-      select_user(current_user, "request_data_sponsor", "request[data_sponsor]")
-      select_user(current_user, "request_data_manager", "request[data_manager]")
+      select_user(current_user, "data_sponsor", "request[data_sponsor]")
+      select_user(current_user, "data_manager", "request[data_manager]")
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       click_on "Add User(s)"
@@ -232,9 +224,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("Assign roles for your project")
       expect(page).to have_content "Roles and People"
       expect(page).to have_content "Data Manager"
-      expect(page).to have_field("request_data_sponsor", with: current_user.display_name_safe)
+      expect(page.find("#data_sponsor_input input").value).to eq(current_user.display_name_safe)
       expect(page).to have_field("request[data_sponsor]", type: :hidden, with: current_user.uid)
-      expect(page).to have_field("request_data_manager", with: current_user.display_name_safe)
+      expect(page.find("#data_manager_input input").value).to eq(current_user.display_name_safe)
       expect(page).to have_field("request[data_manager]", type: :hidden, with: current_user.uid)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\",\"read_only\":false}")
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
