@@ -33,7 +33,7 @@
   <div class="detail-pair">
     <li class="detail-subheading">Project Purpose</li>
     <p class="detail-value" id="project-purpose-value">
-      <% if @presenter.project_purpose.empty? %>
+      <% if @presenter.project_purpose.blank? %>
         <strong class="px-0">&mdash;</strong>
       <% else %>
         <%= @presenter.project_purpose %>
