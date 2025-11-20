@@ -49,7 +49,16 @@
                <% if @presenter.departments.empty? %>
                <strong class="px-0">&mdash;</strong>
                <% else %>
-               <%= @presenter.departments.join(", ") %>
+                <div class="departments-group">
+                  <% @presenter.department_codes.each do |dept|%>
+                    <div class="departments-container">
+                      <lux-badge class="lux-badge lux-badge-white departments">
+                        <div class="badge-text"><%= dept.second %></div>
+                      </lux-badge>
+                      <div class="departments-name"><%= dept.first %> </div>
+                    </div>
+                  <%end%>
+                </div>
                <% end %>
             </p>
          </div>
@@ -155,6 +164,7 @@
    </ul>
 </div>
 </div>
+
 <script type="module">
    projectStyle('<%= @project_session %>');
    projectTab("<%= project_path %>", "<%= project_details_path %>");

@@ -3,7 +3,9 @@ require "rails_helper"
 
 RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do
   let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:request) { FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: current_user.uid }
+  let(:request) do
+    FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: current_user.uid, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
+  end
   let(:project) { request.approve(current_user) }
   subject(:presenter) { ProjectShowPresenter.new(project, current_user) }
 
@@ -82,6 +84,15 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   describe "#to_xml" do
     it "generates the string-serialized XML for the Project XML Document" do
       expect(presenter.to_xml).to be_a(String)
+    end
+  end
+
+  describe "#department_codes" do
+    before do
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+    end
+    it "delegates to project metadata_model" do
+      expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
     end
   end
 end
