@@ -96,6 +96,19 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
+    context "Storage and Access" do 
+      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+      it "shows the connection options table with options configured" do
+        sign_in sponsor_user
+        visit "/projects/#{project.id}/details"
+        expect(page.find("#hpc-access").text).to include "Yes"
+        expect(page.find("#smb-access").text).to include "No"
+        expect(page.find("#globus-access").text).to include "No"       
+      end
+    end
+
+
     context "Provenance Events" do
       let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
