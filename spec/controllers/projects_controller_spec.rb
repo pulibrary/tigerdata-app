@@ -277,7 +277,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     render_views
     let(:current_user) { sponsor_and_data_manager }
     let!(:project) do
-      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: current_user.uid, data_sponsor: current_user.uid
+      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: current_user.uid, data_sponsor: current_user.uid, departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}]
       request.approve(sponsor_and_data_manager)
     end
 
