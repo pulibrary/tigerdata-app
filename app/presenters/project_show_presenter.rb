@@ -111,6 +111,16 @@ class ProjectShowPresenter
     @project_mf[:departments] || []
   end
 
+  def department_codes
+    @dep_with_codes = {}
+    departments_list = departments.nil? ? [] : departments.first.split(", ")
+    departments_list.map do |dept|
+      tmp_code = Affiliation.find_fuzzy_by_name(dept)
+      @dep_with_codes[dept] = tmp_code.code unless tmp_code.nil?
+    end
+    @dep_with_codes
+  end
+
   def project_id
     @project_mf[:project_id]
   end
