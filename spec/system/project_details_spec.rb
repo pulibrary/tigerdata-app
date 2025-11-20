@@ -12,7 +12,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
   context "Details page" do
     let(:project_in_mediaflux) do
-      request = FactoryBot.create :request_project, data_manager: sponsor_user.uid, storage_size: 500, storage_unit: "GB"
+      request = FactoryBot.create :request_project, data_manager: sponsor_user.uid, storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}]
       request.approve(sponsor_and_data_manager_user)
     end
     context "Navigation Buttons" do
@@ -55,6 +55,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Approved projects" do
+      before do
+        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      end
       it "Shows the approved values" do
         sign_in sponsor_user
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
@@ -63,11 +66,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
-
         expect(page).to have_content(project_in_mediaflux.title)
         expect(page).to have_content("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
-        expect(page).to have_content("RDSS")
+        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_content("Research")
       end
     end

@@ -169,6 +169,28 @@
   line-height: 1.5rem;
 }
 
+.departments-group {
+  margin-left: -9px;
+}
+
+.departments-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  align-items: center;
+  background: $gray-10;
+  border: 2px solid black;
+  border-radius: 8px;
+  width: 40em;
+  margin-bottom: 2px;
+}
+
+.lux-badge-white.departments {
+  background: white;
+  color: black;
+  margin-left: 1em;
+}
+
 .data-users-section {
   /* frame-218 in Figma */
   display: inline-flex;
