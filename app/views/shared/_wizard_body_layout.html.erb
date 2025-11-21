@@ -40,5 +40,16 @@
       </div>
     </div>
 
+    <script>
+      // Make sure user gets a chance to save their changes when clicking on the Dashboard
+      // link in the breadcrumps.
+      $("ul.breadcrumbs > li > a").on("click", (event) => {
+        console.log("dashboard link clicked");
+        $("input[value='Save and exit']").click();
+        console.log("save and exit button clicked");
+        return false;
+      });
+    </script>
+
     <div class="welcome-footer"><%= render partial: 'shared/footer' %></div>
   </body>
