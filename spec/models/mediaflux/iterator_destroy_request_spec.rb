@@ -18,6 +18,10 @@ RSpec.describe Mediaflux::IteratorDestroyRequest, connect_to_mediaflux: true, ty
       expect(a_request(:post, mediaflux_url).with do |req|
         req.body.include?("service name=\"asset.query.iterator.destroy\"")
       end).to have_been_made
+
+      # This second test is to emulate deleting an iterator that Mediaflux deleted behind the scenes.
+      destroy_request_again = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id)
+      expect(destroy_request_again.error?).to be false
     end
   end
 end

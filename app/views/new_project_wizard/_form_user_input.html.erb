@@ -10,7 +10,7 @@
               placeholder="Select a <%= field_name.titleize %>"
               :async-load-items-function="searchUsers"
               id="data-user-select-<%= field_name %>"
-              :default-value="{label: '<%= field_value %>', id: '<%= field_id_value %>'}"
+              :default-value="<%= {label: field_value, id: field_id_value}.to_json %>"
               >
               <template v-slot:hidden-input="{ selectedItem }">
                   <input type="hidden" name="request[<%= field_name %>]" class="selected_user" :value="selectedItem.id"></input>

@@ -11,7 +11,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true) }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true, display_name: "Sally O'Smith") }
     it "walks through the wizard if the feature is enabled" do
       sign_in current_user
       visit "/"

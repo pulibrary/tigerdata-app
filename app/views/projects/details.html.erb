@@ -44,6 +44,10 @@
             </p>
          </div>
          <div class="detail-pair">
+            <li class="detail-subheading">Project Description</li>
+            <p id="description-text-full" class="detail-value"><%= @presenter.description %></p>
+         </div>
+         <div class="detail-pair">
             <li class="detail-subheading">Department(s)</li>
             <p class="detail-value">
                <% if @presenter.departments.empty? %>
@@ -76,7 +80,7 @@
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Data Manager</li>
-            <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+            <p class="detail-value"><%= @presenter.data_manager.display_name_safe %></p>
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Data User(s)</li>
@@ -113,7 +117,7 @@
          <div class="sub-details basic-details-fields">
             <div class="detail-pair">
               <div class="detail-subheading">Connection Options</div>
-            
+
               <div class="detail-table">
                 <div class="detail-row" id="hpc-access">
                   <div class="detail-subheading">HPC Access</div>
