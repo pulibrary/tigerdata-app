@@ -29,6 +29,9 @@ class RequestWizardsController < ApplicationController
       if params[:commit].start_with?("http")
         # Go directly to the step the user clicked on
         redirect_to params[:commit]
+      elsif params[:go_to_dashboard] == "yes"
+        # The user clicked on the "Dashboard" breadcrumb
+        redirect_to dashboard_path
       else
         redirect_to request_path(@request_model)
       end
