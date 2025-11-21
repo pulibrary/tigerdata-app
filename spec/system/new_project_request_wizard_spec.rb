@@ -111,9 +111,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Enter the storage and access needs"
-        # Check that TB is listed as default
+        expect(page).not_to have_select("storage_unit")
         find('label[for="radiocustom"]').click
+        # Check that TB is listed as default
         expect(page).to have_select("storage_unit", selected: "TB")
+        find('label[for="radio500gb"]').click
+        expect(page).not_to have_select("storage_unit")
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Take a moment to review"
