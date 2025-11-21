@@ -24,6 +24,16 @@
 
       <div class="row">
         <div class="col-12">
+          <div class="date-and-data-info-single">
+            <ul>
+              <li><span class="label">Project Directory:</span> <%= @presenter.project_directory %><i class="copy-paste" title="copy"></i></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-12">
           <div class="date-and-data-info">
             <ul>
               <li><span class="label">Date Created:</span> <%= @presenter.created %></li>
@@ -31,14 +41,14 @@
             </ul>
           </div>
         </div>
-      </div><!-- .row -->
+      </div>
 
       <div class="row">
         <div class="col-12">
           <div class="date-and-data-info">
             <ul>
-              <li><span class="label">Data Sponsor:</span> <span class="netid-large"><%= @presenter.data_sponsor&.uid %></span></li>
-              <li><span class="label">Data Manager:</span> <span class="netid-large"><%= @presenter.data_manager&.uid %></span></li>
+              <li class="info-container"><span class="label">Data Sponsor:</span> <%= @presenter.data_sponsor.display_name_full_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_sponsor&.uid %></span></li>
+              <li class="info-container"><span class="label">Data Manager:</span> <%= @presenter.data_manager.display_name_full_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_manager&.uid %></span></li>
             </ul>
           </div>
         </div><!-- .col-12 -->

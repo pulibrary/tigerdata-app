@@ -151,6 +151,17 @@
   }
 }
 
+.lux-badge-inline {
+  display: inline-flex !important;
+  padding: 0 0.375rem !important;
+  color: $black !important;
+  font-size: 1rem !important;
+  gap: 0.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 150% */
+}
+
 .basic-details-fields {
   padding-top: 30px;
   list-style-type: none;

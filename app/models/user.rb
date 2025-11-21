@@ -97,6 +97,12 @@ class User < ApplicationRecord
     [given_name, family_name, "(#{uid})"].compact.join(" ")
   end
 
+  def display_name_full_safe
+    return uid if given_name.blank? && family_name.blank?
+
+    [given_name, family_name].compact.join(" ")
+  end
+
   # Is this user eligible to be a data sponsor in this environment?
   # @return [Boolean]
   def eligible_sponsor?
