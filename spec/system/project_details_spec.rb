@@ -12,7 +12,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
   context "Details page" do
     let(:project_in_mediaflux) do
-      request = FactoryBot.create :request_project, data_manager: sponsor_user.uid, storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}]
+      request = FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: sponsor_user.uid, storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}]
       request.approve(sponsor_and_data_manager_user)
     end
     context "Navigation Buttons" do
@@ -29,6 +29,15 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_link "Request More", href: "https://tigerdata.princeton.edu/form/quota-increase-request"
 
             expect(page).to have_css ".approved"
+
+            # The description should be rendered twice (at the top and as part of the details)
+            expect(page).to have_selector("#description-text")
+            expect(page).to have_selector("#description-text-full")
+
+            # Make sure both data manager and sponsor are rendered
+            expect(page).to have_content("#{data_manager.display_name} (#{data_manager.uid})")
+            expect(page).to have_content("#{sponsor_user.display_name} (#{sponsor_user.uid})")
+
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
             expect(page).to have_selector(:link_or_button, "Content Preview")
@@ -96,7 +105,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
-    context "Storage and Access" do 
+    context "Storage and Access" do
       let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       it "shows the connection options table with options configured" do
@@ -104,7 +113,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page.find("#hpc-access").text).to include "Yes"
         expect(page.find("#smb-access").text).to include "No"
-        expect(page.find("#globus-access").text).to include "No"       
+        expect(page.find("#globus-access").text).to include "No"
       end
     end
 
