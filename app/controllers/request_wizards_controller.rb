@@ -106,15 +106,13 @@ class RequestWizardsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    # rubocop:disable Metrics/MethodLength
     def request_params
       request_params = params.fetch(:request, {}).permit(:request_title, :project_title, :state, :data_sponsor, :data_manager,
                                         :project_purpose, :description, :parent_folder, :project_folder, :project_id, :quota,
                                         :requested_by, :storage_size, :storage_unit, :number_of_files, :hpc, :smb, :globus, user_roles: [], departments: [])
       request_params[:storage_unit] ||= "TB"
       if request_params[:departments].present?
-        uniq_departments = request_params[:departments].uniq
-        request_params[:departments] = uniq_departments.compact_blank.map { |dep_str| JSON.parse(dep_str) }
+        request_params[:departments] = clean_departments(request_params[:departments])
       end
       if request_params[:user_roles].present?
         request_params[:user_roles] = request_params[:user_roles].compact_blank.map do |role_str|
@@ -125,7 +123,11 @@ class RequestWizardsController < ApplicationController
       end
       request_params
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def clean_departments(departments)
+      uniq_departments = departments.uniq
+      uniq_departments.compact_blank.map { |dep_str| JSON.parse(dep_str) }
+    end
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
