@@ -337,6 +337,39 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end.to change { Request.count }.by(1)
     end
 
+    it "does not allow requests to be submitted with duplicate departments." do
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      sign_in current_user
+      visit "new-project/project-info"
+
+      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
+      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
+      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
+      # This is triggering the html5 element like it would normally if the page has focus
+      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services").exactly(2).times
+
+      click_on "Review and Submit"
+      expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
+      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services").exactly(1).times
+
+      fill_in :project_title, with: "No Duplicate Departments Project"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      select "Research", from: "project_purpose"
+      select_user(current_user, "data_sponsor", "request[data_sponsor]")
+      select_user(current_user, "data_manager", "request[data_manager]")
+
+      click_on "Submit"
+      expect(page).to have_content("Your new project request is submitted")
+
+      visit "requests/#{Request.last.id}"
+      expect(page).to have_content("No Duplicate Departments Project")
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+    end
+
     it "allows for save and exit" do
       sign_in current_user
       visit "/"
