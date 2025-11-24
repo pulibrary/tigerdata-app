@@ -18,6 +18,7 @@ describe "features", type: :system, js: true do
     it "flip flop doesn't show for any user" do
       visit "/features"
       expect(page).not_to have_content("Disable login to the web portal")
+      expect(page).not_to have_content("Last updated dashboard")
     end
   end
 
@@ -31,6 +32,7 @@ describe "features", type: :system, js: true do
     it "flip flop doesn't show for any user" do
       visit "/features"
       expect(page).not_to have_content("Disable login to the web portal")
+      expect(page).not_to have_content("Last updated dashboard")
     end
   end
 
@@ -44,6 +46,7 @@ describe "features", type: :system, js: true do
     it "flip flop doesn't show for any user" do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
+      expect(page).to have_content("Last updated dashboard")
     end
   end
 
@@ -57,6 +60,7 @@ describe "features", type: :system, js: true do
     it "flip flop doesn't show for any user" do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
+      expect(page).to have_content("Last updated dashboard")
     end
   end
 end
