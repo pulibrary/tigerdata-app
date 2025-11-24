@@ -36,9 +36,21 @@
         <div class="button-frame">
             <%= render partial: navigation_partial, locals: {form:} %>
         </div>
+        <!-- hidden input -->
+        <input id="go_to_dashboard" name="go_to_dashboard" class="hidden-element" value="no" />
       <% end %>
       </div>
     </div>
+
+    <script>
+      // Make sure user gets a chance to save their changes when clicking on the Dashboard
+      // link in the breadcrumps.
+      $("ul.breadcrumbs > li > a").on("click", (event) => {
+        event.preventDefault();
+        $("#go_to_dashboard").val("yes");
+        $("input[value='Save and exit']").click();
+      });
+    </script>
 
     <div class="welcome-footer"><%= render partial: 'shared/footer' %></div>
   </body>
