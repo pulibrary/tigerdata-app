@@ -18,14 +18,6 @@ class RequestWizardsController < ApplicationController
 
   # PUT /request_wizards/1/save
   def save
-    # TODO: My local installation is NOT saving the new data sponsor/manager
-    # but it works in QA.
-    #
-    # It is strange that I also see the old "loading users" behavior even
-    # though that has been fixed in QA. Do I have an old version of Lux?
-    # #
-    # raise 2/0
-
     # save and render dashboard
     save_request
     case params[:commit]
