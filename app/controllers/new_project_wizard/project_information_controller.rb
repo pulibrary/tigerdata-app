@@ -5,6 +5,7 @@ class NewProjectWizard::ProjectInformationController < RequestWizardsController
   protected
 
     def render_current
+      add_breadcrumb("New Project Request")
       @request_presenter = RequestPresenter.new(@request_model)
       @wizard_first_step = true
       @form_url = new_project_project_info_save_path(@request_model)

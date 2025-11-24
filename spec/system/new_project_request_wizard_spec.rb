@@ -120,6 +120,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Take a moment to review"
+
+        # Clicking on the breadcrumb gives the use a chance to save their changes
+        click_on "Dashboard"
+        expect(page).to have_content "Save Your Progress"
+        find(".pul-popover-close").click
+
         click_on "Back"
         expect(page).to have_content "Enter the storage and access needs"
         click_on "Back"

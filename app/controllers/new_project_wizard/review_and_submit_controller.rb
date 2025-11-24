@@ -5,6 +5,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
   protected
 
     def render_current
+      add_breadcrumb("New Project Request")
       @request_presenter = RequestPresenter.new(@request_model)
       @request_model.valid_to_submit?
       @form_url = new_project_review_and_submit_save_path(@request_model)
