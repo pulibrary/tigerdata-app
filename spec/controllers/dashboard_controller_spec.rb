@@ -112,6 +112,29 @@ RSpec.describe DashboardController do
       sign_in user
     end
 
+    it "does not show the admin tab" do
+      get :index
+      expect(response.body).not_to include("Administration")
+    end
+
+    context "disable_login is true" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:disable_login, false)
+      end
+
+      it "redirects to the home page" do
+        get :index
+        expect(response).to redirect_to root_path
+        expect(flash.notice).to eq("You can not be signed in at this time.")
+      end
+    end
+
     context "and the user is a sysadmin" do
       let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
       render_views
