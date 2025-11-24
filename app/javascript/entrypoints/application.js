@@ -23,7 +23,6 @@ import '../channels/consumer.js';
 
 import { setTargetHtml } from './helper.js';
 import { displayMediafluxVersion } from './mediafluxVersion.js';
-import { showCreateScript } from './atermScripts.js';
 import { dashStyle, dashTab } from './dashboardTabs.js';
 import { departmentAutocomplete } from './departmentAutocomplete.js';
 import { setupTable } from './pulDataTables.js';
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.Modal = Modal;
 window.displayMediafluxVersion = displayMediafluxVersion;
-window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
 window.dashTab = dashTab;
 window.setupTable = setupTable;
