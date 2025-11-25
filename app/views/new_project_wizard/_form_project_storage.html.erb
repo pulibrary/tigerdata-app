@@ -5,24 +5,24 @@
     <div class="options-frame">
       <div class="quota-select">
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio500gb"  Value="500 GB" class="quota-option" <%= "checked" if quota == "500 GB" %> tabindex="-1" ></input>
+          <input type="radio" name="request[quota]" id="radio500gb"  Value="500 GB" class="quota-option custom-quota-close" <%= "checked" if quota == "500 GB" %> tabindex="-1" ></input>
           <label for="radio500gb" focus="true" tabindex="0">500 GB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio2tb"  Value="2 TB" class="quota-option"  <%= "checked" if quota == "2 TB" %> tabindex="-1" ></input>
+          <input type="radio" name="request[quota]" id="radio2tb"  Value="2 TB" class="quota-option custom-quota-close"  <%= "checked" if quota == "2 TB" %> tabindex="-1" ></input>
           <label for="radio2tb" focus="true" tabindex="0">2 TB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio10tb"  Value="10 TB" class="quota-option" <%= "checked" if quota == "10 TB" %> tabindex="-1"></input>
+          <input type="radio" name="request[quota]" id="radio10tb"  Value="10 TB" class="quota-option custom-quota-close" <%= "checked" if quota == "10 TB" %> tabindex="-1"></input>
           <label for="radio10tb" focus="true" tabindex="0">10 TB</label>
         </div>
         <div class="quota-option">
-          <input type="radio" name="request[quota]" id="radio25tb"  Value="25 TB" class="quota-option" <%= "checked" if quota == "25 TB" %> tabindex="-1" ></input>
+          <input type="radio" name="request[quota]" id="radio25tb"  Value="25 TB" class="quota-option custom-quota-close" <%= "checked" if quota == "25 TB" %> tabindex="-1" ></input>
           <label for="radio25tb" focus="true" tabindex="0">25 TB</label>
         </div>
       </div>
     </div>
-    <div class="options-frame hidden-toggle">
+    <div class="options-frame custom-quota-toggle">
       <div class="quota-select">
         <div class="quota-option">
           <input type="radio" name="request[quota]" id="radiocustom"  Value="custom" class="quota-option"  <%= "checked" if quota == "custom" %> tabindex="-1" ></input>
@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="hidden-div input-frame" <%= "hidden" if quota != "custom" %> >
+      <div class="custom-quota-div input-frame" <%= "hidden" if quota != "custom" %> >
         <div class="custom-quota">
           <div class="text-input number-input">
             <div class="horizontal-frame">
