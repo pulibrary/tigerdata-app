@@ -266,6 +266,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Review")
         within(".project-title") do
           expect(page).to have_content("cannot be empty")
+          fill_in :project_title, with: "A basic Project"
+          expect(page).not_to have_content("cannot be empty")
         end
         within(".project-description") do
           expect(page).to have_content("cannot be empty")
@@ -281,6 +283,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
         within(".data-sponsor") do
           expect(page).to have_content("cannot be empty")
+          select_user(current_user, "data_sponsor", "request[data_sponsor]")
+          expect(page).not_to have_content("cannot be empty")
         end
         within(".project-folder") do
           expect(page).to have_content("cannot be empty")

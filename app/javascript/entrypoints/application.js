@@ -47,12 +47,18 @@ async function searchUsers(query) {
   return [];
 }
 
+function clearUserError(event, component) {
+  document.getElementById(component).innerHTML = '';
+}
+
 // If you are not running a full Vue application, just embedding the component into a static HTML,
 // ruby web app, or similar: one way to bind your logic to the async-load-items-function prop is
 // to add it to the vue application's globalProperties.
 const createMyApp = () => {
   const myapp = createApp(app);
   myapp.config.globalProperties.searchUsers = (query) => searchUsers(query);
+  myapp.config.globalProperties.clearUserError = (event, component) =>
+    clearUserError(event, component);
   return myapp;
 };
 
