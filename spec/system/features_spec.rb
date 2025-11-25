@@ -43,7 +43,7 @@ describe "features", type: :system, js: true do
       sign_in current_user
     end
 
-    it "flip flop doesn't show for any user" do
+    it "displays for developers" do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
       expect(page).to have_content("Last updated dashboard")
@@ -57,7 +57,7 @@ describe "features", type: :system, js: true do
       sign_in current_user
     end
 
-    it "flip flop doesn't show for any user" do
+    it "displays for sysadmin users" do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
       expect(page).to have_content("Last updated dashboard")
