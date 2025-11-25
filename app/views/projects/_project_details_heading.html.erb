@@ -25,8 +25,15 @@
       <div class="row">
         <div class="col-12">
           <div class="date-and-data-info-single">
+          <input type="text" value="Hello World" id="myInput">
+
             <ul>
-              <li><span class="label">Project Directory:</span> <%= @presenter.project_directory %><i class="copy-paste" title="copy"></i></li>
+              <li><span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %>
+                <button id="copy-project-path" onclick="copyPastePath()" class="btn btn-sm" data-url="<%= @presenter.project_directory %>" title="Copy path to the clipboard">
+                  <i id="copy-project-path-icon" class="bi bi-clipboard" title="Copy path to the clipboard"></i>
+                  <span id="copy-project-path-label" class="copy-project-path-label-normal">COPY</span>
+                </button>
+              </li>
             </ul>
           </div>
         </div>
