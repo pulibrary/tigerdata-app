@@ -12,9 +12,11 @@
                <div class="type"><%= project.type %></div>
                <div class="role"><%= project.role(current_user) %></div>
                <div class="download"><%= project.latest_file_list_time %></div>
-               <div class="activity"><%= project.last_activity %></div>
-            </div>
-        </div>
+
+                <% if Flipflop.last_updated_dashboard? %>
+                    <div class="activity"><%= project.last_activity %></div>
+                <% end %>
+
         <div class="storage-details">
           <div class="storage">
             <div class="w3-light-grey w3-round-xlarge">
