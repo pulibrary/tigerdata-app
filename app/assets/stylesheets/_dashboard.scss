@@ -201,6 +201,18 @@
         align-items: center;
         gap: 1rem;
 
+        .data-sponsor {
+          text-transform: none;
+        }
+
+        .data-manager {
+          text-transform: none;
+        }
+
+        .netid-large {
+          text-transform: none;
+        }
+
         .path {
           display: flex;
           align-items: center;
