@@ -30,6 +30,12 @@ module Mediaflux
         super do |xml|
           xml.args do
             xml.id @iterator
+            # An iterator can be destroyed by Mediaflux when we have read all its contents.
+            # For example if an iterator query has only a few results and we read them all
+            # in the first iteration then Mediaflux deletes the iterator behind the scenes.
+            xml.send("ignore-missing") do
+              xml.text(true)
+            end
           end
         end
       end
