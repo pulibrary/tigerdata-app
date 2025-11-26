@@ -39,6 +39,12 @@ class ProjectCreate < Dry::Operation
         Failure debug_output
       else
         ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
+        # Save the submission provenance
+        # TODO:  Should we update the metadata_model or just the metadata hash directly?
+        project.metadata_model.submission["approved_by"] = current_user.uid
+        project.metadata_model.submission["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
+        project.save!
+
         Success(mediaflux_id)
       end
     # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.

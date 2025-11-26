@@ -170,19 +170,6 @@
           <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
           <div class="detail-value"> <%= @presenter.submission_provenance[:approved_on] %> </div>
          </div>
-         <%
-=begin%>
- <% @provenance_events.each do |event| %>
-         <li class="provenance">
-            <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
-            <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
-            <blockquote>
-               <%= event.event_note %>
-            </blockquote>
-            <% end %>
-            <% end %>
-<%
-=end%>
       </ul>
    </ul>
 </div>

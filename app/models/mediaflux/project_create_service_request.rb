@@ -91,7 +91,6 @@ module Mediaflux
                 xml.text(@project_purpose)
               end
             end
-            # Send the request and project provenance
           end
         end
       end
