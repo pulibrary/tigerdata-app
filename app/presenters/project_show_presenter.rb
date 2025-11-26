@@ -111,6 +111,10 @@ class ProjectShowPresenter
     @project_mf[:departments] || []
   end
 
+  def submission_provenance
+    @project_mf[:submission]
+  end
+
   def department_codes
     @dep_with_codes = {}
     departments_list = departments.nil? ? [] : departments.first.split(", ")
