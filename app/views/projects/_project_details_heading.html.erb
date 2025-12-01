@@ -26,7 +26,12 @@
         <div class="col-12">
           <div class="date-and-data-info-single">
             <ul>
-              <li><span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %></li>
+              <li><span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %>
+                <button id="copy-project-path-button" class="btn btn-sm" data-url="<%= @presenter.project_directory %>" title="Copy project path to the clipboard">
+                  <i id="copy-project-path-icon" class="bi bi-clipboard" title="Copy project path to the clipboard"></i>
+                  <span id="copy-project-path-label" class="copy-project-path-label-normal">COPY</span>
+                </button>
+              </li>
             </ul>
           </div>
         </div>
