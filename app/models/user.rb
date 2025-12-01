@@ -89,15 +89,14 @@ class User < ApplicationRecord
     self.display_name = extra_cas_info.pudisplayname
   end
 
-  # Return the display name if it exists, otherwise return the uid
+  # Return the display name and uid if it exists, otherwise return the uid
   # @return [String]
   def display_name_safe
     return uid if given_name.blank? && family_name.blank?
-
     [given_name, family_name, "(#{uid})"].compact.join(" ")
   end
 
-  # Return the display name if it exists, otherwise return the uid
+  # Return the display name only (no uid) if it exists, otherwise return the uid
   # @return [String]
   def display_name_only_safe
     return uid if given_name.blank? && family_name.blank?
