@@ -33,8 +33,6 @@ import { userRolesAutocomplete } from './userRolesAutocomplete.js';
 import { storageInputs } from './storageInputs.js';
 import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
-import { copyPastePath } from './copyPastePath.js';
-
 
 const app = createApp({});
 
