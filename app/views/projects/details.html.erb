@@ -171,7 +171,7 @@
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
-               <div class="provenance-value"> <%= @presenter.submission_provenance["request_date_time"] %> </div>
+               <div class="provenance-value"> <%= @presenter.requested_on.keys.first %> <%= @presenter.requested_on.values.first %> </div>
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info">Approved by</div>
@@ -182,7 +182,7 @@
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
-               <div class="provenance-value"> <%= @presenter.submission_provenance["approved_on"] %> </div>
+               <div class="provenance-value"> <%= @presenter.approved_on.keys.first %> <%= @presenter.approved_on.values.first %></div>
             </div>
          </ul>
          <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">

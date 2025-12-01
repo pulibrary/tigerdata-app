@@ -125,6 +125,14 @@ class ProjectShowPresenter
     user_name_id
   end
 
+  def requested_on
+    date_time = {}
+    date = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%B %d, %Y")
+    time = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
+  end
+
   def approved_by
     user_name_id = {}
     uid = submission_provenance["requested_by"]
@@ -133,6 +141,14 @@ class ProjectShowPresenter
     user = User.find_by(uid: uid)
     user_name_id["#{user.given_name} #{user.family_name}"] = uid
     user_name_id
+  end
+
+  def approved_on
+    date_time = {}
+    date = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%B %d, %Y")
+    time = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
   end
 
   def department_codes
