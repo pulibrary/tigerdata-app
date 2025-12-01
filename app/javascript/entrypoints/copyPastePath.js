@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
 export function copyPastePath() {
-
   // Sets the elements to the proper CSS classes once a value has been copied to the clipboard.
   function setCopiedToClipboard(iconEl, labelEl, normalClass, copiedClass) {
     $(iconEl).removeClass('copy-paste-frames');
@@ -41,7 +40,7 @@ export function copyPastePath() {
       },
     );
   }
-  
+
   $('#copy-project-path-button').on('click', () => {
     const projectPath = $('#copy-project-path-button').data('url');
     copyPath(
@@ -54,6 +53,6 @@ export function copyPastePath() {
   });
 
   $(() => {
-    $("#copy-project-path-button").addClass("copy-paste-frames");
+    $('#copy-project-path-button').addClass('copy-paste-frames');
   });
 }
