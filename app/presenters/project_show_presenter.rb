@@ -135,7 +135,7 @@ class ProjectShowPresenter
 
   def approved_by
     user_name_id = {}
-    uid = submission_provenance["requested_by"]
+    uid = submission_provenance["approved_by"]
     return "N/A" if uid.nil?
 
     user = User.find_by(uid: uid)
