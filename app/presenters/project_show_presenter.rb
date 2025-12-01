@@ -115,6 +115,26 @@ class ProjectShowPresenter
     @project.metadata_json["submission"]
   end
 
+  def requested_by
+    user_name_id = {}
+    uid = submission_provenance["requested_by"]
+    return "N/A" if uid.nil?
+
+    user = User.find_by(uid: uid)
+    user_name_id["#{user.given_name} #{user.family_name}"] = uid
+    user_name_id
+  end
+
+  def approved_by
+    user_name_id = {}
+    uid = submission_provenance["requested_by"]
+    return "N/A" if uid.nil?
+
+    user = User.find_by(uid: uid)
+    user_name_id["#{user.given_name} #{user.family_name}"] = uid
+    user_name_id
+  end
+
   def department_codes
     @dep_with_codes = {}
     departments_list = departments.nil? ? [] : departments.first.split(", ")

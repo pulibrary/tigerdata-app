@@ -163,20 +163,26 @@
          <ul class="sub-details basic-details-fields">
             <div class="detail-sub-heading">Submission</div>
             <div class="detail-pair">
-            <div class="detail-sub-heading provenance-info"> Requested by</div>
-            <div class="provenance-value"> <%= @presenter.submission_provenance["requested_by"] %> </div>
+               <div class="detail-sub-heading provenance-info"> Requested by</div>
+               <div class="provenance-value"> <%=  @presenter.requested_by.keys.first %> </div>
+               <lux-badge class="lux-badge lux-badge-grey">
+                  <div class="badge-text"><%= @presenter.requested_by.values.first %></div>
+               </lux-badge>
             </div>
             <div class="detail-pair">
-            <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
-            <div class="provenance-value"> <%= @presenter.submission_provenance["request_date_time"] %> </div>
+               <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
+               <div class="provenance-value"> <%= @presenter.submission_provenance["request_date_time"] %> </div>
             </div>
             <div class="detail-pair">
-            <div class="detail-sub-heading provenance-info">Approved by</div>
-            <div class="provenance-value"> <%= @presenter.submission_provenance["approved_by"] %> </div>
+               <div class="detail-sub-heading provenance-info">Approved by</div>
+               <div class="provenance-value"> <%=  @presenter.approved_by.keys.first %> </div>
+               <lux-badge class="lux-badge lux-badge-grey">
+                  <div class="badge-text"><%= @presenter.approved_by.values.first %></div>
+               </lux-badge>
             </div>
             <div class="detail-pair">
-            <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
-            <div class="provenance-value"> <%= @presenter.submission_provenance["approved_on"] %> </div>
+               <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
+               <div class="provenance-value"> <%= @presenter.submission_provenance["approved_on"] %> </div>
             </div>
          </ul>
          <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
