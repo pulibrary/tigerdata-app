@@ -247,7 +247,6 @@ function initPage() {
   validationClear();
   titleCopySaveExit();
   userRolesAutocomplete();
-  copyPastePath();
 }
 
 window.addEventListener('load', () => initPage());
