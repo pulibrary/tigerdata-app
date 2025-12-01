@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 namespace :load_users do
-  desc "Load user from ldap"
+  desc "Load users from LDAP"
   task from_ldap: :environment do
     count_before = User.count
     PrincetonUsers.create_users_from_ldap

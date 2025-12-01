@@ -2,29 +2,36 @@
   <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Department(s)", field_sub_label: "Required"} %>
   <div class="input-frame">
-    <div class="text-input">
+    <div class="text-input lux-field">
       <div class="horizontal-frame">
         <div class="vertical-frame">
-          <input class="form-input datalist" type="text" name="department_find" id="department_find"
-                list="princeton_departments" placeholder="Search using department code or name" autocomplete="off"></input>
-          <datalist id="princeton_departments">
-            <% @princeton_departments.each do |department| %>
-                <!-- Non breaking space &nbsp; is at the end of every option to indicate an option was selected not just the user typing -->
-                <option data-value="<%= {code: department.code, name: department.name}.to_json %>" value="<%= "(#{department.code}) #{department.name}" %>&nbsp;"></option>
-            <% end %>
-          </datalist>
+          <div class="lux-field">
+            <lux-input-multiselect
+                label="Departments"
+                hide-label="true"
+                selected-items-label=""
+                none-selected-label="No departments selected"
+                placeholder="Search using department code or name"
+                :items='<%= @princeton_departments.map{|dep| {id: dep.code, label: "(#{dep.code}) #{dep.name}", value: dep.name }}.to_json %>'
+                :default-values="<%= departments.map{|dep| {id: dep['code'], value: dep['name']}}.to_json %>"
+                >
+                <template #item="{itemProps}">
+                    <div class="info">
+                      <lux-badge class="badge">
+                        <div class="badge-text">{{ itemProps.id }}</div>
+                      </lux-badge>
+                      <div class="item-text">{{ itemProps.value }}</div>
+                    </div>
+                </template>
+
+                <template v-slot:hidden-input="{ selectedItems }">
+                  <input v-for="item in selectedItems" type="hidden" name="request[departments][]" :value="JSON.stringify( {'code': item.id, 'name': item.value})" class="selected-item"></input>
+                </template>
+            </lux-input-multiselect>
+          </div>
           <div class="input-error">
                <%= department_error %>
           </div>
-          <ul class="selected-departments selected-items">
-            <% departments.each do |department| %>
-              <li class="selected-item">
-                <%= "(#{department['code']}) #{department['name']}" %>
-                <div tabindex="0" class="remove-department remove-item" title="Remove department"></div>
-                <input type="hidden" name="request[departments][]" value="<%= {code: department['code'], name: department['name']}.to_json %>"> </input>
-              </li>
-            <% end %>
-          </ul>
           <input type="hidden" id="request-departments" name="request[departments][]" value="" />
         </div>
       </div>
