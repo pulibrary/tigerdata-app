@@ -29,6 +29,9 @@ class RequestWizardsController < ApplicationController
       if params[:commit].start_with?("http")
         # Go directly to the step the user clicked on
         redirect_to params[:commit]
+      elsif params[:go_to_dashboard] == "yes"
+        # The user clicked on the "Dashboard" breadcrumb
+        redirect_to dashboard_path
       else
         redirect_to request_path(@request_model)
       end
@@ -112,7 +115,7 @@ class RequestWizardsController < ApplicationController
                                         :requested_by, :storage_size, :storage_unit, :number_of_files, :hpc, :smb, :globus, user_roles: [], departments: [])
       request_params[:storage_unit] ||= "TB"
       if request_params[:departments].present?
-        request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
+        request_params[:departments] = clean_departments(request_params[:departments])
       end
       if request_params[:user_roles].present?
         request_params[:user_roles] = request_params[:user_roles].compact_blank.map do |role_str|
@@ -122,6 +125,11 @@ class RequestWizardsController < ApplicationController
         end
       end
       request_params
+    end
+
+    def clean_departments(departments)
+      uniq_departments = departments.uniq
+      uniq_departments.compact_blank.map { |dep_str| JSON.parse(dep_str) }
     end
 
     def set_breadcrumbs

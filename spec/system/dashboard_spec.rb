@@ -58,10 +58,18 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
         expect(page).to have_content "Sponsor"
         expect(page).to have_content "project 111"
+        expect(page).to have_content "Data Sponsor: #{current_user.display_name_only_safe}\n#{current_user.uid}"
+        expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe}\n#{other_user.uid}"
+
         expect(page).to have_content "Data Manager"
         expect(page).to have_content "project 222"
+        expect(page).to have_content "Data Sponsor: #{other_user.display_name_only_safe}\n#{other_user.uid}"
+        expect(page).to have_content "Data Manager: #{current_user.display_name_only_safe}\n#{current_user.uid}"
+
         expect(page).to have_content "Data User"
         expect(page).to have_content "project 333"
+        expect(page).to have_content "Data Sponsor: #{other_user.display_name_only_safe}\n#{other_user.uid}"
+        expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe}\n#{other_user.uid}"
       end
 
       it "shows the latests downloads available" do

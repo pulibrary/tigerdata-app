@@ -25,7 +25,6 @@
       <div class="row">
         <div class="col-12">
           <div class="date-and-data-info-single">
-          <input type="text" value="Hello World" id="myInput">
             <ul>
               <li><span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %></li>
             </ul>
@@ -48,8 +47,8 @@
         <div class="col-12">
           <div class="date-and-data-info">
             <ul>
-              <li class="info-container"><span class="label">Data Sponsor:</span> <%= @presenter.data_sponsor.display_name_full_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_sponsor&.uid %></span></li>
-              <li class="info-container"><span class="label">Data Manager:</span> <%= @presenter.data_manager.display_name_full_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_manager&.uid %></span></li>
+              <li class="info-container"><span class="label">Data Sponsor:</span> <%= @presenter.data_sponsor.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_sponsor&.uid %></span></li>
+              <li class="info-container"><span class="label">Data Manager:</span> <%= @presenter.data_manager.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_manager&.uid %></span></li>
             </ul>
           </div>
         </div><!-- .col-12 -->

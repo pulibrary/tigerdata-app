@@ -11,7 +11,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true) }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true, display_name: "Sally O'Smith") }
     it "walks through the wizard if the feature is enabled" do
       sign_in current_user
       visit "/"
@@ -82,13 +82,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       select "Teaching", from: :project_purpose
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
-      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
-      # This is triggering the html5 element like it would normally if the page has focus
-      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
-      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
+      select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+      select_and_verify_department(department: "HPC-High Performance Computing", department_code: "66666", department_list: [{ code: "77777", name: "RDSS-Research Data and Scholarship Services" }])
 
       select_user(current_user, "data_sponsor", "request[data_sponsor]")
       select_user(current_user, "data_manager", "request[data_manager]")
@@ -111,12 +107,21 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Enter the storage and access needs"
-        # Check that TB is listed as default
+        expect(page).not_to have_select("storage_unit")
         find('label[for="radiocustom"]').click
+        # Check that TB is listed as default
         expect(page).to have_select("storage_unit", selected: "TB")
+        find('label[for="radio500gb"]').click
+        expect(page).not_to have_select("storage_unit")
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Take a moment to review"
+
+        # Clicking on the breadcrumb gives the use a chance to save their changes
+        click_on "Dashboard"
+        expect(page).to have_content "Save Your Progress"
+        find(".pul-popover-close").click
+
         click_on "Back"
         expect(page).to have_content "Enter the storage and access needs"
         click_on "Back"
@@ -147,14 +152,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       fill_in :project_folder, with: "skeletor"
       fill_in :description, with: "An awesome project to show the wizard is magic"
       expect(page).to have_content "46/1000 characters"
-      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
       select "Research", from: "project_purpose"
-      # This is triggering the html5 element like it would normally if the page has focus
-      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
-      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
+      select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
 
       # force a save and page reload to make sure all data is being saved to the model
       click_on "Next"
@@ -175,7 +175,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_field("parent_folder", with: "abc_lab")
       expect(page).to have_field("project_folder", with: "skeletor")
       expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
-      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
       # TODO: when the wizard is fully functional the correct next step(s) are below
@@ -264,17 +264,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "46/1000 characters"
 
       # Select a department
-      department_to_test = "(77777) RDSS-Research Data and Scholarship Services"
-      expect(page).not_to have_content(department_to_test)
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select "#{department_to_test}\u00A0", from: "department_find"
-      # This is triggering the html5 element like it would normally if the page has focus
-      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
-      expect(page).to have_content(department_to_test)
-      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      department_to_test = "RDSS-Research Data and Scholarship Services"
+      select_and_verify_department(department: department_to_test, department_code: "77777", department_list: [])
 
       # Remove the department
-      page.execute_script("document.getElementsByClassName('remove-department')[0].click()")
+      within(".departments") do
+        page.execute_script("document.getElementsByClassName('remove-item')[0].click()")
+      end
       expect(page).not_to have_content(department_to_test)
     end
 
@@ -326,6 +322,43 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Your new project request has been saved")
         expect(page).to have_content("A basic Project updated")
       end.to change { Request.count }.by(1)
+    end
+
+    it "does not allow requests to be submitted with duplicate departments." do
+      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      sign_in current_user
+      visit "new-project/project-info"
+
+      select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+      # the option is no longer available
+      within(".departments") do
+        page.find(".lux-field input").fill_in with: "77777"
+        within(".lux-autocomplete-input") do
+          expect(page).not_to have_content "RDSS-Research Data and Scholarship Services"
+        end
+      end
+
+      expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+
+      click_on "Review and Submit"
+      expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+
+      fill_in :project_title, with: "No Duplicate Departments Project"
+      fill_in :parent_folder, with: "abc_lab"
+      fill_in :project_folder, with: "skeletor"
+      fill_in :description, with: "An awesome project to show the wizard is magic"
+      select "Research", from: "project_purpose"
+      select_user(current_user, "data_sponsor", "request[data_sponsor]")
+      select_user(current_user, "data_manager", "request[data_manager]")
+
+      click_on "Submit"
+      expect(page).to have_content("Your new project request is submitted")
+
+      visit "requests/#{Request.last.id}"
+      expect(page).to have_content("No Duplicate Departments Project")
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
     end
 
     it "allows for save and exit" do

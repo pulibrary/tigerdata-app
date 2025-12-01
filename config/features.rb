@@ -23,4 +23,5 @@ Flipflop.configure do
   #   description: "Take over the world."
 
   feature :disable_login, default: false, description: "Disable login to the web portal."
+  feature :last_updated_dashboard, default: true, description: "Show last updated column on dashboard."
 end

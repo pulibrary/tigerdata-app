@@ -5,6 +5,13 @@
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
             <div class="summary">
+                <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %></span>
+                <span class="netid-large"><%= project.data_sponsor.uid %></span>
+                |
+                <span class="data-manager"><b>Data Manager:</b> <%= project.data_manager.display_name_only_safe %></span>
+                <span class="netid-large"><%= project.data_manager.uid %></span>
+            </div>
+            <div class="summary">
                 <div class="path"> <%= project.path %></div>
             </div>
             <div class="summary">
@@ -12,9 +19,11 @@
                <div class="type"><%= project.type %></div>
                <div class="role"><%= project.role(current_user) %></div>
                <div class="download"><%= project.latest_file_list_time %></div>
-               <div class="activity"><%= project.last_activity %></div>
-            </div>
-        </div>
+
+                <% if Flipflop.last_updated_dashboard? %>
+                    <div class="activity"><%= project.last_activity %></div>
+                <% end %>
+
         <div class="storage-details">
           <div class="storage">
             <div class="w3-light-grey w3-round-xlarge">

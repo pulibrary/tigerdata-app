@@ -3,21 +3,23 @@
       <div class="horizontal-frame">
         <div class="vertical-frame">
 
-          <div class="lux field" id="<%= field_name %>_input">
+          <div class="lux-field field" id="<%= field_name %>_input">
             <lux-input-async-select
               label="<%= field_name.titleize %>"
               hide-label="true"
               placeholder="Select a <%= field_name.titleize %>"
               :async-load-items-function="searchUsers"
+              @selected="clearUserError($event,'data-user-error-<%= field_name %>')"
               id="data-user-select-<%= field_name %>"
-              :default-value="{label: '<%= field_value %>', id: '<%= field_id_value %>'}"
+              :default-value="<%= {label: field_value, id: field_id_value}.to_json %>"
               >
               <template v-slot:hidden-input="{ selectedItem }">
+                  <input type="hidden" class="selected_user_label" :value="selectedItem.label"></input>
                   <input type="hidden" name="request[<%= field_name %>]" class="selected_user" :value="selectedItem.id"></input>
               </template>
             </lux-input-async-select>
           </div>
-          <div class="input-error">
+          <div class="input-error" id="data-user-error-<%= field_name %>">
                <%= field_error %>
           </div>
         </div>

@@ -23,7 +23,6 @@ import '../channels/consumer.js';
 
 import { setTargetHtml } from './helper.js';
 import { displayMediafluxVersion } from './mediafluxVersion.js';
-import { showCreateScript } from './atermScripts.js';
 import { dashStyle, dashTab } from './dashboardTabs.js';
 import { departmentAutocomplete } from './departmentAutocomplete.js';
 import { setupTable } from './pulDataTables.js';
@@ -48,12 +47,18 @@ async function searchUsers(query) {
   return [];
 }
 
+function clearUserError(event, component) {
+  document.getElementById(component).innerHTML = '';
+}
+
 // If you are not running a full Vue application, just embedding the component into a static HTML,
 // ruby web app, or similar: one way to bind your logic to the async-load-items-function prop is
 // to add it to the vue application's globalProperties.
 const createMyApp = () => {
   const myapp = createApp(app);
   myapp.config.globalProperties.searchUsers = (query) => searchUsers(query);
+  myapp.config.globalProperties.clearUserError = (event, component) =>
+    clearUserError(event, component);
   return myapp;
 };
 
@@ -70,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.Modal = Modal;
 window.displayMediafluxVersion = displayMediafluxVersion;
-window.showCreateScript = showCreateScript;
 window.dashStyle = dashStyle;
 window.dashTab = dashTab;
 window.setupTable = setupTable;
