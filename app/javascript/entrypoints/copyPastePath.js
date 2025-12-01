@@ -43,9 +43,9 @@ export function copyPastePath() {
   }
   
   $('#copy-project-path-button').on('click', () => {
-    const project_path = $('#copy-project-path-button').data('url');
+    const projectPath = $('#copy-project-path-button').data('url');
     copyPath(
-      project_path,
+      projectPath,
       '#copy-project-path-button',
       '#copy-project-path-label',
       'copy-project-path-label-normal',
@@ -53,7 +53,7 @@ export function copyPastePath() {
     );
   });
 
-  $(function() {
+  $(() => {
     $("#copy-project-path-button").addClass("copy-paste-frames");
   });
 }
