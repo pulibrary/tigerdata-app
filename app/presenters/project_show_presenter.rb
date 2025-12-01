@@ -112,7 +112,7 @@ class ProjectShowPresenter
   end
 
   def submission_provenance
-    @project_mf[:submission]
+    @project.metadata_json["submission"]
   end
 
   def department_codes

@@ -66,6 +66,9 @@
                <% end %>
             </p>
          </div>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
       <ul class="details basic-details-fields">
          <div class="detail-heading">
@@ -92,6 +95,9 @@
                <% end %>
             </p>
          </div>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
       <ul class="details basic-details-fields">
          <div class="detail-heading">
@@ -135,44 +141,49 @@
             </div>
          </div>
          <ul class="sub-details basic-details-fields">
-         <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
-         <div class="detail-pair">
-            <li class="detail-subheading">Mediaflux ID</li>
-            <p class="detail-value"><%= @project.mediaflux_id %></p>
-         </div>
-         <% elsif !@project.in_mediaflux? %>
-         <li class="detail-subheading">Mediaflux ID</li>
-         <p class="detail-value">This project has not been saved to Mediaflux</p>
-         </ul>
-   </div>
-   <% end %>
-   </ul>
-   <ul class="details basic-details-fields">
-      <div class="detail-heading">
-         <div class="heading-text" id="provenance-section">Provenance</div>
-      </div>
-      <ul class="sub-details basic-details-fields">
-         <div class="detail-sub-heading">Submission</div>
+            <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
+               <div class="detail-pair">
+                  <li class="detail-subheading mediaflux-id">Mediaflux ID</li>
+                  <p class="detail-value"><%= @project.mediaflux_id %></p>
+               </div>
+            <% elsif !@project.in_mediaflux? %>
+               <li class="detail-subheading mediaflux-id">Mediaflux ID</li>
+               <p class="detail-value">This project has not been saved to Mediaflux</p>
+            <% end %>
 
-         <div class="detail-pair">
-          <div class="detail-sub-heading provenance-info"> Requested by</div>
-          <div class="detail-value"> <%= @presenter.submission_provenance[:requested_by] %> </div>
+         </ul>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
+
+      <ul class="details basic-details-fields">
+         <div class="detail-heading">
+            <div class="heading-text" id="provenance-section">Provenance</div>
          </div>
-         <div class="detail-pair">
-          <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
-          <div class="detail-value"> <%= @presenter.submission_provenance[:requested_on] %> </div>
-         </div>
-         <div class="detail-pair">
-          <div class="detail-sub-heading provenance-info">Approved by</div>
-          <div class="detail-value"> <%= @presenter.submission_provenance[:approved_by] %> </div>
-         </div>
-         <div class="detail-pair">
-          <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
-          <div class="detail-value"> <%= @presenter.submission_provenance[:approved_on] %> </div>
-         </div>
+         <ul class="sub-details basic-details-fields">
+            <div class="detail-sub-heading">Submission</div>
+            <div class="detail-pair">
+            <div class="detail-sub-heading provenance-info"> Requested by</div>
+            <div class="provenance-value"> <%= @presenter.submission_provenance["requested_by"] %> </div>
+            </div>
+            <div class="detail-pair">
+            <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
+            <div class="provenance-value"> <%= @presenter.submission_provenance["request_date_time"] %> </div>
+            </div>
+            <div class="detail-pair">
+            <div class="detail-sub-heading provenance-info">Approved by</div>
+            <div class="provenance-value"> <%= @presenter.submission_provenance["approved_by"] %> </div>
+            </div>
+            <div class="detail-pair">
+            <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
+            <div class="provenance-value"> <%= @presenter.submission_provenance["approved_on"] %> </div>
+            </div>
+         </ul>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
-   </ul>
-</div>
+   </div>
 </div>
 
 <script type="module">
