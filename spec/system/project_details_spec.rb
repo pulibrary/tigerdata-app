@@ -34,6 +34,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_selector("#description-text")
             expect(page).to have_selector("#description-text-full")
 
+            # Make sure project path is rendered
+            expect(page).to have_css "#project-path-copy"
+            expect(page).to have_content(project_in_mediaflux.project_directory)
+
             # Make sure both data manager and sponsor are rendered
             expect(page).to have_content("#{data_manager.display_name} (#{data_manager.uid})")
             expect(page).to have_content("#{sponsor_user.display_name} (#{sponsor_user.uid})")
