@@ -155,6 +155,10 @@
         .modal-content .text-input,
         .lux-field {
           width: 100%;
+
+          .search-icon {
+            top: 0.5rem;
+          }
         }
       }
 
@@ -518,7 +522,8 @@
       }
 
       .data-manager .text-input,
-      .data-sponsor .text-input {
+      .data-sponsor .text-input,
+      .departments .text-input {
         width: 95%;
       }
 
