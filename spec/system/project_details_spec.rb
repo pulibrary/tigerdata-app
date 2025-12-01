@@ -85,6 +85,30 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_content("Research")
       end
+      it "copies DOI to the clipboard" do
+        sign_in sponsor_user
+        project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+        project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
+        project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
+        project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
+        project_in_mediaflux.save!
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        
+        expect(page.html.include?('<button id="copy-project-path-button"')).to be true
+
+        # A test as follows would be preferrable
+        #
+        # ```
+        #   expect(page).to have_content "COPY"
+        #   click_on "#copy-project-path-button"
+        #   expect(page).to have_css ".copy-paste-check"
+        # ```
+        #
+        # but unfortunately this kind of test only works when we run RSpec like this:
+        #
+        #   RUN_IN_BROWSER=true bundle exec rspec spec/system/project_details_spec.rb
+        #
+      end
     end
 
     context "Empty Project Purpose field" do
