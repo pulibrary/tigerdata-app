@@ -25,12 +25,9 @@ RSpec.describe "The Space Ghost Epic", type: :system, connect_to_mediaflux: fals
       fill_in :description, with: "An awesome project to show the wizard is magic"
       select "Teaching", from: :project_purpose
       expect(page).to have_content "46/1000 characters"
-      expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
-      # Non breaking space `u00A0` is at the end of every option to indicate an option was selected
-      select "(77777) RDSS-Research Data and Scholarship Services\u00A0", from: "department_find"
-      # This is triggering the html5 element like it would normally if the page has focus
-      page.find(:datalist_input, "department_find").execute_script("document.getElementById('department_find').dispatchEvent(new Event('input'))")
-      expect(page).to have_content("(77777) RDSS-Research Data and Scholarship Services")
+      expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
+      select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+      expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
       click_on "Next"
 
