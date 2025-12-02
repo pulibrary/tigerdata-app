@@ -24,5 +24,6 @@ FactoryBot.define do
     departments { [{ name: "RDSS" }, { name: "RC" }] }
     description { "a random description" }
     project_folder { random_project_directory }
+    requested_by { "tigerdatatester" }
   end
 end

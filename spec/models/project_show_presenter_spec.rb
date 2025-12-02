@@ -95,4 +95,37 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
     end
   end
+
+  describe "#submission_provenance" do
+    it "returns the hash containing the project submission and approval provenance" do
+      expect(presenter.submission_provenance).to be_a(Hash)
+      expect(presenter.submission_provenance).to eq(project.metadata_json["submission"])
+    end
+  end
+
+  describe "#requested_by" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.requested_by).to be_a(Hash)
+      expect(presenter.requested_by.values.first).to eq(project.metadata_json["submission"]["requested_by"])
+    end
+  end
+
+  describe "#requested_on" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.requested_on).to be_a(Hash)
+    end
+  end
+
+  describe "#approved_by" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.approved_by).to be_a(Hash)
+      expect(presenter.approved_by.values.first).to eq(project.metadata_json["submission"]["approved_by"])
+    end
+  end
+
+  describe "#approved_on" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.approved_on).to be_a(Hash)
+    end
+  end
 end
