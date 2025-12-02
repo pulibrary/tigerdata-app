@@ -162,6 +162,81 @@
   line-height: 1.5rem; /* 150% */
 }
 
+#copy-project-path-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.copy-paste-frames {
+  background-image: asset_url("copy.svg");
+}
+
+.copy-paste-check {
+  background-image: asset_url("green-checkmark.svg");
+}
+
+copy-paste-error {
+  background-image: asset_url("custom_error.svg");
+}
+
+.pul-copy-paste-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1/1;
+  font-weight: normal;
+}
+
+/* Tooltip text */
+.pul-copy-paste-tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #333 transparent transparent;
+}
+
+.pul-copy-paste-tooltiptext {
+  visibility: hidden; /* Hidden by default */
+  background-color: #333;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  z-index: 1; /* Ensure tooltip is displayed above content */
+  top: -50%;
+  left: 95%;
+  @supports (-webkit-line-clamp: 4) {
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+}
+
+copy-project-path-label-normal {
+  width: 3rem;
+}
+
+.copy-project-path-label-copied {
+  width: 5rem;
+}
+
+/* Show the tooltip text on hover */
+.pul-copy-paste-tooltip:hover .pul-copy-paste-tooltiptext {
+  visibility: visible;
+}
+
 .basic-details-fields {
   padding-top: 30px;
   list-style-type: none;
