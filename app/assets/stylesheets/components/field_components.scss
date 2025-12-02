@@ -35,10 +35,6 @@ input[type="text"]::placeholder {
   line-height: 1.5rem;
 }
 
-input[type="text"]:focus {
-  border-color: $princeton-orange !important;
-}
-
 .required-field {
   border: 1px solid $gray-20;
   background: $white;
