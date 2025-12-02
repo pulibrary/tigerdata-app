@@ -114,6 +114,45 @@
             }
           }
         }
+
+        .learn-more {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          gap: 4px;
+          color: $gray-100;
+          text-align: center;
+          text-decoration: none;
+
+          /* Body S Bold */
+          font-family: "Libre Franklin";
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 24px; /* 150% */
+          border: none;
+          background: $white;
+
+          &::after {
+            background-image: asset_url("open-icon.svg");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            content: "";
+            display: inline-block;
+            height: 12px;
+            margin-left: 8px;
+            position: relative;
+            width: 12px;
+          }
+        }
+        .welcome-actions {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 4px;
+          align-self: stretch;
+        }
       }
       .welcome-right {
         display: flex;
