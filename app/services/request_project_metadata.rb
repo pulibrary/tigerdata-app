@@ -17,8 +17,8 @@ class RequestProjectMetadata
         project_directory: project_directory(request),
         storage_capacity: storage_capacity(request),
         storage_performance_expectations: { requested: "Standard", approved: "Standard" },
-        created_by: nil,
-        created_on: request[:created_at],
+        created_by: request[:requested_by],
+        created_on: request[:created_at], # This is redundant and counterintuitive. Insinuates that the project was created when the request was created.
         project_id: ProjectMetadata::DOI_NOT_MINTED,
         number_of_files: request[:number_of_files],
         hpc: request[:hpc]&.downcase == "yes",

@@ -111,6 +111,46 @@ class ProjectShowPresenter
     @project_mf[:departments] || []
   end
 
+  def submission_provenance
+    @project.metadata_json["submission"]
+  end
+
+  def requested_by
+    user_name_id = {}
+    uid = submission_provenance["requested_by"]
+    return "N/A" if uid.nil?
+
+    user = User.find_by(uid: uid)
+    user_name_id["#{user.given_name} #{user.family_name}"] = uid
+    user_name_id
+  end
+
+  def requested_on
+    date_time = {}
+    date = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%B %d, %Y")
+    time = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
+  end
+
+  def approved_by
+    user_name_id = {}
+    uid = submission_provenance["approved_by"]
+    return "N/A" if uid.nil?
+
+    user = User.find_by(uid: uid)
+    user_name_id["#{user.given_name} #{user.family_name}"] = uid
+    user_name_id
+  end
+
+  def approved_on
+    date_time = {}
+    date = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%B %d, %Y")
+    time = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
+  end
+
   def department_codes
     @dep_with_codes = {}
     departments_list = departments.nil? ? [] : departments.first.split(", ")
