@@ -115,38 +115,36 @@ class ProjectShowPresenter
     @project.metadata_json["submission"]
   end
 
-  def requested_by
-    user_name_id = {}
-    uid = submission_provenance["requested_by"]
-    return "N/A" if uid.nil?
+  def requested_by_display_name
+    requested_by_user.display_name_only_safe
+  end
 
-    user = User.find_by(uid: uid)
-    user_name_id["#{user.given_name} #{user.family_name}"] = uid
-    user_name_id
+   def requested_by_uid
+    requested_by_user.uid
   end
 
   def requested_on
     date_time = {}
-    date = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%B %d, %Y")
-    time = @project.metadata_json["submission"]["request_date_time"].to_datetime.strftime("%I:%M %p")
+    req_date =  safe_date(@project.metadata_json["submission"]["request_date_time"])
+    date = req_date.strftime("%B %d, %Y")
+    time = req_date.strftime("%I:%M %p")
     date_time["#{date}"] = time
     date_time
   end
 
-  def approved_by
-    user_name_id = {}
-    uid = submission_provenance["approved_by"]
-    return "N/A" if uid.nil?
+  def approved_by_display_name
+    approved_by_user.display_name_only_safe
+  end
 
-    user = User.find_by(uid: uid)
-    user_name_id["#{user.given_name} #{user.family_name}"] = uid
-    user_name_id
+  def approved_by_uid
+    approved_by_user.uid
   end
 
   def approved_on
     date_time = {}
-    date = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%B %d, %Y")
-    time = @project.metadata_json["submission"]["approved_on"].to_datetime.strftime("%I:%M %p")
+    approve_date =  safe_date(@project.metadata_json["submission"]["approved_on"])
+    date = approve_date.strftime("%B %d, %Y")
+    time = approve_date.strftime("%I:%M %p")
     date_time["#{date}"] = time
     date_time
   end
@@ -210,6 +208,30 @@ class ProjectShowPresenter
   end
 
   private
+
+    def requested_by_user        
+      @requested_by_user ||= safe_user(submission_provenance["requested_by"])
+    end
+
+    def approved_by_user
+      @approved_by_user ||= safe_user(submission_provenance["approved_by"])
+    end
+
+    def safe_user(uid)
+      if uid.blank?
+        NilUser.new
+      else
+        User.find_by(uid:) ||  NilUser.new
+      end
+    end
+
+    def safe_date(date)
+      if date.blank?
+        NilDate.new
+      else
+        date.to_datetime || NilDate
+      end
+    end
 
     # Capacity is in bytes
     def default_capacity_divisor
