@@ -164,9 +164,9 @@
             <div class="detail-sub-heading">Submission</div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Requested by</div>
-               <div class="provenance-value"> <%=  @presenter.requested_by.keys.first %> </div>
+               <div class="provenance-value"> <%=  @presenter.requested_by_display_name %> </div>
                <lux-badge class="lux-badge lux-badge-grey">
-                  <div class="badge-text"><%= @presenter.requested_by.values.first %></div>
+                  <div class="badge-text"><%= @presenter.requested_by_uid %></div>
                </lux-badge>
             </div>
             <div class="detail-pair">
@@ -175,9 +175,9 @@
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info">Approved by</div>
-               <div class="provenance-value"> <%=  @presenter.approved_by.keys.first %> </div>
+               <div class="provenance-value"> <%=  @presenter.approved_by_display_name %> </div>
                <lux-badge class="lux-badge lux-badge-grey">
-                  <div class="badge-text"><%= @presenter.approved_by.values.first %></div>
+                  <div class="badge-text"><%= @presenter.approved_by_uid %></div>
                </lux-badge>
             </div>
             <div class="detail-pair">
