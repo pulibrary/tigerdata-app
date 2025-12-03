@@ -33,9 +33,9 @@ RSpec.describe "Project Index Page", type: :system do
     let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
     let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda") }
 
-    let!(:project1) { create_project_in_mediaflux(request: request1, current_user: current_user) }
-    let!(:project2) { create_project_in_mediaflux(request: request2, current_user: current_user) }
-    let!(:project3) { create_project_in_mediaflux(request: request3, current_user: current_user) }
+    let(:project1) { create_project_in_mediaflux(request: request1, current_user: current_user) }
+    let(:project2) { create_project_in_mediaflux(request: request2, current_user: current_user) }
+    let(:project3) { create_project_in_mediaflux(request: request3, current_user: current_user) }
 
     after do
       Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
@@ -44,6 +44,20 @@ RSpec.describe "Project Index Page", type: :system do
     end
 
     before do
+      # Ensure projects are re-created in Mediaflux. We're getting intermittent test failures b/c sometimes the
+      # projects already exist in Mediaflux from a previous test run.
+      request1.destroy
+      request2.destroy
+      request3.destroy
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+      request1
+      request2
+      request3
+      project1
+      project2
+      project3
       sign_in current_user
       project_not_in_mediaflux
     end
