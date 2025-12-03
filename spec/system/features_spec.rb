@@ -19,6 +19,7 @@ describe "features", type: :system, js: true do
       visit "/features"
       expect(page).not_to have_content("Disable login to the web portal")
       expect(page).not_to have_content("Last updated dashboard")
+      expect(page).not_to have_content("Project type indicator")
     end
   end
 
@@ -33,6 +34,7 @@ describe "features", type: :system, js: true do
       visit "/features"
       expect(page).not_to have_content("Disable login to the web portal")
       expect(page).not_to have_content("Last updated dashboard")
+      expect(page).not_to have_content("Project type indicator")
     end
   end
 
@@ -47,6 +49,7 @@ describe "features", type: :system, js: true do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
       expect(page).to have_content("Last updated dashboard")
+      expect(page).to have_content("Project type indicator")
     end
   end
 
@@ -61,6 +64,7 @@ describe "features", type: :system, js: true do
       visit "/features"
       expect(page).to have_content("Disable login to the web portal")
       expect(page).to have_content("Last updated dashboard")
+      expect(page).to have_content("Project type indicator")
     end
   end
 end
