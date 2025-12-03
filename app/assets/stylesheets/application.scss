@@ -141,60 +141,32 @@ h6 {
   align-items: center;
   gap: 0.25rem;
   border-radius: 0.25rem;
-}
 
-.pul-button:focus {
-  border-color: $princeton-orange !important;
-  border-width: 2px;
-  box-shadow: 0 0 0 0.2rem $bright-blue;
-}
+  &:focus {
+    border-width: 2px;
+    box-shadow: 0 0 0 0.2rem $bright-blue;
+  }
+  &:active {
+    border-color: $black;
+    /* Outline properties */
+    outline-style: solid;
+    outline-color: black;
+    outline-width: 1px; /* Adjust outline thickness */
+    box-shadow: 0 0 0 0.2rem $white;
 
-.pul-button:hover {
-  text-decoration: underline !important;
+    /* Space between button and outline */
+    outline-offset: 2px; /* Adjust the offset as needed */
+  }
+
+  &:hover {
+    text-decoration: underline !important;
+  }
 }
 
 .pul-button-primary {
   background: $gray-100;
   color: $white;
   text-decoration: none;
-}
-
-a.pul-button-primary {
-  /* Outline properties */
-  outline-style: solid;
-  outline-color: black;
-  outline-width: 1px; /* Adjust outline thickness */
-
-  /* Space between button and outline */
-  outline-offset: 2px; /* Adjust the offset as needed */
-}
-input[type="submit"]:enabled.pul-button-primary {
-  /* Outline properties */
-  outline-style: solid;
-  outline-color: black;
-  outline-width: 1px; /* Adjust outline thickness */
-
-  /* Space between button and outline */
-  outline-offset: 2px; /* Adjust the offset as needed */
-}
-
-input[type="submit"]:enabled.pul-button-secondary {
-  /* Outline properties */
-  outline-style: solid;
-  outline-color: black;
-  outline-width: 1px; /* Adjust outline thickness */
-
-  /* Space between button and outline */
-  outline-offset: 2px; /* Adjust the offset as needed */
-}
-input[type="button"]:enabled.pul-button-secondary {
-  /* Outline properties */
-  outline-style: solid;
-  outline-color: black;
-  outline-width: 1px; /* Adjust outline thickness */
-
-  /* Space between button and outline */
-  outline-offset: 2px; /* Adjust the offset as needed */
 }
 
 .pul-button-primary:hover {
