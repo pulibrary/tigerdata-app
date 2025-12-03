@@ -37,9 +37,9 @@
             <li class="detail-subheading">Project Purpose</li>
             <p class="detail-value" id="project-purpose-value">
                <% if @presenter.project_purpose.blank? %>
-               <strong class="px-0">&mdash;</strong>
+                 <strong class="px-0">&mdash;</strong>
                <% else %>
-               <%= @presenter.project_purpose %>
+                 <%= @presenter.project_purpose %>
                <% end %>
             </p>
          </div>
@@ -51,18 +51,18 @@
             <li class="detail-subheading">Department(s)</li>
             <p class="detail-value">
                <% if @presenter.departments.empty? %>
-               <strong class="px-0">&mdash;</strong>
+                 <strong class="px-0">&mdash;</strong>
                <% else %>
-                <div class="departments-group">
-                  <% @presenter.department_codes.each do |dept|%>
-                    <div class="departments-container">
-                      <lux-badge class="lux-badge lux-badge-white departments">
-                        <div class="badge-text"><%= dept.second %></div>
-                      </lux-badge>
-                      <div class="departments-name"><%= dept.first %> </div>
-                    </div>
-                  <%end%>
-                </div>
+                 <div class="departments-group">
+                   <% @presenter.department_codes.each do |dept|%>
+                     <div class="departments-container">
+                       <lux-badge class="lux-badge lux-badge-white departments">
+                         <div class="badge-text"><%= dept.second %></div>
+                       </lux-badge>
+                       <div class="departments-name"><%= dept.first %> </div>
+                     </div>
+                   <%end%>
+                 </div>
                <% end %>
             </p>
          </div>

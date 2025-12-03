@@ -240,10 +240,14 @@ copy-project-path-label-normal {
 .basic-details-fields {
   padding-top: 30px;
   list-style-type: none;
-  width: 75rem;
+  width: 100%;
   height: auto;
   flex-shrink: 0;
   padding-left: 0rem;
+}
+
+blockquote {
+  line-break: anywhere;
 }
 
 .detail-table-label {
