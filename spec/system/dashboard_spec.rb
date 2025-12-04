@@ -21,18 +21,24 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:docker_response) { Mediaflux::EXPECTED_VERSION }
 
     let(:request_111) { FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111" }
-    let!(:project_111) { request_111.approve(current_user) }
+    let(:project_111) { request_111.approve(current_user) }
 
     let(:request_222) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222" }
-    let!(:project_222) { request_222.approve(current_user) }
+    let(:project_222) { request_222.approve(current_user) }
 
     let(:request_333) do
       FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
     end
-    let!(:project_333) { request_333.approve(current_user) }
+    let(:project_333) { request_333.approve(current_user) }
+
+    let(:created_projects) { [] }
 
     before do
       allow(File).to receive(:size) { 1_234_567 }
+    end
+
+    after do
+      created_projects.each { |project| Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve }
     end
 
     context "current user dashboard - non admin user" do
@@ -54,6 +60,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "shows the projects based on the user's role" do
         sign_in current_user
+        created_projects.push(project_111, project_222, project_333)
+
         visit dashboard_path
 
         expect(page).to have_content "Sponsor"
@@ -73,6 +81,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "shows the latests downloads available" do
+        created_projects.push(project_111, project_222, project_333)
+
         approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
@@ -105,6 +115,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "allows for navigation back to user dashboard when clicking logo" do
         sign_in current_user
+        created_projects << project_222
+
         visit project_path(project_222)
         expect(page).to have_content "project 222"
         page.find(:css, "#logo").click
@@ -112,10 +124,12 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "paginates the projects; 8 per page" do
+        created_projects.push(project_111, project_222, project_333)
         projects = (1..17).map do
           request_nnn = FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid
           project = request_nnn.approve(current_user)
           project.save!
+          created_projects << project
           project
         end
 
@@ -171,6 +185,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "shows the system administrator dashboard", js: true do
         sign_in developer_user
+        created_projects.push(project_111, project_222, project_333)
+
         visit dashboard_path
         expect(page).to have_content "project 111"
         expect(page).to have_content "project 222"
@@ -198,6 +214,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_select("emulation_menu")
       end
       it "displays sponsored projects when emulating a data sponsor" do
+        created_projects.push(project_111, project_222, project_333)
+
         sign_in current_user
         current_user.trainer = true
         current_user.save!
@@ -210,6 +228,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         end
       end
       it "displays sponsored projects when emulating a data manager" do
+        created_projects.push(project_111, project_222, project_333)
+
         sign_in current_user
         current_user.trainer = true
         current_user.save!
@@ -241,6 +261,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "shows the system administrator dashboard" do
         sign_in admin_user
+        created_projects.push(project_111, project_222)
+
         visit dashboard_path
         click_on "Administration"
         sleep(1)
