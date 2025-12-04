@@ -54,25 +54,27 @@ class ProjectShowPresenter
   end
 
   def data_sponsor
-    User.find_by(uid: @project_mf[:data_sponsor])
+    @data_sponsor ||= User.find_by(uid: @project_mf[:data_sponsor])
   end
 
   def data_manager
-    User.find_by(uid: @project_mf[:data_manager])
+    @data_manager ||= User.find_by(uid: @project_mf[:data_manager])
   end
 
   def data_read_only_users
-    (@project_mf[:ro_users] || []).map { |uid| ReadOnlyUser.find_by(uid:) }.compact
+    (@project_mf[:ro_users] || []).map { |uid| UserPresenter.new(User.find_by(uid:)) }.compact
   end
 
   def data_read_write_users
-    (@project_mf[:rw_users] || []).map { |uid| User.find_by(uid:) }.compact
+    (@project_mf[:rw_users] || []).map { |uid| UserReadWritePresenter.new(User.find_by(uid:)) }.compact
   end
 
   def data_users
-    unsorted_data_users = data_read_only_users + data_read_write_users
-    sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
-    sorted_data_users.uniq { |u| u.uid }
+    @data_users ||= begin
+                      unsorted_data_users = data_read_only_users + data_read_write_users
+                      sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
+                      sorted_data_users.uniq { |u| u.uid }
+                    end
   end
 
   def data_user_names
