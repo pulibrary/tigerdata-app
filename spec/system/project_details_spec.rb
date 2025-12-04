@@ -39,8 +39,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_content(project_in_mediaflux.project_directory)
 
             # Make sure both data manager and sponsor are rendered
-            expect(page).to have_content("#{data_manager.display_name} (#{data_manager.uid})")
-            expect(page).to have_content("#{sponsor_user.display_name} (#{sponsor_user.uid})")
+            expect(page).to have_content("Data Manager\n#{data_manager.display_name}\n#{data_manager.uid}")
+            expect(page).to have_content("Data Sponsor\n#{sponsor_user.display_name}\n#{sponsor_user.uid}")
 
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading

@@ -187,3 +187,9 @@ h6 {
   color: $white;
   background-color: $black-hover;
 }
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
