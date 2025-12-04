@@ -270,6 +270,8 @@ blockquote {
   border-radius: 0.5rem;
   border: 1px solid $gray-10;
   margin-bottom: 2rem;
+  max-height: 33rem;
+  overflow: scroll;
   .detail-row {
     display: flex;
     padding: 0 1rem 1rem 1rem;
