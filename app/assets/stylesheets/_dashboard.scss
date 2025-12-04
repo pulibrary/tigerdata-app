@@ -331,6 +331,9 @@
       justify-content: center;
       align-items: center;
       gap: 0.75rem;
+      @media (min-width: 1280px) {
+        width: 20rem;
+      }
 
       .storage {
         display: flex;
