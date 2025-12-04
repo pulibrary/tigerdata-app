@@ -150,11 +150,26 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
-      it "shows provenance events" do
+      let(:approval_event) { FactoryBot.create(:approval_event, project: project) }
+      it "shows submission events" do
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page).to have_content "#{submission_event.event_details}, #{submission_event.created_at.to_time.in_time_zone('America/New_York').iso8601}"
+        expect(page).to have_content("Requested by")
+        expect(page).to have_css(".provenance-value", count: 4)
+        expect(page).to have_content "Requested Date–Time"
+        expect(page).to have_content "#{submission_event.created_at.to_datetime.strftime("%B %d, %Y")}"
+        expect(page).to have_content "#{submission_event.created_at.to_datetime.strftime("%I:%M %p")}"
+      end
+      it "shows approval events" do
+        approval_event
+        sign_in sponsor_user
+        visit "/projects/#{project.id}/details"
+        expect(page).to have_content("Approved by")
+        expect(page).to have_css(".provenance-value", count: 4)
+        expect(page).to have_content "Approval Date–Time"
+        expect(page).to have_content "#{approval_event.created_at.to_datetime.strftime("%B %d, %Y")}"
+        expect(page).to have_content "#{approval_event.created_at.to_datetime.strftime("%I:%M %p")}"
       end
       it "shows the project status under the provenance section" do
         submission_event

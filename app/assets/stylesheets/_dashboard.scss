@@ -429,14 +429,6 @@
       gap: 1px;
 
       .request-btn {
-        /* Outline properties */
-        outline-style: solid;
-        outline-color: black;
-        outline-width: 1px; /* Adjust outline thickness */
-
-        /* Space between button and outline */
-        outline-offset: 2px; /* Adjust the offset as needed */
-
         display: flex;
         padding: 0.5rem 1.25rem;
         align-items: flex-start;
@@ -451,17 +443,24 @@
         &:hover {
           background: $gray-60;
         }
+        &:active {
+          /* Outline properties */
+          outline-style: solid;
+          outline-color: black;
+          outline-width: 1px; /* Adjust outline thickness */
+          box-shadow: 0 0 0 0.2rem $white;
+
+          /* Space between button and outline */
+          outline-offset: 2px; /* Adjust the offset as needed */
+        }
+        &:focus {
+          border-width: 2px;
+          box-shadow: 0 0 0 0.2rem $bright-blue;
+          outline-color: $bright-blue;
+        }
       }
 
       .request-options {
-        /* Outline properties */
-        outline-style: solid;
-        outline-color: black;
-        outline-width: 1px; /* Adjust outline thickness */
-
-        /* Space between button and outline */
-        outline-offset: 2px; /* Adjust the offset as needed */
-
         display: flex;
         padding: 0.5rem 0.25rem;
         align-items: flex-start;
@@ -479,6 +478,16 @@
         }
         &:hover {
           background: $gray-60;
+        }
+        &:active {
+          /* Outline properties */
+          outline-style: solid;
+          outline-color: black;
+          outline-width: 1px; /* Adjust outline thickness */
+          box-shadow: 0 0 0 0.2rem $white;
+
+          /* Space between button and outline */
+          outline-offset: 2px; /* Adjust the offset as needed */
         }
       }
 

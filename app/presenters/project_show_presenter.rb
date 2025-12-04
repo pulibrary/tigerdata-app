@@ -111,6 +111,44 @@ class ProjectShowPresenter
     @project_mf[:departments] || []
   end
 
+  def submission_provenance
+    @project.metadata_json["submission"]
+  end
+
+  def requested_by_display_name
+    requested_by_user.display_name_only_safe
+  end
+
+   def requested_by_uid
+    requested_by_user.uid
+  end
+
+  def requested_on
+    date_time = {}
+    req_date =  safe_date(@project.metadata_json["submission"]["request_date_time"])
+    date = req_date.strftime("%B %d, %Y")
+    time = req_date.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
+  end
+
+  def approved_by_display_name
+    approved_by_user.display_name_only_safe
+  end
+
+  def approved_by_uid
+    approved_by_user.uid
+  end
+
+  def approved_on
+    date_time = {}
+    approve_date =  safe_date(@project.metadata_json["submission"]["approved_on"])
+    date = approve_date.strftime("%B %d, %Y")
+    time = approve_date.strftime("%I:%M %p")
+    date_time["#{date}"] = time
+    date_time
+  end
+
   def department_codes
     @dep_with_codes = {}
     departments_list = departments.nil? ? [] : departments.first.split(", ")
@@ -170,6 +208,30 @@ class ProjectShowPresenter
   end
 
   private
+
+    def requested_by_user        
+      @requested_by_user ||= safe_user(submission_provenance["requested_by"])
+    end
+
+    def approved_by_user
+      @approved_by_user ||= safe_user(submission_provenance["approved_by"])
+    end
+
+    def safe_user(uid)
+      if uid.blank?
+        NilUser.new
+      else
+        User.find_by(uid:) ||  NilUser.new
+      end
+    end
+
+    def safe_date(date)
+      if date.blank?
+        NilDate.new
+      else
+        date.to_datetime || NilDate
+      end
+    end
 
     # Capacity is in bytes
     def default_capacity_divisor

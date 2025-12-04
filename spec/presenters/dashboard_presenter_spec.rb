@@ -7,10 +7,10 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   let(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:other_user) { FactoryBot.create :user, uid: "kl37" }
 
-  let(:request1) { FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: other_user.uid }
-  let(:request2) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: current_user.uid }
-  let(:request3) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, user_roles: [{"uid" => current_user.uid, "read_only" => true}] }
-  let(:request4) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid }
+  let(:request1) { FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: other_user.uid, requested_by: other_user.uid }
+  let(:request2) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: current_user.uid, requested_by: other_user.uid }
+  let(:request3) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, user_roles: [{"uid" => current_user.uid, "read_only" => true}], requested_by: other_user.uid }
+  let(:request4) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, requested_by: other_user.uid }
 
   let!(:project1) { request1.approve(current_user) }
   let!(:project2) {

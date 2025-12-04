@@ -95,4 +95,94 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
     end
   end
+
+  describe "#submission_provenance" do
+    it "returns the hash containing the project submission and approval provenance" do
+      expect(presenter.submission_provenance).to be_a(Hash)
+      expect(presenter.submission_provenance).to eq(project.metadata_json["submission"])
+    end
+  end
+
+  describe "#requested_by_uid" do
+    it "returns the uid" do
+      expect(presenter.requested_by_uid).to be_a(String)
+      expect(presenter.requested_by_uid).to eq(project.metadata_json["submission"]["requested_by"])
+    end
+
+    context "when requested by is blank" do
+      before do
+        project.metadata_json["submission"]["requested_by"] = nil
+      end
+
+      it "returns an empty string" do
+        expect(presenter.requested_by_uid).to be_a(String)
+        expect(presenter.requested_by_uid).to eq("")
+      end
+    end
+  end
+
+  describe "#requested_by_display_name" do
+    it "returns the display name " do
+      expect(presenter.requested_by_display_name).to be_a(String)
+      expect(presenter.requested_by_display_name).to eq(current_user.display_name_only_safe)
+    end
+
+    context "when requested by is blank" do
+      before do
+        project.metadata_json["submission"]["requested_by"] = nil
+      end
+
+      it "returns an empty string" do
+        expect(presenter.requested_by_display_name).to be_a(String)
+        expect(presenter.requested_by_display_name).to eq("NA")
+      end
+    end
+  end
+
+  describe "#requested_on" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.requested_on).to be_a(Hash)
+    end
+  end
+
+  describe "#approved_by_uid" do
+    it "returns the aprrover uid" do
+      expect(presenter.approved_by_uid).to be_a(String)
+      expect(presenter.approved_by_uid).to eq(project.metadata_json["submission"]["approved_by"])
+    end
+
+    context "when approved by is blank" do
+      before do
+        project.metadata_json["submission"]["approved_by"] = nil
+      end
+
+      it "returns an empty string" do
+        expect(presenter.approved_by_uid).to be_a(String)
+        expect(presenter.approved_by_uid).to eq("")
+      end
+    end
+  end
+
+  describe "#approved_by_display_name" do
+    it "returns the approver uid" do
+      expect(presenter.approved_by_display_name).to be_a(String)
+      expect(presenter.approved_by_display_name).to eq(current_user.display_name_only_safe)
+    end
+
+    context "when approved by is blank" do
+      before do
+        project.metadata_json["submission"]["approved_by"] = nil
+      end
+
+      it "returns an empty string" do
+        expect(presenter.approved_by_display_name).to be_a(String)
+        expect(presenter.approved_by_display_name).to eq("NA")
+      end
+    end
+  end
+  describe "#approved_on" do
+    it "generates the string-serialized XML for the Project XML Document" do
+      expect(presenter.approved_on).to be_a(Hash)
+    end
+  end
 end

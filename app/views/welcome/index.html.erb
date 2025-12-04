@@ -11,10 +11,11 @@
             <p>TigerData is a data management service for the Princeton research community that includes a suite of software tools and scalable, tiered storage to enable the organization, description, storage, sharing, and long-term sustainability of research and administrative data. </p>
             <p>It enables the things you want to do (with your data), and makes it easier to do the things you have to do.</p>
           </div>
-          <%= button_to "Learn More", "https://tigerdata.princeton.edu", class: "pul-button pul-button-primary", id: "learn-more-button" %>
-
-          <div class="welcome-warn">
-              <p>Log in is currently limited to early adopters. <%= link_to "Contact us", "mailto:td-frontend@princeton.edu" %> for more information.</p>
+          <div class="welcome-actions">
+            <% unless Flipflop.disable_login? %>
+              <%= button_to "Login", user_cas_omniauth_authorize_path, class: "pul-button pul-button-primary", id: "login-button" %>
+            <% end %>
+            <%= link_to "Learn More", "https://tigerdata.princeton.edu", class: "pul-button learn-more", id: "learn-more-button", target: "_blank" %>
           </div>
         </div>
       </div>

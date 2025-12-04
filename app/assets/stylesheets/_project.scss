@@ -240,10 +240,14 @@ copy-project-path-label-normal {
 .basic-details-fields {
   padding-top: 30px;
   list-style-type: none;
-  width: 75rem;
+  width: 100%;
   height: auto;
   flex-shrink: 0;
   padding-left: 0rem;
+}
+
+blockquote {
+  line-break: anywhere;
 }
 
 .detail-table-label {
@@ -297,7 +301,18 @@ copy-project-path-label-normal {
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-right: 1.25rem;
+  line-height: 1.5rem; /* 150% */
+  width: 11.5rem;
+}
+.provenance-info {
+  font-weight: 200;
+}
+.provenance-value {
+  font-size: 1rem;
+  font-weight: 200;
+  line-height: 1.5rem; /* 150% */
 }
 
 .departments-group {
@@ -320,6 +335,12 @@ copy-project-path-label-normal {
   background: white;
   color: black;
   margin-left: 1em;
+}
+
+.lux-badge.lux-badge-grey {
+  background: #eee;
+  color: black;
+  margin: 0.15rem 0.25rem 0.25rem 0;
 }
 
 .data-users-section {

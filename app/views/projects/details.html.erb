@@ -37,9 +37,9 @@
             <li class="detail-subheading">Project Purpose</li>
             <p class="detail-value" id="project-purpose-value">
                <% if @presenter.project_purpose.blank? %>
-               <strong class="px-0">&mdash;</strong>
+                 <strong class="px-0">&mdash;</strong>
                <% else %>
-               <%= @presenter.project_purpose %>
+                 <%= @presenter.project_purpose %>
                <% end %>
             </p>
          </div>
@@ -51,21 +51,24 @@
             <li class="detail-subheading">Department(s)</li>
             <p class="detail-value">
                <% if @presenter.departments.empty? %>
-               <strong class="px-0">&mdash;</strong>
+                 <strong class="px-0">&mdash;</strong>
                <% else %>
-                <div class="departments-group">
-                  <% @presenter.department_codes.each do |dept|%>
-                    <div class="departments-container">
-                      <lux-badge class="lux-badge lux-badge-white departments">
-                        <div class="badge-text"><%= dept.second %></div>
-                      </lux-badge>
-                      <div class="departments-name"><%= dept.first %> </div>
-                    </div>
-                  <%end%>
-                </div>
+                 <div class="departments-group">
+                   <% @presenter.department_codes.each do |dept|%>
+                     <div class="departments-container">
+                       <lux-badge class="lux-badge lux-badge-white departments">
+                         <div class="badge-text"><%= dept.second %></div>
+                       </lux-badge>
+                       <div class="departments-name"><%= dept.first %> </div>
+                     </div>
+                   <%end%>
+                 </div>
                <% end %>
             </p>
          </div>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
       <ul class="details basic-details-fields">
          <div class="detail-heading">
@@ -92,6 +95,9 @@
                <% end %>
             </p>
          </div>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
       <ul class="details basic-details-fields">
          <div class="detail-heading">
@@ -135,38 +141,55 @@
             </div>
          </div>
          <ul class="sub-details basic-details-fields">
-         <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
-         <div class="detail-pair">
-            <li class="detail-subheading">Mediaflux ID</li>
-            <p class="detail-value"><%= @project.mediaflux_id %></p>
-         </div>
-         <% elsif !@project.in_mediaflux? %>
-         <li class="detail-subheading">Mediaflux ID</li>
-         <p class="detail-value">This project has not been saved to Mediaflux</p>
+            <% if @project.in_mediaflux? && (current_user.developer? || current_user.eligible_sysadmin?) %>
+               <div class="detail-pair">
+                  <li class="detail-subheading mediaflux-id">Mediaflux ID</li>
+                  <p class="detail-value"><%= @project.mediaflux_id %></p>
+               </div>
+            <% elsif !@project.in_mediaflux? %>
+               <li class="detail-subheading mediaflux-id">Mediaflux ID</li>
+               <p class="detail-value">This project has not been saved to Mediaflux</p>
+            <% end %>
+
          </ul>
-   </div>
-   <% end %>
-   </ul>
-   <ul class="details basic-details-fields">
-      <div class="detail-heading">
-         <div class="heading-text" id="provenance-section">Provenance</div>
-      </div>
-      <ul class="sub-details basic-details-fields">
-         <div class="detail-sub-heading">
-            <div class="heading-text">Submission</div>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
+
+      <ul class="details basic-details-fields">
+         <div class="detail-heading">
+            <div class="heading-text" id="provenance-section">Provenance</div>
          </div>
-         <% @provenance_events.each do |event| %>
-         <li class="provenance">
-            <%= event.event_details %>, <%=event.created_at.to_time.in_time_zone("America/New_York").iso8601%>
-            <% if current_user.eligible_sysadmin? && event.event_type = ProvenanceEvent::DEBUG_OUTPUT_TYPE && event.event_note %>
-            <blockquote>
-               <%= event.event_note %>
-            </blockquote>
-            <% end %>
-            <% end %>
+         <ul class="sub-details basic-details-fields">
+            <div class="detail-sub-heading">Submission</div>
+            <div class="detail-pair">
+               <div class="detail-sub-heading provenance-info"> Requested by</div>
+               <div class="provenance-value"> <%=  @presenter.requested_by_display_name %> </div>
+               <lux-badge class="lux-badge lux-badge-grey">
+                  <div class="badge-text"><%= @presenter.requested_by_uid %></div>
+               </lux-badge>
+            </div>
+            <div class="detail-pair">
+               <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
+               <div class="provenance-value"> <%= @presenter.requested_on.keys.first %> <%= @presenter.requested_on.values.first %> </div>
+            </div>
+            <div class="detail-pair">
+               <div class="detail-sub-heading provenance-info">Approved by</div>
+               <div class="provenance-value"> <%=  @presenter.approved_by_display_name %> </div>
+               <lux-badge class="lux-badge lux-badge-grey">
+                  <div class="badge-text"><%= @presenter.approved_by_uid %></div>
+               </lux-badge>
+            </div>
+            <div class="detail-pair">
+               <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
+               <div class="provenance-value"> <%= @presenter.approved_on.keys.first %> <%= @presenter.approved_on.values.first %></div>
+            </div>
+         </ul>
+         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+            <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
+         </svg>
       </ul>
-   </ul>
-</div>
+   </div>
 </div>
 
 <script type="module">
