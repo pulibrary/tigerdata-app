@@ -48,8 +48,8 @@ class ProjectMetadata
   def self.safe_directory(directory)
     return "" if directory.nil?
 
-    # only alphanumeric characters and /
-    directory.strip.gsub(/[^A-Za-z\d\/_]/, "-")
+    # only alphanumeric characters, underscores, and /
+    directory.strip.gsub(/[^A-Za-z\d_\/]/, "-")
   end
 
   attr_accessor(
