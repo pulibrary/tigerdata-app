@@ -49,7 +49,7 @@ class ProjectMetadata
     return "" if directory.nil?
 
     # only alphanumeric characters and /
-    directory.strip.gsub(/[^A-Za-z\d\/]/, "-")
+    directory.strip.gsub(/[^A-Za-z\d\/_]/, "-")
   end
 
   attr_accessor(
