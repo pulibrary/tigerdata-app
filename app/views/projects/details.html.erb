@@ -4,7 +4,7 @@
    <button id="project-content" class="tab-nav"> Content Preview </button>
    <button id="project-details" class="tab-nav"> Details </button>
 </div>
-<div class="basic-details-container">
+<div class="basic-details-container lux">
    <div class="basic-details-navigation">
       <ul>
          <li><a id="basic-details-link" href="#basic-details-section">Basic Details</a></li>
@@ -66,7 +66,7 @@
                <% end %>
             </p>
          </div>
-         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
             <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
          </svg>
       </ul>
@@ -79,23 +79,30 @@
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Data Sponsor</li>
-            <p class="detail-value"><%= @presenter.data_sponsor.display_name_safe %></p>
+            <p class="detail-value"><%= render partial: 'shared/user_display', locals: {user_name: @presenter.data_sponsor.display_name_only_safe, user_id: @presenter.data_sponsor.uid }%></p>
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Data Manager</li>
-            <p class="detail-value"><%= @presenter.data_manager.display_name_safe %></p>
+            <p class="detail-value"><%= render partial: 'shared/user_display', locals: {user_name: @presenter.data_manager.display_name_only_safe, user_id: @presenter.data_manager.uid }%></p>
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Data User(s)</li>
             <p class="detail-value">
-               <% if @presenter.data_user_names == 0 %>
-               <strong class="px-0">&mdash;</strong>
+               <% if @presenter.data_users.count == 0 %>
+                 <strong class="px-0">&mdash;</strong>
                <% else %>
-               <%= @presenter.data_user_names %>
+                 <div class="detail-table">
+                    <% @presenter.data_users.each do |user| %>
+                        <div class="detail-row<%= "-last" if user == @presenter.data_users.last %>">
+                           <div class="detail-subheading"><%= render partial: 'shared/user_display', locals: {user_name: user.display_name, user_id: user.uid }%></div>
+                           <div class="detail-value"><%= user.access_type %></div>
+                        </div>
+                    <% end %>
+                 </div>
                <% end %>
             </p>
          </div>
-         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
             <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
          </svg>
       </ul>
@@ -152,7 +159,7 @@
             <% end %>
 
          </ul>
-         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
             <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
          </svg>
 
@@ -185,7 +192,7 @@
                <div class="provenance-value"> <%= @presenter.approved_on.keys.first %> <%= @presenter.approved_on.values.first %></div>
             </div>
          </ul>
-         <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
+         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
             <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
          </svg>
       </ul>

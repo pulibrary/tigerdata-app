@@ -270,27 +270,28 @@ blockquote {
   border-radius: 0.5rem;
   border: 1px solid $gray-10;
   margin-bottom: 2rem;
+  max-height: 33rem;
+  overflow: scroll;
   .detail-row {
     display: flex;
-    padding: 1rem 1rem 2rem 1rem;
+    padding: 0 1rem 1rem 1rem;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     border-bottom: 1px solid $gray-10;
   }
   .detail-row-last {
     border-bottom: none;
     display: flex;
-    padding: 1rem;
+    padding: 0 1rem 0 1rem;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
   }
   .detail-subheading {
-    line-height: 0 !important;
     margin: 0 !important;
+    width: max-content;
   }
 
   .detail-value {
-    line-height: 0 !important;
     margin: 0 !important;
   }
 }
