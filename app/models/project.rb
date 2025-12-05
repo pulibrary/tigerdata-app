@@ -253,11 +253,6 @@ class Project < ApplicationRecord
       end
     end
 
-    # Ensure that the project directory is a valid path
-    def safe_directory(directory)
-      Project.safe_directory(directory)
-    end
-
     def log_elapsed(start_time, prefix, message)
       elapsed_time = Time.zone.now - start_time
       timing_info = "#{format('%.2f', elapsed_time)} s"
