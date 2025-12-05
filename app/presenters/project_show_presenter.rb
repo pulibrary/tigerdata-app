@@ -211,7 +211,7 @@ class ProjectShowPresenter
 
   private
 
-    def requested_by_user        
+    def requested_by_user
       @requested_by_user ||= safe_user(submission_provenance["requested_by"])
     end
 
