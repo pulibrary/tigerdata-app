@@ -1,11 +1,17 @@
 A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= request_url(@request) %>
 Here is a preview of the request details:
 
-title: <%= @request.project_title %>
-description: <%= @request.description %>
-state: <%= @request.state %>
-data_sponsor: <%= @request.data_sponsor %>
-data_manager: <%= @request.data_manager %>
-departments: <%= @request.departments %>
-data_user: <%= @request.user_roles %>
-storage_capacity: <%= @request.quota%>
+<% @request_presenter = RequestPresenter.new(@request) %> 
+Project Title: <%= @request.project_title %>
+Project Directory: <%= @request_presenter.project_directory %>
+Project Purpose: <%= @request_presenter.project_purpose %>
+Project Description: <%= @request.description %>
+Department(s): <%= @request_presenter.departments_list %>
+Data Sponsor: <%= @request_presenter.data_sponsor %>
+Data Manager: <%= @request_presenter.data_manager %>
+Data User(s): <%= @request_presenter.user_list %>
+Requested Quota: <%= @request.approved_quota_size %> <%= @request.approved_quota_unit %>
+Estimated Number of Files: <%= @request.number_of_files %>
+Needs HPC?: <%= @request.hpc %>
+Needs SMB?: <%= @request.smb %>
+Needs Globus? <%= @request.globus %>
