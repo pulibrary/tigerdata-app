@@ -11,7 +11,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", sysadmin: true, display_name: "Sally O'Smith") }
+    let(:current_user) { FactoryBot.create(:user, uid: "pul123", display_name: "Sally O'Smith") }
     it "walks through the wizard if the feature is enabled" do
       sign_in current_user
       visit "/"
@@ -64,10 +64,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
     it "can not submit if the request is not valid" do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-      request = Request.create
+      request = Request.create(requested_by: current_user.uid)
       sign_in current_user
-      visit "/"
-      click_on "New Project Request"
       visit "/new-project/review-submit/#{request.id}"
       expect(page).to have_content "Take a moment to review"
       click_on("Submit")
@@ -93,10 +91,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("Your new project request is submitted")
     end
 
-    context "non sysadmin user" do
-      let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    context "a sysadmin user" do
+      let(:current_user) { FactoryBot.create(:sysadmin, uid: "pul123") }
 
-      it "allows users to walk through the wizard" do
+      it "allows sysadmins to walk through the wizard" do
         sign_in current_user
         visit "/"
         click_on "New Project Request"

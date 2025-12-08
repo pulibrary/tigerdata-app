@@ -19,8 +19,9 @@ class RequestsController < ApplicationController
   end
 
   def show
-    if current_user.developer || current_user.sysadmin || current_user.trainer
-      @request_model = Request.find(params[:id])
+    @request_model = Request.find(params[:id])
+
+    if current_user.uid == @request_model.requested_by || current_user.developer || current_user.sysadmin || current_user.trainer
       @request_presenter = RequestPresenter.new(@request_model)
       add_breadcrumb("New Project Request", new_project_project_info_path)
       render :show
