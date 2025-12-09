@@ -137,10 +137,8 @@ describe "#file_list", integration: true do
   let(:manager) { sponsor_and_data_manager_user }
   let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user) }
-  let!(:project) do
-    request = FactoryBot.create(:request_project)
-    request.approve(manager)
-  end
+  let(:request) { FactoryBot.create(:request_project) }
+  let(:project) { request.approve(manager) }
 
   before do
     # create a collection so it can be filtered
@@ -174,9 +172,17 @@ describe "#file_list", integration: true do
     visit "/projects/#{project.id}"
     expect(page).to have_content("Access Denied")
   end
-  it "does not allow a user to approve a project" do
+  it "does not allow any user to visit the request" do
     sign_in user
-    visit "/requests/#{project.id}" # this is the url a sysadmin can approve a project
+    visit "/requests/#{request.id}"
     expect(page).to have_content("You do not have access to this page.")
+  end
+  it "does not allow the requestor to approve the request" do
+    request.requested_by = user.uid
+    request.save
+    sign_in user
+    visit "/requests/#{request.id}"
+    expect(page).to have_content(request.project_title)
+    expect(page).not_to have_content("Approve")
   end
 end

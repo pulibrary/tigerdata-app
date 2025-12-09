@@ -117,4 +117,19 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.title).to eq("title abc again")
     end
   end
+
+  describe "#safe_directory" do
+    it "handles nil values" do
+      expect(described_class.safe_directory(nil)).to eq ""
+    end
+
+    it "honors dashes and underscores" do
+      expect(described_class.safe_directory("abc_123")).to eq "abc_123"
+      expect(described_class.safe_directory("abc-456")).to eq "abc-456"
+    end
+
+    it "replaces unexpected characters with dashes" do
+      expect(described_class.safe_directory("hello#world{x}")).to eq "hello-world-x-"
+    end
+  end
 end
