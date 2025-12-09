@@ -22,7 +22,12 @@ RSpec.describe TigerdataMailer, type: :mailer do
         { uid: data_user_1.uid, name: data_user_1.display_name_safe, read_only: false }, 
         { uid: data_user_2.uid, name: data_user_2.display_name_safe, read_only: true },
         { uid: data_user_3.uid, name: data_user_3.display_name_safe, read_only: false }
-      ]
+      ],
+      project_purpose: "research",
+      number_of_files: "Less than 10,000",
+      hpc: "yes",
+      smb: "no",
+      globus: "maybe"
     )
   end
   let(:request_id) { valid_request.id }
@@ -79,10 +84,15 @@ context "When a request is created" do
     expect(html_body).to have_content(valid_request.data_sponsor)
     expect(html_body).to have_content(valid_request.data_manager)
     expect(html_body).to have_content("RDSS")
+    expect(html_body).to have_content("Project Purpose: Research")
     expect(html_body).to have_content("(abc123),")
     expect(html_body).to have_content("(ddd) read only")
     expect(html_body).to have_content("(efg)\n")
     expect(html_body).to have_content("500.0 GB")
+    expect(html_body).to have_content("Estimated Number of Files: Less than 10,000")
+    expect(html_body).to have_content("Needs HPC?: yes")
+    expect(html_body).to have_content("Needs SMB?: no")
+    expect(html_body).to have_content("Needs Globus?: maybe")
     expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
   end
 
