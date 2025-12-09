@@ -14,7 +14,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       project_title: "Valid Request", 
       data_sponsor: sponsor_and_data_manager_user.uid, 
       data_manager: sponsor_and_data_manager_user.uid, 
-      departments: ["RDSS"],
+      departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
       quota: "500 GB", 
       description: "A valid request",
       project_folder: "valid_folder",
@@ -78,9 +78,11 @@ context "When a request is created" do
     expect(html_body).to have_content(valid_request.state)
     expect(html_body).to have_content(valid_request.data_sponsor)
     expect(html_body).to have_content(valid_request.data_manager)
-    expect(html_body).to have_content(valid_request.departments)
-    expect(html_body).to have_content(valid_request.user_roles)
-    expect(html_body).to have_content(valid_request.quota)
+    expect(html_body).to have_content("RDSS")
+    expect(html_body).to have_content("(abc123),")
+    expect(html_body).to have_content("(ddd) read only")
+    expect(html_body).to have_content("(efg)\n")
+    expect(html_body).to have_content("500.0 GB")
     expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
   end
 
