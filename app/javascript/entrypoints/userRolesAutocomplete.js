@@ -104,6 +104,14 @@ function newInput(json) {
 }
 
 function newTableRow(table, json) {
+  // Do not add duplicate data users (in either the data sponsor or manager too)
+  if (
+    document.getElementsByName(`request[read_only_${json.id}]`).length > 0 ||
+    document.getElementsByName(`request[data_sponsor]`)[0].value === json.id ||
+    document.getElementsByName(`request[data_manager]`)[0].value === json.id
+  )
+    return;
+
   const newRow = document.createElement('div');
   newRow.classList.add('row');
   const newName = newCell(document.createTextNode(json.label));
@@ -120,17 +128,29 @@ function newTableRow(table, json) {
   table.appendChild(newRow);
 }
 
+function setInfoText(originalCount, totalNewCount) {
+  const newCount = document.getElementsByName('request[user_roles][]').length;
+  const addedCount = newCount - originalCount;
+  const duplicateCount = totalNewCount - addedCount;
+  const userInfo = document.getElementsByClassName('user-info')[0];
+  const text = `${duplicateCount} duplicate user(s) were ignored. ${addedCount} new user(s) were successfully added.`;
+  userInfo.textContent = text;
+}
+
 function moveNewUsers() {
+  const originalCount = document.getElementsByName('request[user_roles][]').length;
   const newUsers = JSON.parse($('.all_selected')[0].value);
   const ul = document.querySelector('.modal-content .selected-items');
   const table = document.querySelector('.user-table');
   const items = ul.getElementsByTagName('li');
-  for (let i = 0; i < newUsers.length; i += 1) {
+  const totalNewCount = newUsers.length;
+  for (let i = 0; i < totalNewCount; i += 1) {
     newTableRow(table, newUsers[i]);
     items[i].lastChild.click();
   }
+  setInfoText(originalCount, totalNewCount);
   registerRemove();
-  if (newUsers.length > 0)
+  if (newUsers.length > 0 && document.querySelector('.no-users'))
     removeNoDataUser({ currentTarget: document.querySelector('.no-users') });
 }
 

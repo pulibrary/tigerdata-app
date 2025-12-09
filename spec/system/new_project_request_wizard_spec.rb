@@ -134,6 +134,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       other_user = FactoryBot.create(:user)
       another_user = FactoryBot.create(:user)
+      data_manager = FactoryBot.create(:user)
 
       sign_in current_user
       visit "/"
@@ -184,7 +185,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content("Assign roles for your project")
 
       select_user(current_user, "data_sponsor", "request[data_sponsor]")
-      select_user(current_user, "data_manager", "request[data_manager]")
+      select_user(data_manager, "data_manager", "request[data_manager]")
 
       # Fill in a partial match to force the textbox to fetch a list of options to select from
       click_on "Add User(s)"
@@ -196,22 +197,39 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).not_to have_content(another_user.given_name)
       expect(page).to have_field("all_selected", type: :hidden, with: "[]")
 
-      select_data_user(current_user, [{ label: current_user.display_name_safe, id: current_user.uid }])
-      select_data_user(other_user, [{ label: current_user.display_name_safe, id: current_user.uid },
+      select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
+      select_data_user(other_user, [{ label: another_user.display_name_safe, id: another_user.uid },
                                     { label: other_user.display_name_safe, id: other_user.uid }])
+      select_data_user(current_user, [{ label: another_user.display_name_safe, id: another_user.uid },
+                                      { label: other_user.display_name_safe, id: other_user.uid },
+                                      { label: current_user.display_name_safe, id: current_user.uid }])
+      select_data_user(data_manager, [{ label: another_user.display_name_safe, id: another_user.uid },
+                                      { label: other_user.display_name_safe, id: other_user.uid },
+                                      { label: current_user.display_name_safe, id: current_user.uid },
+                                      { label: data_manager.display_name_safe, id: data_manager.uid }])
 
       click_on "Add Users"
 
-      expect(page).to have_field("request[read_only_#{current_user.uid}]", type: :radio)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\"}")
-      expect(page).to have_content(current_user.display_name_safe)
-      expect(page).not_to have_content("#{current_user.display_name_safe} (#{current_user.uid})")
+      expect(page).to have_field("request[read_only_#{another_user.uid}]", type: :radio)
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
+      expect(page).to have_content(another_user.display_name_safe)
+      expect(page).not_to have_content("#{another_user.display_name_safe} (#{another_user.uid})")
 
       expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
       expect(page).to have_content(other_user.display_name_safe)
 
-      choose("request[read_only_#{current_user.uid}]", option: "false")
+      expect(page).to have_content("2 duplicate user(s) were ignored. 2 new user(s) were successfully added.")
+
+      click_on "Add User(s)"
+      select_data_user(other_user, [{ label: other_user.display_name_safe, id: other_user.uid }])
+
+      click_on "Add Users"
+
+      expect(page).to have_content("1 duplicate user(s) were ignored. 0 new user(s) were successfully added.")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}").once
+
+      choose("request[read_only_#{another_user.uid}]", option: "false")
 
       click_on "Back"
       # TODO: when the wizard is fully functional the Dates should be back
@@ -224,9 +242,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Data Manager"
       expect(page.find("#data_sponsor_input input").value).to eq(current_user.display_name_safe)
       expect(page).to have_field("request[data_sponsor]", type: :hidden, with: current_user.uid)
-      expect(page.find("#data_manager_input input").value).to eq(current_user.display_name_safe)
-      expect(page).to have_field("request[data_manager]", type: :hidden, with: current_user.uid)
-      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{current_user.uid}\",\"name\":\"#{current_user.display_name_safe}\",\"read_only\":false}")
+      expect(page.find("#data_manager_input input").value).to eq(data_manager.display_name_safe)
+      expect(page).to have_field("request[data_manager]", type: :hidden, with: data_manager.uid)
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\",\"read_only\":false}")
       expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
       expect(page).not_to have_content("#{current_user.display_name_safe} (#{current_user.uid})")
     end
