@@ -1,6 +1,6 @@
 <div class="form-field">
   <%= render partial: "/new_project_wizard/form_field_label",
-           locals: {field_label: "Data User(s)", field_sub_label: ""} %>
+           locals: {field_label: "Data User(s)", field_sub_label: "", tooltip: "Person(s) with access privileges to the project and its contents."} %>
   <div class="input-frame">
     <div class="user-input-display">
       <div class="user-table">
@@ -27,7 +27,6 @@
         <% end %>
       </div>
       <div class="user-info">
-        Person(s) with access privileges to the project and its contents.
       </div>
       <span for="add-users" class="user-add-prompt">
         <input type="button" popovertarget="user-role" id="add-users" class="add-users" value="Add User(s)"></input>
