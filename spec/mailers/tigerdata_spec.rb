@@ -3,6 +3,9 @@ require "rails_helper"
 
 RSpec.describe TigerdataMailer, type: :mailer do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_1) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_2) { FactoryBot.create(:user, uid: "ddd", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_3) { FactoryBot.create(:user, uid: "efg", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project, project_id: "abc123/def" , mediaflux_id: 123}
   let(:project_id) { project.id }
 
@@ -16,9 +19,9 @@ RSpec.describe TigerdataMailer, type: :mailer do
       description: "A valid request",
       project_folder: "valid_folder",
       user_roles: [
-        { uid: "abc123", name: "Abe Cat" }, 
-        { uid: "ddd", name: "Dandy Dog", read_only: true },
-        { uid: "efg", name: "Fern Frog", read_only: false }
+        { uid: data_user_1.uid, name: data_user_1.display_name_safe, read_only: false }, 
+        { uid: data_user_2.uid, name: data_user_2.display_name_safe, read_only: true },
+        { uid: data_user_3.uid, name: data_user_3.display_name_safe, read_only: false }
       ]
     )
   end
@@ -26,7 +29,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
 
 context "When a project is created" do
 
-  it "Sends project creation requests" do
+  it "Sends project approval notifications" do
     expect { described_class.with(project_id:, approver: sponsor_and_data_manager_user).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
