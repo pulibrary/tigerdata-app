@@ -45,6 +45,10 @@ body {
       padding-left: 2.4375rem;
       padding-right: 2.4375rem;
     }
+    @media (min-width: 2140px) {
+      padding-left: 12.5rem;
+      padding-right: 12.5rem;
+    }
   }
 
   /* removes horizontal scroll */
