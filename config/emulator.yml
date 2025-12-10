@@ -9,11 +9,6 @@ qa:
   body: You may select another role to emulate
   alt_title: As an approved tester-trainer
   alt_body: You are currently emulating
-staging:
-  title: As an approved tester-trainer
-  body: You may select another role to emulate
-  alt_title: As an approved tester-trainer
-  alt_body: You are currently emulating
 ci:
   title: As an approved tester-trainer
   body: You may select another role to emulate

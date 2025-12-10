@@ -8,14 +8,21 @@
     <p> A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= request_url(@request) %></p>
     <p> Here is a preview of the request details: </p>
 
-    title: <%= @request.project_title %>
-    description: <%= @request.description %>
-    state: <%= @request.state %>
-    data_sponsor: <%= @request.data_sponsor %>
-    data_manager: <%= @request.data_manager %>
-    departments: <%= @request.departments %>
-    data_user: <%= @request.user_roles %>
-    storage_capacity: <%= @request.quota%>
+    <% @request_presenter = RequestPresenter.new(@request) %> 
+    <ul>
+      <li>Request State: <%= @request.state %></li>
+      <li>Project Title: <%= @request.project_title %></li>
+      <li>Project Directory: <%= @request_presenter.project_directory %></li>
+      <li>Project Purpose: <%= @request_presenter.project_purpose %></li>
+      <li>Project Description: <%= @request.description %></li>
+      <li>Department(s): <%= @request_presenter.departments_list %></li>
+      <li>Data Sponsor: <%= @request_presenter.data_sponsor %></li>
+      <li>Data Manager: <%= @request_presenter.data_manager %></li>
+      <li>Data User(s): <%= @request_presenter.user_list %></li>
+      <li>Requested Quota: <%= @request.approved_quota_size %> <%= @request.approved_quota_unit %></li>
+      <li>Estimated Number of Files: <%= @request.number_of_files %></li>
+      <li>Needs HPC?: <%= @request.hpc %></li>
+      <li>Needs SMB?: <%= @request.smb %></li>
+      <li>Needs Globus?: <%= @request.globus %></li>
+    </ul>
 
-  </body>
-</html>
