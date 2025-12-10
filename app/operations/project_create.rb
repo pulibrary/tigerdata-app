@@ -49,8 +49,13 @@ class ProjectCreate < Dry::Operation
       end
     # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
     #        I could not figure out a way in tests to hit this error...
+    #        Rescue EOFError from mediaflux gem?
     rescue => ex
-      Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
+      if ex.is_a?(EOFError) && eof_error_handler
+        retry
+      else
+        Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
+      end
     end
 
     def update_project_with_mediaflux_info(mediaflux_id:, project:)
@@ -91,4 +96,16 @@ class ProjectCreate < Dry::Operation
     rescue => ex
       Failure("Error activate project #{project.id}: #{ex}")
     end
+
+    def eof_error_handler
+      @retry_count ||= 0
+      @retry_count += 1
+
+      # current_user.clear_mediaflux_session(session)
+      # current_user.mediaflux_from_session(session)
+      # TODO: How do we fix EOF errors?  Just retrying for now.
+
+      @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
+    end
+
 end
