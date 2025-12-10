@@ -101,7 +101,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).to have_content "Don't see what your're looking for?"
+        expect(page).to have_content "Don't see what you're looking for?"
         expect(page).to have_css(".contact-content", text: "Contact us")
       end
 
