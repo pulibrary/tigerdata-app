@@ -206,19 +206,32 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     end
 
     context "for tester-trainers" do
-      it "shows the emulation bar" do
+      before do
         sign_in current_user
         current_user.trainer = true
         current_user.save!
+      end
+
+      it "shows the emulation bar" do
         visit "/dashboard"
         expect(page).to have_select("emulation_menu")
       end
+
+      it "does not show the emulation bar in Production" do
+        allow(Rails.env).to receive(:production?).and_return(true)
+        visit "/dashboard"
+        expect(page).not_to have_select("emulation_menu")
+      end
+
+      it "does not show the emulation bar in Staging" do
+        allow(Rails.env).to receive(:staging?).and_return(true)
+        visit "/dashboard"
+        expect(page).not_to have_select("emulation_menu")
+      end
+
       it "displays sponsored projects when emulating a data sponsor" do
         created_projects.push(project_111, project_222, project_333)
 
-        sign_in current_user
-        current_user.trainer = true
-        current_user.save!
         visit dashboard_path
         select "Data Sponsor", from: "emulation_menu"
         within("#projects-listing") do
@@ -227,12 +240,10 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
           expect(page).to have_content("Data User")
         end
       end
+
       it "displays sponsored projects when emulating a data manager" do
         created_projects.push(project_111, project_222, project_333)
 
-        sign_in current_user
-        current_user.trainer = true
-        current_user.save!
         visit dashboard_path
         select "Data Manager", from: "emulation_menu"
         within("#projects-listing") do
@@ -247,10 +258,6 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       end
 
       it "hides the 'Administration' tab" do
-        sign_in current_user
-        current_user.trainer = true
-        current_user.save!
-
         visit dashboard_path
         expect(page).not_to have_content "Administration"
       end
