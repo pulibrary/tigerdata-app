@@ -31,7 +31,11 @@
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Project Directory</li>
-            <p class="detail-value"><%= @presenter.project_directory %></p>
+            <p class="detail-value"><%= @presenter.project_directory %><button id="copy-project-path-button-basic" class="btn copy-paste-button-sizer" data-url="<%= @presenter.project_directory %>" title="Copy project path to the clipboard">
+                <div class="pul-copy-paste-tooltip">
+                  <span id="copy-project-path-label-basic" class="copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
+                </div>
+                </button></p>
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Project Purpose</li>
