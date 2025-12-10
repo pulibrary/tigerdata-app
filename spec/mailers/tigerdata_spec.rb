@@ -3,6 +3,9 @@ require "rails_helper"
 
 RSpec.describe TigerdataMailer, type: :mailer do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_1) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_2) { FactoryBot.create(:user, uid: "ddd", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_user_3) { FactoryBot.create(:user, uid: "efg", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create :project, project_id: "abc123/def" , mediaflux_id: 123}
   let(:project_id) { project.id }
 
@@ -11,22 +14,27 @@ RSpec.describe TigerdataMailer, type: :mailer do
       project_title: "Valid Request", 
       data_sponsor: sponsor_and_data_manager_user.uid, 
       data_manager: sponsor_and_data_manager_user.uid, 
-      departments: ["RDSS"],
+      departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
       quota: "500 GB", 
       description: "A valid request",
       project_folder: "valid_folder",
       user_roles: [
-        { uid: "abc123", name: "Abe Cat" }, 
-        { uid: "ddd", name: "Dandy Dog", read_only: true },
-        { uid: "efg", name: "Fern Frog", read_only: false }
-      ]
+        { uid: data_user_1.uid, name: data_user_1.display_name_safe, read_only: false }, 
+        { uid: data_user_2.uid, name: data_user_2.display_name_safe, read_only: true },
+        { uid: data_user_3.uid, name: data_user_3.display_name_safe, read_only: false }
+      ],
+      project_purpose: "research",
+      number_of_files: "Less than 10,000",
+      hpc: "yes",
+      smb: "no",
+      globus: "maybe"
     )
   end
   let(:request_id) { valid_request.id }
 
 context "When a project is created" do
 
-  it "Sends project creation requests" do
+  it "Sends project approval notifications" do
     expect { described_class.with(project_id:, approver: sponsor_and_data_manager_user).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
@@ -75,9 +83,16 @@ context "When a request is created" do
     expect(html_body).to have_content(valid_request.state)
     expect(html_body).to have_content(valid_request.data_sponsor)
     expect(html_body).to have_content(valid_request.data_manager)
-    expect(html_body).to have_content(valid_request.departments)
-    expect(html_body).to have_content(valid_request.user_roles)
-    expect(html_body).to have_content(valid_request.quota)
+    expect(html_body).to have_content("RDSS")
+    expect(html_body).to have_content("Project Purpose: Research")
+    expect(html_body).to have_content("(abc123),")
+    expect(html_body).to have_content("(ddd) read only")
+    expect(html_body).to have_content("(efg)\n")
+    expect(html_body).to have_content("500.0 GB")
+    expect(html_body).to have_content("Estimated Number of Files: Less than 10,000")
+    expect(html_body).to have_content("Needs HPC?: yes")
+    expect(html_body).to have_content("Needs SMB?: no")
+    expect(html_body).to have_content("Needs Globus?: maybe")
     expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
   end
 
