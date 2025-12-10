@@ -26,20 +26,24 @@ class ProjectImport
           if existing_project.count > 0
             output << "Skipping project #{project_id}.  There are already #{existing_project.count} version of that project in the system"
           else
-            metadata = convert_csv(project_metadata:, project_id:)
-            if test_run
-              output << metadata.to_json
-            else
-              if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
-                metadata.data_user_read_only = []
-              end
-              # Create the Rails record for the project
-              project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
-              if (project.valid?)
-                output << "Created project for #{project_id}"
+            begin
+              metadata = convert_csv(project_metadata:, project_id:)
+              if test_run
+                output << metadata.to_json
               else
-                output << "Error creating project for #{project_metadata["asset"]}: #{project.errors.to_a.join(";")}"
+                if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
+                  metadata.data_user_read_only = []
+                end
+                # Create the Rails record for the project
+                project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
+                if (project.valid?)
+                  output << "Created project for #{project_id}"
+                else
+                  output << "Error creating project for #{project_metadata["asset"]}: #{project.errors.to_a.join(";")}"
+                end
               end
+            rescue => ex
+              output << "Error processing #{project_id}, #{ex.message}"
             end
           end
         end
