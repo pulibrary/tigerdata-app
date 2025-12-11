@@ -109,23 +109,24 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         find('label[for="radiocustom"]').click
         # Check that TB is listed as default
         expect(page).to have_select("storage_unit", selected: "TB")
-        find('label[for="radio500gb"]').click
+        find('label[for="radio2tb"]').click
         expect(page).not_to have_select("storage_unit")
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Take a moment to review"
-
-        # Clicking on the breadcrumb gives the use a chance to save their changes
-        click_on "Dashboard"
-        expect(page).to have_content "Save Your Progress"
-        find(".pul-popover-close").click
-
         click_on "Back"
         expect(page).to have_content "Enter the storage and access needs"
         click_on "Back"
         expect(page).to have_content "Assign roles for your project"
         click_on "Back"
         expect(page).to have_content "Tell us a little about your project!"
+        fill_in :project_title, with: "A basic Project"
+
+        # Clicking on the breadcrumb saves the user changes
+        click_on "Dashboard"
+        expect(page).to have_content "Welcome, #{current_user.given_name}!"
+        request = Request.last
+        expect(request.project_title).to eq("A basic Project")
       end
     end
 

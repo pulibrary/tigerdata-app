@@ -33,6 +33,7 @@ import { storageInputs } from './storageInputs.js';
 import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
 import { copyPastePath } from './copyPastePath.js';
+import { wizardNavigation } from './wizardNavigation.js';
 
 const app = createApp({});
 
@@ -249,6 +250,7 @@ function initPage() {
   titleCopySaveExit();
   userRolesAutocomplete();
   copyPastePath();
+  wizardNavigation();
 }
 
 window.addEventListener('load', () => initPage());
