@@ -50,7 +50,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
     end
 
     context "Failure cases" do
-      it "returns a failure if the project cannot be saved to Mediaflux" do
+      it "returns a failure for non-EOF errors if the project cannot be saved to Mediaflux" do
         expect do
           result = described_class.new.call(request: invalid_request, approver: approver)
           expect(result).not_to be_success
@@ -88,6 +88,50 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
         error_message = result.failure
         expect(error_message).to include("Error activate project")
+      end
+
+      it "retries on EOFError when persisting to Mediaflux" do
+        project_metadata_json = RequestProjectMetadata.convert(valid_request)
+        # Link the request to the project
+        project = Project.create!({ metadata_json: project_metadata_json })
+        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
+        project_create_operation = described_class.new
+
+        error_count = 0
+        allow(mediaflux_request).to receive(:resolve).and_wrap_original do |original_method, *args|
+          if error_count == 0
+            # Force an error the first time to make sure the retry is invoked in the code
+            error_count = 1
+            raise EOFError, "error"
+          else
+            original_method.call(*args)
+          end
+        end
+
+        result = project_create_operation.call(request: valid_request, approver: approver)
+
+        expect(mediaflux_request).to have_received(:resolve).twice
+
+        expect(result).to be_success
+        expect(result.value!.mediaflux_id).not_to eq(0)
+      end
+
+      it "Fails on mulitple EOFError's when persisting to Mediaflux" do
+        project_metadata_json = RequestProjectMetadata.convert(valid_request)
+        # Link the request to the project
+        project = Project.create!({ metadata_json: project_metadata_json })
+        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
+        project_create_operation = described_class.new
+
+        allow(mediaflux_request).to receive(:resolve).and_raise EOFError
+
+        result = project_create_operation.call(request: valid_request, approver: approver)
+
+        expect(mediaflux_request).to have_received(:resolve).exactly(3).times
+
+        expect(result).to_not be_success
       end
     end
   end
