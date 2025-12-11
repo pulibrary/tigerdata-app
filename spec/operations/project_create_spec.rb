@@ -125,7 +125,6 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
         allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
         project_create_operation = described_class.new
 
-        error_count = 0
         allow(mediaflux_request).to receive(:resolve).and_raise EOFError
 
         result = project_create_operation.call(request: valid_request, approver: approver)
