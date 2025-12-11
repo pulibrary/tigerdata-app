@@ -91,17 +91,27 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
       end
 
       it "retries on EOFError when persisting to Mediaflux" do
-        project = FactoryBot.create(:approved_project)
+        project_metadata_json = RequestProjectMetadata.convert(valid_request)
+        # Link the request to the project
+        project = Project.create!({ metadata_json: project_metadata_json })
         mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
         project_create_operation = described_class.new
-
-        allow(Project).to receive(:"create!").and_return(project)
-        allow(mediaflux_request).to receive(:resolve).and_raise(EOFError)
+        
+        error_count = 0
+        allow(mediaflux_request).to receive(:resolve).and_wrap_original do |original_method, *args|
+          if error_count == 0
+            # Force an error the first time to make sure the retry is invoked in the code
+            error_count = 1
+            raise EOFError, "error"
+          else
+            original_method.call(*args)
+          end
+        end
 
         result = project_create_operation.call(request: valid_request, approver: approver)
 
-        expect(project_create_operation).to receive(:call).once.and_raise
-        expect(project_create_operation).to receive(:call).once.and_call_original
+        expect(mediaflux_request).to have_received(:resolve).twice
 
         expect(result).to be_success
         expect(result.value!.mediaflux_id).not_to eq(0)
