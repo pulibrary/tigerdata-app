@@ -104,6 +104,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
         expect(project_create_operation).to receive(:call).once.and_call_original
 
         expect(result).to be_success
+        expect(result.value!.mediaflux_id).not_to eq(0)
       end
     end
   end
