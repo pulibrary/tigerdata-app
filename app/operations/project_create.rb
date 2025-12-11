@@ -47,9 +47,17 @@ class ProjectCreate < Dry::Operation
 
         Success(mediaflux_id)
       end
-    # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
-    #        I could not figure out a way in tests to hit this error...
+    rescue EOFError => ex
+      # Retry EOFErrors a few times
+      if eof_error_handler
+        Rails.logger.error "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
+        Honeybadger.notify "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
+        retry
+      else
+        Failure("Error saving project #{project.id} to Mediaflux: #{ex}. EOFError retry failed.")
+      end
     rescue => ex
+      # All other errors will just be returned as failures
       Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
     end
 
@@ -91,4 +99,13 @@ class ProjectCreate < Dry::Operation
     rescue => ex
       Failure("Error activate project #{project.id}: #{ex}")
     end
+
+    def eof_error_handler
+      @retry_count ||= 0
+      @retry_count += 1
+      # TODO: How do we fix EOF errors?  Just retrying for now.
+
+      @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
+    end
+
 end
