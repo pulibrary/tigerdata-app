@@ -42,18 +42,6 @@
   padding-bottom: 2.06rem;
 }
 
-.return-dashboard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.25rem;
-  padding-bottom: 1rem;
-
-  .btn {
-    height: 2.5rem;
-  }
-}
-
 .saved-summary {
   width: 14.0625rem;
   height: 2rem;
@@ -64,6 +52,7 @@
   font-style: normal;
   font-weight: 700;
   line-height: 2rem; /* 133.333% */
+  padding-bottom: 3rem;
 }
 
 .blue-box {
@@ -124,6 +113,16 @@
   align-items: center;
   gap: 0.25rem;
   border-radius: 0.25rem;
+  display: inline-flex;
+}
+
+.return-dashboard {
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: white;
+  display: inline-flex;
 }
 
 .request-fields {

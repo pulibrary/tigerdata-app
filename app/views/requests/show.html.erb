@@ -13,9 +13,6 @@
 
   <div class="request-heading">Your new project request has been saved</div>
   <div class="request-subheading">Your project has been saved and may be edited</div>
-  <div class="return-dashboard">
-    <%= link_to "Return to Dashboard", dashboard_path, class: "btn btn-dark" %>
-    <div class="horizontal-frame">
       <% if @request_presenter.eligible_to_edit?(current_user)%>
         <% if @request_model.submitted?%>
           <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark" %>
@@ -42,7 +39,9 @@
               </div>
           </div>
           <div class="continue-edit">
-            <%= link_to "Continue Editing", new_project_project_info_path(@request_model.id),class: "btn btn-dark btn-sm" %>
+            <%= link_to "Continue Editing", new_project_project_info_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+            <div class="return-dashboard">
+            <%= link_to "Return to Dashboard", dashboard_path, class: "btn btn-outline-dark btn-sm" %>
           </div>
         </div>
       <% end %>
