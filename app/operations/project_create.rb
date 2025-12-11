@@ -47,16 +47,18 @@ class ProjectCreate < Dry::Operation
 
         Success(mediaflux_id)
       end
-    # We are catching all errors here to retry on EOFError
-    rescue => ex
-      if ex.is_a?(EOFError) && eof_error_handler
+    rescue EOFError => ex
+      # Retry EOFErrors a few times
+      if eof_error_handler
         Rails.logger.error "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
         Honeybadger.notify "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
         retry
       else
-        # All other errors will just be returned as failures
-        Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
+        Failure("Error saving project #{project.id} to Mediaflux: #{ex}. EOFError retry failed.")
       end
+    rescue => ex
+      # All other errors will just be returned as failures
+      Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
     end
 
     def update_project_with_mediaflux_info(mediaflux_id:, project:)
