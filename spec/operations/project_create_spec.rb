@@ -50,7 +50,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
     end
 
     context "Failure cases" do
-      it "returns a failure if the project cannot be saved to Mediaflux" do
+      it "returns a failure for non-EOF errors if the project cannot be saved to Mediaflux" do
         expect do
           result = described_class.new.call(request: invalid_request, approver: approver)
           expect(result).not_to be_success
@@ -88,6 +88,22 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
         error_message = result.failure
         expect(error_message).to include("Error activate project")
+      end
+
+      it "retries on EOFError when persisting to Mediaflux" do
+        project = FactoryBot.create(:approved_project)
+        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        project_create_operation = described_class.new
+
+        allow(Project).to receive(:"create!").and_return(project)
+        allow(mediaflux_request).to receive(:resolve).and_raise(EOFError)
+
+        result = project_create_operation.call(request: valid_request, approver: approver)
+
+        expect(project_create_operation).to receive(:call).once.and_raise
+        expect(project_create_operation).to receive(:call).once.and_call_original
+
+        expect(result).to be_success
       end
     end
   end
