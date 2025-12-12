@@ -236,6 +236,13 @@
           gap: 0.25rem;
         }
 
+        .status-larger-device {
+          display: flex;
+          @media (max-width: 853px) {
+            display: none;
+          }
+        }
+
         .status::before {
           content: "";
           display: inline-flex;
@@ -313,6 +320,13 @@
           gap: 0.25rem;
         }
 
+        .activity-larger-device {
+          display: flex;
+          @media (max-width: 853px) {
+            display: none;
+          }
+        }
+
         .activity::before {
           content: "";
           display: inline-flex;
@@ -320,6 +334,13 @@
           width: 20px;
           height: 20px;
           vertical-align: top;
+        }
+      }
+
+      .summary-smaller-device {
+        display: none;
+        @media (max-width: 853px) {
+          display: flex;
         }
       }
     }
@@ -438,6 +459,9 @@
         gap: 0.625rem;
         border-radius: 0.25rem 0 0 0.25rem;
         background: $gray-100;
+        @media (max-width: 853px) {
+          display: none;
+        }
 
         a {
           color: white;
@@ -471,6 +495,9 @@
         border-radius: 0 0.25rem 0.25rem 0;
         border-right: 1px solid $white;
         background: $gray-100;
+        @media (max-width: 853px) {
+          display: none;
+        }
         anchor-name: --request-btn;
 
         .down-arrow {
@@ -678,6 +705,11 @@
       align-self: stretch;
       flex-grow: 0;
 
+      // Hide the sidebar for smaller devices
+      @media (max-width: 853px) {
+        display: none;
+      }
+
       .downloads {
         display: flex;
         width: 17.8125rem;
@@ -842,6 +874,55 @@
             background: $princeton-orange;
             color: #fff;
           }
+        }
+      }
+    }
+
+    // Contact us block for small devices
+    .contact-us-small-device {
+      display: none;
+
+      @media (max-width: 853px) {
+        display: flex;
+        max-width: 500px;
+        align-self: center;
+      }
+
+      width: 100%;
+      height: 8.4375rem;
+      flex-direction: column;
+      align-items: center;
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      border-radius: 0.75rem;
+      background: $princeton-orange-20;
+
+      .header {
+        color: #000;
+        text-align: center;
+        font-family: "Libre Franklin";
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1.125rem; /* 112.5% */
+        padding-top: 1.87rem;
+        padding-bottom: 1.88rem;
+      }
+
+      .contact-content {
+        .btn {
+          display: flex;
+          width: 7.6875rem;
+          height: 2.125rem;
+          padding: 0.5rem 1.25rem;
+          justify-content: center;
+          align-items: center;
+          gap: 0.25rem;
+          flex-shrink: 0;
+          border-radius: 0.25rem;
+          background: $princeton-orange;
+          color: #fff;
         }
       }
     }
