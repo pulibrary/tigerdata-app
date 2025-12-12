@@ -438,6 +438,9 @@
         gap: 0.625rem;
         border-radius: 0.25rem 0 0 0.25rem;
         background: $gray-100;
+        @media(max-width: 853px) {
+          display: none;
+        }
 
         a {
           color: white;
@@ -471,6 +474,9 @@
         border-radius: 0 0.25rem 0.25rem 0;
         border-right: 1px solid $white;
         background: $gray-100;
+        @media(max-width: 853px) {
+          display: none;
+        }
         anchor-name: --request-btn;
 
         .down-arrow {
@@ -857,6 +863,8 @@
 
       @media (max-width: 853px) {
         display: flex;
+        max-width: 500px;
+        align-self: center;
       }
 
       width: 100%;
