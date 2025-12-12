@@ -12,7 +12,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.27.5",
     "jsdom": "^21.1.0",
+    "lint-staged": "^16.2.7",
     "nanoid": ">=3.3.8",
+    "precommit-hook": "^3.0.0",
     "prettier": "3.4.2",
     "rollup": "^4.24.0",
     "vite": "^5.4.21",
@@ -38,7 +40,17 @@
   },
   "scripts": {
     "lint": "eslint 'app/javascript/**/*.js'",
+    "lint-staged": "lint-staged",
     "test": "vitest run --coverage",
-    "test:dev": "vitest"
+    "test:dev": "vitest",
+    "validate": "npm ls"
+  },
+  "pre-commit": [
+    "lint-staged"
+  ],
+  "lint-staged": {
+    "*rb": "bundle exec rubocop -a",
+    "*.js": "eslint --fix",
+    "*": "prettier --write"
   }
 }
