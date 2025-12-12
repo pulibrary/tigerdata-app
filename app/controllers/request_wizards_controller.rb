@@ -20,8 +20,13 @@ class RequestWizardsController < ApplicationController
   def save
     # save and render the requested step
     save_request
-    if params["redirectUrl"]
+    notice_message = "Draft request saved automatically. To open or delete your draft, select the dropdown menu next to 'New Project Request'."
+    if params["redirectUrl"] == "undefined" # clicking the tigerdata logo
+      redirect_to dashboard_path
+      flash[:notice] = notice_message
+    elsif params["redirectUrl"] # clicking a breadcrumb link
       redirect_to params["redirectUrl"]
+      flash[:notice] = notice_message
     else
       redirect_to_requested_step
     end

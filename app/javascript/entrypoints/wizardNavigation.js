@@ -25,7 +25,8 @@ export function wizardNavigation() {
   // only capture clicks to links if we are in the wizard
   if (steps.length > 0) {
     const crumbs = document.getElementsByClassName('breadcrumb-link');
-    const allItems = Array.from(steps).concat(Array.from(crumbs));
+    const logo = document.getElementsByClassName('header-image');
+    const allItems = Array.from(steps).concat(Array.from(crumbs)).concat(Array.from(logo));
     allItems.forEach((item) => {
       item.addEventListener('click', saveOnClick);
     });
