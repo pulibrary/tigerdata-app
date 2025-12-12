@@ -4,6 +4,9 @@
             <div class="title">
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
+            <div class="summary summary-status-smaller-device">
+                <div class="status <%= project.status.downcase %> status-smaller-device"><%= project.status %></div>
+            </div>
             <div class="summary">
                 <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %></span>
                 <span class="netid-large"><%= project.data_sponsor.uid %></span>
@@ -15,7 +18,7 @@
                 <div class="path"> <%= project.path %></div>
             </div>
             <div class="summary">
-               <div class="status <%= project.status.downcase %>"><%= project.status %></div>
+               <div class="status <%= project.status.downcase %> status-larger-device"><%= project.status %></div>
 
                 <% if Flipflop.project_type_indicator? %>
                     <div class="type"><%= project.type %></div>
@@ -27,8 +30,8 @@
                 <% if Flipflop.last_updated_dashboard? %>
                     <div class="activity"><%= project.last_activity %></div>
                 <% end %>
-
-              </div></div>
+            </div>
+        </div>
 
         <div class="storage-details">
           <div class="storage">

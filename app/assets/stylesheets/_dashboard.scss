@@ -236,6 +236,20 @@
           gap: 0.25rem;
         }
 
+        .status-smaller-device {
+          display: none;
+          @media(max-width: 853px) {
+            display: flex;
+          }
+        }
+
+        .status-larger-device {
+          display: flex;
+          @media(max-width: 853px) {
+            display: none;
+          }
+        }
+
         .status::before {
           content: "";
           display: inline-flex;
@@ -320,6 +334,13 @@
           width: 20px;
           height: 20px;
           vertical-align: top;
+        }
+      }
+
+      .summary-status-smaller-device {
+        display: none;
+        @media(max-width: 853px) {
+          display: flex;
         }
       }
     }
