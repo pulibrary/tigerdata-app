@@ -18,27 +18,27 @@ class RequestWizardsController < ApplicationController
 
   # PUT /request_wizards/1/save
   def save
-    # save and render dashboard
+    # save and render the requested step
     save_request
-    case params[:commit]
-    when "Back"
-      render_back
-    when "Next", "Submit"
-      render_next
+    if params["redirectUrl"]
+      redirect_to params["redirectUrl"]
     else
-      if params[:commit].start_with?("http")
-        # Go directly to the step the user clicked on
-        redirect_to params[:commit]
-      elsif params[:go_to_dashboard] == "yes"
-        # The user clicked on the "Dashboard" breadcrumb
-        redirect_to dashboard_path
-      else
-        redirect_to request_path(@request_model)
-      end
+      redirect_to_requested_step
     end
   end
 
   private
+
+    def redirect_to_requested_step
+      case params[:commit]
+      when "Back"
+        render_back
+      when "Next", "Submit"
+        render_next
+      else
+        redirect_to request_path(@request_model)
+      end
+    end
 
     def check_access
       return if user_eligible_to_modify_request?
@@ -88,10 +88,10 @@ class RequestWizardsController < ApplicationController
     end
 
     def update_sidebar_url(request_model)
-      return unless params[:commit].start_with?("http")
+      return unless params["redirectUrl"] && params["redirectUrl"].last == "0"
 
       # take of the zero in the url and replace it with the real request id
-      params[:commit] = "#{params[:commit][0..-2]}#{request_model.id}"
+      params["redirectUrl"] = "#{params['redirectUrl'][0..-2]}#{request_model.id}"
     end
 
     # set if id is present or initialize a blank request if not
