@@ -238,14 +238,14 @@
 
         .status-smaller-device {
           display: none;
-          @media(max-width: 853px) {
+          @media (max-width: 853px) {
             display: flex;
           }
         }
 
         .status-larger-device {
           display: flex;
-          @media(max-width: 853px) {
+          @media (max-width: 853px) {
             display: none;
           }
         }
@@ -339,7 +339,7 @@
 
       .summary-status-smaller-device {
         display: none;
-        @media(max-width: 853px) {
+        @media (max-width: 853px) {
           display: flex;
         }
       }
@@ -459,7 +459,7 @@
         gap: 0.625rem;
         border-radius: 0.25rem 0 0 0.25rem;
         background: $gray-100;
-        @media(max-width: 853px) {
+        @media (max-width: 853px) {
           display: none;
         }
 
@@ -495,7 +495,7 @@
         border-radius: 0 0.25rem 0.25rem 0;
         border-right: 1px solid $white;
         background: $gray-100;
-        @media(max-width: 853px) {
+        @media (max-width: 853px) {
           display: none;
         }
         anchor-name: --request-btn;
