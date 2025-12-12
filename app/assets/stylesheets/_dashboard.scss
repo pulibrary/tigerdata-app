@@ -236,13 +236,6 @@
           gap: 0.25rem;
         }
 
-        .status-smaller-device {
-          display: none;
-          @media (max-width: 853px) {
-            display: flex;
-          }
-        }
-
         .status-larger-device {
           display: flex;
           @media (max-width: 853px) {
@@ -327,6 +320,13 @@
           gap: 0.25rem;
         }
 
+        .activity-larger-device {
+          display: flex;
+          @media (max-width: 853px) {
+            display: none;
+          }
+        }
+
         .activity::before {
           content: "";
           display: inline-flex;
@@ -337,7 +337,7 @@
         }
       }
 
-      .summary-status-smaller-device {
+      .summary-smaller-device {
         display: none;
         @media (max-width: 853px) {
           display: flex;

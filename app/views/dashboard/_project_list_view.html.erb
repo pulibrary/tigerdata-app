@@ -4,8 +4,11 @@
             <div class="title">
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
-            <div class="summary summary-status-smaller-device">
-                <div class="status <%= project.status.downcase %> status-smaller-device"><%= project.status %></div>
+            <div class="summary summary-smaller-device">
+                <div class="status <%= project.status.downcase %> "><%= project.status %></div>
+                <% if Flipflop.last_updated_dashboard? %>
+                    <div class="activity"><%= project.last_activity %></div>
+                <% end %>
             </div>
             <div class="summary">
                 <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %></span>
@@ -28,7 +31,7 @@
                <div class="download"><%= project.latest_file_list_time %></div>
 
                 <% if Flipflop.last_updated_dashboard? %>
-                    <div class="activity"><%= project.last_activity %></div>
+                    <div class="activity activity-larger-device"><%= project.last_activity %></div>
                 <% end %>
             </div>
         </div>
