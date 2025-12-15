@@ -51,6 +51,8 @@
   "lint-staged": {
     "*rb": "bundle exec rubocop -a",
     "*.js": "eslint --fix",
-    "*": "prettier --write"
+    "*.rb": "prettier --write",
+    "*css": "prettier --write",
+    "*js": "prettier --write"
   }
 }
