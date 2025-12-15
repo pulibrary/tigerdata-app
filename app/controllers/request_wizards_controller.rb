@@ -4,7 +4,6 @@ class RequestWizardsController < ApplicationController
   before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[save]
-  before_action :exit_without_saving, only: %i[save]
   before_action :set_or_init_request_model, only: %i[show]
   before_action :check_access
 
@@ -52,16 +51,6 @@ class RequestWizardsController < ApplicationController
       error_message = "You do not have access to this page."
       flash[:notice] = error_message
       redirect_to dashboard_path
-    end
-
-    def exit_without_saving
-      if params[:commit] == "Exit without Saving"
-        if @request_model.nil?
-          redirect_to dashboard_path
-        else
-          redirect_to request_path(@request_model)
-        end
-      end
     end
 
     def render_current
