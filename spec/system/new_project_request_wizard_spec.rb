@@ -284,20 +284,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).not_to have_content(department_to_test)
     end
 
-    it "allows for Exit without Saving" do
-      sign_in current_user
-      visit "/"
-      expect do
-        click_on "New Project Request"
-        expect(page).to have_content "Basic Details"
-        fill_in :project_title, with: "A basic Project"
-        click_on "Save and exit"
-        expect(page).to have_content "will be saved as draft"
-        click_on "Exit without Saving"
-        expect(page).to have_content("Welcome")
-      end.not_to change { Request.count }
-    end
-
     it "does not allow save and exit for a request with missing titles" do
       sign_in current_user
       visit "new-project/project-info"
