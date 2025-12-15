@@ -1,68 +1,48 @@
 <div id="project-details-heading">
 
-  <div class="row">
-    <div class="col-6 col-md-8">
+  <div class="title-row">
+    <div class="heading-frame">
       <h1><%= @presenter.title %></h1>
-    <div class="heading-decoration"></div>
+      <div class="heading-decoration"></div>
     </div>
-    <div class="col-6 col-md-4">
+    <div class="project-status">
       <div class="status <%= @presenter.status.downcase %>">
         <%= @presenter.status %>
       </div>
     </div>
-  </div><!-- .row -->
+  </div><!-- title-row -->
 
   <div class="row">
     <div class="col-lg-6"><!-- .col -->
-
-      <div id="project-description">
-        <div id="description-text" class="truncate">
-          <%= @presenter.description %>
-        </div>
-        <a id="show-more-less-link" class="show-more" href="#"><span>more</span></a>
-      </div><!-- #project-description -->
-
-      <div class="row">
-        <div class="col-12">
-          <div class="date-and-data-info-single">
-            <ul>
-              <li><span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %>
-                <button id="copy-project-path-button" class="btn" data-url="<%= @presenter.project_directory %>" title="Copy project path to the clipboard">
-                <div class="pul-copy-paste-tooltip">
-                  <span id="copy-project-path-label" class="copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
-                </div>
-                </button>
-              </li>
-            </ul>
+      <div class="project-info">
+        <div id="project-description">
+          <div id="description-text" class="truncate">
+            <%= @presenter.description %>
           </div>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-12">
-          <div class="date-and-data-info">
-            <ul>
-              <li><span class="label">Date Created:</span> <%= @presenter.created %></li>
-              <li><span class="label">Last updated:</span> <%= @presenter.updated %></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+          <a id="show-more-less-link" class="show-more" href="#"><span>more</span></a>
+        </div><!-- #project-description -->
 
-      <div class="row">
-        <div class="col-12">
-          <div class="date-and-data-info">
-            <ul>
-              <li class="info-container"><span class="label">Data Sponsor:</span> <%= @presenter.data_sponsor.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_sponsor&.uid %></span></li>
-              <li class="info-container"><span class="label">Data Manager:</span> <%= @presenter.data_manager.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_manager&.uid %></span></li>
-            </ul>
-          </div>
-        </div><!-- .col-12 -->
-      </div><!-- .row -->
+        <div class="date-and-data-info-single">
+          <span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %>
+          <button id="copy-project-path-button" class="btn" data-url="<%= @presenter.project_directory %>" title="Copy project path to the clipboard">
+            <div class="pul-copy-paste-tooltip">
+              <span id="copy-project-path-label" class="copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
+            </div>
+          </button>
+        </div>
+        <div class="date-and-data-info">
+          <div class="left-item"> <span class="label">Date Created:</span> <%= @presenter.created %> </div>
+          <div> <span class="label">Last updated:</span> <%= @presenter.updated %> </div>
+        </div>
+        <div class="date-and-data-info">
+          <div class="left-item"><span class="label">Data Sponsor:</span> <%= @presenter.data_sponsor.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_sponsor&.uid %></span></div>
+          <div><span class="label">Data Manager:</span> <%= @presenter.data_manager.display_name_only_safe %><span class="lux-badge lux-badge-gray badge-text lux-badge-inline"><%= @presenter.data_manager&.uid %></span></div>
+        </div>
+      </div><!-- .project-info -->
     </div><!-- .col -->
 
     <div class="col-lg-6">
-      <div class="row mt-4">
+      <div class="row">
         <div class="storage-quota container-fluid px-3 py-2 border border-secondary me-0">
           <div class="row mt-2 mb-4">
             <div class="col-6">
