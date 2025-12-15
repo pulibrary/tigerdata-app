@@ -120,13 +120,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Assign roles for your project"
         click_on "Back"
         expect(page).to have_content "Tell us a little about your project!"
-        fill_in :project_title, with: "A basic Project"
-
-        # Clicking on the breadcrumb saves the user changes
-        click_on "Dashboard"
-        expect(page).to have_content "Welcome, #{current_user.given_name}!"
-        request = Request.last
-        expect(request.project_title).to eq("A basic Project")
       end
     end
 
@@ -393,6 +386,36 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Your new project request has been saved")
         expect(page).to have_content("A basic Project updated")
       end.to change { Request.count }.by(1)
+    end
+
+    it "automatically saves and redirects the user to the dashboard when a user clicks the dashboard breadcrumb" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Tell us a little about your project!"
+      fill_in :project_title, with: "Dashboard Redirect Test"
+
+      # Clicking on the breadcrumb saves the user changes
+      click_on "Dashboard"
+      expect(page).to have_content "Welcome, #{current_user.given_name}!"
+      request = Request.last
+      expect(request.project_title).to eq("Dashboard Redirect Test")
+      expect(page).to have_content("Draft request saved automatically")
+    end
+
+    it "automatically saves and redirects the user to the dashboard when a user clicks the tigerdata logo" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Tell us a little about your project!"
+      fill_in :project_title, with: "Dashboard Redirect Test"
+
+      # Clicking on the TigerData logo saves the user changes
+      find("#logo.header-image").click
+      expect(page).to have_content "Welcome, #{current_user.given_name}!"
+      request = Request.last
+      expect(request.project_title).to eq("Dashboard Redirect Test")
+      expect(page).to have_content("Draft request saved automatically")
     end
   end
 end
