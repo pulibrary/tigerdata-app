@@ -371,7 +371,7 @@
         align-items: flex-start;
         gap: 0.75rem;
 
-        usage {
+        .usage {
           color: $gray-60;
 
           /* Body XXS */
@@ -390,6 +390,8 @@
       justify-content: center;
       align-items: center;
       gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: flex-start;
 
       @media (max-width: 853px) {
         display: flex;
@@ -399,23 +401,30 @@
         display: none;
       }
 
+      .data-storage-progress {
+        display: flex;
+      }
+
       .storage {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 0.75rem;
         width: 100%;
+      }
 
-        usage {
-          color: $gray-60;
+      .usage {
+        display: flex;
+        justify-content: flex-end;
+        /* min-width: 400px; */
+        color: $gray-60;
 
-          /* Body XXS */
-          font-family: $libre-franklin;
-          font-size: 0.75rem;
-          font-style: normal;
-          font-weight: 400;
-          line-height: 1.125rem; /* 150% */
-        }
+        /* Body XXS */
+        font-family: $libre-franklin;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.125rem; /* 150% */
       }
     }
   }

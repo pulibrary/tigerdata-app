@@ -59,6 +59,11 @@
     margin-right: 2em;
     color: #000 !important;
     background-color: #f1f1f1 !important;
+
+    @media (max-width: 853px) {
+      width: 100%;
+    }
+
     @media (min-width: 1280px) {
       width: 20em;
     }

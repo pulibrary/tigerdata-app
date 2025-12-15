@@ -11,13 +11,14 @@
                 <% end %>
             </div>
 
-            <div class="summary">
+            <div class="summary" style="width: 100%;">
                 <div class="storage-details-smaller-device">
+                    <div class="data-storage-progress">Data Storage Progress</div>
+                    <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
                     <div class="storage">
                         <div class="w3-light-grey w3-round-xlarge">
                             <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session, dashboard: true) %>%"></div>
                         </div>
-                        <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
                     </div>
                 </div>
             </div>
