@@ -10,6 +10,18 @@
                     <div class="activity"><%= project.last_activity %></div>
                 <% end %>
             </div>
+
+            <div class="summary">
+                <div class="storage-details-smaller-device">
+                    <div class="storage">
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session, dashboard: true) %>%"></div>
+                        </div>
+                        <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="summary">
                 <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %></span>
                 <span class="netid-large"><%= project.data_sponsor.uid %></span>
