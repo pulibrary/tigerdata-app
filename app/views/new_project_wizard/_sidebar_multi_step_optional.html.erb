@@ -7,11 +7,10 @@
             <div class="step-text"><a class="go-to-step" href="<%= step_url %>"><%= step_name %></a><span class="substep-text">(Optional)</span></div>
         </div>
     </div>
-    <%
-=begin%>
-    <div class="step-expanded-container">
-        <div class="step-expanded"></div>
-    </div>
-    <%
-=end%>
+    <!-- don't render the care for now since we are not using it -->
+    <% if false %>
+        <div class="step-expanded-container">
+            <div class="step-expanded"></div>
+        </div>
+    <% end %>
 </div>
