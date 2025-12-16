@@ -203,6 +203,16 @@
 
         .data-sponsor {
           text-transform: none;
+
+          .separator {
+            @media (max-width: 853px) {
+              display: none;
+            }
+
+            @media (min-width: 854px) {
+              padding-left: 20px;
+            }
+          }
         }
 
         .data-manager {
@@ -343,8 +353,15 @@
           display: flex;
         }
       }
-    }
 
+      .summary-data-sponsor-smaller-device {
+        @media (max-width: 853px) {
+          gap: 0.5rem;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    }
     .storage-details {
       display: flex;
       width: 9.375rem;
