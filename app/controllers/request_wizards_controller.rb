@@ -4,7 +4,6 @@ class RequestWizardsController < ApplicationController
   before_action :set_breadcrumbs
 
   before_action :set_request_model, only: %i[save]
-  before_action :exit_without_saving, only: %i[save]
   before_action :set_or_init_request_model, only: %i[show]
   before_action :check_access
 
@@ -18,27 +17,32 @@ class RequestWizardsController < ApplicationController
 
   # PUT /request_wizards/1/save
   def save
-    # save and render dashboard
+    # save and render the requested step
     save_request
-    case params[:commit]
-    when "Back"
-      render_back
-    when "Next", "Submit"
-      render_next
+    notice_message = "Draft request saved automatically. To open or delete your draft, select the dropdown menu next to 'New Project Request'."
+    if params["redirectUrl"] == "undefined" # clicking the tigerdata logo
+      redirect_to dashboard_path
+      flash[:notice] = notice_message
+    elsif params["redirectUrl"] # clicking a breadcrumb link
+      redirect_to params["redirectUrl"]
+      flash[:notice] = notice_message
     else
-      if params[:commit].start_with?("http")
-        # Go directly to the step the user clicked on
-        redirect_to params[:commit]
-      elsif params[:go_to_dashboard] == "yes"
-        # The user clicked on the "Dashboard" breadcrumb
-        redirect_to dashboard_path
-      else
-        redirect_to request_path(@request_model)
-      end
+      redirect_to_requested_step
     end
   end
 
   private
+
+    def redirect_to_requested_step
+      case params[:commit]
+      when "Back"
+        render_back
+      when "Next", "Submit"
+        render_next
+      else
+        redirect_to request_path(@request_model)
+      end
+    end
 
     def check_access
       return if user_eligible_to_modify_request?
@@ -47,16 +51,6 @@ class RequestWizardsController < ApplicationController
       error_message = "You do not have access to this page."
       flash[:notice] = error_message
       redirect_to dashboard_path
-    end
-
-    def exit_without_saving
-      if params[:commit] == "Exit without Saving"
-        if @request_model.nil?
-          redirect_to dashboard_path
-        else
-          redirect_to request_path(@request_model)
-        end
-      end
     end
 
     def render_current
@@ -88,10 +82,10 @@ class RequestWizardsController < ApplicationController
     end
 
     def update_sidebar_url(request_model)
-      return unless params[:commit].start_with?("http")
+      return unless params["redirectUrl"] && params["redirectUrl"].last == "0"
 
       # take of the zero in the url and replace it with the real request id
-      params[:commit] = "#{params[:commit][0..-2]}#{request_model.id}"
+      params["redirectUrl"] = "#{params['redirectUrl'][0..-2]}#{request_model.id}"
     end
 
     # set if id is present or initialize a blank request if not

@@ -109,17 +109,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         find('label[for="radiocustom"]').click
         # Check that TB is listed as default
         expect(page).to have_select("storage_unit", selected: "TB")
-        find('label[for="radio500gb"]').click
+        find('label[for="radio2tb"]').click
         expect(page).not_to have_select("storage_unit")
         expect(page).to have_button "Back"
         click_on "Next"
         expect(page).to have_content "Take a moment to review"
-
-        # Clicking on the breadcrumb gives the use a chance to save their changes
-        click_on "Dashboard"
-        expect(page).to have_content "Save Your Progress"
-        find(".pul-popover-close").click
-
         click_on "Back"
         expect(page).to have_content "Enter the storage and access needs"
         click_on "Back"
@@ -290,20 +284,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).not_to have_content(department_to_test)
     end
 
-    it "allows for Exit without Saving" do
-      sign_in current_user
-      visit "/"
-      expect do
-        click_on "New Project Request"
-        expect(page).to have_content "Basic Details"
-        fill_in :project_title, with: "A basic Project"
-        click_on "Save and exit"
-        expect(page).to have_content "will be saved as draft"
-        click_on "Exit without Saving"
-        expect(page).to have_content("Welcome")
-      end.not_to change { Request.count }
-    end
-
     it "does not allow save and exit for a request with missing titles" do
       sign_in current_user
       visit "new-project/project-info"
@@ -392,6 +372,36 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Your new project request has been saved")
         expect(page).to have_content("A basic Project updated")
       end.to change { Request.count }.by(1)
+    end
+
+    it "automatically saves and redirects the user to the dashboard when a user clicks the dashboard breadcrumb" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Tell us a little about your project!"
+      fill_in :project_title, with: "Dashboard Redirect Test"
+
+      # Clicking on the breadcrumb saves the user changes
+      click_on "Dashboard"
+      expect(page).to have_content "Welcome, #{current_user.given_name}!"
+      request = Request.last
+      expect(request.project_title).to eq("Dashboard Redirect Test")
+      expect(page).to have_content("Draft request saved automatically")
+    end
+
+    it "automatically saves and redirects the user to the dashboard when a user clicks the tigerdata logo" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect(page).to have_content "Tell us a little about your project!"
+      fill_in :project_title, with: "Dashboard Redirect Test"
+
+      # Clicking on the TigerData logo saves the user changes
+      find("#logo.header-image").click
+      expect(page).to have_content "Welcome, #{current_user.given_name}!"
+      request = Request.last
+      expect(request.project_title).to eq("Dashboard Redirect Test")
+      expect(page).to have_content("Draft request saved automatically")
     end
   end
 end
