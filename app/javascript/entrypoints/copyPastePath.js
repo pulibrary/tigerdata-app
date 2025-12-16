@@ -41,6 +41,7 @@ export function copyPastePath() {
     );
   }
 
+  /* Dashboard */
   $('.copy-project-path-icon').on('click', (event) => {
     $('.copy-project-path-icon').removeClass('copy-paste-check');
     $('.copy-project-path-icon').addClass('copy-paste-frames');
@@ -63,8 +64,6 @@ export function copyPastePath() {
     $('.copy-project-path-icon').addClass('copy-paste-frames');
     $('.copy-project-path-label-text').text('Copy');
     const projectPath = $(event.target).data('url');
-    const iconEl = "#" + event.currentTarget.id;
-    const labelEl = iconEl + " #copy-project-path-label";
     copyPath(
       projectPath,
       '#copy-project-path-button-heading',
@@ -80,8 +79,6 @@ export function copyPastePath() {
     $('.copy-project-path-icon').addClass('copy-paste-frames');
     $('.copy-project-path-label-text').text('Copy');
     const projectPath = $(event.target).data('url');
-    const iconEl = "#" + event.currentTarget.id;
-    const labelEl = iconEl + " #copy-project-path-label";
     copyPath(
       projectPath,
       '#copy-project-path-button-basic',
