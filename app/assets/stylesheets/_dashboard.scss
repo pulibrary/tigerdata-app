@@ -387,11 +387,10 @@
     .storage-details-smaller-device {
       width: 100%;
       padding: 0.375rem 0rem;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       gap: 0.75rem;
       flex-wrap: wrap;
-      justify-content: flex-start;
 
       @media (max-width: 853px) {
         display: flex;
