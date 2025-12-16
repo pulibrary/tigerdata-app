@@ -171,6 +171,7 @@
   height: 1.5rem;
   background-repeat: no-repeat;
   background-position: center;
+
 }
 
 .copy-paste-frames {
@@ -181,8 +182,12 @@
   background-image: asset_url("green-checkmark.svg");
 }
 
-copy-paste-error {
+.copy-paste-error {
   background-image: asset_url("custom_error.svg");
+}
+
+.copy-project-path-icon {
+  z-index: 10;
 }
 
 .pul-copy-paste-tooltip {
@@ -193,6 +198,7 @@ copy-paste-error {
   height: 1.5rem;
   aspect-ratio: 1/1;
   font-weight: normal;
+  z-index: -1;
 }
 
 /* Tooltip text */
