@@ -219,7 +219,8 @@
         .input-frame {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          width: 100%;
+          padding-right: 10px;
           gap: 0.5rem;
           flex: 1 0 0;
           .text-input {
@@ -240,9 +241,9 @@
                 flex: 1 0 0;
                 .form-input {
                   display: flex;
-                  width: 36.875rem;
+                  align-self: stretch;
                   flex-direction: column;
-                  align-items: flex-start;
+                  align-items: stretch;
                   gap: 0.25rem;
                 }
                 .char-limit {
@@ -291,9 +292,10 @@
           }
           .project-directory {
             display: flex;
-            width: 38.625rem;
             align-items: center;
             gap: 0.5rem;
+            align-self: stretch;
+            align-items: stretch;
             .parent-folder {
               display: flex;
               width: 15rem;
@@ -304,7 +306,6 @@
             }
             .project-folder {
               display: flex;
-              width: 23.125rem;
               flex-direction: column;
               align-items: flex-start;
               gap: 0.25rem;
