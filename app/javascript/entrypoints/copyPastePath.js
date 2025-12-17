@@ -47,8 +47,8 @@ export function copyPastePath() {
     $('.copy-project-path-icon').addClass('copy-paste-frames');
     $('.copy-project-path-label-text').text('Copy');
     const projectPath = $(event.target).data('url');
-    const iconEl = "#" + event.currentTarget.id;
-    const labelEl = iconEl + " #copy-project-path-label";
+    const iconEl = `#${event.currentTarget.id}`;
+    const labelEl = `${iconEl} #copy-project-path-label`;
     copyPath(
       projectPath,
       iconEl,
