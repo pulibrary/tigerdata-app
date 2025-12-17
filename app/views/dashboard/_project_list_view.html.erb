@@ -4,12 +4,34 @@
             <div class="title">
                 <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
             </div>
-            <div class="summary">
-                <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %></span>
-                <span class="netid-large"><%= project.data_sponsor.uid %></span>
-                |
-                <span class="data-manager"><b>Data Manager:</b> <%= project.data_manager.display_name_only_safe %></span>
-                <span class="netid-large"><%= project.data_manager.uid %></span>
+            <div class="summary summary-smaller-device">
+                <div class="status <%= project.status.downcase %> "><%= project.status %></div>
+                <% if Flipflop.last_updated_dashboard? %>
+                    <div class="activity"><%= project.last_activity %></div>
+                <% end %>
+            </div>
+
+            <div class="summary" style="width: 100%;">
+                <div class="storage-details-smaller-device">
+                    <div class="data-storage-progress">Data Storage Progress</div>
+                    <div class="usage"> <%= project.quota_usage(session_id: current_user.mediaflux_session) %></div>
+                    <div class="storage">
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-orange w3-round-xlarge" style="height:6px;width:<%= project.quota_percentage(session_id: current_user.mediaflux_session, dashboard: true) %>%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary summary-data-sponsor-smaller-device">
+                <span class="data-sponsor"><b>Data Sponsor:</b> <%= project.data_sponsor.display_name_only_safe %>
+                    <span class="netid-large"><%= project.data_sponsor.uid %></span>
+                    <span class="separator">|</span>
+                </span>
+
+                <span class="data-manager"><b>Data Manager:</b> <%= project.data_manager.display_name_only_safe %>
+                    <span class="netid-large"><%= project.data_manager.uid %></span>
+                </span>
             </div>
             <div class="summary">
                 <div class="path"> <%= project.path %></div>
@@ -20,7 +42,7 @@
                 </button>
             </div>
             <div class="summary">
-               <div class="status <%= project.status.downcase %>"><%= project.status %></div>
+               <div class="status <%= project.status.downcase %> status-larger-device"><%= project.status %></div>
 
                 <% if Flipflop.project_type_indicator? %>
                     <div class="type"><%= project.type %></div>
@@ -30,10 +52,10 @@
                <div class="download"><%= project.latest_file_list_time %></div>
 
                 <% if Flipflop.last_updated_dashboard? %>
-                    <div class="activity"><%= project.last_activity %></div>
+                    <div class="activity activity-larger-device"><%= project.last_activity %></div>
                 <% end %>
-
-              </div></div>
+            </div>
+        </div>
 
         <div class="storage-details">
           <div class="storage">
