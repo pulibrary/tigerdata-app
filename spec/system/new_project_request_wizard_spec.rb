@@ -403,5 +403,21 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(request.project_title).to eq("Dashboard Redirect Test")
       expect(page).to have_content("Draft request saved automatically")
     end
+
+    it "allows a user to click a step in the side panel and a flash message is not displayed" do
+      sign_in current_user
+      visit "/"
+      click_on "New Project Request"
+      expect do
+        expect(page).to have_content "Tell us a little about your project!"
+        fill_in :project_title, with: "Dashboard Redirect Test"
+
+        # Clicking on the side panel step does not display the flash message
+        click_on "Roles and People"
+        expect(page).not_to have_content "Draft request saved automatically"
+        request = Request.last
+        expect(request.project_title).to eq("Dashboard Redirect Test")
+      end.to change { Request.count }.by(1)
+    end
   end
 end
