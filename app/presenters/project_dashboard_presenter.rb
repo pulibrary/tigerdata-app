@@ -4,6 +4,18 @@ class ProjectDashboardPresenter < ProjectShowPresenter
 
   delegate :to_model, :updated_at, to: :project
 
+  # Constructor
+  # @param project_data [Project or Hash] the project to be presented
+  # @param current_user [User] the user currently logged in
+  def initialize(project_data, current_user)
+    if project_data.is_a?(Hash)
+      super(rails_project(project_data), current_user, project_mf: project_data)
+    else
+      super(project_data, current_user,
+            project_mf: project_data.mediaflux_metadata(session_id: current_user.mediaflux_session))
+    end
+  end
+
   def type
     if storage_performance_expectations["approved"].nil?
       "Requested #{storage_performance_expectations['requested']}"
