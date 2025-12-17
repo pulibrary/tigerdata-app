@@ -44,21 +44,6 @@ namespace :projects do
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
 
-  task :download_file_list, [:netid, :project_id] => [:environment] do |_, args|
-    netid = args[:netid]
-    user = User.where(uid: netid).first
-    raise "User #{netid} not found" if user.nil?
-
-    project_id = args[:project_id]
-    project = Project.find(project_id)
-    filename = "file_list_#{project_id}.csv"
-    puts "Downloading file list for project #{project_id}"
-    time_action("download file list") do
-      asset_id = project.file_list_to_file(session_id: user.mediaflux_session, filename: filename)
-    end
-    puts "File list downloaded for project #{project_id}"
-  end
-
   desc "Uploads the fileList TCL script to Mediaflux and makes it executable"
   task :script_file_list_create, [:netid] => [:environment] do |_, args|
     netid = args[:netid]
