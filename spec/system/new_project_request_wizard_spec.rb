@@ -417,7 +417,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).not_to have_content "Draft request saved automatically"
         request = Request.last
         expect(request.project_title).to eq("Dashboard Redirect Test")
-        expect(page).to have_content("Draft request saved automatically")
       end.to change { Request.count }.by(1)
     end
   end
