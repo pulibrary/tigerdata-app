@@ -23,9 +23,13 @@ class RequestWizardsController < ApplicationController
     if params["redirectUrl"] == "undefined" # clicking the tigerdata logo
       redirect_to dashboard_path
       flash[:notice] = notice_message
-    elsif params["redirectUrl"] # clicking a breadcrumb link
-      redirect_to params["redirectUrl"]
-      flash[:notice] = notice_message
+    elsif params["redirectUrl"]
+      if params["redirectUrl"].include?("dashboard") # clicking the dashboard breadcrumb
+        redirect_to dashboard_path
+        flash[:notice] = notice_message
+      else
+        redirect_to params["redirectUrl"] # clicking a sidebar step
+      end
     else
       redirect_to_requested_step
     end
