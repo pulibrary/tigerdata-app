@@ -242,7 +242,7 @@ class ProjectShowPresenter
     end
 
     def rails_project(project_mf)
-      database_record = Project.where(mediaflux_id:project_mf[:mediaflux_id]).first
+      database_record = Project.find_by(mediaflux_id: project_mf[:mediaflux_id])
       if database_record.nil?
         message = "Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})"
         Rails.logger.warn(message)

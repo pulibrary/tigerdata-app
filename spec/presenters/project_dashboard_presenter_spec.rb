@@ -5,12 +5,14 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request1) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
   let(:project) { request1.approve(sponsor_and_data_manager) }
-  subject(:presenter) { ProjectDashboardPresenter.new(project, sponsor_and_data_manager) }
+  
+  let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
+  subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:) }
 
   describe "#type" do
     it "returns the requested type" do
       project.metadata_model.storage_performance_expectations["approved"] = nil
-      presenter = ProjectDashboardPresenter.new(project, sponsor_and_data_manager)
+      presenter = ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:)
       expect(presenter.type).to include("Requested")
     end
 

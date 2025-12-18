@@ -75,6 +75,7 @@ module Mediaflux
       def parse(asset)
         {
           id: asset.xpath("./@id").text,
+          mediaflux_id: asset.xpath("./@id").text,
           name: asset.xpath("./name").text,
           creator: asset.xpath("./creator/user").text,
           description: asset.xpath("./description").text,
@@ -114,6 +115,7 @@ module Mediaflux
         data_users = data_users_from_string(project.xpath("./DataUser").text)
         rw_users = parse_read_write_users(asset, data_users)
         {
+          data_users: data_users,
           rw_users: rw_users,
           ro_users: data_users - rw_users
         }

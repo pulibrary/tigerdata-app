@@ -7,13 +7,8 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   # Constructor
   # @param project_data [Project or Hash] the project to be presented
   # @param current_user [User] the user currently logged in
-  def initialize(project_data, current_user)
-    if project_data.is_a?(Hash)
-      super(rails_project(project_data), current_user, project_mf: project_data)
-    else
-      super(project_data, current_user,
-            project_mf: project_data.mediaflux_metadata(session_id: current_user.mediaflux_session))
-    end
+  def initialize(project_data, current_user, project: nil)
+    super(project || rails_project(project_data), current_user, project_mf: project_data)
   end
 
   def type
