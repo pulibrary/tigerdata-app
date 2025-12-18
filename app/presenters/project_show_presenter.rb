@@ -10,20 +10,13 @@ class ProjectShowPresenter
     ProjectXmlPresenter
   end
 
-  # While we are transitioning to fetching the data straight from Mediaflux `project` can be
-  # an ActiveRecord Project model (when used from the Project show page) or a Hash with the
-  # data from Mediaflux (when used from the Dashboard).
-  # This branching can be refactored (elimitated?) once we implement ticket
-  # https://github.com/pulibrary/tigerdata-app/issues/2039 and the project data will always
-  # come from Mediaflux.
-  def initialize(project, current_user)
-    if project.is_a?(Hash)
-      @project_mf = project
-      @project = rails_project(@project_mf)
-    else
-      @project = project
-      @project_mf = project.mediaflux_metadata(session_id: current_user.mediaflux_session)
-    end
+  # Constructor
+  # @param project [Project] the project to be presented
+  # @param current_user [User] the user currently logged in
+  # @param project_mf [Hash] the current representation of the project in Mediaflux
+  def initialize(project, current_user, project_mf: nil)
+    @project = project
+    @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     @project_metadata = @project&.metadata_model
   end
 
@@ -251,8 +244,9 @@ class ProjectShowPresenter
     def rails_project(project_mf)
       database_record = Project.where(mediaflux_id:project_mf[:mediaflux_id]).first
       if database_record.nil?
-        Rails.logger.warn("Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})")
-        Honeybadger.notify("Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})")
+        message = "Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})"
+        Rails.logger.warn(message)
+        Honeybadger.notify(message)
       end
       database_record
     end

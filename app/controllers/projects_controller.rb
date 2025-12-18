@@ -10,24 +10,16 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
-    @provenance_events = project.provenance_events.where.not(event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE)
+    project_metadata = @project.metadata
+    storage_capacity = project_metadata[:storage_capacity]
+    size = storage_capacity[:size]
+    unit = storage_capacity[:unit]
 
-    @project_eligible_to_edit = true if project.status == Project::APPROVED_STATUS && eligible_editor?
+    @requested_size = size[:requested]
+    @requested_unit = unit[:requested]
 
-    @project_metadata = @project.metadata
-    @storage_capacity = @project_metadata[:storage_capacity]
-    @size = @storage_capacity[:size]
-    @unit = @storage_capacity[:unit]
-
-    @requested_size = @size[:requested]
-    @requested_unit = @unit[:requested]
-
-    @approved_size = @size[:approved]
-    @approved_unit = @unit[:approved]
-
-    @storage_expectations = @project_metadata[:storage_performance_expectations]
-    @requested_storage_expectations = @storage_expectations[:requested]
-    @approved_storage_expectations = @storage_expectations[:approved]
+    @approved_size = size[:approved]
+    @approved_unit = unit[:approved]
 
     @project_session = "details"
 
@@ -126,11 +118,6 @@ class ProjectsController < ApplicationController
 
     def project_job_service
       @project_job_service ||= ProjectJobService.new(project:)
-    end
-
-
-    def build_new_project
-      @project ||= Project.new
     end
 
     def project
