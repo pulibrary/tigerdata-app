@@ -85,7 +85,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_content("Research")
       end
-      it "copies DOI to the clipboard" do
+      it "copies the project path to the clipboard" do
         sign_in sponsor_user
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
         project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
@@ -94,13 +94,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
         
-        expect(page.html.include?('<button id="copy-project-path-button"')).to be true
+        expect(page.html.include?('<button id="copy-project-path-button-heading"')).to be true
+        expect(page.html.include?('<button id="copy-project-path-button-basic"')).to be true
 
         # A test as follows would be preferrable
         #
         # ```
         #   expect(page).to have_content "COPY"
-        #   click_on "#copy-project-path-button"
+        #   click_on "#copy-project-path-button-heading"
         #   expect(page).to have_css ".copy-paste-check"
         # ```
         #
