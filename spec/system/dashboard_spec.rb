@@ -80,6 +80,23 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
       end
 
+      it "copies the project path to the clipboard" do
+        expect(page.html.include?('class="copy-project-path-icon"')).to be true
+
+        # A test as follows would be preferrable
+        #
+        # ```
+        #   expect(page).to have_content "COPY"
+        #   click_on "#copy-project-path-button-heading"
+        #   expect(page).to have_css ".copy-paste-check"
+        # ```
+        #
+        # but unfortunately this kind of test only works when we run RSpec like this:
+        #
+        #   RUN_IN_BROWSER=true bundle exec rspec spec/system/project_details_spec.rb
+        #
+      end
+
       it "shows the latests downloads available" do
         created_projects.push(project_111, project_222, project_333)
 
