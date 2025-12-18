@@ -14,8 +14,7 @@ class Request < ApplicationRecord
     valid_quota?
     valid_project_purpose?
     valid_description?
-    # Is parent folder really required?  For Skeletor let's skip it.
-    # valid_parent_folder?
+    valid_parent_folder?
     valid_project_folder?
     # For Skeletor we are setting the requestor to the data sponsor
     # valid_requested_by?
@@ -57,14 +56,15 @@ class Request < ApplicationRecord
   def valid_parent_folder?
     check_errors? do
       field_present?(parent_folder, :parent_folder)
-      alphanumeric_dash_underscore_only(project_title, :parent_folder)
+      alphanumeric_dash_underscore_only(parent_folder, :parent_folder)
     end
   end
 
   def valid_project_folder?
     check_errors? do
       field_present?(project_folder, :project_folder)
-      alphanumeric_dash_underscore_only(project_folder, :project_folder)
+      # Check the project folder for the error but only display the error under the parent folder
+      alphanumeric_dash_underscore_only(project_folder, :parent_folder)
     end
   end
 
@@ -150,7 +150,7 @@ class Request < ApplicationRecord
   end
 
   def requestor
-    return "missing" if requested_by.blank?
+    return "Missing requestor." if requested_by.blank?
     User.find_by(uid: requested_by).display_name_safe
   end
 
@@ -190,27 +190,27 @@ class Request < ApplicationRecord
       if uid.blank?
         errors.add(field, :blank, message: "This field is required.")
       elsif User.where(uid: uid).count == 0
-        errors.add(field, :invalid, message: "must be a valid user")
+        errors.add(field, :invalid, message: "Must be a valid user.")
       end
     end
 
     def project_purpose_present?(project_purpose, field)
       if project_purpose.blank?
-        errors.add(field, :blank, message: "select a project purpose")
+        errors.add(field, :blank, message: "Select a project purpose.")
       end
     end
 
     def valid_length(value, length, field)
       return if value.blank?
       if value.length > length
-        errors.add(field, :invalid, message: "cannot exceed #{length} characters")
+        errors.add(field, :invalid, message: "Cannot exceed #{length} characters.")
       end
     end
 
     def no_quotes(value, field)
       return if value.blank?
       if value.include?('"')
-        errors.add(field, :invalid, message: "cannot include quotes")
+        errors.add(field, :invalid, message: "Cannot include quotes.")
       end
     end
 
