@@ -78,16 +78,14 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_content "project 333"
         expect(page).to have_content "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
         expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
-      end
 
-      it "copies the project path to the clipboard" do
-        expect(page.html.include?('class="copy-project-path-icon"')).to be true
+        expect(page).to have_css ".copy-project-path-icon"
 
         # A test as follows would be preferrable
         #
         # ```
         #   expect(page).to have_content "COPY"
-        #   click_on "#copy-project-path-button-heading"
+        #   click_on "#copy-project-path-button"
         #   expect(page).to have_css ".copy-paste-check"
         # ```
         #
