@@ -4,16 +4,16 @@ export const showMoreLess = {
   showMore: function (element, excerpt) {
     const textElement = element;
 
-    textElement.addEventListener('click', (event) => {
+    textElement.addEventListener("click", (event) => {
       const linkText = event.target.textContent.toLowerCase();
       event.preventDefault();
 
-      if (linkText === 'more') {
-        textElement.textContent = 'less';
-        excerpt.classList.remove('truncate');
+      if (linkText === "more") {
+        textElement.textContent = "less";
+        excerpt.classList.remove("truncate");
       } else {
-        textElement.textContent = 'more';
-        excerpt.classList.add('truncate');
+        textElement.textContent = "more";
+        excerpt.classList.add("truncate");
       }
     });
   },

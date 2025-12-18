@@ -1,3 +1,3 @@
-import MediafluxComponent from './mediaflux.js';
+import MediafluxComponent from "./mediaflux.js";
 
 export default MediafluxComponent;

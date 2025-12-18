@@ -1,101 +1,102 @@
 export function projectStyle(railsSession) {
-  const content = document.getElementById('project-content');
-  const details = document.getElementById('project-details');
-  const script = document.getElementById('project-script');
-  const approval = document.getElementById('project-approval');
+  const content = document.getElementById("project-content");
+  const details = document.getElementById("project-details");
+  const script = document.getElementById("project-script");
+  const approval = document.getElementById("project-approval");
   const session = railsSession;
-  const project = document.getElementById('show') || document.getElementById('content');
+  const project =
+    document.getElementById("show") || document.getElementById("content");
 
   // Check the session to see which tab should start as active be active
   if (project) {
     switch (session) {
-      case 'details':
-        details.style.borderBottom = 'solid';
-        details.style.borderColor = '#E77500';
-        details.classList.add('active');
+      case "details":
+        details.style.borderBottom = "solid";
+        details.style.borderColor = "#E77500";
+        details.classList.add("active");
         break;
-      case 'script':
-        script.style.borderBottom = 'solid';
-        script.style.borderColor = '#E77500';
-        script.classList.add('active');
+      case "script":
+        script.style.borderBottom = "solid";
+        script.style.borderColor = "#E77500";
+        script.classList.add("active");
         break;
-      case 'approval':
-        approval.style.borderBottom = 'solid';
-        approval.style.borderColor = '#E77500';
-        approval.classList.add('active');
+      case "approval":
+        approval.style.borderBottom = "solid";
+        approval.style.borderColor = "#E77500";
+        approval.classList.add("active");
         break;
       default:
-        content.style.borderBottom = 'solid';
-        content.style.borderColor = '#E77500';
-        content.classList.add('active');
+        content.style.borderBottom = "solid";
+        content.style.borderColor = "#E77500";
+        content.classList.add("active");
         break;
     }
   }
 
-  $('#project-content').on('mouseenter', (el) => {
+  $("#project-content").on("mouseenter", (el) => {
     const element = el;
     element.preventDefault();
-    if (!content.classList.contains('active')) {
-      content.style.borderBottom = 'solid';
-      content.style.borderColor = '#121212';
+    if (!content.classList.contains("active")) {
+      content.style.borderBottom = "solid";
+      content.style.borderColor = "#121212";
     }
   });
 
-  $('#project-content').on('mouseleave', (el) => {
+  $("#project-content").on("mouseleave", (el) => {
     const element = el;
     element.preventDefault();
-    if (!content.classList.contains('active')) {
-      content.style.border = 'none';
+    if (!content.classList.contains("active")) {
+      content.style.border = "none";
     }
   });
 
-  $('#project-content').on('click', (el) => {
+  $("#project-content").on("click", (el) => {
     const element = el;
     element.preventDefault();
-    content.style.borderBottom = 'solid';
-    content.style.borderColor = '#E77500';
-    content.classList.add('active');
+    content.style.borderBottom = "solid";
+    content.style.borderColor = "#E77500";
+    content.classList.add("active");
   });
 
-  $('#project-details').on('mouseenter', (el) => {
+  $("#project-details").on("mouseenter", (el) => {
     const element = el;
     element.preventDefault();
-    if (!details.classList.contains('active')) {
-      details.style.borderBottom = 'solid';
-      details.style.borderColor = '#121212';
+    if (!details.classList.contains("active")) {
+      details.style.borderBottom = "solid";
+      details.style.borderColor = "#121212";
     }
   });
 
-  $('#project-details').on('mouseleave', (el) => {
+  $("#project-details").on("mouseleave", (el) => {
     const element = el;
     element.preventDefault();
-    if (!details.classList.contains('active')) {
-      details.style.border = 'none';
+    if (!details.classList.contains("active")) {
+      details.style.border = "none";
     }
   });
 
-  $('#project-details').on('click', (el) => {
+  $("#project-details").on("click", (el) => {
     const element = el;
     element.preventDefault();
-    details.style.borderBottom = 'solid';
-    details.style.borderColor = '#E77500';
-    details.classList.add('active');
+    details.style.borderBottom = "solid";
+    details.style.borderColor = "#E77500";
+    details.classList.add("active");
   });
 
-  $('#project-script').on('mouseenter', (el) => {
+  $("#project-script").on("mouseenter", (el) => {
     const element = el;
     element.preventDefault();
-    if (!script.classList.contains('active')) {
-      script.style.borderBottom = 'solid';
-      script.style.borderColor = '#121212';
+    if (!script.classList.contains("active")) {
+      script.style.borderBottom = "solid";
+      script.style.borderColor = "#121212";
     }
   });
 
-  $('#project-script').on('mouseleave', (el) => {
+  $("#project-script").on("mouseleave", (el) => {
     const element = el;
     element.preventDefault();
-    if (!script.classList.contains('active')) {
-      script.style.border = 'none';
+    if (!script.classList.contains("active")) {
+      script.style.border = "none";
     }
   });
 
@@ -107,39 +108,39 @@ export function projectStyle(railsSession) {
   //     script.classList.add('active');
   //   });
 
-  $('#project-approval').on('mouseenter', (el) => {
+  $("#project-approval").on("mouseenter", (el) => {
     const element = el;
     element.preventDefault();
 
-    if (!approval.classList.contains('active')) {
-      approval.style.borderBottom = 'solid';
-      approval.style.borderColor = '#121212';
+    if (!approval.classList.contains("active")) {
+      approval.style.borderBottom = "solid";
+      approval.style.borderColor = "#121212";
     }
   });
 
-  $('#project-approval').on('mouseleave', (el) => {
+  $("#project-approval").on("mouseleave", (el) => {
     const element = el;
     element.preventDefault();
 
-    if (!approval.classList.contains('active')) {
-      approval.style.border = 'none';
+    if (!approval.classList.contains("active")) {
+      approval.style.border = "none";
     }
   });
 
-  $('#project-approval').on('click', (el) => {
+  $("#project-approval").on("click", (el) => {
     const element = el;
     element.preventDefault();
-    approval.style.borderBottom = 'solid';
-    approval.style.borderColor = '#E77500';
-    approval.classList.add('active');
+    approval.style.borderBottom = "solid";
+    approval.style.borderColor = "#E77500";
+    approval.classList.add("active");
   });
 }
 
 export function projectTab(contentUrl, detailsUrl) {
-  $('#project-content').on('click', (element) => {
+  $("#project-content").on("click", (element) => {
     element.preventDefault();
     $.ajax({
-      type: 'GET',
+      type: "GET",
       url: contentUrl,
       success() {
         window.location.href = contentUrl; // update the browser's URL
@@ -147,10 +148,10 @@ export function projectTab(contentUrl, detailsUrl) {
     });
   });
 
-  $('#project-details').on('click', (element) => {
+  $("#project-details").on("click", (element) => {
     element.preventDefault();
     $.ajax({
-      type: 'GET',
+      type: "GET",
       url: detailsUrl,
       success() {
         window.location.href = detailsUrl; // update the browser's URL

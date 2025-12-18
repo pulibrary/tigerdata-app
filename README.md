@@ -22,7 +22,8 @@ This application provides a front end for users to create and manage projects th
 The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework.
 
 ### Roles
-The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tigerdata-app/blob/main/docs/roles.md) of the system roles
+
+The system will eventually have many roles. Please refer to the [docs for a description](https://github.com/pulibrary/tigerdata-app/blob/main/docs/roles.md) of the system roles
 
 ## Local development
 
@@ -36,27 +37,28 @@ The system will eventually have many roles.  Please refer to the [docs for a des
 
 1. Check out code and `cd`
 1. Install tool dependencies; If you've worked on other PUL projects they will already be installed.
-    1. [Lando](https://docs.lando.dev/getting-started/installation.html)
-    1. [asdf](https://asdf-vm.com/guide/getting-started.html#_2-download-asdf)
-    1. postgresql (`brew install postgresql`: PostgreSQL runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local PostgreSQL library to install successfully.)
+   1. [Lando](https://docs.lando.dev/getting-started/installation.html)
+   1. [asdf](https://asdf-vm.com/guide/getting-started.html#_2-download-asdf)
+   1. postgresql (`brew install postgresql`: PostgreSQL runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local PostgreSQL library to install successfully.)
 1. Install asdf dependencies with asdf
-    1. `asdf plugin add ruby`
-    1. `asdf plugin add node`
-    1. `asdf plugin add yarn`
-    1. `asdf plugin add java`
-    1. `asdf install`
-    1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
+   1. `asdf plugin add ruby`
+   1. `asdf plugin add node`
+   1. `asdf plugin add yarn`
+   1. `asdf plugin add java`
+   1. `asdf install`
+   1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
 1. OR - Install dependencies with brew and chruby
    1. `ruby-install 3.2.3 -- --with-openssl-dir=$(brew --prefix openssl@1.1)`
    2. If you get "error: use of undeclared identifier 'RUBY_FUNCTION_NAME_STRING'" while updating, make sure your Xcode toolks are up to date.
    3. close the terminal window and open a new terminal
    4. `chruby 3.2.3`
    5. `ruby --version`
-2. Install language-specific dependencies
-    1. `bundle install`
-    2. `yarn install`
+1. Install language-specific dependencies
+   1. `bundle install`
+   2. `yarn install`
 
 On a Mac with an M1 chip, `bundle install` may fail. [This suggestion](https://stackoverflow.com/questions/74196882/cannot-install-jekyll-eventmachine-on-m1-mac) helped:
+
 ```
 gem install eventmachine -v '1.2.7' -- --with-openssl-dir=$(brew --prefix libressl)
 brew install pkg-config
@@ -85,20 +87,18 @@ Users can be added one-by-one via an LDAP lookup of their net ID with the follow
 
 `bundle exec rake load_users:load_single_user\["abc123"]`
 
-***In the non-production environments only***, elevate an existing user to developer with the following rake task (example argument):
+**_In the non-production environments only_**, elevate an existing user to developer with the following rake task (example argument):
 
 `bundle exec rake user_roles:add_developer\["abc123"]`
 
-Similarly, ***in the non-production environments only***, you can remove developer from a user with the following rake task (example argument):
+Similarly, **_in the non-production environments only_**, you can remove developer from a user with the following rake task (example argument):
 
 `bundle exec rake user_roles:remove_developer\["abc123"]`
-
 
 #### MediaFlux Server
 
 You should no longer have to start mediaflux separately. `bundle exec rake servers:start` includes spinning up mediaflux in docker.
 Additional documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
-
 
 ##### Authentication
 
@@ -142,8 +142,8 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 
 The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/mflux/service-docs/
 
-
 ### How to run test suite
+
 - `asdf install`
 - `bundle install`
 - `yarn install`
@@ -154,6 +154,7 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
 
 ### How to run only integration tests
+
 - To run just the tests that are integration tests, we will need to pass a flag that will only run tests that are tagged as an integration test `bundle exec rspec --tag integration`
 
 ### Starting the development server
@@ -162,11 +163,11 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 2. Access application at [http://localhost:3000/](http://localhost:3000/)
 
 ## Production and Staging Deployment
-Deploy with Capistrano (we are intending to have a deployment mechanism with Ansible Tower, but that is not yet implemented)
-```bundle exec cap production deploy```
-or
-```bundle exec cap staging deploy```
 
+Deploy with Capistrano (we are intending to have a deployment mechanism with Ansible Tower, but that is not yet implemented)
+`bundle exec cap production deploy`
+or
+`bundle exec cap staging deploy`
 
 ## Load Balancer
 
@@ -180,49 +181,55 @@ Notice that the name of the machine (`tigerdata-prod1` in the example above) mus
 
 You can use `application:serve_from_nginx` to re-add the machine to the load balancer.
 
-
 ## Mail
 
 ### Mail on Development
-Mailcatcher is a gem that can also be installed locally.  See the [mailcatcher documentation](https://mailcatcher.me/) for how to run it on your machine.
+
+Mailcatcher is a gem that can also be installed locally. See the [mailcatcher documentation](https://mailcatcher.me/) for how to run it on your machine.
 
 ### Mail on Staging and QA
-To See mail that has been sent on the Staging and QA servers you can utilize capistrano to open up both mailcatcher consoles in your browser (see below).  Look in your default browser for the consoles
+
+To See mail that has been sent on the Staging and QA servers you can utilize capistrano to open up both mailcatcher consoles in your browser (see below). Look in your default browser for the consoles
 
 #### staging command
+
 ```
 cap staging  mailcatcher:console
 ```
 
 #### qa command
+
 ```
 cap qa  mailcatcher:console
 ```
 
 ### Mail on Production
+
 Emails on production are sent via [Pony Express](https://github.com/pulibrary/pul-it-handbook/blob/f54dfdc7ada1ff993a721f6edb4aa1707bb3a3a5/services/smtp-mail-server.md).
 
 ## Sidekiq
 
-[Sidekiq](https://sidekiq.org/) is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
+[Sidekiq](https://sidekiq.org/) is used to run backgroud jobs on the server. The jobs are created by ActiveJob and ActiveMailer.
 
 You can go to the following urls to see the sidekiq dashboard, but because these environments are load balanced, that view will switch back and forth between hosts.
- - https://tigerdata-staging.lib.princeton.edu/sidekiq
- - https://tigerdata-qa.princeton.edu/sidekiq
- - https://tigerdata-app.princeton.edu/sidekiq
+
+- https://tigerdata-staging.lib.princeton.edu/sidekiq
+- https://tigerdata-qa.princeton.edu/sidekiq
+- https://tigerdata-app.princeton.edu/sidekiq
 
 Instead, use the capistrano task, which will open an ssh tunnel to all nodes in a tigerdata environment (staging, qa or production), with a tab in your browser for each one.
- - `cap staging sidekiq:console`
- - `cap qa sidekiq:console`
- - `cap production sidekiq:console`
+
+- `cap staging sidekiq:console`
+- `cap qa sidekiq:console`
+- `cap production sidekiq:console`
 
 ### Workers
 
 Workers must be running on each server in order for mail to be sent and background jobs to be run.
- The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`.
-
+The sidekiq workers are run on the server via a service, `tiger-data-workers`. To see the status on the workers on the server run `sudo service tiger-data-workers status`. You can restart the workers by running `sudo service tiger-data-workers restart`.
 
 ## Manually attaching a File Inventory Job
+
 To attach the output of an existing File Inventory Job to a user we can run the rake task `file_inventory:attach_file`.
 
 1. Log into one of the production machines
