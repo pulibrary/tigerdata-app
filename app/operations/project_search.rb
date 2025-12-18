@@ -1,8 +1,8 @@
 class ProjectSearch < Dry::Operation
     def call(search_string:, requestor:, field_name: "Title")
         verified_search_string = step verify_search_string(search_string)
-        result_ids = step query_mediaflux(search_string: verified_search_string, requestor:, field_name:)
-        step convert_results(result_ids)
+        mf_results = step query_mediaflux(search_string: verified_search_string, requestor:, field_name:)
+        step convert_results(mf_results, requestor)
     end
 
     private
@@ -22,32 +22,18 @@ class ProjectSearch < Dry::Operation
       if query.error?
         Failure("Error querying mediaflux: #{query.response_error[:message]}")
       else
-        result_ids = query.result_items.map{|result| result[:id]}
-        Success(result_ids)
+        Success(query.results)
       end
     end
 
     def mediaflux_query(search_string:, requestor:, field_name:)
       aql_query = "xpath(tigerdata:project/#{field_name}) matches ignore-case '#{search_string}'"
-      Mediaflux::QueryRequest.new(session_token: requestor.mediaflux_session, aql_query: , iterator: false )
+      request = Mediaflux::ProjectListRequest.new(session_token: requestor.mediaflux_session, aql_query:)
     end
 
 
-    def convert_results(result_ids)
-      projects_not_found = []
-      projects = []
-      result_ids.map do |mediaflux_id|
-        project = Project.find_by(mediaflux_id: )
-        if project.blank?
-          projects_not_found << mediaflux_id
-        else
-          projects << project
-        end
-      end
-      if projects_not_found.count > 0
-        Rails.logger.error("The following Mediaflux Projects were not found in the Rails database: #{projects_not_found.join(', ')}")
-        Honeybadger.notify("The following Mediaflux Projects were not found in the Rails database: #{projects_not_found.join(', ')}")
-      end
-      Success(projects)
+    def convert_results(mf_results, requestor)
+      presenters = mf_results.map{ |result| ProjectDashboardPresenter.new( result, requestor)}
+      Success(presenters.reject{|presenter| presenter.project.blank?})
     end
 end

@@ -45,31 +45,31 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
         pending "There is a title miss match on activate that needs to be fixed"
         result = described_class.new.call(search_string: "z grape*\\\\\"*", requestor: approver)
         expect(result).to be_success
-        expect(result.value!).to eq([project3])
+        expect(result.value!.map(&:id)).to eq([project3.id])
       end
 
       it "searches for single quote just fine if you escape it" do
         result = described_class.new.call(search_string: "z grape*\\'*", requestor: approver)
         expect(result).to be_success
-        expect(result.value!).to eq([project3])
+        expect(result.value!.map(&:id)).to eq([project3.id])
       end
 
       it "searches for greater than just fine" do
         result = described_class.new.call(search_string: "z grape*>*", requestor: approver)
         expect(result).to be_success
-        expect(result.value!).to eq([project3])
+        expect(result.value!.map(&:id)).to eq([project3.id])
       end
 
       it "searches for less than just fine" do
         result = described_class.new.call(search_string: "z grape*<*", requestor: approver)
         expect(result).to be_success
-        expect(result.value!).to eq([project3])
+        expect(result.value!.map(&:id)).to eq([project3.id])
       end
 
       it "searches for back slash just fine" do
         result = described_class.new.call(search_string: "z grape*\\\\*", requestor: approver)
         expect(result).to be_success
-        expect(result.value!).to eq([project3])
+        expect(result.value!.map(&:id)).to eq([project3.id])
       end
     end
   end
@@ -82,11 +82,12 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
     end
 
     it "logs projects not found in the Rails database" do
-      allow(Rails.logger).to receive(:error)
+      allow(Rails.logger).to receive(:warn)
       project1.destroy # make sure the project is not on the rails side
       result = described_class.new.call(search_string: "*pop", requestor: approver)
       expect(result).to be_success
-      expect(Rails.logger).to have_received(:error).with("The following Mediaflux Projects were not found in the Rails database: #{project1.mediaflux_id}")
+      message = "Mediaflux project with ID #{project1.mediaflux_id} is not in the Rails database (title: #{project1.title})"
+      expect(Rails.logger).to have_received(:warn).with(message)
     end
 
     it "returns a failure if the search query has bad characters" do
