@@ -57,14 +57,14 @@ class Request < ApplicationRecord
   def valid_parent_folder?
     check_errors? do
       field_present?(parent_folder, :parent_folder)
-      no_quotes(project_title, :parent_folder)
+      alphanumeric_dash_underscore_only(project_title, :parent_folder)
     end
   end
 
   def valid_project_folder?
     check_errors? do
       field_present?(project_folder, :project_folder)
-      no_quotes(project_folder, :project_folder)
+      alphanumeric_dash_underscore_only(project_folder, :project_folder)
     end
   end
 
@@ -182,13 +182,13 @@ class Request < ApplicationRecord
 
     def field_present?(value, name)
       if value.blank?
-        errors.add(name, :invalid, message: "cannot be empty")
+        errors.add(name, :invalid, message: "This field is required.")
       end
     end
 
     def validate_uid(uid, field)
       if uid.blank?
-        errors.add(field, :blank, message: "cannot be empty")
+        errors.add(field, :blank, message: "This field is required.")
       elsif User.where(uid: uid).count == 0
         errors.add(field, :invalid, message: "must be a valid user")
       end
@@ -211,6 +211,13 @@ class Request < ApplicationRecord
       return if value.blank?
       if value.include?('"')
         errors.add(field, :invalid, message: "cannot include quotes")
+      end
+    end
+
+    def alphanumeric_dash_underscore_only(value, field)
+      return if value.blank?
+      if value.match(/\A[\w\-]+\z/).nil?
+        errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed. Please update your input.")
       end
     end
 
