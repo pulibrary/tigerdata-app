@@ -253,5 +253,45 @@ function initPage() {
   wizardNavigation();
 }
 
+window.log_plausible_request_more = function () {
+  console.log('log_plausible_request_more event logged');
+  plausible('Request More');
+};
+
+window.log_plausible_saved_draft_requests = function () {
+  console.log('log_plausible_saved_draft_requests event logged');
+  plausible('Saved Draft Requests');
+};
+
+window.log_plausible_view_submitted_requests = function () {
+  console.log(`log_plausible_view_submitted_requests event logged`);
+  plausible('View Submitted Requests');
+};
+
+window.log_plausible_contact_us_nav = function () {
+  console.log('log_plausible_contact_us_nav event logged');
+  plausible('Contact Us from Navigation');
+};
+
+window.log_plausible_faq = function () {
+  console.log('log_plausible_faq event logged');
+  plausible('FAQ');
+};
+
+window.log_plausible_contact_us_dash = function () {
+  console.log('log_plausible_contact_us_dash event logged');
+  plausible('Contact Us from Dashboard');
+};
+
+window.log_plausible_download = function () {
+  console.log(`log_plausible_download event logged`);
+  plausible('Download');
+};
+
+window.log_plausible_project = function () {
+  console.log('log_plausible_project event logged');
+  plausible('Project');
+};
+
 window.addEventListener('load', () => initPage());
 window.addEventListener('turbo:render', () => initPage());
