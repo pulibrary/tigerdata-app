@@ -151,11 +151,7 @@ class ProjectsController < ApplicationController
       result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
       if result.success?
         flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
-        # As of today the search results and the Dashboard show similar information (a list of projects)
-        # and it makes sense to use the same presenter. If once we flesh out the search feature the
-        # results become too different from each other we can create a specific presenter for the search
-        # results.
-        @project_presenters = result.value!.map { |project| ProjectDashboardPresenter.new(project, current_user) }
+        @project_presenters = result.value!
       else
         flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
         @project_presenters = []
