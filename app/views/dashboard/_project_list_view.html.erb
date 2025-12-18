@@ -36,7 +36,7 @@
             <div class="summary">
                 <div class="path"> <%= project.path %></div>
                 <button id="copy-project-path-button-<%= project.id %>" class="btn copy-paste-button-sizer copy-project-path-icon" data-url="<%= project.path %>" title="Copy project path to the clipboard">
-                <div class="pul-copy-paste-tooltip">
+                <div class="pul-copy-paste-tooltip" data-url="<%= project.path %>">
                   <span id="copy-project-path-label" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
                 </div>
                 </button>
