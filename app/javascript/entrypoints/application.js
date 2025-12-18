@@ -253,6 +253,9 @@ function initPage() {
   wizardNavigation();
 }
 
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
+/* eslint-disable func-names */
 window.log_plausible_request_more = function () {
   console.log('log_plausible_request_more event logged');
   plausible('Request More');
@@ -292,6 +295,9 @@ window.log_plausible_project = function () {
   console.log('log_plausible_project event logged');
   plausible('Project');
 };
+/* eslint-enable no-console */
+/* eslint-enable no-undef */
+/* eslint-enable func-names */
 
 window.addEventListener('load', () => initPage());
 window.addEventListener('turbo:render', () => initPage());
