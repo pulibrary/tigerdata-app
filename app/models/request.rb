@@ -55,7 +55,8 @@ class Request < ApplicationRecord
 
   def valid_parent_folder?
     check_errors? do
-      field_present?(parent_folder, :parent_folder)
+      # the below-commented-out method may come back into use when this ticket is worked - https://github.com/pulibrary/tigerdata-app/issues/2219
+      # field_present?(parent_folder, :parent_folder)
       alphanumeric_dash_underscore_only(parent_folder, :parent_folder)
     end
   end
