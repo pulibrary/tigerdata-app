@@ -240,7 +240,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_parent_folder?" do
     it "requires a parent_folder" do
-      request = Request.new(parent_folder: "")
+      request = Request.new(parent_folder: "abc%%%")
       expect(request.valid_parent_folder?).to be_falsey
       request.parent_folder = "abc"
       expect(request.valid_parent_folder?).to be_truthy
