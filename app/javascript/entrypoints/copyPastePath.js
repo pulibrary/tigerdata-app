@@ -41,18 +41,54 @@ export function copyPastePath() {
     );
   }
 
-  $('#copy-project-path-button').on('click', () => {
-    const projectPath = $('#copy-project-path-button').data('url');
+  /* Dashboard */
+  $('.copy-project-path-icon').on('click', (event) => {
+    $('.copy-project-path-icon').removeClass('copy-paste-check');
+    $('.copy-project-path-icon').addClass('copy-paste-frames');
+    $('.copy-project-path-label-text').text('Copy');
+    const projectPath = $(event.target).data('url');
+    const iconEl = `#${event.currentTarget.id}`;
+    const labelEl = `${iconEl} #copy-project-path-label`;
     copyPath(
       projectPath,
-      '#copy-project-path-button',
-      '#copy-project-path-label',
+      iconEl,
+      labelEl,
+      'copy-project-path-label-normal',
+      'copy-project-path-label-copied',
+    );
+  });
+
+  /* Basic Details heading */
+  $('#copy-project-path-button-heading').on('click', (event) => {
+    $('.copy-project-path-icon').removeClass('copy-paste-check');
+    $('.copy-project-path-icon').addClass('copy-paste-frames');
+    $('.copy-project-path-label-text').text('Copy');
+    const projectPath = $(event.target).data('url');
+    copyPath(
+      projectPath,
+      '#copy-project-path-button-heading',
+      '#copy-project-path-label-heading',
+      'copy-project-path-label-normal',
+      'copy-project-path-label-copied',
+    );
+  });
+
+  /* Basic Details section */
+  $('#copy-project-path-button-basic').on('click', (event) => {
+    $('.copy-project-path-icon').removeClass('copy-paste-check');
+    $('.copy-project-path-icon').addClass('copy-paste-frames');
+    $('.copy-project-path-label-text').text('Copy');
+    const projectPath = $(event.target).data('url');
+    copyPath(
+      projectPath,
+      '#copy-project-path-button-basic',
+      '#copy-project-path-label-basic',
       'copy-project-path-label-normal',
       'copy-project-path-label-copied',
     );
   });
 
   $(() => {
-    $('#copy-project-path-button').addClass('copy-paste-frames');
+    $('.copy-project-path-icon').addClass('copy-paste-frames');
   });
 }

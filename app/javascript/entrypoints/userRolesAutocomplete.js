@@ -133,7 +133,10 @@ function setInfoText(originalCount, totalNewCount) {
   const addedCount = newCount - originalCount;
   const duplicateCount = totalNewCount - addedCount;
   const userInfo = document.getElementsByClassName('user-info')[0];
-  const text = `${duplicateCount} duplicate user(s) were ignored. ${addedCount} new user(s) were successfully added.`;
+  let text;
+  if (duplicateCount > 0)
+    text = `${duplicateCount} duplicate user(s) were ignored. ${addedCount} new user(s) were successfully added.`;
+  else text = `${addedCount} new user(s) were successfully added.`;
   userInfo.textContent = text;
 }
 

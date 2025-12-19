@@ -163,6 +163,9 @@
 }
 
 #copy-project-path-button {
+}
+
+.copy-paste-button-sizer {
   width: 1.5rem;
   height: 1.5rem;
   background-repeat: no-repeat;
@@ -177,8 +180,11 @@
   background-image: asset_url("green-checkmark.svg");
 }
 
-copy-paste-error {
+.copy-paste-error {
   background-image: asset_url("custom_error.svg");
+}
+
+.copy-project-path-icon {
 }
 
 .pul-copy-paste-tooltip {
