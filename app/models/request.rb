@@ -203,7 +203,7 @@ class Request < ApplicationRecord
     def valid_length(value, length, field)
       return if value.blank?
       if value.length > length
-        errors.add(field, :invalid, message: "Cannot exceed #{length} characters.")
+        errors.add(field, :invalid, message: "")
       end
     end
 
