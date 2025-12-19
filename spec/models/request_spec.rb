@@ -240,7 +240,10 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_parent_folder?" do
     it "requires a parent_folder" do
-      request = Request.new(parent_folder: "abc%%%")
+      # the below-commented-out method may come back into use when this ticket is worked - https://github.com/pulibrary/tigerdata-app/issues/2219
+      # request = Request.new(parent_folder: "")
+      # expect(request.valid_parent_folder?).to be_falsey
+      request = Request.new(parent_folder: "abc@")
       expect(request.valid_parent_folder?).to be_falsey
       request.parent_folder = "abc"
       expect(request.valid_parent_folder?).to be_truthy
