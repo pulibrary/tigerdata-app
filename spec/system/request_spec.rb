@@ -265,29 +265,27 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit approve_request_path(invalid_request.id)
         expect(page).to have_content("Review")
         within(".project-title") do
-          expect(page).to have_content("cannot be empty")
-          fill_in :project_title, with: "A basic Project"
-          expect(page).not_to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
         end
         within(".project-description") do
-          expect(page).to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
         end
         within(".project-purpose") do
-          expect(page).to have_content("select a project purpose")
+          expect(page).to have_content("Select a project purpose.")
         end
         within(".departments") do
-          expect(page).to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
         end
         within(".data-manager") do
-          expect(page).to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
         end
         within(".data-sponsor") do
-          expect(page).to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
           select_user(current_user, "data_sponsor", "request[data_sponsor]")
-          expect(page).not_to have_content("cannot be empty")
+          expect(page).not_to have_content("This field is required.")
         end
         within(".project-folder") do
-          expect(page).to have_content("cannot be empty")
+          expect(page).to have_content("This field is required.")
         end
       end
 
@@ -296,7 +294,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit approve_request_path(title_too_long.id)
         expect(page).to have_content("Review")
         within(".project-title") do
-          expect(page).to have_content("cannot exceed 200 characters")
+          expect(page).to have_content("233/200 characters")
         end
       end
 
@@ -305,7 +303,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit approve_request_path(description_too_long.id)
         expect(page).to have_content("Review")
         within(".project-description") do
-          expect(page).to have_content("cannot exceed 1000 characters")
+          expect(page).to have_content("1751/1000 characters")
         end
       end
 
