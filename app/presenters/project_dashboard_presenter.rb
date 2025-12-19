@@ -52,8 +52,20 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     project_directory
   end
 
-  # Removes "about" (as in "about 1 month ago") from time_ago_in_words
-  def remove_about(time_ago)
-    time_ago.gsub("about ", "")
-  end
+  private
+
+    # Removes "about" (as in "about 1 month ago") from time_ago_in_words
+    def remove_about(time_ago)
+      time_ago.gsub("about ", "")
+    end
+
+    def rails_project(project_mf)
+      database_record = Project.find_by(mediaflux_id: project_mf[:mediaflux_id])
+      if database_record.nil?
+        message = "Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})"
+        Rails.logger.warn(message)
+        Honeybadger.notify(message)
+      end
+      database_record
+    end
 end
