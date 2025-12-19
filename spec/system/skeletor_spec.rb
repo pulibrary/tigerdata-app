@@ -42,7 +42,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :project_title, with: "She was a Fairy"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "Fairy"
-      fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
+      fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
       select "Teaching", from: :project_purpose
       expect(page).to have_content "46/1000 characters"
@@ -82,7 +82,7 @@ RSpec.describe "The Skeletor Epic", connect_to_mediaflux: true, js: true, integr
       fill_in :project_title, with: "She was a Fairy"
       expect(page).to have_content "15/200 characters"
       fill_in :parent_folder, with: "Fairy"
-      fill_in :project_folder, with: "Pixie Dust #{random_project_directory}"
+      fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
       fill_in :description, with: "An awesome project to show the wizard is magic"
       select "Teaching", from: :project_purpose
       expect(page).to have_content "46/1000 characters"
