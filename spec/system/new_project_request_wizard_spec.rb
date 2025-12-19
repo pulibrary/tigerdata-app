@@ -186,11 +186,31 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
 
-      # we can remove the user
+      # we can remove the user in the modal
       page.find(".lux-button.remove-item").click
       expect(page).not_to have_content(another_user.given_name)
       expect(page).to have_field("all_selected", type: :hidden, with: "[]")
 
+      # we can remove all the users from the table and have it stick between page loads
+      select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
+      click_on "Add Users"
+      expect(page).to have_content("1 new user(s) were successfully added.")
+      expect(page).not_to have_content("0 duplicate user(s) were ignored.")
+      expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
+      click_on "Next"
+      expect(page).to have_content("Enter the storage and access needs for your project")
+      click_on "Back"
+      expect(page).to have_content("Assign roles for your project")
+      within(".user-input-display") do
+        page.execute_script("document.getElementsByClassName('remove-item')[0].click()")
+      end
+      click_on "Next"
+      expect(page).to have_content("Enter the storage and access needs for your project")
+      click_on "Back"
+      expect(page).to have_content("Assign roles for your project")
+      expect(page).not_to have_content(another_user.given_name)
+
+      click_on "Add User(s)"
       select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
       select_data_user(other_user, [{ label: another_user.display_name_safe, id: another_user.uid },
                                     { label: other_user.display_name_safe, id: other_user.uid }])
