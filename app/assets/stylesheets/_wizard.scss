@@ -283,6 +283,11 @@
             font-weight: 400;
             line-height: 1.125rem; /* 150% */
           }
+
+          .parent-folder-error {
+            width: max-content;
+          }
+
           .number-input {
             display: flex;
             flex-direction: column;

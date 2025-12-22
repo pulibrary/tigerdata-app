@@ -5,6 +5,7 @@ RSpec.describe RequestsController, type: :controller do
   let(:valid_request) do
     Request.create(project_title: "Valid Request", data_sponsor: current_user.uid, data_manager: current_user.uid, departments: [{ code: "dept", name: "department" }],
                    quota: "500 GB", description: "A valid request",
+                   parent_folder: "parent",
                    project_folder: random_project_directory, project_purpose: "research")
   end
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
@@ -138,7 +139,6 @@ RSpec.describe RequestsController, type: :controller do
       valid_request
       allow(Request).to receive(:find).and_return(valid_request)
       allow(valid_request).to receive(:approve).and_raise(Mediaflux::SessionExpired, "Session expired for token")
-
       get :approve, params: { id: valid_request.id }
       expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Frequests%2F#{valid_request.id}%2Fapprove"
     end
