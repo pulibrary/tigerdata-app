@@ -278,7 +278,6 @@ window.log_plausible_contact_us_nav = function () {
 
 window.log_plausible_contact_us_dash = function () {
   console.log('log_plausible_contact_us_from_dashboard event logged');
-  debugger;
   plausible('Contact Us from Dashboard');
 };
 
