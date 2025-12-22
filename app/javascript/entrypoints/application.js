@@ -276,14 +276,15 @@ window.log_plausible_contact_us_nav = function () {
   plausible('Contact Us from Navigation');
 };
 
+window.log_plausible_contact_us_dash = function () {
+  console.log('log_plausible_contact_us_from_dashboard event logged');
+  debugger;
+  plausible('Contact Us from Dashboard');
+};
+
 window.log_plausible_faq = function () {
   console.log('log_plausible_faq event logged');
   plausible('FAQ');
-};
-
-window.log_plausible_dashboard_cu_link = function () {
-  console.log('log_plausible_contact_us_from_dashboard event logged');
-  plausible('Dashboard CU Link');
 };
 
 window.log_plausible_download = function () {
