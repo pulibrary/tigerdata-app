@@ -272,7 +272,7 @@ window.log_plausible_view_submitted_requests = function () {
 };
 
 window.log_plausible_contact_us_nav = function () {
-  console.log('log_plausible_contact_us_nav event logged');
+  console.log('log_plausible_contact_us_from_navigation event logged');
   plausible('Contact Us from Navigation');
 };
 
@@ -282,7 +282,7 @@ window.log_plausible_faq = function () {
 };
 
 window.log_plausible_contact_us_dash = function () {
-  console.log('log_plausible_contact_us_dash event logged');
+  console.log('log_plausible_contact_us_from_dashboard event logged');
   plausible('Contact Us from Dashboard');
 };
 
