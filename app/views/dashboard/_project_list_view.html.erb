@@ -2,7 +2,7 @@
     <td class="project-row">
         <div class="project-details">
             <div class="title">
-                <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" ><%= project.title %></a>
+                <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" onclick="log_plausible_project()" ><%= project.title %></a>
             </div>
             <div class="summary summary-smaller-device">
                 <div class="status <%= project.status.downcase %> "><%= project.status %></div>

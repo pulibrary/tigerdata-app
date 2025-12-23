@@ -9,14 +9,14 @@
     <div class="request-options">
         <button popovertarget="request-dropdown" class="down-arrow" aria-label="view draft and saved requests" title="view draft and saved requests"></button>
         <div popover="auto" id="request-dropdown" class="request-dropdown">
-          <button class="request-button" popovertarget="draft-request-list">Saved Draft Requests</button>
-          <button class="request-button" popovertarget="submitted-request-list">Submitted Requests</button>
+          <button class="request-button" popovertarget="draft-request-list" onclick="log_plausible_saved_draft_requests()">Saved Draft Requests</button>
+          <button class="request-button" popovertarget="submitted-request-list" onclick="log_plausible_view_submitted_requests()">Submitted Requests</button>
         </div>
 
         <!-- draft requests popup -->
         <div popover="auto" id="draft-request-list" class=request-list pul-popover">
           <div class="modal-content">
-            <div class="draft-list-header"> 
+            <div class="draft-list-header">
               <div class="model-title">Saved Draft Requests</div>
               <input type=button popovertarget="draft-request-list" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
             </div>
@@ -39,7 +39,7 @@
         <!-- submitted requests popup -->
         <div popover="auto" id="submitted-request-list" class="request-list pul-popover">
           <div class="modal-content">
-            <div class="draft-list-header"> 
+            <div class="draft-list-header">
               <div class="model-title">Submitted Requests</div>
               <input type=button popovertarget="submitted-request-list" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
             </div>
