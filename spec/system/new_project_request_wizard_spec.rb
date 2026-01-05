@@ -265,7 +265,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         datasponsor = FactoryBot.create(:project_sponsor)
         datamanager = FactoryBot.create(:data_manager)
         expect(Project.count).to eq 0
-        sign_in user
+        sign_in current_user
         visit "/"
         expect(page).to have_content("Welcome, #{user.given_name}!")
         click_on "New Project Request"
