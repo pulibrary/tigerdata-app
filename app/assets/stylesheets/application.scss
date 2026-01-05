@@ -41,6 +41,11 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.625rem;
+
+    @media (max-width: 853px) {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
     @media (min-width: 854px) {
       padding-left: 1rem;
       padding-right: 1rem;
