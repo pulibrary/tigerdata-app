@@ -13,11 +13,11 @@ footer {
   flex-direction: column;
   align-items: flex-start;
   background: $gray-100;
+  overflow-x: hidden;
 
   .footer-content {
     display: flex;
     padding: 5rem 0rem;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     align-self: stretch;
@@ -28,6 +28,7 @@ footer {
     width: 81.188rem;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 
     #pul-logo {
       width: 12.5rem;
