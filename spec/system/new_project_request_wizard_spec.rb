@@ -70,7 +70,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       expect(page).to have_content "Take a moment to review"
       click_on("Submit")
       within(".project-title") do
-        expect(page).to have_content("cannot be empty")
+        expect(page).to have_content("This field is required.")
       end
       expect(page).to have_content("Please resolve errors before submitting your request")
       fill_in :project_title, with: "A basic Project"

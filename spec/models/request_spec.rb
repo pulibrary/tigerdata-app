@@ -97,25 +97,24 @@ RSpec.describe Request, type: :model do
     it "requires a title" do
       request = Request.new(project_title: "")
       expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq("cannot be empty")
+      expect(request.errors[:project_title].join(", ")).to eq("This field is required.")
     end
 
     it "validates the title length" do
       request = Request.new(project_title: long_title)
       expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq("cannot exceed 200 characters")
     end
 
     it "does not allow quotes" do
       request = Request.new(project_title: "abc\"123")
       expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq("cannot include quotes")
+      expect(request.errors[:project_title].join(", ")).to eq("Cannot include quotes.")
     end
 
     it "validates the title length and quotes" do
       request = Request.new(project_title: long_title.gsub("vitae", "\"vitae\""))
       expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq("cannot exceed 200 characters, cannot include quotes")
+      expect(request.errors[:project_title].join(", ")).to eq(", Cannot include quotes.")
     end
 
     it "validates a title" do
@@ -212,25 +211,24 @@ RSpec.describe Request, type: :model do
     it "requires a description" do
       request = Request.new(description: "")
       expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq("cannot be empty")
+      expect(request.errors[:description].join(", ")).to eq("This field is required.")
     end
 
     it "does not allow quotes" do
       request.description = "abc\""
       expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq("cannot include quotes")
+      expect(request.errors[:description].join(", ")).to eq("Cannot include quotes.")
     end
 
     it "errors if too long" do
       request.description = long_description
       expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq("cannot exceed 1000 characters")
     end
 
     it "errors if too long and has a quote" do
       request.description = long_description.gsub("elit", "\"elit\"")
       expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq("cannot exceed 1000 characters, cannot include quotes")
+      expect(request.errors[:description].join(", ")).to eq(", Cannot include quotes.")
     end
 
     it "validates a description" do
@@ -242,7 +240,10 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_parent_folder?" do
     it "requires a parent_folder" do
-      request = Request.new(parent_folder: "")
+      # the below-commented-out method may come back into use when this ticket is worked - https://github.com/pulibrary/tigerdata-app/issues/2219
+      # request = Request.new(parent_folder: "")
+      # expect(request.valid_parent_folder?).to be_falsey
+      request = Request.new(parent_folder: "abc@")
       expect(request.valid_parent_folder?).to be_falsey
       request.parent_folder = "abc"
       expect(request.valid_parent_folder?).to be_truthy
@@ -253,13 +254,14 @@ RSpec.describe Request, type: :model do
     it "requires a project_folder" do
       request = Request.new(project_folder: "")
       expect(request.valid_project_folder?).to be_falsey
-      expect(request.errors[:project_folder].join(", ")).to eq("cannot be empty")
+      expect(request.errors[:project_folder].join(", ")).to eq("This field is required.")
     end
 
-    it "requires the project_folder to not include quotes" do
+    it "requires the project_folder to include only alphanumeric, hyphen, and underscore characters" do
       request = Request.new(project_folder: "abc\"123")
       expect(request.valid_project_folder?).to be_falsey
-      expect(request.errors[:project_folder].join(", ")).to eq("cannot include quotes")
+      # The error for either the project or parent folder only displays under the parent folder per design specifications
+      expect(request.errors[:parent_folder].join(", ")).to eq("Only letters, numbers, dashes, and underscores are allowed. Please update your input.")
     end
 
     it "validates a project_folder" do

@@ -10,7 +10,7 @@ class TestProjectGenerator
   end
 
   def generate
-    request = create_request
+    request = create_request(user)
     project = request.approve(user)
     project.save!
     project
@@ -18,17 +18,17 @@ class TestProjectGenerator
 
   private
 
-    def create_request
+    def create_request(user)
       # create a duplicate copy of the configuration so we do not modify the rails defaults
       capacity = Rails.configuration.project_defaults[:storage_capacity].deep_dup
 
-      Request.create(metadata(capacity))
+      Request.create(metadata(capacity, user))
     end
 
     # rubocop:disable Metrics/MethodLength
-    def metadata(capacity)
+    def metadata(capacity, user)
       {
-        data_sponsor: "tigerdatatester", # Must be a valid netid/uid
+        data_sponsor: user.uid, # Must be a valid netid/uid
         data_manager: "tigerdatatester", # Must be a valid netid/uid
         user_roles: [],
         quota: "custom",
