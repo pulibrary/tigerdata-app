@@ -22,7 +22,8 @@ Flipflop.configure do
   #   default: true,
   #   description: "Take over the world."
 
-  feature :disable_login, default: false, description: "Disable login to the web portal."
+  feature :disable_login, default: false, description: "Unplanned outage. Disable login to the web portal."
+  feature :planned_maintenance, default: false, description: "Planned Maintenance. Disable login to the web portal."
   feature :last_updated_dashboard, default: false, description: "Show last updated column on dashboard."
   feature :project_type_indicator, default: false, description: "Show project type indicator on dashboard."
 end
