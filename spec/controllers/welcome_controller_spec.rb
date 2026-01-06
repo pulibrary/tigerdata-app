@@ -45,6 +45,24 @@ RSpec.describe WelcomeController do
         expect(flash.notice).to eq("You can not be signed in at this time.")
       end
     end
+
+    context "planned_maintenance is true" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:planned_maintenance, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:planned_maintenance, false)
+      end
+
+      it "displays a flash message" do
+        get :index
+        expect(response).to render_template("index")
+        expect(flash.notice).to eq("You can not be signed in at this time.")
+      end
+    end
   end
 
   context "when a sysadmin user is logged in", connect_to_mediaflux: true do
@@ -67,6 +85,24 @@ RSpec.describe WelcomeController do
       after do
         test_strategy = Flipflop::FeatureSet.current.test!
         test_strategy.switch!(:disable_login, false)
+      end
+
+      it "displays a flash message and redirects to the user dashboard" do
+        get :index
+        expect(response).to redirect_to(dashboard_path)
+        expect(flash.notice).to eq("System is only enabled for administrators currently")
+      end
+    end
+
+    context "planned_maintenance is true" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:planned_maintenance, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:planned_maintenance, false)
       end
 
       it "displays a flash message and redirects to the user dashboard" do

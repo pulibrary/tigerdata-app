@@ -128,7 +128,7 @@ class ApplicationController < ActionController::Base
     end
 
     def downtime_check(with_redirect: true)
-      if Flipflop.disable_login?
+      if Flipflop.disable_login? || Flipflop.planned_maintenance?
         if current_user&.eligible_sysadmin?
           flash[:notice] = I18n.t(:only_sysadmin_users)
         else

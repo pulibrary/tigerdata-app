@@ -18,4 +18,14 @@ describe "home", type: :system do
       test_strategy.switch!(:disable_login, false)
     end
   end
+
+  context "when system is under maintenance" do
+    it "does not display the Log In button" do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:planned_maintenance, true)
+      visit "/"
+      expect(page).not_to have_css ".login-btn"
+      test_strategy.switch!(:planned_maintenance, false)
+    end
+  end
 end
