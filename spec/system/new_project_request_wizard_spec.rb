@@ -267,7 +267,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(Project.count).to eq 0
         sign_in current_user
         visit "/"
-        expect(page).to have_content("Welcome, #{user.given_name}!")
+        expect(page).to have_content("Welcome, #{current_user.given_name}!")
         click_on "New Project Request"
         expect(page).to have_content "Basic Details"
         fill_in :project_title, with: "She was a Fairy"
