@@ -111,6 +111,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/projects/#{project1.id}.xml"
         expect(page).to have_content("Access Denied")
       end
+
       it "allows a user to see a project they are affiliated with" do
         sign_in user_b
         visit "/projects/#{project2.id}"
