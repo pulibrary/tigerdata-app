@@ -3,7 +3,8 @@
       <div class="welcome-left">
         <div class="welcome-text">
           <div class="welcome-heading">
-              <%= render partial: "login_disabled" if Flipflop.disable_login? %>
+              <%= render partial: "login_disabled" if Flipflop.disable_login?  %>
+              <%= render partial: "planned_maintenance" if Flipflop.planned_maintenance? %>
               <h3>Welcome to</h3>
               <h1>TigerData Web Portal</h1>
           </div>
@@ -12,7 +13,7 @@
             <p>It enables the things you want to do (with your data), and makes it easier to do the things you have to do.</p>
           </div>
           <div class="welcome-actions">
-            <% unless Flipflop.disable_login? %>
+            <% unless Flipflop.disable_login? || Flipflop.planned_maintenance? %>
               <%= button_to "Login", user_cas_omniauth_authorize_path, class: "pul-button pul-button-primary", id: "login-button" %>
             <% end %>
             <%= link_to "Learn More", "https://tigerdata.princeton.edu", class: "pul-button learn-more", id: "learn-more-button", target: "_blank" %>

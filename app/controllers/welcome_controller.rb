@@ -7,13 +7,21 @@ class WelcomeController < ApplicationController
   def index
     if current_user.blank?
       render layout: "welcome"
-    elsif Flipflop.disable_login?
-      downtime_check(with_redirect: false)
-      redirect_to dashboard_path if current_user&.eligible_sysadmin?
     else
-      redirect_to dashboard_path
+      redirect_user
     end
   end
 
   def help; end
+
+  private
+
+    def redirect_user
+      if Flipflop.disable_login? || Flipflop.planned_maintenance?
+        downtime_check(with_redirect: false)
+        redirect_to dashboard_path if current_user&.eligible_sysadmin?
+      else
+        redirect_to dashboard_path
+      end
+    end
 end
