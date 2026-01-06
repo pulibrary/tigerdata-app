@@ -14,8 +14,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", display_name: "Sally O'Smith") }
-
     context "a sysadmin user" do
       let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:datasponsor) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
@@ -96,14 +94,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
     end
 
-    context "user" do
-      let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    context "tester-trainer user" do
+      let!(:current_tester) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       let(:user_a) { FactoryBot.create(:user, uid: "cac9") }
       let(:user_b) { FactoryBot.create(:user, uid: "jrg5") }
       let(:request1) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester" }
-      let(:project1) { request1.approve(sponsor_and_data_manager_user) }
+      let(:project1) { request1.approve(current_tester) }
       let(:request2) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }] }
-      let(:project2) { request2.approve(sponsor_and_data_manager_user) }
+      let(:project2) { request2.approve(current_tester) }
       it "does not allow a user to see someone elses project" do
         sign_in user_a
         visit "/projects/#{project1.id}"
@@ -119,15 +117,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/projects/#{project2.id}.xml"
         expect(page.body).to include(project2.title)
       end
+    end
 
-      it "Supports all the Skeletor fields on the basic information page" do
+    context "research user" do
+      let(:current_researcher) { FactoryBot.create(:user, uid: "pul123", display_name: "Sally O'Smith") }
+      it "Supports all the Shippable Increment fields on the basic information page" do
+        # TODO: Add tests for all the shippable increment fields as they are added to the wizard
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
         other_user = FactoryBot.create(:user)
         another_user = FactoryBot.create(:user)
         data_manager = FactoryBot.create(:user)
 
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
 
@@ -175,7 +177,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # click_on "Next"
         expect(page).to have_content("Assign roles for your project")
 
-        select_user(current_user, "data_sponsor", "request[data_sponsor]")
+        select_user(current_researcher, "data_sponsor", "request[data_sponsor]")
         select_user(data_manager, "data_manager", "request[data_manager]")
 
         # Fill in a partial match to force the textbox to fetch a list of options to select from
@@ -211,12 +213,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
         select_data_user(other_user, [{ label: another_user.display_name_safe, id: another_user.uid },
                                       { label: other_user.display_name_safe, id: other_user.uid }])
-        select_data_user(current_user, [{ label: another_user.display_name_safe, id: another_user.uid },
-                                        { label: other_user.display_name_safe, id: other_user.uid },
-                                        { label: current_user.display_name_safe, id: current_user.uid }])
+        select_data_user(current_researcher, [{ label: another_user.display_name_safe, id: another_user.uid },
+                                              { label: other_user.display_name_safe, id: other_user.uid },
+                                              { label: current_researcher.display_name_safe, id: current_researcher.uid }])
         select_data_user(data_manager, [{ label: another_user.display_name_safe, id: another_user.uid },
                                         { label: other_user.display_name_safe, id: other_user.uid },
-                                        { label: current_user.display_name_safe, id: current_user.uid },
+                                        { label: current_researcher.display_name_safe, id: current_researcher.uid },
                                         { label: data_manager.display_name_safe, id: data_manager.uid }])
 
         click_on "Add Users"
@@ -251,61 +253,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Assign roles for your project")
         expect(page).to have_content "Roles and People"
         expect(page).to have_content "Data Manager"
-        expect(page.find("#data_sponsor_input input").value).to eq(current_user.display_name_safe)
-        expect(page).to have_field("request[data_sponsor]", type: :hidden, with: current_user.uid)
+        expect(page.find("#data_sponsor_input input").value).to eq(current_researcher.display_name_safe)
+        expect(page).to have_field("request[data_sponsor]", type: :hidden, with: current_researcher.uid)
         expect(page.find("#data_manager_input input").value).to eq(data_manager.display_name_safe)
         expect(page).to have_field("request[data_manager]", type: :hidden, with: data_manager.uid)
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\",\"read_only\":false}")
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
-        expect(page).not_to have_content("#{current_user.display_name_safe} (#{current_user.uid})")
+        expect(page).not_to have_content("#{current_researcher.display_name_safe} (#{current_researcher.uid})")
       end
 
-      it "contains the fields of the drupal form when creating a project" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-        another_user = FactoryBot.create(:user)
-        datasponsor = FactoryBot.create(:project_sponsor)
-        datamanager = FactoryBot.create(:data_manager)
-        expect(Project.count).to eq 0
-        sign_in current_user
-        visit "/"
-        expect(page).to have_content("Welcome, #{current_user.given_name}!")
-        click_on "New Project Request"
-        expect(page).to have_content "Basic Details"
-        fill_in :project_title, with: "She was a Fairy"
-        expect(page).to have_content "15/200 characters"
-        fill_in :parent_folder, with: "Fairy"
-        fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
-        fill_in :description, with: "An awesome project to show the wizard is magic"
-        select "Teaching", from: :project_purpose
-        expect(page).to have_content "46/1000 characters"
-        expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
-        click_on "Next"
-
-        # This part of the test is filling out the data manager and sponsor
-        expect(page).to have_content("Assign roles for your project")
-        select_user(datasponsor, "data_sponsor", "request[data_sponsor]")
-        select_user(datamanager, "data_manager", "request[data_manager]")
-
-        # This part of the test is filling out the data users
-        click_on "Add User(s)"
-        select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
-        click_on "Add Users"
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
-
-        # This part of the code is going through the rest of the fields of the wizard form to review and submit the project request
-        click_on "Next"
-        expect(page).to have_content("Enter the storage and access needs for your project.")
-        click_on "Next"
-        expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
-        click_on "Submit"
-        expect(page).to have_content("Your new project request is submitted")
-      end
+      # Consolidate the tests for each shippable increment of the wizard below
 
       it "walks through the wizard if the feature is enabled" do
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
@@ -356,8 +316,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "can not submit if the request is not valid" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-        request = Request.create(requested_by: current_user.uid)
-        sign_in current_user
+        request = Request.create(requested_by: current_researcher.uid)
+        sign_in current_researcher
         visit "/new-project/review-submit/#{request.id}"
         expect(page).to have_content "Take a moment to review"
         click_on("Submit")
@@ -376,8 +336,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         select_and_verify_department(department: "HPC-High Performance Computing", department_code: "66666", department_list: [{ code: "77777", name: "RDSS-Research Data and Scholarship Services" }])
 
-        select_user(current_user, "data_sponsor", "request[data_sponsor]")
-        select_user(current_user, "data_manager", "request[data_manager]")
+        select_user(current_researcher, "data_sponsor", "request[data_sponsor]")
+        select_user(current_researcher, "data_manager", "request[data_manager]")
 
         click_on("Submit")
         expect(page).to have_content("Your new project request is submitted")
@@ -386,7 +346,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "saves work in progress if user jumps to another step in the wizard" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
@@ -402,7 +362,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "deletes departments when clicking on the X next to them" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
@@ -425,7 +385,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "does not allow save and exit for a request with missing titles" do
-        sign_in current_user
+        sign_in current_researcher
         visit "new-project/project-info"
         expect do
           expect(page).to have_content "Basic Details"
@@ -443,7 +403,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "does not allow save and exit for a request with an empty titles with spaces" do
-        sign_in current_user
+        sign_in current_researcher
         visit "new-project/project-info"
         expect do
           expect(page).to have_content "Basic Details"
@@ -462,7 +422,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "does not allow requests to be submitted with duplicate departments." do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-        sign_in current_user
+        sign_in current_researcher
         visit "new-project/project-info"
 
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
@@ -486,8 +446,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :project_folder, with: "skeletor"
         fill_in :description, with: "An awesome project to show the wizard is magic"
         select "Research", from: "project_purpose"
-        select_user(current_user, "data_sponsor", "request[data_sponsor]")
-        select_user(current_user, "data_manager", "request[data_manager]")
+        select_user(current_researcher, "data_sponsor", "request[data_sponsor]")
+        select_user(current_researcher, "data_manager", "request[data_manager]")
 
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
@@ -498,7 +458,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "allows for save and exit" do
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         expect do
           click_on "New Project Request"
@@ -515,7 +475,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "automatically saves and redirects the user to the dashboard when a user clicks the dashboard breadcrumb" do
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
@@ -523,14 +483,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         # Clicking on the breadcrumb saves the user changes
         click_on "Dashboard"
-        expect(page).to have_content "Welcome, #{current_user.given_name}!"
+        expect(page).to have_content "Welcome, #{current_researcher.given_name}!"
         request = Request.last
         expect(request.project_title).to eq("Dashboard Redirect Test")
         expect(page).to have_content("Draft request saved automatically")
       end
 
       it "automatically saves and redirects the user to the dashboard when a user clicks the tigerdata logo" do
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
@@ -538,14 +498,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         # Clicking on the TigerData logo saves the user changes
         find("#logo.header-image").click
-        expect(page).to have_content "Welcome, #{current_user.given_name}!"
+        expect(page).to have_content "Welcome, #{current_researcher.given_name}!"
         request = Request.last
         expect(request.project_title).to eq("Dashboard Redirect Test")
         expect(page).to have_content("Draft request saved automatically")
       end
 
       it "allows a user to click a step in the side panel and a flash message is not displayed" do
-        sign_in current_user
+        sign_in current_researcher
         visit "/"
         click_on "New Project Request"
         expect do
