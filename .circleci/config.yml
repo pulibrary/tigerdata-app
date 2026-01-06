@@ -15,7 +15,7 @@ parameters:
 
 orbs:
   browser-tools: circleci/browser-tools@1.4
-  coveralls: coveralls/coveralls@2.2
+  coveralls: coveralls/coveralls@2.2.5
   ruby: circleci/ruby@2.5
   node: circleci/node@7.1
 executors:
@@ -130,10 +130,8 @@ jobs:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
-    parallelism: 4
     environment:
       ARCH: linux
-      COVERALLS_PARALLEL: true
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
@@ -166,6 +164,8 @@ jobs:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
+          parallel: true
+          flag_name: job1
 
   test_browser:
     working_directory: ~/tiger_data
@@ -173,7 +173,6 @@ jobs:
     resource_class: pulibrary/ruby-deploy
     environment:
       ARCH: linux
-      COVERALLS_PARALLEL: true
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
@@ -208,6 +207,8 @@ jobs:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
+          parallel: true
+          flag_name: job2
 
   yarn_lint_format:
     docker:
@@ -285,6 +286,14 @@ jobs:
           name: Deploy to CI
           command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
 
+  done:
+    docker:
+      - image: cimg/node:22.9.0
+    steps:
+      - coveralls/upload:
+          carryforward: job1,job2
+          parallel_finished: true
+
 workflows:
   version: 2
   build_accept_deploy:
@@ -299,6 +308,10 @@ workflows:
       - test_browser
       - yarn_lint_format
       - yarn_test
+      - done:
+          requires:
+            - test
+            - test_browser
       - deploy:
           requires: # Call the auto-deploy job after the main test job
             - test
