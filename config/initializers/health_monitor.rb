@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
+require "pul_cache"
+
 Rails.application.config.after_initialize do
   HealthMonitor.configure do |config|
-    config.cache
 
     config.file_absence.configure do |file_config|
       file_config.filename = "/opt/tigerdata/shared/remove-from-nginx"
@@ -14,6 +16,9 @@ Rails.application.config.after_initialize do
 
     # Make this health check available at /health
     config.path = :health
+
+    # Use our custom Cache checker instead of the default one
+    config.add_custom_provider(PULCache).configure
 
     config.error_callback = proc do |e|
       Rails.logger.error "Health check failed with: #{e.message}"
