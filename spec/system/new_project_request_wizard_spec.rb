@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
+describe "New Project Request page", type: :system, connect_to_mediaflux: false, clean_projects: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
