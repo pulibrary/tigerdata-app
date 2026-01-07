@@ -7,12 +7,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:data_manager) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:read_only) { FactoryBot.create :user }
+  let(:read_only) { FactoryBot.create :user, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session }
   let(:read_write) { FactoryBot.create :user }
 
   context "Details page" do
     let(:project_in_mediaflux) do
-      request = FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: sponsor_user.uid, storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}]
+      request = FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: sponsor_user.uid,
+        storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
+        user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }]
       request.approve(sponsor_and_data_manager_user)
     end
     context "Navigation Buttons" do
@@ -51,6 +53,17 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
           end
         end
+
+        context "Data User" do
+          it "does not show the quota increase option" do
+            sign_in read_only
+            visit "/projects/#{project_in_mediaflux.id}/details"
+            expect(page).to have_content(project_in_mediaflux.title)
+            expect(page).to have_content(project_in_mediaflux.project_directory)
+            expect(page).not_to have_link "Request More", href: "https://tigerdata.princeton.edu/form/quota-increase-request"
+          end
+        end
+
         context "SysAdmin" do
           it "Shows the correct nav buttons" do
             sign_in sysadmin_user
@@ -93,7 +106,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
-        
+
         expect(page.html.include?('<button id="copy-project-path-button-heading"')).to be true
         expect(page.html.include?('<button id="copy-project-path-button-basic"')).to be true
 
