@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-describe DashboardPresenter, type: :model, connect_to_mediaflux: false, clean_projects: true do
+describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(current_user:) }
 
   let(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectsController, type: ["controller", "feature"], clean_projects: true do
+RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
   let(:project) { project_request.approve(sponsor_and_data_manager) }
@@ -104,6 +104,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"], clean_projec
       let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       before do
         sign_in sponsor_and_data_manager
+      end
+
+      after do
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
       end
 
       it "Shows all the project" do

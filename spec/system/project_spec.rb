@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, clean_projects: true do
+RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   # TODO: - When the sponsors have access to write in the system we should remove trainer from here
   # let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session, trainer: true) }

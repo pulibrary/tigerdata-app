@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectShowPresenter, clean_projects: true do
+RSpec.describe ProjectShowPresenter do
   let!(:data_sponsor) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "kl37") }
   let(:ro_user) { FactoryBot.create(:user, uid: "jr5") }

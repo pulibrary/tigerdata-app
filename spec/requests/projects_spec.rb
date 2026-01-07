@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe "/projects", connect_to_mediaflux: true, type: :request, clean_projects: true do
+RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "GET /projects" do

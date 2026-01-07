@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectMediaflux, type: :model, clean_projects: true do
+RSpec.describe ProjectMediaflux, type: :model do
   let(:project) do
     request = FactoryBot.create(:request_project)
     request.number_of_files = "Between 100,000 and 1,000,000"

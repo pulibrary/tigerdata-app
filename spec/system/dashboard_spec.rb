@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true, clean_projects: true do
+RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit dashboard_path
@@ -38,10 +38,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true, clean_projects
     end
 
     after do
-      created_projects.each do |project|
-        Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
-        project.destroy
-      end
+      created_projects.each { |project| Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve }
     end
 
     context "current user dashboard - non admin user" do

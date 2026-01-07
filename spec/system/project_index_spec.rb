@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Index Page", type: :system, clean_projects: true do
+RSpec.describe "Project Index Page", type: :system do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit projects_path
@@ -36,6 +36,12 @@ RSpec.describe "Project Index Page", type: :system, clean_projects: true do
     let!(:project1) { create_project_in_mediaflux(request: request1, current_user: current_user) }
     let!(:project2) { create_project_in_mediaflux(request: request2, current_user: current_user) }
     let!(:project3) { create_project_in_mediaflux(request: request3, current_user: current_user) }
+
+    after do
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+    end
 
     before do
       sign_in current_user

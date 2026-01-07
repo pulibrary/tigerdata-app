@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false, clean_projects: true do
+RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do
   let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
     FactoryBot.create :request_project, data_manager: current_user.uid, data_sponsor: current_user.uid, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
