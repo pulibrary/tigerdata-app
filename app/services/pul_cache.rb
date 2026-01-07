@@ -17,12 +17,12 @@ class PULCache < HealthMonitor::Providers::Cache
     raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time
   rescue RuntimeError => e
     raise PulCacheException, e.message
-    end
+  end
 
     private
 
-    def key
-      random = rand(99_999)
-      @key ||= ["health", request.try(:remote_ip), random].join(":")
-    end
+      def key
+        random = rand(99_999)
+        @key ||= ["health", request.try(:remote_ip), random].join(":")
+      end
 end

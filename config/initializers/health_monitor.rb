@@ -4,7 +4,6 @@ require "pul_cache"
 
 Rails.application.config.after_initialize do
   HealthMonitor.configure do |config|
-
     config.file_absence.configure do |file_config|
       file_config.filename = "/opt/tigerdata/shared/remove-from-nginx"
     end
