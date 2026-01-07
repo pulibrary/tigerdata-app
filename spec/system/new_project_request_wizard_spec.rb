@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "open-uri"
 
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
   context "unauthenticated user" do
