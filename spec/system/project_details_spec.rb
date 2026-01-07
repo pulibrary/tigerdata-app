@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
+RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true, clean_projects: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
@@ -204,10 +204,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       before do
         # Create a project in mediaflux and generate assets for the collection
         TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
-      end
-
-      after do
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
       end
 
       it "renders the storage quota usage component" do

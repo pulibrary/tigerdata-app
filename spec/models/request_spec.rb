@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Request, type: :model do
+RSpec.describe Request, type: :model, clean_projects: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do

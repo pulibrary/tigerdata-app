@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe ProjectSearch, type: :operation, integration: true do
+RSpec.describe ProjectSearch, type: :operation, integration: true, clean_projects: true do
   let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   let(:request1) { FactoryBot.create(:request_project, project_title: "soda Pop") }
@@ -14,12 +14,6 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
   let!(:project1) { create_project_in_mediaflux(request: request1, current_user: approver) }
   let!(:project2) { create_project_in_mediaflux(request: request2, current_user: approver) }
   let!(:project3) { create_project_in_mediaflux(request: request3, current_user: approver) }
-
-  after do
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
-  end
 
   describe "#call" do
     context "Success case" do
