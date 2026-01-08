@@ -3,8 +3,8 @@ development:
   title:
   body:
 test:
-  title:
-  body:
+  title: Welcome to the <i>test</i> site
+  body: This is a <b>test</b> <a href="mailto:fake@princeton.edu">message.</a>
 staging:
   title:
   body:
