@@ -202,6 +202,14 @@ class ProjectShowPresenter
     project != nil
   end
 
+  def can_increase_quota?(user:)
+    if user.uid == data_manager.uid || user.uid == data_sponsor.uid
+      true
+    else
+      false
+    end
+  end
+
   private
 
     def requested_by_user
