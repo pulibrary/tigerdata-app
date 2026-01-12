@@ -275,7 +275,6 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
-    let(:sponsor_and_data_manager) { sponsor_and_data_manager }
     let!(:project) do
       request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
                                                     departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
