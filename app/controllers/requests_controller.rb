@@ -39,7 +39,7 @@ class RequestsController < ApplicationController
   def approve
     if eligible_to_approve
       @request_model = Request.find(params[:id])
-      if @request_model.valid_to_submit?
+      if @request_model.valid_to_submit?(allow_empty_parent_folder: true)
         project = @request_model.approve(current_user)
         @request_model.destroy!
         stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."

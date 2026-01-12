@@ -4,7 +4,7 @@ class Request < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
 
-  def valid_to_submit?
+  def valid_to_submit?(allow_empty_parent_folder: false)
     errors.clear
     # run all validations and then check for errors otherwise ruby stops at the first error
     valid_title?
@@ -14,7 +14,7 @@ class Request < ApplicationRecord
     valid_quota?
     valid_project_purpose?
     valid_description?
-    valid_parent_folder?
+    valid_parent_folder?(allow_empty_parent_folder:)
     valid_project_folder?
     # For Skeletor we are setting the requestor to the data sponsor
     # valid_requested_by?
@@ -53,10 +53,10 @@ class Request < ApplicationRecord
     end
   end
 
-  def valid_parent_folder?
+  def valid_parent_folder?(allow_empty_parent_folder: false)
     check_errors? do
-      # the below-commented-out method may come back into use when this ticket is worked - https://github.com/pulibrary/tigerdata-app/issues/2219
-      field_present?(parent_folder, :parent_folder)
+      field_present?(parent_folder, :parent_folder) unless allow_empty_parent_folder
+      # Check the parent_folder for invalid characters.
       alphanumeric_dash_underscore_only(parent_folder, :parent_folder)
     end
   end
@@ -64,7 +64,7 @@ class Request < ApplicationRecord
   def valid_project_folder?
     check_errors? do
       field_present?(project_folder, :project_folder)
-      # Check the project folder for the error but only display the error under the parent folder
+      # Check the project folder for invalid characters (notice that we display the error under the parent folder)
       alphanumeric_dash_underscore_only(project_folder, :parent_folder)
     end
   end
