@@ -115,15 +115,15 @@ RSpec.describe RequestsController, type: :controller do
     end
 
     context "a developer" do
-      let(:developer) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+      let(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
       let(:valid_request) do
-        Request.create(project_title: "Valid Request", data_sponsor: developer.uid, data_manager: developer.uid, departments: [{ code: "dept", name: "department" }],
+        Request.create(project_title: "Valid Request", data_sponsor: developer_user.uid, data_manager: developer_user.uid, departments: [{ code: "dept", name: "department" }],
                        quota: "500 GB", description: "A valid request",
                        parent_folder: "parent",
                        project_folder: random_project_directory, project_purpose: "research")
       end
       before do
-        sign_in developer
+        sign_in developer_user
       end
 
       it "approves the request" do
