@@ -36,78 +36,87 @@ RSpec.describe RequestsController, type: :controller do
           expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
         end
       end
+    end
 
-      context "a non elevated user" do
-        let!(:current_user) { FactoryBot.create(:user) }
+    context "a non elevated user" do
+      let!(:current_user) { FactoryBot.create(:user) }
+      before do
+        sign_in current_user
+      end
+
+      it "does not approve the request" do
+        valid_request # make sure the request exists before we start the count
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
+        expect(response).to redirect_to "http://test.host/dashboard"
+      end
+
+      context "the production environment" do
+        before do
+          allow(Rails.env).to receive(:production?).and_return(true)
+        end
 
         it "does not approve the request" do
           valid_request # make sure the request exists before we start the count
           expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
           expect(response).to redirect_to "http://test.host/dashboard"
         end
+      end
+    end
 
-        context "the production environment" do
-          before do
-            allow(Rails.env).to receive(:production?).and_return(true)
-          end
-
-          it "does not approve the request" do
-            valid_request # make sure the request exists before we start the count
-            expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
-            expect(response).to redirect_to "http://test.host/dashboard"
-          end
-        end
+    context "a tester trainer" do
+      let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+      before do
+        sign_in current_user
       end
 
-      context "a tester trainer" do
-        let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+      it "does not approve the request" do
+        valid_request # make sure the request exists before we start the count
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
+        expect(response).to redirect_to "http://test.host/dashboard"
+      end
+
+      it "approves the request if they are emulating a sysadmin" do
+        allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
+        allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
+        valid_request # make sure the request exists before we start the count
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
+      end
+
+      context "the production environment" do
+        before do
+          allow(Rails.env).to receive(:production?).and_return(true)
+        end
 
         it "does not approve the request" do
           valid_request # make sure the request exists before we start the count
           expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
           expect(response).to redirect_to "http://test.host/dashboard"
         end
+      end
+    end
 
-        it "approves the request if they are emulating a sysadmin" do
-          allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
-          allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
-          valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
-        end
-
-        context "the production environment" do
-          before do
-            allow(Rails.env).to receive(:production?).and_return(true)
-          end
-
-          it "does not approve the request" do
-            valid_request # make sure the request exists before we start the count
-            expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
-            expect(response).to redirect_to "http://test.host/dashboard"
-          end
-        end
+    context "a developer" do
+      let!(:current_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+      before do
+        sign_in current_user
       end
 
-      context "a developer" do
-        let!(:current_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+      it "approves the request" do
+        allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
+        allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
+        valid_request # make sure the request exists before we start the count
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
+      end
 
-        it "approves the request" do
-          allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
-          allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
-          valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { Request.count }.by(-1)
+      context "the production environment" do
+        before do
+          allow(Rails.env).to receive(:production?).and_return(true)
         end
 
-        context "the production environment" do
-          before do
-            allow(Rails.env).to receive(:production?).and_return(true)
-          end
-
-          it "does not approve the request" do
-            valid_request # make sure the request exists before we start the count
-            expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
-            expect(response).to redirect_to "http://test.host/dashboard"
-          end
+        it "does not approve the request" do
+          valid_request # make sure the request exists before we start the count
+          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { Request.count }.by(0)
+          expect(response).to redirect_to "http://test.host/dashboard"
         end
       end
     end
