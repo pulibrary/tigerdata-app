@@ -323,9 +323,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         within(".project-title") do
           expect(page).to have_content("This field is required.")
         end
+
         expect(page).to have_content("Please resolve errors before submitting your request")
         fill_in :project_title, with: "A basic Project"
         expect(page).to have_content "15/200 characters"
+
+        click_on("Submit")
+        within(".parent-folder") do
+          expect(page).to have_content("This field is required.")
+        end
+        within(".project-folder") do
+          expect(page).to have_content("This field is required.")
+        end
+
         fill_in :parent_folder, with: "abc_lab"
         fill_in :project_folder, with: "skeletor"
         select "Teaching", from: :project_purpose

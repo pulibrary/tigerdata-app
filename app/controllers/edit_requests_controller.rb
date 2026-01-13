@@ -15,7 +15,7 @@ class EditRequestsController < ApplicationController
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
   def update
     respond_to do |format|
-      if @request_model.update(request_params) && @request_model.valid_to_submit?
+      if @request_model.update(request_params) && @request_model.valid_to_submit?(allow_empty_parent_folder: true)
         format.html { redirect_to request_url(@request_model), notice: I18n.t(:successful_update) }
         format.json { render :show, status: :ok, location: @request_model }
       else
