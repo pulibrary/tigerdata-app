@@ -26,12 +26,23 @@ module Mediaflux
       xml = response_xml
       asset = xml.xpath("/response/reply/result/asset")
       metadata = parse(asset)
+      statistics = asset.xpath("./collection/statistics")
 
       if metadata[:collection]
         metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
         metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
         metadata[:accum_names] = asset.xpath("./collection/accumulator/@name")
         metadata[:ctime] = asset.xpath("./ctime")
+      end
+
+      if statistics.count == 0
+        metadata[:statistics] = false
+      else
+        # The statistics is the better way to get the total file count
+        # and if it is available we fetch them from there
+        metadata[:statistics] = true
+        metadata[:total_file_count] = statistics.xpath("non-collections").text
+        metadata[:size] = statistics.xpath("total-size").text
       end
 
       parse_image(asset.xpath("./meta/mf-image"), metadata) # this does not do anything because mf-image is not a part of the meta xpath
