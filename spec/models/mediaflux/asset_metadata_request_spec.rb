@@ -63,6 +63,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("0 bytes")
         expect(metadata[:total_file_count]).to eq("0")
+        expect(metadata[:statistics]).to be true
         expect(metadata[:quota_allocation]).to eq("500 GB")
         expect(metadata[:project_id]).to eq("10.34770/tbd")
         expect(metadata[:project_directory]).to eq(valid_project.project_directory)

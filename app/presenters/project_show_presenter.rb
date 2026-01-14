@@ -17,6 +17,7 @@ class ProjectShowPresenter
   def initialize(project, current_user, project_mf: nil)
     @project = project
     @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
+    check_statistics
     @project_metadata = @project&.metadata_model
   end
 
@@ -247,5 +248,14 @@ class ProjectShowPresenter
 
     def xml_presenter
       @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
+    end
+
+    # Log if we run into a collection without statistics so that we can notify RC
+    # See https://github.com/pulibrary/tigerdata-app/issues/2353
+    def check_statistics
+      if @project_mf[:statistics] == false
+        Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
+        Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
+      end
     end
 end
