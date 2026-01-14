@@ -47,9 +47,9 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
     end
 
     context "actual mediaflux connection" do
-      let(:current_user) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:valid_project) {  create_project_in_mediaflux(current_user: current_user) }
-      let(:session_token) { current_user.mediaflux_session }
+      let(:research_user) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:valid_project) { create_project_in_mediaflux(current_user: research_user) }
+      let(:session_token) { research_user.mediaflux_session }
 
       it "parses the resonse",
       :integration do
