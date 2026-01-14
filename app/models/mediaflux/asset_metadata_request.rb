@@ -27,17 +27,7 @@ module Mediaflux
       asset = xml.xpath("/response/reply/result/asset")
       metadata = parse(asset)
 
-      if metadata[:collection]
-        metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
-        metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
-        metadata[:accum_names] = asset.xpath("./collection/accumulator/@name")
-        metadata[:ctime] = asset.xpath("./ctime")
-      end
-
-      parse_image(asset.xpath("./meta/mf-image"), metadata) # this does not do anything because mf-image is not a part of the meta xpath
-
-      parse_note(asset.xpath("./meta/mf-note"), metadata) # this does not do anything because mf-note is not a part of the meta xpath
-
+      parse_file_count(asset, metadata)
       parse_quota(asset.xpath("./collection/quota"), metadata)
       metadata
     end
@@ -52,23 +42,32 @@ module Mediaflux
         end
       end
 
-      def parse_note(note, metadata)
-        if note.count > 0
-          metadata[:mf_note] = note.text
-        end
-      end
-
-      def parse_image(image, metadata)
-        if image.count > 0
-          metadata[:image_size] = image.xpath("./width").text + " X " + image.xpath("./height").text
-        end
-      end
-
       def parse_quota(quota, metadata)
         metadata[:quota_allocation] = quota.xpath("./allocation/@h").text
         metadata[:quota_allocation_raw] = quota.xpath("./allocation").text.to_i
         metadata[:quota_used] = quota.xpath("./used/@h").text
         metadata[:quota_used_raw] = quota.xpath("./used").text.to_i
+      end
+
+      def parse_file_count(asset, metadata)
+        # By default use the collection values
+        if metadata[:collection]
+          metadata[:total_file_count] = asset.xpath("./collection/accumulator/value/non-collections").text
+          metadata[:size] = asset.xpath("./collection/accumulator/value/total/@h").text
+          metadata[:accum_names] = asset.xpath("./collection/accumulator/@name")
+          metadata[:ctime] = asset.xpath("./ctime")
+        end
+
+        statistics = asset.xpath("./collection/statistics")
+        if statistics.count == 0
+          metadata[:statistics] = false
+        else
+          # The statistics is the better way to get the total file count than the accumulator
+          # and if it is available we fetch them from there.
+          metadata[:statistics] = true
+          metadata[:total_file_count] = statistics.xpath("non-collections").text
+          metadata[:size] = statistics.xpath("total-size/@h").text
+        end
       end
 
       # Update this to match full 0.6.1 schema
