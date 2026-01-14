@@ -101,6 +101,7 @@ class ProjectShowPresenter
   def number_of_files
     if @project_mf[:statistics] == false
       # Log if we run into a collection without statistics so that we can notify RC
+      # See https://github.com/pulibrary/tigerdata-app/issues/2353
       Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
       Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
     end
