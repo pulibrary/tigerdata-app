@@ -265,7 +265,8 @@ class ProjectMetadata
 
       def calculate_project_directory(params)
         if params.key?("project_directory_prefix") || params.key?("project_directory")
-          full_path = [params["project_directory_prefix"], params["project_directory"]].compact.join("/")
+          path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
+          full_path = path_items.join("/")
           @project_directory = ProjectMetadata.safe_directory(full_path)
         end
       end

@@ -10,7 +10,7 @@ RSpec.describe ProjectMetadata, type: :model do
       data_sponsor: "abc",
       data_manager: "def",
       departments: "dep",
-      project_directory: "dir",
+      project_directory: " dir ",
       title: "title abc",
       description: "description 123",
       status: "approved"
@@ -115,6 +115,11 @@ RSpec.describe ProjectMetadata, type: :model do
       hash["title"] = "title abc again"
       project_metadata.update_with_params(hash, current_user)
       expect(project_metadata.title).to eq("title abc again")
+
+      # it changes the project directory and strips the spaces
+      hash["project_directory_prefix"] = "  parent  "
+      project_metadata.update_with_params(hash, current_user)
+      expect(project_metadata.project_directory).to eq("parent/dir")
     end
   end
 
