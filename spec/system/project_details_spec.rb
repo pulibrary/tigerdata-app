@@ -6,13 +6,13 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:data_manager) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:manager_user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session }
   let(:read_write) { FactoryBot.create :user }
 
   context "Details page" do
     let(:project_in_mediaflux) do
-      request = FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: sponsor_user.uid,
+      request = FactoryBot.create :request_project, data_manager: manager_user.uid, data_sponsor: sponsor_user.uid,
         storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
         user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }]
       request.approve(sponsor_and_data_manager_user)
@@ -41,7 +41,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_content(project_in_mediaflux.project_directory)
 
             # Make sure both data manager and sponsor are rendered
-            expect(page).to have_content("Data Manager\n#{data_manager.display_name}\n#{data_manager.uid}")
+            expect(page).to have_content("Data Manager\n#{manager_user.display_name}\n#{manager_user.uid}")
             expect(page).to have_content("Data Sponsor\n#{sponsor_user.display_name}\n#{sponsor_user.uid}")
 
             # Per ticket #1114 sponsor users no longer have edit access
