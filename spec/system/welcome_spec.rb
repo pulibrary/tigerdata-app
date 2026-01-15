@@ -43,22 +43,22 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:admin_user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
+    let(:researcher_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:sysadmin_user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 
     it "redirects to the user's dashboard and shows the logout button" do
-      sign_in current_user
+      sign_in researcher_user
       visit "/"
 
-      expect(page).to have_content("Welcome, #{current_user.given_name}!")
-      click_link current_user.uid.to_s
+      expect(page).to have_content("Welcome, #{researcher_user.given_name}!")
+      click_link researcher_user.uid.to_s
       expect(page).to have_content "Log out"
     end
 
     it "shows the new request multi button to sysadmin users" do
-      FactoryBot.create(:request, project_title: "A new draft request", requested_by: admin_user.uid)
-      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: admin_user.uid, state: Request::SUBMITTED)
-      sign_in admin_user
+      FactoryBot.create(:request, project_title: "A new draft request", requested_by: sysadmin_user.uid)
+      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: sysadmin_user.uid, state: Request::SUBMITTED)
+      sign_in sysadmin_user
       visit "/"
 
       expect(page).to have_content "New Project Request"
