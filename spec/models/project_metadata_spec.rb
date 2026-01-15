@@ -118,7 +118,7 @@ RSpec.describe ProjectMetadata, type: :model do
 
       # it changes the project directory and strips the spaces
       hash["project_directory_prefix"] = "  parent  "
-      project_metadata.update_with_params(hash, current_user)
+      project_metadata.update_with_params(hash, researcher_user)
       expect(project_metadata.project_directory).to eq("parent/dir")
     end
   end
