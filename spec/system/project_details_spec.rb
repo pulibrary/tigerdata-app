@@ -17,6 +17,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }]
       request.approve(sponsor_and_data_manager_user)
     end
+
     context "Navigation Buttons" do
       context "Approved projects" do
         context "Sponsor user" do
