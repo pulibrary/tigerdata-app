@@ -4,8 +4,8 @@ require "rails_helper"
 describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(project) }
 
-  let(:data_sponsor) { FactoryBot.create(:project_sponsor, uid: "abc123") }
-  let(:data_manager) { FactoryBot.create(:data_manager, uid: "bcd234") }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "abc123") }
+  let(:manager_user) { FactoryBot.create(:data_manager, uid: "bcd234") }
   let(:read_only) { FactoryBot.create :user }
   let(:read_write) { FactoryBot.create :user }
   let(:department) { "77777" }
@@ -28,8 +28,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
   let(:metadata_model) do
     hash = {
-      data_sponsor: data_sponsor.uid,
-      data_manager: data_manager.uid,
+      data_sponsor: sponsor_user.uid,
+      data_manager: manager_user.uid,
       project_directory: project_directory,
       title: "project 123",
       departments: [department], # RDSS test code in fixture data
@@ -47,8 +47,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
   let(:project) do
     FactoryBot.create(:project_with_doi,
-                      data_sponsor: data_sponsor.uid,
-                      data_manager: data_manager.uid,
+                      data_sponsor: sponsor_user.uid,
+                      data_manager: manager_user.uid,
                       metadata_model: metadata_model)
   end
   let(:submission_event) { FactoryBot.create(:submission_event, project: project, event_person: submitter.uid) }
