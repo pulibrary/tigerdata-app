@@ -120,16 +120,19 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     before do
       sysadmin_user.developer = false
       sysadmin_user.sysadmin = false
+      sysadmin_user.trainer = true
       sysadmin_user.save!
     end
 
     it "mark as developer an admin and a developer user" do
       expect(sysadmin_user.sysadmin).to be false
       expect(sysadmin_user.developer).to be false
+      expect(sysadmin_user.trainer).to be true
       sign_in sysadmin_user
       User.update_user_roles(user: sysadmin_user)
       expect(sysadmin_user.sysadmin).to be true
       expect(sysadmin_user.developer).to be true
+      expect(sysadmin_user.trainer).to be false
     end
   end
 end

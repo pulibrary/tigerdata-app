@@ -180,6 +180,7 @@ class User < ApplicationRecord
     mediaflux_roles = mediaflux_roles(user:)
     update_developer_status(user:, mediaflux_roles:)
     update_sysadmin_status(user:, mediaflux_roles:)
+    update_tester_status(user:, mediaflux_roles:)
   rescue => ex
     Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{ex.message}")
   end
@@ -220,6 +221,16 @@ class User < ApplicationRecord
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating sysadmin role for user #{user.id} to #{sysadmin_now}")
       user.sysadmin = sysadmin_now
+      user.save!
+    end
+  end
+
+  def self.update_tester_status(user:, mediaflux_roles:)
+    trainer_now = mediaflux_roles.include?("pu-lib:tester")
+    if user.trainer != trainer_now
+      # Only update the record in the database if there is a change
+      Rails.logger.info("Updating trainer role for user #{user.id} to #{trainer_now}")
+      user.trainer = trainer_now
       user.save!
     end
   end
