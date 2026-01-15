@@ -4,7 +4,7 @@ Date: 2025-09-08
 
 ## Status
 
-Decided
+Superseded (by 0013)
 
 ## Context
 
