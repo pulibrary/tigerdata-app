@@ -8,22 +8,24 @@ Discussion
 
 ## Context
 
-We as a team want to organize our system tests so that there are directories for each type of user, so that we can create and locate tests that match up to user stories for each type of user. There are currently three user types; sysadmin user, researcher user, and tester-trainer user.
+We as a team want to organize our system tests so that there are directories for each type of user, so that we can create and locate tests that match up to user stories for each type of user. There are currently four user types; developer user, sysadmin user, researcher user, and tester-trainer user.
 
 ## Decision
 
 As we refactor existing system tests and whenever we create new system tests, they will be placed in the correct folder cooresponding to the user type, as follows:
 
-Sysadmins: sysadmin_user
+Developers: developer_user
 Regular users: researcher_user
+Sysadmins: sysadmin_user
 Tester-trainers: trainer_user
 
 ```md
 tigerdata-app/
 ├── spec/
 ├── system/
-├── sysadmin_user/
+├── developer_user/
 ├── researcher_user/
+├── sysadmin_user/
 └── trainer_user/
 ```
 
