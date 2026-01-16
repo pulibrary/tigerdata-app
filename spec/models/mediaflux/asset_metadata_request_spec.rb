@@ -51,7 +51,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       let(:valid_project) { create_project_in_mediaflux(current_user: research_user) }
       let(:session_token) { research_user.mediaflux_session }
 
-      it "parses the resonse",
+      it "parses the response",
       :integration do
         metadata_request = described_class.new(session_token: session_token, id: valid_project.mediaflux_id)
         metadata = metadata_request.metadata
