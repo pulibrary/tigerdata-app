@@ -149,16 +149,16 @@ RSpec.describe RequestsController, type: :controller do
 
   context "when a session expires" do
     let(:original_session) { SystemUser.mediaflux_session }
-    let(:researcher_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+    let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
     let(:valid_request) do
-      Request.create(project_title: "Valid Request", data_sponsor: researcher_user.uid, data_manager: researcher_user.uid, departments: [{ code: "dept", name: "department" }],
+      Request.create(project_title: "Valid Request", data_sponsor: sysadmin_user.uid, data_manager: sysadmin_user.uid, departments: [{ code: "dept", name: "department" }],
                      quota: "500 GB", description: "A valid request",
                      parent_folder: "parent",
                      project_folder: random_project_directory, project_purpose: "research")
     end
 
     before do
-      sign_in researcher_user
+      sign_in sysadmin_user
       allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
       allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
       allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(true)
