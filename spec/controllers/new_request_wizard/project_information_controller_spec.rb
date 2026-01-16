@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require "rails_helper"
 RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller do
-  let(:current_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
   let(:requestor) { FactoryBot.create(:user) }
   let(:valid_request) do
     Request.create(project_title: "Valid Request", data_sponsor: requestor.uid, data_manager: requestor.uid, departments: [{ code: "dept", name: "department" }],
