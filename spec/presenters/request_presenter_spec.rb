@@ -3,49 +3,49 @@ require "rails_helper"
 
 describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(request) }
-  let(:current_user) { FactoryBot.create :user, uid: "tigerdatatester" }
+  let(:researcher_user) { FactoryBot.create :user, uid: "tigerdatatester" }
   let(:request) { FactoryBot.create :request, requested_by: "tigerdatatester" }
 
   describe "#eligible_to_edit?" do
     it "allows the requester to edit a draft request" do
       request.state = Request::DRAFT
-      expect(presenter.eligible_to_edit?(current_user)).to be true
+      expect(presenter.eligible_to_edit?(researcher_user)).to be true
     end
 
     it "prevents the requester from editing a submitted request" do
       request.state = Request::SUBMITTED
-      expect(presenter.eligible_to_edit?(current_user)).to be false
+      expect(presenter.eligible_to_edit?(researcher_user)).to be false
     end
 
     context "when the user is a sysadmin" do
-      let(:current_user) { FactoryBot.create :sysadmin }
+      let(:sysadmin_user) { FactoryBot.create :sysadmin }
       it "allows a sysadmin to edit a draft request" do
         request.state = Request::DRAFT
-        expect(presenter.eligible_to_edit?(current_user)).to be true
+        expect(presenter.eligible_to_edit?(sysadmin_user)).to be true
       end
 
       it "allows a sysadmin to edit a submitted request" do
         request.state = Request::SUBMITTED
-        expect(presenter.eligible_to_edit?(current_user)).to be true
+        expect(presenter.eligible_to_edit?(sysadmin_user)).to be true
       end
     end
 
     context "when the user is a developer" do
-      let(:current_user) { FactoryBot.create :developer }
+      let(:developer_user) { FactoryBot.create :developer }
       it "allows a developer to edit a draft request" do
         request.state = Request::DRAFT
-        expect(presenter.eligible_to_edit?(current_user)).to be true
+        expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
 
       it "allows a developer to edit a submitted request" do
         request.state = Request::SUBMITTED
-        expect(presenter.eligible_to_edit?(current_user)).to be true
+        expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
 
       it "allows a developer to edit a draft request if they are the requester" do
         request.state = Request::DRAFT
-        request.requested_by = current_user.uid
-        expect(presenter.eligible_to_edit?(current_user)).to be true
+        request.requested_by = developer_user.uid
+        expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
 
       context "when in production" do
@@ -55,41 +55,41 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
 
         it "prevents a developer to edit a draft request" do
           request.state = Request::DRAFT
-          expect(presenter.eligible_to_edit?(current_user)).to be false
+          expect(presenter.eligible_to_edit?(developer_user)).to be false
         end
 
         it "allows a developer to edit a draft request if they are the requester" do
           request.state = Request::DRAFT
-          request.requested_by = current_user.uid
-          expect(presenter.eligible_to_edit?(current_user)).to be true
+          request.requested_by = developer_user.uid
+          expect(presenter.eligible_to_edit?(developer_user)).to be true
         end
 
         it "prevents a developer to edit a submitted request" do
           request.state = Request::SUBMITTED
-          expect(presenter.eligible_to_edit?(current_user)).to be false
+          expect(presenter.eligible_to_edit?(developer_user)).to be false
         end
       end
     end
   end
 
   describe "#data_sponsor" do
-    let(:current_user) { FactoryBot.create :user }
-    let(:request) { FactoryBot.create :request, data_sponsor: current_user.uid }
+    let(:sponsor_user) { FactoryBot.create :project_sponsor }
+    let(:request) { FactoryBot.create :request, data_sponsor: sponsor_user.uid }
     it "returns the full name of the data sponsor" do
-      expect(presenter.data_sponsor).to eq(current_user.display_name_safe)
+      expect(presenter.data_sponsor).to eq(sponsor_user.display_name_safe)
     end
   end
 
   describe "#data_manager" do
-    let(:current_user) { FactoryBot.create :user }
-    let(:request) { FactoryBot.create :request, data_manager: current_user.uid }
+    let(:manager_user) { FactoryBot.create :data_manager }
+    let(:request) { FactoryBot.create :request, data_manager: manager_user.uid }
     it "returns the full name of the data manager" do
-      expect(presenter.data_manager).to eq(current_user.display_name_safe)
+      expect(presenter.data_manager).to eq(manager_user.display_name_safe)
     end
   end
 
   describe "#data_manager empty" do
-    let(:current_user) { FactoryBot.create :user }
+    let(:manager_user) { FactoryBot.create :data_manager }
     let(:request) { FactoryBot.create :request, data_manager: "" }
     it "handles empty users correctly" do
       expect(presenter.data_manager).to eq("")
@@ -97,10 +97,10 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#user_list" do
-    let(:current_user) { FactoryBot.create :user, family_name: "Smith", given_name: "Sally", uid: "ss123" }
+    let(:researcher_user) { FactoryBot.create :user, family_name: "Smith", given_name: "Sally", uid: "ss123" }
     let(:other_user) { FactoryBot.create :user, family_name: "Doe", given_name: "John", uid: "jd123" }
     let(:request) do
-      FactoryBot.create :request, user_roles: [{ "uid" => current_user.uid.to_s, "name" => current_user.display_name_safe, "read_only" => true },
+      FactoryBot.create :request, user_roles: [{ "uid" => researcher_user.uid.to_s, "name" => researcher_user.display_name_safe, "read_only" => true },
                                                { "uid" => other_user.uid.to_s, "name" => other_user.display_name_safe, "read_only" => false }]
     end
     it "returns a list of the full names of the data users and their uids" do
@@ -109,7 +109,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#user_list empty" do
-    let(:current_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create :user }
     let(:request) { FactoryBot.create :request, user_roles: [] }
     it "handles empty users correctly" do
       expect(presenter.user_list).to eq("")
@@ -117,7 +117,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#departments_list" do
-    let(:current_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create :user }
     let(:request) do
       FactoryBot.create :request, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }]
     end
@@ -127,7 +127,7 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#departments_list empty" do
-    let(:current_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create :user }
     let(:request) do
       FactoryBot.create :request, departments: []
     end
@@ -137,17 +137,17 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   describe "#full_name" do
-    let(:current_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create :user }
     it "returns the full name for a valid uid" do
-      expect(presenter.full_name(current_user.uid)).to eq(current_user.display_name_safe)
+      expect(presenter.full_name(researcher_user.uid)).to eq(researcher_user.display_name_safe)
     end
 
     it "returns the uid if the full name is not found" do
-      current_user.display_name = nil
-      current_user.given_name = nil
-      current_user.family_name = nil
-      current_user.save!
-      expect(presenter.full_name(current_user.uid)).to eq(current_user.uid)
+      researcher_user.display_name = nil
+      researcher_user.given_name = nil
+      researcher_user.family_name = nil
+      researcher_user.save!
+      expect(presenter.full_name(researcher_user.uid)).to eq(researcher_user.uid)
     end
 
     it "returns an empty string if the uid is nil" do

@@ -9,10 +9,10 @@ describe "features", type: :system, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+    let(:researcher_user) { FactoryBot.create(:user, uid: "pul123") }
 
     before do
-      sign_in current_user
+      sign_in researcher_user
     end
 
     it "flip flop doesn't show for any user" do
@@ -24,10 +24,10 @@ describe "features", type: :system, js: true do
   end
 
   context "sponsor user" do
-    let(:current_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
+    let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123") }
 
     before do
-      sign_in current_user
+      sign_in sponsor_user
     end
 
     it "flip flop doesn't show for any user" do
@@ -39,10 +39,10 @@ describe "features", type: :system, js: true do
   end
 
   context "developer" do
-    let(:current_user) { FactoryBot.create(:developer, uid: "pul123") }
+    let(:developer_user) { FactoryBot.create(:developer, uid: "pul123") }
 
     before do
-      sign_in current_user
+      sign_in developer_user
     end
 
     it "displays for developers" do
@@ -54,10 +54,10 @@ describe "features", type: :system, js: true do
   end
 
   context "sysadmin user" do
-    let(:current_user) { FactoryBot.create(:sysadmin, uid: "pul123") }
+    let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "pul123") }
 
     before do
-      sign_in current_user
+      sign_in sysadmin_user
     end
 
     it "displays for sysadmin users" do

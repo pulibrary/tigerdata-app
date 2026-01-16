@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe ProjectMetadata, type: :model do
-  let(:current_user) { FactoryBot.create(:user, uid: "hc1234") }
+  let(:researcher_user) { FactoryBot.create(:user, uid: "hc1234") }
   let(:project) { Project.new }
   let(:project_metadata) { described_class.new }
   let(:hash) do
@@ -108,17 +108,17 @@ RSpec.describe ProjectMetadata, type: :model do
 
       # it blanks the title
       hash["title"] = nil
-      project_metadata.update_with_params(hash, current_user)
+      project_metadata.update_with_params(hash, researcher_user)
       expect(project_metadata.title).to be nil
 
       # changes the title when one is given
       hash["title"] = "title abc again"
-      project_metadata.update_with_params(hash, current_user)
+      project_metadata.update_with_params(hash, researcher_user)
       expect(project_metadata.title).to eq("title abc again")
 
       # it changes the project directory and strips the spaces
       hash["project_directory_prefix"] = "  parent  "
-      project_metadata.update_with_params(hash, current_user)
+      project_metadata.update_with_params(hash, researcher_user)
       expect(project_metadata.project_directory).to eq("parent/dir")
     end
   end

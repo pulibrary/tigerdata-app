@@ -11,11 +11,11 @@ RSpec.describe "Project Index Page", type: :system do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:researcher_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:project_not_in_mediaflux) { FactoryBot.create(:project, data_sponsor: "pul123", data_manager: "pul123") }
 
     before do
-      sign_in current_user
+      sign_in researcher_user
       project_not_in_mediaflux
     end
 
@@ -26,25 +26,25 @@ RSpec.describe "Project Index Page", type: :system do
   end
 
   context "system admin user" do
-    let(:current_user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
     let(:project_not_in_mediaflux) { FactoryBot.create(:project, data_sponsor: "pul123", data_manager: "pul123", title: "no mediaflux pop") }
 
     let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop") }
     let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
     let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda") }
 
-    let!(:project1) { create_project_in_mediaflux(request: request1, current_user: current_user) }
-    let!(:project2) { create_project_in_mediaflux(request: request2, current_user: current_user) }
-    let!(:project3) { create_project_in_mediaflux(request: request3, current_user: current_user) }
+    let!(:project1) { create_project_in_mediaflux(request: request1, current_user: sysadmin_user) }
+    let!(:project2) { create_project_in_mediaflux(request: request2, current_user: sysadmin_user) }
+    let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sysadmin_user) }
 
     after do
-      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
-      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
-      Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
     end
 
     before do
-      sign_in current_user
+      sign_in sysadmin_user
       project_not_in_mediaflux
     end
 

@@ -2,8 +2,8 @@
 require "rails_helper"
 
 RSpec.describe RequestProjectMetadata do
-  let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
-  let(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:researcher_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:manager_user) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
     Request.create(
@@ -13,7 +13,7 @@ RSpec.describe RequestProjectMetadata do
       created_at: Time.current.in_time_zone("America/New_York").iso8601,
       state: "draft",
       data_sponsor: sponsor_user.uid,
-      data_manager: data_manager.uid,
+      data_manager: manager_user.uid,
       departments:
         [{ "code" => "41000", "name" => "LIB-PU Library" }],
       description: "This collection contains important periodicals of the European avant-garde.",
@@ -24,7 +24,7 @@ RSpec.describe RequestProjectMetadata do
       requested_by: nil,
       storage_unit: nil,
       quota: "500 GB",
-      user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      user_roles: [{ "uid" => researcher_user.uid, "name" => researcher_user.display_name }]
     )
   end
 
@@ -36,7 +36,7 @@ RSpec.describe RequestProjectMetadata do
       created_at: Time.current.in_time_zone("America/New_York").iso8601,
       state: "draft",
       data_sponsor: sponsor_user.uid,
-      data_manager: data_manager.uid,
+      data_manager: manager_user.uid,
       departments:
         [{ "code" => "41000", "name" => "LIB-PU Library" }],
       description: "This collection contains important periodicals of the European avant-garde.",
@@ -47,7 +47,7 @@ RSpec.describe RequestProjectMetadata do
       requested_by: nil,
       storage_unit: nil,
       quota: "500 GB",
-      user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name }]
+      user_roles: [{ "uid" => researcher_user.uid, "name" => researcher_user.display_name }]
     )
   end
 
@@ -58,9 +58,9 @@ RSpec.describe RequestProjectMetadata do
       expect(project_metadata[:description]).to eq("This collection contains important periodicals of the European avant-garde.")
       expect(project_metadata[:status]).to eq(Project::APPROVED_STATUS)
       expect(project_metadata[:data_sponsor]).to eq(sponsor_user.uid)
-      expect(project_metadata[:data_manager]).to eq(data_manager.uid)
+      expect(project_metadata[:data_manager]).to eq(manager_user.uid)
       expect(project_metadata[:departments]).to eq(["LIB-PU Library"])
-      expect(project_metadata[:data_user_read_only]).to eq([current_user.uid])
+      expect(project_metadata[:data_user_read_only]).to eq([researcher_user.uid])
       expect(project_metadata[:data_user_read_write]).to eq([])
       expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
       expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "500.0", requested: "500.0" })
@@ -85,7 +85,7 @@ RSpec.describe RequestProjectMetadata do
           created_at: Time.current.in_time_zone("America/New_York").iso8601,
           state: "draft",
           data_sponsor: sponsor_user.uid,
-          data_manager: data_manager.uid,
+          data_manager: manager_user.uid,
           departments:
             [{ "code" => "41000", "name" => "LIB-PU Library" }],
           description: "This collection contains important periodicals of the European avant-garde.",
@@ -96,7 +96,7 @@ RSpec.describe RequestProjectMetadata do
           requested_by: nil,
           storage_unit: "TB",
           quota: "custom",
-          user_roles: [{ "uid" => current_user.uid, "name" => current_user.display_name, "read_only" => false }]
+          user_roles: [{ "uid" => researcher_user.uid, "name" => researcher_user.display_name, "read_only" => false }]
         )
       end
 
@@ -106,10 +106,10 @@ RSpec.describe RequestProjectMetadata do
         expect(project_metadata[:description]).to eq("This collection contains important periodicals of the European avant-garde.")
         expect(project_metadata[:status]).to eq(Project::APPROVED_STATUS)
         expect(project_metadata[:data_sponsor]).to eq(sponsor_user.uid)
-        expect(project_metadata[:data_manager]).to eq(data_manager.uid)
+        expect(project_metadata[:data_manager]).to eq(manager_user.uid)
         expect(project_metadata[:departments]).to eq(["LIB-PU Library"])
         expect(project_metadata[:data_user_read_only]).to eq([])
-        expect(project_metadata[:data_user_read_write]).to eq([current_user.uid])
+        expect(project_metadata[:data_user_read_write]).to eq([researcher_user.uid])
         expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
         expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "30.0", requested: "30.0" })
         expect(project_metadata[:storage_capacity][:unit]).to eq({ approved: "TB", requested: "TB" })

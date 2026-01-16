@@ -3,11 +3,12 @@
 require "rails_helper"
 
 describe "Current Users page", type: :system, connect_to_mediaflux: false, js: true do
-  let(:current_user) { FactoryBot.create(:user, uid: "pul123") }
+  let(:researcher_user) { FactoryBot.create(:user, uid: "pul123") }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:developer_user) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:manager_user) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:trainer_user) { FactoryBot.create(:trainer, uid: "pultrainer", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user_without_provider) { FactoryBot.create(:data_manager, provider: "", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "unauthenticated user" do
@@ -19,9 +20,9 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "authenticated user" do
     it "shows the error message" do
-      sign_in current_user
+      sign_in researcher_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page (#{current_user.uid})"
+      expect(page).to have_content "You do not have access to this page (#{researcher_user.uid})"
     end
   end
 
@@ -35,7 +36,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "developer" do
     it "shows the Current Users page" do
-      sign_in developer
+      sign_in developer_user
       visit "/users"
       expect(page).to have_content "Current Users"
     end
@@ -43,9 +44,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "trainer" do
     it "shows the the Current Users page" do
-      sign_in current_user
-      current_user.trainer = true
-      current_user.save!
+      sign_in trainer_user
       visit "/users"
       expect(page).to have_content "Current Users"
     end
@@ -60,16 +59,16 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
     it "shows the error message when visiting the user show page" do
       sign_in sponsor_user
-      visit "/users/#{data_manager.id}"
+      visit "/users/#{manager_user.id}"
       expect(page).to have_content "You do not have access to this page (#{sponsor_user.uid})"
     end
   end
 
   context "data manager" do
     it "shows the error message" do
-      sign_in data_manager
+      sign_in manager_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page (#{data_manager.uid})"
+      expect(page).to have_content "You do not have access to this page (#{manager_user.uid})"
     end
   end
 
@@ -77,8 +76,8 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     let(:new_given_name) { FFaker::Name.name }
     it "shows the user information" do
       sign_in sysadmin_user
-      visit "/users/#{data_manager.id}"
-      expect(page).to have_content "NetID: #{data_manager.uid}"
+      visit "/users/#{manager_user.id}"
+      expect(page).to have_content "NetID: #{manager_user.uid}"
       expect(page).to have_content "Provider: cas"
       expect(page).to have_button "Edit"
     end
@@ -91,11 +90,11 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
     it "allows user to edit information" do
       sign_in sysadmin_user
-      visit "/users/#{data_manager.id}/edit"
+      visit "/users/#{manager_user.id}/edit"
       fill_in :user_given_name, with: new_given_name
       click_on "Save"
       expect(page).to have_content("Give name: #{new_given_name}")
-      expect(User.find(data_manager.id).given_name).to eq new_given_name
+      expect(User.find(manager_user.id).given_name).to eq new_given_name
     end
   end
 

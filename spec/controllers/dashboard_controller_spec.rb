@@ -7,10 +7,10 @@ RSpec.describe DashboardController do
     expect(response).to redirect_to("/sign_in")
   end
 
-  context "when a user is logged in", connect_to_mediaflux: true do
-    let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+  context "when a trainer is logged in", connect_to_mediaflux: true do
+    let(:trainer_user) { FactoryBot.create :trainer, mediaflux_session: SystemUser.mediaflux_session }
     before do
-      sign_in user
+      sign_in trainer_user
     end
 
     it "renders the index page" do
@@ -36,8 +36,6 @@ RSpec.describe DashboardController do
     end
 
     it "accepts a post to change the emulation role" do
-      user.trainer = true
-      user.save!
       post :emulate, params: { emulation_menu: "System Administrator" }
       expect(session[:emulation_role]).to eq "System Administrator"
 
@@ -47,8 +45,6 @@ RSpec.describe DashboardController do
 
     context "when a trainer is emulating sysadmin" do
       it "renders the index page" do
-        user.trainer = true
-        user.save!
         get :index, session: { emulation_role: "System Administrator" }
         expect(response).to render_template("index")
 
@@ -61,8 +57,6 @@ RSpec.describe DashboardController do
         render_views
 
         it "shows the admin tab" do
-          user.trainer = true
-          user.save!
           get :index, session: { emulation_role: "System Administrator" }
           expect(response).to render_template("index")
           expect(response.body).to include("Administration")
@@ -71,8 +65,6 @@ RSpec.describe DashboardController do
     end
     context "when a trainer is emulating eligible_sponsor" do
       it "renders the index page" do
-        user.trainer = true
-        user.save!
         get :index, session: { emulation_role: "Eligible Data Sponsor" }
         expect(response).to render_template("index")
         expect(assigns(:current_user).sysadmin).to be_falsey
@@ -82,8 +74,6 @@ RSpec.describe DashboardController do
     end
     context "when a trainer is emulating eligible_manager" do
       it "renders the index page" do
-        user.trainer = true
-        user.save!
         get :index, session: { emulation_role: "Eligible Data Manager" }
         expect(response).to render_template("index")
 
@@ -94,8 +84,6 @@ RSpec.describe DashboardController do
     end
     context "when a trainer is emulating eligible_data_user" do
       it "renders the index page" do
-        user.trainer = true
-        user.save!
         get :index, session: { emulation_role: "Eligible Data User" }
         expect(response).to render_template("index")
 
@@ -107,9 +95,9 @@ RSpec.describe DashboardController do
   end
 
   context "when a user is logged in", connect_to_mediaflux: true do
-    let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+    let(:researcher_user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
     before do
-      sign_in user
+      sign_in researcher_user
     end
 
     it "does not show the admin tab" do
@@ -136,8 +124,12 @@ RSpec.describe DashboardController do
     end
 
     context "and the user is a sysadmin" do
-      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
+      let(:sysadmin_user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
       render_views
+
+      before do
+        sign_in sysadmin_user
+      end
 
       it "shows the admin tab" do
         get :index
@@ -164,8 +156,12 @@ RSpec.describe DashboardController do
     end
 
     context "and the user is a developer" do
-      let(:user) { FactoryBot.create :developer, mediaflux_session: SystemUser.mediaflux_session }
+      let(:developer_user) { FactoryBot.create :developer, mediaflux_session: SystemUser.mediaflux_session }
       render_views
+
+      before do
+        sign_in developer_user
+      end
 
       it "shows the admin tab" do
         get :index

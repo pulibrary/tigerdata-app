@@ -10,7 +10,7 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
-      let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
+      let(:manager_user) { FactoryBot.create(:user, uid: "manager1") }
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:request) { Request.create(data_sponsor: "pul123", data_manager: "manager1", project_title: "new project") }
 
@@ -32,7 +32,7 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to redirect_to(new_user_session_path)
     end
     context "when the client is authenticated" do
-      let(:data_manager) { FactoryBot.create(:user, uid: "manager1") }
+      let(:manager_user) { FactoryBot.create(:user, uid: "manager1") }
       let(:other_user) { FactoryBot.create(:user) }
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 

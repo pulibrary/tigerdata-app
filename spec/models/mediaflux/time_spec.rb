@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::Time do
     let(:project) { FactoryBot.build :project_with_doi }
-    let!(:current_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:docker_response) { "Etc/UTC" }
     let(:ansible_response) { "America/Chicago" }
     subject(:instance) { described_class.new }
@@ -12,9 +12,9 @@ RSpec.describe Mediaflux::Time do
     describe "#convert", connect_to_mediaflux: true do
       it "converts mediaflux time objects to utc before converting to america/new_york",
       :integration do
-        project = create_project_in_mediaflux(current_user:)
+        project = create_project_in_mediaflux(current_user: sponsor_and_data_manager)
         metadata = Mediaflux::AssetMetadataRequest.new(
-          session_token: current_user.mediaflux_session,
+          session_token: sponsor_and_data_manager.mediaflux_session,
           id: project.mediaflux_id
           ).metadata
 
