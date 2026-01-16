@@ -20,9 +20,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create :user }
       before do
-        sign_in user
+        sign_in researcher_user
       end
 
       it "redirects to the root when the user does not have access " do
@@ -31,7 +31,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       context "a user who has project access" do
-        let(:user) { User.find_by(uid: project.metadata_model.data_sponsor) }
+        let(:researcher_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
 
         it "renders the project metadata as json" do
           get :details, params: { id: project.id, format: :json }
@@ -82,9 +82,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create :user }
       before do
-        sign_in user
+        sign_in researcher_user
       end
       it "redirects to root" do
         get :index
@@ -146,9 +146,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create :user }
       before do
-        sign_in user
+        sign_in researcher_user
       end
 
       it "redirects to the root when the user does not have access " do
@@ -158,9 +158,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a user with access" do
-      let(:user) { User.find_by(uid: project.metadata_model.data_manager) }
+      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
       before do
-        sign_in user
+        sign_in researcher_user
       end
 
       it "enqueues a job and tells the user" do
@@ -182,9 +182,9 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create :user }
       before do
-        sign_in user
+        sign_in researcher_user
       end
 
       it "redirects to the root when the user does not have access " do
@@ -193,7 +193,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       context "a user who has project access" do
-        let(:user) { User.find_by(uid: project.metadata_model.data_sponsor) }
+        let(:researcher_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
 
         it "does contact mediaflux" do
           allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
@@ -275,15 +275,14 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
     render_views
-    let(:current_user) { sponsor_and_data_manager }
     let!(:project) do
-      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: current_user.uid, data_sponsor: current_user.uid,
+      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
                                                     departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
       request.approve(sponsor_and_data_manager)
     end
 
     before do
-      sign_in(current_user)
+      sign_in(sponsor_and_data_manager)
     end
 
     it "shows the affiliation name (instead the internal code) on the project show views" do

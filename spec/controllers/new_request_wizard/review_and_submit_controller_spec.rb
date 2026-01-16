@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require "rails_helper"
 RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
-  let!(:current_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
   let(:requestor) { FactoryBot.create(:user) }
   let(:valid_request) do
     Request.create(project_title: "Valid Request", data_sponsor: requestor.uid, data_manager: requestor.uid, departments: [{ code: "dept", name: "department" }],
@@ -17,11 +16,12 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
     end
 
     context "a signed in user" do
-      before do
-        sign_in current_user
-      end
-
       context "a sysadmin" do
+        let!(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+        before do
+          sign_in sysadmin_user
+        end
+
         it "shows the form" do
           get :show, params: { request_id: valid_request.id }
           expect(response).not_to have_http_status(:redirect)
@@ -40,7 +40,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a non elevated user" do
-        let!(:current_user) { FactoryBot.create(:user) }
+        let!(:researcher_user) { FactoryBot.create(:user) }
+        before do
+          sign_in researcher_user
+        end
 
         it "redirects to the dashboard" do
           get :show, params: { request_id: valid_request.id }
@@ -48,7 +51,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         it "shows the form when the user is the requestor" do
-          valid_request.requested_by = current_user.uid
+          valid_request.requested_by = researcher_user.uid
           valid_request.save
           get :show, params: { request_id: valid_request.id }
           expect(response).not_to have_http_status(:redirect)
@@ -56,7 +59,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a tester trainer" do
-        let!(:current_user) { FactoryBot.create(:trainer) }
+        let(:trainer_user) { FactoryBot.create(:trainer) }
+        before do
+          sign_in trainer_user
+        end
 
         it "redirects to the dashboard" do
           get :show, params: { request_id: valid_request.id }
@@ -86,7 +92,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a developer" do
-        let!(:current_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+        let!(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+        before do
+          sign_in developer_user
+        end
 
         it "shows the form" do
           get :show, params: { request_id: valid_request.id }
@@ -112,6 +121,11 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a sysadmin" do
+          let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+          before do
+            sign_in sysadmin_user
+          end
+
           it "shows the form" do
             get :show, params: { request_id: valid_request.id }
             expect(response).not_to have_http_status(:redirect)
@@ -130,7 +144,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a non elevated user" do
-          let!(:current_user) { FactoryBot.create(:user) }
+          let!(:researcher_user) { FactoryBot.create(:user) }
+          before do
+            sign_in researcher_user
+          end
 
           it "redirects to the dashboard" do
             get :show, params: { request_id: valid_request.id }
@@ -138,7 +155,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
           end
 
           it "does not show the form even when the user is the requestor" do
-            valid_request.requested_by = current_user.uid
+            valid_request.requested_by = researcher_user.uid
             valid_request.save
             get :show, params: { request_id: valid_request.id }
             expect(response).to have_http_status(:redirect)
@@ -146,7 +163,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a tester trainer" do
-          let!(:current_user) { FactoryBot.create(:trainer) }
+          let!(:trainer_user) { FactoryBot.create(:trainer) }
+          before do
+            sign_in trainer_user
+          end
 
           it "redirects to the dashboard" do
             get :show, params: { request_id: valid_request.id }
@@ -176,7 +196,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a developer" do
-          let!(:current_user) { FactoryBot.create(:developer) }
+          let!(:developer_user) { FactoryBot.create(:developer) }
+          before do
+            sign_in developer_user
+          end
 
           it "shows the form" do
             get :show, params: { request_id: valid_request.id }
@@ -205,11 +228,11 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
     end
 
     context "a signed in user" do
-      before do
-        sign_in current_user
-      end
-
       context "a sysadmin" do
+        let!(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+        before do
+          sign_in sysadmin_user
+        end
         it "updates the request" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           valid_request.reload
@@ -230,7 +253,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a non elevated user" do
-        let!(:current_user) { FactoryBot.create(:user) }
+        let!(:researcher_user) { FactoryBot.create(:user) }
+        before do
+          sign_in researcher_user
+        end
 
         it "redirects to the dashboard" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
@@ -238,7 +264,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         it "updates the request when the user is the requestor" do
-          valid_request.requested_by = current_user.uid
+          valid_request.requested_by = researcher_user.uid
           valid_request.save
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           valid_request.reload
@@ -247,7 +273,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a tester trainer" do
-        let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+        let!(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+        before do
+          sign_in trainer_user
+        end
 
         it "redirects to the dashboard" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
@@ -280,7 +309,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
       end
 
       context "a developer" do
-        let!(:current_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+        let!(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+        before do
+          sign_in developer_user
+        end
 
         it "updates the request" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
@@ -308,6 +340,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a sysadmin" do
+          let!(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+          before do
+            sign_in sysadmin_user
+          end
           it "updates the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload
@@ -328,7 +364,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a non elevated user" do
-          let!(:current_user) { FactoryBot.create(:user) }
+          let!(:researcher_user) { FactoryBot.create(:user) }
+          before do
+            sign_in researcher_user
+          end
 
           it "does not update the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
@@ -338,7 +377,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a tester trainer" do
-          let!(:current_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+          let!(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+          before do
+            sign_in trainer_user
+          end
 
           it "updates the request if they are emulating a sysadmin" do
             allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
@@ -364,7 +406,10 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         end
 
         context "a developer" do
-          let!(:current_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+          let!(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+          before do
+            sign_in developer_user
+          end
 
           it "updates the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }

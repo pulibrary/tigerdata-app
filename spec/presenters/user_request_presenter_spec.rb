@@ -3,10 +3,11 @@ require "rails_helper"
 
 describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(user_request) }
+  let(:researcher_user) { FactoryBot.create :user, uid: "tigerdatatester" }
 
   let(:user_request) do
     FileInventoryRequest.create(
-      user_id: current_user.id,
+      user_id: researcher_user.id,
       project_id: project.id,
       job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
       state: UserRequest::COMPLETED,
@@ -18,11 +19,10 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
     )
   end
 
-  let(:current_user) { FactoryBot.create :user, uid: "tigerdatatester" }
   let(:project) do
     FactoryBot.create :project_with_apostrophe_in_title,
-    data_manager: current_user.uid,
-    data_sponsor: current_user.uid
+    data_manager: researcher_user.uid,
+    data_sponsor: researcher_user.uid
   end
 
   describe "#title" do
@@ -65,7 +65,7 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
 
     context "a failed user request" do
       let(:user_request) do
-        FileInventoryRequest.create(user_id: current_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
+        FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
                                     request_details: { project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
       end
       it "returns 'failed_item'" do
