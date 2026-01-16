@@ -71,7 +71,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
                                              request_details: { project_title: project1.title }, completion_time: 1.day.ago)
       inv_req2 = FileInventoryRequest.create!(user_id: sponsor_and_data_manager.id, project_id: project1.id, job_id: 123, state: UserRequest::PENDING,
                                               request_details: { project_title: project1.title }, completion_time: nil)
-      # Leading underscore to show that the request is intentonally unused, and should be ignored by linting tools
+      # Leading underscore to show that the request is intentionally unused, and should be ignored by linting tools
       _inv_req3 = FileInventoryRequest.create!(user_id: other_user.id, project_id: project1.id, job_id: 123, state: UserRequest::PENDING,
                                                request_details: { project_title: project1.title }, completion_time: nil)
       expect(presenter.my_inventory_requests.count).to eq(2)
