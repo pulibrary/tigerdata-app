@@ -2,9 +2,8 @@
 require "rails_helper"
 RSpec.describe RequestsController, type: :controller do
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
-  let(:current_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
   let(:valid_request) do
-    Request.create(project_title: "Valid Request", data_sponsor: current_user.uid, data_manager: current_user.uid, departments: [{ code: "dept", name: "department" }],
+    Request.create(project_title: "Valid Request", data_sponsor: "tigerdatatester", data_manager: "tigerdatatester", departments: [{ code: "dept", name: "department" }],
                    quota: "500 GB", description: "A valid request",
                    parent_folder: "parent",
                    project_folder: random_project_directory, project_purpose: "research")
