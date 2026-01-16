@@ -198,14 +198,14 @@ class User < ApplicationRecord
   private
 
   def self.update_developer_status(user:, mediaflux_roles:)
-    # TODO: Figure out why the role name is different in staging from production:
-    #   production:   "pu-smb-group:PU:tigerdata:librarydevelopers"
-    #   staging:      "pu-oit-group:PU:tigerdata:librarydevelopers"
-    #   development:  "pu-lib:developer"
-    #   test:         "system-administrator"
+    # Production authentication has groups prefixed by "pu-smb-group". 
+    # In the future lower environments which currently have "pu-oit-group" should match production.
+    # See https://github.com/PrincetonUniversityLibrary/tigerdata-config/issues/289
+    #   production:            "pu-smb-group:PU:tigerdata:librarydevelopers"
+    #   staging & development: "pu-oit-group:PU:tigerdata:librarydevelopers"
+    #   test:                  "system-administrator"
     developer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
       mediaflux_roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
-      mediaflux_roles.include?("pu-lib:developer") ||
       mediaflux_roles.include?("system-administrator")
     if user.developer != developer_now
       # Only update the record in the database if there is a change
@@ -226,7 +226,8 @@ class User < ApplicationRecord
   end
 
   def self.update_tester_status(user:, mediaflux_roles:)
-    trainer_now = mediaflux_roles.include?("pu-lib:tester")
+    trainer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:tester-trainers") ||
+                  mediaflux_roles.include?("pu-oit-group:PU:tigerdata:tester-trainers")
     if user.trainer != trainer_now
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating trainer role for user #{user.id} to #{trainer_now}")
