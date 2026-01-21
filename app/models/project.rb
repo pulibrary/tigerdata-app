@@ -232,6 +232,10 @@ class Project < ApplicationRecord
     Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
+  def quota(session_id:)
+    quota_req = Mediaflux::ProjectQuotaRequest.new(session_token: session_id, asset_id: self.mediaflux_id)
+    quota_req.quota
+  end
 
   private
 

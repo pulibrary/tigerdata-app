@@ -22,6 +22,9 @@ class ProjectsController < ApplicationController
     @approved_unit = unit[:approved]
 
     @project_session = "details"
+    if params["quota"] == "true"
+      @quota = project.quota(session_id:current_user.mediaflux_session)
+    end
 
     respond_to do |format|
       format.html do
