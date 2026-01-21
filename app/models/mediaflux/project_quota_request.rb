@@ -17,12 +17,7 @@ module Mediaflux
       "tigerdata.project.quota.get"
     end
 
-    # Returns the entire response returned by the service.
-    def debug_output
-      response_xml.xpath("response/reply/result/result").to_s
-    end
-
-    # Returns the id of the collection created in Mediaflux
+    # Returns the quota information for collection in Mediaflux
     def quota
       result = response_xml.xpath("response/reply/result")
       {
