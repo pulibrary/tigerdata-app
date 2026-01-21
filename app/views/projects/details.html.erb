@@ -205,18 +205,18 @@
    </div>
 </div>
 
-<% if @quota != nil %>
+<% if @show_quota_breakdown %>
    <h2>Quota breakdown</h2>
-   <p>quota-allocation: <%= @quota[:quota_allocation] %></p>
-   <p>quota-allocation-human: <%= @quota[:quota_allocation_human] %></p>
-   <p>quota_used: <%= @quota[:quota_used] %></p>
-   <p>quota_used_human: <%= @quota[:quota_used_human] %></p>
-   <p>project_files: <%= @quota[:project_files] %></p>
-   <p>project_files_human: <%= @quota[:project_files_human] %></p>
-   <p>recycle_bin: <%= @quota[:recycle_bin] %></p>
-   <p>recycle_bin_human: <%= @quota[:recycle_bin_human] %></p>
-   <p>old_versions: <%= @quota[:old_versions] %></p>
-   <p>old_versions_human: <%= @quota[:old_versions_human] %></p>
+   <p>quota-allocation: <%= @presenter.quota_breakdown[:quota_allocation] %></p>
+   <p>quota-allocation-human: <%= @presenter.quota_breakdown[:quota_allocation_human] %></p>
+   <p>quota_used: <%= @presenter.quota_breakdown[:quota_used] %></p>
+   <p>quota_used_human: <%= @presenter.quota_breakdown[:quota_used_human] %></p>
+   <p>project_files: <%= @presenter.quota_breakdown[:project_files] %></p>
+   <p>project_files_human: <%= @presenter.quota_breakdown[:project_files_human] %></p>
+   <p>recycle_bin: <%= @presenter.quota_breakdown[:recycle_bin] %></p>
+   <p>recycle_bin_human: <%= @presenter.quota_breakdown[:recycle_bin_human] %></p>
+   <p>old_versions: <%= @presenter.quota_breakdown[:old_versions] %></p>
+   <p>old_versions_human: <%= @presenter.quota_breakdown[:old_versions_human] %></p>
 <% end %>
 
 <script type="module">
