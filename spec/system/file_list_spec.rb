@@ -4,7 +4,6 @@ require "rails_helper"
 describe "#file_list", integration: true, clean_projects: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
-  let(:current_sysadmin) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user) }
   let(:request) { FactoryBot.create(:request_project) }
   let(:project) { request.approve(manager) }

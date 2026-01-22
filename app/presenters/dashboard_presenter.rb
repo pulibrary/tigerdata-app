@@ -32,10 +32,16 @@ class DashboardPresenter
   end
 
   def my_draft_requests
-    @my_draft_requests ||= Request.where(requested_by: current_user.uid, state: Request::DRAFT)
+    @my_draft_requests ||= presented_requests(Request.where(requested_by: current_user.uid, state: Request::DRAFT))
   end
 
   def my_submitted_requests
-    @my_submitted_requests ||= Request.where(requested_by: current_user.uid, state: Request::SUBMITTED)
+    @my_submitted_requests ||= presented_requests(Request.where(requested_by: current_user.uid, state: Request::SUBMITTED))
   end
+
+  private
+
+    def presented_requests(requests)
+      requests.map { |req| UserRequestPresenter.new(req) }
+    end
 end
