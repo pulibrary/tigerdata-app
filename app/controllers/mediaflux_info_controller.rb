@@ -7,6 +7,7 @@ class MediafluxInfoController < ApplicationController
     @sysadmin = current_user.sysadmin
     @developer = current_user.developer
     @java_plugin_status = java_plugin_check
+    @java_plugin_version = java_plugin_version
     respond_to do |format|
       format.html
       format.json { render json: @mf_version }
@@ -22,6 +23,19 @@ class MediafluxInfoController < ApplicationController
     rescue => ex
       Rails.logger.error("Java plugin not working: #{ex.message}")
       "Not working: #{ex.message}"
+    end
+
+    def java_plugin_version
+      describe_request = Mediaflux::PackageDescribeRequest.new(package_name: "tigerdata-plugin", session_token: current_user.mediaflux_session)
+      describe_request.resolve
+      if describe_request.error?
+        "Not available (see log for details)"
+      else
+        describe_request.describe[:version]
+      end
+    rescue => ex
+      Rails.logger.error("Cannot determine version information for the Java plugin: #{ex.message}")
+      "Not available (see log for details)"
     end
 
     def mediaflux_version_info

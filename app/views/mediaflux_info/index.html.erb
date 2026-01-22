@@ -1,5 +1,8 @@
 <p>Connected to MediaFlux <b><%= @mf_version[:version] %></b> at <b><%= Mediaflux::Connection.host %></b>
 <dl>
+  <dt>tigerdata-plugin: </dt>
+  <dd><%= @java_plugin_version %></dd>
+
   <dt>Mediaflux Port: </dt>
   <dd><%= Mediaflux::Connection.port %></dd>
 
