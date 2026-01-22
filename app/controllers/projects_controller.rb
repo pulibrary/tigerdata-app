@@ -22,6 +22,7 @@ class ProjectsController < ApplicationController
     @approved_unit = unit[:approved]
 
     @project_session = "details"
+    @show_quota_breakdown = params["quota"] == "true"
 
     respond_to do |format|
       format.html do
