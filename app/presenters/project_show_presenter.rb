@@ -17,6 +17,7 @@ class ProjectShowPresenter
   def initialize(project, current_user, project_mf: nil)
     @project = project
     @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
+    @session_id = current_user.mediaflux_session
     check_statistics
     @project_metadata = @project&.metadata_model
   end
@@ -209,6 +210,10 @@ class ProjectShowPresenter
     else
       false
     end
+  end
+
+  def quota_breakdown
+    @quota_breakdown ||= project.quota(session_id: @session_id)
   end
 
   private
