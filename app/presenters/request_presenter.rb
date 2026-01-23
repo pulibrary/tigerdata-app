@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 class RequestPresenter
   attr_reader :request
+
+  delegate :id, to: :request
+
   def initialize(request)
     @request = request
   end
@@ -74,7 +77,27 @@ class RequestPresenter
     end
   end
 
+  def review_path
+    url_helpers.new_project_review_and_submit_path(request.id)
+  end
+
+  def delete_path
+    url_helpers.request_path(request.id)
+  end
+
+  def safe_project_title
+    if request.project_title.empty?
+      "(no title entered)"
+    else
+      request.project_title
+    end
+  end
+
   private
+
+    def url_helpers
+      Rails.application.routes.url_helpers
+    end
 
     def step1_css_suffix(controller_name, substep = nil)
       css_suffix = "-incomplete"

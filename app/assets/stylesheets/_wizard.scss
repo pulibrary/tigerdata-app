@@ -817,6 +817,13 @@
   }
 }
 
+.pul-popover-actions {
+  display: flex;
+  height: 2.875rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .pul-popover-close {
   width: 1.5rem;
   height: 1.5rem;

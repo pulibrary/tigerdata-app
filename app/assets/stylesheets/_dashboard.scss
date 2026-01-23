@@ -691,6 +691,11 @@
               border-radius: 0.25rem;
               background: var(--Neutral-White, #fff);
 
+              &:hover {
+                border-radius: 0.25rem;
+                background: $gray-10;
+              }
+
               .request-name {
                 display: flex;
                 align-items: center;
@@ -730,6 +735,13 @@
                   padding: 0.125rem 0.25rem;
                   align-items: center;
                   gap: 0.25rem;
+                  border: none;
+                  background: none;
+                  color: $red-dark;
+
+                  &:hover {
+                    text-decoration: underline;
+                  }
                 }
                 .request-remove-icon {
                   width: 1.5rem;
@@ -1033,5 +1045,32 @@
         color: $blue !important;
       }
     }
+  }
+  .delete-draft-confirm {
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    display: flex;
+    border-radius: 0.5rem;
+    background: $status-success;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .status-mark {
+    display: flex;
+    width: 1.625rem;
+    height: 1.625rem;
+    padding: 0.1875rem;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+  }
+  .green-circle-check {
+    width: 20px;
+    height: 20px;
+    aspect-ratio: 1/1;
+    background: url("circle-check.svg") no-repeat;
+    border-radius: 6.25rem;
+    background-color: $green-dark;
   }
 }

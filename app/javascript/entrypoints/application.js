@@ -21,7 +21,6 @@ import { Modal } from 'bootstrap';
 import '../channels/index.js';
 import '../channels/consumer.js';
 
-import { setTargetHtml } from './helper.js';
 import { displayMediafluxVersion } from './mediafluxVersion.js';
 import { dashStyle, dashTab } from './dashboardTabs.js';
 import { departmentAutocomplete } from './departmentAutocomplete.js';
@@ -34,6 +33,7 @@ import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
 import { copyPastePath } from './copyPastePath.js';
 import { wizardNavigation } from './wizardNavigation.js';
+import { popoverManagement } from './popoverManagement.js';
 
 const app = createApp({});
 
@@ -234,9 +234,6 @@ function projectTitleValidation() {
 }
 
 function initPage() {
-  $('#test-jquery').click((event) => {
-    setTargetHtml(event, 'jQuery works!');
-  });
   initListContentsModal();
   showMoreLessContent();
   showMoreLessSysAdmin();
@@ -251,6 +248,7 @@ function initPage() {
   userRolesAutocomplete();
   copyPastePath();
   wizardNavigation();
+  popoverManagement();
 }
 
 /* eslint-disable no-console */

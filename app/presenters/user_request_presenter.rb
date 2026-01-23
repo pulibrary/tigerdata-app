@@ -2,7 +2,7 @@
 class UserRequestPresenter
   attr_reader :user_request
 
-  delegate :request_details, :job_id, :completion_time, :expiration_date, :id, to: :user_request
+  delegate :request_details, :job_id, :completion_time, :expiration_date, to: :user_request
 
   def initialize(user_request)
     @user_request = user_request
@@ -40,12 +40,8 @@ class UserRequestPresenter
     url_helpers.new_project_review_and_submit_path(user_request.id)
   end
 
-  def safe_project_title
-    if user_request.project_title.empty?
-      "(no title entered)"
-    else
-      user_request.project_title
-    end
+  def delete_path
+    url_helpers.new_project_review_and_submit_path(user_request.id)
   end
 
   private

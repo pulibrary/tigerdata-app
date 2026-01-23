@@ -1,0 +1,15 @@
+                      <div popover="auto" id="delete-draft-<%= id %>" class="delete-confirm pul-popover">
+                        <div class="modal-content">
+                            <div class="delete-draft-header modal-title-frame">
+                                <div class="model-title">Delete Draft Requests</div>
+                                <input type=button popovertarget="delete-draft-<%= id %>" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+                            </div>
+                            <div class="delete-content modal-body-text">
+                                <p>You're about to delete the draft request "<%= project_title %>". You will not be able to restore it once it's deleted.</p>
+                                <div class="pul-popover-actions">
+                                  <button popovertarget="delete-draft-<%= id %>" popovertargetaction="hide" class="pul-button pul-button-secondary delete-cancel">Cancel</button>
+                                  <%= button_to("Permanently Delete", delete_path, :method => :delete, class: "pul-button pul-button-secondary-dark-red") %>
+                                </div>
+                            </div>
+                        </div>
+                      </div>

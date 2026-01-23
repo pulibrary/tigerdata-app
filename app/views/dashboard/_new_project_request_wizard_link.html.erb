@@ -13,6 +13,26 @@
           <button class="request-button" popovertarget="submitted-request-list" onclick="log_plausible_view_submitted_requests()">Submitted Requests</button>
         </div>
 
+        <!-- deleted request popup -->
+        <div popover="auto" id="confirm-delete-draft" class="pul-popover" data="<%= 'auto-load' if @presenter.display_confirm_delete_draft_modal? %>">
+          <div class="modal-content">
+            <div class="confirm-delete-header modal-title-frame">
+              <div class="model-title">Delete Draft Requests</div>
+              <input type=button popovertarget="confirm-delete-draft" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+            </div>
+            <div class="delete-draft-confirm">
+              <div class="status-mark">
+                <div class="green-circle-check"></div>
+              </div>
+              <div>
+              Your file  has been permanently deleted.
+              </div>
+            </div>
+            <button popovertarget="draft-request-list" class="pul-button pul-button-secondary">Back to draft requests</button>
+
+          </div>
+        </div>
+        
         <!-- draft requests popup -->
         <div popover="auto" id="draft-request-list" class=request-list pul-popover">
           <div class="modal-content">
@@ -23,12 +43,19 @@
             <div class="draft-content">
               <div class="draft-list">
                 <% @presenter.my_draft_requests.each do | request_model| %>
-                  <%= render partial: 'draft_request', locals: {review_path: request_model.review_path, project_title: request_model.safe_project_title } %>
+                  <%= render partial: 'draft_request', locals: {review_path: request_model.review_path, delete_path: request_model.delete_path,
+                                                                project_title: request_model.safe_project_title, id: request_model.id } %>
                 <% end %>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- popover for each draft request -->
+        <% @presenter.my_draft_requests.each do | request_model| %>
+          <%= render partial: 'draft_request_popover', locals: {review_path: request_model.review_path, delete_path: request_model.delete_path,
+                                                        project_title: request_model.safe_project_title, id: request_model.id } %>
+        <% end %>
 
         <!-- submitted requests popup -->
         <div popover="auto" id="submitted-request-list" class="request-list pul-popover">

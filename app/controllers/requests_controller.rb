@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class RequestsController < ApplicationController
+  before_action :set_request_model, only: %i[show approve destroy]
   before_action :set_breadcrumbs
 
   # GET /requests
@@ -19,8 +20,6 @@ class RequestsController < ApplicationController
   end
 
   def show
-    @request_model = Request.find(params[:id])
-
     if current_user.uid == @request_model.requested_by || current_user.developer || current_user.sysadmin || current_user.trainer
       @request_presenter = RequestPresenter.new(@request_model)
       add_breadcrumb("New Project Request", new_project_project_info_path)
@@ -38,7 +37,6 @@ class RequestsController < ApplicationController
   # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if eligible_to_approve
-      @request_model = Request.find(params[:id])
       if @request_model.valid_to_submit?(allow_empty_parent_folder: true)
         project = @request_model.approve(current_user)
         @request_model.destroy!
@@ -70,7 +68,21 @@ class RequestsController < ApplicationController
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
 
+  def destroy
+    if eligible_to_destroy?
+      @request_model.destroy
+      redirect_to dashboard_path(modal: "confirm_delete_draft")
+    else
+      flash[:notice] = I18n.t(:no_permission_to_delete)
+      redirect_to dashboard_path
+    end
+  end
+
   private
+
+    def set_request_model
+      @request_model = Request.find(params[:id])
+    end
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
@@ -78,5 +90,9 @@ class RequestsController < ApplicationController
 
     def eligible_to_approve
       current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+    end
+
+    def eligible_to_destroy?
+      current_user.uid == @request_model.requested_by
     end
 end
