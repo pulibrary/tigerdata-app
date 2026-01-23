@@ -264,6 +264,55 @@ RSpec.describe Request, type: :model do
       expect(request.errors[:parent_folder].join(", ")).to eq("Only letters, numbers, dashes, and underscores are allowed. Please update your input.")
     end
 
+    it "allows nested paths in the parent_folder and project_folder" do
+      request = Request.new(parent_folder: "abc", project_folder: "123") # abc/123
+      expect(request.valid_parent_folder?).to be_truthy
+      expect(request.valid_project_folder?).to be_truthy
+
+      request = Request.new(parent_folder: "abc", project_folder: "def/123") # abc/def/123
+      expect(request.valid_parent_folder?).to be_truthy
+      expect(request.valid_project_folder?).to be_truthy
+
+      request = Request.new(parent_folder: "abc/def", project_folder: "123") # abc/def/123
+      expect(request.valid_parent_folder?).to be_truthy
+      expect(request.valid_project_folder?).to be_truthy
+
+      request = Request.new(parent_folder: "abc/def", project_folder: "xyz/123") # abc/def/xyz/123
+      expect(request.valid_parent_folder?).to be_truthy
+      expect(request.valid_project_folder?).to be_truthy
+    end
+
+    it "prevents empty subfolders in the parent_folder or project_folder" do
+      request = Request.new(parent_folder: "abc//def", project_folder: "123") # abc//def/123
+      expect(request.valid_parent_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Empty subfolders are not allowed")).to be true
+
+      request = Request.new(parent_folder: "abc", project_folder: "xyz//123") # abc/xyz//123
+      expect(request.valid_parent_folder?).to be_truthy
+      expect(request.valid_project_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Empty subfolders are not allowed")).to be true
+    end
+
+    it "prevent parent_folder or project_folder to start with a forward slash" do
+      request = Request.new(parent_folder: "/abc", project_folder: "123") # /abc/123
+      expect(request.valid_parent_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Cannot start with a forward slash")).to be true
+
+      request = Request.new(parent_folder: "abc", project_folder: "/123") # abc/123
+      expect(request.valid_project_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Cannot start with a forward slash")).to be true
+    end
+
+    it "prevent parent_folder or project_folder to end with a forward slash" do
+      request = Request.new(parent_folder: "abc/", project_folder: "123") # abc/123
+      expect(request.valid_parent_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Cannot end with a forward slash")).to be true
+
+      request = Request.new(parent_folder: "abc", project_folder: "123/") # abc/123/
+      expect(request.valid_project_folder?).to be_falsey
+      expect(request.errors[:parent_folder].join(", ").include?("Cannot end with a forward slash")).to be true
+    end
+
     it "validates a project_folder" do
       request = Request.new(project_folder: "abc")
       expect(request.valid_project_folder?).to be_truthy
