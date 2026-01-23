@@ -265,15 +265,15 @@ RSpec.describe Request, type: :model do
     end
 
     it "allows nested paths in the parent_folder and project_folder" do
-      request = Request.new(parent_folder: "abc", project_folder: "123")  # abc/123
+      request = Request.new(parent_folder: "abc", project_folder: "123") # abc/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
-      request = Request.new(parent_folder: "abc", project_folder: "def/123")  # abc/def/123
+      request = Request.new(parent_folder: "abc", project_folder: "def/123") # abc/def/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
-      request = Request.new(parent_folder: "abc/def", project_folder: "123")  # abc/def/123
+      request = Request.new(parent_folder: "abc/def", project_folder: "123") # abc/def/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
