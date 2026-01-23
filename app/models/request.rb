@@ -215,10 +215,17 @@ class Request < ApplicationRecord
       end
     end
 
+    # Allows alphanumeric, dashes, underscores, and forward-slashes
     def alphanumeric_dash_underscore_only(value, field)
       return if value.blank?
-      if value.match(/\A[\w\-]+\z/).nil?
+      if value.match(/\A[\w\-\/]+\z/).nil?
         errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed. Please update your input.")
+      elsif value.include?("//")
+        errors.add(field, :invalid, message: "Empty subfolders are not allowed. Please update your input.")
+      elsif value.start_with?("/")
+        errors.add(field, :invalid, message: "Cannot start with a forward slash. Please update your input.")
+      elsif value.end_with?("/")
+        errors.add(field, :invalid, message: "Cannot end with a forward slash. Please update your input.")
       end
     end
 
