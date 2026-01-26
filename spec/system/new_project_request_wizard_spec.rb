@@ -332,11 +332,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         within(".parent-folder") do
           expect(page).to have_content("This field is required.")
         end
+
+        fill_in :parent_folder, with: "abc_lab"
+        click_on("Submit")
         within(".project-folder") do
           expect(page).to have_content("This field is required.")
         end
 
-        fill_in :parent_folder, with: "abc_lab"
         fill_in :project_folder, with: "skeletor"
         select "Teaching", from: :project_purpose
         fill_in :description, with: "An awesome project to show the wizard is magic"

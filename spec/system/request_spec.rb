@@ -283,7 +283,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           select_user(sponsor_and_data_manager, "data_sponsor", "request[data_sponsor]")
           expect(page).not_to have_content("This field is required.")
         end
-        within(".project-folder") do
+        within(".parent-folder") do
           expect(page).to have_content("This field is required.")
         end
       end

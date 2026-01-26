@@ -20,7 +20,10 @@
               </div>
             </div>
             <div class="input-error parent-folder-error">
-                <%= parent_folder_error %>
+              <% if parent_folder_error.count > 0 %>
+                <!-- combine the parent and project folder errors for display purposes -->
+                <%= (parent_folder_error + project_folder_error).uniq.join(" ") %>
+              <% end %>
             </div>
           </div>
         </div>
@@ -40,7 +43,10 @@
             <div class="char-limit">
             </div>
             <div class="input-error">
-                <%= project_folder_error %>
+              <% if parent_folder_error.count == 0 && project_folder_error.count > 0 %>
+                <!-- we only display the project_folder here if there were no parent_folder errors -->
+                <%= project_folder_error.join(" ") %>
+              <% end %>
             </div>
           </div>
         </div>

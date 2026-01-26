@@ -261,7 +261,7 @@ RSpec.describe Request, type: :model do
       request = Request.new(project_folder: "abc\"123")
       expect(request.valid_project_folder?).to be_falsey
       # The error for either the project or parent folder only displays under the parent folder per design specifications
-      expect(request.errors[:parent_folder].join(", ")).to eq("Only letters, numbers, dashes, and underscores are allowed. Please update your input.")
+      expect(request.errors[:parent_folder].join(", ")).to eq("Only letters, numbers, dashes, and underscores are allowed.")
     end
 
     it "allows nested paths in the parent_folder and project_folder" do
