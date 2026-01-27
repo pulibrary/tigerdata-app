@@ -205,6 +205,18 @@ h6 {
   background-color: $black-hover;
 }
 
+.pul-button-secondary-dark-red {
+  background: $red-dark;
+  text-decoration: none;
+  color: $white;
+  border: none;
+}
+
+.pul-button-secondary-dark-red:hover {
+  text-decoration-color: $red-darker !important;
+  background: $red-darker;
+}
+
 .info {
   display: flex;
   align-items: center;

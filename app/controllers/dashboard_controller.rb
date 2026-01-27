@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
   layout "welcome"
 
   def index
-    @presenter = DashboardPresenter.new(current_user: current_user)
+    @presenter = DashboardPresenter.new(current_user: current_user, display_modal: modal_name)
 
     session[:dashtab] ||= "project" # default the session tab to projects
     @dash_session = session[:dashtab]
@@ -33,4 +33,14 @@ class DashboardController < ApplicationController
       session[:dashtab] = params[:dashtab]
     end
   end
+
+  private
+
+    def modal_name
+      if params.key?("modal")
+        params[:modal]
+      else
+        ""
+      end
+    end
 end

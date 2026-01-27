@@ -1,7 +1,7 @@
-                  <div class="draft-request">
+                  <div class="draft-request" id="draft-request-<%= id %>">
                       <div class="request-name"><%= project_title %></div>
                       <div class="request-actions">
-                        <a href="<%= review_path%>" class="request-open" focus="true" tabindex="0" aria-label="<%= project_title %> Open"><div>Open</div><div class="request-open-icon"></div></a>
-                        <!--div class="request-remove"><div class="request-remove-icon"></div><div>Delete</div></div-->
+                        <a href="<%= review_path %>" class="request-open" focus="true" tabindex="0" aria-label="<%= project_title %> Open"><div class="request-open-icon"></div><div>Open</div></a>
+                        <button class="request-remove" popovertarget="delete-draft-<%= id %>" aria-label="<%= project_title %> Delete"><div class="request-remove-icon"></div><div>Delete</div></button>
                       </div>
                   </div>

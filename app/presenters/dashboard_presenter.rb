@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 class DashboardPresenter
-  attr_reader :current_user
-  def initialize(current_user:)
+  attr_reader :current_user, :display_modal
+
+  def initialize(current_user:, display_modal: "")
     @current_user = current_user
+    @display_modal = display_modal
   end
 
   def all_projects
@@ -39,9 +41,13 @@ class DashboardPresenter
     @my_submitted_requests ||= presented_requests(Request.where(requested_by: current_user.uid, state: Request::SUBMITTED))
   end
 
+  def display_confirm_delete_draft_modal?
+    display_modal == "confirm_delete_draft"
+  end
+
   private
 
     def presented_requests(requests)
-      requests.map { |req| UserRequestPresenter.new(req) }
+      requests.map { |req| RequestPresenter.new(req) }
     end
 end
