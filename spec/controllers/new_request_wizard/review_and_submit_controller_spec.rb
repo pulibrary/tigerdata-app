@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
   let(:requestor) { FactoryBot.create(:user) }
   let(:valid_request) do
-    Request.create(project_title: "Valid Request", data_sponsor: requestor.uid, data_manager: requestor.uid, departments: [{ code: "dept", name: "department" }],
-                   quota: "500 GB", description: "A valid request", requested_by: requestor.uid,
-                   project_folder: random_project_directory, project_purpose: "research")
+    NewProjectRequest.create(project_title: "Valid Request", data_sponsor: requestor.uid, data_manager: requestor.uid, departments: [{ code: "dept", name: "department" }],
+                             quota: "500 GB", description: "A valid request", requested_by: requestor.uid,
+                             project_folder: random_project_directory, project_purpose: "research")
   end
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
 
@@ -116,7 +116,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
 
       context "the request is submitted" do
         before do
-          valid_request.state = Request::SUBMITTED
+          valid_request.state = NewProjectRequest::SUBMITTED
           valid_request.save
         end
 
@@ -335,7 +335,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
 
       context "the request is submitted" do
         before do
-          valid_request.state = Request::SUBMITTED
+          valid_request.state = NewProjectRequest::SUBMITTED
           valid_request.save
         end
 

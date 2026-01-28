@@ -11,7 +11,7 @@ RSpec.describe "new-project/storage-access", type: :request do
     end
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project", quota: "custom", storage_size: 23, storage_unit: "GB") }
+      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "custom", storage_size: 23, storage_unit: "GB") }
 
       it "renders a successful response" do
         sign_in user
@@ -34,7 +34,7 @@ RSpec.describe "new-project/storage-access", type: :request do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
-        let(:request) { Request.create(request_title: "abc123", project_title: "project", quota: "500 GB") }
+        let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", quota: "500 GB") }
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Save")

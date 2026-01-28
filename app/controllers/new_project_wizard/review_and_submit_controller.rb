@@ -14,7 +14,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
 
     def render_next
       if @request_model.valid_to_submit?
-        @request_model.state = Request::SUBMITTED
+        @request_model.state = NewProjectRequest::SUBMITTED
         @request_model.save
         TigerdataMailer.with(request_id: @request_model.id, submitter: current_user).request_creation.deliver_now
         redirect_to request_submit_path

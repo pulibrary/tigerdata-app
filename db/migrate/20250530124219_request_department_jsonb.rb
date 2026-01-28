@@ -1,6 +1,6 @@
 class RequestDepartmentJsonb < ActiveRecord::Migration[7.0]
   def up
-    Request.all.each do |request|
+    NewProjectRequest.all.each do |request|
       dep_str = request.departments&.strip
       if !dep_str.blank?
         request.departments = dep_str.split(",").map do |dep|
@@ -17,7 +17,7 @@ class RequestDepartmentJsonb < ActiveRecord::Migration[7.0]
   def down
     change_column :requests, :departments, :string
 
-    Request.all.each do |request|
+    NewProjectRequest.all.each do |request|
       dep_json = request.departments
       if dep_json.present?
         request.departments = JSON.parse(dep_json).map{|dep| "(#{dep["code"]}) #{dep["name"]}"}.join(",")

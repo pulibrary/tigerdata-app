@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 # rubocop:disable Metrics/ClassLength
-class Request < ApplicationRecord
+class NewProjectRequest < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
 
@@ -141,7 +141,7 @@ class Request < ApplicationRecord
   end
 
   def submitted?
-    state == Request::SUBMITTED
+    state == NewProjectRequest::SUBMITTED
   end
 
   def project_path
