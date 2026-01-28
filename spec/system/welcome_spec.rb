@@ -58,7 +58,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "shows the new request multi button to sysadmin users" do
       FactoryBot.create(:request, project_title: "A new draft request", requested_by: sysadmin_user.uid)
       other_request = FactoryBot.create(:request, project_title: "Other draft request", requested_by: sysadmin_user.uid)
-      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: sysadmin_user.uid, state: Request::SUBMITTED)
+      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: sysadmin_user.uid, state: NewProjectRequest::SUBMITTED)
       sign_in sysadmin_user
       visit "/"
 

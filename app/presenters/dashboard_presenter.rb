@@ -34,11 +34,11 @@ class DashboardPresenter
   end
 
   def my_draft_requests
-    @my_draft_requests ||= presented_requests(Request.where(requested_by: current_user.uid, state: Request::DRAFT))
+    @my_draft_requests ||= presented_requests(NewProjectRequest.where(requested_by: current_user.uid, state: NewProjectRequest::DRAFT))
   end
 
   def my_submitted_requests
-    @my_submitted_requests ||= presented_requests(Request.where(requested_by: current_user.uid, state: Request::SUBMITTED))
+    @my_submitted_requests ||= presented_requests(NewProjectRequest.where(requested_by: current_user.uid, state: NewProjectRequest::SUBMITTED))
   end
 
   def display_confirm_delete_draft_modal?

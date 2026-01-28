@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 FactoryBot.define do
-  factory :request, class: "Request" do
+  factory :request, class: "NewProjectRequest" do
     quota { "custom" }
     storage_size { 2 }
     storage_unit { "TB" }
@@ -10,7 +10,7 @@ FactoryBot.define do
     project_title { "Test request" }
   end
 
-  factory :request_project, class: "Request" do
+  factory :request_project, class: "NewProjectRequest" do
     quota { "custom" }
     data_sponsor { "tigerdatatester" }  # Must be a valid netid/uid
     data_manager { "tigerdatatester" }  # Must be a valid netid/uid

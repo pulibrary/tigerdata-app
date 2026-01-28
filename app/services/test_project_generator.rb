@@ -22,7 +22,7 @@ class TestProjectGenerator
       # create a duplicate copy of the configuration so we do not modify the rails defaults
       capacity = Rails.configuration.project_defaults[:storage_capacity].deep_dup
 
-      Request.create(metadata(capacity, user))
+      NewProjectRequest.create(metadata(capacity, user))
     end
 
     # rubocop:disable Metrics/MethodLength
