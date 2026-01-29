@@ -6,7 +6,7 @@ RSpec.describe RequestProjectMetadata do
   let(:manager_user) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
-    Request.create(
+    NewProjectRequest.create(
       request_type: nil,
       request_title: nil,
       project_title: "Blue Mountain",
@@ -29,7 +29,7 @@ RSpec.describe RequestProjectMetadata do
   end
 
   let(:request_without_parent_folder) do
-    Request.create(
+    NewProjectRequest.create(
       request_type: nil,
       request_title: nil,
       project_title: "Blue Mountain",
@@ -78,7 +78,7 @@ RSpec.describe RequestProjectMetadata do
 
     context "the storage is custom" do
       let(:request) do
-        Request.create(
+        NewProjectRequest.create(
           request_type: nil,
           request_title: nil,
           project_title: "Blue Mountain",

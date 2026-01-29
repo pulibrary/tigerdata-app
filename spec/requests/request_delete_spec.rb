@@ -11,12 +11,12 @@ RSpec.describe "delete request/:id", type: :request do
 
     context "when the client is authenticated" do
       let(:researcher) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
+      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }
 
       it "renders a redirect response" do
         sign_in researcher
         request # make sure the object exists before we try to destroy it
-        expect { delete request_path(request.id) }.to change { Request.count }.by(0)
+        expect { delete request_path(request.id) }.to change { NewProjectRequest.count }.by(0)
         expect(response).to be_redirect
         expect(response).to redirect_to(dashboard_path)
         expect(flash.notice).to eq("You do not have permission to delete the request of another user.")
@@ -25,12 +25,12 @@ RSpec.describe "delete request/:id", type: :request do
 
     context "when the authenticated client is request creator" do
       let(:researcher) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project", requested_by: researcher.uid) }
+      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", requested_by: researcher.uid) }
 
       it "returns json" do
         sign_in researcher
         request # make sure the object exists before we try to destroy it
-        expect { delete request_path(request.id) }.to change { Request.count }.by(-1)
+        expect { delete request_path(request.id) }.to change { NewProjectRequest.count }.by(-1)
         expect(response).to be_redirect
         expect(response).to redirect_to(dashboard_path(modal: "confirm_delete_draft"))
       end

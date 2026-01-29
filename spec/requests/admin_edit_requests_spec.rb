@@ -23,7 +23,7 @@ RSpec.describe "/edit_requests", type: :request do
     end
     context "when the client is authenticated and is a regular user" do
       let(:user) { FactoryBot.create(:user) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
+      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }
 
       it "redirects them to the request path with a notice that they cannot modify the request" do
         sign_in user
@@ -36,7 +36,7 @@ RSpec.describe "/edit_requests", type: :request do
 
     context "when the client is authenticated and is a sysadmin" do
       let(:user) { FactoryBot.create(:sysadmin) }
-      let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
+      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }
 
       it "renders the Edit Submitted Request page" do
         sign_in user
@@ -62,7 +62,7 @@ RSpec.describe "/edit_requests", type: :request do
 
       context "when the client is authenticated and is a regular user" do
         let(:user) { FactoryBot.create(:user) }
-        let(:request) { Request.create(request_title: "abc123", project_title: "new project") }
+        let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }
 
         it "redirects them to the request path with a notice that they cannot modify the request" do
           sign_in user
@@ -75,7 +75,7 @@ RSpec.describe "/edit_requests", type: :request do
 
       context "when the client is authenticated and is a sysadmin" do
         let(:user) { FactoryBot.create(:sysadmin) }
-        let(:request) { Request.create(request_title: "abc123", project_title: "new project", quota: "500 GB") }
+        let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "500 GB") }
 
         let(:valid_request_params) do
           { request_title: "new title", project_title: "changed_title",
@@ -93,7 +93,7 @@ RSpec.describe "/edit_requests", type: :request do
           put admin_edit_request_url(request.id), params: { request: valid_request_params }
           expect(response).to be_redirect
           expect(response).to redirect_to(request_path(request.id))
-          updated_request = Request.find(request.id)
+          updated_request = NewProjectRequest.find(request.id)
           expect(updated_request.project_title).to eq("changed_title")
           expect(updated_request.quota).to eq("500 GB")
           expect(updated_request.approved_quota).to eq("200 GB")

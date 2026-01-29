@@ -4,7 +4,7 @@ class RequestCleanupJob < ApplicationJob
 
   def perform
     # Destroy every request in the database that is not valid to submit and has 6 or more errors
-    Request.where.not(state: Request::SUBMITTED).each do |request|
+    NewProjectRequest.where.not(state: NewProjectRequest::SUBMITTED).each do |request|
       # check if the request has not been updated within 24 hours
       next unless request.updated_at < 24.hours.ago
       next if request.valid_title?

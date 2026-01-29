@@ -10,7 +10,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let(:project_id) { project.id }
 
   let(:valid_request) do
-    Request.create(
+    NewProjectRequest.create(
       project_title: "Valid Request", 
       data_sponsor: sponsor_and_data_manager_user.uid, 
       data_manager: sponsor_and_data_manager_user.uid, 
