@@ -17,7 +17,7 @@
     </div>
 
     <% if params["explorer"] == "true" %>
-      <%= render partial: "file_explorer", locals: { files: @files } %>
+      <%= render partial: "file_explorer" %>
     <% else %>
       <%= render partial: "contents", locals: { files: @files } %>
     <% end %>

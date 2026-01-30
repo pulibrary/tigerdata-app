@@ -198,22 +198,18 @@
     results
   end
 
-  # Fetches the first n files
-  def file_explorer(session_id:, path_id:)
-    return { files: [] } if mediaflux_id.nil?
-
-    size = 100
+  # Creates the iterator for the file explorer
+  def file_explorer_setup(session_id:, path_id:)
     query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: path_id, deep_search: false, aql_query: "type!='application/arc-asset-collection'")
     iterator_id = query_req.result
+    iterator_id
+  end
 
+  # Fetchs results from the iterator for the file explorer
+  def file_explorer_iterate(session_id:, iterator_id:)
+    size = 5
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
-
-    # Destroy _after_ fetching the first set of results from iterator_req.
-    # This call is required since it possible that we have read less assets than
-    # what the collection has but we are done with the iterator.
-    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
-
     results
   end
 
