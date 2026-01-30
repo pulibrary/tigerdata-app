@@ -62,6 +62,7 @@
   <div>Current path id: <input id="current-path-id"></div>
   <div>Iterator id: <input id="iterator-id"></div>
   <div>Complete?: <input id="complete"></div>
+  <div>File-explorer UR: <input id="file-explorer-url" value="<%= project_file_explorer_url %>"></div>
 </div>
 
 <script>
@@ -73,11 +74,12 @@ $(function() {
     var pathId = $("#current-path-id").val();
     var iteratorId = parseInt($("#iterator-id").val(), 10);
     var completed = $("#complete").val() === "true";
+    var fileExplorerUrl = $("#file-explorer-url").val();
 
     // debugger;
 
     $.ajax({
-      url: `http://localhost:3000/projects/2/file-explorer?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
+      url: `${fileExplorerUrl}?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
     }).done(function(data) {
       var i;
       var table = $("#file_explorer_body");
