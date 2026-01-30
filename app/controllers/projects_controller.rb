@@ -62,12 +62,36 @@ class ProjectsController < ApplicationController
     @files = @file_list[:files]
     @files.sort_by!(&:path)
 
+    @current_file_path = @presenter.project_directory
+
     @project_session = "content"
     respond_to do |format|
       format.html { render }
       format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
     }
     end
+  end
+
+  def file_list
+    project # force the presenter to be set
+
+    if params["pathId"].to_i > 0
+      path = params["path"]
+      path_id = params["pathId"].to_i
+    else
+      path = @presenter.project_directory
+      path_id = project.mediaflux_id
+    end
+
+    mediaflux_files = project.file_explorer(session_id: current_user.mediaflux_session, path_id: path_id)
+    data = {
+      fileListUrl: project_file_list_url,
+      currentPath: path,
+      currentPathId: path_id,
+      files: mediaflux_files[:files],
+      complete: mediaflux_files[:complete]
+    }
+    render json: data
   end
 
   # GET "projects/:id/:id-mf"

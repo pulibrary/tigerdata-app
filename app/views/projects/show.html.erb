@@ -16,7 +16,11 @@
       </div>
     </div>
 
-    <%= render partial: "contents", locals: { files: @files } %>
+    <% if params["explorer"] == "true" %>
+      <%= render partial: "file_explorer", locals: { files: @files } %>
+    <% else %>
+      <%= render partial: "contents", locals: { files: @files } %>
+    <% end %>
     <section class="project-alerts my-4">
       <div class="row">
         <div class="col">
@@ -30,7 +34,7 @@
 
 <div popover="auto" id="list-contents-modal" class="pul-popover">
   <div class="modal-content">
-    <div class="modal-title-frame"> 
+    <div class="modal-title-frame">
       <div class="model-title">List Project Contents</div>
       <input type=button popovertarget="list-contents-modal" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
     </div>
