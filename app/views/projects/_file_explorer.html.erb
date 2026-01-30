@@ -58,10 +58,10 @@
 
 <div class="debug-info">
   <b>Debug Values</b><br/>
-  <div>Current path: <input id="current-path-text" value="x" size="80"></div>
-  <div>Current path id: <input id="current-path-id" value="x"></div>
-  <div>Iterator id: <input id="iterator-id" value="0"></div>
-  <div>Complete?: <input id="complete" value="false"></div>
+  <div>Current path: <input id="current-path-text" size="80"></div>
+  <div>Current path id: <input id="current-path-id"></div>
+  <div>Iterator id: <input id="iterator-id"></div>
+  <div>Complete?: <input id="complete"></div>
 </div>
 
 <script>
@@ -103,6 +103,7 @@ $(function() {
         var iconColumn, nameColumn, sizeColumn, dateColumn;
 
         if (file.collection === true) {
+          // It's a folder
           iconColumn = $('<i>').addClass("bi bi-folder-fill");
           nameColumn = $('<a>')
             .attr("href", `${data.fileListUrl}?path=${file.path}&pathId=${file.id}`)
@@ -110,14 +111,15 @@ $(function() {
             .text(file.name);
           sizeColumn = $('<span>').text("");
           dateColumn = $('<span>').text("");
-          idColumn = $('<span>').text(file.id);
         } else {
+          // It's a file
           iconColumn = $('<i>').addClass("bi bi-file");
           nameColumn = $('<span>').text(file.name);
           sizeColumn = $('<span>').text(file.size);
           dateColumn = $('<span>').text(file.last_modified_mf);
         }
 
+        // Append the folder/file row to the table
         table.append($('<tr>')
           .append($('<td>').append(iconColumn))
           .append($('<td>').addClass("name-column").append(nameColumn))
@@ -128,6 +130,9 @@ $(function() {
     });
   }
 
+  // When clicking on a folder load the data for that folder
+  // Notice that we set the on-click on the $(document) so that it applies
+  // to rows added on the fly.
   $(document).on("click", ".file-explorer-folder", function(element) {
     var targetUrl = new URL(element.target.href);
     var path = targetUrl.searchParams.get("path");
@@ -143,6 +148,7 @@ $(function() {
     return false;
   });
 
+  // Reload from the root folder for the project
   $("#back-home").on("click", function(element) {
     $("#current-path-text").val("");
     $("#current-path-id").val("");
@@ -152,11 +158,17 @@ $(function() {
     return false;
   });
 
+  // Load more items for the current folder
   $("#load-more").on("click", function(element) {
     loadFileList();
     return false;
   });
 
+  // Perform the inital load of files
+  $("#current-path-text").val("");
+  $("#current-path-id").val("");
+  $("#iterator-id").val("0");
+  $("#complete").val("false");
   loadFileList();
 });
 </script>
