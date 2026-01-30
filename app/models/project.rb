@@ -1,5 +1,5 @@
 # frozen_string_literal: true
- class Project < ApplicationRecord
+class Project < ApplicationRecord
 
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
