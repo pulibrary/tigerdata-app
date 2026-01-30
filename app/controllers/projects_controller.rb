@@ -62,12 +62,58 @@ class ProjectsController < ApplicationController
     @files = @file_list[:files]
     @files.sort_by!(&:path)
 
+    @current_file_path = @presenter.project_directory
+
     @project_session = "content"
     respond_to do |format|
       format.html { render }
       format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
     }
     end
+  end
+
+  def file_explorer
+
+    project # force the presenter to be set
+
+    if params["pathId"].to_i > 0
+      path = params["path"]
+      path_id = params["pathId"].to_i
+    else
+      path = @presenter.project_directory
+      path_id = project.mediaflux_id
+    end
+
+    puts "================================"
+    puts "MF session: #{current_user.mediaflux_session}"
+    puts "path: #{path}"
+    puts "path_id: #{path_id}"
+    if params["iteratorId"].to_i == 0
+      puts "iterator: N/A"
+    else
+      puts "iterator: #{params['iteratorId']}"
+    end
+    puts "================================"
+    # byebug
+
+    if params["iteratorId"].to_i == 0
+      iterator_id = project.file_explorer_setup(session_id: current_user.mediaflux_session, path_id: path_id)
+      puts "Setup new iterator #{iterator_id}"
+    else
+      iterator_id = params["iteratorId"].to_i
+      puts "Reusing iterator #{iterator_id}"
+    end
+    mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
+
+    data = {
+      fileListUrl: project_file_explorer_url,
+      currentPath: path,
+      currentPathId: path_id,
+      iteratorId: iterator_id,
+      files: mediaflux_data[:files],
+      complete: mediaflux_data[:complete]
+    }
+    render json: data
   end
 
   # GET "projects/:id/:id-mf"

@@ -1,0 +1,176 @@
+<style>
+  .left-panel {
+    float: left;
+    width: 70%;
+  }
+
+  .right-panel {
+    float: right;
+    min-width: 300px;
+    background-color:rgb(230, 238, 248)
+  }
+
+  .name-column {
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+  .size-column {
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+  .debug-info {
+    border-top: #e3e3fa 10px solid;
+    margin-top: 30px;
+  }
+</style>
+
+<div class="content-info">
+  <span id="current-path"><%= @current_file_path %></span>
+  <span>(<a id="back-home" href="#">back home</a>)</span>
+</div>
+<div class="table project-files">
+  <div class="left-panel">
+    <table id="file_explorer">
+      <thead>
+        <tr class="content heading">
+          <th>&nbsp;</th> <!-- icon -->
+          <th>name</th>
+          <th>size</th>
+          <th>last updated</th>
+        </tr>
+      </thead>
+      <tbody id="file_explorer_body">
+      </tbody>
+    </table>
+  </div>
+  <div class="right-panel">
+    <p>filename: xxx</p>
+    <p>filesize: 123</p>
+    <p>notes: 123</p>
+  </div>
+</div>
+
+<div>
+  <a href="#" id="load-more">Load More</a>
+</div>
+
+<div class="debug-info">
+  <b>Debug Values</b><br/>
+  <div>Current path: <input id="current-path-text" size="80"></div>
+  <div>Current path id: <input id="current-path-id"></div>
+  <div>Iterator id: <input id="iterator-id"></div>
+  <div>Complete?: <input id="complete"></div>
+  <div>File-explorer UR: <input id="file-explorer-url" value="<%= project_file_explorer_url %>"></div>
+</div>
+
+<script>
+$(function() {
+
+  function loadFileList() {
+
+    var path = $("#current-path-text").val();
+    var pathId = $("#current-path-id").val();
+    var iteratorId = parseInt($("#iterator-id").val(), 10);
+    var completed = $("#complete").val() === "true";
+    var fileExplorerUrl = $("#file-explorer-url").val();
+
+    // debugger;
+
+    $.ajax({
+      url: `${fileExplorerUrl}?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
+    }).done(function(data) {
+      var i;
+      var table = $("#file_explorer_body");
+
+      if (iteratorId === 0) {
+        table.empty();
+      }
+
+      $("#current-path").text(data.currentPath);
+      $("#current-path-text").val(data.currentPath);
+      $("#current-path-id").val(data.currentPathId);
+      $("#iterator-id").val(data.iteratorId);
+      $("#complete").val(data.complete);
+
+      if (data.complete === true) {
+        $("#load-more").addClass("hidden-element");
+      } else {
+        $("#load-more").removeClass("hidden-element");
+      }
+
+      for(i = 0; i < data.files.length; i++) {
+        var file = data.files[i];
+        var iconColumn, nameColumn, sizeColumn, dateColumn;
+
+        if (file.collection === true) {
+          // It's a folder
+          iconColumn = $('<i>').addClass("bi bi-folder-fill");
+          nameColumn = $('<a>')
+            .attr("href", `${data.fileListUrl}?path=${file.path}&pathId=${file.id}`)
+            .addClass("file-explorer-folder")
+            .text(file.name);
+          sizeColumn = $('<span>').text("");
+          dateColumn = $('<span>').text("");
+        } else {
+          // It's a file
+          iconColumn = $('<i>').addClass("bi bi-file");
+          nameColumn = $('<span>').text(file.name);
+          sizeColumn = $('<span>').text(file.size);
+          dateColumn = $('<span>').text(file.last_modified_mf);
+        }
+
+        // Append the folder/file row to the table
+        table.append($('<tr>')
+          .append($('<td>').append(iconColumn))
+          .append($('<td>').addClass("name-column").append(nameColumn))
+          .append($('<td>').addClass("size-column").append(sizeColumn))
+          .append($('<td>').append(dateColumn))
+        );
+      }
+    });
+  }
+
+  // When clicking on a folder load the data for that folder
+  // Notice that we set the on-click on the $(document) so that it applies
+  // to rows added on the fly.
+  $(document).on("click", ".file-explorer-folder", function(element) {
+    var targetUrl = new URL(element.target.href);
+    var path = targetUrl.searchParams.get("path");
+    var pathId = targetUrl.searchParams.get("pathId");
+    $("#current-path-text").val(path);
+    $("#current-path-id").val(pathId);
+    $("#iterator-id").val("0");
+    $("#complete").val("false");
+
+    console.log("loading folder " + path);
+    loadFileList();
+    console.log("loaded folder" + path);
+    return false;
+  });
+
+  // Reload from the root folder for the project
+  $("#back-home").on("click", function(element) {
+    $("#current-path-text").val("");
+    $("#current-path-id").val("");
+    $("#iterator-id").val("0");
+    $("#complete").val("false");
+    loadFileList();
+    return false;
+  });
+
+  // Load more items for the current folder
+  $("#load-more").on("click", function(element) {
+    loadFileList();
+    return false;
+  });
+
+  // Perform the inital load of files
+  $("#current-path-text").val("");
+  $("#current-path-id").val("");
+  $("#iterator-id").val("0");
+  $("#complete").val("false");
+  loadFileList();
+});
+</script>
