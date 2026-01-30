@@ -1,4 +1,15 @@
 <style>
+  .left-panel {
+    float: left;
+    width: 70%;
+  }
+
+  .right-panel {
+    float: right;
+    min-width: 300px;
+    background-color:rgb(230, 238, 248)
+  }
+
   .name-column {
     padding-left: 10px;
     padding-right: 20px;
@@ -9,6 +20,10 @@
     padding-right: 20px;
   }
 
+  .debug-info {
+    border-top: #e3e3fa 10px solid;
+    margin-top: 30px;
+  }
 </style>
 
 <div class="content-info">
@@ -16,33 +31,72 @@
   <span>(<a id="back-home" href="#">back home</a>)</span>
 </div>
 <div class="table project-files">
-  <table id="file_explorer">
-    <thead>
-      <tr class="content heading">
-        <th>&nbsp;</th> <!-- icon -->
-        <th>name</th>
-        <th>size</th>
-        <th>last updated</th>
-      </tr>
-    </thead>
-    <tbody id="file_explorer_body">
-    </tbody>
-  </table>
+  <div class="left-panel">
+    <table id="file_explorer">
+      <thead>
+        <tr class="content heading">
+          <th>&nbsp;</th> <!-- icon -->
+          <th>name</th>
+          <th>size</th>
+          <th>last updated</th>
+        </tr>
+      </thead>
+      <tbody id="file_explorer_body">
+      </tbody>
+    </table>
+  </div>
+  <div class="right-panel">
+    <p>filename: xxx</p>
+    <p>filesize: 123</p>
+    <p>notes: 123</p>
+  </div>
+</div>
+
+<div>
+  <a href="#" id="load-more">Load More</a>
+</div>
+
+<div class="debug-info">
+  <b>Debug Values</b><br/>
+  <div>Current path: <input id="current-path-text" value="x" size="80"></div>
+  <div>Current path id: <input id="current-path-id" value="x"></div>
+  <div>Iterator id: <input id="iterator-id" value="0"></div>
+  <div>Complete?: <input id="complete" value="false"></div>
 </div>
 
 <script>
 $(function() {
 
-  function loadFileList(path, pathId) {
+  function loadFileList() {
+
+    var path = $("#current-path-text").val();
+    var pathId = $("#current-path-id").val();
+    var iteratorId = parseInt($("#iterator-id").val(), 10);
+    var completed = $("#complete").val() === "true";
+
+    // debugger;
 
     $.ajax({
-      url: `http://localhost:3000/projects/2/file-list?path=${path}&pathId=${pathId}`,
+      url: `http://localhost:3000/projects/2/file-explorer?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
     }).done(function(data) {
       var i;
       var table = $("#file_explorer_body");
-      table.empty();
+
+      if (iteratorId === 0) {
+        table.empty();
+      }
 
       $("#current-path").text(data.currentPath);
+      $("#current-path-text").val(data.currentPath);
+      $("#current-path-id").val(data.currentPathId);
+      $("#iterator-id").val(data.iteratorId);
+      $("#complete").val(data.complete);
+
+      if (data.complete === true) {
+        $("#load-more").addClass("hidden-element");
+      } else {
+        $("#load-more").removeClass("hidden-element");
+      }
 
       for(i = 0; i < data.files.length; i++) {
         var file = data.files[i];
@@ -51,7 +105,7 @@ $(function() {
         if (file.collection === true) {
           iconColumn = $('<i>').addClass("bi bi-folder-fill");
           nameColumn = $('<a>')
-            .attr("href", `${data.fileListUrl}?path=${file.path}&path_id=${file.id}`)
+            .attr("href", `${data.fileListUrl}?path=${file.path}&pathId=${file.id}`)
             .addClass("file-explorer-folder")
             .text(file.name);
           sizeColumn = $('<span>').text("");
@@ -75,23 +129,34 @@ $(function() {
   }
 
   $(document).on("click", ".file-explorer-folder", function(element) {
-    /*
-      TODO: We shhould set the path Id as a "data attribute" of the href
-      so that we don't have to manually parse it from the query string
-    */
-    var path = element.currentTarget.text;
-    var pathId = element.target.href.split("&")[1].split("=")[1];
-    console.log("loading " + path);
-    loadFileList(path, pathId);
-    console.log("loaded " + path);
+    var targetUrl = new URL(element.target.href);
+    var path = targetUrl.searchParams.get("path");
+    var pathId = targetUrl.searchParams.get("pathId");
+    $("#current-path-text").val(path);
+    $("#current-path-id").val(pathId);
+    $("#iterator-id").val("0");
+    $("#complete").val("false");
+
+    console.log("loading folder " + path);
+    loadFileList();
+    console.log("loaded folder" + path);
     return false;
   });
 
   $("#back-home").on("click", function(element) {
-    loadFileList("", 0);
+    $("#current-path-text").val("");
+    $("#current-path-id").val("");
+    $("#iterator-id").val("0");
+    $("#complete").val("false");
+    loadFileList();
     return false;
   });
 
-  loadFileList("", 0);
+  $("#load-more").on("click", function(element) {
+    loadFileList();
+    return false;
+  });
+
+  loadFileList();
 });
 </script>

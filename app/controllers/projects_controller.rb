@@ -72,7 +72,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def file_list
+  def file_explorer
+
     project # force the presenter to be set
 
     if params["pathId"].to_i > 0
@@ -83,13 +84,34 @@ class ProjectsController < ApplicationController
       path_id = project.mediaflux_id
     end
 
-    mediaflux_files = project.file_explorer(session_id: current_user.mediaflux_session, path_id: path_id)
+    puts "================================"
+    puts "MF session: #{current_user.mediaflux_session}"
+    puts "path: #{path}"
+    puts "path_id: #{path_id}"
+    if params["iteratorId"].to_i == 0
+      puts "iterator: N/A"
+    else
+      puts "iterator: #{params['iteratorId']}"
+    end
+    puts "================================"
+    # byebug
+
+    if params["iteratorId"].to_i == 0
+      iterator_id = project.file_explorer_setup(session_id: current_user.mediaflux_session, path_id: path_id)
+      puts "Setup new iterator #{iterator_id}"
+    else
+      iterator_id = params["iteratorId"].to_i
+      puts "Reusing iterator #{iterator_id}"
+    end
+    mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
+
     data = {
-      fileListUrl: project_file_list_url,
+      fileListUrl: project_file_explorer_url,
       currentPath: path,
       currentPathId: path_id,
-      files: mediaflux_files[:files],
-      complete: mediaflux_files[:complete]
+      iteratorId: iterator_id,
+      files: mediaflux_data[:files],
+      complete: mediaflux_data[:complete]
     }
     render json: data
   end
