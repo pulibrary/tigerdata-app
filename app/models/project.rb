@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Project < ApplicationRecord
+ class Project < ApplicationRecord
 
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
@@ -185,6 +185,25 @@ class Project < ApplicationRecord
     return { files: [] } if mediaflux_id.nil?
 
     query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true, aql_query: "type!='application/arc-asset-collection'")
+    iterator_id = query_req.result
+
+    iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
+    results = iterator_req.result
+
+    # Destroy _after_ fetching the first set of results from iterator_req.
+    # This call is required since it possible that we have read less assets than
+    # what the collection has but we are done with the iterator.
+    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+
+    results
+  end
+
+  # Fetches the first n files
+  def file_explorer(session_id:, path_id:)
+    return { files: [] } if mediaflux_id.nil?
+
+    size = 100
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: path_id, deep_search: false, aql_query: "type!='application/arc-asset-collection'")
     iterator_id = query_req.result
 
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)

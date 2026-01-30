@@ -1,0 +1,97 @@
+<style>
+  .name-column {
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+  .size-column {
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+</style>
+
+<div class="content-info">
+  <span id="current-path"><%= @current_file_path %></span>
+  <span>(<a id="back-home" href="#">back home</a>)</span>
+</div>
+<div class="table project-files">
+  <table id="file_explorer">
+    <thead>
+      <tr class="content heading">
+        <th>&nbsp;</th> <!-- icon -->
+        <th>name</th>
+        <th>size</th>
+        <th>last updated</th>
+      </tr>
+    </thead>
+    <tbody id="file_explorer_body">
+    </tbody>
+  </table>
+</div>
+
+<script>
+$(function() {
+
+  function loadFileList(path, pathId) {
+
+    $.ajax({
+      url: `http://localhost:3000/projects/2/file-list?path=${path}&pathId=${pathId}`,
+    }).done(function(data) {
+      var i;
+      var table = $("#file_explorer_body");
+      table.empty();
+
+      $("#current-path").text(data.currentPath);
+
+      for(i = 0; i < data.files.length; i++) {
+        var file = data.files[i];
+        var iconColumn, nameColumn, sizeColumn, dateColumn;
+
+        if (file.collection === true) {
+          iconColumn = $('<i>').addClass("bi bi-folder-fill");
+          nameColumn = $('<a>')
+            .attr("href", `${data.fileListUrl}?path=${file.path}&path_id=${file.id}`)
+            .addClass("file-explorer-folder")
+            .text(file.name);
+          sizeColumn = $('<span>').text("");
+          dateColumn = $('<span>').text("");
+          idColumn = $('<span>').text(file.id);
+        } else {
+          iconColumn = $('<i>').addClass("bi bi-file");
+          nameColumn = $('<span>').text(file.name);
+          sizeColumn = $('<span>').text(file.size);
+          dateColumn = $('<span>').text(file.last_modified_mf);
+        }
+
+        table.append($('<tr>')
+          .append($('<td>').append(iconColumn))
+          .append($('<td>').addClass("name-column").append(nameColumn))
+          .append($('<td>').addClass("size-column").append(sizeColumn))
+          .append($('<td>').append(dateColumn))
+        );
+      }
+    });
+  }
+
+  $(document).on("click", ".file-explorer-folder", function(element) {
+    /*
+      TODO: We shhould set the path Id as a "data attribute" of the href
+      so that we don't have to manually parse it from the query string
+    */
+    var path = element.currentTarget.text;
+    var pathId = element.target.href.split("&")[1].split("=")[1];
+    console.log("loading " + path);
+    loadFileList(path, pathId);
+    console.log("loaded " + path);
+    return false;
+  });
+
+  $("#back-home").on("click", function(element) {
+    loadFileList("", 0);
+    return false;
+  });
+
+  loadFileList("", 0);
+});
+</script>
