@@ -207,7 +207,7 @@ class Project < ApplicationRecord
 
   # Fetchs results from the iterator for the file explorer
   def file_explorer_iterate(session_id:, iterator_id:)
-    size = 5
+    size = 100
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
     results
