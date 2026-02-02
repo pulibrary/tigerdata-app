@@ -96,12 +96,12 @@ class ProjectsController < ApplicationController
     puts "================================"
     # byebug
 
-    if params["iteratorId"].to_i == 0
-      iterator_id = project.file_explorer_setup(session_id: current_user.mediaflux_session, path_id: path_id)
-      puts "Setup new iterator #{iterator_id}"
+    iterator_id = if params["iteratorId"].to_i == 0
+      # setup a new iterator
+      project.file_explorer_setup(session_id: current_user.mediaflux_session, path_id: path_id)
     else
-      iterator_id = params["iteratorId"].to_i
-      puts "Reusing iterator #{iterator_id}"
+      # use the existing iterator
+      params["iteratorId"].to_i
     end
     mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
 

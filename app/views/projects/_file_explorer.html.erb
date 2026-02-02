@@ -1,12 +1,14 @@
 <style>
+  .project-files {
+    display: flex;
+  }
+
   .left-panel {
-    float: left;
-    width: 70%;
+    flex: 70%;
   }
 
   .right-panel {
-    float: right;
-    min-width: 300px;
+    flex: 30%;
     background-color:rgb(230, 238, 248)
   }
 
@@ -24,13 +26,21 @@
     border-top: #e3e3fa 10px solid;
     margin-top: 30px;
   }
+
+  .active-row {
+    background-color:rgb(230, 238, 248)
+  }
+
+  .content-info {
+    background-color: unset;
+  }
 </style>
 
 <div class="content-info">
   <span id="current-path"><%= @current_file_path %></span>
   <span>(<a id="back-home" href="#">back home</a>)</span>
 </div>
-<div class="table project-files">
+<div class="project-files">
   <div class="left-panel">
     <table id="file_explorer">
       <thead>
@@ -46,9 +56,9 @@
     </table>
   </div>
   <div class="right-panel">
-    <p>filename: xxx</p>
-    <p>filesize: 123</p>
-    <p>notes: 123</p>
+    <p>Filename: <span id="right-panel-filename">&nbsp;</span></p>
+    <p>Size: <span id="right-panel-size">&nbsp;</span></p>
+    <p>Full Path: <span id="right-panel-fullname">&nbsp;</span></p>
   </div>
 </div>
 
@@ -68,7 +78,15 @@
 <script>
 $(function() {
 
+  function fileDetails(fileName, fileSize, fullName) {
+    $("#right-panel-filename").text(fileName);
+    $("#right-panel-size").text(fileSize);
+    $("#right-panel-fullname").text(fullName);
+  }
+
   function loadFileList() {
+    // Clear the current file details
+    fileDetails("", "", "");
 
     var path = $("#current-path-text").val();
     var pathId = $("#current-path-id").val();
@@ -83,6 +101,7 @@ $(function() {
     }).done(function(data) {
       var i;
       var table = $("#file_explorer_body");
+      var firstFile = null;
 
       if (iteratorId === 0) {
         table.empty();
@@ -103,9 +122,11 @@ $(function() {
       for(i = 0; i < data.files.length; i++) {
         var file = data.files[i];
         var iconColumn, nameColumn, sizeColumn, dateColumn;
+        var rowClass;
 
         if (file.collection === true) {
           // It's a folder
+          rowClass = "file-explorer-folder";
           iconColumn = $('<i>').addClass("bi bi-folder-fill");
           nameColumn = $('<a>')
             .attr("href", `${data.fileListUrl}?path=${file.path}&pathId=${file.id}`)
@@ -115,24 +136,38 @@ $(function() {
           dateColumn = $('<span>').text("");
         } else {
           // It's a file
+          rowClass = "file-explorer-file";
           iconColumn = $('<i>').addClass("bi bi-file");
-          nameColumn = $('<span>').text(file.name);
+          nameColumn = $('<span>')
+            .text(file.name);
           sizeColumn = $('<span>').text(file.size);
           dateColumn = $('<span>').text(file.last_modified_mf);
+
+          // (save the id of the very first file in the list)
+          if (firstFile === null) {
+            firstFile = `#row-${file.id}`;
+          }
         }
 
         // Append the folder/file row to the table
         table.append($('<tr>')
+          .attr('id', `row-${file.id}`)
+          .addClass(rowClass)
           .append($('<td>').append(iconColumn))
           .append($('<td>').addClass("name-column").append(nameColumn))
           .append($('<td>').addClass("size-column").append(sizeColumn))
           .append($('<td>').append(dateColumn))
         );
       }
+
+      if (firstFile !== null) {
+        $(firstFile).click();
+      }
     });
   }
 
-  // When clicking on a folder load the data for that folder
+  // When clicking on a folder load the data for that folder.
+  //
   // Notice that we set the on-click on the $(document) so that it applies
   // to rows added on the fly.
   $(document).on("click", ".file-explorer-folder", function(element) {
@@ -147,6 +182,21 @@ $(function() {
     console.log("loading folder " + path);
     loadFileList();
     console.log("loaded folder" + path);
+    return false;
+  });
+
+  // When clicking a file mark the current file as selected.
+  $(document).on("click", ".file-explorer-file", function(element) {
+    // Mark the current row as selected...
+    $("#file_explorer>tbody>tr").removeClass("active-row");
+    var rowId = element.currentTarget.id;
+    $(`#${rowId}`).addClass("active-row");
+
+    // ...and display the file details
+    var fileName = $(`#${rowId}>td.name-column>span`).text();
+    var fileSize = $(`#${rowId}>td.size-column>span`).text();
+    var fullName = $("#current-path-text").val() + "/" + fileName;
+    fileDetails(fileName, fileSize, fullName);
     return false;
   });
 
