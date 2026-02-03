@@ -63,7 +63,9 @@
 </div>
 
 <div>
-  <a href="#" id="load-more">Load More</a>
+  <span id="load-more-spinner" class="hidden-element spinner-border spinner-border-sm"></span>
+  <span id="load-more-loading" class="hidden-element">Loading...</span>
+  <a href="#" id="load-more" class="hidden-element">Load More</a>
 </div>
 
 <div class="debug-info">
@@ -121,7 +123,6 @@ $(function() {
       if (pathBreadcrumbs[i].path > currentPath) {
         // the paths are sorted, so once we find one we delete
         // from that path forward with splice
-        console.log(`deleted from ${pathBreadcrumbs[i].path}`);
         pathBreadcrumbs.splice(i);
         break;
       }
@@ -195,6 +196,8 @@ $(function() {
 
       addPathToBreadcrumbs(data.currentPath, data.currentPathId);
 
+      $("#load-more-spinner").addClass("hidden-element");
+      $("#load-more-loading").addClass("hidden-element");
       if (data.complete === true) {
         $("#load-more").addClass("hidden-element");
       } else {
@@ -309,6 +312,9 @@ $(function() {
 
   // Load more items for the current folder
   $("#load-more").on("click", function(element) {
+    $("#load-more-spinner").removeClass("hidden-element");
+    $("#load-more-loading").removeClass("hidden-element");
+    $("#load-more").addClass("hidden-element");
     loadFileList();
     return false;
   });

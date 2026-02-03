@@ -72,6 +72,8 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # GET "projects/:id/file-explorer"
+  # Used via an AJAX call to retrieve the list of files for a given path within a project
   def file_explorer
 
     project # force the presenter to be set
