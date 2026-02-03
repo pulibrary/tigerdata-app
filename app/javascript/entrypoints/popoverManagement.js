@@ -1,6 +1,9 @@
 // eslint-disable-next-line import/prefer-default-export
 export function popoverManagement() {
   const popover = document.getElementById('confirm-delete-draft');
+  // if (popover === null) {
+  //   return;
+  // }
   if (popover.attributes.data.value === 'auto-load') popover.showPopover();
   const deleteElements = document.getElementsByClassName('delete-confirm');
 
