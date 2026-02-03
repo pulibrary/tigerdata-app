@@ -154,7 +154,7 @@ $(function() {
         // render as a hyperlink
         pathElement = $("<a>")
           .attr("href", `${fileListUrl}?path=${path}&pathId=${pathId}`)
-          .addClass("breadcrumb-link")
+          .addClass("path-breadcrumb-link")
           .text(pathDisplay);
       }
 
@@ -285,7 +285,7 @@ $(function() {
   });
 
   // When clicking a breadcrumb link load the file list for the selected path
-  $(document).on("click", ".breadcrumb-link", function(element) {
+  $(document).on("click", ".path-breadcrumb-link", function(element) {
     var targetUrl = new URL(element.target.href);
     var path = targetUrl.searchParams.get("path");
     var pathId = targetUrl.searchParams.get("pathId");
