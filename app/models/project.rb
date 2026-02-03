@@ -210,6 +210,12 @@ class Project < ApplicationRecord
     size = 100
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
+
+    # Strip the beginning "/princeton" from the path
+    results[:files].each do |file|
+      file.path = file.path.gsub(/^\/princeton/,"")
+    end
+
     results
   end
 

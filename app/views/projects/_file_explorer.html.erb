@@ -37,8 +37,7 @@
 </style>
 
 <div class="content-info">
-  <span id="current-path"><%= @current_file_path %></span>
-  <span>(<a id="back-home" href="#">back home</a>)</span>
+  <div id="pathBreadcrumbs"></div>
 </div>
 <div class="project-files">
   <div class="left-panel">
@@ -58,6 +57,7 @@
   <div class="right-panel">
     <p>Filename: <span id="right-panel-filename">&nbsp;</span></p>
     <p>Size: <span id="right-panel-size">&nbsp;</span></p>
+    <p>Last updated: <span id="right-panel-last-updated">&nbsp;</span></p>
     <p>Full Path: <span id="right-panel-fullname">&nbsp;</span></p>
   </div>
 </div>
@@ -72,29 +72,109 @@
   <div>Current path id: <input id="current-path-id"></div>
   <div>Iterator id: <input id="iterator-id"></div>
   <div>Complete?: <input id="complete"></div>
-  <div>File-explorer UR: <input id="file-explorer-url" value="<%= project_file_explorer_url %>"></div>
+  <div>File-explorer URL: <input id="file-explorer-url" size="80" value="<%= project_file_explorer_url %>"></div>
 </div>
 
 <script>
 $(function() {
 
-  function fileDetails(fileName, fileSize, fullName) {
+  // Keep track of paths the user navigates into
+  var pathBreadcrumbs = [];
+
+  // Update the file details on the right panel
+  function fileDetails(fileName, fileSize, lastUpdated, fullName) {
     $("#right-panel-filename").text(fileName);
     $("#right-panel-size").text(fileSize);
+    $("#right-panel-last-updated").text(lastUpdated);
     $("#right-panel-fullname").text(fullName);
   }
 
+  // Adds a path to the breadcrumbs
+  function addPathToBreadcrumbs(path, pathId) {
+    if (pathId == 0) {
+      return;
+    }
+
+    var i;
+    var alreadyAdded = false;
+    for(i = 0; i < pathBreadcrumbs.length; i++) {
+      if (pathBreadcrumbs[i].pathId == pathId) {
+        alreadyAdded = true;
+        break;
+      }
+    }
+
+    if (alreadyAdded === false) {
+      // Add the path and keep the array sorted by path
+      pathBreadcrumbs.push({path: path, pathId: pathId})
+      pathBreadcrumbs.sort((a, b) => a.path.localeCompare(b.path));
+    }
+  }
+
+  // Render the path breadcrumbs
+  function renderPathBreadcrums(fileListUrl, currentPath) {
+    var i;
+    var deleteIndex = -1;
+
+    // Delete any path from the breadcrumbs that is deeper than the current path
+    for(i = 0; i < pathBreadcrumbs.length; i++) {
+      if (pathBreadcrumbs[i].path > currentPath) {
+        // the paths are sorted, so once we find one we delete
+        // from that path forward with splice
+        console.log(`deleted from ${pathBreadcrumbs[i].path}`);
+        pathBreadcrumbs.splice(i);
+        break;
+      }
+    }
+
+    // Clear the display entirely
+    $("#pathBreadcrumbs").empty();
+
+    // Re-display the breadcrumbs with the current data
+    for(i = 0; i < pathBreadcrumbs.length; i++) {
+      var path = pathBreadcrumbs[i].path;
+      var pathId = pathBreadcrumbs[i].pathId;
+      var tokens = path.split("/");
+      var pathDisplay;
+      var lastPath = (i == (pathBreadcrumbs.length - 1));
+      var pathElement;
+
+      if (i == 0) {
+        // use the entire path (e.g. /tigerdata/my-project)
+        pathDisplay = path;
+      } else {
+        // use only the last portion of the path (e.g. lab-123)
+        pathDisplay = tokens[tokens.length-1];
+      }
+
+      if (lastPath) {
+        // render as a text element
+        pathElement = $("<span>").text(pathDisplay);
+      } else {
+        // render as a hyperlink
+        pathElement = $("<a>")
+          .attr("href", `${fileListUrl}?path=${path}&pathId=${pathId}`)
+          .addClass("breadcrumb-link")
+          .text(pathDisplay);
+      }
+
+      $("#pathBreadcrumbs").append(pathElement);
+      if (lastPath === false) {
+        $("#pathBreadcrumbs").append($("<span>").text(" > "));
+      }
+    }
+  }
+
+  // Uploads the file list for the current path
   function loadFileList() {
     // Clear the current file details
     fileDetails("", "", "");
 
     var path = $("#current-path-text").val();
-    var pathId = $("#current-path-id").val();
+    var pathId = parseInt($("#current-path-id").val(), 10);
     var iteratorId = parseInt($("#iterator-id").val(), 10);
     var completed = $("#complete").val() === "true";
     var fileExplorerUrl = $("#file-explorer-url").val();
-
-    // debugger;
 
     $.ajax({
       url: `${fileExplorerUrl}?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
@@ -112,6 +192,8 @@ $(function() {
       $("#current-path-id").val(data.currentPathId);
       $("#iterator-id").val(data.iteratorId);
       $("#complete").val(data.complete);
+
+      addPathToBreadcrumbs(data.currentPath, data.currentPathId);
 
       if (data.complete === true) {
         $("#load-more").addClass("hidden-element");
@@ -156,13 +238,17 @@ $(function() {
           .append($('<td>').append(iconColumn))
           .append($('<td>').addClass("name-column").append(nameColumn))
           .append($('<td>').addClass("size-column").append(sizeColumn))
-          .append($('<td>').append(dateColumn))
+          .append($('<td>').addClass("date-column").append(dateColumn))
         );
       }
 
+      // display the file information for the first file in the current folder
       if (firstFile !== null) {
         $(firstFile).click();
       }
+
+      // Update the path breadcrumbs
+      renderPathBreadcrums(data.fileListUrl, data.currentPath);
     });
   }
 
@@ -178,10 +264,7 @@ $(function() {
     $("#current-path-id").val(pathId);
     $("#iterator-id").val("0");
     $("#complete").val("false");
-
-    console.log("loading folder " + path);
     loadFileList();
-    console.log("loaded folder" + path);
     return false;
   });
 
@@ -195,8 +278,22 @@ $(function() {
     // ...and display the file details
     var fileName = $(`#${rowId}>td.name-column>span`).text();
     var fileSize = $(`#${rowId}>td.size-column>span`).text();
+    var lastUpdated = $(`#${rowId}>td.date-column>span`).text();
     var fullName = $("#current-path-text").val() + "/" + fileName;
-    fileDetails(fileName, fileSize, fullName);
+    fileDetails(fileName, fileSize, lastUpdated, fullName);
+    return false;
+  });
+
+  // When clicking a breadcrumb link load the file list for the selected path
+  $(document).on("click", ".breadcrumb-link", function(element) {
+    var targetUrl = new URL(element.target.href);
+    var path = targetUrl.searchParams.get("path");
+    var pathId = targetUrl.searchParams.get("pathId");
+    $("#current-path-text").val(path);
+    $("#current-path-id").val(pathId);
+    $("#iterator-id").val("0");
+    $("#complete").val("false");
+    loadFileList();
     return false;
   });
 
@@ -218,7 +315,7 @@ $(function() {
 
   // Perform the inital load of files
   $("#current-path-text").val("");
-  $("#current-path-id").val("");
+  $("#current-path-id").val("0");
   $("#iterator-id").val("0");
   $("#complete").val("false");
   loadFileList();

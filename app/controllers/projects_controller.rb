@@ -75,26 +75,13 @@ class ProjectsController < ApplicationController
   def file_explorer
 
     project # force the presenter to be set
-
-    if params["pathId"].to_i > 0
-      path = params["path"]
-      path_id = params["pathId"].to_i
-    else
+    if params["pathId"].to_i == 0
       path = @presenter.project_directory
       path_id = project.mediaflux_id
-    end
-
-    puts "================================"
-    puts "MF session: #{current_user.mediaflux_session}"
-    puts "path: #{path}"
-    puts "path_id: #{path_id}"
-    if params["iteratorId"].to_i == 0
-      puts "iterator: N/A"
     else
-      puts "iterator: #{params['iteratorId']}"
+      path = params["path"]
+      path_id = params["pathId"].to_i
     end
-    puts "================================"
-    # byebug
 
     iterator_id = if params["iteratorId"].to_i == 0
       # setup a new iterator
