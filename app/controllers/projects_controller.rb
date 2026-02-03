@@ -62,8 +62,6 @@ class ProjectsController < ApplicationController
     @files = @file_list[:files]
     @files.sort_by!(&:path)
 
-    @current_file_path = @presenter.project_directory
-
     @project_session = "content"
     respond_to do |format|
       format.html { render }
