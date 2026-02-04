@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe Request, type: :model do
+RSpec.describe NewProjectRequest, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
@@ -95,30 +95,30 @@ RSpec.describe Request, type: :model do
     end
 
     it "requires a title" do
-      request = Request.new(project_title: "")
+      request = NewProjectRequest.new(project_title: "")
       expect(request.valid_title?).to be_falsey
       expect(request.errors[:project_title].join(", ")).to eq("This field is required.")
     end
 
     it "validates the title length" do
-      request = Request.new(project_title: long_title)
+      request = NewProjectRequest.new(project_title: long_title)
       expect(request.valid_title?).to be_falsey
     end
 
     it "does not allow quotes" do
-      request = Request.new(project_title: "abc\"123")
+      request = NewProjectRequest.new(project_title: "abc\"123")
       expect(request.valid_title?).to be_falsey
       expect(request.errors[:project_title].join(", ")).to eq("Cannot include quotes.")
     end
 
     it "validates the title length and quotes" do
-      request = Request.new(project_title: long_title.gsub("vitae", "\"vitae\""))
+      request = NewProjectRequest.new(project_title: long_title.gsub("vitae", "\"vitae\""))
       expect(request.valid_title?).to be_falsey
       expect(request.errors[:project_title].join(", ")).to eq(", Cannot include quotes.")
     end
 
     it "validates a title" do
-      request = Request.new(project_title: "abc")
+      request = NewProjectRequest.new(project_title: "abc")
       expect(request.valid_title?).to be_truthy
     end
   end
@@ -161,7 +161,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_data_sponsor?" do
     it "requires a data_sponsor" do
-      request = Request.new(data_sponsor: "")
+      request = NewProjectRequest.new(data_sponsor: "")
       expect(request.valid_data_sponsor?).to be_falsey
       request.data_sponsor = "abc"
       expect(request.valid_data_sponsor?).to be_falsey
@@ -172,7 +172,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_data_manager?" do
     it "requires a data_manager" do
-      request = Request.new(data_manager: "")
+      request = NewProjectRequest.new(data_manager: "")
       expect(request.valid_data_manager?).to be_falsey
       request.data_manager = "abc"
       expect(request.valid_data_manager?).to be_falsey
@@ -183,7 +183,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_departments?" do
     it "requires departments" do
-      request = Request.new(departments: "")
+      request = NewProjectRequest.new(departments: "")
       expect(request.valid_departments?).to be_falsey
       request.departments = "abc"
       expect(request.valid_departments?).to be_truthy
@@ -209,7 +209,7 @@ RSpec.describe Request, type: :model do
       "semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos."
     end
     it "requires a description" do
-      request = Request.new(description: "")
+      request = NewProjectRequest.new(description: "")
       expect(request.valid_description?).to be_falsey
       expect(request.errors[:description].join(", ")).to eq("This field is required.")
     end
@@ -240,10 +240,10 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_parent_folder?" do
     it "requires a parent_folder" do
-      request = Request.new(parent_folder: "")
+      request = NewProjectRequest.new(parent_folder: "")
       expect(request.valid_parent_folder?).to be_falsey                                   # by default we don't allow empty parent folders
       expect(request.valid_parent_folder?(allow_empty_parent_folder: true)).to be_truthy  # but we can allow it
-      request = Request.new(parent_folder: "abc@")
+      request = NewProjectRequest.new(parent_folder: "abc@")
       expect(request.valid_parent_folder?).to be_falsey
       request.parent_folder = "abc"
       expect(request.valid_parent_folder?).to be_truthy
@@ -252,76 +252,76 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_project_folder?" do
     it "requires a project_folder" do
-      request = Request.new(project_folder: "")
+      request = NewProjectRequest.new(project_folder: "")
       expect(request.valid_project_folder?).to be_falsey
       expect(request.errors[:project_folder].join(", ")).to eq("This field is required.")
     end
 
     it "requires the project_folder to include only alphanumeric, hyphen, and underscore characters" do
-      request = Request.new(project_folder: "abc\"123")
+      request = NewProjectRequest.new(project_folder: "abc\"123")
       expect(request.valid_project_folder?).to be_falsey
       # The error for either the project or parent folder only displays under the parent folder per design specifications
       expect(request.errors[:parent_folder].join(", ")).to eq("Only letters, numbers, dashes, and underscores are allowed.")
     end
 
     it "allows nested paths in the parent_folder and project_folder" do
-      request = Request.new(parent_folder: "abc", project_folder: "123") # abc/123
+      request = NewProjectRequest.new(parent_folder: "abc", project_folder: "123") # abc/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
-      request = Request.new(parent_folder: "abc", project_folder: "def/123") # abc/def/123
+      request = NewProjectRequest.new(parent_folder: "abc", project_folder: "def/123") # abc/def/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
-      request = Request.new(parent_folder: "abc/def", project_folder: "123") # abc/def/123
+      request = NewProjectRequest.new(parent_folder: "abc/def", project_folder: "123") # abc/def/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
 
-      request = Request.new(parent_folder: "abc/def", project_folder: "xyz/123") # abc/def/xyz/123
+      request = NewProjectRequest.new(parent_folder: "abc/def", project_folder: "xyz/123") # abc/def/xyz/123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_truthy
     end
 
     it "prevents empty subfolders in the parent_folder or project_folder" do
-      request = Request.new(parent_folder: "abc//def", project_folder: "123") # abc//def/123
+      request = NewProjectRequest.new(parent_folder: "abc//def", project_folder: "123") # abc//def/123
       expect(request.valid_parent_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Empty subfolders are not allowed")).to be true
 
-      request = Request.new(parent_folder: "abc", project_folder: "xyz//123") # abc/xyz//123
+      request = NewProjectRequest.new(parent_folder: "abc", project_folder: "xyz//123") # abc/xyz//123
       expect(request.valid_parent_folder?).to be_truthy
       expect(request.valid_project_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Empty subfolders are not allowed")).to be true
     end
 
     it "prevent parent_folder or project_folder to start with a forward slash" do
-      request = Request.new(parent_folder: "/abc", project_folder: "123") # /abc/123
+      request = NewProjectRequest.new(parent_folder: "/abc", project_folder: "123") # /abc/123
       expect(request.valid_parent_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Cannot start with a forward slash")).to be true
 
-      request = Request.new(parent_folder: "abc", project_folder: "/123") # abc/123
+      request = NewProjectRequest.new(parent_folder: "abc", project_folder: "/123") # abc/123
       expect(request.valid_project_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Cannot start with a forward slash")).to be true
     end
 
     it "prevent parent_folder or project_folder to end with a forward slash" do
-      request = Request.new(parent_folder: "abc/", project_folder: "123") # abc/123
+      request = NewProjectRequest.new(parent_folder: "abc/", project_folder: "123") # abc/123
       expect(request.valid_parent_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Cannot end with a forward slash")).to be true
 
-      request = Request.new(parent_folder: "abc", project_folder: "123/") # abc/123/
+      request = NewProjectRequest.new(parent_folder: "abc", project_folder: "123/") # abc/123/
       expect(request.valid_project_folder?).to be_falsey
       expect(request.errors[:parent_folder].join(", ").include?("Cannot end with a forward slash")).to be true
     end
 
     it "validates a project_folder" do
-      request = Request.new(project_folder: "abc")
+      request = NewProjectRequest.new(project_folder: "abc")
       expect(request.valid_project_folder?).to be_truthy
     end
   end
 
   describe "#valid_quota?" do
     it "requires a quota to be positive" do
-      request = Request.new(quota: "")
+      request = NewProjectRequest.new(quota: "")
       expect(request.valid_quota?).to be_falsey
       request.quota = "500 GB"
       expect(request.valid_quota?).to be_truthy
@@ -343,7 +343,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_requested_by?" do
     it "requires a requested_by" do
-      request = Request.new(requested_by: "")
+      request = NewProjectRequest.new(requested_by: "")
       expect(request.valid_requested_by?).to be_falsey
       request.requested_by = "abc"
       expect(request.valid_requested_by?).to be_truthy
@@ -352,7 +352,7 @@ RSpec.describe Request, type: :model do
 
   describe "#valid_to_submit?" do
     it "requires all the validations to be true" do
-      request = Request.new
+      request = NewProjectRequest.new
       expect(request.valid_to_submit?).to be_falsey
       request.project_title = "abc"
       expect(request.valid_to_submit?).to be_falsey
@@ -381,68 +381,68 @@ RSpec.describe Request, type: :model do
 
   describe "#requested_quota_size" do
     it "returns part of the quota" do
-      request = Request.new(quota: "23 GB")
+      request = NewProjectRequest.new(quota: "23 GB")
       expect(request.requested_quota_size).to eq(23.0)
     end
 
     it "returns the custom size" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB")
       expect(request.requested_quota_size).to eq(2.0)
     end
   end
 
   describe "#approved_quota_size" do
     it "returns part of the requested quota when the approved is unset" do
-      request = Request.new(quota: "23 GB")
+      request = NewProjectRequest.new(quota: "23 GB")
       expect(request.approved_quota_size).to eq(23.0)
     end
 
     it "returns part of the approved quota" do
-      request = Request.new(quota: "23 GB", approved_quota: "1 TB")
+      request = NewProjectRequest.new(quota: "23 GB", approved_quota: "1 TB")
       expect(request.approved_quota_size).to eq(1.0)
     end
 
     it "returns the custom size of the requested when the approved is unset" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB")
       expect(request.requested_quota_size).to eq(2.0)
     end
 
     it "returns the custom unit of the approved" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
       expect(request.approved_quota_unit).to eq("GB")
     end
   end
 
   describe "#requested_quota_unit" do
     it "returns part of the quota" do
-      request = Request.new(quota: "23 GB")
+      request = NewProjectRequest.new(quota: "23 GB")
       expect(request.requested_quota_unit).to eq("GB")
     end
 
     it "returns the custom unit" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB")
       expect(request.requested_quota_unit).to eq("TB")
     end
   end
 
   describe "#approved_quota_unit" do
     it "returns part of the requested quota when the approved is unset" do
-      request = Request.new(quota: "23 GB")
+      request = NewProjectRequest.new(quota: "23 GB")
       expect(request.approved_quota_unit).to eq("GB")
     end
 
     it "returns part of the approved quota" do
-      request = Request.new(quota: "23 GB", approved_quota: "1 TB")
+      request = NewProjectRequest.new(quota: "23 GB", approved_quota: "1 TB")
       expect(request.approved_quota_unit).to eq("TB")
     end
 
     it "returns the custom unit of the requested when the approved is unset" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB")
       expect(request.approved_quota_unit).to eq("TB")
     end
 
     it "returns the custom unit of the approved" do
-      request = Request.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
       expect(request.approved_quota_unit).to eq("GB")
     end
   end

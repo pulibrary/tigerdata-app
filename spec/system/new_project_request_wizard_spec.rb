@@ -45,7 +45,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Take a moment to review"
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
-        visit "/requests/#{Request.last.id}"
+        visit "/requests/#{NewProjectRequest.last.id}"
         click_on "Approve request"
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
@@ -85,7 +85,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Take a moment to review"
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
-        visit "/requests/#{Request.last.id}"
+        visit "/requests/#{NewProjectRequest.last.id}"
         click_on "Approve request"
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
@@ -315,7 +315,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "can not submit if the request is not valid" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
-        request = Request.create(requested_by: researcher_user.uid)
+        request = NewProjectRequest.create(requested_by: researcher_user.uid)
         sign_in researcher_user
         visit "/new-project/review-submit/#{request.id}"
         expect(page).to have_content "Take a moment to review"
@@ -410,7 +410,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           click_on "Confirm"
           expect(page).to have_content("Your new project request has been saved")
           expect(page).to have_content("A basic Project updated")
-        end.to change { Request.count }.by(1)
+        end.to change { NewProjectRequest.count }.by(1)
       end
 
       it "does not allow save and exit for a request with an empty titles with spaces" do
@@ -428,7 +428,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           click_on "Confirm"
           expect(page).to have_content("Your new project request has been saved")
           expect(page).to have_content("A basic Project updated")
-        end.to change { Request.count }.by(1)
+        end.to change { NewProjectRequest.count }.by(1)
       end
 
       it "does not allow requests to be submitted with duplicate departments." do
@@ -463,7 +463,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
 
-        visit "requests/#{Request.last.id}"
+        visit "requests/#{NewProjectRequest.last.id}"
         expect(page).to have_content("No Duplicate Departments Project")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
       end
@@ -482,7 +482,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           click_on "Confirm"
           expect(page).to have_content("Your new project request has been saved")
           expect(page).to have_content("A basic Project updated")
-        end.to change { Request.count }.by(1)
+        end.to change { NewProjectRequest.count }.by(1)
       end
 
       it "automatically saves and redirects the user to the dashboard when a user clicks the dashboard breadcrumb" do
@@ -495,7 +495,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # Clicking on the breadcrumb saves the user changes
         click_on "Dashboard"
         expect(page).to have_content "Welcome, #{researcher_user.given_name}!"
-        request = Request.last
+        request = NewProjectRequest.last
         expect(request.project_title).to eq("Dashboard Redirect Test")
         expect(page).to have_content("Draft request saved automatically")
       end
@@ -510,7 +510,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # Clicking on the TigerData logo saves the user changes
         find("#logo.header-image").click
         expect(page).to have_content "Welcome, #{researcher_user.given_name}!"
-        request = Request.last
+        request = NewProjectRequest.last
         expect(request.project_title).to eq("Dashboard Redirect Test")
         expect(page).to have_content("Draft request saved automatically")
       end
@@ -526,9 +526,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           # Clicking on the side panel step does not display the flash message
           click_on "Roles and People"
           expect(page).not_to have_content "Draft request saved automatically"
-          request = Request.last
+          request = NewProjectRequest.last
           expect(request.project_title).to eq("Dashboard Redirect Test")
-        end.to change { Request.count }.by(1)
+        end.to change { NewProjectRequest.count }.by(1)
       end
     end
   end

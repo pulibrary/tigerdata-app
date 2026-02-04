@@ -76,12 +76,12 @@ class RequestWizardsController < ApplicationController
 
       @request_model = if params[:request_id] == "0"
                          # on the first page with a brand new request that has not been created
-                         req = Request.create(requested_by: current_user.uid)
+                         req = NewProjectRequest.create(requested_by: current_user.uid)
                          update_sidebar_url(req)
                          req
                        else
                          # on a page when the request has already been created
-                         Request.find(params[:request_id])
+                         NewProjectRequest.find(params[:request_id])
                        end
     end
 
@@ -96,9 +96,9 @@ class RequestWizardsController < ApplicationController
     def set_or_init_request_model
       @princeton_departments = Affiliation.all
       @request_model = if params[:request_id].blank?
-                         Request.new(id: 0, requested_by: current_user.uid)
+                         NewProjectRequest.new(id: 0, requested_by: current_user.uid)
                        else
-                         Request.find(params[:request_id])
+                         NewProjectRequest.find(params[:request_id])
                        end
     end
 

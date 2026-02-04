@@ -83,7 +83,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     before do
       FactoryBot.create :request, requested_by: "tigerdatatester"
       FactoryBot.create :request, requested_by: "tigerdatatester"
-      FactoryBot.create :request, requested_by: "tigerdatatester", state: Request::SUBMITTED
+      FactoryBot.create :request, requested_by: "tigerdatatester", state: NewProjectRequest::SUBMITTED
     end
 
     it "filters draft and submitted requests" do

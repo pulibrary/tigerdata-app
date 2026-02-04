@@ -1,10 +1,10 @@
-# Request Wizards
+# New Project Request Wizards
 
 This system has a pattern for building our request wizards. Currently the new project request wizard is under construction, but the pattern should be the same for all types of project requests in the system.
 
 There should be a folder for the wizard in the controllers and views directory ( app/controllers/new_project_wizard & app/views/new_project_wizard). The controllers folder should contain a controller for each step of the wizard. The views folder should have a view for each step of the wizard. For simplicity we have named the files the same as the step name.
 
-The controllers should all inherit from the superclass RequestWizardsController. This gives you the navigation between steps in the wizard saving the Request as you go.
+The controllers should all inherit from the superclass RequestWizardsController. This gives you the navigation between steps in the wizard saving the NewProjectRequest as you go.
 
 ## Super Class for controllers
 

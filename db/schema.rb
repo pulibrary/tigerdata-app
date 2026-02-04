@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_22_121134) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_28_145539) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,25 +28,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_22_121134) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "projects", force: :cascade do |t|
-    t.integer "mediaflux_id"
-    t.jsonb "metadata_json"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "provenance_events", force: :cascade do |t|
-    t.string "event_type"
-    t.string "event_details"
-    t.string "event_person"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "project_id"
-    t.jsonb "event_note"
-    t.index ["project_id"], name: "index_project_id"
-  end
-
-  create_table "requests", force: :cascade do |t|
+  create_table "new_project_requests", force: :cascade do |t|
     t.string "request_type"
     t.string "request_title"
     t.string "project_title"
@@ -76,6 +58,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_22_121134) do
     t.string "hpc", default: "no"
     t.string "smb", default: "no"
     t.string "globus", default: "no"
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.integer "mediaflux_id"
+    t.jsonb "metadata_json"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "provenance_events", force: :cascade do |t|
+    t.string "event_type"
+    t.string "event_details"
+    t.string "event_person"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "project_id"
+    t.jsonb "event_note"
+    t.index ["project_id"], name: "index_project_id"
   end
 
   create_table "user_requests", force: :cascade do |t|

@@ -7,11 +7,11 @@ class RequestsController < ApplicationController
   def index
     if current_user.eligible_sysadmin?
       add_breadcrumb("Project Requests - All")
-      @draft_requests = Request.where(state: Request::DRAFT).map do |request|
+      @draft_requests = NewProjectRequest.where(state: NewProjectRequest::DRAFT).map do |request|
         request.project_title = "no title set" if request.project_title.blank?
         request
       end
-      @submitted_requests = Request.where(state: Request::SUBMITTED)
+      @submitted_requests = NewProjectRequest.where(state: NewProjectRequest::SUBMITTED)
     else
       error_message = "You do not have access to this page."
       flash[:notice] = error_message
@@ -81,7 +81,7 @@ class RequestsController < ApplicationController
   private
 
     def set_request_model
-      @request_model = Request.find(params[:id])
+      @request_model = NewProjectRequest.find(params[:id])
     end
 
     def set_breadcrumbs

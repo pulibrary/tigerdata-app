@@ -8,24 +8,24 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
 
   describe "#eligible_to_edit?" do
     it "allows the requester to edit a draft request" do
-      request.state = Request::DRAFT
+      request.state = NewProjectRequest::DRAFT
       expect(presenter.eligible_to_edit?(researcher_user)).to be true
     end
 
     it "prevents the requester from editing a submitted request" do
-      request.state = Request::SUBMITTED
+      request.state = NewProjectRequest::SUBMITTED
       expect(presenter.eligible_to_edit?(researcher_user)).to be false
     end
 
     context "when the user is a sysadmin" do
       let(:sysadmin_user) { FactoryBot.create :sysadmin }
       it "allows a sysadmin to edit a draft request" do
-        request.state = Request::DRAFT
+        request.state = NewProjectRequest::DRAFT
         expect(presenter.eligible_to_edit?(sysadmin_user)).to be true
       end
 
       it "allows a sysadmin to edit a submitted request" do
-        request.state = Request::SUBMITTED
+        request.state = NewProjectRequest::SUBMITTED
         expect(presenter.eligible_to_edit?(sysadmin_user)).to be true
       end
     end
@@ -33,17 +33,17 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
     context "when the user is a developer" do
       let(:developer_user) { FactoryBot.create :developer }
       it "allows a developer to edit a draft request" do
-        request.state = Request::DRAFT
+        request.state = NewProjectRequest::DRAFT
         expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
 
       it "allows a developer to edit a submitted request" do
-        request.state = Request::SUBMITTED
+        request.state = NewProjectRequest::SUBMITTED
         expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
 
       it "allows a developer to edit a draft request if they are the requester" do
-        request.state = Request::DRAFT
+        request.state = NewProjectRequest::DRAFT
         request.requested_by = developer_user.uid
         expect(presenter.eligible_to_edit?(developer_user)).to be true
       end
@@ -54,18 +54,18 @@ describe RequestPresenter, type: :model, connect_to_mediaflux: false do
         end
 
         it "prevents a developer to edit a draft request" do
-          request.state = Request::DRAFT
+          request.state = NewProjectRequest::DRAFT
           expect(presenter.eligible_to_edit?(developer_user)).to be false
         end
 
         it "allows a developer to edit a draft request if they are the requester" do
-          request.state = Request::DRAFT
+          request.state = NewProjectRequest::DRAFT
           request.requested_by = developer_user.uid
           expect(presenter.eligible_to_edit?(developer_user)).to be true
         end
 
         it "prevents a developer to edit a submitted request" do
-          request.state = Request::SUBMITTED
+          request.state = NewProjectRequest::SUBMITTED
           expect(presenter.eligible_to_edit?(developer_user)).to be false
         end
       end

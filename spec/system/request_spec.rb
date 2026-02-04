@@ -17,9 +17,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
     let(:developer_user) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
     let!(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:request) { Request.create(request_title: "abc123", project_title: "project", requested_by: sponsor_and_data_manager.uid, project_folder: "folder123") }
+    let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", requested_by: sponsor_and_data_manager.uid, project_folder: "folder123") }
     let(:full_request) do
-      Request.create(
+      NewProjectRequest.create(
         request_type: nil,
         request_title: nil,
         project_title: "Test Project Title",
@@ -42,13 +42,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       )
     end
     let(:submitted_request) do
-      full_request.state = Request::SUBMITTED
+      full_request.state = NewProjectRequest::SUBMITTED
       full_request.save
       full_request
     end
 
     let(:custom_quota_request) do
-      Request.create(
+      NewProjectRequest.create(
         request_type: nil,
         request_title: nil,
         project_title: "Custom Quota Project",
@@ -71,12 +71,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       )
     end
     let(:bluemountain) do
-      Request.create(
+      NewProjectRequest.create(
         request_type: nil,
         request_title: nil,
         project_title: "Blue Mountain",
         created_at: Time.current.in_time_zone("America/New_York").iso8601,
-        state: Request::SUBMITTED,
+        state: NewProjectRequest::SUBMITTED,
         data_sponsor: sponsor_user.uid,
         data_manager: manager_user.uid,
         departments:
@@ -95,7 +95,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
     # rubocop:disable Layout/LineLength
     let(:title_too_long) do
-      Request.create(
+      NewProjectRequest.create(
         request_type: nil,
         request_title: nil,
         project_title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tempus tellus sed orci placerat varius. Cras eu pretium justo. Suspendisse accumsan, libero nec placerat pharetra, nunc mi sollicitudin elit, nec mattis nisi tortor a ipsum.",
@@ -118,7 +118,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       )
     end
     let(:description_too_long) do
-      Request.create(
+      NewProjectRequest.create(
         request_type: nil,
         request_title: nil,
         project_title: "Description Too Long",
@@ -142,7 +142,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
     # rubocop:enable Layout/LineLength
     let(:invalid_request) do
-      Request.create
+      NewProjectRequest.create
     end
 
     context "user without a role" do
@@ -234,7 +234,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
-        full_request.state = Request::SUBMITTED
+        full_request.state = NewProjectRequest::SUBMITTED
         full_request.save
         visit "#{requests_path}/#{full_request.id}"
         expect(page).to have_content("Approve request")
@@ -308,7 +308,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "shows the custom quota on the request review page", integration: true do
         sign_in sysadmin_user
-        custom_quota_request.state = Request::SUBMITTED
+        custom_quota_request.state = NewProjectRequest::SUBMITTED
         custom_quota_request.save
         visit "#{requests_path}/#{custom_quota_request.id}"
         expect(custom_quota_request.quota).to eq("custom")
@@ -317,7 +317,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
       it "shows the approved quota on the request review page" do
         sign_in sysadmin_user
-        submitted_request.state = Request::SUBMITTED
+        submitted_request.state = NewProjectRequest::SUBMITTED
         submitted_request.approved_quota = "300 TB"
         submitted_request.save
         visit "#{requests_path}/#{submitted_request.id}"
@@ -357,7 +357,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
         expect(response).to redirect_to(request_submit_path)
         sign_in sysadmin_user
-        visit "/requests/#{Request.last.id}"
+        visit "/requests/#{NewProjectRequest.last.id}"
         expect(page).to have_content("Approve request")
       end
     end

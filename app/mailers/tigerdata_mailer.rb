@@ -23,7 +23,7 @@ class TigerdataMailer < ApplicationMailer
   private
 
     def request
-      @request ||= Request.find_by(id: @request_id)
+      @request ||= NewProjectRequest.find_by(id: @request_id)
     end
 
     def project
