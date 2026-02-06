@@ -73,8 +73,8 @@ class ProjectsController < ApplicationController
   # GET "projects/:id/file-explorer"
   # Used via an AJAX call to retrieve the list of files for a given path within a project
   def file_explorer
-
     project # force the presenter to be set
+
     if params["pathId"].to_i == 0
       path = @presenter.project_directory
       path_id = project.mediaflux_id
@@ -90,17 +90,21 @@ class ProjectsController < ApplicationController
       # use the existing iterator
       params["iteratorId"].to_i
     end
-    mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
 
-    data = {
-      fileListUrl: project_file_explorer_url,
-      currentPath: path,
-      currentPathId: path_id,
-      iteratorId: iterator_id,
-      files: mediaflux_data[:files],
-      complete: mediaflux_data[:complete]
-    }
-    render json: data
+    mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
+    if mediaflux_data[:error]
+      render json: {}, status: 500
+    else
+      data = {
+        fileListUrl: project_file_explorer_url,
+        currentPath: path,
+        currentPathId: path_id,
+        iteratorId: iterator_id,
+        files: mediaflux_data[:files],
+        complete: mediaflux_data[:complete]
+      }
+      render json: data
+    end
   end
 
   # GET "projects/:id/:id-mf"
