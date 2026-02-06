@@ -1,7 +1,7 @@
 <div styleclass="content-info">
   <div id="pathBreadcrumbs"></div>
 </div>
-<div class="project-file-explorer">
+<div id="project-file-explorer" class="project-file-explorer">
   <div class="left-panel">
     <table id="file_explorer">
       <thead>
@@ -26,11 +26,12 @@
       <p>Click <a href="<%= project_url %>?explorer=true">here</a> to reload the page.</p>
     </div>
   </div>
+
   <div class="right-panel">
-    <p>Filename: <span id="right-panel-filename">&nbsp;</span></p>
-    <p>Size: <span id="right-panel-size">&nbsp;</span></p>
-    <p>Last updated: <span id="right-panel-last-updated">&nbsp;</span></p>
-    <p>Full Path: <span id="right-panel-fullname">&nbsp;</span></p>
+    <p><b>Filename:</b><br/><span id="right-panel-filename">&nbsp;</span></p>
+    <p><b>Size:</b><br/><span id="right-panel-size">&nbsp;</span></p>
+    <p><b>Last updated:</b><br/><span id="right-panel-last-updated">&nbsp;</span></p>
+    <p><b>Full Path:</b><br/><span id="right-panel-fullname">&nbsp;</span></p>
   </div>
 </div>
 
@@ -177,11 +178,6 @@ $(function() {
     fileDetails("", "", "", "");
     hideError();
 
-    // Clear the file list if we are drilling into a new folder
-    if (iteratorId === 0) {
-        table.empty();
-    }
-
     showSpinner();
 
     $.ajax({
@@ -197,9 +193,10 @@ $(function() {
       $("#iterator-id").val(data.iteratorId);
       $("#complete").val(data.complete);
 
+      // Update the path breadcrumbs
       addPathToBreadcrumbs(data.currentPath, data.currentPathId);
+      renderPathBreadcrums(data.fileListUrl, data.currentPath);
 
-      // Disable the spinner
       hideSpinner();
       if (data.complete === true) {
         $("#load-more").addClass("hidden-element");
@@ -207,6 +204,13 @@ $(function() {
         $("#load-more").removeClass("hidden-element");
       }
 
+      // Clear the file list if we are showing a new folder
+      // (i.e. we are not re-using an iterator)
+      if (iteratorId === 0) {
+        table.empty();
+      }
+
+      // Render the files and folders
       for(i = 0; i < data.files.length; i++) {
         file = data.files[i];
         if (file.collection === true) {
@@ -249,9 +253,6 @@ $(function() {
       if (firstFile !== null) {
         $(firstFile).click();
       }
-
-      // Update the path breadcrumbs
-      renderPathBreadcrums(data.fileListUrl, data.currentPath);
     })
     .fail(function(jqXHR, status, message) {
       showError(status, message);

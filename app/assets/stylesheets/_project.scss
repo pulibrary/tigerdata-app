@@ -58,16 +58,23 @@
 }
 
 /* File Explorer Section */
-.project-file-explorer {
+#project-file-explorer {
+  margin-top: 5px;
+  margin-bottom: 10px;
+
   display: flex;
 
-   .left-panel {
-    flex: 70%;
+  .left-panel {
+    flex: 60%;
   }
 
   .right-panel {
-    flex: 30%;
-    background-color:rgb(230, 238, 248)
+    flex: 40%;
+    background-color:rgb(230, 238, 248);
+    border-width: 1px;
+    border-color: black;
+    border-style: dotted;
+    padding: 5px;
   }
 
   #error-panel {
@@ -105,15 +112,14 @@
     text-align: right;
   }
 
-  .debug-info {
-    border-top: #e3e3fa 10px solid;
-    margin-top: 30px;
-  }
-
   .active-row {
     background-color:rgb(230, 238, 248);
     border-width: 1px;
   }
+}
+
+.debug-info {
+  border-top: #e3e3fa 10px solid;
 }
 
 .content-info {
