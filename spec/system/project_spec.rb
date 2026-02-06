@@ -78,10 +78,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           sleep 1
           click_on "Yes"
           expect(page).to have_content("File list for \"#{approved_project.title}\" is being generated in the background.")
-          expect(sponsor_and_data_manager_user.user_requests.count).to eq(1)
-          expect(sponsor_and_data_manager_user.user_requests.first.job_id).not_to be nil
-          expect(sponsor_and_data_manager_user.user_requests.first.state).to eq FileInventoryRequest::PENDING
-          expect(sponsor_and_data_manager_user.user_requests.first.type).to eq "FileInventoryRequest"
+          expect(sponsor_and_data_manager_user.inventory_requests.count).to eq(1)
+          expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
+          expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
+          expect(sponsor_and_data_manager_user.inventory_requests.first.type).to eq "FileInventoryRequest"
         end
       end
 

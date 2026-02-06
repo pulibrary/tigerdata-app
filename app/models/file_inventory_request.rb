@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class FileInventoryRequest < UserRequest
+class FileInventoryRequest < InventoryRequest
   def output_file
     request_details["output_file"]
   end

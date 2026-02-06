@@ -52,7 +52,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
 
-    @latest_completed_download = current_user.user_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
+    @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
     @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
 
@@ -105,12 +105,12 @@ class ProjectsController < ApplicationController
 
   def file_list_download
     job_id = params[:job_id]
-    user_request = FileInventoryRequest.where(job_id:job_id).first
-    if user_request.nil?
+    file_inventory_request = FileInventoryRequest.where(job_id:job_id).first
+    if file_inventory_request.nil?
       # TODO: handle error
       redirect_to "/"
     else
-      filename = user_request.output_file
+      filename = file_inventory_request.output_file
       send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
     end
   end

@@ -100,7 +100,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
         approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
-        FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
+        FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
                                     request_details: { project_title: approved_project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
         sign_in current_user
         visit dashboard_path

@@ -32,7 +32,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
     context "when downloads exist" do
       before do
-        FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: UserRequest::PENDING,
+        FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: InventoryRequest::PENDING,
                                      request_details: { project_title: project.title }, completion_time: 1.day.ago)
       end
 
@@ -43,7 +43,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
     context "when download in progress exist" do
       before do
-        FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: UserRequest::PENDING,
+        FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: InventoryRequest::PENDING,
                                      request_details: { project_title: project.title }, completion_time: nil)
       end
 
