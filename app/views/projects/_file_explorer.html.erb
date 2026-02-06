@@ -17,6 +17,21 @@
     width: 90%;
   }
 
+  .name-header {
+    width: 400px;
+    padding-left: 10px;
+  }
+
+  .size-header {
+    width: 120px;
+    text-align: right;
+  }
+
+  .date-header {
+    width: 200px;
+    text-align: right;
+  }
+
   .name-column {
     padding-left: 10px;
     padding-right: 20px;
@@ -24,7 +39,12 @@
 
   .size-column {
     padding-left: 10px;
-    padding-right: 20px;
+    text-align: right;
+  }
+
+  .date-column {
+    width: 200px;
+    text-align: right;
   }
 
   .debug-info {
@@ -33,7 +53,8 @@
   }
 
   .active-row {
-    background-color:rgb(230, 238, 248)
+    background-color:rgb(230, 238, 248);
+    border-width: 1px;
   }
 
   .content-info {
@@ -50,9 +71,9 @@
       <thead>
         <tr class="content heading">
           <th>&nbsp;</th> <!-- icon -->
-          <th>name</th>
-          <th>size</th>
-          <th>last updated</th>
+          <th class="name-header">name</th>
+          <th class="size-header">size</th>
+          <th class="date-header">last updated</th>
         </tr>
       </thead>
       <tbody id="file_explorer_body">
@@ -265,7 +286,7 @@ $(function() {
         } else {
           // It's a file
           rowClass = "file-explorer-file";
-          iconColumn = $('<i>').addClass("bi bi-file");
+          iconColumn = $('<i>').addClass("bi bi-file-earmark-text");
           nameColumn = $('<span>')
             .text(file.name);
           sizeColumn = $('<span>').text(file.size);
