@@ -6,7 +6,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :rememberable, :omniauthable
 
-  has_many :user_requests, dependent: :destroy
+  has_many :inventory_requests, dependent: :destroy
 
   paginates_per 100
 
@@ -167,7 +167,7 @@ class User < ApplicationRecord
   # Fetches the most recent download jobs for the user
   def latest_downloads(limit: 10)
     @latest_downloads ||= begin
-                            downloads = UserRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
+                            downloads = InventoryRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
                             downloads.map{|download| UserRequestPresenter.new(download)}
                           end
   end

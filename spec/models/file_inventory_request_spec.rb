@@ -10,7 +10,7 @@ RSpec.describe FileInventoryRequest, type: :model do
   let(:project) { FactoryBot.create(:project) }
   let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
-  let(:state) { UserRequest::PENDING }
+  let(:state) { InventoryRequest::PENDING }
   let(:request_details) { { output_file: "filename" } }
 
   describe "#type" do
