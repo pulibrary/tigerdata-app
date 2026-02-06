@@ -1,79 +1,15 @@
-<style>
-  .project-files {
-    display: flex;
-  }
-
-  .left-panel {
-    flex: 70%;
-  }
-
-  .right-panel {
-    flex: 30%;
-    background-color:rgb(230, 238, 248)
-  }
-
-  #error-panel {
-    background-color: #fdcaca;
-    width: 90%;
-  }
-
-  .name-header {
-    width: 400px;
-    padding-left: 10px;
-  }
-
-  .size-header {
-    width: 120px;
-    text-align: right;
-  }
-
-  .date-header {
-    width: 200px;
-    text-align: right;
-  }
-
-  .name-column {
-    padding-left: 10px;
-    padding-right: 20px;
-  }
-
-  .size-column {
-    padding-left: 10px;
-    text-align: right;
-  }
-
-  .date-column {
-    width: 200px;
-    text-align: right;
-  }
-
-  .debug-info {
-    border-top: #e3e3fa 10px solid;
-    margin-top: 30px;
-  }
-
-  .active-row {
-    background-color:rgb(230, 238, 248);
-    border-width: 1px;
-  }
-
-  .content-info {
-    background-color: unset;
-  }
-</style>
-
-<div class="content-info">
+<div styleclass="content-info">
   <div id="pathBreadcrumbs"></div>
 </div>
-<div class="project-files">
+<div class="project-file-explorer">
   <div class="left-panel">
     <table id="file_explorer">
       <thead>
         <tr class="content heading">
           <th>&nbsp;</th> <!-- icon -->
-          <th class="name-header">name</th>
-          <th class="size-header">size</th>
-          <th class="date-header">last updated</th>
+          <th class="name-header">Name</th>
+          <th class="size-header">Size</th>
+          <th class="date-header">Last Updated</th>
         </tr>
       </thead>
       <tbody id="file_explorer_body">

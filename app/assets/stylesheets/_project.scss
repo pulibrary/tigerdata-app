@@ -57,6 +57,65 @@
   --bs-border-color: #717171;
 }
 
+/* File Explorer Section */
+.project-file-explorer {
+  display: flex;
+
+   .left-panel {
+    flex: 70%;
+  }
+
+  .right-panel {
+    flex: 30%;
+    background-color:rgb(230, 238, 248)
+  }
+
+  #error-panel {
+    background-color: #fdcaca;
+    width: 90%;
+  }
+
+  .name-header {
+    width: 400px;
+    padding-left: 10px;
+  }
+
+  .size-header {
+    width: 120px;
+    text-align: right;
+  }
+
+  .date-header {
+    width: 200px;
+    text-align: right;
+  }
+
+  .name-column {
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+
+  .size-column {
+    padding-left: 10px;
+    text-align: right;
+  }
+
+  .date-column {
+    width: 200px;
+    text-align: right;
+  }
+
+  .debug-info {
+    border-top: #e3e3fa 10px solid;
+    margin-top: 30px;
+  }
+
+  .active-row {
+    background-color:rgb(230, 238, 248);
+    border-width: 1px;
+  }
+}
+
 .content-info {
   color: $gray-100;
   background-color: $status-info;
