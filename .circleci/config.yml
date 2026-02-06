@@ -273,8 +273,6 @@ jobs:
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
-          path: coverage
-      - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload
 
