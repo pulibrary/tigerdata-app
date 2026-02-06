@@ -2,14 +2,14 @@
 require "rails_helper"
 require "json"
 
-describe UserRequest, type: :model do
+describe InventoryRequest, type: :model do
   let(:user_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state, request_details: request_details) }
 
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create(:project) }
   let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
-  let(:state) { UserRequest::PENDING }
+  let(:state) { InventoryRequest::PENDING }
   let(:request_details) { { temp_key: "temp_val" } }
 
   describe "#user_id" do
@@ -48,27 +48,27 @@ describe UserRequest, type: :model do
     end
 
     it "can be pending" do
-      user_request.state = UserRequest::PENDING
+      user_request.state = InventoryRequest::PENDING
       user_request.save
-      expect(user_request.state).to eq(UserRequest::PENDING)
+      expect(user_request.state).to eq(InventoryRequest::PENDING)
     end
 
     it "can be completed" do
-      user_request.state = UserRequest::COMPLETED
+      user_request.state = InventoryRequest::COMPLETED
       user_request.save
-      expect(user_request.state).to eq(UserRequest::COMPLETED)
+      expect(user_request.state).to eq(InventoryRequest::COMPLETED)
     end
 
     it "can be stale" do
-      user_request.state = UserRequest::STALE
+      user_request.state = InventoryRequest::STALE
       user_request.save
-      expect(user_request.state).to eq(UserRequest::STALE)
+      expect(user_request.state).to eq(InventoryRequest::STALE)
     end
 
     it "can be failed" do
-      user_request.state = UserRequest::FAILED
+      user_request.state = InventoryRequest::FAILED
       expect(user_request.save).to be(true)
-      expect(user_request.state).to eq(UserRequest::FAILED)
+      expect(user_request.state).to eq(InventoryRequest::FAILED)
     end
 
     it "has an error if set to a non-standard value" do
@@ -87,7 +87,7 @@ describe UserRequest, type: :model do
   describe "#complete?" do
     it "returns true if the current state is completed" do
       expect(user_request.complete?).to be_falsey
-      user_request.update(state: UserRequest::COMPLETED)
+      user_request.update(state: InventoryRequest::COMPLETED)
       expect(user_request.complete?).to be_truthy
     end
   end

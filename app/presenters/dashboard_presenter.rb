@@ -30,7 +30,7 @@ class DashboardPresenter
   end
 
   def my_inventory_requests
-    @my_inventory_requests ||= current_user.user_requests.where(type: "FileInventoryRequest")
+    @my_inventory_requests ||= current_user.inventory_requests.where(type: "FileInventoryRequest")
   end
 
   def my_draft_requests

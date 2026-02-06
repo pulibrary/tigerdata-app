@@ -13,9 +13,9 @@ class UserRequestPresenter
   end
 
   def partial_name
-    if user_request.state == UserRequest::COMPLETED
+    if user_request.state == InventoryRequest::COMPLETED
       "download_item"
-    elsif user_request.state == UserRequest::FAILED
+    elsif user_request.state == InventoryRequest::FAILED
       "failed_item"
     end
   end

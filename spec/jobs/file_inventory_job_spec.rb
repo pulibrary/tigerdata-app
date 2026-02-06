@@ -19,7 +19,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
       end
       expect(FileInventoryRequest.count).to be 1
       file_inventory_request = FileInventoryRequest.first
-      expect(file_inventory_request.state).to eq UserRequest::COMPLETED
+      expect(file_inventory_request.state).to eq InventoryRequest::COMPLETED
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
       FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
       expect(FileInventoryRequest.count).to be 1
       file_inventory_request = FileInventoryRequest.first
-      expect(file_inventory_request.state).to eq UserRequest::COMPLETED
+      expect(file_inventory_request.state).to eq InventoryRequest::COMPLETED
     end
 
     it "saves the output to a file" do

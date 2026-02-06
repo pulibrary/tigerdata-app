@@ -3,7 +3,7 @@ class FileInventoryJob < ApplicationJob
   # Create the FileInventoryRequest as soon as the job is created, not when it is performed
   before_enqueue do |job|
     project = Project.find(job.arguments.first[:project_id])
-    FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: UserRequest::PENDING,
+    FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: InventoryRequest::PENDING,
                                 request_details: { project_title: project.title })
   end
 
@@ -13,7 +13,7 @@ class FileInventoryJob < ApplicationJob
     project = Project.find(job.arguments.first[:project_id])
     inventory_request = FileInventoryRequest.find_by(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id)
     if inventory_request.blank?
-      FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: UserRequest::PENDING,
+      FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: InventoryRequest::PENDING,
                                   request_details: { project_title: project.title })
     end
   end
@@ -57,7 +57,7 @@ class FileInventoryJob < ApplicationJob
     def fail_inventory_request(user_id:, project:, job_id: )
       inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
       request_details = { project_title: project.title, error: "Mediaflux session expired" }
-      inventory_request.update(state: UserRequest::FAILED, request_details: request_details,
+      inventory_request.update(state: InventoryRequest::FAILED, request_details: request_details,
                                 completion_time: Time.current.in_time_zone("America/New_York"))
       inventory_request
     rescue ActiveRecord::StatementInvalid
@@ -70,7 +70,7 @@ class FileInventoryJob < ApplicationJob
       Rails.logger.info "Export - updating inventory request details for project #{project.id}"
       inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
       request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
-      inventory_request.update(state: UserRequest::COMPLETED, request_details: request_details,
+      inventory_request.update(state: InventoryRequest::COMPLETED, request_details: request_details,
                                 completion_time: Time.current.in_time_zone("America/New_York"))
       Rails.logger.info "Export - updated inventory request details for project #{project.id}"
       inventory_request

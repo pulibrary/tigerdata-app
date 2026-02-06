@@ -10,7 +10,7 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
       user_id: researcher_user.id,
       project_id: project.id,
       job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
-      state: UserRequest::COMPLETED,
+      state: InventoryRequest::COMPLETED,
       request_details: {
         project_title: project.title,
         file_size: 1_000_000
@@ -65,7 +65,7 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
 
     context "a failed user request" do
       let(:user_request) do
-        FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: UserRequest::FAILED,
+        FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
                                     request_details: { project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
       end
       it "returns 'failed_item'" do
