@@ -195,6 +195,28 @@ class ProjectShowPresenter
     storage_value
   end
 
+  def quota_percentage_calculation(storage_usage)
+    storage_capacity = quota_breakdown[:quota_allocation]
+    return 0 if storage_capacity.zero?
+    return 0 if storage_usage == 0
+    storage_value = (storage_usage.to_f / storage_capacity.to_f) * 100
+    minimum_storage_used = true if storage_value > 0 && storage_value < 1
+    storage_value = 1 if minimum_storage_used
+    storage_value
+  end
+
+  def quota_percentage_files
+    quota_percentage_calculation(quota_breakdown[:project_files])
+  end
+
+  def quota_percentage_recycle_bin
+    quota_percentage_calculation(quota_breakdown[:recycle_bin])
+  end
+
+  def quota_percentage_old_versions
+    quota_percentage_calculation(quota_breakdown[:old_versions])
+  end
+
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
     data_sponsor&.uid == user.uid || data_manager&.uid == user.uid || data_users.map(&:uid).include?(user.uid)
