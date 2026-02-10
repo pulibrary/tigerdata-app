@@ -56,7 +56,9 @@
           </div>
           <div class="row my-2">
             <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: <%= @presenter.quota_percentage(session_id: current_user.mediaflux_session) %>%"></div>
+              <span class="progress-bar" style="width: <%= @presenter.quota_percentage_old_versions %>%"></span>
+              <span class="progress-bar2" style="background-color: #00E775; width: <%= @presenter.quota_percentage_files %>%"></span>
+              <span class="progress-bar3" style="background-color: #717171; width: <%= @presenter.quota_percentage_recycle_bin %>%"></span>
             </div>
           </div>
           <div class="row my-2">
