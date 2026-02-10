@@ -54,8 +54,8 @@
                                  <% if current_user.latest_downloads.count == 0 %>
                                  <div class="download-item">No downloads available</div>
                                  <% else %>
-                                   <% current_user.latest_downloads.each do |user_request| %>
-                                     <%= render partial: user_request.partial_name, locals: { user_request: } %>
+                                   <% current_user.latest_downloads.each do |inventory_request_presenter| %>
+                                     <%= render partial: inventory_request_presenter.partial_name, locals: { inventory_request_presenter: } %>
                                    <% end %>
                                  <% end %>
                               </div>
