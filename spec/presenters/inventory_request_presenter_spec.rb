@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
-  subject(:presenter) { described_class.new(user_request) }
+describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
+  subject(:presenter) { described_class.new(inventory_request_request) }
   let(:researcher_user) { FactoryBot.create :user, uid: "tigerdatatester" }
 
-  let(:user_request) do
+  let(:inventory_request_request) do
     FileInventoryRequest.create(
       user_id: researcher_user.id,
       project_id: project.id,
@@ -64,7 +64,7 @@ describe UserRequestPresenter, type: :model, connect_to_mediaflux: false do
     end
 
     context "a failed user request" do
-      let(:user_request) do
+      let(:inventory_request_request) do
         FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
                                     request_details: { project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
       end
