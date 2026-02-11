@@ -355,7 +355,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the approve button on a single request view for developers" do
         sign_in developer_user
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
-        expect(response).to redirect_to(request_submit_path)
+        expect(response).to redirect_to(new_project_request_submit_path)
         sign_in sysadmin_user
         visit "/requests/#{NewProjectRequest.last.id}"
         expect(page).to have_content("Approve request")

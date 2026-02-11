@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-class RequestSubmitController < ApplicationController
+class NewProjectRequestSubmitController < ApplicationController
   before_action :set_breadcrumbs
 
-  # GET /request_submit
+  # GET /new_project_request_submit
   def index; end
 
   private
