@@ -133,3 +133,6 @@ group :test do
 end
 
 gem "yard", "~> 0.9.36", group: :development
+
+# https://github.com/lostisland/faraday/security/advisories/GHSA-33mh-2634-fwr2
+gem "faraday", ">= 2.14.1"
