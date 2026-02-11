@@ -56,9 +56,9 @@
           </div>
           <div class="row my-2">
             <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
-              <span class="progress-bar" title="<%= @presenter.quota_breakdown[:old_versions_human] %>" style="width: <%= @presenter.quota_percentage_old_versions %>%"></span>
-              <span class="progress-bar" title="<%= @presenter.quota_breakdown[:project_files_human] %>" style="background-color: #00E775; width: <%= @presenter.quota_percentage_files %>%"></span>
-              <span class="progress-bar" title="<%= @presenter.quota_breakdown[:recycle_bin_human] %>" style="background-color: #717171; width: <%= @presenter.quota_percentage_recycle_bin %>%"></span>
+              <span class="progress-bar progress-bar-old-versions" title="Old versions: <%= @presenter.quota_breakdown[:old_versions_human] %>" style="width: <%= @presenter.quota_percentage_old_versions %>%"></span>
+              <span class="progress-bar progress-bar-project-files" title="Project files: <%= @presenter.quota_breakdown[:project_files_human] %>" style="width: <%= @presenter.quota_percentage_files %>%"></span>
+              <span class="progress-bar progress-bar-recycle-bin" title="Recycle bin: <%= @presenter.quota_breakdown[:recycle_bin_human] %>" style="width: <%= @presenter.quota_percentage_recycle_bin %>%"></span>
             </div>
           </div>
           <div class="row my-2">
