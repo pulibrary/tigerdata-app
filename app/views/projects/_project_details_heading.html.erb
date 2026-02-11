@@ -50,7 +50,7 @@
             </div>
             <div class="col-6 text-end">
               <% if @presenter.can_increase_quota?(user: current_user) %>
-                <%= link_to "Details", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
+                <%= "Details" %>
               <% end %>
             </div>
           </div>
