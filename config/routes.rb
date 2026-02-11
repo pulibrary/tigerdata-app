@@ -46,8 +46,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get "admin_edit_request/:id", to: "edit_requests#edit", as: :admin_edit_request
-  put "admin_edit_request/:id", to: "edit_requests#update"
+  get "edit_new_project_request/:id", to: "edit_new_project_request#edit", as: :edit_new_project_request
+  put "edit_new_project_request/:id", to: "edit_new_project_request#update"
 
   namespace :api do
     namespace :v0 do
