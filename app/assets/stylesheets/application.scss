@@ -222,3 +222,15 @@ h6 {
   align-items: center;
   gap: 4px;
 }
+
+.progress-bar-recycle-bin {
+  background-color: $progress-bar-bg-recycle-bin;
+}
+
+.progress-bar-project-files {
+  background-color: $progress-bar-bg-project-files;
+}
+
+.progress-bar-old-versions {
+  background-color: $progress-bar-bg-old-versions;
+}

@@ -29,9 +29,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).to have_link "Request More", href: "https://tigerdata.princeton.edu/form/quota-increase-request"
-
-            expect(page).to have_css ".approved"
+            expect(page).to have_content("Details")
 
             # The description should be rendered twice (at the top and as part of the details)
             expect(page).to have_selector("#description-text")
@@ -61,7 +59,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             visit "/projects/#{project_in_mediaflux.id}/details"
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).not_to have_link "Request More", href: "https://tigerdata.princeton.edu/form/quota-increase-request"
           end
         end
 

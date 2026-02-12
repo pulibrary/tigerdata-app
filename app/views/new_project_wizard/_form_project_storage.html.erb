@@ -71,10 +71,10 @@
         <div class="estimated-files-dropdown">
             <div data-label?="false" data-state="Default" class="estimated-files-dropdown-subcontainer">
             <select name="request[number_of_files]" id="number_of_files" class="estimated-files-inline-subcontainer">
-              <option class="storage-form-field-text" <%= @request_model.number_of_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
-              <option class="storage-form-field-text"  <%= @request_model.number_of_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
-              <option class="storage-form-field-text" <%= @request_model.number_of_files == "Between 100,000 and 1,000,000" ? "selected" : "" %> >Between 100,000 and 1,000,000</option>
-              <option class="storage-form-field-text" <%= @request_model.number_of_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
+              <option class="storage-form-field-text" <%= @new_project_request.number_of_files == "Less than 10,000" ? "selected" : "" %> >Less than 10,000</option>
+              <option class="storage-form-field-text"  <%= @new_project_request.number_of_files == "Between 10,000 and 100,000" ? "selected" : "" %> >Between 10,000 and 100,000</option>
+              <option class="storage-form-field-text" <%= @new_project_request.number_of_files == "Between 100,000 and 1,000,000" ? "selected" : "" %> >Between 100,000 and 1,000,000</option>
+              <option class="storage-form-field-text" <%= @new_project_request.number_of_files == "More than 1,000,000" ? "selected" : "" %> >More than 1,000,000</option>
             </select>
             </div>
         </div>
@@ -101,19 +101,19 @@
                         <div class="storage-option-radio-button-container">
                             <label for="hpc_yes" class="storage-form-field-text">Yes</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="hpc_yes" name="request[hpc]" value="yes" <%= @request_model.hpc == "yes" ? "checked" : "" %> >
+                              <input type="radio" id="hpc_yes" name="request[hpc]" value="yes" <%= @new_project_request.hpc == "yes" ? "checked" : "" %> >
                             </div>
                         </div>
                         <div class="storage-option-radio-button-container">
                             <label for="hpc_no" class="storage-form-field-text">No</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @request_model.hpc == "no" ? "checked" : "" %> >
+                              <input type="radio" id="hpc_no" name="request[hpc]" value="no" <%= @new_project_request.hpc == "no" ? "checked" : "" %> >
                             </div>
                           </div>
                         <div class="storage-option-radio-button-container">
                             <label for="hpc_maybe" class="storage-form-field-text">Maybe</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                                <input type="radio" id="hpc_maybe" name="request[hpc]" value="maybe" <%= @request_model.hpc == "maybe" ? "checked" : "" %>>
+                                <input type="radio" id="hpc_maybe" name="request[hpc]" value="maybe" <%= @new_project_request.hpc == "maybe" ? "checked" : "" %>>
                             </div>
                         </div>
                     </div>
@@ -129,19 +129,19 @@
                         <div class="storage-option-radio-button-container">
                             <label for="network_yes" class="storage-form-field-text">Yes</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                                <input type="radio" id="network_yes" name="request[smb]" value="yes" <%= @request_model.smb == "yes" ? "checked" : "" %> >
+                                <input type="radio" id="network_yes" name="request[smb]" value="yes" <%= @new_project_request.smb == "yes" ? "checked" : "" %> >
                             </div>
                         </div>
                         <div class="storage-option-radio-button-container">
                             <label for="network_no" class="storage-form-field-text">No</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                                <input type="radio" id="network_no" name="request[smb]" value="no" <%= @request_model.smb == "no" ? "checked" : "" %> >
+                                <input type="radio" id="network_no" name="request[smb]" value="no" <%= @new_project_request.smb == "no" ? "checked" : "" %> >
                             </div>
                         </div>
                         <div class="storage-option-radio-button-container">
                             <label for="network_maybe" class="storage-form-field-text">Maybe</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                                <input type="radio" id="network_maybe" name="request[smb]" value="maybe" <%= @request_model.smb == "maybe" ? "checked" : "" %> >
+                                <input type="radio" id="network_maybe" name="request[smb]" value="maybe" <%= @new_project_request.smb == "maybe" ? "checked" : "" %> >
                             </div>
                         </div>
                     </div>
@@ -160,19 +160,19 @@
                         <div class="storage-option-radio-button-container">
                             <label for="globus_yes" class="storage-form-field-text">Yes</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @request_model.globus == "yes" ? "checked" : "" %> >
+                              <input type="radio" id="globus_yes" name="request[globus]" value="yes" <%= @new_project_request.globus == "yes" ? "checked" : "" %> >
                             </div>
                         </div>
                         <div class="storage-option-radio-button-container">
                             <label for="globus_no" class="storage-form-field-text">No</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @request_model.globus == "no" ? "checked" : "" %> >
+                              <input type="radio" id="globus_no" name="request[globus]" value="no" <%= @new_project_request.globus == "no" ? "checked" : "" %> >
                             </div>
                         </div>
                         <div class="storage-option-radio-button-container">
                             <label for="globus_maybe" class="storage-form-field-text">Maybe</label>
                             <div data-state="Default" class="storage-option-radio-button">
-                              <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @request_model.globus == "maybe" ? "checked" : "" %> >
+                              <input type="radio" id="globus_maybe" name="request[globus]" value="maybe" <%= @new_project_request.globus == "maybe" ? "checked" : "" %> >
                             </div>
                         </div>
                     </div>

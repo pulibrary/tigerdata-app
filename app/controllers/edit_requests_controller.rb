@@ -3,24 +3,24 @@ class EditRequestsController < ApplicationController
   layout "edit_request"
   before_action :set_breadcrumbs
 
-  before_action :set_request_model, only: %i[edit update]
+  before_action :set_new_project_request, only: %i[edit update]
   before_action :check_access
 
   # GET /edit_requests/1/edit
   def edit
-    add_breadcrumb(@request_model.project_title, request_path(@request_model))
+    add_breadcrumb(@new_project_request.project_title, request_path(@new_project_request))
     add_breadcrumb("Edit Submitted Request")
   end
 
   # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
   def update
     respond_to do |format|
-      if @request_model.update(request_params) && @request_model.valid_to_submit?(allow_empty_parent_folder: true)
-        format.html { redirect_to request_url(@request_model), notice: I18n.t(:successful_update) }
-        format.json { render :show, status: :ok, location: @request_model }
+      if @new_project_request.update(request_params) && @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
+        format.html { redirect_to request_url(@new_project_request), notice: I18n.t(:successful_update) }
+        format.json { render :show, status: :ok, location: @new_project_request }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @request_model.errors, status: :unprocessable_entity }
+        format.json { render json: @new_project_request.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -28,9 +28,9 @@ class EditRequestsController < ApplicationController
   private
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_request_model
+    def set_new_project_request
       @princeton_departments = Affiliation.all
-      @request_model = NewProjectRequest.find(params[:id])
+      @new_project_request = NewProjectRequest.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
@@ -72,7 +72,7 @@ class EditRequestsController < ApplicationController
 
       # request can not be modified by this user, redirect to the request
       flash[:notice] = I18n.t(:no_modify_submitted)
-      redirect_to request_path(@request_model)
+      redirect_to request_path(@new_project_request)
     end
 
     def user_eligible_to_modify_request?

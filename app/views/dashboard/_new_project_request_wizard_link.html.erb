@@ -42,9 +42,9 @@
             </div>
             <div class="draft-content">
               <div class="draft-list">
-                <% @presenter.my_draft_requests.each do | request_model| %>
-                  <%= render partial: 'draft_request', locals: {review_path: request_model.review_path, delete_path: request_model.delete_path,
-                                                                project_title: request_model.safe_project_title, id: request_model.id } %>
+                <% @presenter.my_draft_requests.each do | new_project_request| %>
+                  <%= render partial: 'draft_request', locals: {review_path: new_project_request.review_path, delete_path: new_project_request.delete_path,
+                                                                project_title: new_project_request.safe_project_title, id: new_project_request.id } %>
                 <% end %>
               </div>
             </div>
@@ -52,9 +52,9 @@
         </div>
 
         <!-- popover for each draft request -->
-        <% @presenter.my_draft_requests.each do | request_model| %>
-          <%= render partial: 'draft_request_popover', locals: {review_path: request_model.review_path, delete_path: request_model.delete_path,
-                                                        project_title: request_model.safe_project_title, id: request_model.id } %>
+        <% @presenter.my_draft_requests.each do | new_project_request| %>
+          <%= render partial: 'draft_request_popover', locals: {review_path: new_project_request.review_path, delete_path: new_project_request.delete_path,
+                                                        project_title: new_project_request.safe_project_title, id: new_project_request.id } %>
         <% end %>
 
         <!-- submitted requests popup -->
@@ -66,11 +66,11 @@
             </div>
             <div class="draft-content">
               <div class="draft-list">
-                <% @presenter.my_submitted_requests.each do | request_model| %>
+                <% @presenter.my_submitted_requests.each do | new_project_request| %>
                   <div class="draft-request">
-                      <div class="request-name"><%= request_model.safe_project_title %></div>
+                      <div class="request-name"><%= new_project_request.safe_project_title %></div>
                       <div class="request-actions">
-                        <a href="<%= request_path(request_model.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= request_model.safe_project_title %> Open">
+                        <a href="<%= request_path(new_project_request.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= new_project_request.safe_project_title %> Open">
                           <div>Open</div>
                         </a>
                       </div>

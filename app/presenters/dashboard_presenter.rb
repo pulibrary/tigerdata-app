@@ -48,6 +48,6 @@ class DashboardPresenter
   private
 
     def presented_requests(requests)
-      requests.map { |req| RequestPresenter.new(req) }
+      requests.map { |req| NewProjectRequestPresenter.new(req) }
     end
 end

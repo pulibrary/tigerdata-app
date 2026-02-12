@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class RequestsController < ApplicationController
-  before_action :set_request_model, only: %i[show approve destroy]
+  before_action :set_new_project_request, only: %i[show approve destroy]
   before_action :set_breadcrumbs
 
   # GET /requests
@@ -20,8 +20,8 @@ class RequestsController < ApplicationController
   end
 
   def show
-    if current_user.uid == @request_model.requested_by || current_user.developer || current_user.sysadmin || current_user.trainer
-      @request_presenter = RequestPresenter.new(@request_model)
+    if current_user.uid == @new_project_request.requested_by || current_user.developer || current_user.sysadmin || current_user.trainer
+      @request_presenter = NewProjectRequestPresenter.new(@new_project_request)
       add_breadcrumb("New Project Request", new_project_project_info_path)
       render :show
     else
@@ -37,14 +37,14 @@ class RequestsController < ApplicationController
   # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if eligible_to_approve
-      if @request_model.valid_to_submit?(allow_empty_parent_folder: true)
-        project = @request_model.approve(current_user)
-        @request_model.destroy!
+      if @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
+        project = @new_project_request.approve(current_user)
+        @new_project_request.destroy!
         stub_message = "The request has been approved and this project was created in the TigerData web portal.  The request has been processed and deleted."
         TigerdataMailer.with(project_id: project.id, approver: current_user).project_creation.deliver_later
         redirect_to project_path(project.id), notice: stub_message
       else
-        redirect_to new_project_review_and_submit_path(@request_model)
+        redirect_to new_project_review_and_submit_path(@new_project_request)
       end
     else
       error_message = "You do not have access to this page."
@@ -60,7 +60,7 @@ class RequestsController < ApplicationController
       Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
       Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
       flash[:notice] = "Error approving request #{params[:id]}"
-      redirect_to request_path(@request_model)
+      redirect_to request_path(@new_project_request)
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -70,7 +70,7 @@ class RequestsController < ApplicationController
 
   def destroy
     if eligible_to_destroy?
-      @request_model.destroy
+      @new_project_request.destroy
       redirect_to dashboard_path(modal: "confirm_delete_draft")
     else
       flash[:notice] = I18n.t(:no_permission_to_delete)
@@ -80,8 +80,8 @@ class RequestsController < ApplicationController
 
   private
 
-    def set_request_model
-      @request_model = NewProjectRequest.find(params[:id])
+    def set_new_project_request
+      @new_project_request = NewProjectRequest.find(params[:id])
     end
 
     def set_breadcrumbs
@@ -93,6 +93,6 @@ class RequestsController < ApplicationController
     end
 
     def eligible_to_destroy?
-      current_user.uid == @request_model.requested_by
+      current_user.uid == @new_project_request.requested_by
     end
 end
