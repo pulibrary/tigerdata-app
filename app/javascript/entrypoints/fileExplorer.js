@@ -1,3 +1,6 @@
+// Sets up the display of the File Explorer.
+// See ./app/views/projects/_file_explorer.html.erb for the HTML.
+//
 // eslint-disable-next-line import/prefer-default-export
 export function setupFileExplorer() {
   $(() => {
