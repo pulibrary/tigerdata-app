@@ -45,7 +45,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Take a moment to review"
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
-        visit "/requests/#{NewProjectRequest.last.id}"
+        visit new_project_request_path(NewProjectRequest.last.id)
         click_on "Approve request"
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
@@ -85,7 +85,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "Take a moment to review"
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
-        visit "/requests/#{NewProjectRequest.last.id}"
+        visit new_project_request_path(NewProjectRequest.last.id)
         click_on "Approve request"
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
@@ -463,7 +463,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
 
-        visit "requests/#{NewProjectRequest.last.id}"
+        visit new_project_request_path(NewProjectRequest.last.id)
         expect(page).to have_content("No Duplicate Departments Project")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
       end

@@ -5,7 +5,7 @@
         <div class="deco-line"></div>
       </div>
       <div class="main-frame">
-        <%= form_with(url: edit_new_project_request_url(@new_project_request.id), model: @new_project_request, 
+        <%= form_with(url: edit_new_project_request_path(@new_project_request.id), model: @new_project_request, 
                       action: :save, method: :put, class: "form-panel") do |form| %>
           <div class="scrollable-frame">
             <div class="form-header">
@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="button-frame">
-            <%= link_to "Cancel", request_url(@new_project_request), class: "button cancel" %>
+            <%= link_to "Cancel", new_project_request_url(@new_project_request), class: "button cancel" %>
             <%= form.submit "Save", class: "button" %>
           </div>
         <% end %>

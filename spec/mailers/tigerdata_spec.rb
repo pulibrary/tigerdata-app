@@ -93,7 +93,7 @@ context "When a request is created" do
     expect(html_body).to have_content("Needs HPC?: yes")
     expect(html_body).to have_content("Needs SMB?: no")
     expect(html_body).to have_content("Needs Globus?: maybe")
-    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
+    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{new_project_request_url(valid_request)}")
   end
 
   context "when the request ID is invalid or nil" do

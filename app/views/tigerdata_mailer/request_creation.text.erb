@@ -1,4 +1,4 @@
-A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= request_url(@request) %>
+A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= new_project_request_url(@request) %>
 Here is a preview of the request details:
 
 <% @request_presenter = NewProjectRequestPresenter.new(@request) %> 

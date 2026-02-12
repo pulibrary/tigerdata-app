@@ -70,7 +70,7 @@
                   <div class="draft-request">
                       <div class="request-name"><%= new_project_request.safe_project_title %></div>
                       <div class="request-actions">
-                        <a href="<%= request_path(new_project_request.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= new_project_request.safe_project_title %> Open">
+                        <a href="<%= new_project_request_path(new_project_request.id)%>" class="request-open" focus="true" tabindex="0" aria-label="<%= new_project_request.safe_project_title %> Open">
                           <div>Open</div>
                         </a>
                       </div>

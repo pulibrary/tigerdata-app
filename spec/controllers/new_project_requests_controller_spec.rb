@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "rails_helper"
-RSpec.describe RequestsController, type: :controller do
+RSpec.describe NewProjectRequestsController, type: :controller do
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:valid_request) do
     NewProjectRequest.create(project_title: "Valid Request", data_sponsor: "tigerdatatester", data_manager: "tigerdatatester", departments: [{ code: "dept", name: "department" }],
@@ -170,7 +170,7 @@ RSpec.describe RequestsController, type: :controller do
       allow(valid_request).to receive(:approve).and_raise(ProjectCreate::ProjectCreateError, "Session expired for token")
 
       get :approve, params: { id: valid_request.id }
-      expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Frequests%2F#{valid_request.id}%2Fapprove"
+      expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Fnew_project_requests%2F#{valid_request.id}%2Fapprove"
     end
 
     it "and a Mediaflux::SessionExpired is thrown" do
@@ -179,7 +179,7 @@ RSpec.describe RequestsController, type: :controller do
       allow(NewProjectRequest).to receive(:find).and_return(valid_request)
       allow(valid_request).to receive(:approve).and_raise(Mediaflux::SessionExpired, "Session expired for token")
       get :approve, params: { id: valid_request.id }
-      expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Frequests%2F#{valid_request.id}%2Fapprove"
+      expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Fnew_project_requests%2F#{valid_request.id}%2Fapprove"
     end
   end
 end
