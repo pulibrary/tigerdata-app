@@ -1,18 +1,18 @@
 # frozen_string_literal: true
-class EditRequestsController < ApplicationController
+class EditNewProjectRequestController < ApplicationController
   layout "edit_request"
   before_action :set_breadcrumbs
 
   before_action :set_new_project_request, only: %i[edit update]
   before_action :check_access
 
-  # GET /edit_requests/1/edit
+  # GET /edit_new_project_request/1/edit
   def edit
     add_breadcrumb(@new_project_request.project_title, request_path(@new_project_request))
     add_breadcrumb("Edit Submitted Request")
   end
 
-  # PATCH/PUT /edit_requests/1 or /edit_requests/1.json
+  # PATCH/PUT /edit_new_project_request/1 or /edit_new_project_request/1.json
   def update
     respond_to do |format|
       if @new_project_request.update(request_params) && @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
