@@ -1,8 +1,8 @@
 <div class="heading-frame">
-  <% if @request_model.error_message.present? %>
+  <% if @new_project_request.error_message.present? %>
   <p class="error-field">There was an error with this request</p>
   <textarea class="disabled-field" rows="10" cols="50">
-      <%= @request_model.error_message %>
+      <%= @new_project_request.error_message %>
     </textarea>
   <% end %>
 
@@ -14,9 +14,9 @@
   <div class="request-heading">Your new project request has been saved</div>
   <div class="request-subheading">Your project has been saved and may be edited</div>
       <% if @request_presenter.eligible_to_edit?(current_user)%>
-        <% if @request_model.submitted?%>
-          <%= link_to "Edit submitted request", admin_edit_request_path(@request_model.id),class: "btn btn-dark" %>
-          <%= link_to "Approve request", approve_request_path(@request_model.id), class: "btn btn-dark" %>
+        <% if @new_project_request.submitted?%>
+          <%= link_to "Edit submitted request", admin_edit_request_path(@new_project_request.id),class: "btn btn-dark" %>
+          <%= link_to "Approve request", approve_request_path(@new_project_request.id), class: "btn btn-dark" %>
         <% end %>
       <% end %>
     </div>
@@ -27,7 +27,7 @@
 
   <div class="saved-summary">Saved Summary</div>
     <% if @request_presenter.eligible_to_edit?(current_user)%>
-      <% if !@request_model.submitted?%>
+      <% if !@new_project_request.submitted?%>
         <div class="blue-box">
           <div class="box-heading">
               <div class="pul-container">
@@ -39,7 +39,7 @@
               </div>
           </div>
           <div class="continue-edit">
-            <%= link_to "Continue Editing", new_project_project_info_path(@request_model.id), class: "btn btn-dark btn-sm" %>
+            <%= link_to "Continue Editing", new_project_project_info_path(@new_project_request.id), class: "btn btn-dark btn-sm" %>
             <div class="return-dashboard">
             <%= link_to "Return to Dashboard", dashboard_path, class: "btn btn-outline-dark btn-sm" %>
           </div>
@@ -52,14 +52,14 @@
     <div class="detail-heading">
       <div class="heading-text">Basic Info </div>
       <% if @request_presenter.eligible_to_edit?(current_user)%>
-        <% if !@request_model.submitted?%>
-          <%= link_to "Edit", new_project_project_info_path(@request_model.id), class: "edit-link basic-info"%>
+        <% if !@new_project_request.submitted?%>
+          <%= link_to "Edit", new_project_project_info_path(@new_project_request.id), class: "edit-link basic-info"%>
         <% end %>
       <% end %>
     </div>
     <div class="detail-pair">
       <li class="detail-subheading">Project Title</li>
-      <p class="detail-value"><%= @request_model.project_title %></p>
+      <p class="detail-value"><%= @new_project_request.project_title %></p>
     </div>
     <div class="detail-pair">
       <li class="detail-subheading">Project Directory</li>
@@ -71,7 +71,7 @@
     </div>
     <div class="detail-pair">
       <li class="detail-subheading">Project Description</li>
-      <p class="detail-value"><%=@request_model.description %></p>
+      <p class="detail-value"><%=@new_project_request.description %></p>
     </div>
     <div class="detail-pair">
         <li class="detail-subheading">Department(s)</li>
@@ -84,8 +84,8 @@
     <div class="detail-heading">
       <div class="heading-text">Roles and People(s) </div>
       <% if @request_presenter.eligible_to_edit?(current_user)%>
-        <% if !@request_model.submitted?%>
-         <%= link_to "Edit", new_project_roles_and_people_path(@request_model.id), class: "edit-link roles-people"%>
+        <% if !@new_project_request.submitted?%>
+         <%= link_to "Edit", new_project_roles_and_people_path(@new_project_request.id), class: "edit-link roles-people"%>
         <% end %>
       <% end %>
     </div>
@@ -108,32 +108,32 @@
     <div class="detail-heading">
       <div class="heading-text">Storage and Access </div>
       <% if @request_presenter.eligible_to_edit?(current_user)%>
-        <% if !@request_model.submitted?%>
-          <%= link_to "Edit", new_project_storage_and_access_path(@request_model.id), class: "edit-link storage-access"%>
+        <% if !@new_project_request.submitted?%>
+          <%= link_to "Edit", new_project_storage_and_access_path(@new_project_request.id), class: "edit-link storage-access"%>
         <% end %>
       <% end %>
     </div>
     <div class="detail-pair">
       <li class="detail-subheading">Storage Needed</li>
-      <p class="detail-value"><%= @request_model.approved_quota_size %> <%= @request_model.approved_quota_unit %></p>
+      <p class="detail-value"><%= @new_project_request.approved_quota_size %> <%= @new_project_request.approved_quota_unit %></p>
     </div>
     <div class="detail-pair">
       <li class="detail-subheading">Estimated Number of Files</li>
-      <p class="detail-value"><%= @request_model.number_of_files %></p>
+      <p class="detail-value"><%= @new_project_request.number_of_files %></p>
     </div>
 
     <div class="detail-heading">Connection Options</div>
     <div class="detail-pair">
       <li class="storage-heading">Do you need to connect to HPC?</li>
-      <p class="detail-value"><%= @request_model.hpc %></p>
+      <p class="detail-value"><%= @new_project_request.hpc %></p>
     </div>
     <div class="detail-pair">
       <li class="storage-heading">Do you need SMB (network file share)?</li>
-      <p class="detail-value"><%= @request_model.smb %></p>
+      <p class="detail-value"><%= @new_project_request.smb %></p>
     </div>
     <div class="detail-pair">
       <li class="storage-heading">Do you need to enable Globus transfers?</li>
-      <p class="detail-value"> <%= @request_model.globus %></p>
+      <p class="detail-value"> <%= @new_project_request.globus %></p>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
       <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>

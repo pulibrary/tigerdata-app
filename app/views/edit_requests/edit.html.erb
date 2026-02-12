@@ -5,13 +5,13 @@
         <div class="deco-line"></div>
       </div>
       <div class="main-frame">
-        <%= form_with(url: admin_edit_request_url(@request_model.id), model: @request_model, 
+        <%= form_with(url: admin_edit_request_url(@new_project_request.id), model: @new_project_request, 
                       action: :save, method: :put, class: "form-panel") do |form| %>
           <div class="scrollable-frame">
             <div class="form-header">
               <div class="form-title">
                 <div class="form-text">
-                  <%= @request_model.project_title %>
+                  <%= @new_project_request.project_title %>
                 </div>
               </div>
               <div class="form-description">
@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="button-frame">
-            <%= link_to "Cancel", request_url(@request_model), class: "button cancel" %>
+            <%= link_to "Cancel", request_url(@new_project_request), class: "button cancel" %>
             <%= form.submit "Save", class: "button" %>
           </div>
         <% end %>

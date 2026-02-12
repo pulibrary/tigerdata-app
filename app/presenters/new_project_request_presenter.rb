@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class RequestPresenter
+class NewProjectRequestPresenter
   attr_reader :request
 
   delegate :id, to: :request

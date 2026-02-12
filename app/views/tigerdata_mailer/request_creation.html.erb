@@ -8,7 +8,7 @@
     <p> A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: <%= request_url(@request) %></p>
     <p> Here is a preview of the request details: </p>
 
-    <% @request_presenter = RequestPresenter.new(@request) %> 
+    <% @request_presenter = NewProjectRequestPresenter.new(@request) %> 
     <ul>
       <li>Request State: <%= @request.state %></li>
       <li>Project Title: <%= @request.project_title %></li>
