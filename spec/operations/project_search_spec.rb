@@ -94,7 +94,7 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
       result = described_class.new.call(search_string: "\"'blah", requestor: approver)
       expect(result).not_to be_success
       error_message = result.failure
-      expect(error_message).to include("Error querying mediaflux: call to service 'asset.query' failed")
+      expect(error_message).to include("Error querying mediaflux: 4.18.003: call to service 'asset.query' failed")
     end
   end
 end
