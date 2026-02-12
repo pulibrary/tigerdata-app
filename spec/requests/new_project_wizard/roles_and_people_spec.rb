@@ -41,7 +41,7 @@ RSpec.describe "new-project/roles-people", type: :request do
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", data_manager: "manager1", project_title: "new project" }, commit: "Save")
-          expect(response).to redirect_to("#{requests_path}/#{request.id}")
+          expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
           request.reload
           expect(request.data_sponsor).to eq("pul123")
           expect(request.data_manager).to eq("manager1")

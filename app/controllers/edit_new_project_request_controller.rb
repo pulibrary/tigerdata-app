@@ -8,7 +8,7 @@ class EditNewProjectRequestController < ApplicationController
 
   # GET /edit_new_project_request/1/edit
   def edit
-    add_breadcrumb(@new_project_request.project_title, request_path(@new_project_request))
+    add_breadcrumb(@new_project_request.project_title, new_project_request_path(@new_project_request))
     add_breadcrumb("Edit Submitted Request")
   end
 
@@ -16,7 +16,7 @@ class EditNewProjectRequestController < ApplicationController
   def update
     respond_to do |format|
       if @new_project_request.update(request_params) && @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
-        format.html { redirect_to request_url(@new_project_request), notice: I18n.t(:successful_update) }
+        format.html { redirect_to new_project_request_url(@new_project_request), notice: I18n.t(:successful_update) }
         format.json { render :show, status: :ok, location: @new_project_request }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -64,7 +64,7 @@ class EditNewProjectRequestController < ApplicationController
 
     def set_breadcrumbs
       add_breadcrumb("Dashboard", dashboard_path)
-      add_breadcrumb("Requests", requests_path)
+      add_breadcrumb("Requests", new_project_requests_path)
     end
 
     def check_access
@@ -72,7 +72,7 @@ class EditNewProjectRequestController < ApplicationController
 
       # request can not be modified by this user, redirect to the request
       flash[:notice] = I18n.t(:no_modify_submitted)
-      redirect_to request_path(@new_project_request)
+      redirect_to new_project_request_path(@new_project_request)
     end
 
     def user_eligible_to_modify_request?

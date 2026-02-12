@@ -9,19 +9,19 @@ module Mediaflux
 
       # The default request URL path for the Mediaflux API
       # @return [String]
-      def self.request_path
+      def self.new_project_request_path
         "/__mflux_svc__"
       end
 
       def self.uri
         # Setting the URI to the Ansible build or Docker build of mediaflux depending on the environment
-        URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}#{request_path}")
+        URI("#{Connection.transport}://#{Connection.host}:#{Connection.port}#{new_project_request_path}")
       end
 
       # Constructs a new HTTP POST request for usage with the Mediaflux API
       # @return [Net::HTTP::Post]
       def self.build_post_request
-        Net::HTTP::Post.new(request_path)
+        Net::HTTP::Post.new(new_project_request_path)
       end
 
       # The default XML namespace which should be used for building the XML
