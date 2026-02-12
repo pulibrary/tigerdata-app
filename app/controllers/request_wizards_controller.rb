@@ -44,7 +44,7 @@ class RequestWizardsController < ApplicationController
       when "Next", "Submit"
         render_next
       else
-        redirect_to request_path(@new_project_request)
+        redirect_to new_project_request_path(@new_project_request)
       end
     end
 

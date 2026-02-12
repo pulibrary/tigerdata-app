@@ -7,7 +7,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
-      visit "/requests"
+      visit new_project_requests_path
       expect(page).to have_content "Log in"
     end
   end
@@ -148,13 +148,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "user without a role" do
       it "does not show the New Project Requests page to users without a role" do
         sign_in sponsor_and_data_manager
-        visit "/requests"
+        visit new_project_requests_path
         expect(page).to have_content "You do not have access to this page."
       end
 
       it "does not show the approve button on a single request view for users without a role" do
         sign_in sponsor_and_data_manager
-        visit "/requests/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         expect(page).to have_content request.project_title
         expect(page).not_to have_content("Approve request")
       end
@@ -163,12 +163,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "sponsor_user" do
       it "does not show the New Project Requests page to data sponsors" do
         sign_in sponsor_user
-        visit "/requests"
+        visit new_project_requests_path
         expect(page).to have_content "You do not have access to this page."
       end
       it "does not show the approve button on a single request view for data sponsors" do
         sign_in sponsor_user
-        visit "/requests/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         expect(page).to have_content request.project_title
         expect(page).not_to have_content("Approve request")
         expect(page).not_to have_content("Continue Editing")
@@ -179,12 +179,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "data_manager" do
       it "does not show the New Project Requests page to data managers" do
         sign_in manager_user
-        visit "/requests"
+        visit new_project_requests_path
         expect(page).to have_content "You do not have access to this page."
       end
       it "does not show the approve button on a single request view for data managers" do
         sign_in manager_user
-        visit "/requests/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         expect(page).to have_content request.project_title
         expect(page).not_to have_content("Approve request")
         expect(page).not_to have_content("Continue Editing")
@@ -196,14 +196,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the New Project Requests page to sysadmin users" do
         request # make sure the request exists before loading the index page
         sign_in sysadmin_user
-        visit "/requests"
+        visit new_project_requests_path
         expect(page).to have_content "New Project Requests"
         expect(page).to have_content request.requested_by
         expect(page).to have_content request.project_path
       end
       it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
         sign_in sysadmin_user
-        visit "/requests/#{full_request.id}"
+        visit new_project_request_path(full_request.id)
         # it does not show a approve request unless the request is submitted
         expect(page).not_to have_content("Approve request")
         expect(page).not_to have_link("Approve request")
@@ -213,7 +213,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
       it "shows the approve button on a single submitted request view for sysadmins" do
         sign_in sysadmin_user
-        visit "/requests/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         # it does not show a approve request unless the request is submitted
         expect(page).to have_link("Approve request")
         expect(page).not_to have_content("Continue Editing")
@@ -221,13 +221,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
         sign_in sysadmin_user
-        visit "#{requests_path}/#{full_request.id}"
+        visit new_project_request_path(full_request.id)
         expect(page).to have_content("Data User(s)")
         expect(page).to have_content("tigerdatatester")
       end
       it "shows the departments on a single submitted request that includes departments" do
         sign_in sysadmin_user
-        visit "#{requests_path}/#{full_request.id}"
+        visit new_project_request_path(full_request.id)
         expect(page).to have_content("88888")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       end
@@ -236,7 +236,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # a request must be submitted before it can be approved
         full_request.state = NewProjectRequest::SUBMITTED
         full_request.save
-        visit "#{requests_path}/#{full_request.id}"
+        visit new_project_request_path(full_request.id)
         expect(page).to have_content("Approve request")
         expect(page).to have_content("500.0 GB")
         click_on "Approve request"
@@ -249,7 +249,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
       it "creates a project with BlueMountain fixture data when the request is approved", integration: true do
         sign_in sysadmin_user
-        visit "#{requests_path}/#{bluemountain.id}"
+        visit new_project_request_path(bluemountain.id)
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
@@ -261,7 +261,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "forwards back to the request review page when the request is not ready to submit" do
         sign_in sysadmin_user
-        visit approve_request_path(invalid_request.id)
+        visit approve_new_project_request_path(invalid_request.id)
         expect(page).to have_content("Review")
         within(".project-title") do
           expect(page).to have_content("This field is required.")
@@ -290,7 +290,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "reports an error if the title is too long" do
         sign_in sysadmin_user
-        visit approve_request_path(title_too_long.id)
+        visit approve_new_project_request_path(title_too_long.id)
         expect(page).to have_content("Review")
         within(".project-title") do
           expect(page).to have_content("233/200 characters")
@@ -299,7 +299,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "reports an error if the description is too long" do
         sign_in sysadmin_user
-        visit approve_request_path(description_too_long.id)
+        visit approve_new_project_request_path(description_too_long.id)
         expect(page).to have_content("Review")
         within(".project-description") do
           expect(page).to have_content("1751/1000 characters")
@@ -310,7 +310,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in sysadmin_user
         custom_quota_request.state = NewProjectRequest::SUBMITTED
         custom_quota_request.save
-        visit "#{requests_path}/#{custom_quota_request.id}"
+        visit "#{new_project_requests_path}/#{custom_quota_request.id}"
         expect(custom_quota_request.quota).to eq("custom")
         expect(page).to have_content("Approve request")
         expect(page).to have_content("1725.0 TB")
@@ -320,14 +320,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         submitted_request.state = NewProjectRequest::SUBMITTED
         submitted_request.approved_quota = "300 TB"
         submitted_request.save
-        visit "#{requests_path}/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         expect(page).to have_content("Approve request")
         expect(page).to have_content("300.0 TB")
       end
 
       it "shows the edit buttons on the request fields section for a draft request" do
         sign_in sysadmin_user
-        visit "/requests/#{full_request.id}"
+        visit new_project_request_path(full_request.id)
         expect(page).to have_css(".basic-info", text: "Edit")
         expect(page).to have_css(".roles-people", text: "Edit")
         expect(page).to have_css(".storage-access", text: "Edit")
@@ -336,7 +336,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "shows the edit buttons on the request fields section for a submitted request" do
         sign_in sysadmin_user
-        visit "/requests/#{submitted_request.id}"
+        visit new_project_request_path(submitted_request.id)
         expect(page).to_not have_css(".basic-info", text: "Edit")
         expect(page).to_not have_css(".roles-people", text: "Edit")
         expect(page).to_not have_css(".storage-access", text: "Edit")
@@ -348,7 +348,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "developer" do
       it "shows the New Project Requests page to developers" do
         sign_in developer_user
-        visit "/requests"
+        visit new_project_requests_path
         expect(page).to have_content "New Project Requests"
       end
 
@@ -357,7 +357,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
         expect(response).to redirect_to(new_project_request_submit_path)
         sign_in sysadmin_user
-        visit "/requests/#{NewProjectRequest.last.id}"
+        visit new_project_request_path(NewProjectRequest.last.id)
         expect(page).to have_content("Approve request")
       end
     end

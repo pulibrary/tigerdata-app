@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
-  resources :requests do
+  resources :new_project_requests, only: [:show, :index, :destroy] do
     member do
       get :approve
     end

@@ -82,7 +82,7 @@ class NewProjectRequestPresenter
   end
 
   def delete_path
-    url_helpers.request_path(request.id)
+    url_helpers.new_project_request_path(request.id)
   end
 
   def safe_project_title

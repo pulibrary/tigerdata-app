@@ -42,14 +42,14 @@ describe "#file_list", integration: true, clean_projects: true do
   end
   it "does not allow any user to visit the request" do
     sign_in user
-    visit "/requests/#{request.id}"
+    visit new_project_request_path(request.id)
     expect(page).to have_content("You do not have access to this page.")
   end
   it "does not allow the requestor to approve the request" do
     request.requested_by = user.uid
     request.save
     sign_in user
-    visit "/requests/#{request.id}"
+    visit new_project_request_path(request.id)
     expect(page).to have_content(request.project_title)
     expect(page).not_to have_content("Approve")
   end

@@ -16,7 +16,7 @@
       <% if @request_presenter.eligible_to_edit?(current_user)%>
         <% if @new_project_request.submitted?%>
           <%= link_to "Edit submitted request", edit_new_project_request_path(@new_project_request.id),class: "btn btn-dark" %>
-          <%= link_to "Approve request", approve_request_path(@new_project_request.id), class: "btn btn-dark" %>
+          <%= link_to "Approve request", approve_new_project_request_path(@new_project_request.id), class: "btn btn-dark" %>
         <% end %>
       <% end %>
     </div>

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-class RequestsController < ApplicationController
+class NewProjectRequestsController < ApplicationController
   before_action :set_new_project_request, only: %i[show approve destroy]
   before_action :set_breadcrumbs
 
-  # GET /requests
+  # GET /new_project_requests
   def index
     if current_user.eligible_sysadmin?
       add_breadcrumb("Project Requests - All")
@@ -60,7 +60,7 @@ class RequestsController < ApplicationController
       Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
       Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
       flash[:notice] = "Error approving request #{params[:id]}"
-      redirect_to request_path(@new_project_request)
+      redirect_to new_project_request_path(@new_project_request)
     end
   end
   # rubocop:enable Metrics/MethodLength
