@@ -1,0 +1,279 @@
+// Setup the JavaScript needed for the file explorer.
+export function setupFileExplorer() {
+  $(function() {
+
+    // Keep track of paths the user navigates into
+    var pathBreadcrumbs = [];
+
+    // Reset the state values of the file explorer
+    function resetFileExplorerState() {
+      $("#current-path-text").val("");
+      $("#current-path-id").val("");
+      $("#iterator-id").val("0");
+      $("#complete").val("false");
+      hideSpinner();
+    }
+
+    // Update the file details on the right panel
+    function fileDetails(fileName, fileSize, lastUpdated, fullName) {
+      $("#right-panel-filename").text(fileName);
+      $("#right-panel-size").text(fileSize);
+      $("#right-panel-last-updated").text(lastUpdated);
+      $("#right-panel-fullname").text(fullName);
+    }
+
+    // Shows the what we are fetching new data
+    function showSpinner() {
+      $("#load-more-spinner").removeClass("hidden-element");
+      $("#load-more-loading").removeClass("hidden-element");
+      $("#load-more").addClass("hidden-element");
+    }
+
+    // Hides the spinner
+    function hideSpinner() {
+      $("#load-more-spinner").addClass("hidden-element");
+      $("#load-more-loading").addClass("hidden-element");
+    }
+
+    function showError(status, message) {
+      $("#error-message").text(`${message} (${status})`);
+      $("#error-panel").removeClass("hidden-element");
+    }
+
+    function hideError(status, message) {
+      $("#error-message").text("");
+      $("#error-panel").addClass("hidden-element");
+    }
+
+    // Adds a path to the breadcrumbs
+    function addPathToBreadcrumbs(path, pathId) {
+      if (pathId == 0) {
+        return;
+      }
+
+      var i;
+      var alreadyAdded = false;
+      for(i = 0; i < pathBreadcrumbs.length; i++) {
+        if (pathBreadcrumbs[i].pathId == pathId) {
+          alreadyAdded = true;
+          break;
+        }
+      }
+
+      if (alreadyAdded === false) {
+        // Add the path and keep the array sorted by path
+        pathBreadcrumbs.push({path: path, pathId: pathId})
+        pathBreadcrumbs.sort((a, b) => a.path.localeCompare(b.path));
+      }
+    }
+
+    // Render the path breadcrumbs
+    function renderPathBreadcrums(fileListUrl, currentPath) {
+      var i;
+
+      // Delete any path from the breadcrumbs that is deeper than the current path
+      for(i = 0; i < pathBreadcrumbs.length; i++) {
+        if (pathBreadcrumbs[i].path > currentPath) {
+          // the paths are sorted, so once we find one we delete
+          // from that path forward with splice
+          pathBreadcrumbs.splice(i);
+          break;
+        }
+      }
+
+      // Clear the display entirely
+      $("#pathBreadcrumbs").empty();
+
+      // Re-display the breadcrumbs with the current data
+      for(i = 0; i < pathBreadcrumbs.length; i++) {
+        var path = pathBreadcrumbs[i].path;
+        var pathId = pathBreadcrumbs[i].pathId;
+        var tokens = path.split("/");
+        var pathDisplay;
+        var lastPath = (i == (pathBreadcrumbs.length - 1));
+        var pathElement;
+
+        if (i == 0) {
+          // use the entire path (e.g. /tigerdata/my-project)
+          pathDisplay = path;
+        } else {
+          // use only the last portion of the path (e.g. lab-123)
+          pathDisplay = tokens[tokens.length-1];
+        }
+
+        if (lastPath) {
+          // render as a text element
+          pathElement = $("<span>").text(pathDisplay);
+        } else {
+          // render as a hyperlink
+          pathElement = $("<a>")
+            .attr("href", `${fileListUrl}?path=${path}&pathId=${pathId}`)
+            .addClass("path-breadcrumb-link")
+            .text(pathDisplay);
+        }
+
+        $("#pathBreadcrumbs").append(pathElement);
+        if (lastPath === false) {
+          $("#pathBreadcrumbs").append($("<span>").text(" > "));
+        }
+      }
+    }
+
+    // Uploads the file list for the current path
+    function loadFileList() {
+      var path = $("#current-path-text").val();
+      var pathId = parseInt($("#current-path-id").val(), 10);
+      var iteratorId = parseInt($("#iterator-id").val(), 10);
+      var completed = $("#complete").val() === "true";
+      var fileExplorerUrl = $("#file-explorer-url").val();
+      var table = $("#file_explorer_body");
+
+      // Clear the current file details
+      fileDetails("", "", "", "");
+      hideError();
+
+      showSpinner();
+
+      $.ajax({
+        url: `${fileExplorerUrl}?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
+      })
+      .done(function(data) {
+        var i, file, iconColumn, nameColumn, sizeColumn, dateColumn, rowClass;
+        var firstFile = null;
+
+        $("#current-path").text(data.currentPath);
+        $("#current-path-text").val(data.currentPath);
+        $("#current-path-id").val(data.currentPathId);
+        $("#iterator-id").val(data.iteratorId);
+        $("#complete").val(data.complete);
+
+        // Update the path breadcrumbs
+        addPathToBreadcrumbs(data.currentPath, data.currentPathId);
+        renderPathBreadcrums(data.fileListUrl, data.currentPath);
+
+        hideSpinner();
+        if (data.complete === true) {
+          $("#load-more").addClass("hidden-element");
+        } else {
+          $("#load-more").removeClass("hidden-element");
+        }
+
+        // Clear the file list if we are showing a new folder
+        // (i.e. we are not re-using an iterator)
+        if (iteratorId === 0) {
+          table.empty();
+        }
+
+        // Render the files and folders
+        for(i = 0; i < data.files.length; i++) {
+          file = data.files[i];
+          if (file.collection === true) {
+            // It's a folder
+            rowClass = "file-explorer-folder";
+            iconColumn = $('<i>').addClass("bi bi-folder-fill");
+            nameColumn = $('<a>')
+              .attr("href", `${data.fileListUrl}?path=${file.path}&pathId=${file.id}`)
+              .addClass("file-explorer-folder")
+              .text(file.name);
+            sizeColumn = $('<span>').text("");
+            dateColumn = $('<span>').text("");
+          } else {
+            // It's a file
+            rowClass = "file-explorer-file";
+            iconColumn = $('<i>').addClass("bi bi-file-earmark-text");
+            nameColumn = $('<span>')
+              .text(file.name);
+            sizeColumn = $('<span>').text(file.size);
+            dateColumn = $('<span>').text(file.last_modified_mf);
+
+            // Save the id of the very first file in the list (if any)
+            if (firstFile === null) {
+              firstFile = `#row-${file.id}`;
+            }
+          }
+
+          // Append the folder/file row to the table
+          table.append($('<tr>')
+            .attr('id', `row-${file.id}`)
+            .addClass(rowClass)
+            .append($('<td>').append(iconColumn))
+            .append($('<td>').addClass("name-column").append(nameColumn))
+            .append($('<td>').addClass("size-column").append(sizeColumn))
+            .append($('<td>').addClass("date-column").append(dateColumn))
+          );
+        }
+
+        // Display the file information for the first file in the current folder
+        if (firstFile !== null) {
+          $(firstFile).click();
+        }
+      })
+      .fail(function(jqXHR, status, message) {
+        showError(status, message);
+        resetFileExplorerState();
+      });
+    }
+
+    // When clicking on a folder load the data for that folder.
+    //
+    // Notice that we set the on-click on the $(document) so that it applies
+    // to rows added on the fly.
+    $(document).on("click", ".file-explorer-folder", function(element) {
+      var targetUrl = new URL(element.target.href);
+      var path = targetUrl.searchParams.get("path");
+      var pathId = targetUrl.searchParams.get("pathId");
+      $("#current-path-text").val(path);
+      $("#current-path-id").val(pathId);
+      $("#iterator-id").val("0");
+      $("#complete").val("false");
+      loadFileList();
+      return false;
+    });
+
+    // When clicking a file mark the current file as selected.
+    $(document).on("click", ".file-explorer-file", function(element) {
+      // Mark the current row as selected...
+      $("#file_explorer>tbody>tr").removeClass("active-row");
+      var rowId = element.currentTarget.id;
+      $(`#${rowId}`).addClass("active-row");
+
+      // ...and display the file details
+      var fileName = $(`#${rowId}>td.name-column>span`).text();
+      var fileSize = $(`#${rowId}>td.size-column>span`).text();
+      var lastUpdated = $(`#${rowId}>td.date-column>span`).text();
+      var fullName = $("#current-path-text").val() + "/" + fileName;
+      fileDetails(fileName, fileSize, lastUpdated, fullName);
+      return false;
+    });
+
+    // When clicking a breadcrumb link load the file list for the selected path
+    $(document).on("click", ".path-breadcrumb-link", function(element) {
+      var targetUrl = new URL(element.target.href);
+      var path = targetUrl.searchParams.get("path");
+      var pathId = targetUrl.searchParams.get("pathId");
+      $("#current-path-text").val(path);
+      $("#current-path-id").val(pathId);
+      $("#iterator-id").val("0");
+      $("#complete").val("false");
+      loadFileList();
+      return false;
+    });
+
+    // Reload from the root folder for the project
+    $("#back-home").on("click", function(element) {
+      resetFileExplorerState();
+      loadFileList();
+      return false;
+    });
+
+    // Load more items for the current folder
+    $("#load-more").on("click", function(element) {
+      loadFileList();
+      return false;
+    });
+
+    // Perform the inital load of files
+    resetFileExplorerState();
+    loadFileList();
+  });
+}
