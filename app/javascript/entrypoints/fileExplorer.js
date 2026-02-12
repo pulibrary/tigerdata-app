@@ -1,18 +1,9 @@
-// Setup the JavaScript needed for the file explorer.
+// eslint-disable-next-line import/prefer-default-export
 export function setupFileExplorer() {
-  $(function() {
+  $( () => {
 
     // Keep track of paths the user navigates into
-    var pathBreadcrumbs = [];
-
-    // Reset the state values of the file explorer
-    function resetFileExplorerState() {
-      $("#current-path-text").val("");
-      $("#current-path-id").val("");
-      $("#iterator-id").val("0");
-      $("#complete").val("false");
-      hideSpinner();
-    }
+    const pathBreadcrumbs = [];
 
     // Update the file details on the right panel
     function fileDetails(fileName, fileSize, lastUpdated, fullName) {
@@ -40,21 +31,31 @@ export function setupFileExplorer() {
       $("#error-panel").removeClass("hidden-element");
     }
 
-    function hideError(status, message) {
+    function hideError() {
       $("#error-message").text("");
       $("#error-panel").addClass("hidden-element");
     }
 
+    // Reset the state values of the file explorer
+    function resetFileExplorerState() {
+      $("#current-path-text").val("");
+      $("#current-path-id").val("");
+      $("#iterator-id").val("0");
+      $("#complete").val("false");
+      hideSpinner();
+    }
+
     // Adds a path to the breadcrumbs
     function addPathToBreadcrumbs(path, pathId) {
-      if (pathId == 0) {
+      let i;
+      let alreadyAdded = false;
+
+      if (pathId === 0) {
         return;
       }
 
-      var i;
-      var alreadyAdded = false;
-      for(i = 0; i < pathBreadcrumbs.length; i++) {
-        if (pathBreadcrumbs[i].pathId == pathId) {
+      for(i = 0; i < pathBreadcrumbs.length; i += 1) {
+        if (pathBreadcrumbs[i].pathId === pathId) {
           alreadyAdded = true;
           break;
         }
@@ -62,17 +63,15 @@ export function setupFileExplorer() {
 
       if (alreadyAdded === false) {
         // Add the path and keep the array sorted by path
-        pathBreadcrumbs.push({path: path, pathId: pathId})
+        pathBreadcrumbs.push({path, pathId})
         pathBreadcrumbs.sort((a, b) => a.path.localeCompare(b.path));
       }
     }
 
     // Render the path breadcrumbs
     function renderPathBreadcrums(fileListUrl, currentPath) {
-      var i;
-
       // Delete any path from the breadcrumbs that is deeper than the current path
-      for(i = 0; i < pathBreadcrumbs.length; i++) {
+      for(let i = 0; i < pathBreadcrumbs.length; i += 1) {
         if (pathBreadcrumbs[i].path > currentPath) {
           // the paths are sorted, so once we find one we delete
           // from that path forward with splice
@@ -85,15 +84,15 @@ export function setupFileExplorer() {
       $("#pathBreadcrumbs").empty();
 
       // Re-display the breadcrumbs with the current data
-      for(i = 0; i < pathBreadcrumbs.length; i++) {
-        var path = pathBreadcrumbs[i].path;
-        var pathId = pathBreadcrumbs[i].pathId;
-        var tokens = path.split("/");
-        var pathDisplay;
-        var lastPath = (i == (pathBreadcrumbs.length - 1));
-        var pathElement;
+      for(let i = 0; i < pathBreadcrumbs.length; i += 1 ) {
+        const { path } = pathBreadcrumbs[i];
+        const { pathId } = pathBreadcrumbs[i];
+        const tokens = path.split("/");
+        const lastPath = (i === (pathBreadcrumbs.length - 1));
+        let pathDisplay;
+        let pathElement;
 
-        if (i == 0) {
+        if (i === 0) {
           // use the entire path (e.g. /tigerdata/my-project)
           pathDisplay = path;
         } else {
@@ -121,12 +120,11 @@ export function setupFileExplorer() {
 
     // Uploads the file list for the current path
     function loadFileList() {
-      var path = $("#current-path-text").val();
-      var pathId = parseInt($("#current-path-id").val(), 10);
-      var iteratorId = parseInt($("#iterator-id").val(), 10);
-      var completed = $("#complete").val() === "true";
-      var fileExplorerUrl = $("#file-explorer-url").val();
-      var table = $("#file_explorer_body");
+      const path = $("#current-path-text").val();
+      const pathId = parseInt($("#current-path-id").val(), 10);
+      const iteratorId = parseInt($("#iterator-id").val(), 10);
+      const fileExplorerUrl = $("#file-explorer-url").val();
+      const table = $("#file_explorer_body");
 
       // Clear the current file details
       fileDetails("", "", "", "");
@@ -137,9 +135,8 @@ export function setupFileExplorer() {
       $.ajax({
         url: `${fileExplorerUrl}?path=${path}&pathId=${pathId}&iteratorId=${iteratorId}`,
       })
-      .done(function(data) {
-        var i, file, iconColumn, nameColumn, sizeColumn, dateColumn, rowClass;
-        var firstFile = null;
+      .done( (data) => {
+        let firstFile = null;
 
         $("#current-path").text(data.currentPath);
         $("#current-path-text").val(data.currentPath);
@@ -165,8 +162,14 @@ export function setupFileExplorer() {
         }
 
         // Render the files and folders
-        for(i = 0; i < data.files.length; i++) {
-          file = data.files[i];
+        for(let i = 0; i < data.files.length; i += 1) {
+          const file = data.files[i];
+          let iconColumn;
+          let nameColumn;
+          let sizeColumn;
+          let dateColumn;
+          let rowClass;
+
           if (file.collection === true) {
             // It's a folder
             rowClass = "file-explorer-folder";
@@ -208,7 +211,7 @@ export function setupFileExplorer() {
           $(firstFile).click();
         }
       })
-      .fail(function(jqXHR, status, message) {
+      .fail( (_jqXHR, status, message) => {
         showError(status, message);
         resetFileExplorerState();
       });
@@ -218,10 +221,10 @@ export function setupFileExplorer() {
     //
     // Notice that we set the on-click on the $(document) so that it applies
     // to rows added on the fly.
-    $(document).on("click", ".file-explorer-folder", function(element) {
-      var targetUrl = new URL(element.target.href);
-      var path = targetUrl.searchParams.get("path");
-      var pathId = targetUrl.searchParams.get("pathId");
+    $(document).on("click", ".file-explorer-folder", (element) => {
+      const targetUrl = new URL(element.target.href);
+      const path = targetUrl.searchParams.get("path");
+      const pathId = targetUrl.searchParams.get("pathId");
       $("#current-path-text").val(path);
       $("#current-path-id").val(pathId);
       $("#iterator-id").val("0");
@@ -231,26 +234,27 @@ export function setupFileExplorer() {
     });
 
     // When clicking a file mark the current file as selected.
-    $(document).on("click", ".file-explorer-file", function(element) {
+    $(document).on("click", ".file-explorer-file", (element) => {
       // Mark the current row as selected...
       $("#file_explorer>tbody>tr").removeClass("active-row");
-      var rowId = element.currentTarget.id;
+      const rowId = element.currentTarget.id;
       $(`#${rowId}`).addClass("active-row");
 
       // ...and display the file details
-      var fileName = $(`#${rowId}>td.name-column>span`).text();
-      var fileSize = $(`#${rowId}>td.size-column>span`).text();
-      var lastUpdated = $(`#${rowId}>td.date-column>span`).text();
-      var fullName = $("#current-path-text").val() + "/" + fileName;
+      const fileName = $(`#${rowId}>td.name-column>span`).text();
+      const fileSize = $(`#${rowId}>td.size-column>span`).text();
+      const lastUpdated = $(`#${rowId}>td.date-column>span`).text();
+      const currentPathText = $("#current-path-text").val();
+      const fullName = `${currentPathText}/${fileName}`;
       fileDetails(fileName, fileSize, lastUpdated, fullName);
       return false;
     });
 
     // When clicking a breadcrumb link load the file list for the selected path
-    $(document).on("click", ".path-breadcrumb-link", function(element) {
-      var targetUrl = new URL(element.target.href);
-      var path = targetUrl.searchParams.get("path");
-      var pathId = targetUrl.searchParams.get("pathId");
+    $(document).on("click", ".path-breadcrumb-link", element => {
+      const targetUrl = new URL(element.target.href);
+      const path = targetUrl.searchParams.get("path");
+      const pathId = targetUrl.searchParams.get("pathId");
       $("#current-path-text").val(path);
       $("#current-path-id").val(pathId);
       $("#iterator-id").val("0");
@@ -260,14 +264,14 @@ export function setupFileExplorer() {
     });
 
     // Reload from the root folder for the project
-    $("#back-home").on("click", function(element) {
+    $("#back-home").on("click", () => {
       resetFileExplorerState();
       loadFileList();
       return false;
     });
 
     // Load more items for the current folder
-    $("#load-more").on("click", function(element) {
+    $("#load-more").on("click", () => {
       loadFileList();
       return false;
     });
