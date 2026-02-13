@@ -1,42 +1,42 @@
 production:
   project_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
   request_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
 qa:
   project_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
   request_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
 staging:
   project_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
   request_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
 ci:
   project_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
   request_creation:
     to_email: tigerdata@princeton.edu
-    cc_email: mchandler@princeton.edu
+    cc_email:
 development:
   project_creation:
     to_email: test@example.com
-    cc_email: test_to@example.com
+    cc_email:
   request_creation:
     to_email: test@example.com
-    cc_email: test_to@example.com
+    cc_email:
 test:
   project_creation:
     to_email: test@example.com
-    cc_email: test_to@example.com
+    cc_email:
   request_creation:
     to_email: test@example.com
-    cc_email: test_to@example.com
+    cc_email:
