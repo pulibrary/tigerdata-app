@@ -34,6 +34,7 @@ import { titleCopySaveExit } from './titleCopySaveExit.js';
 import { copyPastePath } from './copyPastePath.js';
 import { wizardNavigation } from './wizardNavigation.js';
 import { popoverManagement } from './popoverManagement.js';
+import { setupFileExplorer } from './fileExplorer.js';
 
 const app = createApp({});
 
@@ -83,6 +84,7 @@ window.setupTable = setupTable;
 window.showMoreLess = showMoreLess;
 window.projectStyle = projectStyle;
 window.projectTab = projectTab;
+window.setupFileExplorer = setupFileExplorer;
 
 async function fetchListContents(listContentsPath) {
   const response = await fetch(listContentsPath);

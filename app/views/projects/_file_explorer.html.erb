@@ -1,0 +1,49 @@
+<div styleclass="content-info">
+  <div id="pathBreadcrumbs"></div>
+</div>
+<div id="project-file-explorer" class="project-file-explorer">
+  <div class="left-panel">
+    <table id="file_explorer">
+      <thead>
+        <tr class="content heading">
+          <th>&nbsp;</th> <!-- icon -->
+          <th class="name-header">Name</th>
+          <th class="size-header">Size</th>
+          <th class="date-header">Last Updated</th>
+        </tr>
+      </thead>
+      <tbody id="file_explorer_body">
+      </tbody>
+    </table>
+    <div>
+      <span id="load-more-spinner" class="hidden-element spinner-border spinner-border-sm"></span>
+      <span id="load-more-loading" class="hidden-element">Loading...</span>
+      <a href="#" id="load-more" class="hidden-element">Load More</a>
+    </div>
+    <div id="error-panel" class="hidden-element">
+      <p>There was an error loading file information.</p>
+      <p>Summary: <span id="error-message"></span>. Details were logged on the server.</p>
+      <p>Click <a href="<%= project_url %>?explorer=true">here</a> to reload the page.</p>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <p><b>Filename:</b><br/><span id="right-panel-filename">&nbsp;</span></p>
+    <p><b>Size:</b><br/><span id="right-panel-size">&nbsp;</span></p>
+    <p><b>Last updated:</b><br/><span id="right-panel-last-updated">&nbsp;</span></p>
+    <p><b>Full Path:</b><br/><span id="right-panel-fullname">&nbsp;</span></p>
+  </div>
+</div>
+
+<div class="debug-info <%= params['debug'] == 'true' ? '' : 'hidden-element' %>">
+  <b>Debug Values</b><br/>
+  <div>Current path: <input id="current-path-text" size="80"></div>
+  <div>Current path id: <input id="current-path-id"></div>
+  <div>Iterator id: <input id="iterator-id"></div>
+  <div>Complete?: <input id="complete"></div>
+  <div>File-explorer URL: <input id="file-explorer-url" size="80" value="<%= project_file_explorer_url %>"></div>
+</div>
+
+<script type="module">
+  setupFileExplorer();
+</script>

@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
+  get "projects/:id/file-explorer", to: "projects#file_explorer", as: :project_file_explorer
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
