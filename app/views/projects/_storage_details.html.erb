@@ -1,0 +1,18 @@
+    <div popover="auto" id="storage-details"  class="pul-popover detail-storage-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title-frame"> 
+            <div class="model-title">Storage Usage Overview</div>
+            <input type=button popovertarget="storage-details" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+          </div>
+          <div class="modal-subtitle">
+           Detailed breakdown of your storage usage across different categories
+          </div>
+        </div>
+        <div>
+            <% if @presenter.can_increase_quota?(user: current_user) %>
+              <%= link_to "Request More", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
+            <% end %>
+        </div>
+      </div>
+    </div>
