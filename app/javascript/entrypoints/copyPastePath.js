@@ -74,7 +74,7 @@ export function copyPastePath() {
   });
 
   /* Basic Details section */
-  $('#copy-project-path-button-basic').on('click', (event) => {
+  $('.copy-project-path-button-basic').on('click', (event) => {
     $('.copy-project-path-icon').removeClass('copy-paste-check');
     $('.copy-project-path-icon').addClass('copy-paste-frames');
     $('.copy-project-path-label-text').text('Copy');
