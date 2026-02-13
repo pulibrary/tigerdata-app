@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class TestAssetGenerator
   attr_reader :levels, :base_name, :file_count_per_directory, :directory_per_level, :mediaflux_session
-  def initialize(user:, project_id:, levels: 5, directory_per_level: 100, file_count_per_directory: 1000)
+  def initialize(user:, project_id:, levels: 5, directory_per_level: 100, file_count_per_directory: 1000, root_file_count: 0)
     @user = user
     @project = Project.find(project_id)
     @levels = levels
@@ -10,9 +10,14 @@ class TestAssetGenerator
     # Only use the last part of the path as the base (so we don't get the root "tigerdata/")
     @base_name = @project.project_directory_short.split("/").last
     @mediaflux_session = @user.mediaflux_session
+    @root_file_count = root_file_count
   end
 
   def generate
+    if @root_file_count > 0
+      # Create some files at the root level
+      Mediaflux::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: @project.mediaflux_id, count: @root_file_count, pattern: "root-file-").resolve
+    end
     generate_level(@project.mediaflux_id, levels)
   end
 
@@ -32,7 +37,7 @@ class TestAssetGenerator
       dir_collection = Mediaflux::AssetCreateRequest.new(session_token: mediaflux_session, name: "#{base_name}-#{parent_id}-#{name_extention}", pid: parent_id)
       dir_collection_id = dir_collection.id
       raise dir_collection.response_error.to_s if dir_collection_id.blank?
-      Mediaflux::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection_id, count: file_count_per_directory).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: mediaflux_session, parent_id: dir_collection_id, count: file_count_per_directory, pattern: "file-").resolve
       generate_directory(parent_id, directory_count - 1)
     end
 end

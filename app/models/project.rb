@@ -200,7 +200,7 @@ class Project < ApplicationRecord
 
   # Creates the iterator for the file explorer
   def file_explorer_setup(session_id:, path_id:)
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: path_id, deep_search: false, aql_query: "type!='application/arc-asset-collection'")
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: path_id, deep_search: false)
     iterator_id = query_req.result
     iterator_id
   end

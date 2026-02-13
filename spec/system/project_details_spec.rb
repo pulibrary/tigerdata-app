@@ -285,6 +285,40 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
+    context "File Explorer", type: :system, connect_to_mediaflux: true, integration: true, js: true do
+      let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+      let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+
+      before do
+        # Create a project in Mediaflux and generate files and directories inside it.
+        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4, root_file_count: 3).generate
+      end
+
+      after do
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+      end
+
+      it "displays the file list, drill into a folder, and back", :integration do
+        sign_in sponsor_user
+        visit "/projects/#{project.id}?explorer=true"
+        sleep(0.1) # Give time for the AJAX call to fetch the files to be executed
+
+        # Shows the files at the root level
+        expect(page).to have_selector("tr.file-explorer-file", count: 3)
+
+        # Click on the folder and show its contents
+        find("a.file-explorer-folder").click
+        sleep(0.1) # Give time for the AJAX call to fetch the files to be executed
+        expect(page).to have_selector("a.file-explorer-folder", count: 3)
+
+        # Go back to the root level
+        find("a.path-breadcrumb-link").click
+        sleep(0.1) # Give time for the AJAX call to fetch the files to be executed
+        expect(page).to have_selector("tr.file-explorer-file", count: 3)
+      end
+
+    end
+
     context "system administrator" do
       let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
