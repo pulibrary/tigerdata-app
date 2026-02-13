@@ -329,7 +329,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       before do
         # Create a project in Mediaflux and generate files and directories inside it.
-        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4, root_file_count: 3).generate
+        TestAssetGenerator.new(user: sponsor_user, project_id: project.id,
+          levels: 2, directory_per_level: 2, file_count_per_directory: 4, root_file_count: 3, pattern: "file-").generate
       end
 
       after do
