@@ -731,8 +731,9 @@
   align-items: center;
   gap: 2rem;
   border-radius: 0.5rem;
-  background: #fff;
+  background: $gray-extra-light;
   box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
+  border: $gray-10;
 }
 
 .pul-popover::backdrop {

@@ -26,4 +26,5 @@ Flipflop.configure do
   feature :planned_maintenance, default: false, description: "Planned Maintenance. Disable login to the web portal."
   feature :last_updated_dashboard, default: false, description: "Show last updated column on dashboard."
   feature :project_type_indicator, default: false, description: "Show project type indicator on dashboard."
+  feature :storage_details, default: false, description: "Show project storage details"
 end
