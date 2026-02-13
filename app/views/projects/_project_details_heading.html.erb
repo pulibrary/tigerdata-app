@@ -44,17 +44,22 @@
     <div class="col-lg-6">
       <div class="row">
         <div class="storage-quota container-fluid px-3 py-2 border border-secondary me-0">
-          <div class="row mt-2 mb-4">
-            <div class="col-6">
+          <div class="quota-header mt-2 mb-4">
+            <div>
               <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @presenter.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
             </div>
-            <div class="col-6 text-end">
-              <% if @presenter.can_increase_quota?(user: current_user) %>
-                <%= "Details" %>
+            <div>
+              <% if Flipflop.storage_details? %>
+                <input type="button" popovertarget="storage-details" value="Details" class="pul-button pul-button-link"></input>
+              <% else %>
+                <% if @presenter.can_increase_quota?(user: current_user) %>
+                  <%= link_to "Request More", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
+                <% end %>
               <% end %>
             </div>
           </div>
-          <div class="row my-2">
+          <%= render partial: "storage_details" %>
+          <div class="my-2">
             <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
               <span class="progress-bar progress-bar-old-versions" title="Old versions: <%= @presenter.quota_breakdown[:old_versions_human] %>" style="width: <%= @presenter.quota_percentage_old_versions %>%"></span>
               <span class="progress-bar progress-bar-project-files" title="Project files: <%= @presenter.quota_breakdown[:project_files_human] %>" style="width: <%= @presenter.quota_percentage_files %>%"></span>

@@ -18,6 +18,43 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       request.approve(sponsor_and_data_manager_user)
     end
 
+    context "details feature on" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:storage_details, true)
+      end
+
+      after do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:storage_details, false)
+      end
+
+      it "Shows the storage detail button to the sponsor" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_content("Storage Usage Overview")
+          expect(page).to have_content("Request More")
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
+
+      it "Shows the storage detail button to the data user" do
+        sign_in read_only
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_content("Storage Usage Overview")
+          expect(page).not_to have_content("Request More")
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
+
+    end
+
     context "Navigation Buttons" do
       context "Approved projects" do
         context "Sponsor user" do
@@ -29,7 +66,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).to have_content("Details")
+            expect(page).to have_content("Request More")
 
             # The description should be rendered twice (at the top and as part of the details)
             expect(page).to have_selector("#description-text")
@@ -59,6 +96,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             visit "/projects/#{project_in_mediaflux.id}/details"
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
+            expect(page).not_to have_content("Request More")
           end
         end
 
