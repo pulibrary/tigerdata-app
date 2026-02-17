@@ -11,7 +11,7 @@
         <tr>
         <td><%=request.project_path %> </td>
         <td><%=request.requestor %> </td>
-        <td><%= link_to request.project_title, request_path(request.id) %></td>
+        <td><%= link_to request.project_title, new_project_request_path(request.id) %></td>
         </tr>
     <% end %>
   </tbody>

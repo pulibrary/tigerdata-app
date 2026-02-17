@@ -198,6 +198,30 @@ class Project < ApplicationRecord
     results
   end
 
+  # Creates the iterator for the file explorer
+  def file_explorer_setup(session_id:, path_id:)
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: path_id, deep_search: false)
+    iterator_id = query_req.result
+    iterator_id
+  end
+
+  # Fetchs results from the iterator for the file explorer
+  def file_explorer_iterate(session_id:, iterator_id:, size: 20)
+    iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
+    results = iterator_req.result
+
+    if iterator_req.error?
+      results[:error] = true
+    else
+      results[:error] = false
+      # Strip the beginning "/princeton" from the path
+      results[:files].each do |file|
+        file.path = file.path.gsub(/^\/princeton/,"")
+      end
+    end
+    results
+  end
+
   # Fetches the entire file list to a file
   def file_list_to_file(session_id:, filename:)
     return { files: [] } if mediaflux_id.nil?

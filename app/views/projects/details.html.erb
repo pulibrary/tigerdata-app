@@ -217,6 +217,9 @@
    <p>recycle_bin_human: <%= @presenter.quota_breakdown[:recycle_bin_human] %></p>
    <p>old_versions: <%= @presenter.quota_breakdown[:old_versions] %></p>
    <p>old_versions_human: <%= @presenter.quota_breakdown[:old_versions_human] %></p>
+   <p>quota_percentage_old_versions_calc: <%= @presenter.quota_percentage_old_versions %></p>
+   <p>quota_percentage_recycle_bin_calc: <%= @presenter.quota_percentage_recycle_bin %></p>
+   <p>quota_percentage_files_calc: <%= @presenter.quota_percentage_files %></p>
 <% end %>
 
 <script type="module">

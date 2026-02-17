@@ -13,10 +13,10 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/request_submit", type: :request do
+RSpec.describe "/new_project_request_submit", type: :request do
   describe "GET /index" do
     it "renders a redirect" do
-      get request_submit_url
+      get new_project_request_submit_url
       expect(response).to be_redirect
     end
 
@@ -28,7 +28,7 @@ RSpec.describe "/request_submit", type: :request do
       end
 
       it "renders a successful response" do
-        get request_submit_url
+        get new_project_request_submit_url
         expect(response).to be_successful
       end
     end

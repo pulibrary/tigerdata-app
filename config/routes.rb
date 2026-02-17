@@ -37,17 +37,18 @@ Rails.application.routes.draw do
   get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
+  get "projects/:id/file-explorer", to: "projects#file_explorer", as: :project_file_explorer
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
-  resources :requests do
+  resources :new_project_requests, only: [:show, :index, :destroy] do
     member do
       get :approve
     end
   end
 
-  get "admin_edit_request/:id", to: "edit_requests#edit", as: :admin_edit_request
-  put "admin_edit_request/:id", to: "edit_requests#update"
+  get "edit_new_project_request/:id", to: "edit_new_project_request#edit", as: :edit_new_project_request
+  put "edit_new_project_request/:id", to: "edit_new_project_request#update"
 
   namespace :api do
     namespace :v0 do
@@ -98,7 +99,7 @@ Rails.application.routes.draw do
   get "new-project/review-submit/:request_id", to: "new_project_wizard/review_and_submit#show", as: :new_project_review_and_submit
   put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", as: :new_project_review_and_submit_save
 
-  get "request_submit", to: "request_submit#index"
+  get "new_project_request_submit", to: "new_project_request_submit#index"
 
   # Catch any undefined path and render a 404 page not found
   get "*path", to: "application#render_not_found"

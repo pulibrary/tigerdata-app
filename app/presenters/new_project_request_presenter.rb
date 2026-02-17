@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class RequestPresenter
+class NewProjectRequestPresenter
   attr_reader :request
 
   delegate :id, to: :request
@@ -82,7 +82,7 @@ class RequestPresenter
   end
 
   def delete_path
-    url_helpers.request_path(request.id)
+    url_helpers.new_project_request_path(request.id)
   end
 
   def safe_project_title

@@ -175,12 +175,13 @@ class User < ApplicationRecord
   # Updates the user's roles (sys admin, developer) depending on the information on Mediaflux.
   # This method is meant to be used only for the current logged in user since the roles depend on the Mediaflux session.
   def self.update_user_roles(user:)
-    raise "User.update_user_roles called with for a user without a Mediaflux session" if user.mediaflux_session.nil?
-
-    mediaflux_roles = mediaflux_roles(user:)
-    update_developer_status(user:, mediaflux_roles:)
-    update_sysadmin_status(user:, mediaflux_roles:)
-    update_tester_status(user:, mediaflux_roles:)
+    update_operation = UserRolesUpdate.new
+    result = update_operation.call(user:)
+    if result.success?
+      result.value!
+    else
+      Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{result.failure}")
+    end
   rescue => ex
     Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{ex.message}")
   end
@@ -191,48 +192,11 @@ class User < ApplicationRecord
     raise "User.mediaflux_roles called with for a user without a Mediaflux session" if user.mediaflux_session.nil?
 
     request = Mediaflux::ActorSelfDescribeRequest.new(session_token: user.mediaflux_session)
-    request.resolve
-    request.roles
-  end
-
-  private
-
-  def self.update_developer_status(user:, mediaflux_roles:)
-    # Production authentication has groups prefixed by "pu-smb-group". 
-    # In the future lower environments which currently have "pu-oit-group" should match production.
-    # See https://github.com/PrincetonUniversityLibrary/tigerdata-config/issues/289
-    #   production:            "pu-smb-group:PU:tigerdata:librarydevelopers"
-    #   staging & development: "pu-oit-group:PU:tigerdata:librarydevelopers"
-    #   test:                  "system-administrator"
-    developer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
-      mediaflux_roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
-      mediaflux_roles.include?("system-administrator")
-    if user.developer != developer_now
-      # Only update the record in the database if there is a change
-      Rails.logger.info("Updating developer role for user #{user.id} to #{developer_now}")
-      user.developer = developer_now
-      user.save!
-    end
-  end
-
-  def self.update_sysadmin_status(user:, mediaflux_roles:)
-    sysadmin_now = mediaflux_roles.include?("system-administrator")
-    if user.sysadmin != sysadmin_now
-      # Only update the record in the database if there is a change
-      Rails.logger.info("Updating sysadmin role for user #{user.id} to #{sysadmin_now}")
-      user.sysadmin = sysadmin_now
-      user.save!
-    end
-  end
-
-  def self.update_tester_status(user:, mediaflux_roles:)
-    trainer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:tester-trainers") ||
-                  mediaflux_roles.include?("pu-oit-group:PU:tigerdata:tester-trainers")
-    if user.trainer != trainer_now
-      # Only update the record in the database if there is a change
-      Rails.logger.info("Updating trainer role for user #{user.id} to #{trainer_now}")
-      user.trainer = trainer_now
-      user.save!
+    if request.error?
+      Honeybadger.notify("Could not update roles for user: #{user.uid}, mediaflux error: #{request.response_error}")
+      nil
+    else
+      request.roles
     end
   end
 end

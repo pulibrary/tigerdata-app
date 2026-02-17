@@ -3,11 +3,11 @@ class RequestWizardsController < ApplicationController
   layout "wizard"
   before_action :set_breadcrumbs
 
-  before_action :set_request_model, only: %i[save]
-  before_action :set_or_init_request_model, only: %i[show]
+  before_action :set_new_project_request, only: %i[save]
+  before_action :set_or_init_new_project_request, only: %i[show]
   before_action :check_access
 
-  attr_reader :request_model
+  attr_reader :new_project_request
 
   # GET /request_wizards/1
   def show
@@ -44,7 +44,7 @@ class RequestWizardsController < ApplicationController
       when "Next", "Submit"
         render_next
       else
-        redirect_to request_path(@request_model)
+        redirect_to new_project_request_path(@new_project_request)
       end
     end
 
@@ -70,40 +70,40 @@ class RequestWizardsController < ApplicationController
     end
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_request_model
+    def set_new_project_request
       # do nothing if we are bailing out without creating a request2
       return if params[:request_id] == "0" && params[:commit] == "Exit without Saving"
 
-      @request_model = if params[:request_id] == "0"
-                         # on the first page with a brand new request that has not been created
-                         req = NewProjectRequest.create(requested_by: current_user.uid)
-                         update_sidebar_url(req)
-                         req
-                       else
-                         # on a page when the request has already been created
-                         NewProjectRequest.find(params[:request_id])
-                       end
+      @new_project_request = if params[:request_id] == "0"
+                               # on the first page with a brand new request that has not been created
+                               req = NewProjectRequest.create(requested_by: current_user.uid)
+                               update_sidebar_url(req)
+                               req
+                             else
+                               # on a page when the request has already been created
+                               NewProjectRequest.find(params[:request_id])
+                             end
     end
 
-    def update_sidebar_url(request_model)
+    def update_sidebar_url(new_project_request)
       return unless params["redirectUrl"] && params["redirectUrl"].last == "0"
 
       # take of the zero in the url and replace it with the real request id
-      params["redirectUrl"] = "#{params['redirectUrl'][0..-2]}#{request_model.id}"
+      params["redirectUrl"] = "#{params['redirectUrl'][0..-2]}#{new_project_request.id}"
     end
 
     # set if id is present or initialize a blank request if not
-    def set_or_init_request_model
+    def set_or_init_new_project_request
       @princeton_departments = Affiliation.all
-      @request_model = if params[:request_id].blank?
-                         NewProjectRequest.new(id: 0, requested_by: current_user.uid)
-                       else
-                         NewProjectRequest.find(params[:request_id])
-                       end
+      @new_project_request = if params[:request_id].blank?
+                               NewProjectRequest.new(id: 0, requested_by: current_user.uid)
+                             else
+                               NewProjectRequest.find(params[:request_id])
+                             end
     end
 
     def save_request
-      request_model.update(request_params)
+      new_project_request.update(request_params)
     end
 
     # Only allow a list of trusted parameters through.
@@ -139,7 +139,7 @@ class RequestWizardsController < ApplicationController
       if current_user.sysadmin || (current_user.developer && !Rails.env.production?)
         true
       # current user is the requestor
-      elsif (@request_model.requested_by == current_user.uid) && !@request_model.submitted?
+      elsif (@new_project_request.requested_by == current_user.uid) && !@new_project_request.submitted?
         true
       # a brand new request
       elsif params[:request_id].blank?

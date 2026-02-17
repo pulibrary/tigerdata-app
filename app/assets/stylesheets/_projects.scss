@@ -125,6 +125,11 @@
     @include media-breakpoint-up(lg) {
       max-width: 75%;
     }
+
+    .quota-header {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 

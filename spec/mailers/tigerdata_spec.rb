@@ -40,7 +40,7 @@ context "When a project is created" do
 
     expect(mail.subject).to eq ("Project: '#{project.title}' has been approved")
     expect(mail.to).to eq [sponsor_and_data_manager_user.email]
-    expect(mail.cc).to eq ["test_to@example.com"]
+    expect(mail.cc).to eq nil
     expect(mail.from).to eq ["no-reply@princeton.edu"]
 
     html_body = mail.html_part.body.to_s
@@ -74,7 +74,7 @@ context "When a request is created" do
 
     expect(mail.subject).to eq "New Project Request Ready for Review"
     expect(mail.to).to eq ["test@example.com"]
-    expect(mail.cc).to eq ["test_to@example.com"]
+    expect(mail.cc).to eq nil
     expect(mail.from).to eq [sponsor_and_data_manager_user.email]
 
     html_body = mail.html_part.body.to_s
@@ -93,7 +93,7 @@ context "When a request is created" do
     expect(html_body).to have_content("Needs HPC?: yes")
     expect(html_body).to have_content("Needs SMB?: no")
     expect(html_body).to have_content("Needs Globus?: maybe")
-    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{request_url(valid_request)}")
+    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{new_project_request_url(valid_request)}")
   end
 
   context "when the request ID is invalid or nil" do

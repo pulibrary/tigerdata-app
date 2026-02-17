@@ -13,10 +13,10 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/edit_requests", type: :request do
+RSpec.describe "/edit_new_project_request", type: :request do
   describe "GET /edit" do
     it "redirects the client to the sign in path" do
-      get admin_edit_request_url(1)
+      get edit_new_project_request_path(1)
 
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
@@ -27,9 +27,9 @@ RSpec.describe "/edit_requests", type: :request do
 
       it "redirects them to the request path with a notice that they cannot modify the request" do
         sign_in user
-        get admin_edit_request_url(request.id)
+        get edit_new_project_request_path(request.id)
         expect(response).to be_redirect
-        expect(response).to redirect_to(request_path(request.id))
+        expect(response).to redirect_to(new_project_request_path(request.id))
         expect(flash.notice).to eq("The request has already been submitted.  You can no longer modify the request.")
       end
     end
@@ -40,7 +40,7 @@ RSpec.describe "/edit_requests", type: :request do
 
       it "renders the Edit Submitted Request page" do
         sign_in user
-        get admin_edit_request_url(request.id)
+        get edit_new_project_request_path(request.id)
         expect(response).to be_successful
         expect(response.body).to include("Edit Submitted Request")
       end
@@ -54,7 +54,7 @@ RSpec.describe "/edit_requests", type: :request do
       end
 
       it "redirects the client to the sign in path" do
-        put admin_edit_request_url(1)
+        put edit_new_project_request_path(1)
 
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
@@ -66,9 +66,9 @@ RSpec.describe "/edit_requests", type: :request do
 
         it "redirects them to the request path with a notice that they cannot modify the request" do
           sign_in user
-          put admin_edit_request_url(request.id), params: { request: { project_title: "changed_title" } }
+          put edit_new_project_request_path(request.id), params: { request: { project_title: "changed_title" } }
           expect(response).to be_redirect
-          expect(response).to redirect_to(request_path(request.id))
+          expect(response).to redirect_to(new_project_request_path(request.id))
           expect(flash.notice).to eq("The request has already been submitted.  You can no longer modify the request.")
         end
       end
@@ -90,9 +90,9 @@ RSpec.describe "/edit_requests", type: :request do
         end
 
         it "updates the request and conveys the success message" do
-          put admin_edit_request_url(request.id), params: { request: valid_request_params }
+          put edit_new_project_request_path(request.id), params: { request: valid_request_params }
           expect(response).to be_redirect
-          expect(response).to redirect_to(request_path(request.id))
+          expect(response).to redirect_to(new_project_request_path(request.id))
           updated_request = NewProjectRequest.find(request.id)
           expect(updated_request.project_title).to eq("changed_title")
           expect(updated_request.quota).to eq("500 GB")
@@ -102,7 +102,7 @@ RSpec.describe "/edit_requests", type: :request do
 
         context "with invalid parameters" do
           it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-            put admin_edit_request_url(request.id), params: { request: { project_title: "" } }
+            put edit_new_project_request_path(request.id), params: { request: { project_title: "" } }
             expect(response).to have_http_status(:unprocessable_entity)
           end
         end

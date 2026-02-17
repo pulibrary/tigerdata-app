@@ -6,10 +6,10 @@
         </div>
         <div class="modal-body-text">Your project creation request will be saved as draft.</div>
         <div class="modal-title-input">
-            <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @request_model.project_title || "", project_title_error: "", input_id: "project_title_exit", field_sub_label: "(Required)" } %>
+            <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @new_project_request.project_title || "", project_title_error: "", input_id: "project_title_exit", field_sub_label: "(Required)" } %>
         </div>
     </div>
     <div class="button-frame">
-        <%= form.submit "Confirm", class: "pul-button pul-button-primary", id: "save-exit-confirm", disabled: !@request_model.valid_title? %>
+        <%= form.submit "Confirm", class: "pul-button pul-button-primary", id: "save-exit-confirm", disabled: !@new_project_request.valid_title? %>
     </div>
 </div>
