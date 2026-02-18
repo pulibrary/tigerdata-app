@@ -35,13 +35,14 @@ export function copyPastePath() {
           resetCopyToClipboard(iconEl, labelEl, normalClass, copiedClass);
         }, 20000);
       },
-      () => {
+      (error) => {
+        console.error(error);
         errorCopyToClipboard(iconEl, 'Copy to clipboard failed');
       },
     );
   }
 
-  /* Dashboard */
+  /* Copy path to the clipboard on the Dashboard and the Project Details */
   $('.copy-project-path-icon').on('click', (event) => {
     $('.copy-project-path-icon').removeClass('copy-paste-check');
     $('.copy-project-path-icon').addClass('copy-paste-frames');
@@ -53,36 +54,6 @@ export function copyPastePath() {
       projectPath,
       iconEl,
       labelEl,
-      'copy-project-path-label-normal',
-      'copy-project-path-label-copied',
-    );
-  });
-
-  /* Basic Details heading */
-  $('#copy-project-path-button-heading').on('click', (event) => {
-    $('.copy-project-path-icon').removeClass('copy-paste-check');
-    $('.copy-project-path-icon').addClass('copy-paste-frames');
-    $('.copy-project-path-label-text').text('Copy');
-    const projectPath = $(event.target).data('url');
-    copyPath(
-      projectPath,
-      '#copy-project-path-button-heading',
-      '#copy-project-path-label-heading',
-      'copy-project-path-label-normal',
-      'copy-project-path-label-copied',
-    );
-  });
-
-  /* Basic Details section */
-  $('#copy-project-path-button-basic').on('click', (event) => {
-    $('.copy-project-path-icon').removeClass('copy-paste-check');
-    $('.copy-project-path-icon').addClass('copy-paste-frames');
-    $('.copy-project-path-label-text').text('Copy');
-    const projectPath = $(event.target).data('url');
-    copyPath(
-      projectPath,
-      '#copy-project-path-button-basic',
-      '#copy-project-path-label-basic',
       'copy-project-path-label-normal',
       'copy-project-path-label-copied',
     );
