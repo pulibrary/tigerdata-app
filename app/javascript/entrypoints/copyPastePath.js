@@ -35,7 +35,8 @@ export function copyPastePath() {
           resetCopyToClipboard(iconEl, labelEl, normalClass, copiedClass);
         }, 20000);
       },
-      () => {
+      (error) => {
+        console.error(error);
         errorCopyToClipboard(iconEl, 'Copy to clipboard failed');
       },
     );
