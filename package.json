@@ -43,15 +43,18 @@
     "lint-staged": "lint-staged",
     "test": "vitest run --coverage",
     "test:dev": "vitest",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "validate-license": "bundle exec rake dev_license:expiration_check"
   },
   "pre-commit": [
+    "validate-license",
     "lint-staged"
   ],
   "lint-staged": {
     "app/*rb": "bundle exec rubocop -a",
     "config/*rb": "bundle exec rubocop -a",
     "lib/*rb": "bundle exec rubocop -a",
+    "lib/*rake": "bundle exec rubocop -a",
     "spec/*rb": "bundle exec rubocop -a",
     "*.js": "eslint --fix",
     "*.md": "prettier --write",
