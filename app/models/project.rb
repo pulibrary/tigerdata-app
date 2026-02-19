@@ -224,39 +224,6 @@ class Project < ApplicationRecord
 
   # Fetches the entire file list to a file
   def file_list_to_file(session_id:, filename:)
-    return { files: [] } if mediaflux_id.nil?
-
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true,  aql_query: "type!='application/arc-asset-collection'")
-    iterator_id = query_req.result
-
-    start_time = Time.zone.now
-    prefix = "file_list_to_file #{session_id[0..7]} #{self.metadata_model.project_id}"
-    log_elapsed(start_time, prefix, "STARTED")
-
-    File.open(filename, "w") do |file|
-      page_number = 0
-      # file header
-      file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
-      loop do
-        iterator_start_time = Time.zone.now
-        page_number += 1
-        iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: 1000)
-        iterator_resp = iterator_req.result
-        log_elapsed(iterator_start_time, prefix, "FETCHED page #{page_number} from iterator")
-        lines = files_from_iterator(iterator_resp)
-        file.write(lines.join("\r\n") + "\r\n")
-        break if iterator_resp[:complete] || iterator_req.error?
-      end
-      log_elapsed(start_time, prefix, "ENDED")
-    end
-
-    # Destroy _after_ fetching the results from iterator_req
-    # This call is technically not necessary since Mediaflux automatically deletes the iterator
-    # once we have ran through it and by now we have. But it does not hurt either.
-    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
-  end
-
-  def file_list_to_file_fast(session_id:, filename:)
     file_inventory = ProjectFileInventory.new(project: self, session_id:, filename:)
     file_inventory.generate()
   end
