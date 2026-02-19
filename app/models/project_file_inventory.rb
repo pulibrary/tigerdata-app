@@ -50,7 +50,7 @@ class ProjectFileInventory
       # ...and query the iterator for the results
       loop do
         start_time = Time.zone.now
-        iterator_req = Mediaflux::IteratorRequest.new(session_token: @session_id, iterator: iterator_id, size: 20)
+        iterator_req = Mediaflux::IteratorRequest.new(session_token: @session_id, iterator: iterator_id, size: 1000)
         log_elapsed(start_time, "iterated over path #{path_prefix}")
 
         if iterator_req.error?
@@ -58,19 +58,24 @@ class ProjectFileInventory
         end
 
         # ...process the files in the iterator
+        csv_lines = []
         iterator_response = iterator_req.result
         iterator_response[:files].each do |file|
           # Calculate the path for this file. This is necessary because we are NOT fetching
           # the path from Mediaflux (see `include_path: false` above).
           file.path = "#{path_prefix}/#{file.name}"
           if file.collection == true
-            # Add the folder to the queue
+            # add the folder to the queue
             add_path_to_queue(collection_id: file.id, path_prefix: file.path)
           else
-            # Add the file to the CSV file
-            csv_line = "#{file.id}, #{file.path_only}, #{file.name}, #{file.collection}, #{file.last_modified}, #{file.size}\r\n"
-            @io_file.write(csv_line)
+            # collection the file information
+            csv_lines << "#{file.id}, #{file.path_only}, #{file.name}, #{file.collection}, #{file.last_modified}, #{file.size}"
           end
+        end
+
+        # write the lines for this iteration the CSV file
+        if csv_lines.count > 0
+          @io_file.write(csv_lines.join("\r\n") + "\r\n")
         end
 
         break if iterator_response[:complete]
