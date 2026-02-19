@@ -11,13 +11,15 @@ module Mediaflux
     #                        the fields for the assets or `get-values` to get a limited list of fields.
     # @param deep_search [Bool] Optional, false by default. When true queries the collection and it subcollections.
     # @param iterator [Bool] Optional, true by default. When true returns an iterator.  When false returns a list of results
-    def initialize(session_token:, aql_query: nil, collection: nil, action: "get-values", deep_search: false, iterator: true)
+    # @param include_path [Bool] Optional, true by default, When true we include the `path` in the list of fields we fetch.
+    def initialize(session_token:, aql_query: nil, collection: nil, action: "get-values", deep_search: false, iterator: true, include_path: true)
       super(session_token: session_token)
       @aql_query = aql_query
       @collection = collection
       @action = action
       @deep_search = deep_search
       @iterator = iterator
+      @include_path = include_path
     end
 
     # Specifies the Mediaflux service to use when running a query
@@ -62,8 +64,9 @@ module Mediaflux
       # Adds the declarations to fetch specific fields
       def declare_get_values_fields(xml)
         declare_get_value_field(xml, "name", "name")
-        # Don't fetch the path on purpose because that is apparently very expensive
-        # declare_get_value_field(xml, "path", "path")
+        if @include_path == true
+          declare_get_value_field(xml, "path", "path")
+        end
         declare_get_value_field(xml, "content/@total-size", "total-size")
         declare_get_value_field(xml, "mtime", "mtime")
         declare_get_value_field(xml, "@collection", "collection")
