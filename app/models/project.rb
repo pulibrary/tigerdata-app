@@ -256,6 +256,11 @@ class Project < ApplicationRecord
     Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
   end
 
+  def file_list_to_file_fast(session_id:, filename:)
+    file_inventory = ProjectFileInventory.new(project: self, session_id:, filename:)
+    file_inventory.generate()
+  end
+
   def quota(session_id:)
     quota_req = Mediaflux::ProjectQuotaRequest.new(session_token: session_id, asset_id: self.mediaflux_id)
     quota_req.quota

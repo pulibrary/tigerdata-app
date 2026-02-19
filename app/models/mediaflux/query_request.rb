@@ -32,17 +32,6 @@ module Mediaflux
       xml.xpath("/response/reply/result/iterator").text.to_i
     end
 
-    def result_items
-      xml = response_xml
-      xml.xpath("/response/reply/result").children.map do |node|
-        {
-          id: node.xpath("./@id").text,
-          name: node.xpath("./name").text,
-          path: node.xpath("./path").text
-        }
-      end
-    end
-
     private
 
       def build_http_request_body(name:)
@@ -73,7 +62,8 @@ module Mediaflux
       # Adds the declarations to fetch specific fields
       def declare_get_values_fields(xml)
         declare_get_value_field(xml, "name", "name")
-        declare_get_value_field(xml, "path", "path")
+        # Don't fetch the path on purpose because that is apparently very expensive
+        # declare_get_value_field(xml, "path", "path")
         declare_get_value_field(xml, "content/@total-size", "total-size")
         declare_get_value_field(xml, "mtime", "mtime")
         declare_get_value_field(xml, "@collection", "collection")
