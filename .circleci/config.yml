@@ -68,7 +68,7 @@ commands:
     steps:
       - run:
           name: Run Mediaflux in podman
-          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.30.0"
+          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.30.0"
           background: true
 
   run_postgres:
@@ -84,6 +84,10 @@ commands:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
           command: sudo update-crypto-policies --set LEGACY
+          background: true
+      - run:
+          name: output license expiration information
+          command: 'podman exec --user podman -it mediaflux bin/bash -c ''podman exec mediafluxinternal  bin/bash -c "java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe |grep expiry"'''
           background: true
 
   # Disable SHA1 for security purposes
