@@ -44,17 +44,31 @@
 }
 
 .contents-summary {
-  margin: 1rem 0px;
   padding: 0.75rem 1.5rem;
   background-color: $gray-10;
+  border-radius: 0.5rem;
+
+  // Note, this can not be a variable
+  --bs-border-color: #717171;
+}
+
+.project-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  align-self: stretch;
+  align-items: stretch;
 
   .file-inventory {
     color: $gray-100;
     font-weight: 600;
   }
+}
 
-  // Note, this can not be a variable
-  --bs-border-color: #717171;
+.project-files {
+  border-radius: 0.5rem;
+  border: 1px solid $gray-20;
 }
 
 /* File Explorer Section */
