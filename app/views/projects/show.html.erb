@@ -2,6 +2,7 @@
 
 <content id= "content">
   <div class="container-fluid">
+  <div class="project-pane">
     <div id="project-nav">
       <button id="project-content" class="tab-nav"> Content Preview </button>
       <button id="project-details" class="tab-nav"> Details </button>
@@ -11,8 +12,8 @@
       <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
       <div class="col-sm-8 text-end divider">
         <div name="project-contents-preview">
-          <button class="btn btn-secondary" popovertarget="list-contents-modal">Download Complete List</button>
-        </form>
+          <button class="btn pul-button-primary" popovertarget="list-contents-modal">Download Complete List</button>
+        </div>
       </div>
     </div>
 
@@ -28,9 +29,9 @@
         </div>
       </div>
     </section>
-  </content>
-
-</div>
+  </div>
+  </div>
+</content>
 
 <div popover="auto" id="list-contents-modal" class="pul-popover">
   <div class="modal-content">
