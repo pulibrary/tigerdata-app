@@ -5,7 +5,7 @@ class ProjectFileInventory
     @session_id = session_id
     @filename = filename
     @paths_queue = []
-    @log_prefix = "file_list_to_file_fast #{session_id[0..7]} #{project.mediaflux_id}"
+    @log_prefix = "file_list_to_file #{session_id[0..7]} #{project.mediaflux_id}"
     @io_file = nil
   end
 
@@ -14,6 +14,7 @@ class ProjectFileInventory
     start_time = Time.zone.now
     log_elapsed(start_time, "STARTED")
     @io_file = File.open(@filename, "a")
+    @io_file.write("ID, PATH, NAME, COLLECTION?, LAST_MODIFIED, SIZE\r\n")
 
     # Add the root of the project to the queue...
     add_path_to_queue(collection_id: @project.mediaflux_id, path_prefix: @project.project_directory)
@@ -41,8 +42,8 @@ class ProjectFileInventory
     def process_path(collection_id:, path_prefix:)
 
       # Create an interator for this path
-      # Notice that we do NOT include the path in the results because it is too expensive to retrieve
-      # it from Mediaflux (see https://github.com/pulibrary/tigerdata-app/issues/1344 for details)
+      # Notice that we do NOT include the path in the results because it's too expensive to retrieve it from
+      # Mediaflux (see https://github.com/pulibrary/tigerdata-app/issues/1274#issuecomment-2710860502 for details)
       query_req = Mediaflux::QueryRequest.new(session_token: @session_id, collection: collection_id, deep_search: false, include_path: false)
       iterator_id = query_req.result
 
@@ -67,7 +68,7 @@ class ProjectFileInventory
             # add the folder to the queue
             add_path_to_queue(collection_id: file.id, path_prefix: file.path)
           else
-            # collection the file information
+            # collect the file information
             csv_lines << "#{file.id}, #{file.path_only}, #{file.name}, #{file.collection}, #{file.last_modified}, #{file.size}"
           end
         end

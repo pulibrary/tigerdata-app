@@ -252,10 +252,4 @@ class Project < ApplicationRecord
         Pathname.new(@original_directory)
       end
     end
-
-    def log_elapsed(start_time, prefix, message)
-      elapsed_time = Time.zone.now - start_time
-      timing_info = "#{format('%.2f', elapsed_time)} s"
-      Rails.logger.info "#{prefix}: #{message}, #{timing_info}"
-    end
 end
