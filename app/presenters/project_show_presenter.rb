@@ -238,6 +238,12 @@ class ProjectShowPresenter
     @quota_breakdown ||= project.quota(session_id: @session_id)
   end
 
+  def free_space
+    return @quota_breakdown[:quota_allocation_human] if @quota_breakdown[:quota_used] == 0
+    free_space ||= @quota_breakdown[:quota_allocation] - @quota_breakdown[:quota_used]
+    free_space_human ||= helpers.number_to_human_size(free_space, :precision => 2)
+  end
+
   private
 
     def requested_by_user
