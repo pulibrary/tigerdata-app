@@ -582,3 +582,122 @@ blockquote {
     }
   }
 }
+.row {
+  padding-top: 1.31rem;
+  padding-bottom: 1.31rem;
+}
+@mixin detailed-quota-bullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 0.25rem;
+  border: 0 solid #e5e7eb;
+}
+@mixin detailed-quota-heading {
+  margin-right: 10px;
+}
+.detailed-quota-title {
+  color: #121212;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.detailed-quota-subtitle-container {
+  display: flex;
+  margin-bottom: 1.06rem;
+  .detailed-quota-subtitle {
+    margin-right: 15em;
+    color: $gray-60;
+  }
+}
+.detailed-quota-subtypes-free-space {
+  display: ruby;
+  margin-left: 8rem;
+  .subtype-size-free-space {
+    color: $gray-60;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+.detailed-quota-subtypes {
+  display: ruby;
+  margin-right: 2em;
+  .subtype-text {
+    margin-right: 0.5rem;
+  }
+  .subtype-size {
+    color: $gray-60;
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+}
+
+.detailed-storage-quota {
+  border-radius: 0.5rem;
+  &-total {
+    font-weight: bold;
+  }
+  @include media-breakpoint-up(lg) {
+    min-width: 100%;
+  }
+}
+.project-files {
+  @include detailed-quota-bullet;
+  @include detailed-quota-heading;
+  background: $princeton-orange;
+}
+
+.old-versions {
+  @include detailed-quota-bullet;
+  @include detailed-quota-heading;
+  background: $progress-bar-bg-old-versions;
+}
+
+.recycle-bin {
+  @include detailed-quota-bullet;
+  @include detailed-quota-heading;
+  background: $progress-bar-bg-recycle-bin;
+}
+
+.request-more-btn {
+  display: flex;
+  padding: 0.25rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  width: 13.2rem;
+  height: 1.625rem;
+  background: $gray-100;
+  border-radius: 0.35rem;
+  margin-left: auto;
+
+  @media (max-width: 853px) {
+    display: none;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+  a:hover {
+    color: white;
+  }
+  &:hover {
+    background: $gray-60;
+  }
+  &:active {
+    /* Outline properties */
+    outline-style: solid;
+    outline-color: black;
+    outline-width: 1px; /* Adjust outline thickness */
+    box-shadow: 0 0 0 0.2rem $white;
+
+    /* Space between button and outline */
+    outline-offset: 2px; /* Adjust the offset as needed */
+  }
+  &:focus {
+    border-width: 2px;
+    box-shadow: 0 0 0 0.2rem $bright-blue;
+    outline-color: $bright-blue;
+  }
+}
