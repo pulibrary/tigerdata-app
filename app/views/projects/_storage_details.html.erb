@@ -1,18 +1,55 @@
     <div popover="auto" id="storage-details"  class="pul-popover detail-storage-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="modal-title-frame"> 
+          <div class="modal-title-frame">
             <div class="model-title">Storage Usage Overview</div>
             <input type=button popovertarget="storage-details" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
           </div>
           <div class="modal-subtitle">
            Detailed breakdown of your storage usage across different categories
           </div>
-        </div>
-        <div>
-            <% if @presenter.can_increase_quota?(user: current_user) %>
-              <%= link_to "Request More", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
-            <% end %>
+          <div class="row">
+            <div class="detailed-storage-quota container-fluid px-3 py-2 border border-secondary me-0">
+              <span class="detailed-quota-title"><%= @presenter.quota_usage(session_id: current_user.mediaflux_session) %></span>
+              <div class="detailed-quota-subtitle-container">
+                  <div class="detailed-quota-subtitle">Combined usage across all categories </div>
+                  <% if @presenter.can_increase_quota?(user: current_user) %>
+                    <div class="request-more-btn">
+                      <%= link_to "Request more storage", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
+                      <%= image_tag "open-icon-white.svg", alt: "" %>
+                    </div>
+                  <% end %>
+              </div>
+              <div class="my-2">
+                <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
+                  <span class="progress-bar progress-bar-old-versions" title="Old versions: <%= @presenter.quota_breakdown[:old_versions_human] %>" style="width: <%= @presenter.quota_percentage_old_versions %>%"></span>
+                  <span class="progress-bar progress-bar-project-files" title="Project files: <%= @presenter.quota_breakdown[:project_files_human] %>" style="width: <%= @presenter.quota_percentage_files %>%"></span>
+                  <span class="progress-bar progress-bar-recycle-bin" title="Recycle bin: <%= @presenter.quota_breakdown[:recycle_bin_human] %>" style="width: <%= @presenter.quota_percentage_recycle_bin %>%"></span>
+                </div>
+              </div>
+              <div class="detailed-quota-subtypes-container">
+                <div class="detailed-quota-subtypes">
+                  <div class="project-files"></div>
+                  <div class="subtype-text">Project Files </div>
+                  <span class="subtype-size"><%= @presenter.quota_breakdown[:project_files_human] %> </span>
+                </div>
+                <div class="detailed-quota-subtypes">
+                  <div class="old-versions"> </div>
+                  <div class="subtype-text">Old Versions </div>
+                  <span class="subtype-size"><%= @presenter.quota_breakdown[:old_versions_human] %></span>
+                </div>
+                <div class="detailed-quota-subtypes">
+                  <div class="recycle-bin"> </div>
+                  <div class="subtype-text">Recycle Bin </div>
+                  <span class="subtype-size"><%= @presenter.quota_breakdown[:recycle_bin_human] %></span>
+                </div>
+                <div class="detailed-quota-subtypes-free-space">
+                    <span class="subtype-size-free-space"><%= @presenter.free_space %></span>
+                    <div class="subtype-size-free-space">free</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
