@@ -35,7 +35,22 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         within ".storage-quota" do
           click_on "Details"
           expect(page).to have_content("Storage Usage Overview")
-          expect(page).to have_content("Request More")
+          expect(page).to have_content("Request more storage")
+          expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
+      it "Shows the detailed storage usage breakdown to the sponsor" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_content("Combined usage across all categories")
+          expect(page).to have_content("Project Files")
+          expect(page).to have_content("Old Versions")
+          expect(page).to have_content("Recycle Bin")
+          expect(page).to have_content("free")
           click_on(class: "pul-popover-close")
           expect(page).not_to have_content("Storage Usage Overview")
         end
@@ -47,7 +62,22 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         within ".storage-quota" do
           click_on "Details"
           expect(page).to have_content("Storage Usage Overview")
-          expect(page).not_to have_content("Request More")
+          expect(page).not_to have_content("Request more storage")
+          expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
+      it "Shows the detailed storage usage breakdown to the data user" do
+        sign_in read_only
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_content("Combined usage across all categories")
+          expect(page).to have_content("Project Files")
+          expect(page).to have_content("Old Versions")
+          expect(page).to have_content("Recycle Bin")
+          expect(page).to have_content("free")
           click_on(class: "pul-popover-close")
           expect(page).not_to have_content("Storage Usage Overview")
         end
