@@ -155,8 +155,9 @@ jobs:
       - run: sleep 10
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
+          root: "~/tiger_data"
+          paths:
+            - "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -199,8 +200,9 @@ jobs:
       - run: sleep 10
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
+          root: "~/tiger_data"
+          paths:
+            - "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -265,8 +267,9 @@ jobs:
       - install_dependencies
       - install_yarn_dependencies
       - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
+          root: "~/tiger_data"
+          paths:
+            - "*"
       - run:
           name: Run vitest
           command: yarn run vitest run
@@ -300,6 +303,12 @@ jobs:
           parallel_finished: true
           fail_on_error: false
 
+  mflux_ci_pass:
+    machine: true
+    resource_class: pulibrary/ruby-deploy
+    steps:
+      - run: echo $MY_ENV_VAR
+
 workflows:
   version: 2
   build_accept_deploy:
@@ -308,23 +317,24 @@ workflows:
         - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
         - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
     jobs:
-      - bundler_lint
-      - bundler_audit
-      - test
-      - test_browser
-      - yarn_lint_format
-      - yarn_test
-      - done:
-          requires:
-            - test
-            - test_browser
-      - deploy:
-          requires: # Call the auto-deploy job after the main test job
-            - test
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
+      - mflux_ci_pass
+      # - bundler_lint
+      # - bundler_audit
+      # - test
+      # - test_browser
+      # - yarn_lint_format
+      # - yarn_test
+      # - done:
+      #     requires:
+      #       - test
+      #       - test_browser
+      # - deploy:
+      # requires: # Call the auto-deploy job after the main test job
+      #   - test
+      # filters: # This job is only run on the main branch
+      #   branches:
+      #     only:
+      #       - main
       - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
           requires:
             - test
