@@ -307,7 +307,7 @@ jobs:
     machine: true
     resource_class: pulibrary/ruby-deploy
     steps:
-      - run: echo $MY_ENV_VAR
+      - run: echo $DAILY_CI_MFLUX_PASSWORD
 
 workflows:
   version: 2
