@@ -156,8 +156,7 @@ jobs:
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
           root: &root "~/tiger_data"
-          paths:
-            - "*"
+          paths: "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -201,8 +200,7 @@ jobs:
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
           root: &root "~/tiger_data"
-          paths:
-            - "*"
+          paths: "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
@@ -268,8 +266,7 @@ jobs:
       - install_yarn_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
-          paths:
-            - "*"
+          paths: "*"
       - run:
           name: Run vitest
           command: yarn run vitest run
