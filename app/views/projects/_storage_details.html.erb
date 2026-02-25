@@ -1,4 +1,131 @@
-    <div popover="auto" id="storage-details"  class="pul-popover detail-storage-modal">
+<style>
+
+  .breakdown-row {
+    display: flex;
+    width: 900px;
+    height: 144px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: -30px
+  }
+
+  .understanding-alert-banner {
+    display: flex;
+    width: 900px;
+    padding: 16px 24px;
+    align-items: center;
+    gap: 24px;
+    margin-top: 45px;
+
+    border-radius: 8px;
+    background: var(--Status-Info, #E6EEF8);
+  }
+
+  .understanding-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .understanding-icon {
+    width: 24px;
+    height: 24px;
+    aspect-ratio: 1/1;
+    /* TODO: pick the right icon */
+    background: url("delete-icon.svg") no-repeat;
+  }
+
+  .understanding-header {
+    color: #121212;
+    font-family: "Libre Franklin";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  .understanding-text {
+    width: 640px;
+    color: #717171;
+    font-family: "Libre Franklin";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .understanding-learn-more {
+    display: flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 4px;
+    border: 1px solid var(--Neutral-Black, #121212);
+    background: var(--Neutral-White, #FFF);
+  }
+
+  .breakdown-first-box {
+    width: 283px;
+    flex-shrink: 0;
+  }
+
+  .breakdown-box {
+    display: flex;
+    height: 158px;
+    padding: 18px 24px;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: 1 0 0;
+
+    border-radius: 8px;
+    border: 1px solid #D0D0D0;
+    background: #FFF;
+  }
+
+  .breakdown-box-header {
+    display: flex;
+    height: 21px;
+    align-items: center;
+    flex: 1 0 0;
+    border: 0 solid #E5E7EB;
+    background: rgba(0, 0, 0, 0.00);
+  }
+
+  .breakdown-box-content {
+    display: flex;
+    height: 39px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border: 0 solid #E5E7EB;
+    background: rgba(0, 0, 0, 0.00);
+  }
+
+  .breakdown-box-footer {
+    display: flex;
+    height: 24px;
+    padding: 8px 0 0 2px;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-top: 1px solid #EEE;
+    background: rgba(0, 0, 0, 0.00);
+    color: #717171;
+    font-family: "Libre Franklin";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+</style>
+
+<div popover="auto" id="storage-details"  class="pul-popover detail-storage-modal">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-title-frame">
@@ -47,6 +174,59 @@
                     <span class="subtype-size-free-space"><%= @presenter.free_space %></span>
                     <div class="subtype-size-free-space">free</div>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="row breakdown-row">
+            <div class="breakdown-box breakdown-first-box">
+              <div class="breakdown-box-header">
+                Project Files
+              </div>
+              <div class="breakdown-box-content">
+                hello project files
+              </div>
+              <div class="breakdown-box-footer">
+                The active files in your project directory
+              </div>
+            </div>
+            <div class="breakdown-box">
+              <div class="breakdown-box-header">
+                Old versions
+              </div>
+              <div class="breakdown-box-content">
+                hello old versions
+              </div>
+              <div class="breakdown-box-footer">
+                Historic versions of current project files, recoverable by request
+              </div>
+            </div>
+            <div class="breakdown-box">
+              <div class="breakdown-box-header">
+                Recycle Bin
+              </div>
+              <div class="breakdown-box-content">
+                hello trash
+              </div>
+              <div class="breakdown-box-footer">
+                Deleted files, recoverable by request
+              </div>
+            </div>
+
+          </div>
+          <div class="row understanding-alert-banner">
+            <div class="understading-block">
+              <div class="understanding-icon"></div>
+              <div class="understanding-header">
+                Understanding Your Storage Usage and Capacity
+              </div>
+              <div class="understanding-text">
+                Your total usage includes files you can access, deleted files retained by the system,
+                and older versions of accessible files. To free up space, permanently delete retained
+                files or remove old file versions.
+              </div>
+              <div class="understanding-learn-more">
+                  <%= link_to "Learn more", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank" %>
+                  <%= image_tag "open-icon.svg", alt: "" %>
               </div>
             </div>
           </div>

@@ -133,6 +133,7 @@
   }
   .detail-storage-modal {
     width: 60rem !important;
+    height: 650px;
     .modal-header {
       display: flex;
       flex-direction: column;
@@ -149,6 +150,7 @@
     padding-top: 1.31rem;
     padding-bottom: 1.31rem;
   }
+
   @mixin detailed-quota-bullet {
     width: 0.75rem;
     height: 0.75rem;
