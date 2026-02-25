@@ -155,7 +155,7 @@ jobs:
       - run: sleep 10
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
-          root: "~/tiger_data"
+          root: &root "~/tiger_data"
           paths:
             - "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
@@ -200,7 +200,7 @@ jobs:
       - run: sleep 10
       - enable_sha1_for_mediaflux
       - persist_to_workspace:
-          root: "~/tiger_data"
+          root: &root "~/tiger_data"
           paths:
             - "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
@@ -267,7 +267,7 @@ jobs:
       - install_dependencies
       - install_yarn_dependencies
       - persist_to_workspace:
-          root: "~/tiger_data"
+          root: &root "~/tiger_data"
           paths:
             - "*"
       - run:
