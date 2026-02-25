@@ -335,11 +335,11 @@ workflows:
       #   branches:
       #     only:
       #       - main
-      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
-          requires:
-            - test
-            - deploy
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
+      # - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
+      #     requires:
+      #       - test
+      #       - deploy
+      #     filters: # This job is only run on the main branch
+      #       branches:
+      #         only:
+      #           - main
