@@ -170,6 +170,7 @@ jobs:
           coverage_reporter_version: "v0.6.17"
           parallel: true
           flag_name: job1
+          fail_on_error: false
 
   test_browser:
     working_directory: ~/tiger_data
@@ -213,6 +214,7 @@ jobs:
           coverage_reporter_version: "v0.6.17"
           parallel: true
           flag_name: job2
+          fail_on_error: false
 
   yarn_lint_format:
     docker:
@@ -296,6 +298,7 @@ jobs:
       - coveralls/upload:
           carryforward: job1,job2
           parallel_finished: true
+          fail_on_error: false
 
 workflows:
   version: 2
