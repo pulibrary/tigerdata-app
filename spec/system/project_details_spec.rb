@@ -67,6 +67,25 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).not_to have_content("Storage Usage Overview")
         end
       end
+      it "Shows the storage subtype boxes to the sponsor" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+          expect(page).to have_css(".breakdown-title", text: "Old Versions")
+          expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
+
+          expect(page).to have_css(".progress-container", text: "used", count: 3)
+
+          expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
+          expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+          expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
+
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
 
       it "Shows the storage detail button to the data user" do
         sign_in read_only
@@ -90,6 +109,24 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_content("Old Versions")
           expect(page).to have_content("Recycle Bin")
           expect(page).to have_content("free")
+          click_on(class: "pul-popover-close")
+          expect(page).not_to have_content("Storage Usage Overview")
+        end
+      end
+      it "Shows the storage subtype boxes to the data user" do
+        sign_in read_only
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+          expect(page).to have_css(".breakdown-title", text: "Old Versions")
+          expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
+
+          expect(page).to have_css(".progress-container", text: "used", count: 3)
+
+          expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
+          expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+          expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
           click_on(class: "pul-popover-close")
           expect(page).not_to have_content("Storage Usage Overview")
         end
