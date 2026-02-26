@@ -48,7 +48,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           click_on "Details"
           expect(page).to have_content("Understanding Your Storage Usage and Capacity")
           expect(page).to have_content("Your total usage includes files you can access")
-          expect(page).to have_link("Request more storage", href: "https://tigerdata.princeton.edu/form/quota-increase-request")
+          expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/form/quota-increase-request")
           click_on(class: "pul-popover-close")
           expect(page).not_to have_content("Storage Usage Overview")
         end
@@ -101,7 +101,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           click_on "Details"
           expect(page).to have_content("Understanding Your Storage Usage and Capacity")
           expect(page).to have_content("Your total usage includes files you can access")
-          expect(page).to have_link("Request more storage", href: "https://tigerdata.princeton.edu/form/quota-increase-request")
+          expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/form/quota-increase-request")
           click_on(class: "pul-popover-close")
           expect(page).not_to have_content("Storage Usage Overview")
         end
