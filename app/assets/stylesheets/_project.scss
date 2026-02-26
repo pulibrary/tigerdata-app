@@ -360,6 +360,7 @@ blockquote {
   .detail-row {
     display: flex;
     padding: 0 1rem 1rem 1rem;
+    gap: 1.25rem;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid $gray-10;
@@ -373,11 +374,37 @@ blockquote {
   }
   .detail-subheading {
     margin: 0 !important;
-    width: max-content;
+    width: 15.8125rem;
+    height: 3rem;
+  }
+  .detail-description {
+    margin: 0 !important;
+    width: 15.8125rem;
+    height: 3rem;
+    color: var(--Neutral-Dark-Gray, #717171);
+
+    /* Body S */
+    font-family: "Libre Franklin";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem; /* 150% */
+
+    .description-link {
+      color: #0b7097;
+      &:hover {
+        background: #6dade9;
+      }
+    }
+    .img {
+      filter: invert(28%) sepia(42%) saturate(2881%) hue-rotate(172deg) brightness(96%)
+        contrast(91%);
+    }
   }
 
   .detail-value {
     margin: 0 !important;
+    padding-bottom: 1.45rem;
   }
 }
 
