@@ -139,15 +139,22 @@
 
               <div class="detail-table">
                 <div class="detail-row" id="hpc-access">
-                  <div class="detail-subheading">HPC Access</div>
+                  <div class="detail-subheading">Access your project from Research Computing clusters</div>
+                  <div class="detail-description">For high performance computing needs</div>
                   <div class="detail-value"><%= @presenter.hpc %></div>
                 </div>
                 <div class="detail-row" id="smb-access">
-                  <div class="detail-subheading">SMB Access</div>
+                  <div class="detail-subheading">Enable network file sharing on personal computers</div>
+                  <div class="detail-description">For SMB/CIFS access</div>
                   <div class="detail-value"><%= @presenter.smb %></div>
                 </div>
                 <div class="detail-row-last" id="globus-access">
-                  <div class="detail-subheading">Globus Transfer Access</div>
+                  <div class="detail-subheading">Support high-performance data transfers</div>
+                  <div class="detail-description">For a
+                     <a class="description-link"href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus" target="_blank">Globus
+                        <span class="img"><%= image_tag "open-icon.svg", alt: "" %></span>
+                     </a> endpoint for this project
+                  </div>
                   <div class="detail-value"><%= @presenter.globus %></div>
                 </div>
               </div>
