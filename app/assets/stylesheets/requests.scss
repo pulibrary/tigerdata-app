@@ -189,6 +189,33 @@
   gap: 0.5rem;
 }
 
+.users-detail-pair {
+  @media (max-width: 830px) {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  display: flex;
+}
+
+.departments-detail-pair {
+  @media (max-width: 830px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  display: flex;
+  gap: 0.5rem;
+}
+
+.connections-detail-pair {
+  @media (max-width: 830px) {
+    display: flex;
+    flex-direction: column;
+  }
+  display: flex;
+  gap: 0.5rem;
+}
+
 .horizontal-frame {
   display: flex;
   align-items: flex-start;
