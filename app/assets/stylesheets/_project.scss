@@ -379,7 +379,7 @@ blockquote {
   }
   .detail-description {
     margin: 0 !important;
-    width: 15.8125rem;
+    width: 12.5rem;
     height: 3rem;
     color: var(--Neutral-Dark-Gray, #717171);
 
@@ -405,6 +405,27 @@ blockquote {
   .detail-value {
     margin: 0 !important;
     padding-bottom: 1.45rem;
+    .lux-badge {
+      width: 4.0625rem;
+      height: 1.25rem;
+      justify-content: center;
+      .badge-text {
+        font-weight: 600;
+      }
+    }
+    .request-globus-btn {
+      display: flex;
+      width: 4.6875rem;
+      height: 1.625rem;
+      padding: 0.25rem 0.75rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      &:hover {
+        background: $gray-60;
+      }
+    }
   }
 }
 

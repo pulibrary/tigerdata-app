@@ -141,12 +141,32 @@
                 <div class="detail-row" id="hpc-access">
                   <div class="detail-subheading">Access your project from Research Computing clusters</div>
                   <div class="detail-description">For high performance computing needs</div>
-                  <div class="detail-value"><%= @presenter.hpc %></div>
+                  <div class="detail-value">
+                     <% if @presenter.hpc == "Yes" %>
+                           <lux-badge class="lux-badge">
+                              <div class="badge-text">Enabled</div>
+                           </lux-badge>
+                        <% else %>
+                           <lux-badge class="lux-badge lux-badge-grey">
+                              <div class="badge-text">Disabled</div>
+                           </lux-badge>
+                     <% end %>
+                  </div>
                 </div>
                 <div class="detail-row" id="smb-access">
                   <div class="detail-subheading">Enable network file sharing on personal computers</div>
                   <div class="detail-description">For SMB/CIFS access</div>
-                  <div class="detail-value"><%= @presenter.smb %></div>
+                  <div class="detail-value">
+                     <% if @presenter.smb == "Yes" %>
+                           <lux-badge class="lux-badge">
+                              <div class="badge-text">Enabled</div>
+                           </lux-badge>
+                        <% else %>
+                           <lux-badge class="lux-badge lux-badge-grey">
+                              <div class="badge-text">Disabled</div>
+                           </lux-badge>
+                     <% end %>
+                  </div>
                 </div>
                 <div class="detail-row-last" id="globus-access">
                   <div class="detail-subheading">Support high-performance data transfers</div>
@@ -155,7 +175,21 @@
                         <span class="img"><%= image_tag "open-icon.svg", alt: "" %></span>
                      </a> endpoint for this project
                   </div>
-                  <div class="detail-value"><%= @presenter.globus %></div>
+                  <div class="detail-value">
+                     <% if @presenter.globus == "Yes" %>
+                           <lux-badge class="lux-badge">
+                              <div class="badge-text">Enabled</div>
+                           </lux-badge>
+                        <% else %>
+                           <% if (current_user == @presenter.data_sponsor) || (current_user == @presenter.data_manager) %>
+                              <button class="btn pul-button-primary request-globus-btn">Request</button>
+                           <% else %>
+                              <lux-badge class="lux-badge lux-badge-grey">
+                                 <div class="badge-text">Disabled</div>
+                              </lux-badge>
+                           <% end %>
+                     <% end %>
+                  </div>
                 </div>
               </div>
             </div>

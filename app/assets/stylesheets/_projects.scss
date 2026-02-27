@@ -201,6 +201,7 @@
     border-color: #d0d0d0;
     border-width: 1px;
     border-style: solid;
+    width: 56.251rem;
     &-total {
       font-weight: bold;
     }
@@ -230,13 +231,13 @@
     display: flex;
     padding: 0.25rem 0.75rem;
     justify-content: center;
-    align-items: center;
-    gap: 0.35rem;
-    width: 13.2rem;
+    gap: 0.25rem;
+    width: 10.6875rem;
     height: 1.625rem;
     background: $gray-100;
     border-radius: 0.35rem;
     margin-left: auto;
+    font-size: 0.75rem;
 
     @media (max-width: 853px) {
       display: none;
@@ -314,37 +315,9 @@
         margin-left: 1.5rem;
         font-weight: 600;
         border-radius: 0.25rem;
-        border: 1px solid var(--Neutral-Black, #121212);
-        background: var(--Neutral-White, #fff);
-
-        @media (max-width: 853px) {
-          display: none;
-        }
-
-        a {
-          color: black;
-          text-decoration: none;
-        }
-        a:hover {
-          color: white;
-        }
         &:hover {
+          color: black;
           background: $gray-60;
-        }
-        &:active {
-          /* Outline properties */
-          outline-style: solid;
-          outline-color: black;
-          outline-width: 1px; /* Adjust outline thickness */
-          box-shadow: 0 0 0 0.2rem $white;
-
-          /* Space between button and outline */
-          outline-offset: 2px; /* Adjust the offset as needed */
-        }
-        &:focus {
-          border-width: 2px;
-          box-shadow: 0 0 0 0.2rem $bright-blue;
-          outline-color: $bright-blue;
         }
       }
     }

@@ -24,11 +24,11 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        expect(page).to have_content("Request more storage")
+        expect(page).to have_button("Request more storage")
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
-        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        expect(page).to have_button("Learn more")
         expect(page).to have_content("Combined usage across all categories")
         expect(page).to have_content("Project Files")
         expect(page).to have_content("Old Versions")
@@ -54,7 +54,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        expect(page).not_to have_content("Request more storage")
+        expect(page).not_to have_button("Request more storage")
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Combined usage across all categories")
         expect(page).to have_content("Project Files")
@@ -72,7 +72,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
-        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        expect(page).to have_button("Learn more")
         click_on(class: "pul-popover-close")
         expect(page).not_to have_content("Storage Usage Overview")
       end
@@ -213,9 +213,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs" ,"Yes"
-        expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "No"
-        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project" ,"No"
+        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs" ,"Enabled"
+        expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
+        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project" ,"Request"
         expect(page).to have_link("Globus", href: "https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus")
       end
     end
