@@ -24,11 +24,11 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        expect(page).to have_content("Request more storage")
+        expect(page).to have_button("Request more storage")
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
-        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        expect(page).to have_button("Learn more")
         expect(page).to have_content("Combined usage across all categories")
         expect(page).to have_content("Project Files")
         expect(page).to have_content("Old Versions")
@@ -54,7 +54,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        expect(page).not_to have_content("Request more storage")
+        expect(page).not_to have_button("Request more storage")
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Combined usage across all categories")
         expect(page).to have_content("Project Files")
@@ -72,7 +72,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
-        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        expect(page).to have_button("Learn more")
         click_on(class: "pul-popover-close")
         expect(page).not_to have_content("Storage Usage Overview")
       end
