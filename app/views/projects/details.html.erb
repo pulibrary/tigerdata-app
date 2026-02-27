@@ -181,12 +181,12 @@
                               <div class="badge-text">Enabled</div>
                            </lux-badge>
                         <% else %>
-                           <% if (current_user == @presenter.data_sponsor) || (current_user == @presenter.data_manager)%>
+                           <% if (current_user == @presenter.data_sponsor) || (current_user == @presenter.data_manager) %>
+                              <button class="btn pul-button-primary request-globus-btn">Request</button>
+                           <% else %>
                               <lux-badge class="lux-badge lux-badge-grey">
                                  <div class="badge-text">Disabled</div>
                               </lux-badge>
-                           <% else %>
-                              <button class="btn pul-button-primary request-globus-btn">Request</button>
                            <% end %>
                      <% end %>
                   </div>
