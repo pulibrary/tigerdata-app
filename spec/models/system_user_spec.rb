@@ -19,4 +19,25 @@ RSpec.describe SystemUser, type: :model do
       expect(mediaflux_logon).to have_received(:session_token).once
     end
   end
+
+  context "EOF error" do
+    let(:mediaflux_logon) { Mediaflux::LogonRequest.new }
+
+    it "captures and retries EOF errors" do
+      
+      error_count = 0
+      allow(mediaflux_logon).to receive(:resolve).and_wrap_original do |original_method, *args|
+        if error_count == 0
+          # Force an error the first time to make sure the retry is invoked in the code
+          error_count = 1
+          raise EOFError, "error"
+        else
+          original_method.call(*args)
+        end
+      end
+
+      expect(SystemUser.mediaflux_session).not_to be_nil
+    end
+  end
+
 end
