@@ -184,6 +184,9 @@
 }
 
 .basic-details-navigation {
+  @media (max-width: 1150px) {
+    display: none;
+  }
   width: 25%;
   height: 50vh;
   min-height: 200px;
