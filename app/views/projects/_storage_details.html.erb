@@ -16,12 +16,12 @@
               <span class="detailed-quota-title"><%= @presenter.quota_usage(session_id: current_user.mediaflux_session) %></span>
               <div class="detailed-quota-subtitle-container">
                   <div class="detailed-quota-subtitle">Combined usage across all categories </div>
-                  <% if @presenter.can_increase_quota?(user: current_user) %>
-                    <div class="request-more-btn">
-                      <%= link_to "Request more storage", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
-                      <%= image_tag "open-icon-white.svg", alt: "" %>
-                    </div>
-                  <% end %>
+                    <% if @presenter.can_increase_quota?(user: current_user) %>
+                      <button class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
+                        Request more storage
+                        <%= image_tag "open-icon-white.svg", alt: "" %>
+                      </button>
+                    <% end %>
               </div>
               <div class="my-2">
                 <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
@@ -106,11 +106,12 @@
               <span class="understand-storage-text"> Understanding Your Storage Usage and Capacity</span>
             </div>
             <div class="understand-storage-subtitle">
-              <p class="subtitle-content"> Your total usage includes files you can access, deleted files retained by the system, and older versions of accessible files. To free up space, permanently delete retained files or remove old file versions.</p>
-              <div class="learn-more-btn">
-                <%= link_to "Learn more", "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity", target: "_blank" %>
-                <%= image_tag "open-icon.svg", alt: "" %>
-              </div>
+              <p class="subtitle-content">
+                Your total usage includes files you can access, deleted files retained by the system, and older versions of accessible files. To free up space, permanently delete retained files or remove old file versions.
+              </p>
+              <button class="btn pul-button-secondary learn-more-btn" onclick="window.open('https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity', '_blank')">
+                Learn more <%= image_tag "open-icon.svg", alt: "" %>
+              </button>
             </div>
           </div>
         </div>
