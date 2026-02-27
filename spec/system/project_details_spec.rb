@@ -18,132 +18,64 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       request.approve(sponsor_and_data_manager_user)
     end
 
-    context "details feature on" do
-      before do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:storage_details, true)
-      end
+    it "Shows the storage detail button and complete modal to the sponsor" do
+      sign_in sponsor_user
+      visit "/projects/#{project_in_mediaflux.id}/details"
+      within ".storage-quota" do
+        click_on "Details"
+        expect(page).to have_content("Storage Usage Overview")
+        expect(page).to have_content("Request more storage")
+        expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
+        expect(page).to have_content("Understanding Your Storage Usage and Capacity")
+        expect(page).to have_content("Your total usage includes files you can access")
+        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        expect(page).to have_content("Combined usage across all categories")
+        expect(page).to have_content("Project Files")
+        expect(page).to have_content("Old Versions")
+        expect(page).to have_content("Recycle Bin")
+        expect(page).to have_content("free")
+        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Old Versions")
+        expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 
-      after do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:storage_details, false)
-      end
+        expect(page).to have_css(".progress-container", text: "used", count: 3)
 
-      it "Shows the storage detail button to the sponsor" do
-        sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Storage Usage Overview")
-          expect(page).to have_content("Request more storage")
-          expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-      it "Shows the `understand your storage usage alert` to the sponsor" do
-        sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Understanding Your Storage Usage and Capacity")
-          expect(page).to have_content("Your total usage includes files you can access")
-          expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-      it "Shows the detailed storage usage breakdown to the sponsor" do
-        sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Combined usage across all categories")
-          expect(page).to have_content("Project Files")
-          expect(page).to have_content("Old Versions")
-          expect(page).to have_content("Recycle Bin")
-          expect(page).to have_content("free")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-      it "Shows the storage subtype boxes to the sponsor" do
-        sign_in sponsor_user
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_css(".breakdown-title", text: "Accessable Files")
-          expect(page).to have_css(".breakdown-title", text: "Old Versions")
-          expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
+        expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
+        expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+        expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
 
-          expect(page).to have_css(".progress-container", text: "used", count: 3)
-
-          expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
-          expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
-          expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
-
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
+        click_on(class: "pul-popover-close")
+        expect(page).not_to have_content("Storage Usage Overview")
       end
+    end
+    it "Shows the storage detail button and complete modal to the data user but no request more button" do
+      sign_in read_only
+      visit "/projects/#{project_in_mediaflux.id}/details"
+      within ".storage-quota" do
+        click_on "Details"
+        expect(page).to have_content("Storage Usage Overview")
+        expect(page).not_to have_content("Request more storage")
+        expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
+        expect(page).to have_content("Combined usage across all categories")
+        expect(page).to have_content("Project Files")
+        expect(page).to have_content("Old Versions")
+        expect(page).to have_content("Recycle Bin")
+        expect(page).to have_content("free")
+        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Old Versions")
+        expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 
-      it "Shows the storage detail button to the data user" do
-        sign_in read_only
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Storage Usage Overview")
-          expect(page).not_to have_content("Request more storage")
-          expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-      it "Shows the detailed storage usage breakdown to the data user" do
-        sign_in read_only
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Combined usage across all categories")
-          expect(page).to have_content("Project Files")
-          expect(page).to have_content("Old Versions")
-          expect(page).to have_content("Recycle Bin")
-          expect(page).to have_content("free")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-      it "Shows the storage subtype boxes to the data user" do
-        sign_in read_only
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_css(".breakdown-title", text: "Accessable Files")
-          expect(page).to have_css(".breakdown-title", text: "Old Versions")
-          expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
+        expect(page).to have_css(".progress-container", text: "used", count: 3)
 
-          expect(page).to have_css(".progress-container", text: "used", count: 3)
-
-          expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
-          expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
-          expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
+        expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
+        expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+        expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
+        expect(page).to have_content("Understanding Your Storage Usage and Capacity")
+        expect(page).to have_content("Your total usage includes files you can access")
+        expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
+        click_on(class: "pul-popover-close")
+        expect(page).not_to have_content("Storage Usage Overview")
       end
-      it "Shows the `understand your storage usage alert` to the data user" do
-        sign_in read_only
-        visit "/projects/#{project_in_mediaflux.id}/details"
-        within ".storage-quota" do
-          click_on "Details"
-          expect(page).to have_content("Understanding Your Storage Usage and Capacity")
-          expect(page).to have_content("Your total usage includes files you can access")
-          expect(page).to have_link("Learn more", href: "https://tigerdata.princeton.edu/understanding-your-projects-storage-usage-and-capacity")
-          click_on(class: "pul-popover-close")
-          expect(page).not_to have_content("Storage Usage Overview")
-        end
-      end
-
     end
 
     context "Navigation Buttons" do
@@ -157,7 +89,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             expect(page).to have_content(project_in_mediaflux.title)
             expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).to have_content("Request More")
+            expect(page).to have_content("Details")
 
             # The description should be rendered twice (at the top and as part of the details)
             expect(page).to have_selector("#description-text")

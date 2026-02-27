@@ -49,13 +49,7 @@
               <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @presenter.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
             </div>
             <div>
-              <% if Flipflop.storage_details? %>
                 <input type="button" popovertarget="storage-details" value="Details" class="pul-button pul-button-link"></input>
-              <% else %>
-                <% if @presenter.can_increase_quota?(user: current_user) %>
-                  <%= link_to "Request More", "https://tigerdata.princeton.edu/form/quota-increase-request", target: "_blank", onclick: "log_plausible_request_more();" %>
-                <% end %>
-              <% end %>
             </div>
           </div>
           <%= render partial: "storage_details" %>
