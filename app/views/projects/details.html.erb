@@ -49,11 +49,11 @@
                <% end %>
             </p>
          </div>
-         <div class="detail-pair">
+         <div class="description-detail-pair">
             <li class="detail-subheading">Project Description</li>
             <p id="description-text-full" class="detail-value"><%= @presenter.description %></p>
          </div>
-         <div class="detail-pair">
+         <div class="departments-detail-pair">
             <li class="detail-subheading">Department(s)</li>
             <p class="detail-value">
                <% if @presenter.departments.empty? %>
@@ -91,13 +91,13 @@
             <li class="detail-subheading">Data Manager</li>
             <p class="detail-value"><%= render partial: 'shared/user_display', locals: {user_name: @presenter.data_manager.display_name_only_safe, user_id: @presenter.data_manager.uid }%></p>
          </div>
-         <div class="detail-pair">
+         <div class="users-detail-pair">
             <li class="detail-subheading">Data User(s)</li>
             <p class="detail-value">
                <% if @presenter.data_users.count == 0 %>
                  <strong class="px-0">&mdash;</strong>
                <% else %>
-                 <div class="detail-table">
+                 <div class="users-detail-table">
                     <% @presenter.data_users.each do |user| %>
                         <div class="detail-row<%= "-last" if user == @presenter.data_users.last %>">
                            <div class="detail-subheading"><%= render partial: 'shared/user_display', locals: {user_name: user.display_name, user_id: user.uid }%></div>
@@ -134,10 +134,10 @@
             <p class="detail-value"><%= @presenter.number_of_files %></p>
          </div>
          <div class="sub-details basic-details-fields">
-            <div class="detail-pair">
+            <div class="connections-detail-pair">
               <div class="detail-subheading">Connection Options</div>
 
-              <div class="detail-table">
+              <div class="connections-detail-table">
                 <div class="detail-row" id="hpc-access">
                   <div class="detail-subheading">Access your project from Research Computing clusters</div>
                   <div class="detail-description">For high performance computing needs</div>
