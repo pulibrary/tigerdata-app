@@ -131,8 +131,295 @@
       justify-content: space-between;
     }
   }
-}
+  .detail-storage-modal {
+    width: 60rem !important;
+    .modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      align-self: stretch;
+      gap: 0.5rem;
 
+      .modal-subtitle {
+        color: $gray-60;
+      }
+    }
+  }
+  .row {
+    padding-top: 1.31rem;
+    padding-bottom: 1.31rem;
+  }
+  @mixin detailed-quota-bullet {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 0.25rem;
+    border: 0 solid #e5e7eb;
+  }
+  @mixin detailed-quota-heading {
+    margin-right: 10px;
+  }
+  .detailed-quota-title {
+    color: #121212;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .detailed-quota-subtitle-container {
+    display: flex;
+    margin-bottom: 1.06rem;
+    .detailed-quota-subtitle {
+      margin-right: 15em;
+      color: $gray-60;
+    }
+  }
+  .detailed-quota-subtypes-free-space {
+    display: ruby;
+    margin-left: 8rem;
+    .subtype-size-free-space {
+      color: $gray-60;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  }
+  .detailed-quota-subtypes {
+    display: ruby;
+    margin-right: 2em;
+    .subtype-text {
+      margin-right: 0.5rem;
+    }
+    .subtype-size {
+      color: $gray-60;
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+  }
+
+  .detailed-storage-quota {
+    border-radius: 0.5rem;
+    background: #fff;
+    border-color: #d0d0d0;
+    border-width: 1px;
+    border-style: solid;
+    width: 56.251rem;
+    &-total {
+      font-weight: bold;
+    }
+    @include media-breakpoint-up(lg) {
+      min-width: 100%;
+    }
+  }
+  .project-files {
+    @include detailed-quota-bullet;
+    @include detailed-quota-heading;
+    background: $princeton-orange;
+  }
+
+  .old-versions {
+    @include detailed-quota-bullet;
+    @include detailed-quota-heading;
+    background: $progress-bar-bg-old-versions;
+  }
+
+  .recycle-bin {
+    @include detailed-quota-bullet;
+    @include detailed-quota-heading;
+    background: $progress-bar-bg-recycle-bin;
+  }
+
+  .request-more-btn {
+    display: flex;
+    padding: 0.25rem 0.75rem;
+    justify-content: center;
+    gap: 0.25rem;
+    width: 10.6875rem;
+    height: 1.625rem;
+    background: $gray-100;
+    border-radius: 0.35rem;
+    margin-left: auto;
+    font-size: 0.75rem;
+
+    @media (max-width: 853px) {
+      display: none;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    a:hover {
+      color: white;
+    }
+    &:hover {
+      background: $gray-60;
+    }
+    &:active {
+      /* Outline properties */
+      outline-style: solid;
+      outline-color: black;
+      outline-width: 1px; /* Adjust outline thickness */
+      box-shadow: 0 0 0 0.2rem $white;
+
+      /* Space between button and outline */
+      outline-offset: 2px; /* Adjust the offset as needed */
+    }
+    &:focus {
+      border-width: 2px;
+      box-shadow: 0 0 0 0.2rem $bright-blue;
+      outline-color: $bright-blue;
+    }
+  }
+
+  .understand-storage-container {
+    display: inline;
+    padding: 1rem 1.5rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    background: var(--Status-Info, #e6eef8);
+    width: 56.25rem;
+    height: 6rem;
+    margin-top: 1.31rem;
+
+    .understand-storage-title {
+      gap: 0.5rem;
+
+      .info-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        aspect-ratio: 1/1;
+        fill: #1c1b1f;
+      }
+      .understand-storage-text {
+        font-weight: 600;
+      }
+    }
+    .understand-storage-subtitle {
+      display: inline-flex;
+      gap: 1.5rem;
+      padding-left: 1.8rem;
+      .subtitle-content {
+        color: $gray-60;
+        font-size: 0.75rem;
+        font-weight: 400;
+        width: 40rem;
+      }
+      .learn-more-btn {
+        display: flex;
+        padding: 0.25rem 0.75rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.35rem;
+        width: auto;
+        height: 1.625rem;
+        border-radius: 0.35rem;
+        margin-left: 1.5rem;
+        font-weight: 600;
+        border-radius: 0.25rem;
+        &:hover {
+          color: black;
+          background: $gray-60;
+        }
+      }
+    }
+  }
+
+  .breakdown-row {
+    display: flex;
+    width: 56.25rem;
+    height: 9rem;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .breakdown-box {
+    display: flex;
+    width: 17.6875rem;
+    height: 9.875rem;
+    padding: 1.125rem 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+
+    border-radius: 0.5rem;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+  }
+  @mixin breakdown-box-header {
+    display: flex;
+    height: 21px;
+    align-items: center;
+    flex: 1 0 0;
+    border: 0 solid #e5e7eb;
+    background: rgba(0, 0, 0, 0);
+    padding-right: 5rem;
+    gap: 0.3rem;
+  }
+  .folder-header {
+    @include breakdown-box-header;
+  }
+  .versions-header {
+    @include breakdown-box-header;
+    padding-right: 7rem;
+  }
+
+  .recycle-header {
+    @include breakdown-box-header;
+    padding-right: 8rem;
+  }
+
+  .breakdown-title {
+    color: #121212;
+    font-size: 1rem;
+    font-weight: 600;
+    width: max-content;
+  }
+
+  .progress-container {
+    width: 100%;
+    border-radius: 0.25rem;
+    .progress {
+      height: 1.25rem;
+    }
+    .subtype-size {
+      color: $gray-60;
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
+  }
+
+  @mixin breakdown-box-footer {
+    display: flex;
+    height: 24px;
+    align-items: flex-end;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-top: 1px solid #eee;
+    background: rgba(0, 0, 0, 0);
+    color: #717171;
+    font-family: "Libre Franklin";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .folder-footer {
+    @include breakdown-box-footer;
+    padding: 0.23rem 0;
+  }
+  .versions-footer {
+    @include breakdown-box-footer;
+  }
+  .recycle-footer {
+    @include breakdown-box-footer;
+    padding: 0.23rem 0;
+  }
+
+  .versions-footer-text {
+    margin-bottom: -0.7rem;
+  }
+}
 .project-info {
   display: flex;
   flex-direction: column;
@@ -147,4 +434,5 @@
 .project-alerts {
   position: absolute;
   top: 17%;
+  margin-right: 20px;
 }

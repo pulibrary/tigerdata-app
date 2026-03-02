@@ -68,7 +68,7 @@ commands:
     steps:
       - run:
           name: Run Mediaflux in podman
-          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.30.0"
+          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.31.0"
           background: true
 
   run_postgres:
@@ -170,6 +170,7 @@ jobs:
           coverage_reporter_version: "v0.6.17"
           parallel: true
           flag_name: job1
+          fail_on_error: false
 
   test_browser:
     working_directory: ~/tiger_data
@@ -213,6 +214,7 @@ jobs:
           coverage_reporter_version: "v0.6.17"
           parallel: true
           flag_name: job2
+          fail_on_error: false
 
   yarn_lint_format:
     docker:
@@ -296,6 +298,7 @@ jobs:
       - coveralls/upload:
           carryforward: job1,job2
           parallel_finished: true
+          fail_on_error: false
 
 workflows:
   version: 2
