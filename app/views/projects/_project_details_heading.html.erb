@@ -53,6 +53,7 @@
             </div>
           </div>
           <%= render partial: "storage_details" %>
+          <%= render partial: "globus_access" %>
           <div class="my-2">
             <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
               <span class="progress-bar progress-bar-project-files" title="Project files: <%= @presenter.quota_breakdown[:project_files_human] %>" style="width: <%= @presenter.quota_percentage_files %>%"></span>

@@ -25,3 +25,12 @@ export function popoverManagement() {
     });
   }
 }
+
+export function globusPopoverManagement() {
+  const globusAccessPopover = document.getElementById('globus-access');
+  const switchGlobusPopover = document.getElementById('globus-switch');
+
+  switchGlobusPopover.addEventListener('click', () => {
+    globusAccessPopover.hidePopover();
+  });
+}
