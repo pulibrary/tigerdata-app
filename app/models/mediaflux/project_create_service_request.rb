@@ -36,16 +36,25 @@ module Mediaflux
     # This includes debug information that is useful to troubleshoot issues
     # if the request fails.
     def debug_output
-      response_xml.xpath("response/reply/result/result").to_s
+      if new_project_create?
+        response_xml.xpath("response/reply/result/lineage").to_s
+      else
+        response_xml.xpath("response/reply/result/result").to_s
+      end
     end
 
     # Returns the id of the collection created in Mediaflux
     def mediaflux_id
-      # Extract the <id>nnnn</id> value from the output and then extract the
-      # numeric value inside of it.
-      decoded_string = CGI.unescapeHTML(debug_output)
-      xml_doc  = Nokogiri::XML(decoded_string)
-      (xml_doc.xpath("result/result/id/text()").to_s).to_i
+      if new_project_create?
+        # We have the value in the `id` node
+        response_xml.xpath("response/reply/result/id").text.to_i
+      else
+        # Extract the <id>nnnn</id> value from the output and then extract the
+        # numeric value inside of it.
+        decoded_string = CGI.unescapeHTML(debug_output)
+        xml_doc  = Nokogiri::XML(decoded_string)
+        (xml_doc.xpath("result/result/id/text()").to_s).to_i
+      end
     end
 
     private
@@ -100,6 +109,16 @@ module Mediaflux
     def departments_string(departments)
       names = departments.map { |code| Affiliation.where(code:).first&.name || code }
       names.compact.join(", ")
+    end
+
+    # This is method is only needed while we are transitioning to the new Java based
+    # `tigerdata.project.create` service. We can remove this method once the new
+    # service has been rolled out to all our environments.
+    #
+    # See https://github.com/pulibrary/tigerdata-app/issues/2402 for details.
+    #
+    def new_project_create?
+      response_xml.xpath("response/reply/result/id").count > 0
     end
   end
 end
