@@ -20,6 +20,16 @@ class TigerdataMailer < ApplicationMailer
     subject = "New Project Request Ready for Review"
     mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
   end
+
+  def globus_access_request
+    config = Rails.application.config.tigerdata_mail[:globus_access_request]
+    @project_id = params[:project_id]
+    submitter_mail = params[:submitter].email
+    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
+
+    subject = "Globus Connection Request Ready for Review"
+    mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
+  end
   private
 
     def request
