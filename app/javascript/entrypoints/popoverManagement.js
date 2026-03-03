@@ -26,11 +26,29 @@ export function popoverManagement() {
   }
 }
 
+function triggerMailer(projectId) {
+  // Perform an AJAX POST request to the Rails controller action
+  fetch(`/projects/send_globus_access_request`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Include CSRF token for security (Rails requires this for POST requests)
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({ project_id: projectId }), // Send any necessary data, e.g., project ID
+  }).catch((error) => {
+    console.error('Error:', error);
+    alert('An error occurred.');
+  });
+}
+
 export function globusPopoverManagement() {
   const globusAccessPopover = document.getElementById('globus-access');
   const switchGlobusPopover = document.getElementById('globus-switch');
+  const projectId = window.location.href.split('/')[4]; // Extract project ID from URL, assuming URL structure is consistent
 
   switchGlobusPopover.addEventListener('click', () => {
     globusAccessPopover.hidePopover();
+    triggerMailer(projectId);
   });
 }

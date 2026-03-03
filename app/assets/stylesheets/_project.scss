@@ -345,92 +345,6 @@ blockquote {
   flex-shrink: 0;
 }
 
-.detail-table {
-  display: flex;
-  width: 36.875rem;
-  padding: 1rem 0;
-  flex-direction: column;
-  justify-content: center;
-  align-items: left;
-  gap: 1rem;
-  flex-shrink: 0;
-  border-radius: 0.5rem;
-  border: 1px solid $gray-10;
-  margin-bottom: 2rem;
-  max-height: 33rem;
-  overflow: scroll;
-  .detail-row {
-    display: flex;
-    padding: 0 1rem 1rem 1rem;
-    gap: 1.25rem;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid $gray-10;
-  }
-  .detail-row-last {
-    border-bottom: none;
-    display: flex;
-    padding: 0 1rem 0 1rem;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .detail-subheading {
-    margin: 0 !important;
-    width: 15.8125rem;
-    height: 3rem;
-  }
-  .detail-description {
-    margin: 0 !important;
-    width: 12.5rem;
-    height: 3rem;
-    color: var(--Neutral-Dark-Gray, #717171);
-
-    /* Body S */
-    font-family: "Libre Franklin";
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.5rem; /* 150% */
-
-    .description-link {
-      color: #0b7097;
-      &:hover {
-        background: #6dade9;
-      }
-    }
-    .img {
-      filter: invert(28%) sepia(42%) saturate(2881%) hue-rotate(172deg) brightness(96%)
-        contrast(91%);
-    }
-  }
-
-  .detail-value {
-    margin: 0 !important;
-    padding-bottom: 1.45rem;
-    .lux-badge {
-      width: 4.0625rem;
-      height: 1.25rem;
-      justify-content: center;
-      .badge-text {
-        font-weight: 600;
-      }
-    }
-    .request-globus-btn {
-      display: flex;
-      width: 4.6875rem;
-      height: 1.625rem;
-      padding: 0.25rem 0.75rem;
-      justify-content: center;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.75rem;
-      &:hover {
-        background: $gray-60;
-      }
-    }
-  }
-}
-
 .users-detail-table {
   @media (max-width: 830px) {
     display: flex;
@@ -507,11 +421,63 @@ blockquote {
   }
   .detail-subheading {
     margin: 0 !important;
-    width: max-content;
+    width: 15.8125rem;
+    height: 3rem;
   }
 
   .detail-value {
     margin: 0 !important;
+  }
+
+  .detail-description {
+    margin: 0 !important;
+    width: 12.5rem;
+    height: 3rem;
+    color: var(--Neutral-Dark-Gray, #717171);
+
+    /* Body S */
+    font-family: "Libre Franklin";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem; /* 150% */
+
+    .description-link {
+      color: #0b7097;
+      &:hover {
+        background: #6dade9;
+      }
+    }
+    .img {
+      filter: invert(28%) sepia(42%) saturate(2881%) hue-rotate(172deg) brightness(96%)
+        contrast(91%);
+    }
+  }
+
+  .detail-value {
+    margin: 0 !important;
+    padding-bottom: 1.45rem;
+    .lux-badge {
+      width: 4.0625rem;
+      height: 1.25rem;
+      justify-content: center;
+      .badge-text {
+        font-weight: 600;
+      }
+    }
+    .request-globus-btn {
+      display: flex;
+      width: 4.6875rem;
+      height: 1.625rem;
+      padding: 0.25rem 0.75rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      &:hover {
+        background: $gray-60;
+      }
+    }
   }
 }
 
