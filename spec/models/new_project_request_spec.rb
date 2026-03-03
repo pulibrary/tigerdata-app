@@ -157,6 +157,17 @@ RSpec.describe NewProjectRequest, type: :model do
       # The project should not exist in the database
       expect(Project.find_by_id(invalid_request.project_id)).to be nil
     end
+
+    # TODO: Enable this test once we have integrated the new tigerdata.project.create from tigerdata-config v0.0.4.
+    #
+    #       The current tigerdata.project.create does NOT raise an error when we try to add the data sponsor/manager
+    #       as a data user, but they new one does.
+    #
+    # See https://github.com/pulibrary/tigerdata-app/issues/2402 for details.
+    xit "raises an error if we add the data manager/sponsor as a data user" do
+      request = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => sponsor_and_data_manager_user.uid, "read_only" => true }])
+      expect { request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
+    end
   end
 
   describe "#valid_data_sponsor?" do
