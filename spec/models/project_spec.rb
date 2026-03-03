@@ -3,6 +3,7 @@ require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user2) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "project lists" do
@@ -12,11 +13,11 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       request1.approve(sponsor_and_data_manager_user)
       request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
       request2.approve(sponsor_and_data_manager_user)
-      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => test_user.uid, "read_only" => true }])
+      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => user2.uid, "read_only" => true }])
       request3.approve(sponsor_and_data_manager_user)
-      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => test_user.uid, "read_only" => false }])
+      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => user2.uid, "read_only" => false }])
       request4.approve(sponsor_and_data_manager_user)
-      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user.uid, "read_only" => true }])
+      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user2.uid, "read_only" => true }])
       request5.approve(sponsor_and_data_manager_user)
     end
 
