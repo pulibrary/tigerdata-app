@@ -383,6 +383,22 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     end
 
+    context "Globus Access Request" do
+      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+      it "sends a globus access request email when the user clicks the request button" do
+        sign_in sponsor_user
+        visit "/projects/#{project.id}/details"
+        click_on "Request"
+        expect(page).to have_content("Globus Transfer Access")
+        expect(page).to have_content("Do you need to enable Globus transfers?")
+        click_on "Yes"
+        expect(page).to have_content("Your request has been submitted. Please check your email for updates.")
+        click_on(class: "pul-popover-close")
+        expect(page).not_to have_content("Globus Transfer Access")
+      end
+    end
+
     context "system administrator" do
       let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }

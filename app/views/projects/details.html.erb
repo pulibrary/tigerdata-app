@@ -171,7 +171,7 @@
                 <div class="detail-row-last" id="globus-access">
                   <div class="detail-subheading">Support high-performance data transfers</div>
                   <div class="detail-description">For a
-                     <a class="description-link"href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus" target="_blank">Globus
+                     <a class="description-link" href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus" target="_blank">Globus
                         <span class="img"><%= image_tag "open-icon.svg", alt: "" %></span>
                      </a> endpoint for this project
                   </div>
@@ -182,7 +182,7 @@
                            </lux-badge>
                         <% else %>
                            <% if (current_user == @presenter.data_sponsor) || (current_user == @presenter.data_manager) %>
-                              <button class="btn pul-button-primary request-globus-btn">Request</button>
+                              <button class="btn pul-button-primary request-globus-btn" popovertarget="globus-access">Request</button>
                            <% else %>
                               <lux-badge class="lux-badge lux-badge-grey">
                                  <div class="badge-text">Disabled</div>

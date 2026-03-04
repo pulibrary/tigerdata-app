@@ -1,0 +1,43 @@
+<div popover="auto" id="globus-access"  class="pul-popover globus-access-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title-frame">
+                <div class="modal-title">Globus Transfer Access</div>
+                <input type=button popovertarget="globus-access" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+            </div>
+            <div class="modal-subtitle">
+                Do you need to enable Globus transfers?
+            </div>
+            <div class="globus-p1">
+                Select 'Yes' if the project will need its own
+                <a class="globus-link" href="https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus" target="_blank">
+                Globus endpoint <span class="img"><%= image_tag "open-icon.svg", alt: "" %></span>
+                </a> for high bandwidth data transfers.
+            </div>
+            <div class="globus-p2">
+                You or your Data Manager will need an
+                <a class="globus-link" href="https://docs.globus.org/guides/tutorials/manage-files/transfer-files/" target="_blank">
+                active Globus account <span class="img"><%= image_tag "open-icon.svg", alt: "" %></span>
+                </a> to proceed.
+            </div>
+            <div class="globus-buttons">
+                <button popovertarget="globus-access" popovertargetaction="hide" class="pul-button-secondary cancel">Cancel</button>
+                <button popovertarget="globus-confirmation" popovertargetaction="show" class="pul-button-primary yes" id="globus-switch">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div popover="auto" id="globus-confirmation"  class="pul-popover globus-confirmation-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title-frame">
+                <div class="modal-title">Globus Transfer Access</div>
+                <input type=button popovertarget="globus-confirmation" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+            </div>
+            <div class="modal-subtitle alert alert-success">
+                <span class="img"><%= image_tag "ic_round_check.svg", alt: "" %></span>
+                <p class="alert-text">Your request has been submitted. Please check your email for updates.</p>
+            </div>
+        </div>
+    </div>
+</div>

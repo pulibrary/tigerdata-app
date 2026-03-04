@@ -152,6 +152,13 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def send_globus_access_request
+    project_id = params[:project_id].to_i
+    TigerdataMailer.with(project_id: project_id, submitter: current_user).globus_access_request.deliver_later
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
   private
 
     def project_job_service
