@@ -1,0 +1,48 @@
+<h1>Server</h1>
+<p>Connected to MediaFlux at <b><%= Mediaflux::Connection.host %></b> port <b><%= Mediaflux::Connection.port %></b>
+
+<dl>
+  <dt>Server UUID:</dt>
+  <dd><%= @mediaflux_info[:uuid] %></dd>
+
+  <dt>Server Name:</dt>
+  <dd><%= @mediaflux_info[:name] || "UNKNOWN" %></dd>
+
+  <dt>Server Version:</dt>
+  <dd><%= @mediaflux_info[:server_version] %></dd>
+
+  <dt>TigerData Config:</dt>
+  <dd><%= @mediaflux_info[:tigerdata_config_version] %></dd>
+
+  <dt>TigerData Plugin:</dt>
+  <dd><%= @mediaflux_info[:tigerdata_plugin_version] %></dd>
+</dl>
+
+<h1>User</h1>
+<dl>
+  <dt>Netid: </dt>
+  <dd><%= @current_user.uid %></dd>
+
+  <dt>Sys Admin:</dt>
+  <dd><%= @sysadmin %></dd>
+
+  <dt>Developer:</dt>
+  <dd><%= @developer %></dd>
+
+  <% if @mediaflux_roles.count > 0 %>
+    <dt>Mediaflux Roles:</dt>
+    <dd>
+      <ul>
+        <% @mediaflux_roles.each do |role| %>
+          <li><%= role %>
+        <% end %>
+      <ul>
+    </dd>
+  <% end %>
+</dl>
+
+<h1>Other</h1>
+<dl>
+  <dt>Java plugin status:</dt>
+  <dd><div id="java-plugin-status"><%= @java_plugin_status %></div></dd>
+</dl>
