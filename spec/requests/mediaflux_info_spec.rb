@@ -13,10 +13,10 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
+RSpec.describe "/session-info", connect_to_mediaflux: true, type: :request do
   describe "GET /index" do
     it "renders a successful response" do
-      get mediaflux_info_index_path
+      get session_info_index_path
       expect(response).to be_redirect
     end
 
@@ -29,7 +29,7 @@ RSpec.describe "/mediaflux_info", connect_to_mediaflux: true, type: :request do
       end
 
       it "renders a successful response" do
-        get mediaflux_info_index_path
+        get session_info_index_path
         expect(response).to be_successful
         expect(response.body.match?(Mediaflux::EXPECTED_VERSION)).to eq true
       end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
+RSpec.describe SessionInfoController, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
-  let(:docker_response) { "{\"vendor\":\"Arcitecta Pty. Ltd.\",\"version\":\"#{Mediaflux::EXPECTED_VERSION}\"}" }
+  let(:keys) { ["uuid", "name", "server_version", "tigerdata_config_version", "tigerdata_plugin_version"] }
 
   before do
     sign_in user
@@ -11,7 +11,12 @@ RSpec.describe MediafluxInfoController, connect_to_mediaflux: true do
 
   it "gets the mediaflux information" do
     expect { get :index, format: "json" }.not_to raise_error
-    expect(response.body).to eq(docker_response)
+    json = JSON.parse(response.body)
+    # Check for the presence of the expected keys in the response
+    # (but not their values since they change frequently)
+    keys.each do |key|
+      expect(json.key?(key)).to be true
+    end
   end
 
   it "does not retry infinitely" do

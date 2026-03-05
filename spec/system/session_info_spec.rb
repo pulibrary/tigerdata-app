@@ -2,15 +2,15 @@
 
 require "rails_helper"
 
-describe "mediaflux_info", type: :system, js: true, connect_to_mediaflux: true do
+describe "session_info", type: :system, js: true, connect_to_mediaflux: true do
   let(:researcher_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mflux_port) { Rails.configuration.mediaflux["api_port"] }
 
   it "shows the mediaflux version" do
     sign_in researcher_user
-    visit "/mediaflux_info"
+    visit "/session-info"
     expect(page).to have_content("Connected to MediaFlux")
-    expect(page).to have_content("Mediaflux Port:\n#{mflux_port}\n")
+    expect(page).to have_content("port #{mflux_port}")
     expect(page).to have_content("Mediaflux Roles:")
     expect(page).to have_content("system-administrator")  # Role of our user while running the tests
   end
