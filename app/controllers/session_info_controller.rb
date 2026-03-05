@@ -33,6 +33,6 @@ class SessionInfoController < ApplicationController
       describe_request.server_values
     rescue => ex
       Rails.logger.error("Error fetching server information: #{ex.message}")
-      { uuid: "N/A"}
+      { uuid: "N/A" }
     end
 end
