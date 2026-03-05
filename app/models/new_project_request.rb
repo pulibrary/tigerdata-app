@@ -25,7 +25,6 @@ class NewProjectRequest < ApplicationRecord
     check_errors? do
       field_present?(project_title, :project_title)
       valid_length(project_title, 200, :project_title)
-      no_quotes(project_title, :project_title)
     end
   end
 
@@ -49,7 +48,6 @@ class NewProjectRequest < ApplicationRecord
     check_errors? do
       field_present?(description, :description)
       valid_length(description, 1000, :description)
-      no_quotes(description, :description)
     end
   end
 
@@ -205,13 +203,6 @@ class NewProjectRequest < ApplicationRecord
       return if value.blank?
       if value.length > length
         errors.add(field, :invalid, message: "")
-      end
-    end
-
-    def no_quotes(value, field)
-      return if value.blank?
-      if value.include?('"')
-        errors.add(field, :invalid, message: "Cannot include quotes.")
       end
     end
 
