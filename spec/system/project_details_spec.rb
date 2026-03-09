@@ -99,6 +99,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_button("Request more storage")
         end
       end
+      it "does not display for a data user" do
+          sign_in read_only
+          visit "/projects/#{project_in_mediaflux.id}/details"
+          within ".storage-quota" do
+          click_on "Details"
+          expect(page).not_to have_button("Request more storage")
+        end
+      end
     end
 
     context "Navigation Buttons" do
