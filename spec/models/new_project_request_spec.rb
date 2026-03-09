@@ -160,7 +160,7 @@ RSpec.describe NewProjectRequest, type: :model do
 
     it "raises an error if we add the data manager/sponsor as a data user" do
       # See https://github.com/pulibrary/tigerdata-app/issues/2402 for details.
-      pending("Enable this test once we have integrated the new tigerdata.project.create from tigerdata-config v0.0.4")
+      # pending("Enable this test once we have integrated the new tigerdata.project.create from tigerdata-config v0.0.4")
       request = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => sponsor_and_data_manager_user.uid, "read_only" => true }])
       expect { request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
     end
