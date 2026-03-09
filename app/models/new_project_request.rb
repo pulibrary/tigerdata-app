@@ -202,7 +202,7 @@ class NewProjectRequest < ApplicationRecord
     def valid_length(value, length, field)
       return if value.blank?
       if value.length > length
-        errors.add(field, :invalid, message: "")
+        errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
       end
     end
 
