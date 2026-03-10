@@ -302,9 +302,13 @@
       color: $gray-60;
     }
   }
+  .detailed-quota-subtypes-container {
+    display: flex;
+  }
   .detailed-quota-subtypes-free-space {
-    display: ruby;
-    margin-left: 8rem;
+    display: flex;
+    margin-left: auto;
+    gap: 0.5rem;
     .subtype-size-free-space {
       color: $gray-60;
       font-size: 0.875rem;
