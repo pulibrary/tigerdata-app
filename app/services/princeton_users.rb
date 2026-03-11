@@ -2,12 +2,12 @@
 class PrincetonUsers
   CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a + ['-']
 
-  # `cbentler` and `az3007` are required because they come as data manager and data sponsor
-  # in the default project in the Mediaflux in our Docker image.
-  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441 cbentler az3007].freeze
+  # RESEARCH_COMPUTING_USERS are required because they come as users in the
+  # the default projects in the Mediaflux in our Docker image.
+  RESEARCH_COMPUTING_USERS = %w[cbentler az3007 md1908 knight].freeze
+  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441 ].freeze
 
   class << self
-
 
     # Returns a list of Users that match the given query
     def user_list_query(query)
@@ -34,8 +34,9 @@ class PrincetonUsers
       end.order(:given_name).order(:family_name)
     end
 
-    def load_rdss_developers
-      RDSS_DEVELOPERS.each do |netid|
+    def load_default_users
+      default_users = RDSS_DEVELOPERS + RESEARCH_COMPUTING_USERS
+      default_users.each do |netid|
         create_user_from_ldap_by_uid(netid)
         rescue TigerData::LdapError
         raise TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?"

@@ -14,9 +14,13 @@ namespace :load_users do
     PrincetonUsers.create_user_from_ldap_by_uid(uid)
   end
 
-  desc "Load RDSS developers from LDAP"
   task rdss_developers: [:environment] do
-    PrincetonUsers.load_rdss_developers
-    puts "RDSS developers loaded from LDAP"
+    system("rake load_users:default_users")
+  end
+
+  desc "Load RDSS developers and other required users from LDAP"
+  task default_users: [:environment] do
+    PrincetonUsers.load_default_users
+    puts "RDSS developers and other required users loaded from LDAP"
   end
 end
