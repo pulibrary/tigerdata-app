@@ -24,7 +24,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        expect(page).to have_button("Request more storage")
+        # expect(page).to have_button("Request more storage") # This button is now only displayed if the feature is enabled via the Feature Flipper.
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
@@ -75,6 +75,37 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_button("Learn more")
         click_on(class: "pul-popover-close")
         expect(page).not_to have_content("Storage Usage Overview")
+      end
+    end
+
+    context "Request more storage button displays for a data sponsor or a data manager" do
+      before do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:request_more_storage, true)
+      end
+      it "Shows the request more storage button if the feature is enabled" do
+          sign_in sponsor_user
+          visit "/projects/#{project_in_mediaflux.id}/details"
+          within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_button("Request more storage")
+        end
+      end
+      it "Shows the request more storage button if the feature is enabled" do
+          sign_in manager_user
+          visit "/projects/#{project_in_mediaflux.id}/details"
+          within ".storage-quota" do
+          click_on "Details"
+          expect(page).to have_button("Request more storage")
+        end
+      end
+      it "does not display for a data user" do
+          sign_in read_only
+          visit "/projects/#{project_in_mediaflux.id}/details"
+          within ".storage-quota" do
+          click_on "Details"
+          expect(page).not_to have_button("Request more storage")
+        end
       end
     end
 
