@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   mount Flipflop::Engine => "/features"
   mount HealthMonitor::Engine, at: "/"
 
-  resources :mediaflux_info, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
 
   authenticate :user, ->(user) { user.developer || user.sysadmin } do
@@ -60,6 +59,8 @@ Rails.application.routes.draw do
   mount ActionCable.server => "/cable"
   get "mediaflux_extra", to: "users/mediaflux_callbacks#cas", as: :mediaflux_extra
   get "mediaflux_passthru", to: "users/mediaflux_callbacks#passthru", as: :mediaflux_passthru
+
+  get "session-info", to: "session_info#index", as: :session_info_index
 
   put "project_import", to: "project_import#run"
   get "project_import", to: "dashboard#index"
