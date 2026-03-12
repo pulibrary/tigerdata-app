@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 module Mediaflux
+    # This is the version of Mediaflux that we are testing against
+    EXPECTED_VERSION = "4.18.003"
+
     class Request
 
       # As this is an abstract class, this should be overridden to specify the Mediaflux API service
