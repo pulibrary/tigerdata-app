@@ -105,16 +105,15 @@ RSpec.describe NewProjectRequest, type: :model do
       expect(request.valid_title?).to be_falsey
     end
 
-    it "does not allow quotes" do
+    it "allows quotes" do
       request = NewProjectRequest.new(project_title: "abc\"123")
-      expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq("Cannot include quotes.")
+      expect(request.valid_title?).to be_truthy
     end
 
-    it "validates the title length and quotes" do
+    it "validates the title length" do
       request = NewProjectRequest.new(project_title: long_title.gsub("vitae", "\"vitae\""))
       expect(request.valid_title?).to be_falsey
-      expect(request.errors[:project_title].join(", ")).to eq(", Cannot include quotes.")
+      expect(request.errors[:project_title].join(", ").include?("Value is too long")).to be true
     end
 
     it "validates a title" do
@@ -221,10 +220,12 @@ RSpec.describe NewProjectRequest, type: :model do
       expect(request.errors[:description].join(", ")).to eq("This field is required.")
     end
 
-    it "does not allow quotes" do
+    it "allows quotes" do
       request.description = "abc\""
-      expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq("Cannot include quotes.")
+      expect(request.valid_description?).to be_truthy
+
+      request.description = "abc\'\"hello\"\'"
+      expect(request.valid_description?).to be_truthy
     end
 
     it "errors if too long" do
@@ -235,7 +236,7 @@ RSpec.describe NewProjectRequest, type: :model do
     it "errors if too long and has a quote" do
       request.description = long_description.gsub("elit", "\"elit\"")
       expect(request.valid_description?).to be_falsey
-      expect(request.errors[:description].join(", ")).to eq(", Cannot include quotes.")
+      expect(request.errors[:description].join(", ").include?("Value is too long")).to be true
     end
 
     it "validates a description" do
