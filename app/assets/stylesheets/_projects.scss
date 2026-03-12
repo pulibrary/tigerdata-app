@@ -485,7 +485,7 @@
     flex: 1 0 0;
     border: 0 solid #e5e7eb;
     background: rgba(0, 0, 0, 0);
-    padding-right: 5rem;
+    margin-right: auto;
     gap: 0.3rem;
   }
   .folder-header {
@@ -493,12 +493,10 @@
   }
   .versions-header {
     @include breakdown-box-header;
-    padding-right: 7rem;
   }
 
   .recycle-header {
     @include breakdown-box-header;
-    padding-right: 8rem;
   }
 
   .breakdown-title {
