@@ -34,7 +34,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Old Versions")
         expect(page).to have_content("Recycle Bin")
         expect(page).to have_content("free")
-        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 
@@ -61,7 +61,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Old Versions")
         expect(page).to have_content("Recycle Bin")
         expect(page).to have_content("free")
-        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 

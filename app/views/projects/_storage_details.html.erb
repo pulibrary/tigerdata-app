@@ -54,7 +54,7 @@
             <div class="breakdown-box">
               <div class="folder-header">
                 <%= image_tag "folder_black.svg", alt: "" %>
-                <span class="breakdown-title">Accessable Files</span>
+                <span class="breakdown-title">Project Files</span>
               </div>
               <div class="progress-container">
                 <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
