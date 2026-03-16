@@ -14,10 +14,21 @@
               <span class="detailed-quota-title"><%= @presenter.quota_usage(session_id: current_user.mediaflux_session) %></span>
               <div class="detailed-quota-subtitle-container">
                   <div class="detailed-quota-subtitle">Combined usage across all categories </div>
-                    <% if @presenter.can_increase_quota?(user: current_user) && Flipflop.request_more_storage? %>
-                      <button class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
-                        Request more storage
-                      </button>
+                    <% if Flipflop.request_more_storage? %>
+                      <!-- New logic goes here!! -->
+                      <% if @presenter.can_increase_quota?(user: current_user) %>
+                         <button class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
+                           Request more storage
+                         </button>
+                      <% end %>
+                    <% else %>
+                      <!-- Remove this when the new modal is complete -->
+                      <% if @presenter.can_increase_quota?(user: current_user) %>
+                        <button class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
+                          Request more storage
+                          <%= image_tag "open-icon-white.svg", alt: "" %>
+                        </button>
+                      <% end %>                      
                     <% end %>
               </div>
               <div class="my-2">
