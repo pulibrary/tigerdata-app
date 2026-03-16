@@ -380,6 +380,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.20)
+    rack-mini-profiler (4.0.1)
+      rack (>= 1.2.0)
     rack-protection (4.2.0)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
@@ -667,6 +669,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 6.6)
   rack (>= 3.1.18)
+  rack-mini-profiler
   rails (~> 7.1)
   rails-controller-testing
   redis (~> 4.0)

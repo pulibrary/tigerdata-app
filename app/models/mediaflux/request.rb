@@ -197,6 +197,8 @@ module Mediaflux
         timing_info = "#{format('%.2f', elapsed_time)} s"
         if elapsed_time > 3.0
           Rails.logger.warn "Slow Mediaflux request: #{self.class}, #{timing_info}"
+          Honeybadger.notify("Slow Mediaflux request: #{self.class}, #{timing_info}")
+        else
         end
       end
     end
