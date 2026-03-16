@@ -85,7 +85,7 @@
    // to Mediaflux for every page loaded.
    dashStyle('<%= @dash_session %>');
    dashTab();
-   displayMediafluxVersion('<%= mediaflux_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
+   displayMediafluxVersion('<%= session_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
 
    // Setup the DataTables
    setupTable('#projects-listing');

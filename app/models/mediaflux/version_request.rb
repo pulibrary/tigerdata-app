@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 module Mediaflux
-  # This is the version of Mediaflux that we are testing against
-  EXPECTED_VERSION = "4.18.003"
   class VersionRequest < Request
     # Constructor
     # @param session_token [String] the API token for the authenticated session

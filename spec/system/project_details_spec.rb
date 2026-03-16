@@ -24,7 +24,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_content("Storage Usage Overview")
-        # expect(page).to have_button("Request more storage") # This button is now only displayed if the feature is enabled via the Feature Flipper.
+
+        # This the original button if the feature is not enabled via the Feature Flipper.
+        expect(page).to have_button("Request more storage") 
+        
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
@@ -34,7 +37,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Old Versions")
         expect(page).to have_content("Recycle Bin")
         expect(page).to have_content("free")
-        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 
@@ -61,7 +64,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Old Versions")
         expect(page).to have_content("Recycle Bin")
         expect(page).to have_content("free")
-        expect(page).to have_css(".breakdown-title", text: "Accessable Files")
+        expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
 

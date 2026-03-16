@@ -6,7 +6,7 @@ export function displayMediafluxVersion(url, authenticated) {
       type: 'GET',
       url,
       success(data) {
-        $('#mediaflux_version').text(`| Mediaflux: ${data.version}`);
+        $('#mediaflux_version').text(`| Mediaflux: ${data.server_version}`);
       },
       error(_jqXHR, _textStatus, errorThrown) {
         console.error(errorThrown);
