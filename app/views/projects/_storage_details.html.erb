@@ -1,9 +1,9 @@
 
-    <div popover="auto" id="storage-details"  class="pul-popover detail-storage-modal">
+    <dialog popover="auto" id="storage-details" role="storage-details-dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle" tabindex="0" class="pul-popover detail-storage-modal">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-title-frame">
-            <div class="model-title">Storage Usage Overview</div>
+            <div class="modal-title">Storage Usage Overview</div>
             <input type=button popovertarget="storage-details" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
           </div>
           <div class="modal-subtitle">
@@ -54,7 +54,7 @@
             <div class="breakdown-box">
               <div class="folder-header">
                 <%= image_tag "folder_black.svg", alt: "" %>
-                <span class="breakdown-title">Accessable Files</span>
+                <span class="breakdown-title">Accessible Files</span>
               </div>
               <div class="progress-container">
                 <div class="progress" role="progressbar" aria-label="Storage quota usage" aria-valuenow="<%= @presenter.formatted_quota_percentage(session_id: current_user.mediaflux_session) %>" aria-valuemin="0" aria-valuemax="100">
@@ -113,4 +113,4 @@
           </div>
         </div>
       </div>
-    </div>
+    </dialog>

@@ -32,3 +32,19 @@ export function wizardNavigation() {
     });
   }
 }
+
+// allow tabbing within storage details modal
+
+const dialog = document.getElementById('storage-details');
+const openButton = document.getElementById('Details');
+const closeButton = document.getElementById('cancel');
+
+// Open button opens a modal dialog
+openButton.addEventListener('click', () => {
+  dialog.showModal();
+});
+
+// Close button closes the dialog box
+closeButton.addEventListener('click', () => {
+  dialog.close();
+});
