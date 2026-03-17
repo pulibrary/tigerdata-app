@@ -281,7 +281,9 @@ jobs:
           command: yarn run vitest run
       - run_postgres
       - run: sleep 10
-      - bundle exec rake db:migrate RAILS_ENV=test
+      - run:
+          name: Run Database Migrations
+          command: bundle exec rake db:migrate RAILS_ENV=test
       - run:
           name: Run Rspec
           command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
