@@ -24,7 +24,7 @@ executors:
       - image: cimg/ruby:3.3.0-browsers
         environment:
           RAILS_ENV: ci
-    resource_class: small
+    resource_class: medium
     working_directory: ~/tigerdata-app
 
 commands:

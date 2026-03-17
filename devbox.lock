@@ -1,34 +1,6 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "chromedriver@latest": {
-      "last_modified": "2026-01-30T02:32:49Z",
-      "resolved": "github:NixOS/nixpkgs/6308c3b21396534d8aaeac46179c14c439a89b8a#chromedriver",
-      "source": "devbox-search",
-      "version": "144.0.7559.110",
-      "systems": {
-        "aarch64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/74vricfivrg0y44bxgq33dql9k8h5skv-chromedriver-144.0.7559.110",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/74vricfivrg0y44bxgq33dql9k8h5skv-chromedriver-144.0.7559.110"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/f4fwc9hzb297wykvkxivwn723cm1fpgw-chromedriver-144.0.7559.110",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/f4fwc9hzb297wykvkxivwn723cm1fpgw-chromedriver-144.0.7559.110"
-        }
-      }
-    },
     "git@latest": {
       "last_modified": "2025-10-22T20:59:19Z",
       "resolved": "github:NixOS/nixpkgs/01b6809f7f9d1183a2b3e081f0a1e6f8f415cb09#git",
