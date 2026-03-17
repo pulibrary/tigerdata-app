@@ -12,6 +12,7 @@ parameters:
   GHA_Meta:
     type: string
     default: ""
+
 orbs:
   browser-tools: circleci/browser-tools@1.4
   coveralls: coveralls/coveralls@2.2.5
@@ -25,6 +26,7 @@ executors:
           RAILS_ENV: ci
     resource_class: small
     working_directory: ~/tigerdata-app
+
 commands:
   install_dependencies:
     steps:
@@ -40,6 +42,7 @@ commands:
           key: *gem_key
           paths:
             - ./vendor/bundle
+
   install_yarn_dependencies:
     steps:
       - node/install:
@@ -56,6 +59,7 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
+
   # Manual installation to match local Devbox flake version
   install_pinned_chromedriver:
     steps:
@@ -68,21 +72,25 @@ commands:
             sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
             sudo chmod +x /usr/local/bin/chromedriver
             chromedriver --version
+
   install_crypto_policies:
     steps:
       - run: sudo apt update && sudo apt install -y crypto-policies
+
   run_mediaflux:
     steps:
       - run:
           name: Run Mediaflux in podman
           command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.35.0"
           background: true
+
   run_postgres:
     steps:
       - run:
           name: Run Postgres in podman
           command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
           background: true
+
   enable_sha1_for_mediaflux:
     steps:
       - run:
@@ -93,17 +101,20 @@ commands:
           name: output license expiration information
           command: 'podman exec --user podman -it mediaflux bin/bash -c ''podman exec mediafluxinternal  bin/bash -c "java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe |grep expiry"'''
           background: true
+
   disable_sha1:
     steps:
       - run:
           name: Update the Crypto Policies of the Top Level Pod-Container
           command: sudo update-crypto-policies --set DEFAULT
           background: true
+
   cleanup_docker:
     steps:
       - run: podman stop postgres || true
       - run: podman stop mediaflux || true
       - run: podman system prune -a --volumes -f || true
+
 jobs:
   bundler_lint:
     docker:
@@ -115,6 +126,7 @@ jobs:
       - run:
           name: Run rubocop
           command: bundle exec rubocop
+
   bundler_audit:
     docker:
       - image: cimg/ruby:3.3.0
@@ -128,6 +140,7 @@ jobs:
       - run:
           name: Run gem list
           command: gem list
+
   test:
     working_directory: ~/tiger_data
     machine: true
@@ -168,6 +181,7 @@ jobs:
           parallel: true
           flag_name: job1
           fail_on_error: false
+
   test_browser:
     working_directory: ~/tiger_data
     machine: true
@@ -210,6 +224,7 @@ jobs:
           parallel: true
           flag_name: job2
           fail_on_error: false
+
   yarn_lint_format:
     docker:
       - image: cimg/node:22.9.0
@@ -222,6 +237,7 @@ jobs:
       - run:
           name: Run prettier
           command: yarn run prettier --check .
+
   yarn_test:
     docker:
       - image: cimg/node:22.9.0
@@ -235,6 +251,7 @@ jobs:
           command: yarn test
       - store_artifacts:
           path: coverage
+
   mflux_ci:
     working_directory: ~/tiger_data
     machine: true
@@ -274,12 +291,14 @@ jobs:
           path: coverage
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
+
   deploy:
     executor: basic-executor
     steps:
       - run:
           name: Deploy to CI
           command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
+
   done:
     docker:
       - image: cimg/node:22.9.0
@@ -288,6 +307,7 @@ jobs:
           carryforward: job1,job2
           parallel_finished: true
           fail_on_error: false
+
 workflows:
   version: 2
   build_accept_deploy:
