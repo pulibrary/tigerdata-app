@@ -1,7 +1,9 @@
 .breadcrumbs {
   list-style-type: none;
   padding: 0px;
-  margin: 2em 0em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   a {
     color: $black;
