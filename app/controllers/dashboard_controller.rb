@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class DashboardController < ApplicationController
   layout "welcome"
+  around_action :time_dashboard, only: %i[index]
 
   def index
     @presenter = DashboardPresenter.new(current_user: current_user, display_modal: modal_name)
@@ -42,5 +43,15 @@ class DashboardController < ApplicationController
       else
         ""
       end
+    end
+
+    def time_dashboard
+      start_time = Time.current
+      yield
+    ensure
+      end_time = Time.current
+      elapsed_time = end_time - start_time
+      project_count = @presenter&.dashboard_projects&.count
+      Honeybadger.notify("Dashboard load time", context: { user_id: current_user.id, elapsed_time: elapsed_time, number_of_projects: project_count }) if elapsed_time > 5.0 && project_count.to_i >= 2
     end
 end
