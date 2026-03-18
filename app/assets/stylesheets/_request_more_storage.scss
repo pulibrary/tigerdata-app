@@ -20,4 +20,12 @@
     font-weight: 600;
     line-height: normal;
   }
+
+  .justification-section {
+    display: flex;
+    width: 41.8125rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
