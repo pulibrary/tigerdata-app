@@ -1,0 +1,23 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#request-more-storage {
+  .request-heading-section {
+    display: flex;
+    width: 47rem;
+    height: 1.6875rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .request-heading {
+    width: 18.375rem;
+    height: 1.6875rem;
+    color: $black;
+    font-family: $libre-franklin;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+}
