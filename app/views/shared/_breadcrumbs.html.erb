@@ -9,11 +9,10 @@
           <%= crumb.name %>
         </span>
       <% end %>
-
-      <% unless crumb == breadcrumbs.last %>
-        <span class="breadcrumb-separator">></span>
-      <% end %>
      </li>
+     <% unless crumb == breadcrumbs.last %>
+       <li aria-hidden="true">></li>
+     <% end %>
     <% end %>
   </ul>
 </nav>
