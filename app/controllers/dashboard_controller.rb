@@ -34,6 +34,12 @@ class DashboardController < ApplicationController
     end
   end
 
+  def dash_requests
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
   private
 
     def modal_name
