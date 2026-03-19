@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class DashboardController < ApplicationController
   layout "welcome"
+  around_action :time_dashboard, only: %i[index]
 
   def index
     @presenter = DashboardPresenter.new(current_user: current_user, display_modal: modal_name)
@@ -52,4 +53,29 @@ class DashboardController < ApplicationController
         ""
       end
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def time_dashboard
+      start_time = Time.current
+      yield
+    ensure
+      end_time = Time.current
+      elapsed_time = end_time - start_time
+      project_count = nil
+      if @dash_session == "project"
+        project_count = @presenter&.dashboard_projects&.count
+      end
+
+      if elapsed_time >= 5.0 && project_count.to_i >= 2
+        Honeybadger.notify(
+          "Dashboard load time",
+          context: {
+            user_id: current_user.id,
+            elapsed_time: elapsed_time,
+            number_of_projects: project_count
+          }
+        )
+      end
+    end
+  # rubocop:enable Metrics/MethodLength
 end

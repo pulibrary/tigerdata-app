@@ -95,7 +95,7 @@
             <li class="detail-subheading">Data User(s)</li>
             <p class="detail-value">
                <% if @presenter.data_users.count == 0 %>
-                 <strong class="px-0">&mdash;</strong>
+                 <div class="info-dash"><strong class="px-0">&mdash;</strong></div>
                <% else %>
                  <div class="users-detail-table">
                     <% @presenter.data_users.each do |user| %>
@@ -218,25 +218,42 @@
             <div class="detail-sub-heading">Submission</div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Requested by</div>
-               <div class="provenance-value"> <%=  @presenter.requested_by_display_name %> </div>
-               <lux-badge class="lux-badge lux-badge-grey">
-                  <div class="badge-text"><%= @presenter.requested_by_uid %></div>
-               </lux-badge>
+               <% if @presenter.requested_by_display_name == "NA" %>
+                  <strong class="px-0">&mdash;</strong>
+               <% else %>
+                  <div class="provenance-value"> <%=  @presenter.requested_by_display_name %> </div>
+                  <lux-badge class="lux-badge lux-badge-grey">
+                     <div class="badge-text"><%= @presenter.requested_by_uid %></div>
+                  </lux-badge>
+               <% end %>
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Requested Date–Time </div>
-               <div class="provenance-value"> <%= @presenter.requested_on.keys.first %> <%= @presenter.requested_on.values.first %> </div>
+               <% if @presenter.requested_on.keys.first == "NA" || @presenter.requested_on.values.first == "NA" %>
+                  <strong class="px-0">&mdash;</strong>
+               <% else %>
+                  <div class="provenance-value"> <%= @presenter.requested_on.keys.first %> <%= @presenter.requested_on.values.first %> </div>
+               <% end %>
             </div>
             <div class="detail-pair">
-               <div class="detail-sub-heading provenance-info">Approved by</div>
-               <div class="provenance-value"> <%=  @presenter.approved_by_display_name %> </div>
-               <lux-badge class="lux-badge lux-badge-grey">
-                  <div class="badge-text"><%= @presenter.approved_by_uid %></div>
-               </lux-badge>
+               <% if @presenter.approved_by_display_name == "NA" %>
+                  <div class="detail-sub-heading provenance-info">Approved by</div>
+                  <strong class="px-0">&mdash;</strong>
+               <% else %>
+                  <div class="detail-sub-heading provenance-info">Approved by</div>
+                  <div class="provenance-value"> <%=  @presenter.approved_by_display_name %> </div>
+                  <lux-badge class="lux-badge lux-badge-grey">
+                     <div class="badge-text"><%= @presenter.approved_by_uid %></div>
+                  </lux-badge>
+               <% end %>
             </div>
             <div class="detail-pair">
                <div class="detail-sub-heading provenance-info"> Approval Date–Time</div>
-               <div class="provenance-value"> <%= @presenter.approved_on.keys.first %> <%= @presenter.approved_on.values.first %></div>
+               <% if @presenter.approved_on.keys.first == "NA" || @presenter.approved_on.values.first == "NA" %>
+                  <strong class="px-0">&mdash;</strong>
+               <% else %>
+                  <div class="provenance-value"> <%= @presenter.approved_on.keys.first %> <%= @presenter.approved_on.values.first %></div>
+               <% end %>
             </div>
          </ul>
          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
