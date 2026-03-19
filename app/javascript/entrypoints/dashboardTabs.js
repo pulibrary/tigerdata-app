@@ -33,7 +33,9 @@ export function dashStyle(railsSession) {
     }
   }
 
-  function styleTab(tabId, tabEl) {
+  function styleTab(tabId, tabElement) {
+    const tabEl = tabElement;
+
     $(tabId).on('mouseenter', (el) => {
       el.preventDefault();
       if (!tabEl.classList.contains('active')) {
@@ -93,5 +95,4 @@ export function dashTab() {
   setupTab("#dash-projects", "/dash_project", "project");
   setupTab("#dash-admin", "/dash_admin", "admin");
   setupTab("#dash-requests", "/dash_requests", "requests");
-
 }
