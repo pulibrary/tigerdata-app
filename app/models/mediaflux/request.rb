@@ -200,7 +200,6 @@ module Mediaflux
             context: {
               request_class: self.class.to_s,
               service: self.class.respond_to?(:service) ? self.class.service : nil,
-              elapsed_time: elapsed_time,
               timing_info: timing_info
             }
           )

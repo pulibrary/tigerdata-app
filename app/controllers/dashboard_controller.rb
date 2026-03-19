@@ -45,6 +45,7 @@ class DashboardController < ApplicationController
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def time_dashboard
       start_time = Time.current
       yield
@@ -55,14 +56,17 @@ class DashboardController < ApplicationController
       if @dash_session == "project"
         project_count = @presenter&.dashboard_projects&.count
       end
-      context = {
-        user_id: current_user.id,
-        elapsed_time: elapsed_time,
-        number_of_projects: project_count
-      }
 
-      if elapsed_time > 5.0 && project_count.to_i >= 2
-        Honeybadger.notify("Dashboard load time", context: context)
+      if elapsed_time >= 5.0 && project_count.to_i >= 2
+        Honeybadger.notify(
+          "Dashboard load time",
+          context: {
+            user_id: current_user.id,
+            elapsed_time: elapsed_time,
+            number_of_projects: project_count
+          }
+        )
       end
     end
+  # rubocop:enable Metrics/MethodLength
 end
