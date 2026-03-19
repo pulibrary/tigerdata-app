@@ -1,8 +1,21 @@
 <div id="requests-listing">
   <div class="section">
     <div class="import">
-      <h2>Requests</h2>
+
+      <% if @presenter.my_submitted_requests.count > 0 %>
+        <h2>My Requests</h2>
+        <% @presenter.my_submitted_requests.each do |request| %>
+          <p><%= request.id %>
+        <% end %>
+      <% end %>
+
+      <% if @presenter.requests_to_approve.count > 0 %>
+        <h2>Request to Approve</h2>
+        <% @presenter.requests_to_approve.each do |request_presenter| %>
+          <p><%= link_to request_presenter.request.project_title, new_project_request_path(request_presenter.request) %>
+        <% end %>
+      <% end %>
+
     </div>
-    <p>coming soon...</p>
   </div>
 </div>
