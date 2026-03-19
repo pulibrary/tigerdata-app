@@ -55,6 +55,14 @@ class DashboardController < ApplicationController
       if @dash_session == "project"
         project_count = @presenter&.dashboard_projects&.count
       end
-      Honeybadger.notify("Dashboard load time", context: { user_id: current_user.id, elapsed_time: elapsed_time, number_of_projects: project_count }) if elapsed_time > 5.0 && project_count.to_i >= 2
+      context = {
+        user_id: current_user.id,
+        elapsed_time: elapsed_time,
+        number_of_projects: project_count
+      }
+
+      if elapsed_time > 5.0 && project_count.to_i >= 2
+        Honeybadger.notify("Dashboard load time", context: context)
+      end
     end
 end
