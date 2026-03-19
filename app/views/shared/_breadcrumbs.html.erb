@@ -3,7 +3,7 @@
     <% breadcrumbs.each do |crumb| %>
      <li>
       <% if crumb.link? %>
-        <%= link_to crumb.name, crumb.path, class: "breadcrumb-link" %>
+        <%= link_to crumb.name, crumb.path, class: "breadcrumb-link", tabindex: 0 %>
       <% else %>
         <span class="breadcrumb-page inactive">
           <%= crumb.name %>

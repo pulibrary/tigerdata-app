@@ -40,10 +40,10 @@
   }
   .main-frame {
     display: flex;
-    height: 51.25rem;
     align-items: flex-start;
     gap: 1.25rem;
     align-self: stretch;
+    overflow: auto;
 
     .form-panel {
       display: flex;
@@ -58,7 +58,6 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 2.5rem;
-        flex: 1 0 0;
         align-self: stretch;
 
         .form-header {
@@ -113,13 +112,11 @@
 
         .form-frame {
           display: flex;
-          height: 33.1875rem;
           flex-direction: column;
           align-items: flex-start;
           gap: 2.5rem;
+          flex-shrink: 0;
           align-self: stretch;
-          overflow-y: scroll;
-          scrollbar-width: thin;
 
           .section {
             display: flex;
@@ -146,10 +143,16 @@
           }
 
           .section-line {
-            width: 55.9375rem;
+            align-self: stretch;
             height: 0.0625rem;
             background: $gray-10;
           }
+        }
+
+        .full-width {
+          display: flex;
+          align-self: stretch;
+          align-items: stretch;
         }
 
         .modal-content .text-input,
@@ -158,6 +161,11 @@
 
           .search-icon {
             top: 0.5rem;
+          }
+
+          .info {
+            align-self: stretch;
+            flex-wrap: wrap;
           }
         }
       }
@@ -168,6 +176,7 @@
         align-items: flex-start;
         gap: 1.25rem;
         align-self: stretch;
+        width: 100%;
 
         .field-info {
           display: flex;
@@ -241,6 +250,7 @@
                 flex: 1 0 0;
                 .form-input {
                   display: flex;
+                  width: 100%;
                   align-self: stretch;
                   flex-direction: column;
                   align-items: stretch;
@@ -301,6 +311,8 @@
             gap: 0.5rem;
             align-self: stretch;
             align-items: stretch;
+            flex-wrap: wrap;
+
             .parent-folder {
               display: flex;
               width: 15rem;
@@ -338,6 +350,7 @@
               align-items: center;
               gap: 0.5rem;
               align-self: stretch;
+              flex-wrap: wrap;
             }
 
             .quota-option {
@@ -405,17 +418,18 @@
           gap: 0.25rem;
           list-style-type: none;
           padding-left: 0;
-          width: 100%;
+          align-self: stretch;
+          flex-wrap: wrap;
 
           .selected-item {
             display: flex;
-            height: 2.25rem;
             padding: 0.25rem 0.75rem;
             align-items: center;
             gap: 1.25rem;
             border-radius: 0.25rem;
             background: $gray-10;
-            width: 100%;
+            align-self: stretch;
+            flex-wrap: wrap;
           }
         }
         .remove-item {
@@ -607,6 +621,7 @@
       }
 
       .estimated-files-inline-subcontainer {
+        width: 100%;
         align-self: stretch;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
@@ -628,6 +643,7 @@
         font-weight: 400;
         line-height: 1.5rem;
         word-wrap: break-word;
+        overflow: hidden;
       }
 
       .storage-tooltip {
@@ -698,7 +714,7 @@
       }
 
       .storage-type-option-container {
-        width: 43.25rem;
+        align-self: stretch;
         overflow: hidden;
         justify-content: flex-start;
         align-items: flex-start;
@@ -1080,10 +1096,10 @@
 }
 
 /* Tooltip text */
-.pul-tooltiptext::after {
+.pul-tooltiptext-left::after {
   content: " ";
   position: absolute;
-  top: 50%;
+  top: 2.25rem;
   right: 100%; /* To the left of the tooltip */
   margin-top: -5px;
   border-width: 5px;
@@ -1091,9 +1107,20 @@
   border-color: transparent #333 transparent transparent;
 }
 
+.pul-tooltiptext-right::after {
+  content: " ";
+  position: absolute;
+  top: 2.25rem;
+  left: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #333;
+}
+
 .pul-tooltiptext {
   visibility: hidden; /* Hidden by default */
-  width: 20rem;
+  width: 15rem;
   background-color: #333;
   color: #fff;
   font-size: 12px;
@@ -1104,13 +1131,20 @@
   position: absolute;
   z-index: 1; /* Ensure tooltip is displayed above content */
   top: -100%;
-  left: 105%;
   @supports (-webkit-line-clamp: 4) {
     white-space: initial;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
   }
+}
+
+.pul-tooltiptext-left {
+  left: 105%;
+}
+
+.pul-tooltiptext-right {
+  right: 105%;
 }
 
 /* Show the tooltip text on hover */
