@@ -59,15 +59,13 @@ export function dashStyle(railsSession) {
     });
   }
 
-  styleTab("#dash-projects", project);
-  styleTab("#dash-admin", admin);
-  styleTab("#dash-requests", requests);
+  styleTab('#dash-projects', project);
+  styleTab('#dash-admin', admin);
+  styleTab('#dash-requests', requests);
 }
 
 export function dashTab() {
-
   function setupTab(tabId, tabUrl, tabName) {
-
     $(tabId).on('click', (element) => {
       element.preventDefault();
 
@@ -89,10 +87,9 @@ export function dashTab() {
         },
       });
     });
-
   }
 
-  setupTab("#dash-projects", "/dash_project", "project");
-  setupTab("#dash-admin", "/dash_admin", "admin");
-  setupTab("#dash-requests", "/dash_requests", "requests");
+  setupTab('#dash-projects', '/dash_project', 'project');
+  setupTab('#dash-admin', '/dash_admin', 'admin');
+  setupTab('#dash-requests', '/dash_requests', 'requests');
 }
