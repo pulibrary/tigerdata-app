@@ -123,7 +123,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         :integration do
           visit project_path(approved_project)
 
-          expect(page).to have_content "Storage (500.000 GB)"
+          expect(page).to have_content "Storage (500 GB)"
           expect(page).to have_content "400 bytes out of 500 GB used"
           expect(page).to be_axe_clean
             .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
