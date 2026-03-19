@@ -3,14 +3,17 @@
 @import "bootstrap";
 
 #request-more-storage {
-  .request-heading-section {
+  .request-more-storage-modal {
+    gap: 1.5rem;
+  }
+  .storage-request-heading-section {
     display: flex;
     width: 47rem;
     height: 1.6875rem;
     justify-content: space-between;
     align-items: center;
   }
-  .request-heading {
+  .storage-request-heading {
     width: 18.375rem;
     height: 1.6875rem;
     color: $black;
@@ -20,12 +23,94 @@
     font-weight: 600;
     line-height: normal;
   }
+  .storage-request-subheading {
+    color: #000;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.5rem; /* 150% */
+    margin-right: auto;
+  }
 
-  .justification-section {
+  .capacity-section {
     display: flex;
     width: 41.8125rem;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 1.25rem;
+    margin-right: auto;
+    .capacity-label {
+      line-height: 3rem;
+    }
+    .size-input {
+      width: 7.0625rem;
+      height: 2.875rem;
+    }
+    .unit-input {
+      width: 7.0625rem;
+      height: 2.875rem;
+    }
+  }
+
+  .justification-section {
+    .justification-note {
+      color: #121212;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-bottom: 0.88rem;
+    }
+  }
+  .growth-expectation-section {
+    margin-right: auto;
+  }
+  .date-needed-section {
+    margin-right: auto;
+    .date-needed-note {
+      color: #121212;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1.375rem; /* 137.5% */
+      margin-bottom: 0.62rem;
+    }
+  }
+  .form-label {
+    height: 1.5rem;
+    flex-shrink: 0;
+    color: #121212;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .text-area {
+    height: 7.375rem;
+    width: 41.8125rem;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: 0.5rem;
+    border: 1px solid var(--Neutral-Medium-Gray, #d0d0d0);
+    background: #fff;
+  }
+  .request-more-storage-buttons {
+    display: flex;
+    gap: 36rem;
+    @mixin button-styles {
+      width: 5.375rem;
+      height: 2.3125rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--Neutral-Black, #121212);
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 600;
+    }
+    .storage-cancel {
+      @include button-styles;
+    }
+    .storage-submit {
+      @include button-styles;
+    }
   }
 }

@@ -1,12 +1,38 @@
 <div popover="auto" id="request-more-storage" class="pul-popover request-more-storage-modal">
-  <div class="request-heading-section">
-    <div class="request-heading">Storage Increase Request</div>
+  <div class="storage-request-heading-section">
+    <div class="storage-request-heading">Storage Increase Request</div>
     <div>
       <input type=button popovertarget="request-more-storage" id="request-more-storage-close" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
     </div>
   </div>
+  <div class="storage-request-subheading">Please indicate the new storage capacity you are requesting.</div>
+  <div class="capacity-section">
+    <div class="form-label capacity-label">Amount:</div>
+     <input class="form-input size-input" type="text" name="storage_request[amount]" placeholder="e.g., 500"></input>
+    <div class="form-label capacity-label">Unit:</div>
+     <select class="form-select unit-input" name="storage_request[storage_unit]">
+      <option value="" selected disabled hidden>Select</option>
+      <option value="TB">TB</option>
+      <option value="GB">GB</option>
+      </select>
+  </div>
   <div class="justification-section">
-    <div class="form-label">Amount:</div>
-     <input class="form-input" type="text" name="storage_request[amount]" id="storage_amount" placeholder="e.g., 500"></input>
-    </div>
+    <div class="form-label">Justification:</div>
+    <div class="justification-note">Please briefly explain why additional storage is needed, including details about your project or specific storage requirements.</div>
+    <textarea maxlength="2000" class="form-input text-area" name="storage_request[justification]" id="storage_justification"></textarea>
+  </div>
+  <div class="growth-expectation-section">
+    <div class="form-label">Growth Expectation:</div>
+    <textarea maxlength="2000" class="form-input text-area" name="storage_request[growth_expectation]" id="storage_growth_expectation"></textarea>
+  </div>
+  <div class="date-needed-section">
+    <div class="form-label">Date Needed</div>
+    <div class="date-needed-note">When would you like this updated quota available by?</div>
+    <input class="form-input date-picker" type="date" name="storage_request[date_needed]" id="storage_date_needed"></input>
+  </div>
+  <div class="request-more-storage-buttons">
+    <button popovertarget="request-more-storage" popovertargetaction="hide" class="pul-button-secondary storage-cancel">Cancel</button>
+    <button class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
+  </div>
+
 </div>
