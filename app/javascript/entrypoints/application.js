@@ -33,7 +33,11 @@ import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
 import { copyPastePath } from './copyPastePath.js';
 import { wizardNavigation } from './wizardNavigation.js';
-import { popoverManagement, globusPopoverManagement } from './popoverManagement.js';
+import {
+  popoverManagement,
+  globusPopoverManagement,
+  storagePopoverManagement,
+} from './popoverManagement.js';
 import { setupFileExplorer } from './fileExplorer.js';
 
 const app = createApp({});
@@ -252,6 +256,7 @@ function initPage() {
   wizardNavigation();
   popoverManagement();
   globusPopoverManagement();
+  storagePopoverManagement();
 }
 
 /* eslint-disable no-console */

@@ -52,3 +52,16 @@ export function globusPopoverManagement() {
     triggerMailer(projectId);
   });
 }
+
+export function storagePopoverManagement() {
+  // hide the storage detail when the user opens more storage modal
+  const requestMoreStorageModal = document.getElementsByClassName('request-more-storage-modal');
+  for (let i = 0; i < requestMoreStorageModal.length; i += 1) {
+    requestMoreStorageModal[i].addEventListener('beforetoggle', (event) => {
+      const storageDetail = document.getElementById('storage-details');
+      if (event.newState === 'open') {
+        storageDetail.hidePopover();
+      }
+    });
+  }
+}
