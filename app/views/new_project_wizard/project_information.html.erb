@@ -1,7 +1,7 @@
 <% content_for :title, "New Project Request" %>
 <% content_for :form_title, "Basic Details" %>
 <% content_for :form_description, "Tell us a little about your project! These details are important for setting up and organizing your project." %>
-<div class="lux">
+<div class="lux full-width">
     <%= render partial: "/new_project_wizard/form_project_title_input", locals: {project_title: @new_project_request.project_title || "", project_title_error: "", input_id: "project_title" } %>
     <%= render partial: "/new_project_wizard/form_project_path_input", locals: {project_folder: @new_project_request.project_folder || "", project_folder_error: [],
                                                                                 parent_folder: @new_project_request.parent_folder || "", parent_folder_error: []} %>
