@@ -187,16 +187,22 @@ module Mediaflux
         end
       end
 
-      # Logs as warning Mediaflux requests that take longer than 3 seconds.
+      # Logs as warning and notifies Honeybadger for Mediaflux requests that take longer than 3 seconds.
       #
-      # We could eventually also send to Honeybadger long requests but
-      # let's wait until we have a benchmark of what is considered slow
-      # in Mediaflux.
+      # This helps us monitor and investigate slow Mediaflux performance in production.
       def log_elapsed(start_time)
         elapsed_time = ::Time.zone.now - start_time
         timing_info = "#{format('%.2f', elapsed_time)} s"
         if elapsed_time > 3.0
           Rails.logger.warn "Slow Mediaflux request: #{self.class}, #{timing_info}"
+          Honeybadger.notify(
+            "Slow Mediaflux request",
+            context: {
+              request_class: self.class.to_s,
+              service: self.class.respond_to?(:service) ? self.class.service : nil,
+              timing_info: timing_info
+            }
+          )
         end
       end
     end
