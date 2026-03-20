@@ -535,7 +535,7 @@
             }
 
             .user-cell.cell {
-              width: 18.75rem;
+              flex-grow: 2;
             }
 
             .cell {
@@ -602,6 +602,10 @@
             pointer-events: none;
             position: absolute;
           }
+        }
+        .user-role.pul-popover {
+          width: 80%;
+          background: $white;
         }
       }
 
@@ -1167,25 +1171,29 @@
 }
 
 /* Tooltip text */
-.pul-tooltiptext-left::after {
+.pul-tooltiptext::after {
   content: " ";
   position: absolute;
   top: 2.25rem;
-  right: 100%; /* To the left of the tooltip */
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent #333 transparent transparent;
+}
+
+.pul-tooltiptext-left::after {
+  @media (min-width: 931px) {
+    right: 100%; /* To the left of the tooltip */
+    border-color: transparent #333 transparent transparent;
+  }
+  /* once the screen is small force the tooltip left where we know we have room */
+  @media (max-width: 930px) {
+    left: 100%; /* To the right of the tooltip */
+    border-color: transparent transparent transparent #333;
+  }
 }
 
 .pul-tooltiptext-right::after {
-  content: " ";
-  position: absolute;
-  top: 2.25rem;
-  left: 100%; /* To the left of the tooltip */
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
+  left: 100%; /* To the right of the tooltip */
   border-color: transparent transparent transparent #333;
 }
 
@@ -1211,7 +1219,12 @@
 }
 
 .pul-tooltiptext-left {
-  left: 105%;
+  @media (min-width: 931px) {
+    right: 105%;
+  }
+  @media (max-width: 930px) {
+    right: 105%;
+  }
 }
 
 .pul-tooltiptext-right {
