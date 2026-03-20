@@ -171,7 +171,7 @@ class ProjectShowPresenter
 
   def formatted_storage_capacity(session_id:)
     value = storage_capacity(session_id: session_id)
-    format("%.3f", value)
+    format("%.0f", value)
   end
 
   def formatted_quota_percentage(session_id:)

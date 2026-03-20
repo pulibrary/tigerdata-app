@@ -365,7 +365,7 @@
     padding: 0.2rem 0.75rem;
     justify-content: center;
     gap: 0.25rem;
-    width: 10.6875rem;
+    width: 15.6875rem;
     height: 1.625rem;
     background: $gray-100;
     border-radius: 0.35rem;
@@ -400,6 +400,9 @@
       border-width: 2px;
       box-shadow: 0 0 0 0.2rem $bright-blue;
       outline-color: $bright-blue;
+      font-size: 0.75rem;
+      color: white;
+      border: 1px solid transparent;
     }
   }
 
@@ -451,6 +454,13 @@
         &:hover {
           color: black;
           background: $gray-60;
+        }
+        &:focus {
+          border-width: 2px;
+          box-shadow: 0 0 0 0.2rem $bright-blue;
+          outline-color: $bright-blue;
+          background-color: white;
+          border: 1px solid transparent;
         }
       }
     }

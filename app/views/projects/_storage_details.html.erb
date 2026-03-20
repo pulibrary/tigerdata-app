@@ -1,5 +1,5 @@
 
-    <div popover="left" id="storage-details" trigger="manual" class="pul-popover detail-storage-modal">
+    <dialog popover="auto" role="storage-details-dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle" tabindex="0" id="storage-details"  class="pul-popover detail-storage-modal">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-title-frame">
@@ -17,7 +17,6 @@
                     <% if Flipflop.request_more_storage? %>
                       <!-- New logic goes here!! -->
                       <% if @presenter.can_increase_quota?(user: current_user) %>
-
                          <button class="btn pul-button-primary request-more-btn" id="request-more-storage-button" popovertarget="request-more-storage">
                            Request more storage
                          </button>
@@ -26,11 +25,11 @@
                     <% else %>
                       <!-- Remove this when the new modal is complete -->
                       <% if @presenter.can_increase_quota?(user: current_user) %>
-                        <button class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
+                        <button id="request-more-btn" class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
                           Request more storage
                           <%= image_tag "open-icon-white.svg", alt: "" %>
                         </button>
-                      <% end %>                      
+                      <% end %>
                     <% end %>
               </div>
               <div class="my-2">
@@ -125,6 +124,9 @@
             </div>
           </div>
         </div>
+
+        <!-- Force the focus to stay within the modal form (https://stackoverflow.com/a/75300986/446681) -->
+        <span tabindex="0" aria-hidden="true" onfocus="document.getElementById('request-more-btn').focus()"></span>
+
       </div>
-    </div>
-    
+    </dialog>

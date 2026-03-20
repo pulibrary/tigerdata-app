@@ -8,18 +8,43 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2.5rem;
+
+  @media (max-width: 1280px) {
+    padding: 1.5rem 1.25rem;
+    gap: 1.44rem;
+  }
+
   nav {
     display: flex;
     height: 1.8125rem;
     padding: 0.25rem 0rem;
     align-items: center;
     gap: 0.625rem;
+    @media (min-width: 1440px) {
+      width: 75rem;
+    }
+    @media (max-width: 1280px) {
+      padding: 0.25rem 1.25rem;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    .breadcrumbs {
+      @media (max-width: 1280px) {
+        margin-bottom: 0rem;
+      }
+    }
   }
   .heading-frame {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+    @media (min-width: 1440px) {
+      width: 75rem;
+    }
+    @media (max-width: 1280px) {
+      padding: 0rem 1.25rem 1.3rem 1.25rem;
+    }
 
     .heading-text {
       color: $gray-100;
@@ -44,6 +69,15 @@
     gap: 1.25rem;
     align-self: stretch;
     overflow: auto;
+    @media (min-width: 1440px) {
+      width: 75rem;
+    }
+
+    @media (max-width: 1280px) {
+      padding: 0 1.25rem;
+      gap: 2.875rem;
+      display: flex;
+    }
 
     .form-panel {
       display: flex;
@@ -52,6 +86,9 @@
       gap: 1.25rem;
       align-self: stretch;
       flex-grow: 1;
+      @media (min-width: 1440px) {
+        width: 56rem;
+      }
 
       .scrollable-frame {
         display: flex;
@@ -60,6 +97,9 @@
         gap: 2.5rem;
         align-self: stretch;
 
+        @media (max-width: 1280px) {
+          gap: 1.4375rem;
+        }
         .form-header {
           display: flex;
           padding: 0.75rem 0rem 1.5rem 0rem;
@@ -69,6 +109,11 @@
           align-self: stretch;
           border-bottom: 1px solid $gray-20;
           background: $white;
+
+          @media (max-width: 1280px) {
+            padding: 0rem;
+            padding-bottom: 1.5rem;
+          }
 
           .form-title {
             display: flex;
@@ -178,6 +223,10 @@
         align-self: stretch;
         width: 100%;
 
+        @media (max-width: 930px) {
+          flex-direction: column;
+        }
+
         .field-info {
           display: flex;
           width: 11.4375rem;
@@ -232,6 +281,11 @@
           padding-right: 10px;
           gap: 0.5rem;
           flex: 1 0 0;
+
+          @media (max-width: 1280px) {
+            padding-right: 0px;
+          }
+
           .text-input {
             display: flex;
             flex-direction: column;
@@ -325,8 +379,18 @@
               display: flex;
               flex-direction: column;
               align-items: flex-start;
+              align-self: stretch;
               gap: 0.25rem;
-              flex-shrink: 0;
+              flex-grow: 1;
+
+              .form-input {
+                width: 100%;
+              }
+
+              .horizontal-frame {
+                flex-direction: column;
+                align-items: stretch;
+              }
             }
           }
         }
@@ -544,7 +608,7 @@
       .data-manager .text-input,
       .data-sponsor .text-input,
       .departments .text-input {
-        width: 95%;
+        width: 100%;
       }
 
       .button-frame {
@@ -860,6 +924,10 @@
   align-items: flex-start;
   border-radius: 0.75rem;
   background: $gray-5;
+  @media (max-width: 1280px) {
+    width: 14.8125rem;
+    flex-shrink: 0;
+  }
 }
 
 .sidebar-container {
@@ -868,6 +936,9 @@
   align-items: flex-start;
   gap: 1.25rem;
   flex: 1 0 0;
+  @media (max-width: 1280px) {
+    width: 12.625rem;
+  }
 }
 
 .expanded-state {
