@@ -43,12 +43,13 @@ function triggerMailer(projectId) {
 }
 
 export function globusPopoverManagement() {
-  const globusAccessPopover = document.getElementById('globus-access');
   const switchGlobusPopover = document.getElementById('globus-switch');
-  const projectId = window.location.href.split('/')[4]; // Extract project ID from URL, assuming URL structure is consistent
-
-  switchGlobusPopover.addEventListener('click', () => {
-    globusAccessPopover.hidePopover();
-    triggerMailer(projectId);
-  });
+  if (switchGlobusPopover !== null) {
+    const globusAccessPopover = document.getElementById('globus-access');
+    const projectId = window.location.href.split('/')[4]; // Extract project ID from URL, assuming URL structure is consistent
+    switchGlobusPopover.addEventListener('click', () => {
+      globusAccessPopover.hidePopover();
+      triggerMailer(projectId);
+    });
+  }
 }

@@ -41,6 +41,14 @@ class DashboardPresenter
     @my_submitted_requests ||= presented_requests(NewProjectRequest.where(requested_by: current_user.uid, state: NewProjectRequest::SUBMITTED))
   end
 
+  def requests_to_approve
+    @requests_to_approve ||= if current_user.eligible_sysadmin?
+                               presented_requests(NewProjectRequest.where(state: NewProjectRequest::SUBMITTED))
+                             else
+                               []
+                             end
+  end
+
   def display_confirm_delete_draft_modal?
     display_modal == "confirm_delete_draft"
   end

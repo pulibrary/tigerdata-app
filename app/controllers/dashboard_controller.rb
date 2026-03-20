@@ -23,13 +23,22 @@ class DashboardController < ApplicationController
     end
   end
 
+  # HTTP POST /dash_project via AJAX to toogle the current tab
   def dash_project
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]
     end
   end
 
+  # HTTP POST /dash_admin via AJAX to toogle the current tab
   def dash_admin
+    if params.key?("dashtab")
+      session[:dashtab] = params[:dashtab]
+    end
+  end
+
+  # HTTP POST /dash_requests via AJAX to toogle the current tab
+  def dash_requests
     if params.key?("dashtab")
       session[:dashtab] = params[:dashtab]
     end
