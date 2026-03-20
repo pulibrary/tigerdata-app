@@ -52,3 +52,35 @@ export function globusPopoverManagement() {
     triggerMailer(projectId);
   });
 }
+function checkStoragePopoverFields() {
+  const storageAmount = document.getElementById('storage_amount').value;
+  const storageUnit = document.getElementById('storage_unit').value;
+  const storageJustification = document.getElementById('storage_justification').value;
+  const growthExpectation = document.getElementById('storage_growth_expectation').value;
+  const fields = [storageAmount, storageUnit, storageJustification, growthExpectation];
+  const errorMessage = document.querySelectorAll('.storage-modal-error');
+  // TODO: add check for date needed once the date picker is added
+
+  // check that all fields are filled out before allowing the popover to close
+  fields.forEach((field) => {
+    if (field.trim().length === 0 || !field) {
+      errorMessage.forEach((message) => {
+        message.hidden = false; // eslint-disable-line no-param-reassign
+      });
+      return false;
+    }
+
+    return true;
+  });
+}
+export function requestMoreStoragePopoverManagement() {
+  const requestMoreStoragePopover = document.getElementById('request-more-storage');
+  const switchRequestMoreStoragePopover = document.getElementById('submit-storage-request');
+
+  switchRequestMoreStoragePopover.addEventListener('click', () => {
+    if (checkStoragePopoverFields()) {
+      // TODO: submit the form and trigger the mailer, and then close the popover
+      requestMoreStoragePopover.hidePopover();
+    }
+  });
+}
