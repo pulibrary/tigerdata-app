@@ -4,7 +4,7 @@
         <div class="modal-header">
           <div class="modal-title-frame">
             <div class="model-title">Storage Usage Overview</div>
-            <input type=button popovertarget="storage-details" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+            <input type=button popovertarget="storage-details" id="storage-details-close" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
           </div>
           <div class="modal-subtitle">
            Detailed breakdown of your storage usage across different categories
@@ -17,9 +17,10 @@
                     <% if Flipflop.request_more_storage? %>
                       <!-- New logic goes here!! -->
                       <% if @presenter.can_increase_quota?(user: current_user) %>
-                         <button id="request-more-btn" class="btn pul-button-primary request-more-btn" onclick="window.open('https://tigerdata.princeton.edu/form/quota-increase-request', '_blank')">
+                         <button class="btn pul-button-primary request-more-btn" id="request-more-storage-button" popovertarget="request-more-storage">
                            Request more storage
                          </button>
+                         <%= render partial: "request_more_storage" %>
                       <% end %>
                     <% else %>
                       <!-- Remove this when the new modal is complete -->

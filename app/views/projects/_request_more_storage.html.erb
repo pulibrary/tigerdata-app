@@ -1,0 +1,45 @@
+<div popover="auto" id="request-more-storage" class="pul-popover request-more-storage-modal">
+  <div class="storage-request-heading-section">
+    <div class="storage-request-heading">Storage Increase Request</div>
+    <div>
+      <input type=button popovertarget="request-more-storage" id="request-more-storage-close" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+    </div>
+  </div>
+  <div class="storage-request-subheading">Please indicate the new storage capacity you are requesting.<span class="required">*</span></div>
+  <div class="capacity-section">
+    <div class="form-label capacity-label">Amount:</div>
+     <input class="form-input size-input" id="storage_amount" type="number" name="storage_request[amount]" placeholder="e.g., 500"></input>
+    <div class="form-label capacity-label">Unit:</div>
+    <select class="form-select unit-input" id="storage_unit" name="storage_request[storage_unit]">
+      <option value="" selected disabled hidden>Select</option>
+      <option value="MB">MB</option>
+      <option value="GB">GB</option>
+      <option value="TB">TB</option>
+    </select>
+  </div>
+  <div class="storage-modal-error" hidden="true">cannot be empty </div>
+
+  <div class="justification-section">
+    <div class="form-label">Justification<span class="required">*</span></div>
+    <div class="justification-note">Please briefly explain why additional storage is needed, including details about your project or specific storage requirements.</div>
+    <textarea maxlength="2000" class="form-input text-area" name="storage_request[justification]" id="storage_justification"></textarea>
+  </div>
+  <div class="storage-modal-error" hidden="true">cannot be empty </div>
+  <div class="growth-expectation-section">
+    <div class="form-label">Growth Expectation<span class="required">*</span></div>
+    <textarea maxlength="2000" class="form-input text-area" name="storage_request[growth_expectation]" id="storage_growth_expectation"></textarea>
+  </div>
+  <div class="storage-modal-error" hidden="true">cannot be empty </div>
+  <div class="date-needed-section">
+    <div class="form-label">Date Needed<span class="required">*</span></div>
+    <div class="date-needed-note">When would you like this updated quota available by?</div>
+    <lux-date-picker class="lux-date-picker" id="today" name="today" label="Today's Date" mode="single" :holidays="['2020-02-20','2020-02-21']" :defaultDate="(new Date()).setDate((new Date()).getDate() + 7)" :disabled-dates="[{ start: nil, end: new Date()}]"/>
+    <input class="form-input date-picker" type="date" name="storage_request[date_needed]" id="storage_date_needed"></input>
+  </div>
+  <div class="storage-modal-error" hidden="true">select a date </div>
+  <div class="request-more-storage-buttons">
+    <button popovertarget="request-more-storage" popovertargetaction="hide" class="pul-button-secondary storage-cancel">Cancel</button>
+    <button class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
+  </div>
+
+</div>

@@ -1,6 +1,11 @@
 import { createApp } from 'vue';
 import 'lux-design-system/dist/style.css';
-import { LuxBadge, LuxInputMultiselect, LuxInputAsyncSelect } from 'lux-design-system';
+import {
+  LuxBadge,
+  LuxInputMultiselect,
+  LuxInputAsyncSelect,
+  LuxDatePicker,
+} from 'lux-design-system';
 
 // import 'bootstrap/js/src/alert'
 // import 'bootstrap/js/src/button'
@@ -33,7 +38,11 @@ import { validationClear } from './validation.js';
 import { titleCopySaveExit } from './titleCopySaveExit.js';
 import { copyPastePath } from './copyPastePath.js';
 import { wizardNavigation } from './wizardNavigation.js';
-import { popoverManagement, globusPopoverManagement } from './popoverManagement.js';
+import {
+  popoverManagement,
+  globusPopoverManagement,
+  requestMoreStoragePopoverManagement,
+} from './popoverManagement.js';
 import { setupFileExplorer } from './fileExplorer.js';
 
 const app = createApp({});
@@ -72,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-badge', LuxBadge)
       .component('lux-input-multiselect', LuxInputMultiselect)
       .component('lux-input-async-select', LuxInputAsyncSelect)
+      .component('lux-date-picker', LuxDatePicker)
       .mount(elements[i]);
   }
 });
@@ -252,6 +262,7 @@ function initPage() {
   wizardNavigation();
   popoverManagement();
   globusPopoverManagement();
+  requestMoreStoragePopoverManagement();
 }
 
 /* eslint-disable no-console */
