@@ -1,19 +1,29 @@
 <div id="requests-listing">
   <div class="section">
     <div class="import">
-
-      <% if @presenter.my_submitted_requests.count > 0 %>
-        <h2>My Requests</h2>
-        <% @presenter.my_submitted_requests.each do |request| %>
-          <p><%= request.id %>
-        <% end %>
-      <% end %>
-
       <% if @presenter.requests_to_approve.count > 0 %>
         <h2>Request to Approve</h2>
-        <% @presenter.requests_to_approve.each do |request_presenter| %>
-          <p><%= link_to request_presenter.request.project_title, new_project_request_path(request_presenter.request) %>
-        <% end %>
+
+        <div class="table">
+          <table id="requests-listing" width="100%" role="table"> <!-- width is needed to override datatables calculation -->
+            <thead>
+              <tr class="project heading screenreader-only" role="rowheader">
+                <th>display</th>
+                <th>title</th>
+                <th>status</th>
+                <th>type</td>
+                <th>role</th>
+                <th>download</th>
+                <th>activity</th>
+                <th>quota usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render :partial => "request_list_view", :collection => @presenter.requests_to_approve, :as => :request %>
+            </tbody>
+          </table>
+        </div>
+
       <% end %>
 
     </div>

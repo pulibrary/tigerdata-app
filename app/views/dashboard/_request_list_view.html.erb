@@ -1,0 +1,50 @@
+<tr class="project" >
+  <td class="project-row">
+    <div class="project-details">
+      <div class="title">
+          <a class="click-row" href="<%= new_project_request_path(request.id) %>" tabindex="0" ><%= request.safe_project_title %></a>
+      </div>
+      <div class="summary summary-smaller-device">
+          <div class="status <%= request.request.state.downcase %> "><%= request.request.state %></div>
+      </div>
+
+      <div class="summary" style="width: 100%;">
+          <div class="storage-details-smaller-device">
+              <div class="data-storage-progress">STATE HERE</div>
+          </div>
+      </div>
+
+      <div class="summary summary-data-sponsor-smaller-device">
+          <span class="data-sponsor"><b>Data Sponsor:</b> <%= request.data_sponsor %>
+              <span class="netid-large"><%= request.request.data_sponsor %></span>
+              <span class="separator">|</span>
+          </span>
+
+          <span class="data-manager"><b>Data Manager:</b> <%= request.data_manager %>
+              <span class="netid-large"><%= request.request.data_manager %></span>
+          </span>
+      </div>
+      <div class="summary">
+          <div class="path"> <%= request.project_directory %></div>
+          <button id="copy-project-path-button-<%= request.id %>" class="btn copy-paste-button-sizer copy-project-path-icon" data-url="<%= new_project_request_path(request.id) %>" title="Copy request path to the clipboard">
+          <div class="pul-copy-paste-tooltip" data-url="<%= new_project_request_path(request.id) %>">
+            <span id="copy-project-path-label" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
+          </div>
+          </button>
+      </div>
+      <div class="summary">
+          <div class="status <%= request.request.state.downcase %> status-larger-device"><%= request.request.state.downcase %></div>
+          <div class="role">(role?)</div>
+      </div>
+    </div>
+
+    <div class="storage-details">
+      <div class="storage">
+        <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-orange w3-round-xlarge" style="height:6px;width:100%"></div>
+        </div>
+        <div class="usage">???</div>
+      </div>
+    </div>
+  </td>
+</tr>
