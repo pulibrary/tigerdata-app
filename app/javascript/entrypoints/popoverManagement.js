@@ -26,7 +26,7 @@ export function popoverManagement() {
   }
 }
 
-function triggerMailer(projectId) {
+function sendGlobusRequest(projectId) {
   // Perform an AJAX POST request to the Rails controller action
   fetch(`/projects/send_globus_access_request`, {
     method: 'POST',
@@ -42,6 +42,34 @@ function triggerMailer(projectId) {
   });
 }
 
+function sendStorageIncreaseRequest(
+  projectId,
+  requestedCapacity,
+  justification,
+  growthExpectation,
+  dateNeeded,
+) {
+  // Perform an AJAX POST request to the Rails controller action
+  fetch(`/projects/send_storage_increase_request`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Include CSRF token for security (Rails requires this for POST requests)
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({
+      project_id: projectId,
+      requested_capacity: requestedCapacity,
+      justification,
+      growth_expectation: growthExpectation,
+      date_needed: dateNeeded,
+    }), // Send any necessary data, e.g., project ID
+  }).catch((error) => {
+    console.error('Error:', error);
+    alert('An error occurred.');
+  });
+}
+
 export function globusPopoverManagement() {
   const globusAccessPopover = document.getElementById('globus-access');
   const switchGlobusPopover = document.getElementById('globus-switch');
@@ -49,7 +77,7 @@ export function globusPopoverManagement() {
 
   switchGlobusPopover.addEventListener('click', () => {
     globusAccessPopover.hidePopover();
-    triggerMailer(projectId);
+    sendGlobusRequest(projectId);
   });
 }
 function checkStoragePopoverFields() {
@@ -73,7 +101,7 @@ function checkStoragePopoverFields() {
   }
   return true;
 }
-export function requestMoreStoragePopoverManagement() {
+export function storageIncreasePopoverManagement() {
   const requestMoreStoragePopover = document.getElementById('request-more-storage');
   const submitStorageRequestPopover = document.getElementById('submit-storage-request');
   const cancelStorageRequestPopover = document.getElementById('cancel-storage-request');
@@ -96,8 +124,17 @@ export function requestMoreStoragePopoverManagement() {
   }
 
   submitStorageRequestPopover.addEventListener('click', () => {
+    const storageAmount = document.getElementById('storage_amount').value;
+    const storageUnit = document.getElementById('storage_unit').value;
+    const requestedStorage = `${storageAmount} ${storageUnit}`;
     if (checkStoragePopoverFields()) {
-      // TODO: submit the form and trigger the mailer, and then close the popover
+      sendStorageIncreaseRequest(
+        window.location.href.split('/')[4], // Extract project ID from URL
+        requestedStorage,
+        document.getElementById('storage_justification').value,
+        document.getElementById('storage_growth_expectation').value,
+        document.getElementById('storage_date_needed').value,
+      );
       requestMoreStoragePopover.hidePopover();
     }
   });

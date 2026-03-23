@@ -159,6 +159,27 @@ class ProjectsController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
+  def send_storage_increase_request
+    project_id = params[:project_id].to_i
+    requested_capacity = params[:requested_capacity]
+    justification = params[:justification]
+    growth_expectation = params[:growth_expectation]
+    date_needed = params[:date_needed]
+    project = Project.find(project_id)
+    quota_breakdown = ProjectShowPresenter.new(project, current_user).quota_breakdown
+    TigerdataMailer.with(
+      project_id: project_id,
+      submitter: current_user,
+      requested_capacity: requested_capacity,
+      justification: justification,
+      growth_expectation: growth_expectation,
+      date_needed: date_needed,
+      quota_breakdown: quota_breakdown
+      ).storage_increase_request.deliver_later
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
   private
 
     def project_job_service

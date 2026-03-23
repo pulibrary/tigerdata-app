@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
   resources :projects, except: [:new, :edit]
   post "projects/send_globus_access_request", to: "projects#send_globus_access_request", as: :send_globus_access_request
+  post "projects/send_storage_increase_request", to: "projects#send_storage_increase_request", as: :send_storage_increase_request
   get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
