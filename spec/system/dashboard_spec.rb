@@ -308,8 +308,10 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in admin_user
         visit dashboard_path
         click_on "Requests"
+        # Requests ready to be approved are displayed
         expect(page).to have_content "submitted request 1"
         expect(page).to have_content "submitted request 2"
+        # Draft requests are not shown
         expect(page).not_to have_content "draft request"
       end
     end

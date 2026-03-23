@@ -29,6 +29,10 @@ class NewProjectRequestPresenter
     full_name(request.requested_by, include_netid: false)
   end
 
+  def requested_on
+    request.updated_at.strftime("%b %e, %Y")
+  end
+
   def project_directory
     request.parent_folder.present? ? File.join(request.parent_folder, request.project_folder) : request.project_folder
   end
