@@ -26,8 +26,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Storage Usage Overview")
 
         # This the original button if the feature is not enabled via the Feature Flipper.
-        expect(page).to have_button("Request more storage") 
-        
+        expect(page).to have_button("Request more storage")
+
         expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
@@ -110,6 +110,25 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).not_to have_button("Request more storage")
         end
       end
+      it "Shows the Storage request modal" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          click_on "Request more storage"
+          expect(page).to have_content("Storage Increase Request")
+          expect(page).to have_content("Please indicate the new storage capacity you are requesting.")
+          expect(page).to have_content("Justification")
+          expect(page).to have_content("Growth Expectation")
+          expect(page).to have_content("Date Needed")
+          expect(page).to have_button("Submit")
+          expect(page).to have_button("Cancel")
+          # Check that the required field error messages are not visible before submission and are visible after submission when the fields are empty
+          expect(page).to_not have_css(".storage-modal-error", count: 4)
+          click_on "Submit"
+          expect(page).to have_css(".storage-modal-error", count: 4)
+        end
+    end
     end
 
     context "Navigation Buttons" do

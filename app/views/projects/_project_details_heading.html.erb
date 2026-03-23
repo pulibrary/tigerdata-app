@@ -69,7 +69,6 @@
     </div><!-- .col -->
   </div><!-- .row -->
 </div><!-- #project-details-heading -->
-
 <script type="module">
 
 // https://rubyyagi.com/how-to-truncate-long-text-and-show-read-more-less-button/
@@ -92,3 +91,14 @@ var $element = $('#description-text')[0];
          };
          ExcerptWidget.showMore('.show-more', '#description-text');
 </script>
+
+<script>
+$("#request-more-storage").popover({
+    html: true,
+    trigger: "click",
+    content: function() {
+        $("#storage-details .popover.show").popover('hide');
+    }
+});
+</script>
+
