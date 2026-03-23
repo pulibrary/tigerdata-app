@@ -25,6 +25,10 @@ class NewProjectRequestPresenter
     full_name(request.data_manager)
   end
 
+  def requested_by
+    full_name(request.requested_by, include_netid: false)
+  end
+
   def project_directory
     request.parent_folder.present? ? File.join(request.parent_folder, request.project_folder) : request.project_folder
   end
@@ -53,10 +57,14 @@ class NewProjectRequestPresenter
     usr_list.join(", ")
   end
 
-  def full_name(uid)
+  def full_name(uid, include_netid: true)
     return "" if uid.blank?
     user = User.find_by(uid: uid)
-    user.display_name_safe.to_s
+    if include_netid
+      user.display_name_safe.to_s
+    else
+      user.display_name_only_safe.to_s
+    end
   end
 
   # Returns the correct CSS class suffix for the sidebar navigation progress for a given
