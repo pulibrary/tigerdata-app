@@ -2,18 +2,32 @@
 @import "typography";
 @import "bootstrap";
 
-.pul-popover {
-  .request-more-storage-modal {
-    gap: 1.5rem;
-    width: 55.25rem;
-    height: 53.625rem;
-  }
+.pul-popover-storage {
+  width: 55.25rem;
+  height: 53.625rem;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-radius: 0.5rem;
+  background: $gray-extra-light;
+  box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
+  border: $gray-10;
+}
+
+.pul-popover-storage::backdrop {
+  background-color: $gray-100-transparent;
+}
+
+.pul-popover-storage:popover-open {
+  display: flex;
 }
 
 #request-more-storage {
   .storage-request-heading-section {
     display: flex;
-    width: 47rem;
+    width: 51.5rem;
     height: 1.6875rem;
     justify-content: space-between;
     align-items: center;
@@ -96,7 +110,7 @@
   }
   .text-area {
     height: 7.375rem;
-    width: 41.8125rem;
+    width: 51.8125rem;
     flex-shrink: 0;
     align-self: stretch;
     border-radius: 0.5rem;
@@ -119,7 +133,10 @@
   }
   .request-more-storage-buttons {
     display: flex;
-    gap: 36rem;
+    height: 2.875rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
     @mixin button-styles {
       width: 5.375rem;
       height: 2.3125rem;
