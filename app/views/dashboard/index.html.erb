@@ -5,12 +5,6 @@
          <%= render partial: "new_project_request_wizard_link" %>
       </div>
 
-      <div class="dashboard-admin-buttons">
-         <% if current_user.eligible_sysadmin? %>
-         <%= link_to "Requests", new_project_requests_path(), class: "pul-button pul-button-primary", id: "requests-listing-button" %>
-         <% end %>
-      </div>
-
       <div class="detail-pane">
          <div class="main">
             <div id="dashboard-nav">
