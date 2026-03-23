@@ -20,7 +20,6 @@
                          <button class="btn pul-button-primary request-more-btn" id="request-more-storage-button" popovertarget="request-more-storage">
                            Request more storage
                          </button>
-                         <%= render partial: "request_more_storage" %>
                       <% end %>
                     <% else %>
                       <!-- Remove this when the new modal is complete -->
@@ -130,3 +129,8 @@
 
       </div>
     </dialog>
+<% if Flipflop.request_more_storage? %>
+  <% if @presenter.can_increase_quota?(user: current_user) %>
+      <%= render partial: "request_more_storage" %>
+  <% end %>
+<% end %>
