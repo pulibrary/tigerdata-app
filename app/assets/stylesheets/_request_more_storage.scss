@@ -4,14 +4,14 @@
 
 .pul-popover-storage {
   width: 55.25rem;
-  height: 53.625rem;
+  height: fit-content;
   padding: 1.5rem;
   gap: 1.5rem;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   border-radius: 0.5rem;
-  background: $gray-extra-light;
+  background: #ffffff;
   box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
   border: $gray-10;
 }
@@ -21,7 +21,7 @@
 }
 
 .pul-popover-storage:popover-open {
-  display: flex;
+  display: inline-flex;
 }
 
 #request-more-storage {
