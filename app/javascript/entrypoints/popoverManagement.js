@@ -69,6 +69,9 @@ export function storageIncreasePopoverManagement() {
   const requestMoreStoragePopover = document.getElementById('request-more-storage');
   const submitStorageRequestPopover = document.getElementById('submit-storage-request');
   const cancelStorageRequestPopover = document.getElementById('cancel-storage-request');
+  const storageRequestConfirmationPopover = document.getElementById(
+    'storage-request-confirmation',
+  );
   const returnStorageOverview = document.getElementById('return-storage-overview');
   const storageDetail = document.getElementById('storage-details');
 
@@ -101,6 +104,7 @@ export function storageIncreasePopoverManagement() {
         document.getElementById('storage_date_needed').value,
       );
       requestMoreStoragePopover.hidePopover();
+      storageRequestConfirmationPopover.showPopover();
     }
   });
 
