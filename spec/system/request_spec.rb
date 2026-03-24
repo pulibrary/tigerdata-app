@@ -5,13 +5,6 @@ require "rails_helper"
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  context "unauthenticated user" do
-    it "shows the 'Log In' button" do
-      visit new_project_requests_path
-      expect(page).to have_content "Log in"
-    end
-  end
-
   context "authenticated user" do
     let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
@@ -146,12 +139,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "user without a role" do
-      it "does not show the New Project Requests page to users without a role" do
-        sign_in sponsor_and_data_manager
-        visit new_project_requests_path
-        expect(page).to have_content "You do not have access to this page."
-      end
-
       it "does not show the approve button on a single request view for users without a role" do
         sign_in sponsor_and_data_manager
         visit new_project_request_path(submitted_request.id)
@@ -161,11 +148,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "sponsor_user" do
-      it "does not show the New Project Requests page to data sponsors" do
-        sign_in sponsor_user
-        visit new_project_requests_path
-        expect(page).to have_content "You do not have access to this page."
-      end
       it "does not show the approve button on a single request view for data sponsors" do
         sign_in sponsor_user
         visit new_project_request_path(submitted_request.id)
@@ -177,11 +159,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "data_manager" do
-      it "does not show the New Project Requests page to data managers" do
-        sign_in manager_user
-        visit new_project_requests_path
-        expect(page).to have_content "You do not have access to this page."
-      end
       it "does not show the approve button on a single request view for data managers" do
         sign_in manager_user
         visit new_project_request_path(submitted_request.id)
@@ -193,14 +170,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "sysadmin_user" do
-      it "shows the New Project Requests page to sysadmin users" do
-        request # make sure the request exists before loading the index page
-        sign_in sysadmin_user
-        visit new_project_requests_path
-        expect(page).to have_content "New Project Requests"
-        expect(page).to have_content request.requested_by
-        expect(page).to have_content request.project_path
-      end
       it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
@@ -346,12 +315,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "developer" do
-      it "shows the New Project Requests page to developers" do
-        sign_in developer_user
-        visit new_project_requests_path
-        expect(page).to have_content "New Project Requests"
-      end
-
       it "shows the approve button on a single request view for developers" do
         sign_in developer_user
         put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")

@@ -3,22 +3,6 @@ class NewProjectRequestsController < ApplicationController
   before_action :set_new_project_request, only: %i[show approve destroy]
   before_action :set_breadcrumbs
 
-  # GET /new_project_requests
-  def index
-    if current_user.eligible_sysadmin?
-      add_breadcrumb("Project Requests - All")
-      @draft_requests = NewProjectRequest.where(state: NewProjectRequest::DRAFT).map do |request|
-        request.project_title = "no title set" if request.project_title.blank?
-        request
-      end
-      @submitted_requests = NewProjectRequest.where(state: NewProjectRequest::SUBMITTED)
-    else
-      error_message = "You do not have access to this page."
-      flash[:notice] = error_message
-      redirect_to dashboard_path
-    end
-  end
-
   def show
     if current_user.uid == @new_project_request.requested_by || current_user.developer || current_user.sysadmin || current_user.trainer
       @request_presenter = NewProjectRequestPresenter.new(@new_project_request)

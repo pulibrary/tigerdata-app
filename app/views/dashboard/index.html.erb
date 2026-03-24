@@ -5,28 +5,25 @@
          <%= render partial: "new_project_request_wizard_link" %>
       </div>
 
-      <div class="dashboard-admin-buttons">
-         <% if current_user.eligible_sysadmin? %>
-         <%= link_to "Requests", new_project_requests_path(), class: "pul-button pul-button-primary", id: "requests-listing-button" %>
-         <% end %>
-      </div>
-
       <div class="detail-pane">
          <div class="main">
             <div id="dashboard-nav">
                <button id="dash-projects" class="tab-nav"> Projects </button>
                <% if current_user.eligible_sysadmin? %>
-               <button id="dash-admin" class="tab-nav"> Administration </button>
+                  <button id="dash-admin" class="tab-nav"> Administration </button>
                <% elsif current_user.trainer? %>
-               <% if session[:emulation_role] == "System Administrator" %>
-               <button id="dash-admin" class="tab-nav"> Administration </button>
+                  <% if session[:emulation_role] == "System Administrator" %>
+                     <button id="dash-admin" class="tab-nav"> Administration </button>
+                  <% end %>
                <% end %>
-               <% end %>
+               <button id="dash-requests" class="tab-nav"> Requests </button>
             </div>
             <% if @dash_session == "project"%>
               <%= render partial: "projects_listing", locals: { projects: @presenter.dashboard_projects,  table_id: "projects-listing" } %>
             <% elsif @dash_session == "admin" %>
               <%= render partial: "admin_listing" %>
+            <% elsif @dash_session == "requests" %>
+               <%= render partial: "requests_listing" %>
             <% end %>
 
             <div class="contact-us-small-device">

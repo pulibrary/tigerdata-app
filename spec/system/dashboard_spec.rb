@@ -281,6 +281,10 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     context "with the sysadmin role" do
       let(:admin_user) { FactoryBot.create(:sysadmin, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }
 
+      let!(:request_draft) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft" }
+      let!(:request_submitted1) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted" }
+      let!(:request_submitted2) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted" }
+
       it "shows the system administrator dashboard" do
         sign_in admin_user
         created_projects.push(project_111, project_222)
@@ -298,6 +302,17 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in admin_user
         visit dashboard_path
         expect(page).to have_content "Administration"
+      end
+
+      it "renders the Requests tab with the proper requests" do
+        sign_in admin_user
+        visit dashboard_path
+        click_on "Requests"
+        # Requests ready to be approved are displayed
+        expect(page).to have_content "submitted request 1"
+        expect(page).to have_content "submitted request 2"
+        # Draft requests are not shown
+        expect(page).not_to have_content "draft request"
       end
     end
 

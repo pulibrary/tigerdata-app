@@ -1,0 +1,23 @@
+<div id="requests-listing">
+  <% if @presenter.requests_to_approve.count > 0 %>
+    <div class="table">
+      <table id="requests-listing" width="100%" role="table"> <!-- width is needed to override datatables calculation -->
+        <thead>
+          <tr class="project heading screenreader-only" role="rowheader">
+            <th>display</th>
+            <th>title</th>
+            <th>status</th>
+            <th>type</td>
+            <th>role</th>
+            <th>download</th>
+            <th>activity</th>
+            <th>quota usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render :partial => "request_list_view", :collection => @presenter.requests_to_approve, :as => :request %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
