@@ -1,3 +1,4 @@
+# Validates project records for required fields and consistency.
 class ProjectValidator < ActiveModel::Validator
     def validate(project)
         @schema = TigerdataSchema.new(namespace: "tigerdata", type: "tigerdata:project")
