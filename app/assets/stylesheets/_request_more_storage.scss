@@ -170,7 +170,7 @@
 }
 .storage-request-confirmation-modal {
   width: 35rem !important;
-  height: 15.25rem;
+  height: 16.25rem;
   padding: 2rem 2rem 1.1875rem 2rem;
   justify-content: flex-end;
   align-items: flex-end;
@@ -182,6 +182,7 @@
       align-items: flex-start;
       align-self: stretch;
       gap: 1.75rem;
+      margin-bottom: 1rem;
       .storage-modal-title-frame {
         display: inline-flex;
         justify-content: space-between;
@@ -202,6 +203,17 @@
         background: var(--Status-Success, #ddede6);
         align-items: center;
       }
+    }
+    .pul-button-secondary.storage-return {
+      display: flex;
+      padding: 0.5rem 1.25rem;
+      align-items: flex-start;
+      gap: 0.625rem;
+      border-radius: 0.25rem;
+      border: 1px solid #000;
+      background: #fff;
+      margin-left: auto;
+      font-weight: 600;
     }
   }
   .alert {

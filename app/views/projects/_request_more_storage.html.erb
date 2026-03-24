@@ -40,11 +40,6 @@
   <div class="storage-modal-error" hidden="true">This field is required. </div>
   <div class="request-more-storage-buttons">
     <button popovertarget="request-more-storage" popovertargetaction="hide" class="pul-button-secondary storage-cancel" id="cancel-storage-request">Cancel</button>
-    <%
-=begin%>
- <button class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
-<%
-=end%>
     <button popovertarget="storage-request-confirmation" popovertargetaction="show" class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
   </div>
 </div>
@@ -60,5 +55,6 @@
                 <p class="storage-modal-alert-text">Your storage increase request has been submitted</p>
             </div>
         </div>
+        <button popovertarget="storage-request-confirmation" popovertargetaction="hide" class="pul-button-secondary storage-return">Back to Storage Overview</button>
     </div>
 </div>
