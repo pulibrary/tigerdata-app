@@ -69,6 +69,7 @@ export function storageIncreasePopoverManagement() {
   const requestMoreStoragePopover = document.getElementById('request-more-storage');
   const submitStorageRequestPopover = document.getElementById('submit-storage-request');
   const cancelStorageRequestPopover = document.getElementById('cancel-storage-request');
+  const returnStorageOverview = document.getElementById('return-storage-overview');
   const storageDetail = document.getElementById('storage-details');
 
   // hide the storage detail when the user opens more storage modal
@@ -104,6 +105,10 @@ export function storageIncreasePopoverManagement() {
   });
 
   cancelStorageRequestPopover.addEventListener('click', () => {
+    storageDetail.showPopover();
+  });
+
+  returnStorageOverview.addEventListener('click', () => {
     storageDetail.showPopover();
   });
 }
