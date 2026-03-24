@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# Represents the TigerData schema from Mediaflux.
 class TigerdataSchema
   SCHEMA_VERSION = "0.6.1"
 

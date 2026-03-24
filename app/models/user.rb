@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "csv"
+
+# Represents a user in the tiger-data application, handling authentication, roles, and Mediaflux integration.
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -14,6 +16,9 @@ class User < ApplicationRecord
 
   attr_accessor :mediaflux_session
 
+  # Finds or updates a user from CAS access token.
+  # @param [Object] access_token The CAS access token
+  # @return [User, nil] The user or nil
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
@@ -24,6 +29,7 @@ class User < ApplicationRecord
   end
 
   # Users that can be project sponsors
+  # @return [ActiveRecord::Relation] Users eligible as sponsors
   def self.sponsor_users
     if Rails.env.development? || Rails.env.staging?
       User.where(eligible_sponsor: true).or(User.where(developer: true))
@@ -33,6 +39,7 @@ class User < ApplicationRecord
   end
 
   # Users that can be data managers
+  # @return [ActiveRecord::Relation] Users eligible as managers
   def self.manager_users
     if Rails.env.development? || Rails.env.staging?
       User.where(eligible_manager: true).or(User.where(developer: true))
@@ -41,12 +48,18 @@ class User < ApplicationRecord
     end
   end
 
+  # Clears the Mediaflux session from memory and session.
+  # @param [Hash] session The Rails session
+  # @return [void]
   def clear_mediaflux_session(session)
     Rails.logger.debug("!!!!!!! Clearing Mediaflux session !!!!!!!!")
     @mediaflux_session = nil
     session[:mediaflux_session] = nil
   end
 
+  # Initializes Mediaflux session from the Rails session.
+  # @param [Hash] session The Rails session
+  # @return [void]
   def mediaflux_from_session(session)
     logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
     if session[:mediaflux_session].blank?
@@ -58,6 +71,10 @@ class User < ApplicationRecord
     @mediaflux_session = session[:mediaflux_session]
   end
 
+  # Logs in to Mediaflux using the token and stores the session.
+  # @param [String] token The identity token
+  # @param [Hash] session The Rails session
+  # @return [void]
   def mediaflux_login(token, session)
     logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
@@ -73,6 +90,8 @@ class User < ApplicationRecord
     User.update_user_roles(user: self)
   end
 
+  # Terminates the current Mediaflux session.
+  # @return [void]
   def terminate_mediaflux_session
     return if @mediaflux_session.nil? # nothing to terminate
     logger.debug "!!!! Terminating mediaflux session"
@@ -83,6 +102,8 @@ class User < ApplicationRecord
 
   # Initialize the name values from the CAS information.
   # Our name fields do not match their name fields, so we need to translate.
+  # @param [Object] extra_cas_info The extra CAS information
+  # @return [void]
   def initialize_name_values(extra_cas_info)
     self.given_name = extra_cas_info.givenname
     self.family_name =  extra_cas_info.sn
@@ -117,6 +138,8 @@ class User < ApplicationRecord
     super
   end
 
+  # Checks if the user is a developer.
+  # @return [Boolean]
   def developer?
     return true if developer
     super
@@ -135,6 +158,7 @@ class User < ApplicationRecord
     (!Rails.env.production? && (developer || sysadmin)) || (Rails.env.production? && sysadmin)
   end
 
+  # @return [Boolean]
   def eligible_to_create_new?
     return true if eligible_sysadmin?
 
@@ -154,17 +178,25 @@ class User < ApplicationRecord
   #   https://stackoverflow.com/questions/23597718/what-is-the-warden-data-in-a-rails-devise-session-composed-of/23683925#23683925
   #   https://web.archive.org/web/20211028103224/https://tadas-s.github.io/ruby-on-rails/2020/08/02/devise-serialize-into-session-trick/
   #   https://github.com/wardencommunity/warden/wiki/Setup
+  # @param [User] record The user record
+  # @return [Array] The session data
   def self.serialize_into_session(record)
     # The return value _must_ have at least two elements since the serialize_from_session() requires
     # two arguments (see below)
     [record.uid, ""]
   end
 
+  # @param [String] key The user uid
+  # @param [String] _salt Unused salt parameter
+  # @param [Hash] _opts Unused options
+  # @return [User, nil] The user or nil
   def self.serialize_from_session(key, _salt, _opts = {})
-    User.where(uid: key)&.first
+    User.find_by(uid: key)
   end
 
   # Fetches the most recent download jobs for the user
+  # @param [Integer] limit The number of downloads to fetch
+  # @return [Array] List of download presenters
   def latest_downloads(limit: 10)
     @latest_downloads ||= begin
                             downloads = InventoryRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
@@ -174,6 +206,8 @@ class User < ApplicationRecord
 
   # Updates the user's roles (sys admin, developer) depending on the information on Mediaflux.
   # This method is meant to be used only for the current logged in user since the roles depend on the Mediaflux session.
+  # @param [User] user The user to update roles for
+  # @return [void]
   def self.update_user_roles(user:)
     update_operation = UserRolesUpdate.new
     result = update_operation.call(user:)
@@ -188,6 +222,8 @@ class User < ApplicationRecord
 
   # Returns the roles in Mediaflux for the user in the session.
   # This method is meant to be used only for the current logged in user since the roles depend on the Mediaflux session.
+  # @param [User] user The user
+  # @return [Array, nil] The roles or nil if error
   def self.mediaflux_roles(user:)
     raise "User.mediaflux_roles called with for a user without a Mediaflux session" if user.mediaflux_session.nil?
 

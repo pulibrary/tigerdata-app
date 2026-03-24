@@ -1,5 +1,10 @@
 # frozen_string_literal: true
+
+# ProjectFileInventory generates a CSV file inventory of files in a project from Mediaflux.
 class ProjectFileInventory
+  # @param [Project] project The project to generate inventory for
+  # @param [String] session_id The Mediaflux session ID
+  # @param [String] filename The filename to save the inventory to
   def initialize(project:, session_id:, filename:)
     @project = project
     @session_id = session_id
@@ -10,6 +15,7 @@ class ProjectFileInventory
   end
 
   # Generate the file with the file inventory
+  # @return [void] Generates the CSV file
   def generate()
     start_time = Time.zone.now
     log_elapsed(start_time, "STARTED")
@@ -32,6 +38,9 @@ class ProjectFileInventory
 
   private
 
+    # @param [String] collection_id The collection ID
+    # @param [String] path_prefix The path prefix
+    # @return [void]
     def add_path_to_queue(collection_id:, path_prefix:)
       @paths_queue << {collection_id:, path_prefix:}
     end
@@ -39,8 +48,10 @@ class ProjectFileInventory
     # Fetches the files for the given collection_id (which represents a path),
     # outputs the files to the `io_file`, and queues up any other children paths
     # that we might need to process.
+    # @param [String] collection_id The collection ID
+    # @param [String] path_prefix The path prefix
+    # @return [void]
     def process_path(collection_id:, path_prefix:)
-
       # Create an interator for this path
       # Notice that we do NOT include the path in the results because it's too expensive to retrieve it from
       # Mediaflux (see https://github.com/pulibrary/tigerdata-app/issues/1274#issuecomment-2710860502 for details)
@@ -80,9 +91,11 @@ class ProjectFileInventory
 
         break if iterator_response[:complete]
       end
-
     end
 
+    # @param [Time] start_time The start time
+    # @param [String] message The message to log
+    # @return [void]
     def log_elapsed(start_time, message)
       elapsed_time = Time.zone.now - start_time
       timing_info = "#{format('%.2f', elapsed_time)} s"

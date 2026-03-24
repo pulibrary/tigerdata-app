@@ -5,8 +5,14 @@ class MediafluxDuplicateNamespaceError < StandardError
 end
 
 # Take an instance of Project and adds it to MediaFlux
+# Handles interactions with Mediaflux for projects.
 class ProjectMediaflux
-  # Returns the XML string with the mediaflux metadata
+  # Retrieves the XML payload with Mediaflux metadata for a project.
+  # @param project [Project] the project instance.
+  # @param user [User] the user for session.
+  # @param xml_namespace [String, nil] optional XML namespace.
+  # @return [String] the XML string.
+  # @raise [StandardError] if request errors.
   def self.xml_payload(project:, user:, xml_namespace: nil)
     request = Mediaflux::AssetMetadataRequest.new(session_token: user.mediaflux_session, id: project.mediaflux_id)
     request.resolve
@@ -16,7 +22,11 @@ class ProjectMediaflux
     request.response_body
   end
 
-  # Returns an XML document with the mediaflux metadata
+  # Retrieves an XML document with Mediaflux metadata.
+  # @param project [Project] the project instance.
+  # @param user [User] the user for session.
+  # @param xml_namespace [String, nil] optional XML namespace.
+  # @return [Nokogiri::XML::Document] the parsed XML document.
   def self.document(project:, user:, xml_namespace: nil)
     xml_body = xml_payload(project:, user:, xml_namespace:)
     Nokogiri::XML.parse(xml_body)

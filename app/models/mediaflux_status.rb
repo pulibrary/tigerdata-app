@@ -1,5 +1,10 @@
 # frozen_string_literal: true
+
+# Handles Mediaflux status checks for health monitoring.
 class MediafluxStatus < HealthMonitor::Providers::Base
+  # Performs a health check by attempting to logon to Mediaflux.
+  # @return [String] session_token if successful.
+  # @raise [StandardError] if there's an error during logon or logout.
   def check!
     # Notice that we check Mediaflux status using our TigerData account
     # (rather than the "logged in" user since there is not always a logged

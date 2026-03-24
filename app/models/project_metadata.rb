@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/ClassLength
+# Represents the metadata for a project, handling initialization, updates, and defaults.
 class ProjectMetadata
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
@@ -44,7 +45,9 @@ class ProjectMetadata
     false
   end
 
-  # Ensure that the project directory is a valid path
+  # Ensures the project directory is a valid path.
+  # @param directory [String] the directory path.
+  # @return [String] the safe directory path.
   def self.safe_directory(directory)
     return "" if directory.nil?
 
@@ -68,18 +71,25 @@ class ProjectMetadata
     :provisional
   )
 
+  # Initializes a new ProjectMetadata instance.
   def initialize
     @departments = []
     @data_user_read_only = []
     @data_user_read_write = []
   end
 
+  # Creates a new ProjectMetadata instance from a hash.
+  # @param metadata_hash [Hash] the metadata hash.
+  # @return [ProjectMetadata] the new instance.
   def self.new_from_hash(metadata_hash)
     pm = ProjectMetadata.new
     pm.initialize_from_hash(metadata_hash)
     pm
   end
 
+  # Creates a new ProjectMetadata instance from params.
+  # @param metadata_params [ActionController::Parameters] the metadata parameters.
+  # @return [ProjectMetadata] the new instance.
   def self.new_from_params(metadata_params)
     pm = ProjectMetadata.new
     pm.initialize_from_params(metadata_params)
@@ -90,6 +100,9 @@ class ProjectMetadata
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
+  # Initializes the instance from a hash.
+  # @param metadata_hash [Hash] the metadata hash.
+  # @return [void]
   def initialize_from_hash(metadata_hash)
     @title = metadata_hash[:title]
     @description = metadata_hash[:description]
@@ -133,6 +146,8 @@ class ProjectMetadata
   # rubocop:enable Metrics/AbcSize
 
   # Initializes the object with the values in the params (which is an ActionController::Parameters)
+  # @param params [ActionController::Parameters] the parameters.
+  # @return [void]
   def initialize_from_params(params)
     @data_user_read_only = ro_users_from_params(params)
     @data_user_read_write = rw_users_from_params(params)
@@ -140,6 +155,9 @@ class ProjectMetadata
   end
 
   # Updates the object with the values in the params (which is an ActionController::Parameters)
+  # @param params [ActionController::Parameters] the parameters.
+  # @param current_user [User] the current user.
+  # @return [void]
   # Notice how we only update values that come in the params and don't change the values that
   # don't come as part of the params
   # rubocop:disable Metrics/MethodLength
@@ -170,17 +188,24 @@ class ProjectMetadata
   end
   # rubocop:enable Metrics/MethodLength
 
-  # Alias for `data_user_read_only`
+  # Alias for `data_user_read_only`.
+  # @return [Array<String>] the read-only users.
   def ro_users
     @data_user_read_only
   end
 
-  # Alias for `data_user_read_write`
+  # Alias for `data_user_read_write`.
+  # @return [Array<String>] the read-write users.
   def rw_users
     @data_user_read_write
   end
 
     private
+
+      # Gets data users from params for a specific access level.
+      # @param params [Hash] the parameters.
+      # @param access [String] the access level.
+      # @return [Array<String>] the users.
 
       def data_users_from_params(params, access)
         return [] if params.nil?
@@ -196,9 +221,17 @@ class ProjectMetadata
         users.compact.uniq
       end
 
+      # Gets read-only users from params.
+      # @param params [Hash] the parameters.
+      # @return [Array<String>] the read-only users.
+
       def ro_users_from_params(params)
         data_users_from_params(params, "read-only")
       end
+
+      # Gets read-write users from params.
+      # @param params [Hash] the parameters.
+      # @return [Array<String>] the read-write users.
 
       def rw_users_from_params(params)
         data_users_from_params(params, "read-write")
