@@ -4,7 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
     <body>
-        <% @project_show_presenter = ProjectShowPresenter.new(@project, params[:submitter]) %>
         <p>A storage increase request has been created and is ready for review. Here are the request details:</p>
         Project Title: <%= @project.metadata_json["title"] %>
         Project Directory: <%= @project.metadata_json["project_directory"] %>
