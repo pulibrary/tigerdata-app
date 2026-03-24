@@ -145,7 +145,7 @@ class ProjectMetadata
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
 
-  # Initializes the object with values from params.
+  # Initializes the object with the values in the params (which is an ActionController::Parameters)
   # @param params [ActionController::Parameters] the parameters.
   # @return [void]
   def initialize_from_params(params)
@@ -154,7 +154,7 @@ class ProjectMetadata
     initialize_from_hash(params)
   end
 
-  # Updates the object with values from params.
+  # Updates the object with the values in the params (which is an ActionController::Parameters)
   # @param params [ActionController::Parameters] the parameters.
   # @param current_user [User] the current user.
   # @return [void]
@@ -203,11 +203,8 @@ class ProjectMetadata
     private
 
       # Gets data users from params for a specific access level.
-
       # @param params [Hash] the parameters.
-
       # @param access [String] the access level.
-
       # @return [Array<String>] the users.
 
       def data_users_from_params(params, access)
@@ -225,9 +222,7 @@ class ProjectMetadata
       end
 
       # Gets read-only users from params.
-
       # @param params [Hash] the parameters.
-
       # @return [Array<String>] the read-only users.
 
       def ro_users_from_params(params)
@@ -235,9 +230,7 @@ class ProjectMetadata
       end
 
       # Gets read-write users from params.
-
       # @param params [Hash] the parameters.
-
       # @return [Array<String>] the read-write users.
 
       def rw_users_from_params(params)

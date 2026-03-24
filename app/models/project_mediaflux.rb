@@ -4,6 +4,7 @@
 class MediafluxDuplicateNamespaceError < StandardError
 end
 
+# Take an instance of Project and adds it to MediaFlux
 # Handles interactions with Mediaflux for projects.
 class ProjectMediaflux
   # Retrieves the XML payload with Mediaflux metadata for a project.
