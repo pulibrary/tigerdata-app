@@ -96,6 +96,8 @@ export function storageIncreasePopoverManagement() {
     const storageUnit = document.getElementById('storage_unit').value;
     const requestedStorage = `${storageAmount} ${storageUnit}`;
     if (checkStoragePopoverFields()) {
+      requestMoreStoragePopover.hidePopover();
+      storageRequestConfirmationPopover.showPopover();
       sendStorageIncreaseRequest(
         window.location.href.split('/')[4], // Extract project ID from URL
         requestedStorage,
@@ -103,8 +105,6 @@ export function storageIncreasePopoverManagement() {
         document.getElementById('storage_growth_expectation').value,
         document.getElementById('storage_date_needed').value,
       );
-      requestMoreStoragePopover.hidePopover();
-      storageRequestConfirmationPopover.showPopover();
     }
   });
 

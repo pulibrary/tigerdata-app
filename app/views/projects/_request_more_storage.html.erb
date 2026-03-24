@@ -34,7 +34,7 @@
     <div class="form-label">Date Needed<span class="required">*</span></div>
     <div class="date-needed-note">When would you like this updated quota available by?</div>
     <div class="lux">
-      <lux-date-picker class="lux-date-picker" placeholder="Select a date" id="storage_date_needed" name="storage_date_needed" mode="single" :disabled-dates="[{ start: nil, end: new Date()}]"/>
+      <lux-date-picker class="lux-date-picker" placeholder="Select a date" id="storage_date_needed" name="storage_date_needed" mode="single" :defaultDate="new Date()" :disabled-dates="[{ start: nil, end: new Date()}]"/>
     </div>
   </div>
   <div class="storage-modal-error" hidden="true">This field is required. </div>

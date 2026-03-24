@@ -128,7 +128,25 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           click_on "Submit"
           expect(page).to have_css(".storage-modal-error", count: 4)
         end
-    end
+      end
+      it "Shows the Storage request confirmation modal when submitting a storage request" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
+          click_on "Details"
+          click_on "Request more storage"
+          fill_in "storage_amount", with: "1"
+          select "TB", from: "storage_unit"
+          fill_in "storage_justification", with: "Need more storage for new data being added to the project."
+          fill_in "storage_growth_expectation", with: "Expecting significant growth in the next year as we add new data."
+          fill_in "storage_date_needed", with: (Date.today + 30).strftime("%m/%d/%Y")
+          click_on "Submit"
+          expect(page).to have_content("Storage Increase Request")
+          expect(page).to have_content("Your storage increase request has been submitted")
+          click_on("Back to Storage Overview")
+          expect(page).to have_content("Storage Usage Overview")
+        end
+      end
     end
 
     context "Navigation Buttons" do
