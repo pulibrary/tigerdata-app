@@ -43,8 +43,6 @@ class TigerdataMailer < ApplicationMailer
     @date_needed = params[:date_needed]
     @quota_breakdown = params[:quota_breakdown]
 
-    @project_show_presenter = ProjectShowPresenter.new(project, params[:submitter])
-
     subject = "Storage Increase Request Ready for Review"
     mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
   end

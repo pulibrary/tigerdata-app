@@ -43,12 +43,17 @@ function checkStoragePopoverFields() {
   const storageUnit = document.getElementById('storage_unit').value;
   const storageJustification = document.getElementById('storage_justification').value;
   const growthExpectation = document.getElementById('storage_growth_expectation').value;
-  const fields = [storageAmount, storageUnit, storageJustification, growthExpectation];
+  const dateNeeded = document.getElementById('storage_date_needed').value;
+  const fields = [
+    storageAmount,
+    storageUnit,
+    storageJustification,
+    growthExpectation,
+    dateNeeded,
+  ];
   const errorMessage = document.querySelectorAll('.storage-modal-error');
-  // TODO: add check for date needed once the date picker is added
 
   // check that all fields are filled out before allowing the popover to close
-
   for (let i = 0; i < fields.length; i += 1) {
     if (fields[i].trim().length === 0 || !fields[i]) {
       errorMessage.forEach((message) => {

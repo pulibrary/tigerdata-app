@@ -5,6 +5,7 @@ import {
   LuxInputMultiselect,
   LuxInputAsyncSelect,
   LuxDatePicker,
+  LuxInputText,
 } from 'lux-design-system';
 
 // import 'bootstrap/js/src/alert'
@@ -82,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-input-multiselect', LuxInputMultiselect)
       .component('lux-input-async-select', LuxInputAsyncSelect)
       .component('lux-date-picker', LuxDatePicker)
+      .component('lux-input-text', LuxInputText)
       .mount(elements[i]);
   }
 });
