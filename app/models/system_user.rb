@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# Represents a system user for Mediaflux operations.
 class SystemUser
   class << self
     def mediaflux_session
