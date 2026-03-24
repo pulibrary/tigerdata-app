@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "csv"
+
+# Represents a user in the tiger-data application, handling authentication, roles, and Mediaflux integration.
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -14,6 +16,7 @@ class User < ApplicationRecord
 
   attr_accessor :mediaflux_session
 
+  # Finds or updates a user from CAS access token.
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
@@ -41,12 +44,14 @@ class User < ApplicationRecord
     end
   end
 
+  # Clears the Mediaflux session from memory and session.
   def clear_mediaflux_session(session)
     Rails.logger.debug("!!!!!!! Clearing Mediaflux session !!!!!!!!")
     @mediaflux_session = nil
     session[:mediaflux_session] = nil
   end
 
+  # Initializes Mediaflux session from the Rails session.
   def mediaflux_from_session(session)
     logger.debug "Session Get #{session[:mediaflux_session]} cas: #{session[:active_web_user]}  user: #{uid}"
     if session[:mediaflux_session].blank?
@@ -58,6 +63,7 @@ class User < ApplicationRecord
     @mediaflux_session = session[:mediaflux_session]
   end
 
+  # Logs in to Mediaflux using the token and stores the session.
   def mediaflux_login(token, session)
     logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
@@ -73,6 +79,7 @@ class User < ApplicationRecord
     User.update_user_roles(user: self)
   end
 
+  # Terminates the current Mediaflux session.
   def terminate_mediaflux_session
     return if @mediaflux_session.nil? # nothing to terminate
     logger.debug "!!!! Terminating mediaflux session"
@@ -117,6 +124,7 @@ class User < ApplicationRecord
     super
   end
 
+  # Checks if the user is a developer.
   def developer?
     return true if developer
     super
@@ -161,7 +169,7 @@ class User < ApplicationRecord
   end
 
   def self.serialize_from_session(key, _salt, _opts = {})
-    User.where(uid: key)&.first
+    User.find_by(uid: key)
   end
 
   # Fetches the most recent download jobs for the user
