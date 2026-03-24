@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# ProvenanceEvent model representing events in the lifecycle of a project.
 class ProvenanceEvent < ApplicationRecord
   SUBMISSION_EVENT_TYPE = "Submission"
   APPROVAL_EVENT_TYPE = "Approved"
@@ -7,6 +9,9 @@ class ProvenanceEvent < ApplicationRecord
   DEBUG_OUTPUT_TYPE = "Debug Output"
   belongs_to :project
 
+  # @param [Project] project The project
+  # @param [User] user The user
+  # @return [void]
   def self.generate_submission_events(project:, user:)
     project.provenance_events.create(
       event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE,
@@ -20,6 +25,10 @@ class ProvenanceEvent < ApplicationRecord
     )
   end
 
+  # @param [Project] project The project
+  # @param [User] user The user
+  # @param [String, nil] debug_output The debug output
+  # @return [void]
   def self.generate_approval_events(project:, user:, debug_output: nil)
     project.provenance_events.create(
       event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
@@ -37,6 +46,9 @@ class ProvenanceEvent < ApplicationRecord
     end
   end
 
+  # @param [Project] project The project
+  # @param [User] user The user
+  # @return [void]
   def self.generate_active_events(project:, user:)
     project.provenance_events.create(
       event_type: ProvenanceEvent::ACTIVE_EVENT_TYPE,
