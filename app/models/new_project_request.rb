@@ -279,6 +279,7 @@ class NewProjectRequest < ApplicationRecord
     end
 
     # Validates the value for allowed characters.
+    # Allows alphanumeric, dashes, underscores, and forward-slashes
     # @param value [String] the value.
     # @param field [Symbol] the field name.
     # @return [void]
@@ -295,7 +296,9 @@ class NewProjectRequest < ApplicationRecord
       end
     end
 
-    # Cleans up incomplete project if approval failed.
+    # If a request fails to be a approved we make sure there were not orphan
+    # project records left in our Rails database that do not have a matching
+    # project in Mediaflux (i.e. collection asset).
     # @return [void]
     def cleanup_incomplete_project
       project = Project.find_by_id(project_id)
