@@ -2,7 +2,7 @@
 <% content_for :form_title, "Roles and People" %>
 <% content_for :form_description, "Assign roles for your project." %>
 
-<div class="lux">
+<div class="lux full-width">
     <%= render partial: "/new_project_wizard/form_data_sponsor_input", 
                 locals: {data_sponsor: @new_project_request.data_sponsor || "", data_sponsor_name: @new_project_request.data_sponsor_name, data_sponsor_error: @new_project_request.errors[:data_sponsor].join(", ") } %>
     <%= render partial: "/new_project_wizard/form_data_manager_input", 
