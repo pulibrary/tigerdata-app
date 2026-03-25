@@ -1,0 +1,32 @@
+<tr class="request" >
+  <td class="request-row">
+    <div class="request-details">
+      <div class="title">
+          <a class="click-row" href="<%= new_project_request_path(request.id) %>" tabindex="0" ><%= request.safe_project_title %></a>
+      </div>
+
+      <div class="summary">
+          <span class="requested-by"><b>Requestor:</b> <%= request.requested_by %>
+              <span class="netid-large"><%= request.request.requested_by %></span>
+              <span class="separator">|</span>
+          </span>
+          <span class="requested-on"><b>Date Submitted:</b> <%= request.requested_on %>
+          </span>
+      </div>
+      <div class="summary">
+          <div class="path"> <%= request.project_directory %></div>
+          <button id="copy-project-path-button-<%= request.id %>" class="btn copy-paste-button-sizer copy-project-path-icon" data-url="<%= request.project_directory %>" title="Copy request path to the clipboard">
+          <div class="pul-copy-paste-tooltip" data-url="<%= request.project_directory %>">
+            <span id="copy-project-path-label" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
+          </div>
+          </button>
+      </div>
+    </div>
+
+    <div class="status-container">
+      <div class="status-details">
+        <span class="request-status">Admin Review</span>
+      </div>
+    </div>
+  </td>
+</tr>

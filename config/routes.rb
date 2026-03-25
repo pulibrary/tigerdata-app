@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   post "emulate", to: "dashboard#emulate", as: :emulate
   post "dash_project", to: "dashboard#dash_project", as: :dash_project
   post "dash_admin", to: "dashboard#dash_admin", as: :dash_admin
+  post "dash_requests", to: "dashboard#dash_requests", as: :dash_requests
 
   resources :projects, except: [:new, :edit]
   post "projects/send_globus_access_request", to: "projects#send_globus_access_request", as: :send_globus_access_request
