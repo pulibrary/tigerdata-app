@@ -214,6 +214,17 @@
       background: #fff;
       margin-left: auto;
       font-weight: 600;
+      &:hover {
+        color: black;
+        background: $gray-60;
+      }
+      &:focus {
+        border-width: 2px;
+        box-shadow: 0 0 0 0.2rem $bright-blue;
+        outline-color: $bright-blue;
+        background-color: white;
+        border: 1px solid transparent;
+      }
     }
   }
   .alert {
