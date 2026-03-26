@@ -581,6 +581,9 @@
     border-bottom: 1px solid $gray-20;
     background: $white;
 
+    .request-id {
+      padding-right: 5px;
+    }
     .request-details {
       display: flex;
       flex-direction: column;
