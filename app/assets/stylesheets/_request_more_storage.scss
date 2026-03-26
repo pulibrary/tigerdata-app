@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: flex-start;
   border-radius: 0.5rem;
-  background: #ffffff;
+  background: $white;
   box-shadow: 0 10px 24px 0 rgba(25, 25, 25, 0.1);
   border: $gray-10;
 }
@@ -43,7 +43,7 @@
     line-height: normal;
   }
   .storage-request-subheading {
-    color: #000;
+    color: $black;
     font-size: 1rem;
     font-style: normal;
     font-weight: 600;
@@ -73,7 +73,7 @@
 
   .justification-section {
     .justification-note {
-      color: #121212;
+      color: $gray-100;
       font-size: 1rem;
       font-style: normal;
       font-weight: 400;
@@ -83,11 +83,19 @@
   }
   .growth-expectation-section {
     margin-right: auto;
+    .justification-note {
+      color: $gray-100;
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-bottom: 0.88rem;
+    }
   }
   .date-needed-section {
     margin-right: auto;
     .date-needed-note {
-      color: #121212;
+      color: $gray-100;
       font-size: 1rem;
       font-style: normal;
       font-weight: 400;
@@ -104,7 +112,7 @@
   .form-label {
     height: 1.5rem;
     flex-shrink: 0;
-    color: #121212;
+    color: $gray-100;
     font-size: 1rem;
     font-style: normal;
     font-weight: 600;
@@ -116,14 +124,14 @@
     flex-shrink: 0;
     align-self: stretch;
     border-radius: 0.5rem;
-    border: 1px solid var(--Neutral-Medium-Gray, #d0d0d0);
-    background: #fff;
+    border: 1px solid $gray-20;
+    background: $white;
   }
   .required {
-    color: var(--Secondary-Red-Dark, #b00002);
+    color: $red-dark;
   }
   .storage-modal-error {
-    color: var(--Secondary-Red-Dark, #b00002);
+    color: $red-dark;
     margin-right: auto;
     margin-top: -1rem;
 
@@ -143,7 +151,7 @@
       width: 5.375rem;
       height: 2.3125rem;
       border-radius: 0.25rem;
-      border: 1px solid var(--Neutral-Black, #121212);
+      border: 1px solid $gray-100;
       font-size: 0.875rem;
       font-style: normal;
       font-weight: 600;

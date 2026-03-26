@@ -195,6 +195,13 @@
             align-self: stretch;
             height: 0.0625rem;
             background: $gray-10;
+            @media (min-width: 1281px) {
+              width: 55rem;
+            }
+          }
+
+          @media (min-width: 1281px) {
+            width: 50rem;
           }
         }
 
