@@ -16,7 +16,9 @@
                      <button id="dash-admin" class="tab-nav"> Administration </button>
                   <% end %>
                <% end %>
-               <button id="dash-requests" class="tab-nav"> Requests </button>
+               <% if current_user.eligible_sysadmin? %>
+                  <button id="dash-requests" class="tab-nav"> Requests </button>
+               <% end %>
             </div>
             <% if @dash_session == "project"%>
               <%= render partial: "projects_listing", locals: { projects: @presenter.dashboard_projects,  table_id: "projects-listing" } %>
