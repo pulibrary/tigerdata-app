@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+    <body>
+        <p>A storage increase request has been created and is ready for review. Here are the request details:</p>
+        Project Title: <%= @project.metadata_json["title"] %>
+        Project Directory: <%= @project.metadata_json["project_directory"] %>
+        Project ID: <%= @project.metadata_json["project_id"] %>
+        Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
+        Data Manager: <%= @project.metadata_json["data_manager"] %>
+        Current Storage Capacity: <%= @project.metadata_json["storage_capacity"]["size"]["approved"] %> <%= @project.metadata_json["storage_capacity"]["unit"]["approved"] %>
+        Current Usage: <%= @quota_breakdown[:quota_used_human] %>
+
+        Project Files: <%= @quota_breakdown[:project_files_human] %>
+        Old Versions: <%= @quota_breakdown[:old_versions_human] %>
+        Recycle Bin: <%= @quota_breakdown[:recycle_bin_human] %>
+        Requested Storage Capacity: <%= @requested_capacity %>
+        Justification: <%= @justification %>
+        Growth Expectations: <%= @growth_expectation %>
+        Date Needed: <%= @date_needed %>
+    </body>
+</html>
