@@ -11,15 +11,15 @@ RSpec.describe TigerdataMailer, type: :mailer do
 
   let(:valid_request) do
     NewProjectRequest.create(
-      project_title: "Valid Request", 
-      data_sponsor: sponsor_and_data_manager_user.uid, 
-      data_manager: sponsor_and_data_manager_user.uid, 
+      project_title: "Valid Request",
+      data_sponsor: sponsor_and_data_manager_user.uid,
+      data_manager: sponsor_and_data_manager_user.uid,
       departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
-      quota: "500 GB", 
+      quota: "500 GB",
       description: "A valid request",
       project_folder: "valid_folder",
       user_roles: [
-        { uid: data_user_1.uid, name: data_user_1.display_name_safe, read_only: false }, 
+        { uid: data_user_1.uid, name: data_user_1.display_name_safe, read_only: false },
         { uid: data_user_2.uid, name: data_user_2.display_name_safe, read_only: true },
         { uid: data_user_3.uid, name: data_user_3.display_name_safe, read_only: false }
       ],
@@ -39,7 +39,7 @@ context "When a project is created" do
     mail = ActionMailer::Base.deliveries.last
 
     expect(mail.subject).to eq ("Project: '#{project.title}' has been approved")
-    expect(mail.to).to eq [sponsor_and_data_manager_user.email]
+    expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq nil
     expect(mail.from).to eq ["no-reply@princeton.edu"]
 
@@ -104,4 +104,44 @@ context "When a request is created" do
     end
   end
 end
+
+context "when storage increase request is created" do
+    let(:requested_capacity) { "1000 GB" }
+    let(:justification) { "Test justification" }
+    let(:growth_expectation) { "Test expectation" }
+    let(:date_needed) { "4/23/2026" }
+    let(:quota_breakdown) do
+      { quota_used_human: "450 GB", project_files_human: "10 GB", old_versions_human: "20 GB", recycle_bin_human: "30 GB" }.with_indifferent_access
+    end
+  # let(:storage_increase_request) { FactoryBot.create(:storage_increase_request, project:) }
+
+  it "Sends storage increase request notifications" do
+    expect { described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    mail = ActionMailer::Base.deliveries.last
+
+    expect(mail.subject).to eq "Storage Increase Request Ready for Review"
+    expect(mail.to).to eq ["test@example.com"]
+    expect(mail.cc).to eq nil
+    expect(mail.from).to eq [sponsor_and_data_manager_user.email]
+
+    html_body = mail.html_part.body.to_s
+    expect(html_body).to have_content(project.mediaflux_id)
+    expect(html_body).to have_content(project.title)
+    expect(html_body).to have_content(project.project_directory)
+    expect(html_body).to have_content(project.metadata_json["data_sponsor"])
+    expect(html_body).to have_content(project.metadata_json["data_manager"])
+
+    expect(html_body).to have_content(requested_capacity)
+    expect(html_body).to have_content(justification)
+    expect(html_body).to have_content(growth_expectation)
+    expect(html_body).to have_content(date_needed)
+
+    expect(html_body).to have_content(quota_breakdown[:project_files_human])
+    expect(html_body).to have_content(quota_breakdown[:old_versions_human])
+    expect(html_body).to have_content(quota_breakdown[:recycle_bin_human])
+    expect(html_body).to have_content(quota_breakdown[:quota_used_human])
+    expect(html_body).to have_content(quota_breakdown[:requested_capacity])
+  end
+end
+
 end
