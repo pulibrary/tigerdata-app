@@ -39,7 +39,7 @@ context "When a project is created" do
     mail = ActionMailer::Base.deliveries.last
 
     expect(mail.subject).to eq ("Project: '#{project.title}' has been approved")
-    expect(mail.to).to eq ["test@example.com"]
+    expect(mail.to).to eq [sponsor_and_data_manager_user.email]
     expect(mail.cc).to eq nil
     expect(mail.from).to eq ["no-reply@princeton.edu"]
 
