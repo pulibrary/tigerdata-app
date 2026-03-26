@@ -12,7 +12,7 @@ RSpec.describe "session_info/index", type: :view do
 
   it "renders a mediaflux information" do
     render
-    assert_select "p", "Connected to MediaFlux at #{Mediaflux::Connection.host} port 8888"
+    assert_select "p", "Connected to MediaFlux at #{Mediaflux::Connection.host} port #{Mediaflux::Connection.port}"
     assert_select "dd", "1001"
     assert_select "dd", user.uid
     assert_select "li", "role1"
