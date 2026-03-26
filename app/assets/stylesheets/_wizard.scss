@@ -9,6 +9,9 @@
   align-items: flex-start;
   gap: 2.5rem;
 
+  @media (min-width: 1440px) {
+    align-items: center;
+  }
   @media (max-width: 1280px) {
     padding: 1.5rem 1.25rem;
     gap: 1.44rem;
@@ -71,6 +74,7 @@
     overflow: auto;
     @media (min-width: 1440px) {
       width: 75rem;
+      align-self: center;
     }
 
     @media (max-width: 1280px) {
@@ -191,6 +195,13 @@
             align-self: stretch;
             height: 0.0625rem;
             background: $gray-10;
+            @media (min-width: 1281px) {
+              width: 55rem;
+            }
+          }
+
+          @media (min-width: 1281px) {
+            width: 50rem;
           }
         }
 
@@ -606,6 +617,9 @@
         .user-role.pul-popover {
           width: 80%;
           background: $white;
+          @media (min-width: 1250px) {
+            width: 800px;
+          }
         }
       }
 

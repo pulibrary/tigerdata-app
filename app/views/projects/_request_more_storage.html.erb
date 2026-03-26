@@ -27,19 +27,35 @@
   <div class="storage-modal-error" hidden="true">This field is required. </div>
   <div class="growth-expectation-section">
     <div class="form-label">Growth Expectation<span class="required">*</span></div>
+    <div class="growth-expectation-note">To help us better understand data trends, please describe your expected data growth over the next 12 months.</div>
     <textarea maxlength="2000" class="form-input text-area" name="storage_request[growth_expectation]" id="storage_growth_expectation"></textarea>
   </div>
   <div class="storage-modal-error" hidden="true">This field is required. </div>
   <div class="date-needed-section">
     <div class="form-label">Date Needed<span class="required">*</span></div>
     <div class="date-needed-note">When would you like this updated quota available by?</div>
-    <lux-date-picker class="lux-date-picker" id="today" name="today" label="Today's Date" mode="single" :holidays="['2020-02-20','2020-02-21']" :defaultDate="(new Date()).setDate((new Date()).getDate() + 7)" :disabled-dates="[{ start: nil, end: new Date()}]"/>
-    <input class="form-input date-picker" type="date" name="storage_request[date_needed]" id="storage_date_needed"></input>
+    <div class="lux">
+      <lux-date-picker class="lux-date-picker" placeholder="Select a date" id="storage_date_needed" name="storage_date_needed" mode="single" :defaultDate="new Date()" :disabled-dates="[{ start: nil, end: new Date()}]"/>
+    </div>
   </div>
   <div class="storage-modal-error" hidden="true">This field is required. </div>
   <div class="request-more-storage-buttons">
     <button popovertarget="request-more-storage" popovertargetaction="hide" class="pul-button-secondary storage-cancel" id="cancel-storage-request">Cancel</button>
     <button class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
   </div>
-
+</div>
+<div popover="auto" id="storage-request-confirmation"  class="pul-popover-storage-confirmation storage-request-confirmation-modal">
+    <div class="storage-modal-content">
+        <div class="storage-modal-header">
+            <div class="storage-modal-title-frame">
+                <div class="storage-modal-title">Storage Increase Request</div>
+                <input type=button popovertarget="storage-request-confirmation" popovertargetaction="hide" class="pul-popover-close" data="cancel"></input>
+            </div>
+            <div class="storage-modal-subtitle alert alert-success">
+                <span class="img"><%= image_tag "ic_round_check.svg", alt: "" %></span>
+                <p class="storage-modal-alert-text">Your storage increase request has been submitted</p>
+            </div>
+        </div>
+        <button popovertarget="storage-request-confirmation" popovertargetaction="hide" class="pul-button-secondary storage-return" id="return-storage-overview">Back to Storage Overview</button>
+    </div>
 </div>

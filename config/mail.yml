@@ -8,6 +8,9 @@ production:
   globus_access_request:
     to_email: tigerdata@princeton.edu
     cc_email:
+  storage_increase_request:
+    to_email: tigerdata@princeton.edu
+    cc_email:
 qa:
   project_creation:
     to_email: tigerdata@princeton.edu
@@ -16,6 +19,9 @@ qa:
     to_email: tigerdata@princeton.edu
     cc_email:
   globus_access_request:
+    to_email: tigerdata@princeton.edu
+    cc_email:
+  storage_increase_request:
     to_email: tigerdata@princeton.edu
     cc_email:
 staging:
@@ -28,6 +34,9 @@ staging:
   globus_access_request:
     to_email: tigerdata@princeton.edu
     cc_email:
+  storage_increase_request:
+    to_email: tigerdata@princeton.edu
+    cc_email:
 ci:
   project_creation:
     to_email: tigerdata@princeton.edu
@@ -36,6 +45,9 @@ ci:
     to_email: tigerdata@princeton.edu
     cc_email:
   globus_access_request:
+    to_email: tigerdata@princeton.edu
+    cc_email:
+  storage_increase_request:
     to_email: tigerdata@princeton.edu
     cc_email:
 development:
@@ -48,6 +60,9 @@ development:
   globus_access_request:
     to_email: test@example.com
     cc_email:
+  storage_increase_request:
+    to_email: test@example.com
+    cc_email:
 test:
   project_creation:
     to_email: test@example.com
@@ -56,5 +71,8 @@ test:
     to_email: test@example.com
     cc_email:
   globus_access_request:
+    to_email: test@example.com
+    cc_email:
+  storage_increase_request:
     to_email: test@example.com
     cc_email:
