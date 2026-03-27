@@ -155,9 +155,44 @@
       font-size: 0.875rem;
       font-style: normal;
       font-weight: 600;
+      &:focus {
+        border-width: 2px;
+        box-shadow: 0 0 0 0.2rem $bright-blue;
+        outline-color: $bright-blue;
+        background-color: black;
+        border: 1px solid transparent;
+      }
+      &:active {
+        /* Outline properties */
+        outline-style: solid;
+        outline-color: black;
+        outline-width: 1px; /* Adjust outline thickness */
+        box-shadow: 0 0 0 0.2rem $white;
+
+        /* Space between button and outline */
+        outline-offset: 2px; /* Adjust the offset as needed */
+      }
+      &:focus {
+        border-width: 2px;
+        box-shadow: 0 0 0 0.2rem $bright-blue;
+        outline-color: $bright-blue;
+        background-color: black;
+        border: 1px solid transparent;
+      }
     }
     .storage-cancel {
       @include button-styles;
+      &:hover {
+        background: black;
+        color: $white;
+      }
+      &:active {
+        color: $white;
+      }
+      &:focus {
+        background-color: black;
+        color: $white;
+      }
     }
     .storage-submit {
       @include button-styles;
@@ -223,15 +258,27 @@
       margin-left: auto;
       font-weight: 600;
       &:hover {
-        color: black;
-        background: $gray-60;
+        background: $black-hover;
+        color: $white;
+      }
+      &:active {
+        /* Outline properties */
+        outline-style: solid;
+        outline-color: black;
+        outline-width: 1px; /* Adjust outline thickness */
+        box-shadow: 0 0 0 0.2rem $white;
+
+        /* Space between button and outline */
+        outline-offset: 2px; /* Adjust the offset as needed */
+        color: $white;
       }
       &:focus {
         border-width: 2px;
         box-shadow: 0 0 0 0.2rem $bright-blue;
         outline-color: $bright-blue;
-        background-color: white;
         border: 1px solid transparent;
+        background-color: $black-hover;
+        color: $white;
       }
     }
   }

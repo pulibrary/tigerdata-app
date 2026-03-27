@@ -199,10 +199,29 @@
         border-radius: 0.25rem;
         border: 1px solid var(--Neutral-Black, #121212);
         background: var(--Neutral-White, #fff);
-
         &:hover {
-          background: $gray-60;
-          color: white;
+          background: $black-hover;
+          color: $white;
+        }
+        &:active {
+          /* Outline properties */
+          outline-style: solid;
+          outline-color: black;
+          outline-width: 1px; /* Adjust outline thickness */
+          box-shadow: 0 0 0 0.2rem $white;
+
+          /* Space between button and outline */
+          outline-offset: 2px; /* Adjust the offset as needed */
+          color: $white;
+          background: $black-hover;
+        }
+        &:focus {
+          border-width: 2px;
+          box-shadow: 0 0 0 0.2rem $bright-blue;
+          outline-color: $bright-blue;
+          background-color: $black-hover;
+          border: 1px solid transparent;
+          color: $white;
         }
       }
       .yes {
@@ -219,6 +238,24 @@
         &:hover {
           background: $gray-60;
           color: white;
+        }
+        &:active {
+          /* Outline properties */
+          outline-style: solid;
+          outline-color: black;
+          outline-width: 1px; /* Adjust outline thickness */
+          box-shadow: 0 0 0 0.2rem $white;
+
+          /* Space between button and outline */
+          outline-offset: 2px; /* Adjust the offset as needed */
+          background: $gray-60;
+        }
+        &:focus {
+          border-width: 2px;
+          box-shadow: 0 0 0 0.2rem $bright-blue;
+          outline-color: $bright-blue;
+          background-color: $gray-60;
+          border: 1px solid transparent;
         }
       }
     }
@@ -375,14 +412,6 @@
     @media (max-width: 853px) {
       display: none;
     }
-
-    a {
-      color: white;
-      text-decoration: none;
-    }
-    a:hover {
-      color: white;
-    }
     &:hover {
       background: $gray-60;
     }
@@ -395,13 +424,14 @@
 
       /* Space between button and outline */
       outline-offset: 2px; /* Adjust the offset as needed */
+      color: $white;
     }
     &:focus {
       border-width: 2px;
       box-shadow: 0 0 0 0.2rem $bright-blue;
       outline-color: $bright-blue;
       font-size: 0.75rem;
-      color: white;
+      color: $white;
       border: 1px solid transparent;
     }
   }
@@ -452,15 +482,35 @@
         font-weight: 600;
         border-radius: 0.25rem;
         &:hover {
-          color: black;
-          background: $gray-60;
+          img {
+            filter: invert(1);
+          }
+        }
+        &:active {
+          /* Outline properties */
+          outline-style: solid;
+          outline-color: black;
+          outline-width: 1px; /* Adjust outline thickness */
+          box-shadow: 0 0 0 0.2rem $white;
+
+          /* Space between button and outline */
+          outline-offset: 2px; /* Adjust the offset as needed */
+          color: $white;
+          background: black;
+          img {
+            filter: invert(1);
+          }
         }
         &:focus {
           border-width: 2px;
           box-shadow: 0 0 0 0.2rem $bright-blue;
           outline-color: $bright-blue;
-          background-color: white;
+          background-color: black;
           border: 1px solid transparent;
+          color: $white;
+          img {
+            filter: invert(1);
+          }
         }
       }
     }
