@@ -224,6 +224,17 @@ h6 {
   border: none;
 }
 
+.pul-button-link-storage-details {
+  padding: 0px;
+  background: none;
+  border: none;
+
+  /* This disables a user from clicking 'Details' and opening the storage detail modal for smaller displays */
+  @media (max-width: 950px) {
+    display: none;
+  }
+}
+
 .info {
   display: flex;
   align-items: center;

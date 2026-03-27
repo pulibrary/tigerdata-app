@@ -49,7 +49,7 @@
               <b>Storage</b> <span class="storage-quota-total text-secondary">(<%= @presenter.formatted_storage_capacity(session_id: current_user.mediaflux_session) %> GB)</span>
             </div>
             <div>
-                <input type="button" popovertarget="storage-details" value="Details" class="pul-button pul-button-link"></input>
+                <input type="button" popovertarget="storage-details" value="Details" class="pul-button pul-button-link-storage-details"></input>
             </div>
           </div>
           <%= render partial: "storage_details" %>
@@ -101,4 +101,3 @@ $("#request-more-storage").popover({
     }
 });
 </script>
-
