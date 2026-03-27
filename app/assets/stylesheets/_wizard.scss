@@ -16,6 +16,9 @@
     padding: 1.5rem 1.25rem;
     gap: 1.44rem;
   }
+  @media (max-width: 420px) {
+    overflow-x: auto;
+  }
 
   nav {
     display: flex;
