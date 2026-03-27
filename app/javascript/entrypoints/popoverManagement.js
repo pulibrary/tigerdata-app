@@ -1,3 +1,4 @@
+import { sendGlobusRequest, sendStorageIncreaseRequest } from './mailers.js';
 // eslint-disable-next-line import/prefer-default-export
 export function popoverManagement() {
   const popover = document.getElementById('confirm-delete-draft');
@@ -26,22 +27,6 @@ export function popoverManagement() {
   }
 }
 
-function triggerMailer(projectId) {
-  // Perform an AJAX POST request to the Rails controller action
-  fetch(`/projects/send_globus_access_request`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // Include CSRF token for security (Rails requires this for POST requests)
-      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-    },
-    body: JSON.stringify({ project_id: projectId }), // Send any necessary data, e.g., project ID
-  }).catch((error) => {
-    console.error('Error:', error);
-    alert('An error occurred.');
-  });
-}
-
 export function globusPopoverManagement() {
   const switchGlobusPopover = document.getElementById('globus-switch');
   if (switchGlobusPopover !== null) {
@@ -49,21 +34,27 @@ export function globusPopoverManagement() {
     const projectId = window.location.href.split('/')[4]; // Extract project ID from URL, assuming URL structure is consistent
     switchGlobusPopover.addEventListener('click', () => {
       globusAccessPopover.hidePopover();
-      triggerMailer(projectId);
+      sendGlobusRequest(projectId);
     });
   }
 }
+
 function checkStoragePopoverFields() {
   const storageAmount = document.getElementById('storage_amount').value;
   const storageUnit = document.getElementById('storage_unit').value;
   const storageJustification = document.getElementById('storage_justification').value;
   const growthExpectation = document.getElementById('storage_growth_expectation').value;
-  const fields = [storageAmount, storageUnit, storageJustification, growthExpectation];
+  const dateNeeded = document.getElementById('storage_date_needed').value;
+  const fields = [
+    storageAmount,
+    storageUnit,
+    storageJustification,
+    growthExpectation,
+    dateNeeded,
+  ];
   const errorMessage = document.querySelectorAll('.storage-modal-error');
-  // TODO: add check for date needed once the date picker is added
 
   // check that all fields are filled out before allowing the popover to close
-
   for (let i = 0; i < fields.length; i += 1) {
     if (fields[i].trim().length === 0 || !fields[i]) {
       errorMessage.forEach((message) => {
@@ -74,10 +65,15 @@ function checkStoragePopoverFields() {
   }
   return true;
 }
-export function requestMoreStoragePopoverManagement() {
+
+export function storageIncreasePopoverManagement() {
   const requestMoreStoragePopover = document.getElementById('request-more-storage');
   const submitStorageRequestPopover = document.getElementById('submit-storage-request');
   const cancelStorageRequestPopover = document.getElementById('cancel-storage-request');
+  const storageRequestConfirmationPopover = document.getElementById(
+    'storage-request-confirmation',
+  );
+  const returnStorageOverview = document.getElementById('return-storage-overview');
   const storageDetail = document.getElementById('storage-details');
 
   // hide the storage detail when the user opens more storage modal
@@ -97,13 +93,27 @@ export function requestMoreStoragePopoverManagement() {
   }
 
   submitStorageRequestPopover.addEventListener('click', () => {
+    const storageAmount = document.getElementById('storage_amount').value;
+    const storageUnit = document.getElementById('storage_unit').value;
+    const requestedStorage = `${storageAmount} ${storageUnit}`;
     if (checkStoragePopoverFields()) {
-      // TODO: submit the form and trigger the mailer, and then close the popover
       requestMoreStoragePopover.hidePopover();
+      storageRequestConfirmationPopover.showPopover();
+      sendStorageIncreaseRequest(
+        window.location.href.split('/')[4], // Extract project ID from URL
+        requestedStorage,
+        document.getElementById('storage_justification').value,
+        document.getElementById('storage_growth_expectation').value,
+        document.getElementById('storage_date_needed').value,
+      );
     }
   });
 
   cancelStorageRequestPopover.addEventListener('click', () => {
+    storageDetail.showPopover();
+  });
+
+  returnStorageOverview.addEventListener('click', () => {
     storageDetail.showPopover();
   });
 }

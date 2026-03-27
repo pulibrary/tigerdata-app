@@ -1,5 +1,8 @@
 <tr class="request" >
   <td class="request-row">
+    <div class="request-id">
+      <%= request.id.to_s.rjust(4, "0") %>
+    </div>
     <div class="request-details">
       <div class="title">
           <a class="click-row" href="<%= new_project_request_path(request.id) %>" tabindex="0" ><%= request.safe_project_title %></a>

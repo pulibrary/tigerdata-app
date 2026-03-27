@@ -5,6 +5,7 @@ import {
   LuxInputMultiselect,
   LuxInputAsyncSelect,
   LuxDatePicker,
+  LuxInputText,
 } from 'lux-design-system';
 
 // import 'bootstrap/js/src/alert'
@@ -41,7 +42,7 @@ import { wizardNavigation } from './wizardNavigation.js';
 import {
   popoverManagement,
   globusPopoverManagement,
-  requestMoreStoragePopoverManagement,
+  storageIncreasePopoverManagement,
 } from './popoverManagement.js';
 import { setupFileExplorer } from './fileExplorer.js';
 
@@ -82,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-input-multiselect', LuxInputMultiselect)
       .component('lux-input-async-select', LuxInputAsyncSelect)
       .component('lux-date-picker', LuxDatePicker)
+      .component('lux-input-text', LuxInputText)
       .mount(elements[i]);
   }
 });
@@ -262,7 +264,7 @@ function initPage() {
   wizardNavigation();
   popoverManagement();
   globusPopoverManagement();
-  requestMoreStoragePopoverManagement();
+  storageIncreasePopoverManagement();
 }
 
 /* eslint-disable no-console */
