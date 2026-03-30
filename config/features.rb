@@ -27,4 +27,5 @@ Flipflop.configure do
   feature :last_updated_dashboard, default: false, description: "Show last updated column on dashboard."
   feature :project_type_indicator, default: false, description: "Show project type indicator on dashboard."
   feature :request_more_storage, default: false, description: "Show request more storage on request more storage modal."
+  feature :new_file_details, default: false, description: "Show the new file details display instead of the current file details"
 end
