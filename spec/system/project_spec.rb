@@ -72,17 +72,39 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         request = FactoryBot.create(:request_project)
         request.approve(sponsor_and_data_manager_user)
       end
+      let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
       before do
         sign_in sponsor_and_data_manager_user
         # Create file(s) for the project in mediaflux using test asset create request
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
+
+        @current_state = test_strategy.enabled?(:new_file_details)
+        test_strategy.switch!(:new_file_details, false)
+      end
+
+      after do
+        test_strategy.switch!(:new_file_details, @current_state)
+      end
+
+      context "The new_file_details feature is turned on" do
+        before do
+          test_strategy.switch!(:new_file_details, true)
+        end
+        it "displays the new file feature" do
+          visit project_path(approved_project)
+          expect(page).to have_content("show level by level browser here")
+          expect(page).not_to have_content("Showing the first 100 files due to preview limit.")
+        end
       end
 
       it "enqueues a Sidekiq job for asynchronously requesting project files",
         :integration do
         visit project_path(approved_project)
+
+        expect(page).to have_content("Showing the first 100 files due to preview limit.")
+        expect(page).not_to have_content("show level by level browser here")
 
         expect(page).to have_content("Download Complete List")
         click_on "Download Complete List"
