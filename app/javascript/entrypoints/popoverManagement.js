@@ -45,6 +45,7 @@ function checkStoragePopoverFields() {
   const storageJustification = document.getElementById('storage_justification').value;
   const growthExpectation = document.getElementById('storage_growth_expectation').value;
   const dateNeeded = document.getElementById('storage_date_needed').value;
+  const errorMessages = document.getElementsByClassName('storage-modal-error');
   const fields = [
     storageAmount,
     storageUnit,
@@ -52,15 +53,29 @@ function checkStoragePopoverFields() {
     growthExpectation,
     dateNeeded,
   ];
-  const errorMessage = document.querySelectorAll('.storage-modal-error');
 
   // check that all fields are filled out before allowing the popover to close
   for (let i = 0; i < fields.length; i += 1) {
     if (fields[i].trim().length === 0 || !fields[i]) {
-      errorMessage.forEach((message) => {
-        message.hidden = false; // eslint-disable-line no-param-reassign
-      });
-      return false;
+      if (i === 0) {
+        errorMessages[0].hidden = false; // eslint-disable-line no-param-reassign
+        continue; // eslint-disable-line no-continue
+      } else if (i === 4) {
+        errorMessages[i - 1].hidden = false; // eslint-disable-line no-param-reassign
+        return false;
+      } else {
+        errorMessages[i - 1].hidden = false; // eslint-disable-line no-param-reassign
+        continue; // eslint-disable-line no-continue
+      }
+    }
+    if (i === 4 && fields[i].trim().length !== 0) {
+      const messages = Array.from(errorMessages);
+      const errorsDisplayed = messages.some((el) => el.checkVisibility());
+      if (errorsDisplayed) {
+        return false;
+      } 
+        return true;
+      
     }
   }
   return true;
