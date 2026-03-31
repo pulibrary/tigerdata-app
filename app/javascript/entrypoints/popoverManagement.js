@@ -73,9 +73,8 @@ function checkStoragePopoverFields() {
       const errorsDisplayed = messages.some((el) => el.checkVisibility());
       if (errorsDisplayed) {
         return false;
-      } 
-        return true;
-      
+      }
+      return true;
     }
   }
   return true;
