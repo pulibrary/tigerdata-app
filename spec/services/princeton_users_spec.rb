@@ -175,7 +175,7 @@ RSpec.describe PrincetonUsers, type: :model do
       it "creates all default users", integration: true do
         expect(User.count).to eq 0
         described_class.load_default_users
-        expect(User.count).to eq (described_class::RDSS_DEVELOPERS + described_class::RESEARCH_COMPUTING_USERS).length
+        expect(User.count).to eq (described_class::RDSS_DEVELOPERS + described_class::RESEARCH_COMPUTING_USERS + described_class::TESTING_USERS).length
       end
     end
 
