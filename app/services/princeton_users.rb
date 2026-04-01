@@ -6,6 +6,7 @@ class PrincetonUsers
   # the default projects in the Mediaflux in our Docker image.
   RESEARCH_COMPUTING_USERS = %w[cbentler az3007 md1908 knight].freeze
   RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 hc8719 rl3667 kl37 pp9425 jh6441 ].freeze
+  TESTING_USERS = %w[tigerdatatester libtigerdatadev].freeze
 
   class << self
 
@@ -35,7 +36,7 @@ class PrincetonUsers
     end
 
     def load_default_users
-      default_users = RDSS_DEVELOPERS + RESEARCH_COMPUTING_USERS
+      default_users = RDSS_DEVELOPERS + RESEARCH_COMPUTING_USERS + TESTING_USERS
       default_users.each do |netid|
         create_user_from_ldap_by_uid(netid)
         rescue TigerData::LdapError
