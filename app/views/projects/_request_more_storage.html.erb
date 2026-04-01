@@ -17,20 +17,20 @@
       <option value="TB">TB</option>
     </select>
   </div>
-  <div class="storage-modal-error" hidden="true">This field is required. </div>
+  <div class="storage-modal-error" id="storage_amount_error" hidden="true">This field is required. </div>
 
   <div class="justification-section">
     <div class="form-label">Justification<span class="required">*</span></div>
     <div class="justification-note">Please briefly explain why additional storage is needed, including details about your project or specific storage requirements.</div>
     <textarea maxlength="2000" class="form-input text-area" name="storage_request[justification]" id="storage_justification"></textarea>
   </div>
-  <div class="storage-modal-error" hidden="true">This field is required. </div>
+  <div class="storage-modal-error" id="storage_justification_error" hidden="true">This field is required. </div>
   <div class="growth-expectation-section">
     <div class="form-label">Growth Expectation<span class="required">*</span></div>
     <div class="growth-expectation-note">To help us better understand data trends, please describe your expected data growth over the next 12 months.</div>
     <textarea maxlength="2000" class="form-input text-area" name="storage_request[growth_expectation]" id="storage_growth_expectation"></textarea>
   </div>
-  <div class="storage-modal-error" hidden="true">This field is required. </div>
+  <div class="storage-modal-error" id="storage_growth_expectation_error" hidden="true" >This field is required. </div>
   <div class="date-needed-section">
     <div class="form-label">Date Needed<span class="required">*</span></div>
     <div class="date-needed-note">When would you like this updated quota available by?</div>
@@ -38,7 +38,7 @@
       <lux-date-picker class="lux-date-picker" placeholder="Select a date" id="storage_date_needed" name="storage_date_needed" mode="single" :defaultDate="new Date()" :disabled-dates="[{ start: nil, end: new Date()}]"/>
     </div>
   </div>
-  <div class="storage-modal-error" hidden="true">This field is required. </div>
+  <div class="storage-modal-error" id="storage_date_needed_error" hidden="true">This field is required. </div>
   <div class="request-more-storage-buttons">
     <button popovertarget="request-more-storage" popovertargetaction="hide" class="pul-button-secondary storage-cancel" id="cancel-storage-request">Cancel</button>
     <button class="pul-button-primary storage-submit" id="submit-storage-request">Submit</button>
