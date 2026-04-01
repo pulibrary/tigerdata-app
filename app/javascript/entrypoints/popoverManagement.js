@@ -39,44 +39,35 @@ export function globusPopoverManagement() {
   }
 }
 
-function checkStoragePopoverFields() {
-  const storageAmount = document.getElementById('storage_amount').value;
-  const storageUnit = document.getElementById('storage_unit').value;
-  const storageJustification = document.getElementById('storage_justification').value;
-  const growthExpectation = document.getElementById('storage_growth_expectation').value;
-  const dateNeeded = document.getElementById('storage_date_needed').value;
-  const errorMessages = document.getElementsByClassName('storage-modal-error');
-  const fields = [
-    storageAmount,
-    storageUnit,
-    storageJustification,
-    growthExpectation,
-    dateNeeded,
-  ];
-
-  // check that all fields are filled out before allowing the popover to close
-  for (let i = 0; i < fields.length; i += 1) {
-    if (fields[i].trim().length === 0 || !fields[i]) {
-      if (i === 0) {
-        errorMessages[0].hidden = false; // eslint-disable-line no-param-reassign
-        continue; // eslint-disable-line no-continue
-      } else if (i === 4) {
-        errorMessages[i - 1].hidden = false; // eslint-disable-line no-param-reassign
-        return false;
-      } else {
-        errorMessages[i - 1].hidden = false; // eslint-disable-line no-param-reassign
-        continue; // eslint-disable-line no-continue
-      }
-    }
-    if (i === 4 && fields[i].trim().length !== 0) {
-      const messages = Array.from(errorMessages);
-      const errorsDisplayed = messages.some((el) => el.checkVisibility());
-      if (errorsDisplayed) {
-        return false;
-      }
-      return true;
-    }
+function checkAndDisplayStorageFieldError(fieldId, errorFieldId) {
+  const fieldValue = document.getElementById(fieldId).value;
+  const errorField = document.getElementById(errorFieldId);
+  if (fieldValue.trim().length === 0 || !fieldValue) {
+    errorField.hidden = false;
+    return true; // There was an Error
   }
+  return false; // No Error
+}
+
+function checkStoragePopoverFields() {
+  const amountError = checkAndDisplayStorageFieldError(
+    'storage_amount',
+    'storage_amount_error',
+  );
+  const unitError = checkAndDisplayStorageFieldError('storage_unit', 'storage_amount_error');
+  const justificationError = checkAndDisplayStorageFieldError(
+    'storage_justification',
+    'storage_justification_error',
+  );
+  const growthError = checkAndDisplayStorageFieldError(
+    'storage_growth_expectation',
+    'storage_growth_expectation_error',
+  );
+  const dateError = checkAndDisplayStorageFieldError(
+    'storage_date_needed',
+    'storage_date_needed_error',
+  );
+  if (amountError || unitError || justificationError || growthError || dateError) return false;
   return true;
 }
 
