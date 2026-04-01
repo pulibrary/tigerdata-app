@@ -124,7 +124,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_button("Submit")
           expect(page).to have_button("Cancel")
           # Check that the required field error messages are not visible before submission and are visible after submission when the fields are empty
-          expect(page).to_not have_css(".storage-modal-error", count: 4)
+          expect(page).to_not have_css(".storage-modal-error")
           click_on "Submit"
           expect(page).to have_css(".storage-modal-error", count: 4)
         end

@@ -3,6 +3,9 @@
 @import "bootstrap";
 
 .pul-popover-storage {
+  @media (max-width: 854px) {
+    width: 46.3125rem;
+  }
   width: 55.25rem;
   height: fit-content;
   padding: 1.5rem;
@@ -26,6 +29,9 @@
 
 #request-more-storage {
   .storage-request-heading-section {
+    @media (max-width: 854px) {
+      width: 42.5625rem;
+    }
     display: flex;
     width: 51.5rem;
     height: 1.6875rem;
@@ -72,6 +78,9 @@
   }
 
   .justification-section {
+    @media (max-width: 854px) {
+      width: 42.5625rem;
+    }
     .justification-note {
       color: $gray-100;
       font-size: 1rem;
@@ -82,6 +91,9 @@
     }
   }
   .growth-expectation-section {
+    @media (max-width: 854px) {
+      width: 42.5625rem;
+    }
     margin-right: auto;
     .justification-note {
       color: $gray-100;
@@ -119,6 +131,9 @@
     line-height: normal;
   }
   .text-area {
+    @media (max-width: 854px) {
+      width: 42.5625rem;
+    }
     height: 7.375rem;
     width: 51.8125rem;
     flex-shrink: 0;
