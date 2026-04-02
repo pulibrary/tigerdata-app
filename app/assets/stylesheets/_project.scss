@@ -348,7 +348,7 @@ blockquote {
 .users-detail-table {
   @media (max-width: 830px) {
     display: flex;
-    width: 25rem;
+    width: 30rem;
   }
   display: flex;
   width: 36.875rem;
@@ -393,7 +393,8 @@ blockquote {
 .connections-detail-table {
   @media (max-width: 830px) {
     display: flex;
-    width: 25rem;
+    width: 30rem;
+    height: 20rem;
   }
   display: flex;
   width: 36.875rem;
