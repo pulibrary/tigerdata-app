@@ -82,10 +82,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Request more storage button displays for a data sponsor or a data manager" do
-      before do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:request_more_storage, true)
-      end
       it "Shows the request more storage button if the feature is enabled" do
           sign_in sponsor_user
           visit "/projects/#{project_in_mediaflux.id}/details"
