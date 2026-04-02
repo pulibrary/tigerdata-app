@@ -58,7 +58,7 @@ class ProjectsController < ApplicationController
 
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
 
-    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: 100)
+    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: Rails.configuration.project_file_display_limit)
     @files = @file_list[:files]
     @files.sort_by!(&:path)
 

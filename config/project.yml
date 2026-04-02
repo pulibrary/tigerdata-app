@@ -10,6 +10,7 @@ production: &default
     requested: "Standard"
     approved: null
   project_purpose: "Research"
+  file_display_limit: 100
 qa:
   <<: *default
 staging:
@@ -18,5 +19,7 @@ ci:
   <<: *default
 development:
   <<: *default
+  file_display_limit: 50
 test:
   <<: *default
+  file_display_limit: 50
