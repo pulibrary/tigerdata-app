@@ -100,8 +100,8 @@
                  <div class="users-detail-table">
                     <% @presenter.data_users.each do |user| %>
                         <div class="detail-row<%= "-last" if user == @presenter.data_users.last %>">
-                           <div class="detail-subheading"><%= render partial: 'shared/user_display', locals: {user_name: user.display_name, user_id: user.uid }%></div>
-                           <div class="detail-value"><%= user.access_type %></div>
+                           <%= render partial: 'shared/user_display', locals: {user_name: user.display_name, user_id: user.uid }%>
+                           <div><%= user.access_type %></div>
                         </div>
                     <% end %>
                  </div>

@@ -351,7 +351,7 @@ blockquote {
     width: 25rem;
   }
   display: flex;
-  width: 36.875rem;
+  max-width: 36.875rem;
   padding: 1rem 0;
   flex-direction: column;
   justify-content: center;
@@ -362,7 +362,8 @@ blockquote {
   border: 1px solid $gray-10;
   margin-bottom: 2rem;
   max-height: 33rem;
-  overflow: scroll;
+  overflow: auto;
+  flex-grow: 2;
   .detail-row {
     display: flex;
     padding: 0 1rem 1rem 1rem;
