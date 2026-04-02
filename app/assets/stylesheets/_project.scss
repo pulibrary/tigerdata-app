@@ -512,7 +512,23 @@ blockquote {
 }
 
 .departments-group {
-  margin-left: -9px;
+  &:has(> div:nth-child(1)) {
+    // applies to lists with only one department
+    margin-left: 1rem;
+  }
+  &:has(> div:nth-child(2)) {
+    // applies to lists with two departments
+    margin-left: 4rem;
+  }
+  &:has(> div:nth-child(n + 3)) {
+    // applies to lists with three or more departments
+    margin-left: 5rem;
+  }
+  @media (max-width: 830px) {
+    &:has(> div:nth-child(n + 1)) {
+      margin-left: 5.5rem;
+    }
+  }
 }
 
 .departments-container {
@@ -524,7 +540,6 @@ blockquote {
   gap: 1em;
   align-items: center;
   background: $gray-10;
-  border: 2px solid black;
   border-radius: 8px;
   width: 40em;
   margin-bottom: 2px;
