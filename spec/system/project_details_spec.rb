@@ -372,7 +372,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         click_on("Content Preview")
 
         # Caveat message is displayed
-        expect(page).to have_content("Showing the first 100 files due to preview limit.")
+        expect(page).to have_content("Showing the first 50 files due to preview limit.")
       end
 
       it "displays the file list",

@@ -95,7 +95,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         it "displays the new file feature" do
           visit project_path(approved_project)
           expect(page).to have_content("show level by level browser here")
-          expect(page).not_to have_content("Showing the first 100 files due to preview limit.")
+          expect(page).not_to have_content("Showing the first 50 files due to preview limit.")
         end
       end
 
@@ -103,7 +103,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         :integration do
         visit project_path(approved_project)
 
-        expect(page).to have_content("Showing the first 100 files due to preview limit.")
+        expect(page).to have_content("Showing the first 50 files due to preview limit.")
         expect(page).not_to have_content("show level by level browser here")
 
         expect(page).to have_content("Download Complete List")
