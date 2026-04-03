@@ -194,16 +194,24 @@
 .users-detail-pair {
   @media (max-width: 830px) {
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    gap: 4.5rem;
   }
   display: flex;
+  gap: 0.5rem;
+  .item-text {
+    font-weight: 400;
+  }
+  .detail-value {
+    color: $gray-60;
+  }
 }
 
 .departments-detail-pair {
   @media (max-width: 830px) {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   display: flex;
   gap: 0.5rem;
@@ -212,17 +220,9 @@
 .connections-detail-pair {
   @media (max-width: 830px) {
     display: flex;
-    flex-direction: column;
-  }
-  display: flex;
-  gap: 0.5rem;
-}
-
-.description-detail-pair {
-  @media (max-width: 830px) {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: nowrap;
+    gap: 7rem;
   }
   display: flex;
   gap: 0.5rem;
