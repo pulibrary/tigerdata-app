@@ -103,7 +103,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#directory_listing" do
     let(:manager) { sponsor_and_data_manager_user }
-    let!(:project) do
+    let(:project) do
       # This is the Mediaflux ID for the project with path=princeton/tigerdata/RDSS/Query/CProject
       # If this gets flaky, we will need to revisit
       project = FactoryBot.create(:project, mediaflux_id: 1271)
