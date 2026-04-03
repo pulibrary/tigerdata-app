@@ -49,13 +49,13 @@
                <% end %>
             </p>
          </div>
-         <div class="description-detail-pair">
+         <div class="detail-pair">
             <li class="detail-subheading">Project Description</li>
             <p id="description-text-full" class="detail-value"><%= @presenter.description %></p>
          </div>
          <div class="departments-detail-pair">
             <li class="detail-subheading">Department(s)</li>
-            <p class="detail-value">
+            <div class="detail-value">
                <% if @presenter.departments.empty? %>
                  <strong class="px-0">&mdash;</strong>
                <% else %>
@@ -70,7 +70,7 @@
                    <%end%>
                  </div>
                <% end %>
-            </p>
+            </div>
          </div>
          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1" viewBox="0 0 1200 1" fill="none">
             <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
