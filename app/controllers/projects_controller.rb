@@ -58,9 +58,14 @@ class ProjectsController < ApplicationController
 
     @num_files = project.asset_count(session_id: current_user.mediaflux_session)
 
-    @file_list = project.file_list(session_id: current_user.mediaflux_session, size: Rails.configuration.project_file_display_limit)
-    @files = @file_list[:files]
-    @files.sort_by!(&:path)
+    if Flipflop.new_file_details?
+      @directory_list = project.directory_listing(session_id: current_user.mediaflux_session, size: Rails.configuration.project_file_display_limit)
+      @files = @directory_list[:files]
+    else
+      @file_list = project.file_list(session_id: current_user.mediaflux_session, size: Rails.configuration.project_file_display_limit)
+      @files = @file_list[:files]
+      @files.sort_by!(&:path)
+    end
 
     @project_session = "content"
     respond_to do |format|
