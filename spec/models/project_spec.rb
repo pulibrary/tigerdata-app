@@ -106,12 +106,11 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     let(:project) do
       # This is the Mediaflux ID for the project with path=princeton/tigerdata/RDSS/Query/CProject
       # If this gets flaky, we will need to revisit
-      project = FactoryBot.create(:project, mediaflux_id: 1271)
+      FactoryBot.create(:project, mediaflux_id: 1271)
     end
 
     it "fetches the directory listing",
     :integration do
-
       directory_files_list = project.directory_listing(session_id: manager.mediaflux_session, size: 50)
       expect(directory_files_list[:files].count).to eq 10
       expect(directory_files_list[:files][0].name).to eq "A0"
