@@ -10,3 +10,10 @@ def create_project_in_mediaflux(request: nil, current_user: nil)
   request.destroy!
   project
 end
+
+# path=princeton/tigerdata/RDSS/Query/CProject
+def test_project_from_path(path)
+  metadata = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, id: "path=#{path}").metadata
+  id = metadata[:id]
+  FactoryBot.create(:project, mediaflux_id: id)
+end
