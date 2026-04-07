@@ -530,6 +530,83 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           expect(request.project_title).to eq("Dashboard Redirect Test")
         end.to change { NewProjectRequest.count }.by(1)
       end
+
+      it "preserves the tab order for the request wizard" do
+        sign_in researcher_user
+        visit "/"
+        click_on "New Project Request"
+
+        info_first = find("#project_title")
+        info_second = find("#parent_folder")
+        info_third = find("#project_folder")
+        info_fourth = find("#project_purpose")
+        info_fifth = find("#description")
+        info_sixth = find("#displayInput-v-0")
+        # Project Information tab order
+        find("#project_title").click
+        expect(page.driver.browser.switch_to.active_element).to eq(info_first.native)
+        info_first.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(info_second.native)
+        info_second.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(info_third.native)
+        info_third.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(info_fourth.native)
+        info_fourth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(info_fifth.native)
+        info_fifth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(info_sixth.native)
+
+        click_on "Next"
+
+        roles_first = find("#displayInput-v-0") # Data Sponsor
+        roles_second = find("#displayInput-v-1") # Data Manager
+        roles_third = find("#add-users")
+        # Roles and People tab order
+        find("#displayInput-v-0").click
+        expect(page.driver.browser.switch_to.active_element).to eq(roles_first.native)
+        roles_first.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(roles_second.native)
+        roles_second.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(roles_third.native)
+
+        click_on "Next"
+
+        storage_needed_first = find("label", text: "500 GB")
+        storage_needed_second = find("label", text: "2 TB")
+        storage_needed_third = find("label", text: "10 TB")
+        storage_needed_fourth = find("label", text: "25 TB")
+        storage_needed_fifth = find("label", text: "Custom")
+        storage_access_second = find("#number_of_files")
+        storage_access_third = all(".storage-tooltip-link").first
+        storage_access_fourth = find("#hpc_no")
+        storage_access_fifth = find("#network_no")
+        storage_access_sixth = all(".storage-tooltip-link").last
+        storage_access_seventh = find("#globus_no")
+        # Storage and Access Needs tab order
+        find("label", text: "500 GB").click
+        expect(page.driver.browser.switch_to.active_element).to eq(find("#radio500gb", visible: :hidden).native)
+        # Although we click on the label, the radio button is what receives focus because it is the default option selected in the wizard
+        storage_needed_first.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_second.native)
+        storage_needed_second.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_third.native)
+        storage_needed_third.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_fourth.native)
+        storage_needed_fourth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_fifth.native)
+        storage_needed_fifth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_second.native)
+        storage_access_second.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_third.native)
+        storage_access_third.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_fourth.native)
+        storage_access_fourth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_fifth.native)
+        storage_access_fifth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_sixth.native)
+        storage_access_sixth.send_keys(:tab)
+        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_seventh.native)
+      end
     end
   end
 end
