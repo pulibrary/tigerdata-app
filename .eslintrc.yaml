@@ -4,6 +4,9 @@ env:
 extends:
   - "airbnb-base"
   - "prettier"
+  - "plugin:vue/base"
+plugins:
+  - "vue"
 overrides: []
 parserOptions:
   ecmaVersion: latest

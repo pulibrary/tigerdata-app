@@ -92,10 +92,14 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         before do
           test_strategy.switch!(:new_file_details, true)
         end
+        let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+
         it "displays the new file feature" do
           visit project_path(approved_project)
+          visit project_path(project)
+          expect(page).to have_content("show level by level browser here")
           expect(page).not_to have_content("Showing the first 50 files due to preview limit.")
-          expect(page).to have_content("SampleFile.txt0")
+          expect(page).to have_content("A0")
         end
       end
 

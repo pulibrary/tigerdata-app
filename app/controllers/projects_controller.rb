@@ -75,6 +75,26 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # GET "projects/:id/directory-listing"
+  # Used via an AJAX call to retrieve the list of files for a given path within a project
+  def directory_listing
+    return if project.blank?
+
+    path_id = params["pathid"]&.to_i || project.mediaflux_id
+    mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, size: Rails.configuration.project_file_display_limit)
+    if mediaflux_data[:error]
+      render json: {error: mediaflux_data[:error]}
+    else
+      data = {
+        fileListUrl: project_file_explorer_url,
+        currentPathId: path_id,
+        files: mediaflux_data[:files],
+        complete: mediaflux_data[:complete]
+      }
+      render json: data
+    end
+  end
+
   # GET "projects/:id/file-explorer"
   # Used via an AJAX call to retrieve the list of files for a given path within a project
   def file_explorer
