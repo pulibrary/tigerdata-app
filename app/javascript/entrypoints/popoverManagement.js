@@ -97,7 +97,7 @@ export function storageIncreasePopoverManagement() {
     });
   }
 
-  submitStorageRequestPopover.addEventListener('click', () => {
+  submitStorageRequestPopover?.addEventListener('click', () => {
     const storageAmount = document.getElementById('storage_amount').value;
     const storageUnit = document.getElementById('storage_unit').value;
     const requestedStorage = `${storageAmount} ${storageUnit}`;
@@ -114,11 +114,11 @@ export function storageIncreasePopoverManagement() {
     }
   });
 
-  cancelStorageRequestPopover.addEventListener('click', () => {
+  cancelStorageRequestPopover?.addEventListener('click', () => {
     storageDetail.showPopover();
   });
 
-  returnStorageOverview.addEventListener('click', () => {
+  returnStorageOverview?.addEventListener('click', () => {
     storageDetail.showPopover();
   });
 }
