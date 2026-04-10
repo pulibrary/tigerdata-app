@@ -47,9 +47,11 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       # make sure we don't get the project where the user does not have a role
       expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
 
-      # ...and make sure it excludes the predefined project in the Docker image because we know
-      # for sure our user does not have a role on it.
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).to be nil
+      # ...and make sure the existing testing projects are present
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be nil
     end
 
     it "handles Mediaflux errors" do
