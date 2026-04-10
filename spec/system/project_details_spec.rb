@@ -324,7 +324,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     context "Project Contents", connect_to_mediaflux: true, integration: true do
       let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
-      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: 100)[:files].sort_by!(&:path) }
+      let(:size) { 100 }
+      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
@@ -362,17 +363,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//a[text()='#{project.title}']").click
         expect(page).to have_content(project.title)
-      end
-
-      it "displays the caveat message" do
-        # sign in and be able to view the file count for the collection
-        sign_in sponsor_user
-        visit "/projects/#{project.id}/details"
-        expect(page).to have_selector(:link_or_button, "Content Preview")
-        click_on("Content Preview")
-
-        # Caveat message is displayed
-        expect(page).to have_content("Showing the first 50 files due to preview limit.")
       end
 
       it "displays the file list",

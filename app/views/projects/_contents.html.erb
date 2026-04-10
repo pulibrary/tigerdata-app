@@ -1,16 +1,44 @@
 <div class="table project-files">
-   <div class="content-info"><i class="bi bi-info-circle"></i>Showing the first <%= Rails.configuration.project_file_display_limit %> files due to preview limit.</div>
-   <table id="project-contents" class="project-contents" >
-   <thead>
+  <% if @files.count > @project_file_display_limit %>
+    <div class="content-warning container-inline p-3">
+      <div class="row">
+        <div class="col-auto mx-3 my-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            fill="currentColor"
+            class="bi bi-exclamation-triangle-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+            />
+          </svg>
+        </div>
+        <div class="col mx-3">
+          <header>Preview Limit Reached</header>
+          <p>The preview screen can display up to
+            <%= Rails.configuration.project_file_display_limit %>
+            items per folder. Any sorting selections will apply to those
+            <%= Rails.configuration.project_file_display_limit %>
+            items only. To review all of your project's contents, download the
+            complete list of files.</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <table id="project-contents" class="project-contents">
+    <thead>
       <tr class="content heading">
-         <th class="sorting">name</th>
-         <th>relative path</th>
-         <th>size</th>
-         <th>last updated</th>
+        <th class="sorting">name</th>
+        <th>relative path</th>
+        <th>size</th>
+        <th>last updated</th>
       </tr>
-   </thead>
-   <tbody>
-      <%= render :partial => "content_view", :collection => @files, :as => :file %>
-   </tbody>
-   </table>
+    </thead>
+    <tbody>
+      <%= render partial: "content_view", collection: @files, as: :file %>
+    </tbody>
+  </table>
 </div>

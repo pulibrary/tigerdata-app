@@ -103,7 +103,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         :integration do
         visit project_path(approved_project)
 
-        expect(page).to have_content("Showing the first 50 files due to preview limit.")
         expect(page).not_to have_content("show level by level browser here")
 
         expect(page).to have_content("Download Complete List")
@@ -117,6 +116,46 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
         expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
         expect(sponsor_and_data_manager_user.inventory_requests.first.type).to eq "FileInventoryRequest"
+      end
+
+      it "does not show the item limit warning when there are fewer than the limit",
+        :integration do
+        visit project_path(approved_project)
+
+        # Only 4 files, so the warning should not appear
+        expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+      end
+
+      context "with files over the project file display limit" do
+        before do
+          iterator_request = instance_double("Mediaflux::IteratorRequest")
+          file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
+          allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
+          allow(file_asset).to receive(:size).and_return(100)
+          allow(file_asset).to receive(:last_modified).and_return(Time.current.in_time_zone("America/New_York").iso8601)
+
+          files = [file_asset] * (Rails.configuration.project_file_display_limit + 1)
+          allow(iterator_request).to receive(:result).and_return(
+            {
+              files: files,
+              count: files.size,
+              complete: true
+            }
+          )
+          allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
+        end
+
+        after do
+          allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
+        end
+
+        it "displays the preview alert" do
+          visit project_path(approved_project)
+          expect(page).to have_selector(:link_or_button, "Content Preview")
+          click_on("Content Preview")
+
+          expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder.")
+        end
       end
 
       it "renders the storage capacity in the show view", :integration do

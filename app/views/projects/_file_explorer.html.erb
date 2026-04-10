@@ -6,7 +6,8 @@
     <table id="file_explorer">
       <thead>
         <tr class="content heading">
-          <th>&nbsp;</th> <!-- icon -->
+          <th>&nbsp;</th>
+          <!-- icon -->
           <th class="name-header">Name</th>
           <th class="size-header">Size</th>
           <th class="date-header">Last Updated</th>
@@ -16,14 +17,20 @@
       </tbody>
     </table>
     <div>
-      <span id="load-more-spinner" class="hidden-element spinner-border spinner-border-sm"></span>
+      <span
+        id="load-more-spinner"
+        class="hidden-element spinner-border spinner-border-sm"
+      ></span>
       <span id="load-more-loading" class="hidden-element">Loading...</span>
       <a href="#" id="load-more" class="hidden-element">Load More</a>
     </div>
     <div id="error-panel" class="hidden-element">
       <p>There was an error loading file information.</p>
-      <p>Summary: <span id="error-message"></span>. Details were logged on the server.</p>
-      <p>Click <a href="<%= project_url %>?explorer=true">here</a> to reload the page.</p>
+      <p>Summary:
+        <span id="error-message"></span>. Details were logged on the server.</p>
+      <p>Click
+        <a href="<%= project_url %>?explorer=true">here</a>
+        to reload the page.</p>
     </div>
   </div>
 
@@ -35,13 +42,24 @@
   </div>
 </div>
 
-<div class="debug-info <%= params['debug'] == 'true' ? '' : 'hidden-element' %>">
+<div
+  class="debug-info <%= params['debug'] == 'true' ? '' : 'hidden-element' %>"
+>
   <b>Debug Values</b><br/>
-  <div>Current path: <input id="current-path-text" size="80"></div>
-  <div>Current path id: <input id="current-path-id"></div>
-  <div>Iterator id: <input id="iterator-id"></div>
-  <div>Complete?: <input id="complete"></div>
-  <div>File-explorer URL: <input id="file-explorer-url" size="80" value="<%= project_file_explorer_url %>"></div>
+  <div>Current path:
+    <input id="current-path-text" size="80"></div>
+  <div>Current path id:
+    <input id="current-path-id"></div>
+  <div>Iterator id:
+    <input id="iterator-id"></div>
+  <div>Complete?:
+    <input id="complete"></div>
+  <div>File-explorer URL:
+    <input
+      id="file-explorer-url"
+      size="80"
+      value="<%= project_file_explorer_url %>"
+    ></div>
 </div>
 
 <script type="module">
