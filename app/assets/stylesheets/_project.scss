@@ -146,6 +146,16 @@
   }
 }
 
+.content-warning {
+  color: $gray-100;
+  background-color: $status-warning;
+
+  header {
+    color: $black;
+    font-weight: 600;
+  }
+}
+
 #project-contents {
   margin-bottom: 0.75rem;
 

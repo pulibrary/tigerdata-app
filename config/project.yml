@@ -19,7 +19,5 @@ ci:
   <<: *default
 development:
   <<: *default
-  file_display_limit: 50
 test:
   <<: *default
-  file_display_limit: 50
