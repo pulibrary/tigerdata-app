@@ -22,6 +22,8 @@ import 'bootstrap/js/src/scrollspy';
 // import * as bootstrap from 'bootstrap'; // avoid importing barrel file to reduce bundle size
 import { Modal } from 'bootstrap';
 
+import FileBrowser from '../vue_components/file_browser.vue';
+
 // ActionCable Channels
 import '../channels/index.js';
 import '../channels/consumer.js';
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-input-multiselect', LuxInputMultiselect)
       .component('lux-input-async-select', LuxInputAsyncSelect)
       .component('lux-date-picker', LuxDatePicker)
+      .component('file-browser', FileBrowser)
       .mount(elements[i]);
   }
 });

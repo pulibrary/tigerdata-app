@@ -198,12 +198,16 @@ class Project < ApplicationRecord
     results
   end
 
-  def directory_listing(session_id:, size: 10)
+  def directory_listing(session_id:, size: 10, collection_id: nil)
     return { files: [] } if mediaflux_id.nil?
 
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: false)
-    iterator_id = query_req.result
+    collection_id ||= mediaflux_id
+    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: collection_id, deep_search: false)
 
+    # handel query errors by returning the error message in the response so it can be displayed to the user
+    return { error: query_req.response_error[:message] } if query_req.error?
+
+    iterator_id = query_req.result
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     results = iterator_req.result
 
@@ -211,7 +215,6 @@ class Project < ApplicationRecord
     # This call is required since it possible that we have read less assets than
     # what the collection has but we are done with the iterator.
     Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
-
     results
   end
 

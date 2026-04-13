@@ -1,16 +1,9 @@
 <p> TODO show level by level browser here </p>
 <div class="table project-files">
-   <table class="project-contents">
-   <thead>
-      <tr class="content heading">
-         <th class="sorting">name</th>
-         <th>relative path</th>
-         <th>size</th>
-         <th>last updated</th>
-      </tr>
-   </thead>
-   <tbody>
-      <%= render :partial => "content_view", :collection => @files, :as => :file %>
-   </tbody>
-   </table>
+    <div class="lux">
+      <file-browser :files='<%= @files.map{|file| {id: file.id, name: file.name, path: file.path_only, size: number_to_human_size(file.size), last_modified: file.last_modified, collection: file.collection}}.to_json %>'
+                    directory-list-url="<%= project_directory_listing_url(@project) %>"
+                    current-path="<%= @presenter.project_directory %>"
+                    />
+    </div>
 </div>

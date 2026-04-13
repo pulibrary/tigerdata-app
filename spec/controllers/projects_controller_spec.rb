@@ -271,6 +271,84 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
+  describe "#directory_listing" do
+    it "renders an error when requesting json" do
+      get :directory_listing, params: { id: project.id, format: :json }
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
+    end
+
+    context "a signed in user" do
+      let(:researcher_user) { FactoryBot.create :user }
+      before do
+        sign_in researcher_user
+      end
+
+      it "redirects to the root when the user does not have access " do
+        get :directory_listing, params: { id: project.id, format: :json }
+        expect(response).to redirect_to dashboard_path
+      end
+    end
+
+    context "a user with access" do
+      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      before do
+        sign_in researcher_user
+      end
+
+      it "returns the directory listing as json" do
+        get :directory_listing, params: { id: project.id, format: :json }
+
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        response_json = JSON.parse(response.body)
+        expect(response_json["currentPathId"]).to eq(project.mediaflux_id)
+        expect(response_json["files"]).to eq([])
+      end
+
+      context "a project with files in mediaflux", integration: true do
+        let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
+
+        it "returns the top level directory listing as json" do
+          get :directory_listing, params: { id: project.id, format: :json }
+
+          expect(response.content_type).to eq("application/json; charset=utf-8")
+          response_json = JSON.parse(response.body)
+          expect(response_json["currentPathId"]).to eq(project.mediaflux_id)
+          expect(response_json["files"].count).to eq(6)
+          expect(response_json["files"].count { |f| f["collection"] }).to eq(1)
+          expect(response_json["files"].first["name"]).to eq("A0")
+          expect(response_json["files"].last["name"]).to eq("parent_1")
+
+          get :directory_listing, params: { id: project.id, format: :json, pathid: response_json["files"].last["id"] }
+
+          expect(response.content_type).to eq("application/json; charset=utf-8")
+          subfolder_response = JSON.parse(response.body)
+          expect(subfolder_response["currentPathId"]).to eq(response_json["files"].last["id"].to_i)
+          subfolder_files = subfolder_response["files"]
+          expect(subfolder_files.count { |f| f["collection"] }).to eq(2)
+          expect(subfolder_files.count).to eq(17)
+          expect(subfolder_files.first["name"]).to eq("A0")
+          expect(subfolder_files.last["name"]).to eq("child_2")
+        end
+      end
+
+      context "when mediaflux returns an error" do
+        let(:project) { FactoryBot.create(:project, mediaflux_id: -12_345) }
+
+        it "returns the error message as json" do
+          researcher_user.sysadmin = true
+          researcher_user.save
+
+          get :directory_listing, params: { id: project.id, format: :json }
+
+          expect(response.content_type).to eq("application/json; charset=utf-8")
+          response_json = JSON.parse(response.body)
+          expect(response_json["error"]).to include("call to service 'asset.query' failed")
+        end
+      end
+    end
+  end
+
   context "when the project show views are rendered for an existing project" do
     # Views are stubbed by default for rspec-rails
     # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
