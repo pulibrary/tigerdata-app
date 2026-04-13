@@ -65,7 +65,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         incomplete_project
       end
 
-      it "should raise a MetadataError if project is invalid", integration: true do
+      it "should raise an ActiveModel::Error if project is invalid", integration: true do
         project.create!(initial_metadata: incomplete_project.metadata_model, user: sponsor_and_data_manager_user)
 
         expect(project.valid?).to be false
