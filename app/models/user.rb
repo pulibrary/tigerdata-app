@@ -32,15 +32,6 @@ class User < ApplicationRecord
     end
   end
 
-  # Users that can be data managers
-  def self.manager_users
-    if Rails.env.development? || Rails.env.staging?
-      User.where(eligible_manager: true).or(User.where(developer: true))
-    else
-      User.where(eligible_manager: true)
-    end
-  end
-
   def clear_mediaflux_session(session)
     Rails.logger.debug("!!!!!!! Clearing Mediaflux session !!!!!!!!")
     @mediaflux_session = nil
