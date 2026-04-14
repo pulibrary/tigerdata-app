@@ -88,6 +88,15 @@ namespace :projects do
     end
   end
 
+  desc "rebuild test project under a certain path. Imports all projects from Mediaflux"
+  task :rebuild_test_projects, [:path] => [:environment] do |_, args|
+    path = args[:path] # default path is /princeton/tigerdata/RDSS/ 
+    time_action("Creating projects") do
+      cleaner = TestProjectCleaner.new(path)
+      puts cleaner.reload
+    end
+  end
+
   def time_action(label)
     start_time = Time.current.in_time_zone("America/New_York").iso8601
     yield
