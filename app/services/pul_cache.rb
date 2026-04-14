@@ -16,7 +16,7 @@ class PULCache < HealthMonitor::Providers::Cache
     # with this new implementation that calculates a better key.
     raise "different values (now: #{time}, fetched: #{fetched})" if fetched != time
   rescue RuntimeError => e
-    raise PulCacheException, e.message
+    raise PULCacheException, e.message
   end
 
     private
