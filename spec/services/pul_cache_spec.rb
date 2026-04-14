@@ -15,6 +15,7 @@ RSpec.describe PULCache do
         config.consider_all_requests_local = true
         config.action_mailer.perform_caching = false
         config.cache_store = :memory_store
+        puts "Current cache store: #{Rails.cache.class.name}"
       end
     end
 
