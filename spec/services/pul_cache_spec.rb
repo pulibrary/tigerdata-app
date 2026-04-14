@@ -6,10 +6,8 @@ RSpec.describe PULCache do
     let(:subject) { described_class.new }
 
     before do
-      if ENV["CI"].present?
-        memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
-        allow(Rails).to receive(:cache).and_return(memory_store)
-      end
+      memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
+      allow(Rails).to receive(:cache).and_return(memory_store)
     end
 
     it "writes and reads the same value" do
