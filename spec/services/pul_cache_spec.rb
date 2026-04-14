@@ -9,7 +9,7 @@ RSpec.describe PULCache do
       if ENV["CI"].present?
         # In CI, we want to test that the cache is working at all, so we use the memory store.
         config = Rails.application.config
-        config.cache_store = :memory_store
+        config.cache_store = :mem_cache_store
       end
     end
 
