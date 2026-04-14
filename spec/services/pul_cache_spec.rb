@@ -11,6 +11,7 @@ RSpec.describe PULCache do
         puts "Running in CI environment, using memory store for cache."
         puts "Current cache store: #{Rails.cache.class.name}"
         puts Rails.env.test?.to_s
+        ENV["TEST"].present?
         config = Rails.application.config
         config.consider_all_requests_local = true
         config.action_mailer.perform_caching = false
