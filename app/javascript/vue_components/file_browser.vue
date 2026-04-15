@@ -1,11 +1,9 @@
 <template>
-{{ displayedFolders }}
-  <div class="breadcrumb-list">
-    <div v-for="(path, i) in displayedFolders">
+  <ol class="breadcrumb-list">
+    <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
       {{ path.name }}
-      {{ path.id }}
-    </div>
-  </div>
+    </li>
+  </ol>
   <div class="table project-files">
   <div class="file-browser">
     <table class="project-contents">
@@ -104,6 +102,14 @@ async function onClickCollection(file) {
   displayedFiles.value = await loadFiles(file.id);
   displayedPath.value = file.path.replace(hiddenRoot.value, '');
   displayedFolders.value.push({id: file.id, path: file.path, name: file.name});
+  isLoadingFiles.value = false;
+}
+
+async function onClickBreadcrumb(path) {
+  isLoadingFiles.value = true;
+  displayedFiles.value = await loadFiles(path.id);
+  const path_index = displayedFolders.value.indexOf(path);
+  displayedFolders.value = displayedFolders.value.slice(0,path_index+1);
   isLoadingFiles.value = false;
 }
 </script>
