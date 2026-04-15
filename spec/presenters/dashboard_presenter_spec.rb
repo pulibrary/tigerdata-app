@@ -2,10 +2,16 @@
 require "rails_helper"
 
 describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
-  subject(:presenter) { described_class.new(current_user: sponsor_and_data_manager) }
+  subject(:presenter) do
+    current_user.mediaflux_session = SystemUser.mediaflux_session # ensure the presenter can make mediaflux calls as the current user
+    described_class.new(current_user: current_user)
+  end
 
-  let(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:other_user) { FactoryBot.create :user, uid: "kl37" }
+  let(:current_user) { sponsor_and_data_manager }
+  # tigerdatatester is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
+  let(:sponsor_and_data_manager) { User.find_by(uid: "tigerdatatester") }
+
+  let(:other_user) { User.find_by(uid: "kl37")} # user is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
 
   let(:request1) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: other_user.uid, requested_by: other_user.uid }
   let(:request2) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: sponsor_and_data_manager.uid, requested_by: other_user.uid }
@@ -15,21 +21,21 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   end
   let(:request4) { FactoryBot.create :request_project, data_manager: other_user.uid, data_sponsor: other_user.uid, requested_by: other_user.uid }
 
-  let!(:project1) { request1.approve(sponsor_and_data_manager) }
+  let!(:project1) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
   let!(:project2) do
-    project = request2.approve(sponsor_and_data_manager)
+    project = test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject")
     project.updated_at = ActiveSupport::TimeZone.new("America/New_York").yesterday
     project.save!
     project
   end
 
   let!(:project3) do
-    project = request3.approve(sponsor_and_data_manager)
+    project = test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject")
     project.updated_at = ActiveSupport::TimeZone.new("America/New_York").tomorrow
     project.save!
     project
   end
-  let!(:project4) { request4.approve(sponsor_and_data_manager) }
+  let!(:project4) { test_project_from_path("/princeton/tigerdata/RDSS/testing-project") }
 
   describe "#all_projects" do
     it "returns an empty array for a normal user" do
@@ -39,6 +45,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     context "for a sysadmin" do
       before do
         sponsor_and_data_manager.developer = true # so that is detected as a sysadmin
+        sponsor_and_data_manager.save!
       end
 
       it "returns the list of all projects, sorted" do
@@ -50,18 +57,24 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
 
   describe "dashboard_projects" do
     it "returns the list of the user's projects, sorted" do
-      expect(presenter.dashboard_projects.count).to eq(3)
-      expect(presenter.dashboard_projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
+      project_list = presenter.dashboard_projects
+      expect(project_list.count).to eq(4)
+      expect(project_list.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
     end
   end
 
   describe "#role" do
+    let(:libtigerdatadev) { User.find_by(uid: "libtigerdatadev") }
+    let(:current_user){ libtigerdatadev }
+    let(:tigerdatatester) { User.find_by(uid: "tigerdatatester") }
+    let(:developer) { User.find_by(uid: "kl37") }
+
     it "detects the proper roles for each project" do
       projects = presenter.dashboard_projects
-      expect(projects.map(&:id)).to eq([project3.id, project1.id, project2.id])
-      expect(projects[0].role(sponsor_and_data_manager)).to be "Data User"
-      expect(projects[1].role(sponsor_and_data_manager)).to be "Data Manager"
-      expect(projects[2].role(sponsor_and_data_manager)).to be "Sponsor"
+      expect(projects.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
+      expect(projects[0].role(libtigerdatadev)).to be "Data Manager"
+      expect(projects[0].role(tigerdatatester)).to be "Sponsor"
+      expect(projects[0].role(developer)).to be "Data User"
     end
   end
 
@@ -89,6 +102,25 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     it "filters draft and submitted requests" do
       expect(presenter.my_draft_requests.count).to eq(2)
       expect(presenter.my_submitted_requests.count).to eq(1)
+    end
+  end
+
+  describe "#requests_to_approve" do
+    let(:sysadmin) { FactoryBot.create :sysadmin, uid: "sysadmin", mediaflux_session: SystemUser.mediaflux_session }
+    let(:presenter_for_sysadmin) { described_class.new(current_user: sysadmin) }
+
+    before do
+      FactoryBot.create :request, state: NewProjectRequest::SUBMITTED
+      FactoryBot.create :request, state: NewProjectRequest::SUBMITTED
+      FactoryBot.create :request, state: NewProjectRequest::DRAFT
+    end
+
+    it "returns submitted requests for a sysadmin" do
+      expect(presenter_for_sysadmin.requests_to_approve.count).to eq(2)
+    end
+
+    it "returns an empty array for a non-sysadmin" do
+      expect(presenter.requests_to_approve).to eq([])
     end
   end
 end

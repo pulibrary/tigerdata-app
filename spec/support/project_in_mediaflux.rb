@@ -13,15 +13,16 @@ end
 def test_project_from_path(path)
   metadata = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, id: "path=#{path}").metadata
   id = metadata[:id]
-  raise StandardError, "Project not found in Mediaflux #{path}" if id.nil?
-  data_sponsor = metadata[:data_sponsor]
-  data_manager = metadata[:data_manager]
+  raise StandardError, "Project not found in Mediaflux #{path}" if id.blank?
+  data_sponsor = metadata[:data_sponsor] || "tigerdatatester"
+  data_manager = metadata[:data_manager] || "tigerdatatester"
   data_users = metadata[:data_users]
   FactoryBot.create(:user, uid: data_sponsor) unless User.where(uid: data_sponsor).exists?
   FactoryBot.create(:user, uid: data_manager) unless User.where(uid: data_manager).exists?
   data_users = metadata[:data_users]
-  data_users.each do |user_uid|
+  data_users&.each do |user_uid|
     FactoryBot.create(:user, uid: user_uid) unless User.where(uid: user_uid).exists?
   end
+  byebug if metadata[:title].nil?
   FactoryBot.create(:project, mediaflux_id: id, data_sponsor:, data_manager:, project_directory: path, title: metadata[:title])
 end
