@@ -129,5 +129,20 @@ width: 65.8125rem;
 height: 1.8125rem;
 align-items: center;
 gap: 0.625rem;
+
+list-style-type: none;
+padding: 0px;
+display: flex;
+align-items: center;
+margin-left: 0.25rem;
+
+ li:not(:last-child)::after{
+  content: "/";
+  margin-left: 0.62rem;
+
+ }
+ li:last-child{
+  color: #717171
+ }
 }
 </style>
