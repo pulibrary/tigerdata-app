@@ -18,8 +18,8 @@
     "precommit-hook": "^3.0.0",
     "prettier": "3.8.3",
     "rollup": "^4.60.1",
-    "vite": "^8.0.8",
-    "vite-plugin-ruby": "^5.2.1",
+    "vite": "^8.0.0",
+    "vite-plugin-ruby": "^5.2.0",
     "vitest": "^4.1.4",
     "vue-eslint-parser": "^10.4.0"
   },
