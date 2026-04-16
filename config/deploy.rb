@@ -50,7 +50,18 @@ namespace :application do
       end
     end
   end
+
+  desc "Reload the test fixture projects from Mediaflux"
+  task :reload_test_projects do
+    on roles(:rake) do
+      within release_path do
+        execute :rake, "projects:rebuild_test_projects"
+      end
+    end
+  end
 end
+
+before "deploy:cleanup", "application:reload_test_projects"
 
 # rubocop:disable Rails/Output
 namespace :mailcatcher do
