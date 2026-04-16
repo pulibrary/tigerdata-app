@@ -7,7 +7,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager_user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:read_only) { FactoryBot.create :user, uid: "hc8719", mediaflux_session: SystemUser.mediaflux_session }
+  let(:read_only) { FactoryBot.create :user, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session }
   let(:read_write) { FactoryBot.create :user }
 
   context "Details page" do
