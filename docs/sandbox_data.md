@@ -82,13 +82,13 @@ asset.set :id path=/$demo_ns/$demo_project :meta < \
  :description "This is a test project" \
  :data_sponsor "mjc12" \
  :data_manager "kl37" \
- :data_users_rw "hc8719" \
+ :data_users_rw "jh6441" \
  :data_users_rw "cac9" \
  :data_users_ro "bs3097" \
  :data_users_ro "jrg5" \
  :departments "RDSS" \
  :departments "HPC" \
  :created_on "31-AUG-2023" \
- :created_by "hc8719" > >
+ :created_by "jh6441" > >
 
 # eof

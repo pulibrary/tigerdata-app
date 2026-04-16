@@ -64,10 +64,10 @@ module Mediaflux
       # This is what the call would look like from aterm:
       # tigerdata.project.create \
       #   :data-manager md1908 \
-      #   :data-sponsor hc8719 \
+      #   :data-sponsor jh6441 \
       #   :department "Physics" \
       #   :description "Our fake project" \
-      #   :directory tigerdata/RC/td-testing/md1908/HectorProject2 \
+      #   :directory tigerdata/RC/td-testing/md1908/JaymeeProject2 \
       #   :project-id "fake.id" \
       #   :quota "10 TB" \
       #   :title "Fake Study"

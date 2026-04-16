@@ -52,10 +52,7 @@ namespace :projects do
     namespace = "/system/scripts"
     name = "fileList.tcl"
     full_path = "#{namespace}/#{name}"
-
-    # Once this code has been merged into main, we should be able to change the URL to point to the
-    # Tigerdata GitHub repo rather than a gist under my account.
-    content_url = "https://gist.githubusercontent.com/hectorcorrea/e60cc638ce9e88c2f6723768fc1dfcbf/raw/4f734ee41ba2c911535564bb55bdcf4ac62d121c/fileList.tcl"
+    content_url = "https://raw.githubusercontent.com/pulibrary/tigerdata-app/f557f15bb217c7b8646034ddc444a3114b0f02fb/lib/assets/fileList.tcl"
     upload_request = Mediaflux::ScriptUploadRequest.new(session_token: user.mediaflux_session, namespace: namespace, name: name, url: content_url)
     upload_request.resolve
     if upload_request.error?
