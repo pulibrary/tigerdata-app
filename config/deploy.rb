@@ -53,7 +53,7 @@ namespace :application do
 
   desc "Reload the test fixture projects from Mediaflux"
   task :reload_test_projects do
-    on roles(:rake) do
+    on roles(:test) do
       within release_path do
         execute :rake, "projects:rebuild_test_projects"
       end
