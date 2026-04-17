@@ -47,7 +47,7 @@ commands:
     steps:
       - node/install:
           install-yarn: true
-          node-version: "22.9.0"
+          node-version: "22.12.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
@@ -218,7 +218,7 @@ jobs:
 
   yarn_lint_format:
     docker:
-      - image: cimg/node:22.9.0
+      - image: cimg/node:22.12.0
     steps:
       - checkout
       - install_yarn_dependencies
@@ -231,7 +231,7 @@ jobs:
 
   yarn_test:
     docker:
-      - image: cimg/node:22.9.0
+      - image: cimg/node:22.12.0
     steps:
       - checkout
       - install_yarn_dependencies
@@ -259,7 +259,7 @@ jobs:
           version: "3.3.0"
       - node/install:
           install-yarn: true
-          node-version: "22.9.0"
+          node-version: "22.12.0"
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - install_dependencies
@@ -293,7 +293,7 @@ jobs:
 
   done:
     docker:
-      - image: cimg/node:22.9.0
+      - image: cimg/node:22.12.0
     steps:
       - coveralls/upload:
           carryforward: job1,job2

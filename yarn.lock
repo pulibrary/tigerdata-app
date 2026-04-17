@@ -4110,14 +4110,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node@npm:^22.12.0":
-  version: 22.12.0
-  resolution: "node@npm:22.12.0"
+"node@npm:^22.22.2":
+  version: 22.22.2
+  resolution: "node@npm:22.22.2"
   dependencies:
     node-bin-setup: "npm:^1.0.0"
   bin:
     node: bin/node
-  checksum: 10c0/2c71422c2ae95d862121acc3f63a39b1cac7058da469a9abcce3d651483992f7ec106191a6e25d883ecd64e1003b8838b7d493bcaf0fe1467eaff690b53bd19b
+  checksum: 10c0/f134eefc325f19e9dbf3eb81f345475305c3c886c5999cb76afed759429da8296d64bb615df800f9dbfb0b8096499a7c351db11a2af66b8c5721970cd5a182f2
   languageName: node
   linkType: hard
 
@@ -5254,7 +5254,7 @@ __metadata:
     lux-design-system: "npm:^7.3.2"
     minimatch: "npm:10.2.3"
     nanoid: "npm:>=3.3.8"
-    node: "npm:^22.12.0"
+    node: "npm:^22.22.2"
     precommit-hook: "npm:^3.0.0"
     prettier: "npm:3.4.2"
     rollup: "npm:^4.59.0"
