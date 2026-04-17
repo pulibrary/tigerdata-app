@@ -24,7 +24,7 @@ const props = defineProps({
 
 const projectPath = ref(props.path)
 const buttonId = ref("id")
-watch(() => props.path, (newValue, oldValue) => { projectPath.value = newValue});
+watch(() => props.path, (newValue) => { projectPath.value = newValue});
 
 </script>
 

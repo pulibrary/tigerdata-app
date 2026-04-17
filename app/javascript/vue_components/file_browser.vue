@@ -88,9 +88,6 @@ const props = defineProps({
     required: true,
   },
 });
-function splitPaths(displayedPath){
-return displayedPath.split("/");
-}
 
 const displayedFiles = ref(props.files);
 const displayedPath = ref(props.currentPath);
@@ -115,8 +112,8 @@ async function onClickCollection(file) {
 async function onClickBreadcrumb(path) {
   isLoadingFiles.value = true;
   displayedFiles.value = await loadFiles(path.id);
-  const path_index = displayedFolders.value.indexOf(path);
-  displayedFolders.value = displayedFolders.value.slice(0,path_index+1);
+  const pathIndex = displayedFolders.value.indexOf(path);
+  displayedFolders.value = displayedFolders.value.slice(0,pathIndex+1);
   isLoadingFiles.value = false;
 }
 </script>
