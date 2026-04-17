@@ -4,6 +4,7 @@
       {{ path.name }}
     </li>
   </ol>
+  <copy-path :path="displayedPath"> </copy-path>
   <div class="table project-files">
   <div class="file-browser">
     <table class="project-contents">
@@ -40,6 +41,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import CopyPath from "./copy_path.vue"
 
 defineOptions({ name: 'FileBrowser' });
 const props = defineProps({
@@ -144,5 +146,8 @@ margin-left: 0.25rem;
  li:last-child{
   color: #717171
  }
+}
+.copy-button {
+  background-image: asset_url("copy.svg");
 }
 </style>

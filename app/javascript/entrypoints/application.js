@@ -23,6 +23,7 @@ import 'bootstrap/js/src/scrollspy';
 import { Modal } from 'bootstrap';
 
 import FileBrowser from '../vue_components/file_browser.vue';
+import CopyPath from '../vue_components/copy_path.vue';
 
 // ActionCable Channels
 import '../channels/index.js';
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-input-async-select', LuxInputAsyncSelect)
       .component('lux-date-picker', LuxDatePicker)
       .component('file-browser', FileBrowser)
+      .component('copy-path', CopyPath)
       .mount(elements[i]);
   }
 });
