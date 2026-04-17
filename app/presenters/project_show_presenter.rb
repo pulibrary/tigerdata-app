@@ -244,6 +244,10 @@ class ProjectShowPresenter
     free_space_human ||= helpers.number_to_human_size(free_space, :precision => 2)
   end
 
+  def collection_info
+    {id: mediaflux_id, path: project_directory, name: project_directory.split("/").last}.to_json
+  end
+
   private
 
     def helpers
