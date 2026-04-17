@@ -1,10 +1,15 @@
 <template>
-  <ol class="breadcrumb-list">
-    <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
-      {{ path.name }}
-    </li>
-  </ol>
-  <copy-path :path="displayedPath"> </copy-path>
+  <div class="breadcrumb-container">
+    <div class="home-icon-image">
+      <img :src="'../assets/home_icon.svg'">
+    </div>
+    <ol class="breadcrumb-list">
+      <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
+        {{ path.name }}
+      </li>
+    </ol>
+    <copy-path :path="displayedPath"> </copy-path>
+  </div>
   <div class="table project-files">
   <div class="file-browser">
     <table class="project-contents">
@@ -125,9 +130,18 @@ async function onClickBreadcrumb(path) {
   background-color: gray;
 }
 
+.home-icon-image {
+  margin-left: 0.2rem;
+}
+
+.breadcrumb-container {
+  display: inline-flex;
+  gap: 0.62rem;
+}
+
 .breadcrumb-list {
 display: flex;
-width: 65.8125rem;
+width: auto;
 height: 1.8125rem;
 align-items: center;
 gap: 0.625rem;
@@ -136,15 +150,18 @@ list-style-type: none;
 padding: 0px;
 display: flex;
 align-items: center;
-margin-left: 0.25rem;
 
- li:not(:last-child)::after{
+ li:not(:last-child)::after {
   content: "/";
   margin-left: 0.62rem;
 
  }
- li:last-child{
+ li:last-child {
   color: #717171
+ }
+ li:hover {
+  color: #000000;
+  cursor: pointer;
  }
 }
 .copy-button {
