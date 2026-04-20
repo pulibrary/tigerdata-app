@@ -1,13 +1,19 @@
 <template>
-    <button :id="buttonId" class="btn copy-paste-button-sizer copy-project-path-icon" :data-url="projectPath" title="Copy project path to the clipboard">
-        <div class="pul-copy-paste-tooltip" :data-url="projectPath">
-            <span id="copy-project-path-label" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
-        </div>
+    <div v-if="isSupported" class="copy-box">
+    <button @click="copy(projectPath)" class="sizer">
+      <!-- by default, `copied` will be reset in 1.5s -->
+      <span v-if="!copied" class="frames"></span>
+      <span v-else class="check"></span>
     </button>
+    </div>
+    <p v-else>
+      Your browser does not support Clipboard API
+    </p>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useClipboard } from '@vueuse/core'
 
 defineOptions({ name: 'CopyPath' });
 const props = defineProps({
@@ -20,13 +26,47 @@ const props = defineProps({
     required: true,
   },
 
+  copyIconUrl: {
+    type: String,
+    required: true,
+  },
+
+  copiedIconUrl: {
+    type: String,
+    required: true,
+  }
+
 });
 
 const projectPath = ref(props.path)
 const buttonId = ref("id")
 watch(() => props.path, (newValue) => { projectPath.value = newValue});
 
+const { text, copy, copied, isSupported } = useClipboard({ copiedDuring: 3000 })
+const copyIconUrl = `url(${props.copyIconUrl})`
+const copiedIconUrl = `url(${props.copiedIconUrl})`
+
 </script>
 
 <style>
+.frames {
+  background-image: v-bind(copyIconUrl);
+  width: 1.5rem;
+  height: 1.5rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+}
+.check {
+  background-image: v-bind(copiedIconUrl);
+  width: 1.5rem;
+  height: 1.5rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+}
+.sizer {
+  border: none;
+  background: #fff;
+}
 </style>

@@ -8,8 +8,8 @@
         {{ path.name }}
       </li>
     </ol>
-    <copy-path :path="displayedPath"> </copy-path>
-  </div>
+    <copy-path :path="displayedPath" :copyIconUrl="copyIconUrl" :copiedIconUrl="copiedIconUrl"> </copy-path>
+ </div>
   <div class="table project-files">
   <div class="file-browser">
     <table class="project-contents">
@@ -87,6 +87,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+
+  copyIconUrl: {
+    type: String,
+    required: true,
+  },
+
+  copiedIconUrl: {
+    type: String,
+    required: true,
+  }
 });
 
 const displayedFiles = ref(props.files);
@@ -94,6 +104,8 @@ const displayedPath = ref(props.currentPath);
 const displayedFolders = ref([JSON.parse(props.currentCollection)]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
+const copyIconUrl = ref(props.copyIconUrl);
+const copiedIconUrl = ref(props.copiedIconUrl);
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
