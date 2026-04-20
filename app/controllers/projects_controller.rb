@@ -46,6 +46,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  
+
+  # GET "projects/:id"
+  # If the project is nil, which HTTP status code is returned?
   def show
     return if project.blank?
 
@@ -60,19 +64,10 @@ class ProjectsController < ApplicationController
 
     @project_file_display_limit = Rails.configuration.project_file_display_limit
     @show_preview_limit_warning = false
-
-    if Flipflop.new_file_details?
-      @directory_list = project.directory_listing(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
-      @files = @directory_list[:files]
-      @show_preview_limit_warning = @directory_list[:complete] && (@files.length >= @project_file_display_limit)
-    else
-      @file_list = project.file_list(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
-      @files = @file_list[:files]
-      @show_preview_limit_warning = @file_list[:complete] && (@files.length >= @project_file_display_limit)
-      @files.sort_by!(&:path)
-    end
+    @files = find_mediaflux_assets
 
     @project_session = "content"
+    @render_project_explorer = params["explorer"] == "true"
     respond_to do |format|
       format.html { render }
       format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
@@ -252,5 +247,28 @@ class ProjectsController < ApplicationController
         flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
         @project_presenters = []
       end
+    end
+
+    # This method retrieves the list of assets for the project, either using the new directory listing or the old file list depending on the configuration. It also sets a flag to indicate whether a warning about the preview limit should be shown.
+    # @return [Array] the list of files for the project
+    def find_mediaflux_assets
+      @project_file_display_limit = Rails.configuration.project_file_display_limit
+      @show_preview_limit_warning = false
+
+      listing = {}
+
+      if Flipflop.new_file_details?
+        listing = project.directory_listing(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
+        @directory_list = listing
+      else
+        listing = project.file_list(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
+        @file_list = listing
+      end
+
+      @files = listing.fetch(:files, [])
+      @show_preview_limit_warning = listing.fetch(:complete, false)
+      @show_preview_limit_warning &&= (@files.length >= @project_file_display_limit)
+
+      @files.sort_by!(&:path)
     end
 end

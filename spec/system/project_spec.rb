@@ -184,6 +184,44 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
       end
 
+      context "with files persisted for the project" do
+        let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
+        before do
+          iterator_request = instance_double("Mediaflux::IteratorRequest")
+          file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
+          allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
+          allow(file_asset).to receive(:size).and_return(100)
+          allow(file_asset).to receive(:last_modified).and_return(last_modified)
+
+          files = [file_asset]
+          allow(iterator_request).to receive(:result).and_return(
+            {
+              files: files,
+              count: files.size,
+              complete: true
+            }
+          )
+          allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
+        end
+
+        after do
+          allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
+        end
+
+        it "renders the project file details component", :integration do
+          visit project_path(approved_project)
+
+          expect(page).to have_selector(".project-file-details header", text: "File Name")
+          expect(page).to have_selector("[data-attribute-name='fileName']", text: "file1.txt")
+          expect(page).to have_selector(".project-file-details header", text: "File Size")
+          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "100")
+          expect(page).to have_selector(".project-file-details header", text: "Location")
+          expect(page).to have_selector("[data-attribute-name='location']", text: "path/to/file1.txt")
+          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
+          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified.to_s)
+        end
+      end
+
       it "renders the storage capacity in the show view", :integration do
         visit project_path(approved_project)
 
