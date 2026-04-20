@@ -98,15 +98,18 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   describe "#requests_to_approve" do
     let(:sysadmin) { FactoryBot.create :sysadmin, uid: "sysadmin", mediaflux_session: SystemUser.mediaflux_session }
     let(:presenter_for_sysadmin) { described_class.new(current_user: sysadmin) }
+    let(:request1) { FactoryBot.create :request, state: NewProjectRequest::SUBMITTED, created_at: Date.yesterday }
+    let(:request2) { FactoryBot.create :request, state: NewProjectRequest::SUBMITTED }
 
     before do
-      FactoryBot.create :request, state: NewProjectRequest::SUBMITTED
-      FactoryBot.create :request, state: NewProjectRequest::SUBMITTED
+      request1
+      request2
       FactoryBot.create :request, state: NewProjectRequest::DRAFT
     end
 
     it "returns submitted requests for a sysadmin" do
       expect(presenter_for_sysadmin.requests_to_approve.count).to eq(2)
+      expect(presenter_for_sysadmin.requests_to_approve.map(&:id)).to eq([request2.id, request1.id])
     end
 
     it "returns an empty array for a non-sysadmin" do
