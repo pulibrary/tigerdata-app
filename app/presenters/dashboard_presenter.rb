@@ -43,7 +43,7 @@ class DashboardPresenter
 
   def requests_to_approve
     @requests_to_approve ||= if current_user.eligible_sysadmin?
-                               presented_requests(NewProjectRequest.where(state: NewProjectRequest::SUBMITTED))
+                               presented_requests(NewProjectRequest.where(state: NewProjectRequest::SUBMITTED).order(created_at: :desc))
                              else
                                []
                              end
