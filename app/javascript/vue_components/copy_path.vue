@@ -1,23 +1,20 @@
 <template>
-    <div v-if="isSupported" class="copy-box">
+  <div v-if="isSupported" class="copy-box">
     <button @click="copy(projectPath)" class="sizer">
       <!-- by default, `copied` will be reset in 1.5s -->
       <span v-if="!copied" class="frames"></span>
       <span v-else class="check"></span>
     </button>
-    </div>
-    <p v-else>
-      Your browser does not support Clipboard API
-    </p>
+  </div>
+  <p v-else>Your browser does not support Clipboard API</p>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
-import { useClipboard } from '@vueuse/core'
+import { useClipboard } from '@vueuse/core';
 
 defineOptions({ name: 'CopyPath' });
 const props = defineProps({
-
   /**
    * the current path of the files we are browsing
    */
@@ -34,18 +31,21 @@ const props = defineProps({
   copiedIconUrl: {
     type: String,
     required: true,
-  }
-
+  },
 });
 
-const projectPath = ref(props.path)
-watch(() => props.path, (newValue) => { projectPath.value = newValue});
+const projectPath = ref(props.path);
+watch(
+  () => props.path,
+  (newValue) => {
+    projectPath.value = newValue;
+  },
+);
 
 // eslint-disable-next-line no-unused-vars
-const { text, copy, copied, isSupported } = useClipboard({ copiedDuring: 3000 })
-const copyIconUrl = `url(${props.copyIconUrl})`
-const copiedIconUrl = `url(${props.copiedIconUrl})`
-
+const { text, copy, copied, isSupported } = useClipboard({ copiedDuring: 3000 });
+const copyIconUrl = `url(${props.copyIconUrl})`;
+const copiedIconUrl = `url(${props.copiedIconUrl})`;
 </script>
 
 <style>
