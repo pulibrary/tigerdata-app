@@ -51,7 +51,7 @@ const copiedIconUrl = `url(${props.copiedIconUrl})`
 <style>
 .frames {
   background-image: v-bind(copyIconUrl);
-  width: 1.5rem;
+  width: 1rem;
   height: 1.5rem;
   background-repeat: no-repeat;
   background-position: center;
@@ -59,7 +59,7 @@ const copiedIconUrl = `url(${props.copiedIconUrl})`
 }
 .check {
   background-image: v-bind(copiedIconUrl);
-  width: 1.5rem;
+  width: 1rem;
   height: 1.5rem;
   background-repeat: no-repeat;
   background-position: center;
