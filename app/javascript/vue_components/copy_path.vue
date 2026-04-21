@@ -39,9 +39,9 @@ const props = defineProps({
 });
 
 const projectPath = ref(props.path)
-const buttonId = ref("id")
 watch(() => props.path, (newValue) => { projectPath.value = newValue});
 
+// eslint-disable-next-line no-unused-vars
 const { text, copy, copied, isSupported } = useClipboard({ copiedDuring: 3000 })
 const copyIconUrl = `url(${props.copyIconUrl})`
 const copiedIconUrl = `url(${props.copiedIconUrl})`
