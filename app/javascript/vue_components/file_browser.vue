@@ -173,7 +173,4 @@ async function onClickBreadcrumb(path) {
     cursor: pointer;
   }
 }
-.copy-button {
-  background-image: asset_url('copy.svg');
-}
 </style>

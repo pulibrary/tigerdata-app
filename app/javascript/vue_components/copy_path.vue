@@ -1,7 +1,7 @@
 <template>
   <div v-if="isSupported" class="copy-box">
     <button @click="copy(projectPath)" class="sizer">
-      <!-- by default, `copied` will be reset in 1.5s -->
+      <!-- `copied` will be reset in 3s -->
       <span v-if="!copied" class="frames"></span>
       <span v-else class="check"></span>
     </button>
