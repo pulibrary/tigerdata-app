@@ -92,14 +92,38 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         before do
           test_strategy.switch!(:new_file_details, true)
         end
-        let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+        let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
 
         it "displays the new file feature" do
           visit project_path(approved_project)
           visit project_path(project)
-          expect(page).to have_content("show level by level browser here")
-          expect(page).not_to have_content("Showing the first 50 files due to preview limit.")
+
+          within(".breadcrumb-container") do
+            expect(page).to have_css("img[src*='home_icon.svg']")
+            expect(page).to have_css("li", text: "BProject")
+            page.find(".sizer").click
+            expect(page).to have_css ".check"
+          end
+
           expect(page).to have_content("A0")
+
+          page.find(".browser-collection", text: "parent_1").click
+          within(".breadcrumb-container") do
+            expect(page).to have_css("li", text: "BProject")
+            expect(page).to have_css("li", text: "parent_1")
+          end
+
+          page.find(".browser-collection", text: "child_1").click
+          within(".breadcrumb-container") do
+            expect(page).to have_css("li", text: "BProject")
+            expect(page).to have_css("li", text: "parent_1")
+            expect(page).to have_css("li", text: "child_1")
+          end
+
+          page.find("li", text: "parent_1").click # click on parent_1 in the breadcrumb to go back up to that level
+          within(".project-files") do
+            expect(page).to have_content("child_1")
+          end
         end
       end
 
