@@ -49,6 +49,14 @@ module Mediaflux
             xml.action action if action.present?
             declare_get_values_fields(xml) if action == "get-values"
             xml.as "iterator" if iterator
+            # # TODO I believe this is the sort needed for the file list
+            # # I am thinking we should create a separate class, but I do not want to loose the syntax
+            # xml.sort do
+            #   xml.key "@collection" do
+            #     xml.parent.set_attribute("order", "desc")
+            #   end
+            #   xml.key "name"
+            # end
           end
         end
       end

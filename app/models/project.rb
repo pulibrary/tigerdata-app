@@ -108,15 +108,7 @@ class Project < ApplicationRecord
 
   # Returns the projects that the current user has access in Mediaflux given their credentials
   def self.all_projects(user, aql_query = "xpath(tigerdata:project/ProjectID) has value")
-    request = Mediaflux::ProjectListRequest.new(session_token: user.mediaflux_session, aql_query:)
-    request.resolve
-    if request.error?
-      Rails.logger.error("Error fetching project list for user #{user&.uid}: #{request.response_error[:message]}")
-      Honeybadger.notify("Error fetching project list for user #{user&.uid}: #{request.response_error[:message]}")
-      []
-    else
-      request.results
-    end
+    ProjectList.new(user, aql_query).all_projects
   end
 
   def created_by_user
