@@ -26,7 +26,7 @@ import { Modal } from 'bootstrap';
 import FileBrowser from '../vue_components/file_browser.vue';
 import CopyPath from '../vue_components/copy_path.vue';
 // Import JS Components
-import { ProjectComponent } from '../components/index.js';
+import Project from '../vue_components/project.vue';
 
 // ActionCable Channels
 import '../channels/index.js';
@@ -50,10 +50,6 @@ import {
   storageIncreasePopoverManagement,
 } from './popoverManagement.js';
 import { setupFileExplorer } from './fileExplorer.js';
-
-// Binding ProjectComponent to the window so it can be used in the project show and edit pages
-window.addEventListener('load', () => ProjectComponent.bind(window));
-window.addEventListener('turbo:render', () => ProjectComponent.bind(window));
 
 const app = createApp({});
 
@@ -94,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-date-picker', LuxDatePicker)
       .component('file-browser', FileBrowser)
       .component('copy-path', CopyPath)
+      .component('project', Project)
       .mount(elements[i]);
   }
 });

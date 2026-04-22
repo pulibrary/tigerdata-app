@@ -4,15 +4,9 @@ import vue from '@vitejs/plugin-vue';
 import inject from '@rollup/plugin-inject';
 
 export default ({ command, mode }) => {
-  let minifySetting;
+  const isDevelopment = mode === 'development';
 
-  if (mode === 'development') {
-    minifySetting = false;
-  } else {
-    minifySetting = 'esbuild';
-  }
-
-  return {
+  return defineConfig({
     server: {
       warmup: {
         clientFiles: [
@@ -23,7 +17,7 @@ export default ({ command, mode }) => {
       },
     },
     build: {
-      minify: minifySetting,
+      minify: isDevelopment ? false : 'esbuild',
       skipCompatibilityCheck: true,
     },
     resolve: {
@@ -39,6 +33,13 @@ export default ({ command, mode }) => {
       RubyPlugin(),
       vue(),
     ],
-    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-  };
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+      testEnvironmentOptions: {
+        url: 'http://localhost/',
+      },
+    },
+  });
 };

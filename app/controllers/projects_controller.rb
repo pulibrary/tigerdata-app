@@ -49,7 +49,6 @@ class ProjectsController < ApplicationController
   
 
   # GET "projects/:id"
-  # If the project is nil, which HTTP status code is returned?
   def show
     return if project.blank?
 

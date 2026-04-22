@@ -1,40 +1,39 @@
 <%= render partial: "project_details_heading" %>
 
-<content id= "content" class="project">
+<content id= "content">
   <div class="container-fluid">
-    <div class="project-pane inline-container">
-      <div id="project-nav">
-        <button id="project-content" class="tab-nav"> Content Preview </button>
-        <button id="project-details" class="tab-nav"> Details </button>
-      </div>
-      <div class="row align-items-center contents-summary">
-        <div class="col-sm-2 file-inventory">File Inventory:</div>
-        <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
-        <div class="col-sm-8 text-end divider">
-          <div name="project-contents-preview">
-            <button class="btn pul-button-primary" popovertarget="list-contents-modal">Download Complete List</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TODO: This conditional logic should be moved to a Presenter or Controller -->
-      <% if Flipflop.new_file_details? %>
-        <%= render partial: "file_browser" %>
-      <% else %>
-        <% if @render_project_explorer %>
-          <%= render partial: "file_explorer" %>
-        <% else %>
-          <%= render partial: "contents", locals: { files: @files } %>
-        <% end %>
-      <% end %>
-      <section class="project-alerts my-4">
-        <div class="row">
-          <div class="col">
-            <div id="project-alert" class="alert alert-primary d-none my-1" role="alert" ></div>
-          </div>
-        </div>
-      </section>
+  <div class="project-pane">
+    <div id="project-nav">
+      <button id="project-content" class="tab-nav"> Content Preview </button>
+      <button id="project-details" class="tab-nav"> Details </button>
     </div>
+    <div class="row align-items-center contents-summary">
+      <div class="col-sm-2 file-inventory">File Inventory:</div>
+      <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
+      <div class="col-sm-8 text-end divider">
+        <div name="project-contents-preview">
+          <button class="btn pul-button-primary" popovertarget="list-contents-modal">Download Complete List</button>
+        </div>
+      </div>
+    </div>
+
+    <% if Flipflop.new_file_details? %>
+      <%= render partial: "file_browser" %>
+    <% else %>
+      <% if params["explorer"] == "true" %>
+        <%= render partial: "file_explorer" %>
+      <% else %>
+        <%= render partial: "contents", locals: { files: @files } %>
+      <% end %>
+    <% end %>
+    <section class="project-alerts my-4">
+      <div class="row">
+        <div class="col">
+          <div id="project-alert" class="alert alert-primary d-none my-1" role="alert" ></div>
+        </div>
+      </div>
+    </section>
+  </div>
   </div>
 </content>
 

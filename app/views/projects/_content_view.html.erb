@@ -1,6 +1,6 @@
 <tr class="content">
-  <td data-attribute-name="fileName"><%= file.name %></td>
-  <td data-attribute-name="location"><%= file.path_only %></td>
-  <td data-attribute-name ="fileSize"><%= number_to_human_size(file.size) %></td>
-  <td data-attribute-name="modifiedDate"><%= file.last_modified %></td>
+    <td><%= file.name %></td>
+    <td><%= file.path_only %></td>
+    <td><%=  number_to_human_size(file.size)%></td>
+    <td><%= file.last_modified %></td>
 </tr>

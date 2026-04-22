@@ -146,79 +146,86 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(sponsor_and_data_manager_user.inventory_requests.first.type).to eq "FileInventoryRequest"
       end
 
-      it "does not display the preview alert when the number of files does not exceed the project file display limit" do
-        visit project_path(approved_project)
-
-        expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
-      end
-
-      context "with files exceeding the project file display limit" do
+      context "when the new_file_details feature is turned on" do
         before do
-          iterator_request = instance_double("Mediaflux::IteratorRequest")
-          file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
-          allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
-          allow(file_asset).to receive(:size).and_return(100)
-          allow(file_asset).to receive(:last_modified).and_return(Time.current.in_time_zone("America/New_York").iso8601)
-
-          files = [file_asset] * (Rails.configuration.project_file_display_limit + 1)
-          allow(iterator_request).to receive(:result).and_return(
-            {
-              files: files,
-              count: files.size,
-              complete: true
-            }
-          )
-          allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
+          test_strategy.switch!(:new_file_details, true)
         end
-
-        after do
-          allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
-        end
-
-        it "displays the preview alert" do
-          visit project_path(approved_project)
-          expect(page).to have_selector(:link_or_button, "Content Preview")
-          click_on("Content Preview")
-
-          expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder.")
-        end
-      end
-
-      context "with files persisted for the project" do
-        let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
-        before do
-          iterator_request = instance_double("Mediaflux::IteratorRequest")
-          file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
-          allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
-          allow(file_asset).to receive(:size).and_return(100)
-          allow(file_asset).to receive(:last_modified).and_return(last_modified)
-
-          files = [file_asset]
-          allow(iterator_request).to receive(:result).and_return(
-            {
-              files: files,
-              count: files.size,
-              complete: true
-            }
-          )
-          allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
-        end
-
-        after do
-          allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
-        end
-
-        it "renders the project file details component", :integration do
+        it "does not display the preview alert when the number of files does not exceed the project file display limit" do
           visit project_path(approved_project)
 
-          expect(page).to have_selector(".project-file-details header", text: "File Name")
-          expect(page).to have_selector("[data-attribute-name='fileName']", text: "file1.txt")
-          expect(page).to have_selector(".project-file-details header", text: "File Size")
-          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "100")
-          expect(page).to have_selector(".project-file-details header", text: "Location")
-          expect(page).to have_selector("[data-attribute-name='location']", text: "path/to/file1.txt")
-          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
-          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified.to_s)
+          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+        end
+
+        context "with files exceeding the project file display limit" do
+          before do
+            iterator_request = instance_double("Mediaflux::IteratorRequest")
+            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
+            allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
+            allow(file_asset).to receive(:size).and_return(100)
+            allow(file_asset).to receive(:last_modified).and_return(Time.current.in_time_zone("America/New_York").iso8601)
+            allow(file_asset).to receive(:collection).and_return(false)
+
+            files = [file_asset] * (Rails.configuration.project_file_display_limit + 1)
+            allow(iterator_request).to receive(:result).and_return(
+              {
+                files: files,
+                count: files.size,
+                complete: true
+              }
+            )
+            allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
+          end
+
+          after do
+            allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
+          end
+
+          it "displays the preview alert" do
+            visit project_path(approved_project)
+            expect(page).to have_selector(:link_or_button, "Content Preview")
+            click_on("Content Preview")
+
+            expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder.")
+          end
+        end
+
+        context "with files persisted for the project" do
+          let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
+          before do
+            iterator_request = instance_double("Mediaflux::IteratorRequest")
+            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
+            allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
+            allow(file_asset).to receive(:size).and_return(100)
+            allow(file_asset).to receive(:last_modified).and_return(last_modified)
+            allow(file_asset).to receive(:collection).and_return(false)
+
+            files = [file_asset]
+            allow(iterator_request).to receive(:result).and_return(
+              {
+                files: files,
+                count: files.size,
+                complete: true
+              }
+            )
+            allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
+          end
+
+          after do
+            allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
+          end
+
+          it "renders the project file details component", :integration do
+            visit project_path(approved_project)
+
+            expect(page).to have_selector(".project-file-details header", text: "File Name")
+            expect(page).to have_selector("[data-attribute-name='fileName']", text: "file1.txt")
+            expect(page).to have_selector(".project-file-details header", text: "File Size")
+            expect(page).to have_selector("[data-attribute-name='fileSize']", text: "100")
+            expect(page).to have_selector(".project-file-details header", text: "Location")
+            expect(page).to have_selector("[data-attribute-name='location']", text: "path/to/file1.txt")
+            expect(page).to have_selector(".project-file-details header", text: "Modified Date")
+            expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified.to_s)
+          end
         end
       end
 

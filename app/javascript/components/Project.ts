@@ -18,6 +18,23 @@ class ProjectFileAttribute {
   }
 }
 
+interface ProjectFile {
+  fileName?: string;
+  fileSize?: string;
+  fileType?: string;
+  location?: string;
+  modifiedDate?: string;
+}
+
+interface MediafluxFile {
+  name: string;
+  path: string;
+  size: string;
+  last_modified?: string;
+  last_modified_mf?: string;
+  collection: boolean;
+}
+
 class ProjectFileComponent {
   public static elementSelector: string = '.project-file';
 
@@ -47,13 +64,8 @@ class ProjectFileComponent {
   }
 
   handleStateChange(event: CustomEvent) {
-    //this.fileName = event.detail.fileName || this.fileName;
-    //this.fileSize = event.detail.fileSize || this.fileSize;
-    //this.modifiedDate = event.detail.modifiedDate || this.modifiedDate;
-    //this.fileType = event.detail.fileType || this.fileType;
-
     for (const [key, attribute] of this.attributes.entries()) {
-      if (event.detail[key]) {
+      if (key in event.detail) {
         attribute.value = event.detail[key];
         attribute.mutateElement();
       }
@@ -62,7 +74,7 @@ class ProjectFileComponent {
 
   bind() {
     this.handleStateChange = this.handleStateChange.bind(this);
-    this.element.addEventListener('Project.stateChange', this.handleStateChange);
+    this.element.addEventListener(ProjectComponent.projectStateChange, this.handleStateChange);
 
     const children = this.element.querySelectorAll(ProjectFileAttribute.selector);
     children.forEach((child) => {
@@ -99,7 +111,7 @@ class ProjectFileTableRow {
 
     // Ensure that the CustomEvent can bubble up the DOM tree
     // Ensure that preventDefault() can be called on the event
-    const stateChangeEvent: CustomEvent = new CustomEvent('Project.stateChange', {
+    const stateChangeEvent: CustomEvent = new CustomEvent(ProjectComponent.projectStateChange, {
       detail: detail,
       bubbles: true,
       cancelable: true,
@@ -156,29 +168,22 @@ class ProjectFileTable {
 }
 
 class ProjectComponent {
+  public static projectStateChange: string = 'Project.stateChange';
   document: Document;
-  tables: ProjectFileTable[];
   file: ProjectFileComponent | null;
 
   constructor(document: Document) {
     this.document = document;
-    this.tables = [];
     this.file = null;
     this.bindChildren();
   }
 
   public static bind(window: Window) {
-    const project = new this(window.document);
-    // This ensures that the project instance is accessible globally
-    // However, in a production environment, you might want to avoid polluting the global namespace
-    // and instead use a more modular approach.
-    if (!window.project) {
-      window.project = project;
-    }
+    new this(window.document);
   }
 
   handleStateChange(event: CustomEvent) {
-    const stateChangeEvent: CustomEvent = new CustomEvent('Project.stateChange', {
+    const stateChangeEvent: CustomEvent = new CustomEvent(ProjectComponent.projectStateChange, {
       detail: event.detail,
       bubbles: false,
       cancelable: true,
@@ -187,17 +192,6 @@ class ProjectComponent {
       throw new Error('Project file component not found');
     }
     this.file.element.dispatchEvent(stateChangeEvent);
-  }
-
-  bindTables() {
-    const elements: NodeListOf<Element> = this.document.querySelectorAll(
-      ProjectFileTable.elementSelector,
-    );
-
-    elements.forEach((element) => {
-      const child: ProjectFileTable = new ProjectFileTable(element);
-      this.tables.push(child);
-    });
   }
 
   bindChildren() {
@@ -211,13 +205,31 @@ class ProjectComponent {
 
     if (this.file) {
       this.handleStateChange = this.handleStateChange.bind(this);
-      this.document.addEventListener('Project.stateChange', this.handleStateChange);
-      this.bindTables();
+      this.document.addEventListener(
+        ProjectComponent.projectStateChange,
+        this.handleStateChange,
+      );
     }
+  }
+
+  public static async dispatchProjectStateChange(
+    file: MediafluxFile,
+    document: Document = window.document,
+  ) {
+    const detail: ProjectFile = {
+      fileName: file.name,
+      location: file.path,
+      fileSize: file.size,
+      modifiedDate: file.last_modified || file.last_modified_mf,
+      fileType: file.collection ? 'collection' : 'file',
+    };
+    const event = new CustomEvent(ProjectComponent.projectStateChange, { detail: detail });
+    document.dispatchEvent(event);
   }
 }
 
 export {
+  MediafluxFile,
   ProjectComponent,
   ProjectFileTable,
   ProjectFileTableRow,
