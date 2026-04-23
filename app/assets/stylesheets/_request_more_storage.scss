@@ -119,6 +119,22 @@
       width: 11.125rem;
       height: 2.875rem;
       justify-content: space-between;
+
+      .append-icon {
+        background: transparent;
+        padding-top: 0.5rem;
+        padding-right: 0.9rem;
+      }
+      .lux-icon {
+        display: inherit;
+        background: transparent;
+      }
+      svg {
+        right: 0.135em;
+        g {
+          fill: #717171;
+        }
+      }
     }
   }
   .form-label {
