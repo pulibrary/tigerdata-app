@@ -1,5 +1,5 @@
 <template>
-  <section class="project-file col mx-2 card">
+  <section class="project-file col mx-2 card sticky">
     <div class="card-body rounded">
       <header class="card-title lead fw-bold px-2 my-0">Details</header>
       <div class="project-file-details inline-container bg-body rounded p-2">
