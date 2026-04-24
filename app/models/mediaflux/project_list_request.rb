@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 module Mediaflux
   class ProjectListRequest < Request
-    attr_reader :aql_query, :collection, :action, :deep_search, :iterator, :size
+    attr_reader :aql_query, :action, :size
 
     # Constructor
     # @param session_token [String] the API token for the authenticated session
     # @param aql_query [String] Optional AQL query string
-    # @param collection [Integer] Optional collection id
     # @param action [String] Optional, by default it uses get-name but it could also be get-meta to get all
     #                        the fields for the assets or `get-values` to get a limited list of fields.
-    # @param deep_search [Bool] Optional, false by default. When true queries the collection and it subcollections.
-    # @param iterator [Bool] Optional, true by default. When true returns an iterator.  When false returns a list of results
-    def initialize(session_token:, aql_query: nil, action: "get-meta", deep_search: true)
+    def initialize(session_token:, aql_query: nil, action: "get-meta")
       super(session_token: session_token)
       @aql_query = aql_query
-      @collection = collection
       @action = action
-      @deep_search = deep_search
       # For now we hard-code the size to infinity since only Administrators will fetch a large
       # number of projects and they should get them all. At some point in the future we might
       # want to implement pagination for this list but not now..
@@ -56,6 +51,11 @@ module Mediaflux
             xml.where aql_query if aql_query.present?
             xml.action action if action.present?
             xml.size size if size.present?
+            # I tried sorting by path and that slowed down the query to unusable
+            # We will need to be considerate of performance when sorting the results
+            xml.sort do
+              xml.key "name"
+            end
           end
         end
       end

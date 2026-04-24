@@ -1,0 +1,13 @@
+/* Define CSS variables for the project component classes */
+:root {
+  --gray-10: #eeeeee;
+}
+
+.projectFileTableRow {
+  border-width: 0px;
+}
+
+.projectFile {
+  background-color: var(--gray-10);
+  border-radius: var(--bs-border-radius) !important;
+}

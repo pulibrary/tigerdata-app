@@ -1,9 +1,16 @@
-<div class="lux">
-  <file-browser :files='<%= @files.map{|file| {id: file.id, name: file.name, path: file.path_only, size: number_to_human_size(file.size), last_modified: file.last_modified, collection: file.collection}}.to_json %>'
-                directory-list-url="<%= project_directory_listing_url(@project) %>"
-                current-path="<%= @presenter.project_directory %>"
-                current-collection="<%= @presenter.collection_info %>"
-                copy-icon-url="<%=asset_url("copy.svg") %>"
-                copied-icon-url="<%=asset_url("green-checkmark.svg") %>"
-                />
-</div>
+<section class="inline-container">
+
+  <div class="lux row">
+    <file-browser
+      :files='<%= @files.map{|file| {id: file.id, name: file.name, path: file.path_only, size: number_to_human_size(file.size), last_modified: file.last_modified, collection: file.collection}}.to_json %>'
+      directory-list-url="<%= project_directory_listing_url(@project) %>"
+      current-path="<%= @presenter.project_directory %>"
+      current-collection="<%= @presenter.collection_info %>"
+      copy-icon-url="<%=asset_url("copy.svg") %>"
+      copied-icon-url="<%=asset_url("green-checkmark.svg") %>"
+      :file-display-limit="<%= Rails.configuration.project_file_display_limit %>"
+    >
+      <project/>
+    </file-browser>
+  </div>
+  <section>
