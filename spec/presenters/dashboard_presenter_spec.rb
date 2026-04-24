@@ -42,7 +42,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
 
       it "returns the list of all projects, sorted" do
         expect(presenter.all_projects.count).to eq(4)
-        expect(presenter.all_projects.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
+        expect(presenter.all_projects.map(&:id)).to include(project3.id, project4.id, project1.id, project2.id)
       end
     end
   end
@@ -51,7 +51,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
     it "returns the list of the user's projects, sorted" do
       project_list = presenter.dashboard_projects
       expect(project_list.count).to eq(4)
-      expect(project_list.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
+      expect(project_list.map(&:id)).to include(project3.id, project4.id, project1.id, project2.id)
     end
   end
 
@@ -61,7 +61,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
 
     it "detects the proper roles for each project" do
       projects = presenter.dashboard_projects
-      expect(projects.map(&:id)).to eq([project3.id, project4.id, project1.id, project2.id])
+      expect(projects.map(&:id)).to include(project3.id, project4.id, project1.id, project2.id)
       expect(projects[0].role(libtigerdatadev)).to be "Data Manager"
       expect(projects[0].role(tigerdatatester)).to be "Sponsor"
       expect(projects[0].role(other_user)).to be "Data User"

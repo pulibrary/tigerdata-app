@@ -22,8 +22,11 @@ import 'bootstrap/js/src/scrollspy';
 // import * as bootstrap from 'bootstrap'; // avoid importing barrel file to reduce bundle size
 import { Modal } from 'bootstrap';
 
+// Import Vue Components
 import FileBrowser from '../vue_components/file_browser.vue';
 import CopyPath from '../vue_components/copy_path.vue';
+// Import JS Components
+import Project from '../vue_components/project.vue';
 
 // ActionCable Channels
 import '../channels/index.js';
@@ -87,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-date-picker', LuxDatePicker)
       .component('file-browser', FileBrowser)
       .component('copy-path', CopyPath)
+      .component('project', Project)
       .mount(elements[i]);
   }
 });
@@ -312,6 +316,7 @@ window.log_plausible_project = function () {
   console.log('log_plausible_project event logged');
   plausible('Project');
 };
+
 /* eslint-enable no-console */
 /* eslint-enable no-undef */
 /* eslint-enable func-names */

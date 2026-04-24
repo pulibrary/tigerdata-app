@@ -11,6 +11,9 @@ overrides: []
 parserOptions:
   ecmaVersion: latest
   sourceType: module
+ignorePatterns:
+  - "app/javascript/**/*ts"
+  - "app/javascript/**/*css"
 globals:
   $: readonly
 

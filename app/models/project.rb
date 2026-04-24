@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Project < ApplicationRecord
+  class MediafluxError < StandardError; end
 
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
@@ -172,42 +173,102 @@ class Project < ApplicationRecord
     quota_value
   end
 
-  # Fetches the first n files
-  def file_list(session_id:, size: 10)
-    return { files: [] } if mediaflux_id.nil?
+  # Build a query request for the project with the given arguments. This method is used to handle errors that may occur when building the query request and to log them properly.
+  # @param query_request_args [Hash] the arguments to build the query request, should include at least the session_token and collection (mediaflux_id) keys
+  # @raise [MediafluxError] if there is an error with the query request, the error message will be included in the exception message
+  #
+  # @return [Mediaflux::QueryRequest] the query request object for the project, which can be used to fetch the iterator and results
+  def build_query_request(**query_request_args)
+    query_req = Mediaflux::QueryRequest.new(**query_request_args)
+    # handle query errors by returning the error message in the response so it can be displayed to the user
+    if query_req.error?
+      response_error = query_req.response_error
+      error_message = response_error[:message]
+      Rails.logger.error("Error fetching iterator for collection #{query_request_args[:collection]} with argument keys #{query_request_args.keys}: #{error_message}")
+      raise MediafluxError.new(error_message)
+    end
 
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: mediaflux_id, deep_search: true, aql_query: "type!='application/arc-asset-collection'")
-    iterator_id = query_req.result
+    query_req
+  end
+
+  # @param iterator_id [String] the id of the iterator to fetch results from
+  # @param session_id [String] mediaflux session id to use for the query
+  # @param size [Integer] number of files to fetch, defaults to 10
+  #
+  # @return [Hash] a hash with the files or an empty array if there are no files or the project is not in mediaflux
+  def resolve_iterator_request(iterator_id:, session_id:, size: 10)
 
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
-    results = iterator_req.result
+    response = iterator_req.result
 
     # Destroy _after_ fetching the first set of results from iterator_req.
     # This call is required since it possible that we have read less assets than
     # what the collection has but we are done with the iterator.
-    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
+    destroy_request = Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id)
+    destroy_request.resolve
+
+    response
+  end
+
+  # Fetches the first n files (excludes arc-asset-collection Mediaflux resources)
+  # @param session_id [String] mediaflux session id to use for the query
+  # @param size [Integer] number of files to fetch, defaults to 10
+  #
+  # @return [Hash] a hash with the files or an empty array if there are no files or the project is not in mediaflux
+  def file_list(session_id:, size: 10)
+    listing = { files: [] }
+    return listing if mediaflux_id.nil?
+
+    aql_query = "type!='application/arc-asset-collection'"
+    query_request_args = {
+      session_token: session_id,
+      collection: mediaflux_id,
+      deep_search: true,
+      aql_query: aql_query
+    }
+
+    begin
+      query_request = build_query_request(**query_request_args)
+    rescue MediafluxError => e
+      listing = { error: e.message }
+      return listing
+    rescue StandardError => e
+      raise e
+    end
+
+    iterator_id = query_request.result
+    results = resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
 
     results
   end
 
+  # Fetches the first n files in the project directory
+  # @param session_id [String] mediaflux session id to use for the query
+  # @param size [Integer] number of files to fetch, defaults to 10
+  # @param collection_id [String] optional collection id to fetch from, defaults to the project collection
+  #
+  # @return [Hash] a hash with either the files or an error message if the query failed
   def directory_listing(session_id:, size: 10, collection_id: nil)
-    return { files: [] } if mediaflux_id.nil?
+    listing = { files: [] }
+    return listing if mediaflux_id.nil?
 
     collection_id ||= mediaflux_id
-    query_req = Mediaflux::QueryRequest.new(session_token: session_id, collection: collection_id, deep_search: false)
+    query_request_args = {
+      session_token: session_id,
+      collection: collection_id,
+      deep_search: false,
+    }
+    begin
+      query_request = build_query_request(**query_request_args)
+    rescue MediafluxError => e
+      listing = { error: e.message }
+      return listing
+    rescue StandardError => e
+      raise e
+    end
 
-    # handel query errors by returning the error message in the response so it can be displayed to the user
-    return { error: query_req.response_error[:message] } if query_req.error?
-
-    iterator_id = query_req.result
-    iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
-    results = iterator_req.result
-
-    # Destroy _after_ fetching the first set of results from iterator_req.
-    # This call is required since it possible that we have read less assets than
-    # what the collection has but we are done with the iterator.
-    Mediaflux::IteratorDestroyRequest.new(session_token: session_id, iterator: iterator_id).resolve
-    results
+    iterator_id = query_request.result
+    results = resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
   end
 
   # Creates the iterator for the file explorer
