@@ -711,6 +711,12 @@ blockquote {
   border: none !important;
 }
 
+.sticky {
+  position: sticky !important;
+  overflow: auto !important;
+  top: 10px !important;
+}
+
 .project-file {
   .card-title {
     font-size: 1.125rem;
