@@ -23,11 +23,11 @@
         </thead>
         <tbody>
           <tr v-if="displayedFiles.length === 0" class="content">
-            <td colspan="3" style="text-align: center;">
+            <td colspan="3" style="text-align: center">
               <div class="startup-image">
                 <img :src="'../assets/startup_image.svg'" />
               </div>
-                <p class="empty-dir-text">This folder is empty</p>
+              <p class="empty-dir-text">This folder is empty</p>
             </td>
           </tr>
           <tr
@@ -52,7 +52,6 @@
       </table>
     </div>
   </div>
-
 </template>
 <script setup>
 import { ref } from 'vue';
