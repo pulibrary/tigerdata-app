@@ -124,7 +124,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           end
 
           page.find("li", text: "parent_1").click # click on parent_1 in the breadcrumb to go back up to that level
-          within(".project-files") do
+          within(".files-viewer") do
             expect(page).to have_content("child_1")
           end
         end
