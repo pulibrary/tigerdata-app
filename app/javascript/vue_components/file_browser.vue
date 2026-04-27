@@ -46,8 +46,8 @@
     >
     </copy-path>
   </div>
-  <div class="table project-files row border-0">
-    <div class="file-frame col-9">
+  <div class="table files-viewer">
+    <div class="file-frame">
       <div class="file-browser">
         <table class="file-table">
           <thead>
@@ -250,6 +250,7 @@ onMounted(async () => {
 .file-frame {
   display: flex;
   flex-direction: column;
+  flex-grow: 3;
   align-items: center;
   gap: 1.875rem;
 }
@@ -258,7 +259,6 @@ onMounted(async () => {
   display: flex;
   align-items: flex-start;
   gap: 3.6875rem;
-  flex-shrink: 0;
   align-self: stretch;
   border-radius: 0.5rem 0.5rem 0 0;
   border: 1px solid #d0d0d0;
@@ -295,5 +295,13 @@ onMounted(async () => {
     padding-left: 0.625rem;
     flex-shrink: 0;
   }
+}
+
+.files-viewer {
+  display: flex;
+  align-items: flex-start;
+  gap: 3.6875rem;
+  flex-shrink: 0;
+  align-self: stretch;
 }
 </style>

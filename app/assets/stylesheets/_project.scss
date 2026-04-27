@@ -705,34 +705,3 @@ blockquote {
     }
   } /* data-users-container */
 } /* data-users-section */
-
-.card {
-  height: fit-content !important;
-  border: none !important;
-}
-
-.sticky {
-  position: sticky !important;
-  overflow: auto !important;
-  top: 10px !important;
-}
-
-.project-file {
-  .card-title {
-    font-size: 1.125rem;
-    font-weight: bold !important;
-    line-height: 1.75rem;
-    letter-spacing: -0.03125rem;
-  }
-
-  header {
-    font-size: 0.875rem;
-    font-weight: bold !important;
-    line-height: 0.875rem;
-  }
-
-  .project-file-attribute {
-    font-family: $libre-franklin !important;
-    font-size: 0.875rem;
-  }
-}

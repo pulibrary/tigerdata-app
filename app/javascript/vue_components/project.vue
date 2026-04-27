@@ -1,5 +1,5 @@
 <template>
-  <section class="project-file col mx-2 card sticky">
+  <section class="project-file card sticky">
     <div class="card-body rounded">
       <header class="card-title lead fw-bold px-2 my-0">Details</header>
       <div class="project-file-details inline-container bg-body rounded p-2">
@@ -40,3 +40,46 @@ onMounted(() => {
   ProjectComponent.bind(window);
 });
 </script>
+<style>
+.card {
+  height: fit-content !important;
+  border: none !important;
+}
+
+.sticky {
+  position: sticky !important;
+  overflow: auto !important;
+  top: 10px !important;
+}
+
+.project-file {
+  display: flex;
+  width: 16.875rem;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 0;
+  gap: -0.5rem;
+
+  .card-body {
+    width: 100%;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: bold !important;
+    line-height: 1.75rem;
+    letter-spacing: -0.03125rem;
+  }
+
+  header {
+    font-size: 0.875rem;
+    font-weight: bold !important;
+    line-height: 0.875rem;
+  }
+
+  .project-file-attribute {
+    font-family: 'Libre Franklin', sans-serif !important;
+    font-size: 0.875rem;
+  }
+}
+</style>
