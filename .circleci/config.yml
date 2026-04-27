@@ -304,7 +304,7 @@ workflows:
   version: 2
   build_accept_deploy:
     when:
-      equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+      equal: ["<< pipeline.parameters.GHA_Meta >>", ""]
 
     jobs:
       - bundler_lint
