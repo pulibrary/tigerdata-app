@@ -17,6 +17,15 @@
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="location">Location</header>
+          <div class="row">
+            <copy-path
+            class="col"
+            :path="displayedPath"
+            :copyIconUrl="copyIconUrl"
+            :copiedIconUrl="copiedIconUrl"
+            >
+            </copy-path>
+          </div>
           <p class="project-file-attribute font-monospace" data-attribute-name="location"></p>
         </div>
         <div class="inline-container">
@@ -31,10 +40,42 @@
   </section>
 </template>
 <script setup>
-import { onMounted } from 'vue';
-import { ProjectComponent } from './../components/Project.ts';
+import { ref, onMounted, watch } from 'vue';
+import CopyPath from './copy_path.vue';
+import { ProjectComponent } from '../components/Project.ts';
 
 defineOptions({ name: 'Project' });
+const props = defineProps({
+  /**
+   * the current path of the files we are browsing
+   */
+  currentPath: {
+    type: String,
+    required: true,
+  },
+  copyIconUrl: {
+    type: String,
+    required: true,
+  },
+
+  copiedIconUrl: {
+    type: String,
+    required: true,
+  },
+});
+const displayedPath = ref(props.currentPath);
+const copyIconUrl = ref(props.copyIconUrl);
+const copiedIconUrl = ref(props.copiedIconUrl);
+// const attrName = ref("data-attribute-name");
+// const location = ref("location");
+
+// watch for changes in the location and update the displayed path accordingly
+// watch(
+//   () => attrName.value,
+//   (newValue) => {
+//     displayedPath.value = newValue;
+//   },
+// );
 
 onMounted(() => {
   ProjectComponent.bind(window);
