@@ -57,6 +57,14 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="displayedFiles.length === 0" class="content">
+            <td colspan="3" style="text-align: center">
+              <div class="startup-image">
+                <img :src="'../assets/startup_image.svg'" />
+              </div>
+              <p class="empty-dir-text">This folder is empty</p>
+            </td>
+          </tr>
           <tr
             class="content"
             :class="{ loading: isLoadingFiles }"
@@ -228,5 +236,10 @@ onMounted(async () => {
     color: #000000;
     cursor: pointer;
   }
+}
+
+.empty-dir-text {
+  color: #717171;
+  font-size: 1.5em;
 }
 </style>

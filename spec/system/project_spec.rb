@@ -93,6 +93,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           test_strategy.switch!(:new_file_details, true)
         end
         let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
+        let(:empty_project_folder) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
 
         it "displays the new file feature" do
           visit project_path(approved_project)
@@ -108,6 +109,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_content("A0")
 
           page.find(".browser-collection", text: "parent_1").click
+          sleep(0.1)
+
           within(".breadcrumb-container") do
             expect(page).to have_css("li", text: "BProject")
             expect(page).to have_css("li", text: "parent_1")
@@ -124,6 +127,15 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           within(".project-files") do
             expect(page).to have_content("child_1")
           end
+        end
+
+        it "displays an empty folder indicator" do
+          visit project_path(approved_project)
+          visit project_path(empty_project_folder)
+          expect(page).to have_css("li", text: "AProject")
+          page.find(".browser-collection", text: "empty_directory").click
+          sleep(0.1)
+          expect(page).to have_content("This folder is empty")
         end
       end
 
