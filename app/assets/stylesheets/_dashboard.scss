@@ -1241,6 +1241,9 @@
     }
 
     .startup-prompt {
+      @media (max-width: 744px) {
+        display: none;
+      }
       color: $black;
       font-family: $libre-franklin;
       font-size: 24px;
