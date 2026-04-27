@@ -47,45 +47,49 @@
     </copy-path>
   </div>
   <div class="table project-files row border-0">
-    <div class="file-browser col-9">
-      <table class="project-contents">
-        <thead>
-          <tr class="content heading">
-            <th class="sorting">name</th>
-            <th>size</th>
-            <th>last updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="displayedFiles.length === 0" class="content">
-            <td colspan="3" style="text-align: center">
-              <div class="startup-image">
-                <img :src="'../assets/startup_image.svg'" />
-              </div>
-              <p class="empty-dir-text">This folder is empty</p>
-            </td>
-          </tr>
-          <tr
-            class="content"
-            :class="{ loading: isLoadingFiles }"
-            @mousedown="onClickRow(file)"
-            v-for="(file, i) in displayedFiles"
-            :key="i"
-          >
-            <td
-              v-if="file.collection"
-              class="browser-collection"
-              @mousedown="onClickCollection(file)"
+    <div class="file-frame col-9">
+      <div class="file-browser">
+        <table class="file-table">
+          <thead>
+            <tr class="file-browser-header">
+              <th class="sorting col1 file-header">File Name</th>
+              <th class="file-header">Modified Date</th>
+              <th class="file-header">File Size</th>
+              <th class="file-header">File Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="displayedFiles.length === 0" class="content">
+              <td colspan="3" style="text-align: center">
+                <div class="startup-image">
+                  <img :src="'../assets/startup_image.svg'" />
+                </div>
+                <p class="empty-dir-text">This folder is empty</p>
+              </td>
+            </tr>
+            <tr
+              class="file-browser-row"
+              :class="{ loading: isLoadingFiles }"
+              @mousedown="onClickRow(file)"
+              v-for="(file, i) in displayedFiles"
+              :key="i"
             >
-              {{ file.name }}
-            </td>
-            <td v-else class="browser-file">{{ file.name }}</td>
-            <td v-if="file.collection">--</td>
-            <td v-else>{{ file.size }}</td>
-            <td>{{ file.last_modified }}</td>
-          </tr>
-        </tbody>
-      </table>
+              <td
+                v-if="file.collection"
+                class="browser-collection col1 file-data"
+                @mousedown="onClickCollection(file)"
+              >
+                {{ file.name }}
+              </td>
+              <td v-else class="browser-file col1 file-data">{{ file.name }}</td>
+              <td class="file-data">{{ file.last_modified }}</td>
+              <td v-if="file.collection" class="file-data">--</td>
+              <td v-else class="file-data">{{ file.size }}</td>
+              <td class="file-data">{{ file.type }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <slot></slot>
   </div>
@@ -241,5 +245,55 @@ onMounted(async () => {
 .empty-dir-text {
   color: #717171;
   font-size: 1.5em;
+}
+
+.file-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.875rem;
+}
+
+.file-browser {
+  display: flex;
+  align-items: flex-start;
+  gap: 3.6875rem;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border: 1px solid #d0d0d0;
+  border-bottom: none;
+  overflow: hidden;
+
+  .file-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .file-data.col1,
+  .file-header.col1 {
+    padding-left: 1rem;
+    width: 40%;
+  }
+
+  .file-browser-header,
+  .file-browser-row {
+    height: 2.9375rem;
+    align-items: center;
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .file-browser-row {
+    background: #fff;
+  }
+
+  .file-browser-header {
+    background: #f7f7f7;
+  }
+  .file-data,
+  .file-header {
+    padding-left: 0.625rem;
+    flex-shrink: 0;
+  }
 }
 </style>
