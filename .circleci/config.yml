@@ -304,9 +304,8 @@ workflows:
   version: 2
   build_accept_deploy:
     when:
-      or:
-        - equal: ["<< pipeline.parameters.GHA_Event >>", ""]
-        - equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # WIP: This workflow can/(will be able to) be triggered by deploys to the mediaflux CI server
+      equal: ["<< pipeline.parameters.GHA_Event >>", ""]
+
     jobs:
       - bundler_lint
       - bundler_audit
@@ -333,3 +332,9 @@ workflows:
             branches:
               only:
                 - main
+
+  integration_tests:
+    when:
+      equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # This workflow is triggered by deploys to the mediaflux CI server
+    jobs:
+      - mflux_ci
