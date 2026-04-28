@@ -19,10 +19,10 @@
           <header class="fw-semibold" data-attribute-name="location">Location</header>
           <div class="row">
             <copy-path
-            class="col"
-            :path="displayedPath"
-            :copyIconUrl="copyIconUrl"
-            :copiedIconUrl="copiedIconUrl"
+              class="col"
+              :path="displayedPath"
+              :copyIconUrl="copyIconUrl"
+              :copiedIconUrl="copiedIconUrl"
             >
             </copy-path>
           </div>
