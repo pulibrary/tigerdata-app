@@ -26,7 +26,11 @@
             >
             </copy-path>
           </div>
-          <p class="project-file-attribute font-monospace" ref="locationRef" data-attribute-name="location"></p>
+          <p
+            class="project-file-attribute font-monospace"
+            ref="locationRef"
+            data-attribute-name="location"
+          ></p>
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="modifiedDate">Modified Date</header>
@@ -76,26 +80,26 @@ const copiedIconUrl = ref(props.copiedIconUrl);
 const hiddenRoot = ref(props.hiddenRoot);
 
 // setup a mutation observer to watch for changes to the location element in the project details and update the displayed path accordingly
-const locationRef = ref(null)
-let observer = null
+const locationRef = ref(null);
+let observer = null;
 
 onMounted(() => {
   ProjectComponent.bind(window);
 
   observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      console.log('DOM text changed!', mutation.target.textContent)
+      console.log('DOM text changed!', mutation.target.textContent);
       displayedPath.value = mutation.target.textContent.replace(hiddenRoot.value, '');
-    })
-  })
+    });
+  });
 
   observer.observe(locationRef.value, {
     characterData: true,
     childList: true,
-  })
+  });
 });
 
-onUnmounted(() => observer.disconnect())
+onUnmounted(() => observer.disconnect());
 </script>
 <style>
 .card {
