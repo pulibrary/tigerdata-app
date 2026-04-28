@@ -17,15 +17,11 @@
       >
       </copy-path>
     </div>
-    <div
-      class="content-warning container-inline p-3"
-      v-if="displayedFiles.length >= fileDisplayLimit"
-    >
-      <div class="row">
-        <div class="col-auto mx-3 my-1">
-          <exclamation-triangle color="#FBC129"></exclamation-triangle>
-        </div>
-        <div class="col mx-3">
+
+    <div v-if="displayedFiles.length >= fileDisplayLimit" class="preview-limit-frame">
+      <div class="preview-limit-warning">
+        <exclamation-triangle color="#FBC129"></exclamation-triangle>
+        <div class="warning-message">
           <header>Preview Limit Reached</header>
           <p>
             The preview screen can display up to {{ fileDisplayLimit }} items per folder. Any
@@ -34,6 +30,7 @@
           </p>
         </div>
       </div>
+      <div class="spacer"></div>
     </div>
     <div class="table files-viewer">
       <div class="file-frame">
@@ -318,6 +315,53 @@ onMounted(async () => {
   header {
     color: var(--black);
     font-weight: 600;
+  }
+}
+
+.preview-limit-frame {
+  display: flex;
+  gap: 3.6875rem;
+
+  .preview-limit-warning {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    align-items: flex-start;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    background: var(--Status-Warning, #fff6df);
+
+    .warning-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      display: flex;
+
+      header {
+        color: var(--gray-100);
+        font-family: 'Libre Franklin';
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
+
+      p {
+        color: var(--gray-100);
+        font-family: 'Libre Franklin';
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1.5rem; /* 150% */
+      }
+    }
+  }
+
+  .spacer {
+    flex-basis: 270px;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
 }
 </style>
