@@ -16,8 +16,8 @@
           <p class="project-file-attribute font-monospace" data-attribute-name="fileType"></p>
         </div>
         <div class="inline-container">
-          <header class="fw-semibold" data-attribute-name="location">Location</header>
-          <div class="row">
+          <div class="location-container">
+            <header class="fw-semibold" data-attribute-name="location">Location</header>
             <copy-path
               class="col"
               :path="displayedPath"
@@ -93,6 +93,14 @@ onMounted(() => {
   top: 10px !important;
 }
 
+.location-container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  .copy-box {
+    padding-top: 0.25rem;
+  }
+}
 .project-file {
   display: flex;
   width: 16.875rem;
