@@ -26,7 +26,7 @@
             >
             </copy-path>
           </div>
-          <p class="project-file-attribute font-monospace" data-attribute-name="location"></p>
+          <p class="project-file-attribute font-monospace" ref="locationRef" data-attribute-name="location"></p>
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="modifiedDate">Modified Date</header>
@@ -40,7 +40,7 @@
   </section>
 </template>
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, onUnmounted } from 'vue';
 import CopyPath from './copy_path.vue';
 import { ProjectComponent } from '../components/Project.ts';
 
@@ -62,24 +62,40 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  hiddenRoot: {
+    type: String,
+    required: false,
+    default: '/princeton',
+  },
 });
+
 const displayedPath = ref(props.currentPath);
+displayedPath.value = props.currentPath.replace(props.hiddenRoot, '');
 const copyIconUrl = ref(props.copyIconUrl);
 const copiedIconUrl = ref(props.copiedIconUrl);
-// const attrName = ref("data-attribute-name");
-// const location = ref("location");
+const hiddenRoot = ref(props.hiddenRoot);
 
-// watch for changes in the location and update the displayed path accordingly
-// watch(
-//   () => attrName.value,
-//   (newValue) => {
-//     displayedPath.value = newValue;
-//   },
-// );
+// setup a mutation observer to watch for changes to the location element in the project details and update the displayed path accordingly
+const locationRef = ref(null)
+let observer = null
 
 onMounted(() => {
   ProjectComponent.bind(window);
+
+  observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      console.log('DOM text changed!', mutation.target.textContent)
+      displayedPath.value = mutation.target.textContent.replace(hiddenRoot.value, '');
+    })
+  })
+
+  observer.observe(locationRef.value, {
+    characterData: true,
+    childList: true,
+  })
 });
+
+onUnmounted(() => observer.disconnect())
 </script>
 <style>
 .card {
