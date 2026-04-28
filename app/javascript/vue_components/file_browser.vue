@@ -1,97 +1,98 @@
 <template>
-  <div
-    class="content-warning container-inline p-3"
-    v-if="displayedFiles.length >= fileDisplayLimit"
-  >
-    <div class="row">
-      <div class="col-auto mx-3 my-1">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          fill="currentColor"
-          class="bi bi-exclamation-triangle-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
-          />
-        </svg>
+  <div class="file-browser-container">
+    <div class="breadcrumb-container">
+      <div class="home-icon-image col-auto">
+        <img :src="'../assets/home_icon.svg'" />
       </div>
-      <div class="col mx-3">
-        <header>Preview Limit Reached</header>
-        <p>
-          The preview screen can display up to {{ fileDisplayLimit }} items per folder. Any
-          sorting selections will apply to those {{ fileDisplayLimit }} items only. To review
-          all of your project's contents, download the complete list of files.
-        </p>
-      </div>
+      <ol class="breadcrumb-list col-auto">
+        <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
+          {{ path.name }}
+        </li>
+      </ol>
+      <copy-path
+        class="col"
+        :path="displayedPath"
+        :copyIconUrl="copyIconUrl"
+        :copiedIconUrl="copiedIconUrl"
+      >
+      </copy-path>
     </div>
-  </div>
-
-  <div class="breadcrumb-container row">
-    <div class="home-icon-image col-auto">
-      <img :src="'../assets/home_icon.svg'" />
-    </div>
-    <ol class="breadcrumb-list col-auto">
-      <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
-        {{ path.name }}
-      </li>
-    </ol>
-    <copy-path
-      class="col"
-      :path="displayedPath"
-      :copyIconUrl="copyIconUrl"
-      :copiedIconUrl="copiedIconUrl"
+    <div
+      class="content-warning container-inline p-3"
+      v-if="displayedFiles.length >= fileDisplayLimit"
     >
-    </copy-path>
-  </div>
-  <div class="table files-viewer">
-    <div class="file-frame">
-      <div class="file-browser">
-        <table class="file-table">
-          <thead>
-            <tr class="file-browser-header">
-              <th class="sorting col1 file-header">File Name</th>
-              <th class="file-header">Modified Date</th>
-              <th class="file-header">File Size</th>
-              <th class="file-header">File Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="displayedFiles.length === 0" class="content">
-              <td colspan="3" style="text-align: center">
-                <div class="startup-image">
-                  <img :src="'../assets/startup_image.svg'" />
-                </div>
-                <p class="empty-dir-text">This folder is empty</p>
-              </td>
-            </tr>
-            <tr
-              class="file-browser-row"
-              :class="{ loading: isLoadingFiles }"
-              @mousedown="onClickRow(file)"
-              v-for="(file, i) in displayedFiles"
-              :key="i"
-            >
-              <td
-                v-if="file.collection"
-                class="browser-collection col1 file-data"
-                @mousedown="onClickCollection(file)"
-              >
-                {{ file.name }}
-              </td>
-              <td v-else class="browser-file col1 file-data">{{ file.name }}</td>
-              <td class="file-data">{{ file.last_modified }}</td>
-              <td v-if="file.collection" class="file-data">--</td>
-              <td v-else class="file-data">{{ file.size }}</td>
-              <td class="file-data">{{ file.type }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-auto mx-3 my-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            fill="currentColor"
+            class="bi bi-exclamation-triangle-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+            />
+          </svg>
+        </div>
+        <div class="col mx-3">
+          <header>Preview Limit Reached</header>
+          <p>
+            The preview screen can display up to {{ fileDisplayLimit }} items per folder. Any
+            sorting selections will apply to those {{ fileDisplayLimit }} items only. To review
+            all of your project's contents, download the complete list of files.
+          </p>
+        </div>
       </div>
     </div>
-    <slot></slot>
+    <div class="table files-viewer">
+      <div class="file-frame">
+        <div class="file-browser">
+          <table class="file-table">
+            <thead>
+              <tr class="file-browser-header">
+                <th class="sorting col1 file-header">File Name</th>
+                <th class="file-header">Modified Date</th>
+                <th class="file-header">File Size</th>
+                <th class="file-header">File Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="displayedFiles.length === 0" class="content">
+                <td colspan="3" style="text-align: center">
+                  <div class="startup-image">
+                    <img :src="'../assets/startup_image.svg'" />
+                  </div>
+                  <p class="empty-dir-text">This folder is empty</p>
+                </td>
+              </tr>
+              <tr
+                class="file-browser-row"
+                :class="{ loading: isLoadingFiles }"
+                @mousedown="onClickRow(file)"
+                v-for="(file, i) in displayedFiles"
+                :key="i"
+              >
+                <td
+                  v-if="file.collection"
+                  class="browser-collection col1 file-data"
+                  @mousedown="onClickCollection(file)"
+                >
+                  {{ file.name }}
+                </td>
+                <td v-else class="browser-file col1 file-data">{{ file.name }}</td>
+                <td class="file-data">{{ file.last_modified }}</td>
+                <td v-if="file.collection" class="file-data">--</td>
+                <td v-else class="file-data">{{ file.size }}</td>
+                <td class="file-data">{{ file.type }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <slot></slot>
+    </div>
   </div>
 </template>
 <script setup>
@@ -199,6 +200,15 @@ onMounted(async () => {
 });
 </script>
 <style>
+@import 'variables.css';
+
+.file-browser-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
 .browser-collection {
   text-decoration: underline;
 }
@@ -215,6 +225,11 @@ onMounted(async () => {
 .breadcrumb-container {
   display: inline-flex;
   gap: 0.62rem;
+  align-items: center;
+}
+
+.sizer {
+  vertical-align: bottom;
 }
 
 .breadcrumb-list {
@@ -223,6 +238,7 @@ onMounted(async () => {
   height: 1.8125rem;
   align-items: center;
   gap: 0.625rem;
+  margin-bottom: 0;
 
   list-style-type: none;
   padding: 0px;
@@ -303,5 +319,15 @@ onMounted(async () => {
   gap: 3.6875rem;
   flex-shrink: 0;
   align-self: stretch;
+}
+
+.content-warning {
+  color: var(--gray-100);
+  background-color: var(--status-warning);
+
+  header {
+    color: var(--black);
+    font-weight: 600;
+  }
 }
 </style>
