@@ -9,13 +9,7 @@
           {{ path.name }}
         </li>
       </ol>
-      <copy-path
-        class="col"
-        :path="displayedPath"
-        :copyIconUrl="copyIconUrl"
-        :copiedIconUrl="copiedIconUrl"
-      >
-      </copy-path>
+      <copy-path class="col" :path="displayedPath"> </copy-path>
     </div>
 
     <div v-if="displayedFiles.length >= fileDisplayLimit" class="preview-limit-frame">
@@ -127,16 +121,6 @@ const props = defineProps({
     required: true,
   },
 
-  copyIconUrl: {
-    type: String,
-    required: true,
-  },
-
-  copiedIconUrl: {
-    type: String,
-    required: true,
-  },
-
   fileDisplayLimit: {
     type: Number,
     required: true,
@@ -148,8 +132,6 @@ const displayedPath = ref(props.currentPath);
 const displayedFolders = ref([JSON.parse(props.currentCollection)]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
-const copyIconUrl = ref(props.copyIconUrl);
-const copiedIconUrl = ref(props.copiedIconUrl);
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
@@ -223,13 +205,11 @@ onMounted(async () => {
   display: flex;
   width: auto;
   height: 1.8125rem;
-  align-items: center;
   gap: 0.625rem;
   margin-bottom: 0;
 
   list-style-type: none;
   padding: 0px;
-  display: flex;
   align-items: center;
 
   li:not(:last-child)::after {

@@ -6,8 +6,6 @@
       directory-list-url="<%= project_directory_listing_url(@project) %>"
       current-path="<%= @presenter.project_directory %>"
       current-collection="<%= @presenter.collection_info %>"
-      copy-icon-url="<%=asset_url("copy.svg") %>"
-      copied-icon-url="<%=asset_url("green-checkmark.svg") %>"
       :file-display-limit="<%= Rails.configuration.project_file_display_limit %>"
     >
       <project/>

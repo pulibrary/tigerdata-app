@@ -1,17 +1,28 @@
 <template>
   <div v-if="isSupported" class="copy-box">
-    <button @click="copy(projectPath)" class="sizer">
+    <button
+      @mouseover="isHover = true"
+      @mouseleave="isHover = false"
+      @click="copy(projectPath)"
+      class="sizer"
+    >
       <!-- `copied` will be reset in 3s -->
-      <span v-if="!copied" class="frames"></span>
-      <span v-else class="check"></span>
+      <copy-icon v-if="!copied" class="frames"></copy-icon>
+      <check-icon v-else class="check"></check-icon>
     </button>
   </div>
   <p v-else>Your browser does not support Clipboard API</p>
+  <div v-if="isSupported" class="copy-paste-tooltip">
+    <span v-if="!copied" class="tooltip-text" v-show="isHover">Copy</span>
+    <span v-else class="tooltip-text" v-show="isHover">Copied</span>
+  </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
 import { useClipboard } from '@vueuse/core';
+import CopyIcon from './copy_icon.vue';
+import CheckIcon from './check_icon.vue';
 
 defineOptions({ name: 'CopyPath' });
 const props = defineProps({
@@ -19,16 +30,6 @@ const props = defineProps({
    * the current path of the files we are browsing
    */
   path: {
-    type: String,
-    required: true,
-  },
-
-  copyIconUrl: {
-    type: String,
-    required: true,
-  },
-
-  copiedIconUrl: {
     type: String,
     required: true,
   },
@@ -44,29 +45,57 @@ watch(
 
 // eslint-disable-next-line no-unused-vars
 const { text, copy, copied, isSupported } = useClipboard({ copiedDuring: 3000 });
-const copyIconUrl = `url(${props.copyIconUrl})`;
-const copiedIconUrl = `url(${props.copiedIconUrl})`;
+const isHover = ref(false);
 </script>
 
 <style>
 .frames {
-  background-image: v-bind(copyIconUrl);
-  width: 1rem;
-  height: 1.5rem;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
+  flex-basis: 1.25rem;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 .check {
-  background-image: v-bind(copiedIconUrl);
-  width: 1rem;
-  height: 1.5rem;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
+  flex-basis: 1.25rem;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 .sizer {
   border: none;
   background: #fff;
+  align-self: center;
+}
+
+.copy-paste-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1/1;
+  font-weight: normal;
+
+  .tooltip-text {
+    background-color: #333;
+    color: #fff;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: -25%;
+    z-index: 1; /* Ensure tooltip is displayed above content */
+
+    &::after {
+      content: ' ';
+      position: absolute;
+      top: 50%;
+      right: 100%; /* To the left of the tooltip */
+      margin-top: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent #333 transparent transparent;
+    }
+  }
 }
 </style>
