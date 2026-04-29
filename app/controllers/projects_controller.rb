@@ -80,6 +80,7 @@ class ProjectsController < ApplicationController
     return if project.blank?
 
     path_id = params["pathid"]&.to_i || project.mediaflux_id
+    # TODO: We should not be adding the '+1' below to make the test pass.  Complete from mediaflux or another way to calculate it should really be correct
     mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, size: Rails.configuration.project_file_display_limit)
     if mediaflux_data[:error]
       render json: {error: mediaflux_data[:error]}
