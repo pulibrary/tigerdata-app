@@ -12,7 +12,7 @@
       <copy-path class="col" :path="displayedPath"> </copy-path>
     </div>
 
-    <div v-if="displayedFiles.length >= fileDisplayLimit" class="preview-limit-frame">
+    <div v-if="displayWarning" class="preview-limit-frame">
       <div class="preview-limit-warning">
         <exclamation-triangle color="#FBC129"></exclamation-triangle>
         <div class="warning-message">
@@ -132,10 +132,12 @@ const displayedPath = ref(props.currentPath);
 const displayedFolders = ref([JSON.parse(props.currentCollection)]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
+const displayWarning = ref(props.files.length > props.fileDisplayLimit);
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
   const json = await result.json();
+  displayWarning.value = !json.complete;
   return json.files || [];
 }
 
