@@ -137,6 +137,20 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           sleep(0.1)
           expect(page).to have_content("This folder is empty")
         end
+
+        it "displays the file details component" do
+          visit project_path(approved_project)
+          visit project_path(project)
+
+          within(".card-body") do
+            expect(page).to have_css("header", text: "File Name")
+            expect(page).to have_css("header", text: "File Size")
+            expect(page).to have_css("header", text: "File Type")
+            expect(page).to have_css("header", text: "Location")
+            expect(page).to have_css("header", text: "Modified Date")
+            expect(page).to have_css(".sizer") # check that the copy path button is present
+          end
+        end
       end
 
       it "enqueues a Sidekiq job for asynchronously requesting project files",
