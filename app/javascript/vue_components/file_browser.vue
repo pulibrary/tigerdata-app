@@ -1,9 +1,7 @@
 <template>
   <div class="file-browser-container">
     <div class="breadcrumb-container">
-      <div class="home-icon-image col-auto">
-        <img :src="'../assets/home_icon.svg'" />
-      </div>
+      <home-icon class="home-icon"></home-icon>
       <ol class="breadcrumb-list col-auto">
         <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
           {{ path.name }}
@@ -80,6 +78,7 @@ import { ref, onMounted } from 'vue';
 import CopyPath from './copy_path.vue';
 import ExclamationTriangle from './exclamation_triangle.vue';
 import { ProjectComponent } from '../components/Project.ts';
+import HomeIcon from './home_icon.vue';
 
 defineOptions({ name: 'FileBrowser' });
 const props = defineProps({
@@ -189,8 +188,10 @@ onMounted(async () => {
   background-color: gray;
 }
 
-.home-icon-image {
-  margin-left: 0.2rem;
+.home-icon {
+  flex-basis: 1.25rem;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .breadcrumb-container {

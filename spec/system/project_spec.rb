@@ -101,7 +101,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(project)
 
           within(".breadcrumb-container") do
-            expect(page).to have_css("img[src*='home_icon.svg']")
+            expect(page).to have_css("svg[class*='home-icon']")
             expect(page).to have_css("li", text: "BProject")
             page.find(".sizer").click
             expect(page).to have_css ".check"
