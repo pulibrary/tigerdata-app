@@ -94,13 +94,14 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
         let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
         let(:empty_project_folder) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
+        let(:large_project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
         it "displays the new file feature" do
           visit project_path(approved_project)
           visit project_path(project)
 
           within(".breadcrumb-container") do
-            expect(page).to have_css("img[src*='home_icon.svg']")
+            expect(page).to have_css("svg[class*='home-icon']")
             expect(page).to have_css("li", text: "BProject")
             page.find(".sizer").click
             expect(page).to have_css ".check"
@@ -130,12 +131,48 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
 
         it "displays an empty folder indicator" do
-          visit project_path(approved_project)
           visit project_path(empty_project_folder)
           expect(page).to have_css("li", text: "AProject")
           page.find(".browser-collection", text: "empty_directory").click
           sleep(0.1)
           expect(page).to have_content("This folder is empty")
+        end
+
+        it "displays the file details component" do
+          visit project_path(approved_project)
+          visit project_path(project)
+
+          within(".card-body") do
+            expect(page).to have_css("header", text: "File Name")
+            expect(page).to have_css("header", text: "File Size")
+            expect(page).to have_css("header", text: "File Type")
+            expect(page).to have_css("header", text: "Location")
+            expect(page).to have_css("header", text: "Modified Date")
+            expect(page).to have_css(".sizer") # check that the copy path button is present
+          end
+        end
+
+        it "displays an the file warning indicator when appropriate" do
+          visit project_path(large_project)
+          expect(page).to have_css("li", text: "CProject")
+          # should not show the warning because we are under the limit
+          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          page.find(".browser-collection", text: "n_01000").click
+          sleep(0.1)
+          expect(page).to have_content("A99")
+          # should show the warning because we are above the limit
+          expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          page.find("li", text: "CProject").click
+          # # TODO: This shows the mediaflux issue in that they are indicating complete is false when the iterator show exactly the number of items as the size limit.
+          # #       We should not be showing the warning in this case because we are not actually over the limit.
+          # within(".files-viewer") do
+          #   expect(page).to have_content("n_00100")
+          # end
+          # page.find(".browser-collection", text: "n_00100").click
+          # sleep(0.1)
+          # expect(page).to have_content("E19")
+          # #should not show the warning because we are at the limit
+          # expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
       end
 

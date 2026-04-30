@@ -1,42 +1,19 @@
 <template>
   <div class="file-browser-container">
     <div class="breadcrumb-container">
-      <div class="home-icon-image col-auto">
-        <img :src="'../assets/home_icon.svg'" />
-      </div>
+      <home-icon class="home-icon"></home-icon>
       <ol class="breadcrumb-list col-auto">
         <li v-for="(path, i) in displayedFolders" @mousedown="onClickBreadcrumb(path)">
           {{ path.name }}
         </li>
       </ol>
-      <copy-path
-        class="col"
-        :path="displayedPath"
-        :copyIconUrl="copyIconUrl"
-        :copiedIconUrl="copiedIconUrl"
-      >
-      </copy-path>
+      <copy-path class="col" :path="displayedPath"> </copy-path>
     </div>
-    <div
-      class="content-warning container-inline p-3"
-      v-if="displayedFiles.length >= fileDisplayLimit"
-    >
-      <div class="row">
-        <div class="col-auto mx-3 my-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            fill="currentColor"
-            class="bi bi-exclamation-triangle-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
-            />
-          </svg>
-        </div>
-        <div class="col mx-3">
+
+    <div v-if="displayWarning" class="preview-limit-frame">
+      <div class="preview-limit-warning">
+        <exclamation-triangle color="#FBC129"></exclamation-triangle>
+        <div class="warning-message">
           <header>Preview Limit Reached</header>
           <p>
             The preview screen can display up to {{ fileDisplayLimit }} items per folder. Any
@@ -45,6 +22,7 @@
           </p>
         </div>
       </div>
+      <div class="spacer"></div>
     </div>
     <div class="table files-viewer">
       <div class="file-frame">
@@ -62,7 +40,7 @@
               <tr v-if="displayedFiles.length === 0" class="content">
                 <td colspan="3" style="text-align: center">
                   <div class="startup-image">
-                    <img :src="'../assets/startup_image.svg'" />
+                    <img src="@/../assets/images/startup_image.svg" />
                   </div>
                   <p class="empty-dir-text">This folder is empty</p>
                 </td>
@@ -98,7 +76,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import CopyPath from './copy_path.vue';
+import ExclamationTriangle from './exclamation_triangle.vue';
 import { ProjectComponent } from '../components/Project.ts';
+import HomeIcon from './home_icon.vue';
 
 defineOptions({ name: 'FileBrowser' });
 const props = defineProps({
@@ -140,16 +120,6 @@ const props = defineProps({
     required: true,
   },
 
-  copyIconUrl: {
-    type: String,
-    required: true,
-  },
-
-  copiedIconUrl: {
-    type: String,
-    required: true,
-  },
-
   fileDisplayLimit: {
     type: Number,
     required: true,
@@ -161,12 +131,12 @@ const displayedPath = ref(props.currentPath);
 const displayedFolders = ref([JSON.parse(props.currentCollection)]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
-const copyIconUrl = ref(props.copyIconUrl);
-const copiedIconUrl = ref(props.copiedIconUrl);
+const displayWarning = ref(props.files.length > props.fileDisplayLimit);
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
   const json = await result.json();
+  displayWarning.value = !json.complete;
   return json.files || [];
 }
 
@@ -218,8 +188,10 @@ onMounted(async () => {
   background-color: gray;
 }
 
-.home-icon-image {
-  margin-left: 0.2rem;
+.home-icon {
+  flex-basis: 1.25rem;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .breadcrumb-container {
@@ -236,13 +208,11 @@ onMounted(async () => {
   display: flex;
   width: auto;
   height: 1.8125rem;
-  align-items: center;
   gap: 0.625rem;
   margin-bottom: 0;
 
   list-style-type: none;
   padding: 0px;
-  display: flex;
   align-items: center;
 
   li:not(:last-child)::after {
@@ -328,6 +298,53 @@ onMounted(async () => {
   header {
     color: var(--black);
     font-weight: 600;
+  }
+}
+
+.preview-limit-frame {
+  display: flex;
+  gap: 3.6875rem;
+
+  .preview-limit-warning {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    align-items: flex-start;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    background: var(--Status-Warning, #fff6df);
+
+    .warning-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      display: flex;
+
+      header {
+        color: var(--gray-100);
+        font-family: 'Libre Franklin';
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
+
+      p {
+        color: var(--gray-100);
+        font-family: 'Libre Franklin';
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1.5rem; /* 150% */
+      }
+    }
+  }
+
+  .spacer {
+    flex-basis: 270px;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
 }
 </style>
