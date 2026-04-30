@@ -40,7 +40,7 @@
               <tr v-if="displayedFiles.length === 0" class="content">
                 <td colspan="3" style="text-align: center">
                   <div class="startup-image">
-                    <img :src="'../assets/startup_image.svg'" />
+                  <img src="@/../assets/images/startup_image.svg"/>
                   </div>
                   <p class="empty-dir-text">This folder is empty</p>
                 </td>
