@@ -54,6 +54,13 @@
           </p>
         </div>
         <div class="inline-container">
+          <header class="fw-semibold" data-attribute-name="modifiedDate">Creation Date</header>
+          <p
+            class="project-file-attribute font-monospace"
+            data-attribute-name="creationDate"
+          ></p>
+        </div>
+        <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="modifiedDate">Modified Date</header>
           <p class="project-file-attribute font-monospace" data-attribute-name="modifiedDate">
             {{ displayedObject.last_modified }}
@@ -91,6 +98,27 @@ watch(
     displayedPath.value = newValue.path.replace(hiddenRoot.value, '');
   },
 );
+
+// setup a mutation observer to watch for changes to the location element in the project details and update the displayed path accordingly
+const locationRef = ref(null);
+let observer = null;
+
+onMounted(() => {
+  ProjectComponent.bind(window);
+
+  observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      displayedPath.value = mutation.target.textContent.replace(hiddenRoot.value, '');
+    });
+  });
+
+  observer.observe(locationRef.value, {
+    characterData: true,
+    childList: true,
+  });
+});
+
+onUnmounted(() => observer.disconnect());
 </script>
 <style>
 .card {

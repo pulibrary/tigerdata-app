@@ -85,11 +85,31 @@ class ProjectsController < ApplicationController
     if mediaflux_data[:error]
       render json: {error: mediaflux_data[:error]}
     else
+
+      files = mediaflux_data.fetch(:files, [])
+      # TODO: Remove this
+      @explorer_files = files.map do |file|
+        {
+          id: file.id,
+          name: file.name,
+          type: file.type,
+          path: file.path_only,
+          size: file.human_size,
+          last_modified: file.last_modified,
+          created_at: file.created_at,
+          collection: file.collection?
+        }
+      end
+
+      @file_show_presenters = files.map{|file| ProjectFileShowPresenter.new(file)}
+
+      @complete = mediaflux_data.fetch(:complete, false)
+
       data = {
         fileListUrl: project_file_explorer_url,
         currentPathId: path_id,
-        files: mediaflux_data[:files].map{|file| ProjectFileShowPresenter.new(file)},
-        complete: mediaflux_data[:complete]
+        files: @file_show_presenters,
+        complete: @complete
       }
       render json: data
     end
@@ -120,13 +140,29 @@ class ProjectsController < ApplicationController
     if mediaflux_data[:error]
       render json: {}, status: 500
     else
+      files = mediaflux_data.fetch(:files, [])
+      @explorer_files = files.map do |file|
+        {
+          id: file.id,
+          name: file.name,
+          type: file.type,
+          path: file.path_only,
+          size: file.human_size,
+          last_modified: file.last_modified,
+          created_at: file.created_at,
+          collection: file.collection?
+        }
+      end
+
+      @complete = mediaflux_data.fetch(:complete, false)
+
       data = {
         fileListUrl: project_file_explorer_url,
         currentPath: path,
         currentPathId: path_id,
         iteratorId: iterator_id,
-        files: mediaflux_data[:files],
-        complete: mediaflux_data[:complete]
+        files: @explorer_files,
+        complete: @complete
       }
       render json: data
     end
@@ -256,6 +292,34 @@ class ProjectsController < ApplicationController
       @show_preview_limit_warning = @presenter.show_preview_limit_warning
 
       @files = @presenter.files
-      @files
+      listing = {}
+      @explorer_files = []
+
+      if Flipflop.new_file_details?
+        listing = project.directory_listing(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
+        @directory_list = listing
+        files = listing.fetch(:files, [])
+        @explorer_files = files.map do |file|
+          {
+            id: file.id,
+            name: file.name,
+            type: file.type,
+            path: file.path_only,
+            size: file.human_size,
+            last_modified: file.last_modified,
+            created_at: file.created_at,
+            collection: file.collection?
+          }
+        end
+      else
+        listing = project.file_list(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
+        @file_list = listing
+      end
+
+      @files = listing.fetch(:files, [])
+      @show_preview_limit_warning = listing.fetch(:complete, false)
+      @show_preview_limit_warning &&= (@files.length >= @project_file_display_limit)
+
+      @files.sort_by!(&:path)
     end
 end

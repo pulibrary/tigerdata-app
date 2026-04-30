@@ -31,6 +31,7 @@
             <thead>
               <tr class="file-browser-header">
                 <th class="sorting col1 file-header">File Name</th>
+                <th class="file-header">Creation Date</th>
                 <th class="file-header">Modified Date</th>
                 <th class="file-header">File Size</th>
                 <th class="file-header">File Type</th>
@@ -59,7 +60,10 @@
                 >
                   {{ file.name }}
                 </td>
-                <td v-else class="browser-file col1 file-data">{{ file.name }}</td>
+                <td v-else class="browser-file col1 file-data" @mousedown="onClickRow(file)">
+                  {{ file.name }}
+                </td>
+                <td class="file-data">{{ file.created_at }}</td>
                 <td class="file-data">{{ file.last_modified }}</td>
                 <td v-if="file.collection" class="file-data">--</td>
                 <td v-else class="file-data">{{ file.size }}</td>
@@ -135,6 +139,7 @@ const displayWarning = ref(props.files.length > props.fileDisplayLimit);
 const currentObject = ref(displayedFiles.value[0]);
 
 async function loadFiles(pathId) {
+  console.log(`fetching files for path id ${pathId} from ${props.directoryListUrl}`);
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
   const json = await result.json();
   displayWarning.value = !json.complete;
@@ -146,6 +151,7 @@ function clearCurrent(file) {
   return file;
 }
 async function onClickRow(file) {
+  await ProjectComponent.dispatchProjectStateChange(file);
   displayedFiles.value = displayedFiles.value.map(clearCurrent);
   file.current_object = true;
   currentObject.value = file;
@@ -167,6 +173,13 @@ async function onClickBreadcrumb(path) {
   displayedFolders.value = displayedFolders.value.slice(0, pathIndex + 1);
   isLoadingFiles.value = false;
 }
+
+onMounted(async () => {
+  if (props.files.length > 0) {
+    console.log(props.files);
+    await ProjectComponent.dispatchProjectStateChange(props.files[0]);
+  }
+});
 </script>
 <style>
 @import 'variables.css';

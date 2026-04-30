@@ -29,9 +29,14 @@ module Mediaflux
     end
 
     # Returns the iterator that could be used to fetch the data
+    # @return [Integer] the iterator id
     def result
-      xml = response_xml
-      xml.xpath("/response/reply/result/iterator").text.to_i
+      response_xml unless @response_xml.present?
+
+      result_xpath = "/response/reply/result/iterator"
+      element = @response_xml.xpath(result_xpath)
+      element_text = element.text.strip
+      element_text.to_i
     end
 
     private
@@ -72,11 +77,13 @@ module Mediaflux
       # Adds the declarations to fetch specific fields
       def declare_get_values_fields(xml)
         declare_get_value_field(xml, "name", "name")
+        declare_get_value_field(xml, "type", "type")
         if @include_path == true
           declare_get_value_field(xml, "path", "path")
         end
         declare_get_value_field(xml, "content/@total-size", "total-size")
         declare_get_value_field(xml, "mtime", "mtime")
+        declare_get_value_field(xml, "ctime", "ctime")
         declare_get_value_field(xml, "@collection", "collection")
         declare_get_value_field(xml, "collection/statistics/non-collections", "file-count")
         declare_get_value_field(xml, "collection/statistics/collections", "collection-count")

@@ -2,7 +2,7 @@
 
   <div class="lux row">
     <file-browser
-      :files='<%= @presenter.file_list_json %>'
+      :files='<%= @explorer_files.to_json %>'
       directory-list-url="<%= project_directory_listing_url(@project) %>"
       current-path="<%= @presenter.project_directory %>"
       current-collection="<%= @presenter.collection_info %>"
