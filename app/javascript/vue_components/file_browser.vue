@@ -7,7 +7,7 @@
           {{ path.name }}
         </li>
       </ol>
-      <copy-path class="col" :path="displayedPath"> </copy-path>
+      <copy-path :classNames="['col']" :path="displayedPath"> </copy-path>
     </div>
 
     <div v-if="displayWarning" class="preview-limit-frame">
@@ -31,6 +31,7 @@
             <thead>
               <tr class="file-browser-header">
                 <th class="sorting col1 file-header">File Name</th>
+                <th class="file-header">Creation Date</th>
                 <th class="file-header">Modified Date</th>
                 <th class="file-header">File Size</th>
                 <th class="file-header">File Type</th>
@@ -59,7 +60,10 @@
                 >
                   {{ file.name }}
                 </td>
-                <td v-else class="browser-file col1 file-data">{{ file.name }}</td>
+                <td v-else class="browser-file col1 file-data" @mousedown="onClickRow(file)">
+                  {{ file.name }}
+                </td>
+                <td class="file-data">{{ file.created_at }}</td>
                 <td class="file-data">{{ file.last_modified }}</td>
                 <td v-if="file.collection" class="file-data">--</td>
                 <td v-else class="file-data">{{ file.size }}</td>
@@ -98,10 +102,11 @@ const props = defineProps({
     required: true,
   },
   /**
-   * the current path and id of the files we are browsing
+   * the current collection being browsed, with an ID, name and path
+   * NOTE: this is passed as a JSON-serialized string
    */
   currentCollection: {
-    type: Object,
+    type: String,
     required: true,
   },
   /**
@@ -128,11 +133,15 @@ const props = defineProps({
 
 const displayedFiles = ref(props.files);
 const displayedPath = ref(props.currentPath);
-const displayedFolders = ref([JSON.parse(props.currentCollection)]);
+const currentCollectionJSON = JSON.parse(props.currentCollection);
+const displayedFolders = ref([currentCollectionJSON]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
 const displayWarning = ref(props.files.length > props.fileDisplayLimit);
-const currentObject = ref(displayedFiles.value[0]);
+let currentObject = ref(currentCollectionJSON);
+if (displayedFiles.value.length > 0) {
+  currentObject = ref(displayedFiles.value[0]);
+}
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
@@ -156,7 +165,9 @@ async function onClickCollection(file) {
   displayedFiles.value = await loadFiles(file.id);
   displayedPath.value = file.path.replace(hiddenRoot.value, '');
   displayedFolders.value.push({ id: file.id, path: file.path, name: file.name });
-  onClickRow(displayedFiles.value[0]);
+  if (displayedFiles.value.length > 0) {
+    onClickRow(displayedFiles.value[0]);
+  }
   isLoadingFiles.value = false;
 }
 

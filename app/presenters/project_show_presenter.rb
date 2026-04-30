@@ -247,12 +247,19 @@ class ProjectShowPresenter
     free_space_human ||= helpers.number_to_human_size(free_space, :precision => 2)
   end
 
+  # Returns a JSON string containing the collection information for the project, including the mediaflux_id, project_directory, and name (the last part of the project_directory).
+  # @return [String] a JSON string containing the collection information for the project, including the mediaflux_id, project_directory, and name (the last part of the project_directory)
   def collection_info
-    {id: mediaflux_id, path: project_directory, name: project_directory.split("/").last}.to_json
+    collection_name = project_directory.split("/").last
+    serialized = {id: mediaflux_id, path: project_directory, name: collection_name}
+    serialized.to_json
   end
 
+  # Returns an array of the files in the project, sorted by path.
+  # The files are represented as hashes with keys :path, :size, and :modified.
+  # @return [Array<Hash>] the files in the project
   def files
-    @files ||=  mediaflux_listing.fetch(:files, []).sort_by!(&:path)
+    @files ||= mediaflux_listing.fetch(:files, []).sort_by!(&:path)
   end
 
   def file_list_json

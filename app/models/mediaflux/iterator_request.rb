@@ -19,12 +19,25 @@ module Mediaflux
 
     # Returns hash with the files fetched in this iteration as well as a flag on whether we are
     # done iterating (complete=true) or if we need to keep iterating
+    # @return [Hash] with the list of files, the count of files and whether the result is complete or not
     def result
-      xml = response_xml
+      response_xml if @response_xml.blank?
+
+      result_files = parse_files(@response_xml)
+      result_complete_xpath = "/response/reply/result/iterated/@complete"
+      result_complete_element = @response_xml.xpath(result_complete_xpath)
+      result_complete_element_text = result_complete_element.text
+      result_complete = result_complete_element_text == "true"
+
+      result_count_xpath = "/response/reply/result/iterated/@count"
+      result_count_element = @response_xml.xpath(result_count_xpath)
+      result_count_element_text = result_count_element.text
+      result_count = result_count_element_text.to_i
+
       {
-        files: parse_files(xml),
-        complete: xml.xpath("/response/reply/result/iterated/@complete").text == "true",
-        count: xml.xpath("/response/reply/result/iterated").text.to_i
+        files: result_files,
+        complete: result_complete,
+        count: result_count
       }
     end
 
@@ -39,6 +52,7 @@ module Mediaflux
         end
       end
 
+      # @return [Array<Mediaflux::Asset>] the list of files extracted from the XML response
       def parse_files(xml)
         case @action
         when "get-name"
@@ -52,46 +66,86 @@ module Mediaflux
         end
       end
 
+      # @return [String] the XPath expression to extract file names from the XML response when the "action: get-name" parameter is used
+      def result_names_xpath
+        "/response/reply/result/name"
+      end
+
       # Extracts file information when the request was made with the "action: get-name" parameter
+      # @return [Array<Mediaflux::Asset>] the list of files extracted from the XML response
       def parse_get_name(xml)
         files = []
-        xml.xpath("/response/reply/result/asset").each do |node|
+        xml.xpath(result_assets_xpath).each do |node|
           file = Mediaflux::Asset.new(
             id: node.xpath("./@id").text,
             name: node.xpath("./name").text,
-            collection: node.xpath("./collection").text == "true"
+            type: node.xpath("./type").text,
+            collection: node.xpath("./@collection").text == "true"
           )
           files << file
         end
         files
       end
 
-      # Extracts file information when the request was made with the "action: get-meta" parameter
-      def parse_get_meta(xml)
-        files = []
-        xml.xpath("/response/reply/result/asset").each do |node|
-          file = Mediaflux::Asset.new(
-            id: node.xpath("./@id").text,
-            name: node.xpath("./name").text,
-            path: node.xpath("./path").text,
-            collection: node.xpath("./@collection").text == "true",
-            size: node.xpath("./content/@total-size").text.to_i,
-            last_modified_mf: node.xpath("mtime").text
-          )
-          files << file
+      # @param node [Nokogiri::XML::Node] the XML node containing the file information
+      # @return [Integer, nil] the size of the file extracted from the XML node, or nil if the size information is not available
+      def find_node_size(node:)
+        size_element = node.xpath("./content/@total-size")
+        size_text = size_element ? size_element.text : nil
+        size_text ? size_text.to_i : nil
+      end
+
+      # @param node [Nokogiri::XML::Node] the XML node containing the file information
+      # @return [Boolean] true if the XML node represents a collection, false otherwise
+      def find_node_collection(node:)
+        collection_element = node.xpath("./@collection")
+        collection_text = collection_element ? collection_element.text : nil
+        collection_text == "true"
+      end
+
+      # @param node [Nokogiri::XML::Node] the XML node containing the file information
+      # @return [Mediaflux::Asset] the file information extracted from the XML node
+      def build_from_xml_asset(node:)
+        size = find_node_size(node: node)
+        collection = find_node_collection(node: node)
+
+        Mediaflux::Asset.new(
+          id: node.xpath("./@id").text,
+          name: node.xpath("./name").text,
+          type: node.xpath("./type").text,
+          path: node.xpath("./path").text,
+          collection: collection,
+          size: size,
+          last_modified_mf: node.xpath("mtime").text,
+          created_at_mf: node.xpath("ctime").text
+        )
+      end
+
+      # @return [String] the XPath expression to extract asset information from the XML response when the "action: get-meta" or "action: get-values" parameter is used
+      def result_assets_xpath
+        "/response/reply/result/asset"
+      end
+
+      # @param node [Nokogiri::XML::Node] the XML node containing the file information
+      # @return [Array<Mediaflux::Asset>] the list of files extracted from the XML node
+      def build_from_xml_assets(node:)
+        asset_nodes = node.xpath(result_assets_xpath)
+        asset_nodes.map do |element|
+          build_from_xml_asset(node: element)
         end
-        files
+      end
+
+      # Extracts file information when the request was made with the "action: get-meta" parameter
+      # @return [Array<Mediaflux::Asset>] the list of files extracted from the XML response
+      def parse_get_meta(xml)
+        build_from_xml_assets(node: xml)
       end
 
       # Extracts file information when the request was made with the "action: get-values" parameter
       # Notice that this code is coupled with the fields defined in QueryRequest.
+      # @return [Array<Mediaflux::Asset>] the list of files extracted from the XML response
       def parse_get_values(xml)
-        files = []
-        xml.xpath("/response/reply/result/asset").each do |node|
-          file = Mediaflux::Asset.new(**parse_asset_attribute(node))
-          files << file
-        end
-        files
+        build_from_xml_assets(node: xml)
       end
 
       def parse_asset_attribute(node)

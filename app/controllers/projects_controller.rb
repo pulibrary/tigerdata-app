@@ -67,9 +67,11 @@ class ProjectsController < ApplicationController
 
     @project_session = "content"
     @render_project_explorer = params["explorer"] == "true"
+    project_show_presenter = ProjectShowPresenter.new(project, current_user)
+    xml_response = project_show_presenter.to_xml
     respond_to do |format|
       format.html { render }
-      format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
+      format.xml { render xml: xml_response
     }
     end
   end
@@ -79,20 +81,24 @@ class ProjectsController < ApplicationController
   def directory_listing
     return if project.blank?
 
-    path_id = params["pathid"]&.to_i || project.mediaflux_id
-    # TODO: We should not be adding the '+1' below to make the test pass.  Complete from mediaflux or another way to calculate it should really be correct
+    path_id_param = params.get("pathid", project.mediaflux_id.to_s)
+    path_id = path_id_param.to_i
+    # TODO: We should not be adding the '+1' below to make the test pass.
+    # Complete from mediaflux or another way to calculate it should really be correct
     mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, size: Rails.configuration.project_file_display_limit)
-    if mediaflux_data[:error]
-      render json: {error: mediaflux_data[:error]}
-    else
-      data = {
-        fileListUrl: project_file_explorer_url,
-        currentPathId: path_id,
-        files: mediaflux_data[:files].map{|file| ProjectFileShowPresenter.new(file)},
-        complete: mediaflux_data[:complete]
-      }
-      render json: data
-    end
+    return render(json: {error: mediaflux_data[:error]}, status: 500) if mediaflux_data[:error]
+
+    files = mediaflux_data.fetch(:files, [])
+    @file_show_presenters = files.map { |file| ProjectFileShowPresenter.new(file) }
+    @complete = mediaflux_data.fetch(:complete, false)
+
+    data = {
+      fileListUrl: project_file_explorer_url,
+      currentPathId: path_id,
+      files: @file_show_presenters,
+      complete: @complete
+    }
+    render json: data
   end
 
   # GET "projects/:id/file-explorer"
@@ -100,36 +106,40 @@ class ProjectsController < ApplicationController
   def file_explorer
     project # force the presenter to be set
 
-    if params["pathId"].to_i == 0
+    path = params["path"]
+    path_id_param = params.get("pathId", project.mediaflux_id.to_s)
+    path_id = path_id_param.to_i
+
+    if path_id == 0
       path = @presenter.project_directory
       path_id = project.mediaflux_id
-    else
-      path = params["path"]
-      path_id = params["pathId"].to_i
     end
 
-    iterator_id = if params["iteratorId"].to_i == 0
+    iterator_id_param = params.get("iteratorId", "0")
+    iterator_id = iterator_id_param.to_i
+
+    iterator_id = if iterator_id_param < 1
       # setup a new iterator
       project.file_explorer_setup(session_id: current_user.mediaflux_session, path_id: path_id)
-    else
-      # use the existing iterator
-      params["iteratorId"].to_i
     end
 
     mediaflux_data = project.file_explorer_iterate(session_id: current_user.mediaflux_session, iterator_id: iterator_id)
-    if mediaflux_data[:error]
-      render json: {}, status: 500
-    else
-      data = {
-        fileListUrl: project_file_explorer_url,
-        currentPath: path,
-        currentPathId: path_id,
-        iteratorId: iterator_id,
-        files: mediaflux_data[:files],
-        complete: mediaflux_data[:complete]
-      }
-      render json: data
-    end
+    mediaflux_error = mediaflux_data.get(:error, nil)
+    return render(json: {error: mediaflux_error}, status: 500) if mediaflux_error
+
+    files = mediaflux_data.fetch(:files, [])
+    @file_show_presenters = files.map { |file| ProjectFileShowPresenter.new(file) }
+    @complete = mediaflux_data.fetch(:complete, false)
+
+    data = {
+      fileListUrl: project_file_explorer_url,
+      currentPath: path,
+      currentPathId: path_id,
+      iteratorId: iterator_id,
+      files: @file_show_presenters,
+      complete: @complete
+    }
+    render json: data
   end
 
   # GET "projects/:id/:id-mf"
@@ -256,6 +266,5 @@ class ProjectsController < ApplicationController
       @show_preview_limit_warning = @presenter.show_preview_limit_warning
 
       @files = @presenter.files
-      @files
     end
 end

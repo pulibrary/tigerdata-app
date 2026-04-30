@@ -6,6 +6,8 @@
   ],
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.3",
+    "@vitest/ui": "3.2.4",
+    "@vue/test-utils": "^2.4.10",
     "esbuild": "^0.27.0",
     "eslint": "^8.33.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -50,6 +52,7 @@
     "lint-staged": "lint-staged",
     "test": "vitest run --coverage",
     "test:dev": "vitest",
+    "test:debug": "vitest run --inspect-brk --no-file-parallelism",
     "validate": "npm ls",
     "validate-license": "bundle exec rake dev_license:expiration_check"
   },

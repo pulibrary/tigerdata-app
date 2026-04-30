@@ -1,4 +1,4 @@
-<template>
+<template class="{classNames}">
   <div v-if="isSupported" class="copy-box">
     <button
       @mouseover="isHover = true"
@@ -32,6 +32,15 @@ const props = defineProps({
   path: {
     type: String,
     required: true,
+  },
+
+  /**
+   * Additional class names to apply to the component
+   */
+  classNames: {
+    type: Array,
+    required: false,
+    default: () => [],
   },
 });
 

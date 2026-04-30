@@ -23,16 +23,20 @@ interface ProjectFile {
   fileSize?: string;
   fileType?: string;
   location?: string;
+  creationDate?: string;
   modifiedDate?: string;
+  collection?: boolean;
 }
 
 interface MediafluxFile {
   name: string;
+  type: string;
   path: string;
   size: string;
-  last_modified?: string;
-  last_modified_mf?: string;
   collection: boolean;
+  created_at?: string;
+  last_modified?: string;
+  id?: string;
 }
 
 class ProjectFileComponent {
@@ -218,21 +222,16 @@ class ProjectComponent {
   ) {
     const detail: ProjectFile = {
       fileName: file.name,
+      fileType: file.type,
       location: file.path,
       fileSize: file.size,
-      modifiedDate: file.last_modified || file.last_modified_mf,
-      fileType: file.collection ? 'collection' : 'file',
+      creationDate: file.created_at,
+      modifiedDate: file.last_modified,
+      collection: file.collection,
     };
     const event = new CustomEvent(ProjectComponent.projectStateChange, { detail: detail });
     document.dispatchEvent(event);
   }
 }
 
-export {
-  MediafluxFile,
-  ProjectComponent,
-  ProjectFileTable,
-  ProjectFileTableRow,
-  ProjectFileComponent,
-  ProjectFileAttribute,
-};
+export { MediafluxFile };
