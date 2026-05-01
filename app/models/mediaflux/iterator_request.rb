@@ -21,7 +21,7 @@ module Mediaflux
     # done iterating (complete=true) or if we need to keep iterating
     # @return [Hash] with the list of files, the count of files and whether the result is complete or not
     def result
-      response_xml unless @response_xml.present?
+      response_xml if @response_xml.blank?
 
       result_files = parse_files(@response_xml)
       result_complete_xpath = "/response/reply/result/iterated/@complete"

@@ -31,7 +31,7 @@ module Mediaflux
     # Returns the iterator that could be used to fetch the data
     # @return [Integer] the iterator id
     def result
-      response_xml unless @response_xml.present?
+      response_xml if @response_xml.blank?
 
       result_xpath = "/response/reply/result/iterator"
       element = @response_xml.xpath(result_xpath)
