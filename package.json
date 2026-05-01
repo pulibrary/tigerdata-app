@@ -24,6 +24,8 @@
     "vue-eslint-parser": "^10.4.0"
   },
   "dependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
     "@popperjs/core": "^2.11.8",
     "@rails/actioncable": "^8.1.300",
     "@rollup/plugin-inject": "^5.0.5",
@@ -36,6 +38,7 @@
     "datatables.net-dt": "^2.3.8",
     "datatables.net-vue3": "^3.0.7",
     "glob": "13.0.6",
+    "globals": "^17.5.0",
     "jquery": "^4.0.0",
     "lux-design-system": "^7.6.2",
     "minimatch": "10.2.5",
