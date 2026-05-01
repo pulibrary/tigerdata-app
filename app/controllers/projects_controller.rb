@@ -252,23 +252,10 @@ class ProjectsController < ApplicationController
     # This method retrieves the list of assets for the project, either using the new directory listing or the old file list depending on the configuration. It also sets a flag to indicate whether a warning about the preview limit should be shown.
     # @return [Array] the list of files for the project
     def find_mediaflux_assets
-      @project_file_display_limit = Rails.configuration.project_file_display_limit
-      @show_preview_limit_warning = false
+      @project_file_display_limit = @presenter.project_file_display_limit
+      @show_preview_limit_warning = @presenter.show_preview_limit_warning
 
-      listing = {}
-
-      if Flipflop.new_file_details?
-        listing = project.directory_listing(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
-        @directory_list = listing
-      else
-        listing = project.file_list(session_id: current_user.mediaflux_session, size: @project_file_display_limit)
-        @file_list = listing
-      end
-
-      @files = listing.fetch(:files, [])
-      @show_preview_limit_warning = listing.fetch(:complete, false)
-      @show_preview_limit_warning &&= (@files.length >= @project_file_display_limit)
-
-      @files.sort_by!(&:path)
+      @files = @presenter.files
+      @files
     end
 end

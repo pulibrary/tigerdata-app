@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 class ProjectShowPresenter
+  include ActiveSupport::NumberHelper
+
   delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
   delegate "project_id", "storage_performance_expectations", to: :project_metadata
 
-  attr_reader :project, :project_metadata
+  attr_reader :project, :project_metadata, :project_file_display_limit
 
   # @return [Class] The presenter class for building XML Documents from Projects
   def self.xml_presenter_class
@@ -20,6 +22,7 @@ class ProjectShowPresenter
     @session_id = current_user.mediaflux_session
     check_statistics
     @project_metadata = @project&.metadata_model
+    @project_file_display_limit = Rails.configuration.project_file_display_limit
   end
 
   def title
@@ -248,6 +251,24 @@ class ProjectShowPresenter
     {id: mediaflux_id, path: project_directory, name: project_directory.split("/").last}.to_json
   end
 
+  def files
+    @files ||=  mediaflux_listing.fetch(:files, []).sort_by!(&:path)
+  end
+
+  def file_list_json
+    file_hashes = files.map do |file| 
+                    { id: file.id, name: file.name, path: file.path_only, 
+                      size: number_to_human_size(file.size), last_modified: file.last_modified, 
+                      collection: file.collection, current_object: false}
+                  end
+    file_hashes.first[:current_object] = true if file_hashes.any?
+    file_hashes.to_json
+  end
+
+  def show_preview_limit_warning
+    @show_preview_limit_warning ||= mediaflux_listing.fetch(:complete, false)
+  end
+
   private
 
     def helpers
@@ -298,5 +319,15 @@ class ProjectShowPresenter
         Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
         Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
       end
+    end
+
+
+
+    def mediaflux_listing
+      @mediaflux_listing ||= if Flipflop.new_file_details?
+                               project.directory_listing(session_id: @session_id, size: project_file_display_limit)
+                             else
+                               project.file_list(session_id: @session_id, size: project_file_display_limit)
+                             end
     end
 end
