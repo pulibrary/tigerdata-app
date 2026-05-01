@@ -13,7 +13,6 @@ In discussion
 ## Decision
 
 - Schema Fields to Mediaflux asset data:
-
   - project_directory => asset/meta/tigerdata:project/ProjectDirectory (note this could also be asset/path)
   - title => asset/meta/tigerdata:project/Title
   - status => "active"
