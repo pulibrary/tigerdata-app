@@ -47,7 +47,7 @@
               </tr>
               <tr
                 class="file-browser-row"
-                :class="{ loading: isLoadingFiles }"
+                :class="{ loading: isLoadingFiles, 'selected-object': file.current_object }"
                 @mousedown="onClickRow(file)"
                 v-for="(file, i) in displayedFiles"
                 :key="i"
@@ -140,8 +140,14 @@ async function loadFiles(pathId) {
   return json.files || [];
 }
 
+function clearCurrent(file) {
+  file.current_object = false;
+  return file;
+}
 async function onClickRow(file) {
   await ProjectComponent.dispatchProjectStateChange(file);
+  displayedFiles.value = displayedFiles.value.map(clearCurrent);
+  file.current_object = true;
 }
 
 async function onClickCollection(file) {
@@ -280,6 +286,10 @@ onMounted(async () => {
   .file-header {
     padding-left: 0.625rem;
     flex-shrink: 0;
+  }
+
+  .selected-object {
+    background-color: var(--neutral-dark-gray);
   }
 }
 

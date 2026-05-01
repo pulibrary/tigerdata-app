@@ -2,11 +2,11 @@
 
   <div class="lux row">
     <file-browser
-      :files='<%= @files.map{|file| {id: file.id, name: file.name, path: file.path_only, size: number_to_human_size(file.size), last_modified: file.last_modified, collection: file.collection}}.to_json %>'
+      :files='<%= @presenter.file_list_json %>'
       directory-list-url="<%= project_directory_listing_url(@project) %>"
       current-path="<%= @presenter.project_directory %>"
       current-collection="<%= @presenter.collection_info %>"
-      :file-display-limit="<%= Rails.configuration.project_file_display_limit %>"
+      :file-display-limit="<%= @presenter.project_file_display_limit %>"
     >
       <project
         current-path="<%= @presenter.project_directory %>"
