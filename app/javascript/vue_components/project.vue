@@ -88,6 +88,9 @@ onUnmounted(() => observer.disconnect());
 .card {
   height: fit-content !important;
   border: none !important;
+  @media (max-width: 744px) {
+    display: none !important;
+  }
 }
 
 .sticky {
