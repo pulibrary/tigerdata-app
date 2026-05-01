@@ -18,13 +18,7 @@
         <div class="inline-container">
           <div class="location-container">
             <header class="fw-semibold" data-attribute-name="location">Location</header>
-            <copy-path
-              class="col"
-              :path="displayedPath"
-              :copyIconUrl="copyIconUrl"
-              :copiedIconUrl="copiedIconUrl"
-            >
-            </copy-path>
+            <copy-path class="col" :path="displayedPath"> </copy-path>
           </div>
           <p
             class="project-file-attribute font-monospace"
@@ -57,15 +51,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  copyIconUrl: {
-    type: String,
-    required: true,
-  },
-
-  copiedIconUrl: {
-    type: String,
-    required: true,
-  },
   hiddenRoot: {
     type: String,
     required: false,
@@ -75,8 +60,6 @@ const props = defineProps({
 
 const displayedPath = ref(props.currentPath);
 displayedPath.value = props.currentPath.replace(props.hiddenRoot, '');
-const copyIconUrl = ref(props.copyIconUrl);
-const copiedIconUrl = ref(props.copiedIconUrl);
 const hiddenRoot = ref(props.hiddenRoot);
 
 // setup a mutation observer to watch for changes to the location element in the project details and update the displayed path accordingly
