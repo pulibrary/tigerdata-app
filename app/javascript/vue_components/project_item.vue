@@ -71,7 +71,7 @@
   </section>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import CopyPath from './copy_path.vue';
 
 defineOptions({ name: 'ProjectItem' });
