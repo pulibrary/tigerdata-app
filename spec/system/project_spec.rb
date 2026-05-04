@@ -97,7 +97,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         let(:large_project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
         it "displays the new file feature" do
-          visit project_path(approved_project)
           visit project_path(project)
 
           within(".breadcrumb-container") do
@@ -139,15 +138,19 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
 
         it "displays the file details component" do
-          visit project_path(approved_project)
           visit project_path(project)
-
-          within(".card-body") do
+          dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
+          project_files = dir_listing[:files]
+          within(".project-file") do
             expect(page).to have_css("header", text: "File Name")
+            expect(page).to have_css("p", text: "A0")
             expect(page).to have_css("header", text: "File Size")
+            expect(page).to have_css("p", text: "10 Bytes")
             expect(page).to have_css("header", text: "File Type")
             expect(page).to have_css("header", text: "Location")
+            have_css("p", text: "/tigerdata/RDSS/Query/CProject/A0")
             expect(page).to have_css("header", text: "Modified Date")
+            have_css("p", text: project_files.first.last_modified.to_s)
             expect(page).to have_css(".sizer") # check that the copy path button is present
           end
         end

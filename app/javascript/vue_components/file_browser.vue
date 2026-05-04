@@ -69,7 +69,7 @@
           </table>
         </div>
       </div>
-      <slot></slot>
+      <project :current-object="currentObject" />
     </div>
   </div>
 </template>
@@ -79,6 +79,7 @@ import CopyPath from './copy_path.vue';
 import ExclamationTriangle from './exclamation_triangle.vue';
 import { ProjectComponent } from '../components/Project.ts';
 import HomeIcon from './home_icon.vue';
+import Project from './project.vue';
 
 defineOptions({ name: 'FileBrowser' });
 const props = defineProps({
@@ -132,6 +133,7 @@ const displayedFolders = ref([JSON.parse(props.currentCollection)]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
 const displayWarning = ref(props.files.length > props.fileDisplayLimit);
+const currentObject = ref(displayedFiles.value[0]);
 
 async function loadFiles(pathId) {
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
@@ -148,6 +150,7 @@ async function onClickRow(file) {
   await ProjectComponent.dispatchProjectStateChange(file);
   displayedFiles.value = displayedFiles.value.map(clearCurrent);
   file.current_object = true;
+  currentObject.value = file;
 }
 
 async function onClickCollection(file) {

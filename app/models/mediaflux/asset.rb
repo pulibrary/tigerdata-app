@@ -65,5 +65,17 @@ module Mediaflux
         p.dirname.to_s
       end
     end
+
+    def as_json(options = {})
+      super(options).merge({
+                             id: id,
+                             name: name,
+                             path: path,
+                             collection: collection,
+                             size: size,
+                             last_modified: last_modified,
+                             last_modified_mf: @last_modified_mf
+                           })
+    end
   end
 end
