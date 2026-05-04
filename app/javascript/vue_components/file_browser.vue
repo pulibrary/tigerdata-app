@@ -132,7 +132,8 @@ const props = defineProps({
 
 const displayedFiles = ref(props.files);
 const displayedPath = ref(props.currentPath);
-const displayedFolders = ref([JSON.parse(props.currentCollection)]);
+const currentCollectionJSON = JSON.parse(props.currentCollection);
+const displayedFolders = ref([currentCollectionJSON]);
 const hiddenRoot = ref(props.hiddenRoot);
 const isLoadingFiles = ref(false);
 const displayWarning = ref(props.files.length > props.fileDisplayLimit);

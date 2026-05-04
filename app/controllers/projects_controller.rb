@@ -67,9 +67,11 @@ class ProjectsController < ApplicationController
 
     @project_session = "content"
     @render_project_explorer = params["explorer"] == "true"
+    project_show_presenter = ProjectShowPresenter.new(project, current_user)
+    xml_response = project_show_presenter.to_xml
     respond_to do |format|
       format.html { render }
-      format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
+      format.xml { render xml: xml_response
     }
     end
   end
