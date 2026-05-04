@@ -141,6 +141,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(project)
           dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
           project_files = dir_listing[:files]
+          last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
           within(".project-file") do
             expect(page).to have_css("header", text: "File Name")
             expect(page).to have_css("p", text: "A0")
@@ -150,7 +151,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "Location")
             have_css("p", text: "/tigerdata/RDSS/Query/CProject/A0")
             expect(page).to have_css("header", text: "Modified Date")
-            have_css("p", text: project_files.first.last_modified.to_s)
+            have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
           end
         end
@@ -268,6 +269,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
           it "renders the project file details component", :integration do
             visit project_path(approved_project)
+            dir_listing = approved_project.directory_listing(session_id: SystemUser.mediaflux_session)
+            project_files = dir_listing[:files]
+            last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
 
             expect(page).to have_selector(".project-file-details header", text: "File Name")
             expect(page).to have_selector("[data-attribute-name='fileName']", text: "file1.txt")
@@ -276,7 +280,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_selector(".project-file-details header", text: "Location")
             expect(page).to have_selector("[data-attribute-name='location']", text: "path/to/file1.txt")
             expect(page).to have_selector(".project-file-details header", text: "Modified Date")
-            expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified.to_s)
+            expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
           end
         end
       end
