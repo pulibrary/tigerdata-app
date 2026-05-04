@@ -100,7 +100,7 @@ watch(
 );
 
 onMounted(() => {
-  ProjectComponent.bind(window);
+  //ProjectComponent.bind(window);
 });
 </script>
 <style>
