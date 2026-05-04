@@ -1,54 +1,57 @@
 <template>
   <section class="project-file card sticky">
-    <div class="card-body rounded">
+    <div class="full-width">
       <header class="card-title lead fw-bold px-2 my-0">Details</header>
       <div class="project-file-details inline-container bg-body rounded p-2">
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="fileName">File Name</header>
-          <p class="project-file-attribute font-monospace" data-attribute-name="fileName"></p>
+          <p class="project-file-attribute font-monospace" data-attribute-name="fileName">
+            {{ displayedObject.name }}
+          </p>
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="fileSize">File Size</header>
-          <p class="project-file-attribute font-monospace" data-attribute-name="fileSize"></p>
+          <p class="project-file-attribute font-monospace" data-attribute-name="fileSize">
+            {{ displayedObject.size }}
+          </p>
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="fileType">File Type</header>
-          <p class="project-file-attribute font-monospace" data-attribute-name="fileType"></p>
+          <p class="project-file-attribute font-monospace" data-attribute-name="fileType">
+            {{ displayedObject.type }}
+          </p>
         </div>
         <div class="inline-container">
           <div class="location-container">
             <header class="fw-semibold" data-attribute-name="location">Location</header>
-            <copy-path class="col" :path="displayedPath"> </copy-path>
+            <copy-path class="col" :path="displayedPath"> {{ displayedPath }}</copy-path>
           </div>
           <p
             class="project-file-attribute font-monospace"
             ref="locationRef"
             data-attribute-name="location"
-          ></p>
+          >
+            {{ displayedPath }}
+          </p>
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="modifiedDate">Modified Date</header>
-          <p
-            class="project-file-attribute font-monospace"
-            data-attribute-name="modifiedDate"
-          ></p>
+          <p class="project-file-attribute font-monospace" data-attribute-name="modifiedDate">
+            {{ displayedObject.last_modified }}
+          </p>
         </div>
       </div>
     </div>
   </section>
 </template>
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from 'vue';
+import { ref, watch } from 'vue';
 import CopyPath from './copy_path.vue';
-import { ProjectComponent } from '../components/Project.ts';
 
 defineOptions({ name: 'Project' });
 const props = defineProps({
-  /**
-   * the current path of the files we are browsing
-   */
-  currentPath: {
-    type: String,
+  currentObject: {
+    type: Object,
     required: true,
   },
   hiddenRoot: {
@@ -58,36 +61,25 @@ const props = defineProps({
   },
 });
 
-const displayedPath = ref(props.currentPath);
-displayedPath.value = props.currentPath.replace(props.hiddenRoot, '');
 const hiddenRoot = ref(props.hiddenRoot);
+const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, ''));
+const displayedObject = ref(props.currentObject);
 
-// setup a mutation observer to watch for changes to the location element in the project details and update the displayed path accordingly
-const locationRef = ref(null);
-let observer = null;
-
-onMounted(() => {
-  ProjectComponent.bind(window);
-
-  observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      console.log('DOM text changed!', mutation.target.textContent);
-      displayedPath.value = mutation.target.textContent.replace(hiddenRoot.value, '');
-    });
-  });
-
-  observer.observe(locationRef.value, {
-    characterData: true,
-    childList: true,
-  });
-});
-
-onUnmounted(() => observer.disconnect());
+watch(
+  () => props.currentObject,
+  (newValue) => {
+    displayedObject.value = newValue;
+    displayedPath.value = newValue.path.replace(hiddenRoot.value, '');
+  },
+);
 </script>
 <style>
 .card {
   height: fit-content !important;
   border: none !important;
+  @media (max-width: 744px) {
+    display: none !important;
+  }
 }
 
 .sticky {
@@ -110,9 +102,14 @@ onUnmounted(() => observer.disconnect());
   flex-direction: column;
   align-items: flex-start;
   flex-grow: 0;
-  gap: -0.5rem;
+  padding: 0.625rem 1rem;
+  align-items: center;
+  gap: 0.625rem;
+  align-self: stretch;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: #eee;
 
-  .card-body {
+  .full-width {
     width: 100%;
   }
 
@@ -132,6 +129,7 @@ onUnmounted(() => observer.disconnect());
   .project-file-attribute {
     font-family: 'Libre Franklin', sans-serif !important;
     font-size: 0.875rem;
+    line-break: anywhere;
   }
 }
 </style>

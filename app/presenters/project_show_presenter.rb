@@ -257,8 +257,8 @@ class ProjectShowPresenter
 
   def file_list_json
     file_hashes = files.map do |file| 
-                    { id: file.id, name: file.name, path: file.path_only, 
-                      size: number_to_human_size(file.size), last_modified: file.last_modified, 
+                    { id: file.id, name: file.name, path: file.path, 
+                      size: number_to_human_size(file.size), last_modified: file.last_modified || file.created_on, 
                       collection: file.collection, current_object: false}
                   end
     file_hashes.first[:current_object] = true if file_hashes.any?
