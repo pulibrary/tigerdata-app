@@ -139,7 +139,6 @@ const displayWarning = ref(props.files.length > props.fileDisplayLimit);
 const currentObject = ref(displayedFiles.value[0]);
 
 async function loadFiles(pathId) {
-  console.log(`fetching files for path id ${pathId} from ${props.directoryListUrl}`);
   const result = await fetch(`${props.directoryListUrl}?pathid=${pathId}`);
   const json = await result.json();
   displayWarning.value = !json.complete;
