@@ -88,17 +88,24 @@ module Mediaflux
       def parse_get_values(xml)
         files = []
         xml.xpath("/response/reply/result/asset").each do |node|
-          file = Mediaflux::Asset.new(
-            id: node.xpath("./@id").text,
-            name: node.xpath("./name").text,
-            path: node.xpath("./path").text,
-            collection: node.xpath("./collection").text == "true",
-            size: node.xpath("./total-size").text.to_i,
-            last_modified_mf: node.xpath("mtime").text
-          )
+          file = Mediaflux::Asset.new(**parse_asset_attribute(node))
           files << file
         end
         files
+      end
+
+      def parse_asset_attribute(node)
+        {
+          id: node.xpath("./@id").text,
+          name: node.xpath("./name").text,
+          path: node.xpath("./path").text,
+          collection: node.xpath("./collection").text == "true",
+          size: node.xpath("./total-size").text.to_i,
+          last_modified_mf: node.xpath("mtime").text,
+          collection_count: node.xpath("./collection-count").text.to_i,
+          file_count: node.xpath("./file-count").text.to_i,
+          folder_size: node.xpath("./folder-size").text.to_i
+        }
       end
   end
 end

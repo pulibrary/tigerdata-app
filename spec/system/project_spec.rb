@@ -154,6 +154,20 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
           end
+          page.all("tr")[6].click
+          within(".project-file") do
+            expect(page).to have_css("header", text: "Folder Name")
+            expect(page).to have_css("p", text: "parent_1")
+            expect(page).to have_css("header", text: "Folder Size")
+            expect(page).to have_css("p", text: "950 Bytes")
+            expect(page).to have_css("header", text: "Item Count")
+            expect(page).to have_css("p", text: "97")
+            expect(page).to have_css("header", text: "Location")
+            have_css("p", text: "/tigerdata/RDSS/Query/CProject/parent_1")
+            expect(page).to have_css("header", text: "Modified Date")
+            have_css("p", text: last_modified_date)
+            expect(page).to have_css(".sizer") # check that the copy path button is present
+          end
         end
 
         it "displays an the file warning indicator when appropriate" do
@@ -200,6 +214,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       end
 
       context "when the new_file_details feature is turned on" do
+        let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
         before do
           test_strategy.switch!(:new_file_details, true)
         end
@@ -212,11 +227,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         context "with files exceeding the project file display limit" do
           before do
             iterator_request = instance_double("Mediaflux::IteratorRequest")
-            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
-            allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
-            allow(file_asset).to receive(:size).and_return(100)
-            allow(file_asset).to receive(:last_modified).and_return(Time.current.in_time_zone("America/New_York").iso8601)
-            allow(file_asset).to receive(:collection).and_return(false)
+            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt", path_only: "path/to/file1.txt",
+                                                             collection: false, size: 100, last_modified: last_modified, folder_size: 0, asset_count: 0)
 
             files = [file_asset] * (Rails.configuration.project_file_display_limit + 1)
             allow(iterator_request).to receive(:result).and_return(
@@ -243,14 +255,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
 
         context "with files persisted for the project" do
-          let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
           before do
             iterator_request = instance_double("Mediaflux::IteratorRequest")
-            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt")
-            allow(file_asset).to receive(:path_only).and_return("path/to/file1.txt")
-            allow(file_asset).to receive(:size).and_return(100)
-            allow(file_asset).to receive(:last_modified).and_return(last_modified)
-            allow(file_asset).to receive(:collection).and_return(false)
+            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt", path_only: "path/to/file1.txt",
+                                                             collection: false, size: 100, last_modified: last_modified, folder_size: 0, asset_count: 0)
 
             files = [file_asset]
             allow(iterator_request).to receive(:result).and_return(

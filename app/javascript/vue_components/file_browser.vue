@@ -69,7 +69,7 @@
           </table>
         </div>
       </div>
-      <project :current-object="currentObject" />
+      <project-item :current-object="currentObject" />
     </div>
   </div>
 </template>
@@ -77,9 +77,8 @@
 import { ref, onMounted } from 'vue';
 import CopyPath from './copy_path.vue';
 import ExclamationTriangle from './exclamation_triangle.vue';
-import { ProjectComponent } from '../components/Project.ts';
 import HomeIcon from './home_icon.vue';
-import Project from './project.vue';
+import ProjectItem from './project_item.vue';
 
 defineOptions({ name: 'FileBrowser' });
 const props = defineProps({
@@ -147,7 +146,6 @@ function clearCurrent(file) {
   return file;
 }
 async function onClickRow(file) {
-  await ProjectComponent.dispatchProjectStateChange(file);
   displayedFiles.value = displayedFiles.value.map(clearCurrent);
   file.current_object = true;
   currentObject.value = file;
@@ -159,9 +157,6 @@ async function onClickCollection(file) {
   displayedPath.value = file.path.replace(hiddenRoot.value, '');
   displayedFolders.value.push({ id: file.id, path: file.path, name: file.name });
   isLoadingFiles.value = false;
-  if (displayedFiles.value.length > 0) {
-    await ProjectComponent.dispatchProjectStateChange(displayedFiles.value[0]);
-  }
 }
 
 async function onClickBreadcrumb(path) {
@@ -171,12 +166,6 @@ async function onClickBreadcrumb(path) {
   displayedFolders.value = displayedFolders.value.slice(0, pathIndex + 1);
   isLoadingFiles.value = false;
 }
-
-onMounted(async () => {
-  if (props.files.length > 0) {
-    await ProjectComponent.dispatchProjectStateChange(props.files[0]);
-  }
-});
 </script>
 <style>
 @import 'variables.css';

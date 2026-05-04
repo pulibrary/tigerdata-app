@@ -78,6 +78,9 @@ module Mediaflux
         declare_get_value_field(xml, "content/@total-size", "total-size")
         declare_get_value_field(xml, "mtime", "mtime")
         declare_get_value_field(xml, "@collection", "collection")
+        declare_get_value_field(xml, "collection/statistics/non-collections", "file-count")
+        declare_get_value_field(xml, "collection/statistics/collections", "collection-count")
+        declare_get_value_field(xml, "collection/statistics/total-size", "folder-size")
       end
 
       # Adds a single field declaration

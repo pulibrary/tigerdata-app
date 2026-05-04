@@ -4,18 +4,37 @@
       <header class="card-title lead fw-bold px-2 my-0">Details</header>
       <div class="project-file-details inline-container bg-body rounded p-2">
         <div class="inline-container">
-          <header class="fw-semibold" data-attribute-name="fileName">File Name</header>
+          <header
+            v-if="displayedObject.collection"
+            class="fw-semibold"
+            data-attribute-name="fileName"
+          >
+            Folder Name
+          </header>
+          <header v-else class="fw-semibold" data-attribute-name="fileName">File Name</header>
           <p class="project-file-attribute font-monospace" data-attribute-name="fileName">
             {{ displayedObject.name }}
           </p>
         </div>
-        <div class="inline-container">
+        <div v-if="displayedObject.collection" class="inline-container">
+          <header class="fw-semibold" data-attribute-name="folderSize">Folder Size</header>
+          <p class="project-file-attribute font-monospace" data-attribute-name="folderSize">
+            {{ displayedObject.folder_size }}
+          </p>
+        </div>
+        <div v-else class="inline-container">
           <header class="fw-semibold" data-attribute-name="fileSize">File Size</header>
           <p class="project-file-attribute font-monospace" data-attribute-name="fileSize">
             {{ displayedObject.size }}
           </p>
         </div>
-        <div class="inline-container">
+        <div v-if="displayedObject.collection" class="inline-container">
+          <header class="fw-semibold" data-attribute-name="itemCount">Item Count</header>
+          <p class="project-file-attribute font-monospace" data-attribute-name="itemCount">
+            {{ displayedObject.asset_count }}
+          </p>
+        </div>
+        <div v-if="!displayedObject.collection" class="inline-container">
           <header class="fw-semibold" data-attribute-name="fileType">File Type</header>
           <p class="project-file-attribute font-monospace" data-attribute-name="fileType">
             {{ displayedObject.type }}
@@ -48,7 +67,7 @@
 import { ref, watch } from 'vue';
 import CopyPath from './copy_path.vue';
 
-defineOptions({ name: 'Project' });
+defineOptions({ name: 'ProjectItem' });
 const props = defineProps({
   currentObject: {
     type: Object,
