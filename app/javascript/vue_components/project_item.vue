@@ -43,7 +43,9 @@
         <div class="inline-container">
           <div class="location-container">
             <header class="fw-semibold" data-attribute-name="location">Location</header>
-            <copy-path class="col" :path="displayedPath"> {{ displayedPath }}</copy-path>
+            <copy-path :classNames="['col']" :path="displayedPath">
+              {{ displayedPath }}</copy-path
+            >
           </div>
           <p
             class="project-file-attribute font-monospace"

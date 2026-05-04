@@ -7,7 +7,7 @@
           {{ path.name }}
         </li>
       </ol>
-      <copy-path class="col" :path="displayedPath"> </copy-path>
+      <copy-path :classNames="['col']" :path="displayedPath"> </copy-path>
     </div>
 
     <div v-if="displayWarning" class="preview-limit-frame">
