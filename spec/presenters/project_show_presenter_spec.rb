@@ -37,4 +37,42 @@ RSpec.describe ProjectShowPresenter do
       end
     end
   end
+
+  describe "#file_list_json" do
+    let(:test_strategy) { Flipflop::FeatureSet.current.test! }
+
+    before do
+      @current_state = test_strategy.enabled?(:new_file_details)
+      test_strategy.switch!(:new_file_details, true)
+    end
+
+    after do
+      test_strategy.switch!(:new_file_details, @current_state)
+    end
+    let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+
+    it "returns a JSON string of the file list" do
+      parsed = JSON.parse(presenter.file_list_json)
+      dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
+      project_files = dir_listing[:files]
+      last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
+      expect(parsed.count).to eq(10)
+      expect(parsed.first["name"]).to eq("A0")
+      expect(parsed.first["collection"]).to be_falsey
+      expect(parsed.first["current_object"]).to be_truthy
+      expect(parsed.first["last_modified"]).to eq(last_modified_date)
+      expect(parsed.first["name"]).to eq("A0")
+      expect(parsed.first["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/A0")
+      expect(parsed.first["size"]).to eq("10 Bytes")
+      expect(parsed.first["type"]).to eq("unknown")
+      expect(parsed.first["name"]).to eq("A0")
+      expect(parsed.last["collection"]).to be_truthy
+      expect(parsed.last["current_object"]).to be_falsey
+      expect(parsed.last["last_modified"]).to eq(last_modified_date)
+      expect(parsed.last["name"]).to eq("n_10000")
+      expect(parsed.last["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/n_10000")
+      expect(parsed.last["size"]).to eq("0 Bytes")
+      expect(parsed.last["type"]).to eq("collection")
+    end
+  end
 end

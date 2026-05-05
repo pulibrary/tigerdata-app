@@ -88,7 +88,7 @@ class ProjectsController < ApplicationController
       data = {
         fileListUrl: project_file_explorer_url,
         currentPathId: path_id,
-        files: mediaflux_data[:files],
+        files: mediaflux_data[:files].map{|file| ProjectFileShowPresenter.new(file)},
         complete: mediaflux_data[:complete]
       }
       render json: data
