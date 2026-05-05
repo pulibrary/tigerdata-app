@@ -141,7 +141,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(project)
           dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
           project_files = dir_listing[:files]
-          last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
+          last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
           within(".project-file") do
             expect(page).to have_css("header", text: "File Name")
             expect(page).to have_css("p", text: "A0")
@@ -174,7 +174,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(large_project)
           dir_listing = large_project.directory_listing(session_id: SystemUser.mediaflux_session)
           project_files = dir_listing[:files]
-          last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
+          last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
 
           expect(page).to have_selector(".project-file-details header", text: "File Name")
           expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
@@ -184,13 +184,19 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/A0")
           expect(page).to have_selector(".project-file-details header", text: "Modified Date")
           expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
+          expect(page).to have_selector(".project-file-details header", text: "Created Date")
+          expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
+          expect(page).to have_selector(".project-file-details header", text: "Created By")
+          expect(page).to have_selector("[data-attribute-name='createdBy']", text: "system:manager")
 
           expect(page).to have_css("li", text: "CProject")
           # should not show the warning because we are under the limit
           expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find(".browser-collection", text: "n_01000").click
           sleep(0.1)
-          expect(page).to have_content("A99")
+          within(".files-viewer") do
+            expect(page).to have_content("A99")
+          end
 
           expect(page).to have_selector(".project-file-details header", text: "File Name")
           expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
@@ -200,9 +206,13 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
           expect(page).to have_selector(".project-file-details header", text: "Modified Date")
           expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
+          expect(page).to have_selector(".project-file-details header", text: "Created Date")
+          expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
+
           # should show the warning because we are above the limit
           expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find("li", text: "CProject").click
+
           # TODO: This shows the mediaflux issue in that they are indicating complete is false when the iterator show exactly the number of items as the size limit.
           #       We should not be showing the warning in this case because we are not actually over the limit.
           within(".files-viewer") do
