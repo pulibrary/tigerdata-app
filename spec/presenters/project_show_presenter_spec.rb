@@ -64,6 +64,8 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.first["name"]).to eq("A0")
       expect(parsed.first["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/A0")
       expect(parsed.first["size"]).to eq("10 Bytes")
+      expect(parsed.first["asset_count"]).to eq(0)
+      expect(parsed.first["folder_size"]).to eq("0 Bytes")
       expect(parsed.first["type"]).to eq("unknown")
       expect(parsed.first["name"]).to eq("A0")
       expect(parsed.last["collection"]).to be_truthy
@@ -72,6 +74,8 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.last["name"]).to eq("n_10000")
       expect(parsed.last["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/n_10000")
       expect(parsed.last["size"]).to eq("0 Bytes")
+      expect(parsed.last["asset_count"]).to eq(10_000)
+      expect(parsed.last["folder_size"]).to eq("98 KB")
       expect(parsed.last["type"]).to eq("collection")
     end
   end

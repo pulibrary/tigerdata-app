@@ -2,7 +2,7 @@
 class ProjectFileShowPresenter
   include ActiveSupport::NumberHelper
 
-  delegate "id", "name", "path", "size", "collection", :last_modified, to: :file
+  delegate "id", "name", "path", "size", "collection", :last_modified, :asset_count, :folder_size, to: :file
   attr_reader :file
 
   def initialize(project_file)
@@ -23,6 +23,10 @@ class ProjectFileShowPresenter
     number_to_human_size(size, precision: 2)
   end
 
+  def folder_size_human
+    number_to_human_size(folder_size, precision: 2)
+  end
+
   def to_hash
     {
       id: id,
@@ -31,7 +35,9 @@ class ProjectFileShowPresenter
       collection: collection,
       size: size_human,
       type: type,
-      last_modified: Time.zone.parse(last_modified).strftime("%m/%d/%Y")
+      last_modified: Time.zone.parse(last_modified).strftime("%m/%d/%Y"),
+      asset_count: asset_count,
+      folder_size: folder_size_human
     }
   end
 

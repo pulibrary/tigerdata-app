@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 module Mediaflux
   class Asset
-    attr_accessor :id, :path, :collection, :size
+    attr_accessor :id, :path, :collection, :size, :collection_count, :file_count, :folder_size
 
-    def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil)
+    def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil, collection_count: nil, file_count: nil, folder_size: nil)
       @id = id
       @name = name
       @path = path
       @collection = collection
       @size = size
       @last_modified_mf = last_modified_mf
+      @collection_count = collection_count
+      @file_count = file_count
+      @folder_size = folder_size
     end
 
     def name
@@ -74,8 +77,14 @@ module Mediaflux
                              collection: collection,
                              size: size,
                              last_modified: last_modified,
-                             last_modified_mf: @last_modified_mf
+                             last_modified_mf: @last_modified_mf,
+                             asset_count: asset_count,
+                             folder_size: folder_size
                            })
+    end
+
+    def asset_count
+      collection_count + file_count
     end
   end
 end
