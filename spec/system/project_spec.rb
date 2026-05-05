@@ -172,23 +172,45 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         it "displays an the file warning indicator when appropriate" do
           visit project_path(large_project)
+          dir_listing = large_project.directory_listing(session_id: SystemUser.mediaflux_session)
+          project_files = dir_listing[:files]
+          last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
+
+          expect(page).to have_selector(".project-file-details header", text: "File Name")
+          expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
+          expect(page).to have_selector(".project-file-details header", text: "File Size")
+          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "10")
+          expect(page).to have_selector(".project-file-details header", text: "Location")
+          expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/A0")
+          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
+          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
+
           expect(page).to have_css("li", text: "CProject")
           # should not show the warning because we are under the limit
           expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find(".browser-collection", text: "n_01000").click
           sleep(0.1)
           expect(page).to have_content("A99")
+
+          expect(page).to have_selector(".project-file-details header", text: "File Name")
+          expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
+          expect(page).to have_selector(".project-file-details header", text: "File Size")
+          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "10")
+          expect(page).to have_selector(".project-file-details header", text: "Location")
+          expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
+          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
+          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
           # should show the warning because we are above the limit
           expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find("li", text: "CProject").click
-          # # TODO: This shows the mediaflux issue in that they are indicating complete is false when the iterator show exactly the number of items as the size limit.
-          # #       We should not be showing the warning in this case because we are not actually over the limit.
-          # within(".files-viewer") do
-          #   expect(page).to have_content("n_00100")
-          # end
-          # page.find(".browser-collection", text: "n_00100").click
-          # sleep(0.1)
-          # expect(page).to have_content("E19")
+          # TODO: This shows the mediaflux issue in that they are indicating complete is false when the iterator show exactly the number of items as the size limit.
+          #       We should not be showing the warning in this case because we are not actually over the limit.
+          within(".files-viewer") do
+            expect(page).to have_content("n_00100")
+          end
+          page.find(".browser-collection", text: "n_00100").click
+          sleep(0.1)
+          expect(page).to have_content("E19")
           # #should not show the warning because we are at the limit
           # expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
@@ -222,74 +244,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           visit project_path(approved_project)
 
           expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
-        end
-
-        context "with files exceeding the project file display limit" do
-          before do
-            iterator_request = instance_double("Mediaflux::IteratorRequest")
-            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt", path_only: "path/to/file1.txt",
-                                                             collection: false, size: 100, last_modified: last_modified, folder_size: 0, asset_count: 0)
-
-            files = [file_asset] * (Rails.configuration.project_file_display_limit + 1)
-            allow(iterator_request).to receive(:result).and_return(
-              {
-                files: files,
-                count: files.size,
-                complete: true
-              }
-            )
-            allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
-          end
-
-          after do
-            allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
-          end
-
-          it "displays the preview alert" do
-            visit project_path(approved_project)
-            expect(page).to have_selector(:link_or_button, "Content Preview")
-            click_on("Content Preview")
-
-            expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder.")
-          end
-        end
-
-        context "with files persisted for the project" do
-          before do
-            iterator_request = instance_double("Mediaflux::IteratorRequest")
-            file_asset = instance_double("Mediaflux::Asset", id: "123", name: "file1.txt", path: "path/to/file1.txt", path_only: "path/to/file1.txt",
-                                                             collection: false, size: 100, last_modified: last_modified, folder_size: 0, asset_count: 0)
-
-            files = [file_asset]
-            allow(iterator_request).to receive(:result).and_return(
-              {
-                files: files,
-                count: files.size,
-                complete: true
-              }
-            )
-            allow(Mediaflux::IteratorRequest).to receive(:new).with(session_token: anything, iterator: anything, size: anything).and_return(iterator_request)
-          end
-
-          after do
-            allow(Mediaflux::IteratorRequest).to receive(:new).and_call_original
-          end
-
-          it "renders the project file details component", :integration do
-            visit project_path(approved_project)
-            dir_listing = approved_project.directory_listing(session_id: SystemUser.mediaflux_session)
-            project_files = dir_listing[:files]
-            last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
-
-            expect(page).to have_selector(".project-file-details header", text: "File Name")
-            expect(page).to have_selector("[data-attribute-name='fileName']", text: "file1.txt")
-            expect(page).to have_selector(".project-file-details header", text: "File Size")
-            expect(page).to have_selector("[data-attribute-name='fileSize']", text: "100")
-            expect(page).to have_selector(".project-file-details header", text: "Location")
-            expect(page).to have_selector("[data-attribute-name='location']", text: "path/to/file1.txt")
-            expect(page).to have_selector(".project-file-details header", text: "Modified Date")
-            expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
-          end
         end
       end
 
