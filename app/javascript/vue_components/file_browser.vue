@@ -74,7 +74,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import CopyPath from './copy_path.vue';
 import ExclamationTriangle from './exclamation_triangle.vue';
 import HomeIcon from './home_icon.vue';
@@ -156,6 +156,7 @@ async function onClickCollection(file) {
   displayedFiles.value = await loadFiles(file.id);
   displayedPath.value = file.path.replace(hiddenRoot.value, '');
   displayedFolders.value.push({ id: file.id, path: file.path, name: file.name });
+  onClickRow(displayedFiles.value[0]);
   isLoadingFiles.value = false;
 }
 
