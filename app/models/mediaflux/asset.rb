@@ -3,13 +3,16 @@ module Mediaflux
   class Asset
     attr_accessor :id, :path, :collection, :size, :collection_count, :file_count, :folder_size
 
-    def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil, collection_count: nil, file_count: nil, folder_size: nil)
+    def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil, collection_count: nil, file_count: nil, folder_size: nil,
+                   created_on_mf: nil, creator: nil)
       @id = id
       @name = name
       @path = path
       @collection = collection
       @size = size
       @last_modified_mf = last_modified_mf
+      @created_on_mf = created_on_mf
+      @creator = creator
       @collection_count = collection_count
       @file_count = file_count
       @folder_size = folder_size
@@ -40,12 +43,29 @@ module Mediaflux
       end
     end
 
-    # Returns the last modified date but using the standard ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601)
+    # Returns the last modified date parsed or the created on date if the last modified date is not available. The date is converted to the "America/New_York" timezone.
     def last_modified
-      return nil if @last_modified_mf.nil?
+      return created_on if @last_modified_mf.nil?
       # https://nandovieira.com/working-with-dates-on-ruby-on-rails
       # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
-      Object::Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York").iso8601
+      Object::Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York")
+    end
+
+    # Returns the created_on date parsed. The date is converted to the "America/New_York" timezone.
+    def created_on
+      return nil if @created_on_mf.nil?
+      # https://nandovieira.com/working-with-dates-on-ruby-on-rails
+      # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
+      Object::Time.zone.parse(@created_on_mf).in_time_zone("America/New_York")
+    end
+
+    def created_by
+      return nil if @creator.nil?
+      if @creator[:name].blank?
+        "#{@creator[:domain]}:#{@creator[:uid]}"
+      else
+        "#{@creator[:name]} (#{@creator[:domain]}:#{@creator[:uid]})"
+      end
     end
 
     # Returns the path for the asset

@@ -55,7 +55,7 @@ RSpec.describe ProjectShowPresenter do
       parsed = JSON.parse(presenter.file_list_json)
       dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
       project_files = dir_listing[:files]
-      last_modified_date = Time.zone.parse(project_files.first.last_modified).strftime("%m/%d/%Y")
+      last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
       expect(parsed.count).to eq(10)
       expect(parsed.first["name"]).to eq("A0")
       expect(parsed.first["collection"]).to be_falsey
@@ -68,6 +68,8 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.first["folder_size"]).to eq("0 Bytes")
       expect(parsed.first["type"]).to eq("unknown")
       expect(parsed.first["name"]).to eq("A0")
+      expect(parsed.first["created_by"]).to eq("system:manager")
+      expect(parsed.first["created_on"]).to eq(last_modified_date)
       expect(parsed.last["collection"]).to be_truthy
       expect(parsed.last["current_object"]).to be_falsey
       expect(parsed.last["last_modified"]).to eq(last_modified_date)
@@ -77,6 +79,8 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.last["asset_count"]).to eq(10_000)
       expect(parsed.last["folder_size"]).to eq("98 KB")
       expect(parsed.last["type"]).to eq("collection")
+      expect(parsed.last["created_by"]).to eq("system:manager")
+      expect(parsed.last["created_on"]).to eq(last_modified_date)
     end
   end
 end

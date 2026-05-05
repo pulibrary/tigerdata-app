@@ -77,6 +77,10 @@ module Mediaflux
         end
         declare_get_value_field(xml, "content/@total-size", "total-size")
         declare_get_value_field(xml, "mtime", "mtime")
+        declare_get_value_field(xml, "ctime", "ctime")
+        declare_get_value_field(xml, "creator/user", "creator_uid")
+        declare_get_value_field(xml, "creator/domain", "creator_domain")
+        declare_get_value_field(xml, "creator/name", "creator_name")
         declare_get_value_field(xml, "@collection", "collection")
         declare_get_value_field(xml, "collection/statistics/non-collections", "file-count")
         declare_get_value_field(xml, "collection/statistics/collections", "collection-count")

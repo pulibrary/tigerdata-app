@@ -55,11 +55,11 @@ module Mediaflux
       # Extracts file information when the request was made with the "action: get-name" parameter
       def parse_get_name(xml)
         files = []
-        xml.xpath("/response/reply/result/name").each do |node|
+        xml.xpath("/response/reply/result/asset").each do |node|
           file = Mediaflux::Asset.new(
             id: node.xpath("./@id").text,
-            name: node.text,
-            collection: node.xpath("./@collection").text == "true"
+            name: node.xpath("./name").text,
+            collection: node.xpath("./collection").text == "true"
           )
           files << file
         end
@@ -102,6 +102,8 @@ module Mediaflux
           collection: node.xpath("./collection").text == "true",
           size: node.xpath("./total-size").text.to_i,
           last_modified_mf: node.xpath("mtime").text,
+          created_on_mf: node.xpath("ctime").text,
+          creator: { uid: node.xpath("creator_uid").text, name: node.xpath("creator_name").text, domain: node.xpath("creator_domain").text },
           collection_count: node.xpath("./collection-count").text.to_i,
           file_count: node.xpath("./file-count").text.to_i,
           folder_size: node.xpath("./folder-size").text.to_i

@@ -59,6 +59,18 @@
             {{ displayedObject.last_modified }}
           </p>
         </div>
+        <div class="inline-container">
+          <header class="fw-semibold" data-attribute-name="createdDate">Created Date</header>
+          <p class="project-file-attribute font-monospace" data-attribute-name="createdDate">
+            {{ displayedObject.created_on }}
+          </p>
+        </div>
+        <div class="inline-container">
+          <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
+          <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+            {{ displayedObject.created_by }}
+          </p>
+        </div>
       </div>
     </div>
   </section>
