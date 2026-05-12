@@ -232,7 +232,8 @@ GEM
       thor
       tilt
     hashdiff (1.2.1)
-    hashie (5.0.0)
+    hashie (5.1.0)
+      logger
     health-monitor-rails (12.4.0)
       railties (>= 6.1)
     honeybadger (6.1.0)
@@ -345,7 +346,7 @@ GEM
       rack (>= 2.2.3)
       rack-protection
     omniauth-cas (3.0.2)
-      addressable (~> 2.9)
+      addressable (~> 2.8)
       nokogiri (~> 1.12)
       omniauth (~> 2.1)
     openssl (3.3.2)
