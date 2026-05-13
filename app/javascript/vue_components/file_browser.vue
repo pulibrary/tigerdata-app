@@ -16,9 +16,8 @@
         <div class="warning-message">
           <header>Preview Limit Reached</header>
           <p>
-            The preview screen can display up to {{ fileDisplayLimit }} items per folder. Any
-            sorting selections will apply to those {{ fileDisplayLimit }} items only. To review
-            all of your project's contents, download the complete list of files.
+            The preview screen can display up to {{ fileDisplayLimit }} items per folder. To
+            review all of your project's contents, download the complete list of files.
           </p>
         </div>
       </div>
