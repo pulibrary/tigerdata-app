@@ -99,14 +99,14 @@ const displayedObject = ref(props.currentObject);
 const createdBy = ref(displayedObject.created_by);
 /* eslint-disable no-console */
 
-const displayName = ref("");
-const netid = ref("");
+const displayName = ref('');
+const netid = ref('');
 
 function parseCreatedBy(createdBy) {
   // debugger;
   if (createdBy.includes('(')) {
     displayName.value = createdBy.split('(')[0].trim();
-    netid.value = createdBy.split('(')[1].split(":",2)[1].replace(")","");
+    netid.value = createdBy.split('(')[1].split(':', 2)[1].replace(')', '');
     return true;
   }
   return createdBy;
