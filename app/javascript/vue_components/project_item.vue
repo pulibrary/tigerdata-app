@@ -78,7 +78,7 @@
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
           <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-            {{ displayedObject.created_by }}
+            {{ parseCreatedBy(displayedObject.created_by) }}
           </p>
         </div>
       </div>
@@ -106,6 +106,22 @@ const props = defineProps({
 const hiddenRoot = ref(props.hiddenRoot);
 const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, ''));
 const displayedObject = ref(props.currentObject);
+// replace created_by with parsed version that separates the name from the netid
+const createdBy = ref(displayedObject.created_by);
+/* eslint-disable no-console */
+
+const displayName = ref("");
+const netid = ref("");
+
+function parseCreatedBy(createdBy) {
+  // debugger;
+  if (createdBy.includes('(')) {
+    displayName.value = createdBy.split('(')[0].trim();
+    netid.value = createdBy.split('(')[1].split(":",2)[1].replace(")","");
+    return true;
+  }
+  return createdBy;
+}
 
 watch(
   () => props.currentObject,
