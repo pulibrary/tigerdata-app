@@ -13,7 +13,7 @@
       "outputs": ["lib", "out"]
     },
     "nodejs": {
-      "version": "22.9.0",
+      "version": "22.12.0",
       "outputs": ["out", "libv8"]
     },
     "jdk": {
