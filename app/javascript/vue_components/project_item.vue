@@ -137,7 +137,7 @@ watch(
   align-items: center;
   gap: 0.625rem;
   align-self: stretch;
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: 0.5rem;
   background: #eee;
 
   .full-width {
