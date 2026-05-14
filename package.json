@@ -30,7 +30,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vueuse/core": "^14.2.1",
     "bootstrap": "^5.2.3",
-    "brace-expansion": "^3.0.2",
+    "brace-expansion": "^5.0.6",
     "browserslist": "^4.21.5",
     "datatables": "^1.10.18",
     "datatables.net-dt": "^2.3.7",
