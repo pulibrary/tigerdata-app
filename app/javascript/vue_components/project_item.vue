@@ -67,14 +67,23 @@
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
-          <template v-if ="parseCreatedBy(displayedObject.created_by) ">
+          <template v-if="parseCreatedBy(displayedObject.created_by)">
             <div class="createdByContainer">
-              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy"> {{ displayName }}</p>
-              <p class="lux-badge lux-badge-gray badge-text details-netid" data-attribute-name="createdByNetid"> {{ netid}}</p>
+              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+                {{ displayName }}
+              </p>
+              <p
+                class="lux-badge lux-badge-gray badge-text details-netid"
+                data-attribute-name="createdByNetid"
+              >
+                {{ netid }}
+              </p>
             </div>
           </template>
           <template v-else>
-            <p class="project-file-attribute font-monospace" data-attribute-name="createdBy"> {{ displayedObject.created_by  }} </p>
+            <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+              {{ displayedObject.created_by }}
+            </p>
           </template>
         </div>
       </div>
