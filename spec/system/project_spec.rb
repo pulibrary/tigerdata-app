@@ -146,6 +146,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "File Name")
             expect(page).to have_css("p", text: "A0")
             expect(page).to have_css("header", text: "File Size")
+
             expect(page).to have_css("p", text: "10 Bytes")
             expect(page).to have_css("header", text: "File Type")
             expect(page).to have_css("header", text: "Location")
@@ -153,6 +154,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
+            expect(page).not_to have_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
+            find(".info-container .tooltip-container").click
+            expect(page).to have_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
           end
           page.all("tr")[6].click
           within(".project-file") do
@@ -167,6 +171,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
+            expect(page).not_to have_css(".tooltiptext", text: "This number reflects all items")
+            find(".info-container .tooltip-container").click
+            expect(page).to have_css(".tooltiptext", text: "This number reflects all items")
+            expect(page).to have_content("This number reflects all items")
           end
         end
 
