@@ -67,9 +67,24 @@
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
-          <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-            {{ displayedObject.created_by }}
-          </p>
+          <template v-if="parseCreatedBy(displayedObject.created_by)">
+            <div class="createdByContainer">
+              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+                {{ displayName }}
+              </p>
+              <p
+                class="lux-badge lux-badge-gray badge-text details-netid"
+                data-attribute-name="createdByNetid"
+              >
+                {{ netid }}
+              </p>
+            </div>
+          </template>
+          <template v-else>
+            <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+              {{ displayedObject.created_by }}
+            </p>
+          </template>
         </div>
       </div>
     </div>
@@ -95,6 +110,21 @@ const props = defineProps({
 const hiddenRoot = ref(props.hiddenRoot);
 const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, ''));
 const displayedObject = ref(props.currentObject);
+
+const standardUser = ref(false);
+const displayName = ref('');
+const netid = ref('');
+
+function parseCreatedBy(createdBy) {
+  if (createdBy.includes('(')) {
+    displayName.value = createdBy.split('(')[0].trim();
+    netid.value = createdBy.split('(')[1].split(':', 2)[1].replace(')', '');
+    standardUser.value = true;
+    return true;
+  }
+  standardUser.value = false;
+  return false;
+}
 
 watch(
   () => props.currentObject,
@@ -161,6 +191,15 @@ watch(
     font-family: 'Libre Franklin', sans-serif !important;
     font-size: 0.875rem;
     line-break: anywhere;
+  }
+}
+.createdByContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  .details-netid {
+    margin: -0.75rem 0rem 0rem 0rem;
   }
 }
 </style>
