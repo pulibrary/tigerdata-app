@@ -21,8 +21,8 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useClipboard } from '@vueuse/core';
-import CopyIcon from './copy_icon.vue';
-import CheckIcon from './check_icon.vue';
+import CopyIcon from './icons/copy_icon.vue';
+import CheckIcon from './icons/check_icon.vue';
 
 defineOptions({ name: 'CopyPath' });
 const props = defineProps({

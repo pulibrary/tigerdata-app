@@ -17,13 +17,23 @@
           </p>
         </div>
         <div v-if="displayedObject.collection" class="inline-container">
-          <header class="fw-semibold" data-attribute-name="folderSize">Folder Size</header>
+          <div class="info-container">
+            <header class="fw-semibold" data-attribute-name="folderSize">Folder Size</header>
+            <tool-tip
+              text="This number reflects all items in the selected folder, not only what is previewed."
+            ></tool-tip>
+          </div>
           <p class="project-file-attribute font-monospace" data-attribute-name="folderSize">
             {{ displayedObject.folder_size }}
           </p>
         </div>
         <div v-else class="inline-container">
-          <header class="fw-semibold" data-attribute-name="fileSize">File Size</header>
+          <div class="info-container">
+            <header class="fw-semibold" data-attribute-name="fileSize">File Size</header>
+            <tool-tip
+              text="TigerData uses base-10 units for bytes, following the International System of Units. For example, 1 MB = 1 megabyte = 1,000 kilobytes = 1,000,000 bytes."
+            ></tool-tip>
+          </div>
           <p class="project-file-attribute font-monospace" data-attribute-name="fileSize">
             {{ displayedObject.size }}
           </p>
@@ -78,6 +88,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import CopyPath from './copy_path.vue';
+import ToolTip from './tool_tip.vue';
 
 defineOptions({ name: 'ProjectItem' });
 const props = defineProps({
@@ -161,6 +172,10 @@ watch(
     font-family: 'Libre Franklin', sans-serif !important;
     font-size: 0.875rem;
     line-break: anywhere;
+  }
+  .info-container {
+    display: flex;
+    align-items: center;
   }
 }
 </style>
