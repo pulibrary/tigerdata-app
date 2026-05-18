@@ -29,7 +29,7 @@
           <table class="file-table">
             <thead>
               <tr class="file-browser-header">
-                <th class="sorting col1 file-header">File Name</th>
+                <th class="sorting col1 file-header">Name</th>
                 <th class="file-header">Modified Date</th>
                 <th class="file-header">File Size</th>
                 <th class="file-header">File Type</th>
