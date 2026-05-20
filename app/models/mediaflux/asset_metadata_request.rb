@@ -86,8 +86,7 @@ module Mediaflux
         }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first, asset))
       end
 
-      # rubocop:disable Metrics/MethodLength
-      def parse_project(project, asset)
+            def parse_project(project, asset)
         return {} if project.blank?
         metadata = {
           description: project.xpath("./Description").text,
@@ -103,8 +102,7 @@ module Mediaflux
         metadata.merge!(parse_data_users(asset, project))
         metadata.merge!(parse_project_dates(project))
         metadata.merge!(parse_storage_options(project))
-      end
-      # rubocop:enable Metrics/MethodLength
+            end
 
       # NOTE: We are still using the "DataUser" attribute in the Project Metadata
       # to drive the list of users who can read and/or write to the Mediaflux

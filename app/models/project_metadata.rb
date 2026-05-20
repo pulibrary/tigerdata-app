@@ -142,7 +142,6 @@ class ProjectMetadata
   # Updates the object with the values in the params (which is an ActionController::Parameters)
   # Notice how we only update values that come in the params and don't change the values that
   # don't come as part of the params
-  # rubocop:disable Metrics/MethodLength
   def update_with_params(params, current_user)
     set_value(params, "title")
     set_value(params, "description")
@@ -168,7 +167,6 @@ class ProjectMetadata
     @updated_by = current_user.uid
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Alias for `data_user_read_only`
   def ro_users

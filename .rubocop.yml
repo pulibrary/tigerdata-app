@@ -1,1 +1,85 @@
 inherit_from: .rubocop_todo.yml
+
+plugins:
+  - rubocop-rails
+  - rubocop-capybara
+  - rubocop-factory_bot
+
+require:
+  - rubocop-rspec
+
+AllCops:
+  DisabledByDefault: true
+  DisplayCopNames: true
+  Exclude:
+    - "db/**/*"
+    - "script/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "bin/*"
+    - "storage/**/*"
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+Layout/LineLength:
+  Exclude:
+    - "spec/system/data_migration/*"
+
+Metrics/AbcSize:
+  Exclude:
+    - "app/mailers/tigerdata_mailer.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "app/models/mediaflux/http/asset_create_request.rb"
+    - "config/environments/**/*"
+    - "lib/tasks/**/*"
+    - "spec/**/*"
+  Max: 40 # default: 25
+
+Metrics/ClassLength:
+  Max: 150 # default: 100
+  Exclude:
+    - "app/controllers/projects_controller.rb"
+    - "app/models/project.rb"
+    - "app/presenters/project_show_presenter.rb"
+
+Metrics/MethodLength:
+  Max: 25 # default: 10
+  Exclude:
+    - "app/mailers/tigerdata_mailer.rb"
+    - "app/services/project_import.rb"
+    - "app/controllers/projects_controller.rb"
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Exclude: []
+
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Rails/UnknownEnv:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/views/**/*"
+    - "spec/system/**/*"
+    - "spec/lib/**/*"
+    - "spec/tasks/**/*"
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false

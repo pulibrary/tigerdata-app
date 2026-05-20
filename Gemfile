@@ -102,6 +102,8 @@ group :development, :test do
   gem "pry-byebug"
   gem "racc"
   gem "rubocop"
+  gem "rubocop-capybara"
+  gem "rubocop-factory_bot"
   gem "rubocop-rails"
   gem "rubocop-rspec"
 end

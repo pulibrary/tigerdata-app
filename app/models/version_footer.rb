@@ -11,7 +11,6 @@
 # an expensive operation we cache the information as soon as we are sure it's
 # current.
 #
-# rubocop:disable Style/ClassVars
 class VersionFooter
   @@stale = true
   @@git_sha = nil

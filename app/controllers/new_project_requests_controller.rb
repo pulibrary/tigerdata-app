@@ -17,8 +17,6 @@ class NewProjectRequestsController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if eligible_to_approve
       if @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
@@ -47,12 +45,10 @@ class NewProjectRequestsController < ApplicationController
       redirect_to new_project_request_path(@new_project_request)
     end
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
-  def destroy
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
+      def destroy
     if eligible_to_destroy?
       @new_project_request.destroy
       redirect_to dashboard_path(modal: "confirm_delete_draft")
@@ -60,7 +56,7 @@ class NewProjectRequestsController < ApplicationController
       flash[:notice] = I18n.t(:no_permission_to_delete)
       redirect_to dashboard_path
     end
-  end
+      end
 
   private
 

@@ -156,8 +156,7 @@ module Mediaflux
           end
         end
 
-        # rubocop:disable Metrics/MethodLength
-        def build_http_request(name:, form_file: nil)
+                def build_http_request(name:, form_file: nil)
           request = self.class.build_post_request
 
           log_xml_request(xml_payload)
@@ -174,10 +173,9 @@ module Mediaflux
           end
 
           request
-        end
-      # rubocop:enable Metrics/MethodLength
+                end
 
-      def log_xml_request(xml_payload)
+            def log_xml_request(xml_payload)
         password_element = xml_payload.match(/\<password\>.*\<\/password\>/)
         if password_element.nil?
           Rails.logger.debug(xml_payload)
@@ -185,7 +183,7 @@ module Mediaflux
           # Don't log the password
           Rails.logger.debug(xml_payload.gsub(password_element.to_s, "<password>***</password>"))
         end
-      end
+            end
 
       # Logs as warning and notifies Honeybadger for Mediaflux requests that take longer than 3 seconds.
       #

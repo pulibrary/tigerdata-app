@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 class RequestProjectMetadata
   class << self
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def convert(request)
       {
         title: request[:project_title],
@@ -26,10 +24,8 @@ class RequestProjectMetadata
         globus: request[:globus]&.downcase == "yes"
       }
     end
-     # rubocop:enable Metrics/AbcSize
-     # rubocop:enable Metrics/MethodLength
 
-     private
+               private
 
        def project_directory(request)
          [Rails.configuration.mediaflux["api_root"], request[:parent_folder], request[:project_folder]].compact_blank.join("/")
