@@ -85,7 +85,7 @@ gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/
 gem "whenever", require: false
 
 group :development, :test do
-  gem "rspec-rails", "~> 7.0.1"
+  gem "rspec-rails"
 
   gem "bixby"
   gem "bundle-audit", require: false

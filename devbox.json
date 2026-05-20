@@ -30,7 +30,7 @@
       "outputs": ["out", "dev"]
     },
     "pkg-config": "latest",
-    "path:./nix/chromedriver": "",
+    "chromedriver": "latest",
     "lastpass-cli": "latest",
     "prettier": "latest",
     "gnupg": "latest",
