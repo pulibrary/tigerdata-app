@@ -75,8 +75,8 @@
 <script setup>
 import { ref } from 'vue';
 import CopyPath from './copy_path.vue';
-import ExclamationTriangle from './exclamation_triangle.vue';
-import HomeIcon from './home_icon.vue';
+import ExclamationTriangle from './icons/exclamation_triangle.vue';
+import HomeIcon from './icons/home_icon.vue';
 import ProjectItem from './project_item.vue';
 
 defineOptions({ name: 'FileBrowser' });
