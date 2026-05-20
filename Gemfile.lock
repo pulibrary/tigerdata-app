@@ -671,6 +671,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
+  psych
   puma (~> 6.6)
   rack (>= 3.1.21)
   rack-mini-profiler

@@ -77,6 +77,7 @@ gem "kaminari"
 gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
+gem "psych"
 gem "rack", ">= 3.1.21"
 gem "sidekiq"
 gem "sinatra", ">= 4.1.0" # Mailcatcher dependency, please see https://github.com/advisories/GHSA-hxx2-7vcw-mqr3
