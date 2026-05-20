@@ -88,7 +88,6 @@ gem "whenever", require: false
 group :development, :test do
   gem "rspec-rails"
 
-  gem "bixby"
   gem "bundle-audit", require: false
   gem "byebug"
   gem "pry-rails"
@@ -99,7 +98,12 @@ group :development, :test do
   gem "factory_bot_rails", require: false
   gem "ffaker"
   gem "mutex_m", "~> 0.2.0"
+  gem "prism"
   gem "pry-byebug"
+  gem "racc"
+  gem "rubocop"
+  gem "rubocop-rails"
+  gem "rubocop-rspec"
 end
 
 group :development do

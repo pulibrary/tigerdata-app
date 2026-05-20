@@ -102,12 +102,6 @@ GEM
     benchmark (0.5.0)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bixby (5.0.2)
-      rubocop (= 1.28.2)
-      rubocop-ast
-      rubocop-performance
-      rubocop-rails
-      rubocop-rspec
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     bootstrap (5.2.3)
@@ -269,11 +263,13 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    language_server-protocol (3.17.0.5)
     libv8-node (24.1.0.0)
     libv8-node (24.1.0.0-aarch64-linux)
     libv8-node (24.1.0.0-arm64-darwin)
     libv8-node (24.1.0.0-x86_64-darwin)
     libv8-node (24.1.0.0-x86_64-linux)
+    lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.25.1)
       crass (~> 1.0.2)
@@ -352,8 +348,8 @@ GEM
     openssl (3.3.2)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    parallel (1.27.0)
-    parser (3.3.9.0)
+    parallel (2.1.0)
+    parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
     pg (1.6.2)
@@ -441,7 +437,7 @@ GEM
     redis (4.8.1)
     redis-client (0.25.2)
       connection_pool
-    regexp_parser (2.11.2)
+    regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
     responders (3.2.0)
@@ -469,21 +465,20 @@ GEM
     rspec-support (3.13.7)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.28.2)
-      parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+    rubocop (1.86.2)
+      json (~> 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.17.0, < 2.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.46.0)
+      unicode-display_width (>= 2.4.0, < 4.0)
+    rubocop-ast (1.49.1)
       parser (>= 3.3.7.2)
-      prism (~> 1.4)
-    rubocop-performance (1.19.1)
-      rubocop (>= 1.7.0, < 2.0)
-      rubocop-ast (>= 0.4.0)
+      prism (~> 1.7)
     rubocop-rails (2.15.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -584,7 +579,9 @@ GEM
       railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.6.0)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.2.0)
     uri (1.0.4)
     useragent (0.16.11)
     virtus (2.0.0)
@@ -634,7 +631,6 @@ PLATFORMS
 DEPENDENCIES
   axe-core-rspec
   bcrypt_pbkdf
-  bixby
   bootsnap
   bootstrap (~> 5.2.0)
   bundle-audit
@@ -669,10 +665,12 @@ DEPENDENCIES
   omniauth-cas (~> 3.0)
   openssl (>= 3.3.1)
   pg
+  prism
   pry-byebug
   pry-rails
   psych
   puma (~> 6.6)
+  racc
   rack (>= 3.1.21)
   rack-mini-profiler
   rails (~> 7.1)
@@ -681,6 +679,9 @@ DEPENDENCIES
   rspec-rails
   rspec-retry
   rspec_junit_formatter
+  rubocop
+  rubocop-rails
+  rubocop-rspec
   ruby-prof
   sassc-rails
   selenium-webdriver
