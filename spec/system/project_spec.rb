@@ -195,7 +195,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_selector(".project-file-details header", text: "Created Date")
           expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
           expect(page).to have_selector(".project-file-details header", text: "Created By")
-          expect(page).to have_selector("[data-attribute-name='createdBy']", text: "system:manager")
+          expect(page).to have_selector("[data-attribute-name='createdBy']", text: "System Generated")
 
           expect(page).to have_css("li", text: "CProject")
           # should not show the warning because we are under the limit

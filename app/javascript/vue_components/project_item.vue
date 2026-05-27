@@ -77,22 +77,29 @@
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
-          <template v-if="parseCreatedBy(displayedObject.created_by)">
+          <template v-if="systemGenerated()">
             <div class="createdByContainer">
               <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-                {{ displayName }}
+                System Generated
+              </p>
+            </div>
+          </template>
+          <template v-else-if="princetonUserGenerated()">
+            <div class="createdByContainer">
+              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+                {{ displayedObject.created_by.name }}
               </p>
               <p
                 class="lux-badge lux-badge-gray badge-text details-netid"
                 data-attribute-name="createdByNetid"
               >
-                {{ netid }}
+                {{ displayedObject.created_by.uid }}
               </p>
             </div>
           </template>
           <template v-else>
             <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-              {{ displayedObject.created_by }}
+              {{ displayedObject.created_by.name }} ({{ displayedObject.created_by.domain }}:{{ displayedObject.created_by.uid }})
             </p>
           </template>
         </div>
@@ -122,19 +129,11 @@ const hiddenRoot = ref(props.hiddenRoot);
 const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, ''));
 const displayedObject = ref(props.currentObject);
 
-const standardUser = ref(false);
-const displayName = ref('');
-const netid = ref('');
-
-function parseCreatedBy(createdBy) {
-  if (createdBy.includes('(')) {
-    displayName.value = createdBy.split('(')[0].trim();
-    netid.value = createdBy.split('(')[1].split(':', 2)[1].replace(')', '');
-    standardUser.value = true;
-    return true;
-  }
-  standardUser.value = false;
-  return false;
+function systemGenerated() {
+  return displayedObject.value.created_by.uid == 'manager';
+}
+function princetonUserGenerated() {
+  return displayedObject.value.created_by.domain == 'princeton';
 }
 
 watch(
