@@ -99,7 +99,9 @@
           </template>
           <template v-else>
             <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-              {{ displayedObject.created_by.name }} ({{ displayedObject.created_by.domain }}:{{ displayedObject.created_by.uid }})
+              {{ displayedObject.created_by.name }} ({{ displayedObject.created_by.domain }}:{{
+                displayedObject.created_by.uid
+              }})
             </p>
           </template>
         </div>
