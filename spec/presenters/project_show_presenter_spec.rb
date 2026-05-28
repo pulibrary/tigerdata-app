@@ -68,7 +68,7 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.first["folder_size"]).to eq("0 Bytes")
       expect(parsed.first["type"]).to eq("unknown")
       expect(parsed.first["name"]).to eq("A0")
-      expect(parsed.first["created_by"]).to eq("system:manager")
+      expect(parsed.first["created_by"].values).to eq ["manager", "", "system"]
       expect(parsed.first["created_on"]).to eq(last_modified_date)
       expect(parsed.last["collection"]).to be_truthy
       expect(parsed.last["current_object"]).to be_falsey
@@ -79,7 +79,7 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.last["asset_count"]).to eq(10_000)
       expect(parsed.last["folder_size"]).to eq("98 KB")
       expect(parsed.last["type"]).to eq("collection")
-      expect(parsed.last["created_by"]).to eq("system:manager")
+      expect(parsed.last["created_by"].values).to eq ["manager", "", "system"]
       expect(parsed.last["created_on"]).to eq(last_modified_date)
     end
   end
