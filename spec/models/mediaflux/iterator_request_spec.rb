@@ -25,7 +25,6 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       expect(result[:files][0].size).to eq 10
       expect(result[:files][0].last_modified.class).to eq ActiveSupport::TimeWithZone
       expect(result[:files][0].created_on.class).to eq ActiveSupport::TimeWithZone
-      # byebug
       expect(result[:files][0].created_by.values).to eq ["manager", "", "system"]
       expect(result[:files][9].name).to eq "n_10000"
       expect(result[:files][9].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/n_10000"
