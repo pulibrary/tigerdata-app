@@ -61,11 +61,7 @@ module Mediaflux
 
     def created_by
       return nil if @creator.nil?
-      if @creator[:name].blank?
-        "#{@creator[:domain]}:#{@creator[:uid]}"
-      else
-        "#{@creator[:name]} (#{@creator[:domain]}:#{@creator[:uid]})"
-      end
+      @creator
     end
 
     # Returns the path for the asset

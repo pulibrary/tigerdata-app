@@ -77,9 +77,33 @@
         </div>
         <div class="inline-container">
           <header class="fw-semibold" data-attribute-name="createdBy">Created By</header>
-          <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
-            {{ displayedObject.created_by }}
-          </p>
+          <template v-if="systemGenerated()">
+            <div class="createdByContainer">
+              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+                System Generated
+              </p>
+            </div>
+          </template>
+          <template v-else-if="princetonUserGenerated()">
+            <div class="createdByContainer">
+              <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+                {{ displayedObject.created_by.name }}
+              </p>
+              <p
+                class="lux-badge lux-badge-gray badge-text details-netid"
+                data-attribute-name="createdByNetid"
+              >
+                {{ displayedObject.created_by.uid }}
+              </p>
+            </div>
+          </template>
+          <template v-else>
+            <p class="project-file-attribute font-monospace" data-attribute-name="createdBy">
+              {{ displayedObject.created_by.name }} ({{ displayedObject.created_by.domain }}:{{
+                displayedObject.created_by.uid
+              }})
+            </p>
+          </template>
         </div>
       </div>
     </div>
@@ -106,6 +130,13 @@ const props = defineProps({
 const hiddenRoot = ref(props.hiddenRoot);
 const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, ''));
 const displayedObject = ref(props.currentObject);
+
+function systemGenerated() {
+  return displayedObject.value.created_by?.uid == 'manager';
+}
+function princetonUserGenerated() {
+  return displayedObject.value.created_by?.domain == 'princeton';
+}
 
 watch(
   () => props.currentObject,
@@ -176,6 +207,15 @@ watch(
   .info-container {
     display: flex;
     align-items: center;
+  }
+}
+.createdByContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  .details-netid {
+    margin: -0.75rem 0rem 0rem 0rem;
   }
 }
 </style>
