@@ -132,10 +132,10 @@ const displayedPath = ref(props.currentObject.path.replace(hiddenRoot.value, '')
 const displayedObject = ref(props.currentObject);
 
 function systemGenerated() {
-  return displayedObject.value.created_by.uid == 'manager';
+  return displayedObject.value.created_by?.uid == 'manager';
 }
 function princetonUserGenerated() {
-  return displayedObject.value.created_by.domain == 'princeton';
+  return displayedObject.value.created_by?.domain == 'princeton';
 }
 
 watch(
