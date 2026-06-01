@@ -10,6 +10,7 @@ class NewProjectRequest < ApplicationRecord
     valid_title?
     valid_data_sponsor?
     valid_data_manager?
+    valid_user_roles?
     valid_departments?
     valid_quota?
     valid_project_purpose?
@@ -34,6 +35,20 @@ class NewProjectRequest < ApplicationRecord
 
   def valid_data_manager?
     check_errors? { validate_uid(data_manager, :data_manager) }
+  end
+
+  def valid_user_roles?
+    check_errors? do
+      user_roles&.each_with_index do |user_role, index| 
+        validate_uid(user_role["uid"], :user_roles)
+        if user_role["uid"] == data_sponsor
+          errors.add(:user_roles, :invalid, message: "Data sponsor should not be a data user")
+        end
+        if user_role["uid"] == data_manager
+          errors.add(:user_roles, :invalid, message: "Data manager should not be a data user")
+        end
+      end
+    end
   end
 
   def valid_departments?

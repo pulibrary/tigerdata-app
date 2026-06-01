@@ -354,6 +354,19 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Your new project request is submitted")
       end
 
+      it "can not submit if the request has the data sponsor or manager in the data users" do
+        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        request_project = FactoryBot.create(:request_project, requested_by: researcher_user.uid, data_sponsor: researcher_user.uid, data_manager: researcher_user.uid,
+                                                              user_roles: [{ "uid" => researcher_user.uid, "read_only" => true }])
+        sign_in researcher_user
+        visit "/new-project/review-submit/#{request_project.id}"
+        expect(page).to have_content "Take a moment to review"
+        click_on("Submit")
+        within(".user-input-display") do
+          expect(page).to have_content("Data sponsor should not be a data user, Data manager should not be a data user")
+        end
+      end
+
       it "saves work in progress if user jumps to another step in the wizard" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
 
