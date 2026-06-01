@@ -385,6 +385,21 @@ RSpec.describe NewProjectRequest, type: :model do
       request.description = "abc"
       expect(request.valid_to_submit?).to be_truthy
     end
+
+    it "returns false if the data sponsor is included in the data users" do
+      request = NewProjectRequest.new(project_title: "abc", data_sponsor: valid_user.uid, data_manager: sponsor_and_data_manager_user.uid, parent_folder: "abc", project_folder: "abc",
+                                      departments: "abc", quota: "500 GB", requested_by: "abc", project_purpose: "abc", description: "abc",
+                                      user_roles: [{ "uid" => valid_user.uid, "read_only" => true }])
+      expect(request.valid_to_submit?).to be_falsey
+      expect(request.errors[:user_roles].join(", ")).to eq("Data sponsor should not be a data user")
+    end
+    it "returns false if the data sponsor is included in the data users" do
+      request = NewProjectRequest.new(project_title: "abc", data_sponsor: sponsor_and_data_manager_user.uid, data_manager: valid_user.uid, parent_folder: "abc", project_folder: "abc",
+                                      departments: "abc", quota: "500 GB", requested_by: "abc", project_purpose: "abc", description: "abc",
+                                      user_roles: [{ "uid" => valid_user.uid, "read_only" => true }])
+      expect(request.valid_to_submit?).to be_falsey
+      expect(request.errors[:user_roles].join(", ")).to eq("Data manager should not be a data user")
+    end
   end
 
   describe "#requested_quota_size" do
