@@ -20,7 +20,6 @@
       "version": "19",
       "allow_insecure": ["zulu-ca-jdk-19.0.2"]
     },
-    "yarn": "1.22.22",
     "openssl": {
       "version": "latest",
       "outputs": ["bin", "dev", "out"]

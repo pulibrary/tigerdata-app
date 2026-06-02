@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 8
+  version: 10
   cacheKey: 10c0
 
 "@ampproject/remapping@npm:^2.3.0":
@@ -5675,8 +5675,6 @@ __metadata:
     vitest: "npm:^3.2.3"
     vue: "npm:^3.5.22"
     vue-eslint-parser: "npm:^10.4.0"
-    yarn: "npm:^1.22.22"
-    yarn.lock: "npm:^0.0.1-security"
   languageName: unknown
   linkType: soft
 
@@ -6472,23 +6470,6 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 10c0/703e4dc1e34b324aa66876d63618dcacb9ed49f7e7fe9b70f1e703645be8d640f68ab84f12b86df8ac960bac37acf5513e115de7c970940617ce0343c8c9cd96
-  languageName: node
-  linkType: hard
-
-"yarn.lock@npm:^0.0.1-security":
-  version: 0.0.1-security
-  resolution: "yarn.lock@npm:0.0.1-security"
-  checksum: 10c0/9da4b94cf4809273501ccf36faa1caa5f6b8f91d6bd15653377819ba2e33ce03bb67e26bca3a7c406413944de4dc2a8f51e930cd74aace5265801ffe37fb8716
-  languageName: node
-  linkType: hard
-
-"yarn@npm:^1.22.22":
-  version: 1.22.22
-  resolution: "yarn@npm:1.22.22"
-  bin:
-    yarn: bin/yarn.js
-    yarnpkg: bin/yarn.js
-  checksum: 10c0/8c77198c93d7542e7f4e131c63b66de357b7076ecfbcfe709ec0d674115c2dd9edaa45196e5510e6e9366d368707a802579e3402071002e1c9d9a99d491478de
   languageName: node
   linkType: hard
 
