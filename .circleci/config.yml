@@ -105,7 +105,7 @@ commands:
       - run: podman system prune -a --volumes -f || true
 
 jobs:
-  bundler_lint:
+  rubocop_lint:
     docker:
       - image: cimg/ruby:3.3.0
     working_directory: ~/tiger_data
@@ -292,7 +292,7 @@ workflows:
       equal: ["<< pipeline.parameters.GHA_Meta >>", ""]
 
     jobs:
-      - bundler_lint
+      - rubocop_lint
       - test
       - test_browser
       - yarn_lint_format
