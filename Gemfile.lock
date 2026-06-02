@@ -198,6 +198,7 @@ GEM
     erubi (1.13.1)
     eventmachine (1.2.7)
     execjs (2.10.0)
+    executable-hooks (1.7.1)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -352,8 +353,8 @@ GEM
     openssl (3.3.2)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    parallel (1.27.0)
-    parser (3.3.9.0)
+    parallel (1.28.0)
+    parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
     pg (1.6.2)
@@ -441,7 +442,7 @@ GEM
     redis (4.8.1)
     redis-client (0.25.2)
       connection_pool
-    regexp_parser (2.11.2)
+    regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
     responders (3.2.0)
@@ -478,9 +479,9 @@ GEM
       rubocop-ast (>= 1.17.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.46.0)
+    rubocop-ast (1.49.1)
       parser (>= 3.3.7.2)
-      prism (~> 1.4)
+      prism (~> 1.7)
     rubocop-performance (1.19.1)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
@@ -651,6 +652,7 @@ DEPENDENCIES
   dogstatsd-ruby
   dry-operation
   ed25519
+  executable-hooks
   factory_bot_rails
   faraday (>= 2.14.1)
   ffaker
@@ -671,6 +673,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
+  psych
   puma (~> 6.6)
   rack (>= 3.1.21)
   rack-mini-profiler
