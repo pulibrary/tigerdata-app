@@ -80,4 +80,3 @@ package-lock.json
 .devbox/
 
 princeton-ldap.yml
-bin/**
