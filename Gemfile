@@ -86,20 +86,19 @@ gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/
 gem "whenever", require: false
 
 group :development, :test do
-  gem "rspec-rails"
-
+  gem "bcrypt_pbkdf"
   gem "bixby"
   gem "bundle-audit", require: false
   gem "byebug"
-  gem "pry-rails"
-
-  gem "bcrypt_pbkdf"
   gem "capistrano-yarn"
   gem "ed25519"
+  gem "executable-hooks"
   gem "factory_bot_rails", require: false
   gem "ffaker"
   gem "mutex_m", "~> 0.2.0"
   gem "pry-byebug"
+  gem "pry-rails"
+  gem "rspec-rails"
 end
 
 group :development do
