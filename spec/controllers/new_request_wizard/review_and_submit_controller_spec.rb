@@ -356,7 +356,8 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
             end
 
             it "updates the request" do
-              put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
+              put :save, 
+params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Updated title")
             end
@@ -398,7 +399,8 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
             it "does not update the request even if they try to emulate a sysadmin" do
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
-              put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
+              put :save, 
+params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
             end
@@ -423,7 +425,8 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
             end
 
             it "does not update the request" do
-              put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
+              put :save, 
+params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
               valid_request.reload
               expect(valid_request.project_title).to eq("Valid Request")
             end

@@ -119,9 +119,9 @@ class ProjectShowPresenter
     requested_by_user.display_name_only_safe
   end
 
-   def requested_by_uid
-    requested_by_user.uid
-  end
+  def requested_by_uid
+   requested_by_user.uid
+ end
 
   def requested_on
     date_time = {}
@@ -208,17 +208,17 @@ class ProjectShowPresenter
     storage_value
   end
 
-    def quota_percentage_files
-      quota_percentage_calculation(quota_breakdown[:project_files])
-    end
+  def quota_percentage_files
+    quota_percentage_calculation(quota_breakdown[:project_files])
+  end
 
-    def quota_percentage_recycle_bin
-      quota_percentage_calculation(quota_breakdown[:recycle_bin])
-    end
+  def quota_percentage_recycle_bin
+    quota_percentage_calculation(quota_breakdown[:recycle_bin])
+  end
 
-    def quota_percentage_old_versions
-      quota_percentage_calculation(quota_breakdown[:old_versions])
-    end
+  def quota_percentage_old_versions
+    quota_percentage_calculation(quota_breakdown[:old_versions])
+  end
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?

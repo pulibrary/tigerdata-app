@@ -9,7 +9,8 @@ namespace :mediaflux do
     message = "Deleting everything from mediaflux namespace: #{Rails.configuration.mediaflux[:api_root_to_clean]}"
     puts message
     Rails.logger.warn message
-    Mediaflux::NamespaceDestroyRequest.new(session_token: session_id, namespace: Rails.configuration.mediaflux[:api_root_to_clean]).destroy
+    Mediaflux::NamespaceDestroyRequest.new(session_token: session_id, 
+namespace: Rails.configuration.mediaflux[:api_root_to_clean]).destroy
     [InventoryRequest, User, Project].each(&:delete_all)
     puts "All users, projects, and mediaflux data deleted."
     Rails.logger.warn "All users, projects, and mediaflux data deleted."

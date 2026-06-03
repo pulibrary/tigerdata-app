@@ -25,7 +25,8 @@ RSpec.describe "delete request/:id", type: :request do
 
     context "when the authenticated client is request creator" do
       let(:researcher) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", requested_by: researcher.uid) }
+      let(:request) {
+ NewProjectRequest.create(request_title: "abc123", project_title: "new project", requested_by: researcher.uid) }
 
       it "returns json" do
         sign_in researcher

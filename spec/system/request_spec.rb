@@ -3,14 +3,20 @@
 require "rails_helper"
 
 describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
-  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "authenticated user" do
-    let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:sponsor_user) {
+ FactoryBot.create(:project_sponsor, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:sysadmin_user) {
+ FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
     let(:developer_user) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-    let!(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", requested_by: sponsor_and_data_manager.uid, project_folder: "folder123") }
+    let!(:manager_user) {
+ FactoryBot.create(:data_manager, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:request) {
+ NewProjectRequest.create(request_title: "abc123", project_title: "project", 
+requested_by: sponsor_and_data_manager.uid, project_folder: "folder123") }
     let(:full_request) do
       NewProjectRequest.create(
         request_type: nil,
@@ -21,7 +27,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         data_sponsor: sponsor_user.uid,
         data_manager: manager_user.uid,
         departments:
-          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, 
+{ "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
         project_purpose: "research",
         parent_folder: random_project_directory,
@@ -50,7 +57,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         data_sponsor: sponsor_user.uid,
         data_manager: manager_user.uid,
         departments:
-          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
+          [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, 
+{ "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }],
         description: "Test project description",
         project_purpose: "research",
         parent_folder: random_project_directory,
@@ -170,17 +178,20 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "sysadmin_user" do
-      it "does not show the approve button on a single request view for sysadmins if the request has not been submitted" do
-        sign_in sysadmin_user
-        visit new_project_request_path(full_request.id)
-        # it does not show a approve request unless the request is submitted
-        expect(page).not_to have_content("Approve request")
-        expect(page).not_to have_link("Approve request")
-        expect(page).to have_content("This new project request has not been submitted.")
-        expect(page).to have_content("Continue Editing")
-        expect(page).not_to have_content("Edit submitted request")
+      context "when the request has not been submitted" do
+        it "does not show the approve button on a single request view" do
+          sign_in sysadmin_user
+          visit new_project_request_path(full_request.id)
+          # it does not show a approve request unless the request is submitted
+          expect(page).not_to have_content("Approve request")
+          expect(page).not_to have_link("Approve request")
+          expect(page).to have_content("This new project request has not been submitted.")
+          expect(page).to have_content("Continue Editing")
+          expect(page).not_to have_content("Edit submitted request")
+        end
       end
-      it "shows the approve button on a single submitted request view for sysadmins" do
+      context "when a single request has been submitted" do
+        it "shows the approve button" do
         sign_in sysadmin_user
         visit new_project_request_path(submitted_request.id)
         # it does not show a approve request unless the request is submitted
@@ -188,18 +199,22 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).not_to have_content("Continue Editing")
         expect(page).to have_content("Edit submitted request")
       end
-      it "shows the names of the data users on a single submitted request that includes data user(s)" do
+      end
+      end
+      
+      it "shows the names of the data users on a request that includes data user(s)" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         expect(page).to have_content("Data User(s)")
         expect(page).to have_content("tigerdatatester")
       end
-      it "shows the departments on a single submitted request that includes departments" do
+      it "shows the departments on a request that includes departments" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         expect(page).to have_content("88888")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       end
+    end
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
@@ -210,7 +225,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("500.0 GB")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        expect(page).to have_content("The request has been approved and this project was created in the" +
+          "TigerData web portal. The request has been processed and deleted.")        
         project = Project.last
         expect(project.title).to eq("Test Project Title")
         expect(project.metadata_json["project_id"]).to eq("10.34770/tbd")
@@ -222,7 +238,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        expect(page).to have_content("The request has been approved and this project was created in the" +
+          "TigerData web portal. The request has been processed and deleted.")
         project = Project.last
         expect(project.title).to eq("Blue Mountain")
         expect(project).to be_valid
@@ -317,7 +334,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     context "developer" do
       it "shows the approve button on a single request view for developers" do
         sign_in developer_user
-        put new_project_review_and_submit_save_url(full_request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+        put new_project_review_and_submit_save_url(full_request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Next")
         expect(response).to redirect_to(new_project_request_submit_path)
         sign_in sysadmin_user
         visit new_project_request_path(NewProjectRequest.last.id)

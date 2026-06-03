@@ -69,7 +69,8 @@ class ProjectImport
               departments: departments,
               data_user_read_only: data_user,
               project_directory: project_metadata["path"],
-              storage_capacity: {size: { approved: storage_size_gb, requested: storage_size_gb}, unit: {approved: "GB", requested: "GB"}},
+              storage_capacity: {size: { approved: storage_size_gb, requested: storage_size_gb}, 
+unit: {approved: "GB", requested: "GB"}},
               storage_performance_expectations: { requested: "Standard", approved: "Standard" },
               created_by: project_metadata["creatorUser"],
               created_on: project_metadata["createdOn"]

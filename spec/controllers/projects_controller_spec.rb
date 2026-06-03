@@ -2,8 +2,11 @@
 require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
-  let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let!(:sponsor_and_data_manager) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:project_request) {
+ FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, 
+data_sponsor: sponsor_and_data_manager.uid }
   let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
@@ -93,23 +96,31 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in sysadmin user" do
-      let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop", data_sponsor: sponsor_and_data_manager.uid) }
-      let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop", data_sponsor: sponsor_and_data_manager.uid) }
-      let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda", data_sponsor: sponsor_and_data_manager.uid) }
+      let(:request1) {
+ FactoryBot.create(:request_project, project_title: "soda pop", data_sponsor: sponsor_and_data_manager.uid) }
+      let(:request2) {
+ FactoryBot.create(:request_project, project_title: "orange pop", data_sponsor: sponsor_and_data_manager.uid) }
+      let(:request3) {
+ FactoryBot.create(:request_project, project_title: "grape soda", data_sponsor: sponsor_and_data_manager.uid) }
 
       let!(:project1) { create_project_in_mediaflux(request: request1, current_user: sponsor_and_data_manager) }
       let!(:project2) { create_project_in_mediaflux(request: request2, current_user: sponsor_and_data_manager) }
       let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sponsor_and_data_manager) }
 
-      let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+      let!(:sponsor_and_data_manager) {
+ FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", 
+mediaflux_session: SystemUser.mediaflux_session) }
       before do
         sign_in sponsor_and_data_manager
       end
 
       after do
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, 
+collection: project1.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, 
+collection: project2.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_and_data_manager.mediaflux_session, 
+collection: project3.mediaflux_id, members: true).resolve
       end
 
       it "Shows all the project" do
@@ -246,7 +257,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
-              expect { get :show, params: { id: project.id } }.to raise_error(Mediaflux::SessionExpired, /Session expired for token/)
+              expect {
+ get :show, params: { id: project.id } }.to raise_error(Mediaflux::SessionExpired, /Session expired for token/)
             end
           end
 

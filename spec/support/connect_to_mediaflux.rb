@@ -14,6 +14,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do |_ex|
-    Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, namespace: "/princeton/tigerdataNS/rspecNS", ignore_missing: true).resolve
+    Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, 
+namespace: "/princeton/tigerdataNS/rspecNS", ignore_missing: true).resolve
   end
 end

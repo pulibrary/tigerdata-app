@@ -36,7 +36,8 @@ RSpec.describe "new-project/project-type", type: :request do
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project") }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_project_type_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+          put new_project_project_type_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Save")
           expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
@@ -45,7 +46,8 @@ RSpec.describe "new-project/project-type", type: :request do
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_project_type_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+          put new_project_project_type_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Next")
           expect(response).to redirect_to(new_project_storage_and_access_path(request))
           request.reload
           expect(request.request_title).to eq("new title")
@@ -54,7 +56,8 @@ RSpec.describe "new-project/project-type", type: :request do
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_project_type_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
+          put new_project_project_type_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Back")
           expect(response).to redirect_to(new_project_roles_and_people_url(request))
           request.reload
           expect(request.request_title).to eq("new title")

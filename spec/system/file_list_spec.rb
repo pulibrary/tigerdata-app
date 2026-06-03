@@ -2,7 +2,8 @@
 require "rails_helper"
 
 describe "#file_list", integration: true, clean_projects: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
   let(:user) { FactoryBot.create(:user) }
   let(:request) { FactoryBot.create(:request_project) }
@@ -10,11 +11,14 @@ describe "#file_list", integration: true, clean_projects: true do
 
   before do
     # create a collection so it can be filtered
-    Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
+    Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", 
+pid: project.mediaflux_id).resolve
 
     # Create files for the project in mediaflux using test asset create request
-    Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
-    Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
+    Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, 
+pattern: "Real_Among_Random.txt").resolve
+    Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, 
+count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
   end
 
   it "fetches the file list" do

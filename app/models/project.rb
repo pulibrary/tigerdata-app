@@ -35,7 +35,8 @@ class Project < ApplicationRecord
 
   def activate(current_user:)
     raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
-    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, 
+id: self.mediaflux_id)
     metadata_request.resolve
     raise metadata_request.response_error if metadata_request.error?
     if self.title == metadata_request.metadata[:title]
@@ -159,7 +160,7 @@ class Project < ApplicationRecord
 
   def storage_capacity(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
+    quota_value = values.fetch(:quota_allocation, "") #if quota does not exist, set value to an empty string
     if quota_value.blank?
       return self.class.default_storage_capacity
     else

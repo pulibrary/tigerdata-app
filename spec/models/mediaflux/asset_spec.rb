@@ -12,7 +12,8 @@ RSpec.describe Mediaflux::Asset, type: :model do
   end
 
   let(:folder_asset) do
-    Mediaflux::Asset.new(id: 123, name: "photos", path: "#{Rails.configuration.mediaflux['api_root_collection_namespace']}/project-1/photos", collection: true)
+    Mediaflux::Asset.new(id: 123, name: "photos", 
+path: "#{Rails.configuration.mediaflux['api_root_collection_namespace']}/project-1/photos", collection: true)
   end
 
   describe "#path" do

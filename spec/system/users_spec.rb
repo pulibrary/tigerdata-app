@@ -4,12 +4,15 @@ require "rails_helper"
 
 describe "Current Users page", type: :system, connect_to_mediaflux: false, js: true do
   let(:researcher_user) { FactoryBot.create(:user, uid: "pul123") }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) {
+ FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer_user) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:manager_user) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:manager_user) {
+ FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
   let(:trainer_user) { FactoryBot.create(:trainer, uid: "pultrainer", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:user_without_provider) { FactoryBot.create(:data_manager, provider: "", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user_without_provider) {
+ FactoryBot.create(:data_manager, provider: "", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "unauthenticated user" do
     it "shows the 'Log In' button" do

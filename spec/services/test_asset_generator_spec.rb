@@ -2,8 +2,10 @@
 require "rails_helper"
 
 RSpec.describe TestAssetGenerator do
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:subject) {
+ described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
   let(:project) { FactoryBot.create :project, mediaflux_id: 1234 }
 
   describe "#generate" do
@@ -18,9 +20,12 @@ RSpec.describe TestAssetGenerator do
     end
 
     it "creates test data" do
-      allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
-      allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
-      allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(test_directory_create)
+      allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
+      allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, 
+name: anything).and_return(test_collection_create)
+      allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", 
+name: anything).and_return(test_directory_create)
       subject.generate
       expect(user).to have_received(:mediaflux_session)
       expect(test_asset_create).to have_received(:resolve)
@@ -29,12 +34,16 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "multiple files" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 3) }
+      let(:subject) {
+ described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 3) }
 
       it "creates test data" do
-        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 3, pattern: nil).and_return(test_asset_create)
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(test_directory_create)
+        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "2222", count: 3, pattern: nil).and_return(test_asset_create)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, 
+name: anything).and_return(test_collection_create)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", 
+name: anything).and_return(test_directory_create)
         subject.generate
         expect(user).to have_received(:mediaflux_session)
         expect(test_asset_create).to have_received(:resolve)
@@ -44,17 +53,23 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "Multiple levels" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 2, directory_per_level: 1, file_count_per_directory: 1) }
+      let(:subject) {
+ described_class.new(user:, project_id: project.id, levels: 2, directory_per_level: 1, file_count_per_directory: 1) }
       let(:test_collection_create_level2) { instance_double(Mediaflux::AssetCreateRequest, id: "91222") }
       let(:test_asset_create_level2) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
       let(:test_directory_create_level2) { instance_double(Mediaflux::AssetCreateRequest, id: "9222") }
 
       it "creates collections and files" do
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(test_directory_create, test_collection_create_level2)
-        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "91222", name: anything).and_return(test_directory_create_level2)
-        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "9222", count: 1, pattern: nil).and_return(test_asset_create_level2)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, 
+name: anything).and_return(test_collection_create)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(
+test_directory_create, test_collection_create_level2)
+        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "91222", 
+name: anything).and_return(test_directory_create_level2)
+        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "9222", count: 1, pattern: nil).and_return(test_asset_create_level2)
         subject.generate
         expect(test_asset_create).to have_received(:resolve)
         expect(test_asset_create_level2).to have_received(:resolve)
@@ -65,15 +80,20 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "Multiple directories" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
+      let(:subject) {
+ described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
       let(:test_directory_create_2) { instance_double(Mediaflux::AssetCreateRequest, id: "9222") }
       let(:test_asset_create_2) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
 
       it "creates collections and files" do
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, name: anything).and_return(test_collection_create)
-        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(test_directory_create, test_directory_create_2)
-        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
-        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "9222", count: 1, pattern: nil).and_return(test_asset_create_2)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: 1234, 
+name: anything).and_return(test_collection_create)
+        allow(Mediaflux::AssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", pid: "5678", name: anything).and_return(
+test_directory_create, test_directory_create_2)
+        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "2222", count: 1, pattern: nil).and_return(test_asset_create)
+        allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", 
+parent_id: "9222", count: 1, pattern: nil).and_return(test_asset_create_2)
         subject.generate
         expect(test_collection_create).to have_received(:id)
         expect(test_directory_create).to have_received(:id)

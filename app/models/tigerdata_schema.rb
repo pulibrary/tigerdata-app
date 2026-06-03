@@ -10,7 +10,8 @@ class TigerdataSchema
   def fields
     @fields ||= begin
       logon_request = Mediaflux::LogonRequest.new
-      schema_request = Mediaflux::SchemaFetchRequest.new(session_token: logon_request.session_token, namespace: @namespace, type: @type)
+      schema_request = Mediaflux::SchemaFetchRequest.new(session_token: logon_request.session_token, 
+namespace: @namespace, type: @type)
       schema_request.resolve
       schema_request.fields
     end

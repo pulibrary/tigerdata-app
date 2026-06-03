@@ -2,12 +2,14 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :model do
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
 
   describe "#result" do
     before do
-      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id).resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, 
+parent_id: approved_project.mediaflux_id).resolve
     end
 
     it "returns csv data with one row for our test project",

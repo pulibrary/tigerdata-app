@@ -32,7 +32,8 @@ class RequestProjectMetadata
      private
 
        def project_directory(request)
-         [Rails.configuration.mediaflux["api_root"], request[:parent_folder], request[:project_folder]].compact_blank.join("/")
+         [Rails.configuration.mediaflux["api_root"], request[:parent_folder], 
+request[:project_folder]].compact_blank.join("/")
        end
 
        def read_only_users(request)

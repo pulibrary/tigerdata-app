@@ -3,9 +3,11 @@ require "rails_helper"
 
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model, integration: true do
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
-  let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
+  let(:mediaflux_response) {
+ "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<response><reply type=\"result\"><result></result></reply></response>" }
   # Docker and Ansible responses are the same, but may be different in the future
   let(:docker_response_store) { { id: "1", name: "db", tag: "", type: "database" } }
   let(:ansible_response_store) { { id: "1", name: "db", tag: "", type: "database" } }

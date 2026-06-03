@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, type: :model, integration: true do
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   subject(:request) { described_class.new(session_token: user.mediaflux_session, service_name: "asset.namespace.list") }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
   let(:session_token) { SystemUser.mediaflux_session }
@@ -16,7 +17,8 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
     end
 
     context "when a document is passed" do
-      subject(:request) { described_class.new(session_token: session_token, service_name: "asset.namespace.list", document: "<id>1</id>") }
+      subject(:request) {
+ described_class.new(session_token: session_token, service_name: "asset.namespace.list", document: "<id>1</id>") }
 
       it "sends the service execute" do
         request.resolve
@@ -26,7 +28,8 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, connect_to_mediaflux: true, typ
     end
 
     context "when a token is passed" do
-      subject(:request) { described_class.new(session_token: session_token, service_name: "asset.namespace.list", token: "tokentoken") }
+      subject(:request) {
+ described_class.new(session_token: session_token, service_name: "asset.namespace.list", token: "tokentoken") }
 
       it "sends the service execute" do
         request.resolve

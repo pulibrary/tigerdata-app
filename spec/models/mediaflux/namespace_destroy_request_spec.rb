@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_project) { create_project_in_mediaflux(current_user: sponsor_user) }
   let(:namespace) { valid_project.project_directory.split("/").last + "NS" }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, mediaflux_session: SystemUser.mediaflux_session) }
@@ -12,7 +13,8 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
     :integration do
       mediaflux_id = valid_project.mediaflux_id
       expect(mediaflux_id).not_to be_nil
-      parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
+      parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token|
+ token + "NS" }.join("/")
       namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).to include(namespace)
@@ -24,7 +26,9 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
       expect(namespace_names).not_to include(namespace)
 
       # Should raise an error when attempting to destroy a namespace that does not exist
-      expect { described_class.new(session_token: session_id, namespace: "#{parent_namespace}/#{namespace}").destroy }.to raise_error do |error|
+      expect {
+ described_class.new(session_token: session_id, 
+namespace: "#{parent_namespace}/#{namespace}").destroy }.to raise_error do |error|
         expect(error).to be_a(StandardError)
         expect(error.message).to include("call to service 'asset.namespace.hard.destroy' failed: The namespace #{parent_namespace}/#{namespace} does not exist or is not accessible")
       end

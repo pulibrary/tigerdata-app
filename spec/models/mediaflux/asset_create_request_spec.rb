@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:random_directory) { random_project_directory }
@@ -15,7 +16,8 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
 
   describe "#id" do
     it "creates a collection on the server", :integration do
-      create_request = described_class.new(session_token: session_token, name: random_directory, pid: project.mediaflux_id)
+      create_request = described_class.new(session_token: session_token, name: random_directory, 
+pid: project.mediaflux_id)
       expect(create_request.response_error).to be_blank
       expect(create_request.id).not_to be_blank
       req = Mediaflux::AssetMetadataRequest.new(session_token: session_token, id: create_request.id)

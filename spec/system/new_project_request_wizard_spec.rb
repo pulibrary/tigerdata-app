@@ -14,7 +14,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
   context "authenticated user" do
     context "a sysadmin user" do
-      let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:sysadmin_user) {
+ FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
       let(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
       before do
@@ -35,9 +36,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select "Teaching", from: :project_purpose
         expect(page).to have_content "46/1000 characters"
         expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", 
+department_code: "77777", department_list: [])
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_field("request[departments][]", type: :hidden, 
+with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         click_on "Roles and People"
         select_user(sponsor_user, "data_sponsor", "request[data_sponsor]")
         select_user(manager_user, "data_manager", "request[data_manager]")
@@ -54,7 +57,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "developer" do
-      let(:developer_user) { FactoryBot.create(:developer, uid: "developer1", mediaflux_session: SystemUser.mediaflux_session) }
+      let(:developer_user) {
+ FactoryBot.create(:developer, uid: "developer1", mediaflux_session: SystemUser.mediaflux_session) }
       let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
       let(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
       before do
@@ -75,9 +79,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select "Teaching", from: :project_purpose
         expect(page).to have_content "46/1000 characters"
         expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", 
+department_code: "77777", department_list: [])
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_field("request[departments][]", type: :hidden, 
+with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         click_on "Roles and People"
         select_user(sponsor_user, "data_sponsor", "request[data_sponsor]")
         select_user(manager_user, "data_manager", "request[data_manager]")
@@ -94,12 +100,16 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
     end
 
     context "tester-trainer user" do
-      let!(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+      let!(:trainer_user) {
+ FactoryBot.create(:trainer, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       let(:user_a) { FactoryBot.create(:user, uid: "cac9") }
       let(:user_b) { FactoryBot.create(:user, uid: "jrg5") }
-      let(:request1) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester" }
+      let(:request1) {
+ FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester" }
       let(:project1) { request1.approve(trainer_user) }
-      let(:request2) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }] }
+      let(:request2) {
+ FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", 
+user_roles: [{ "uid" => user_b.uid, "read_only" => false }] }
       let(:project2) { request2.approve(trainer_user) }
       it "does not allow a user to see someone elses project" do
         sign_in user_a
@@ -145,7 +155,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content "46/1000 characters"
         select "Research", from: "project_purpose"
         expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", 
+department_code: "77777", department_list: [])
 
         # force a save and page reload to make sure all data is being saved to the model
         click_on "Next"
@@ -167,7 +178,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("project_folder", with: "skeletor")
         expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_field("request[departments][]", type: :hidden, 
+with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         click_on "Next"
         # TODO: when the wizard is fully functional the correct next step(s) are below
         # expect(page).to have_content "Categories (Optional)"
@@ -194,7 +206,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Add Users"
         expect(page).to have_content("1 new user(s) were successfully added.")
         expect(page).not_to have_content("0 duplicate user(s) were ignored.")
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
         click_on "Next"
         expect(page).to have_content("Enter the storage and access needs for your project")
         click_on "Back"
@@ -223,12 +236,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Add Users"
 
         expect(page).to have_field("request[read_only_#{another_user.uid}]", type: :radio)
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
         expect(page).to have_content(another_user.display_name_safe)
         expect(page).not_to have_content("#{another_user.display_name_safe} (#{another_user.uid})")
 
         expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
         expect(page).to have_content(other_user.display_name_safe)
 
         expect(page).to have_content("2 duplicate user(s) were ignored. 2 new user(s) were successfully added.")
@@ -239,7 +254,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Add Users"
 
         expect(page).to have_content("1 duplicate user(s) were ignored. 0 new user(s) were successfully added.")
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}").once
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}").once
 
         choose("request[read_only_#{another_user.uid}]", option: "false")
 
@@ -256,8 +272,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("request[data_sponsor]", type: :hidden, with: researcher_user.uid)
         expect(page.find("#data_manager_input input").value).to eq(manager_user.display_name_safe)
         expect(page).to have_field("request[data_manager]", type: :hidden, with: manager_user.uid)
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\",\"read_only\":false}")
-        expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\",\"read_only\":false}")
+        expect(page).to have_field("request[user_roles][]", type: :hidden, 
+with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
         expect(page).not_to have_content("#{researcher_user.display_name_safe} (#{researcher_user.uid})")
       end
 
@@ -344,8 +362,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :description, with: "An awesome project to show the wizard is magic"
         expect(page).to have_content "46/1000 characters"
         expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
-        select_and_verify_department(department: "HPC-High Performance Computing", department_code: "66666", department_list: [{ code: "77777", name: "RDSS-Research Data and Scholarship Services" }])
+        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", 
+department_code: "77777", department_list: [])
+        select_and_verify_department(department: "HPC-High Performance Computing", department_code: "66666", 
+department_list: [{ code: "77777", name: "RDSS-Research Data and Scholarship Services" }])
 
         select_user(researcher_user, "data_sponsor", "request[data_sponsor]")
         select_user(researcher_user, "data_manager", "request[data_manager]")
@@ -449,7 +469,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in researcher_user
         visit "new-project/project-info"
 
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
+        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", 
+department_code: "77777", department_list: [])
         # the option is no longer available
         within(".departments") do
           page.find(".lux-field input").fill_in with: "77777"
@@ -458,7 +479,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           end
         end
 
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_field("request[departments][]", type: :hidden, 
+with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
 
         click_on "Review and Submit"

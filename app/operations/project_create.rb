@@ -28,7 +28,8 @@ class ProjectCreate < Dry::Operation
 
     def persist_in_mediaflux(project, current_user)
       # Create the project in Mediaflux
-      mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, project: project)
+      mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: current_user.mediaflux_session, 
+project: project)
       mediaflux_request.resolve
 
       mediaflux_id = mediaflux_request.mediaflux_id
@@ -38,11 +39,13 @@ class ProjectCreate < Dry::Operation
         Rails.logger.error debug_output
         Failure debug_output
       else
-        ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
+        ProvenanceEvent.generate_approval_events(project: project, user: current_user, 
+debug_output: mediaflux_request.debug_output.to_s)
         # Save the submission provenance
         # TODO:  Should we update the metadata_model or just the metadata hash directly?
         project.metadata_model.submission["approved_by"] = current_user.uid
-        project.metadata_model.submission["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
+        project.metadata_model.submission["approved_on"] = 
+project.provenance_events.where(event_type: "Approved").first.created_at
         project.save!
 
         Success(mediaflux_id)
@@ -76,7 +79,8 @@ class ProjectCreate < Dry::Operation
       return Success(project) if (project.metadata_model.ro_users + project.metadata_model.rw_users).empty?
 
       # Add the data users to the project in Mediaflux
-      add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: project)
+      add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, 
+project: project)
       add_users_request.resolve
 
       if add_users_request.error?

@@ -103,7 +103,8 @@ module Mediaflux
           size: node.xpath("./total-size").text.to_i,
           last_modified_mf: node.xpath("mtime").text,
           created_on_mf: node.xpath("ctime").text,
-          creator: { uid: node.xpath("creator_uid").text, name: node.xpath("creator_name").text, domain: node.xpath("creator_domain").text },
+          creator: { uid: node.xpath("creator_uid").text, name: node.xpath("creator_name").text, 
+domain: node.xpath("creator_domain").text },
           collection_count: node.xpath("./collection-count").text.to_i,
           file_count: node.xpath("./file-count").text.to_i,
           folder_size: node.xpath("./folder-size").text.to_i

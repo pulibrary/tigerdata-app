@@ -2,12 +2,22 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  let(:access_token) { OmniAuth::AuthHash.new(provider: "cas", uid: "who", extra: { mail: "who@princeton.edu", givenname: "Guess", sn: "Who?", pudisplayname: "Guess Who?" }) }
+  let(:access_token) {
+ OmniAuth::AuthHash.new(provider: "cas", uid: "who", 
+extra: { mail: "who@princeton.edu", givenname: "Guess", sn: "Who?", pudisplayname: "Guess Who?" }) }
   let(:access_token2) { OmniAuth::AuthHash.new(provider: "cas", uid: "who2", extra: { mail: "who2@princeton.edu" }) }
-  let(:access_token3) { OmniAuth::AuthHash.new(provider: "cas", uid: "who3", extra: { mail: "who3@princeton.edu", givenname: "", sn: "", pudisplayname: "" }) }
-  let(:access_token4) { OmniAuth::AuthHash.new(provider: "cas", uid: "who4", extra: { mail: "who4@princeton.edu", givenname: "Guess", sn: "McWho", pudisplayname: "Guess McWho" }) }
-  let(:access_token5) { OmniAuth::AuthHash.new(provider: "cas", uid: "who5", extra: { mail: "who5@princeton.edu", givenname: "Guess", sn: "Who-You", pudisplayname: "Guess Who-You" }) }
-  let(:access_token6) { OmniAuth::AuthHash.new(provider: "cas", uid: "who6", extra: { mail: "who6@princeton.edu", givenname: "Guess", sn: "Y'Who", pudisplayname: "Guess Y'Who" }) }
+  let(:access_token3) {
+ OmniAuth::AuthHash.new(provider: "cas", uid: "who3", 
+extra: { mail: "who3@princeton.edu", givenname: "", sn: "", pudisplayname: "" }) }
+  let(:access_token4) {
+ OmniAuth::AuthHash.new(provider: "cas", uid: "who4", 
+extra: { mail: "who4@princeton.edu", givenname: "Guess", sn: "McWho", pudisplayname: "Guess McWho" }) }
+  let(:access_token5) {
+ OmniAuth::AuthHash.new(provider: "cas", uid: "who5", 
+extra: { mail: "who5@princeton.edu", givenname: "Guess", sn: "Who-You", pudisplayname: "Guess Who-You" }) }
+  let(:access_token6) {
+ OmniAuth::AuthHash.new(provider: "cas", uid: "who6", 
+extra: { mail: "who6@princeton.edu", givenname: "Guess", sn: "Y'Who", pudisplayname: "Guess Y'Who" }) }
   describe "#from_cas" do
     it "returns nil if the user does not exist" do
       expect(described_class.from_cas(access_token)).to be_nil

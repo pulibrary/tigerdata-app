@@ -14,7 +14,8 @@ FactoryBot.define do
       updated_by { FactoryBot.create(:user).uid }
       project_id { random_project_id }
       status { "approved" }
-      storage_capacity { { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
+      storage_capacity {
+ { size: { requested: 500, approved: 500 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access }
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
       project_directory { "#{Rails.configuration.mediaflux['api_root']}/#{random_project_directory}" }
@@ -76,7 +77,8 @@ FactoryBot.define do
 
     factory :approved_project, class: "Project" do
       transient do
-        storage_capacity { { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } }.with_indifferent_access }
+        storage_capacity {
+ { size: { requested: 500, approved: 600 }, unit: { requested: "GB", approved: "KB" } }.with_indifferent_access }
         storage_performance { { requested: "standard", approved: "performant" }.with_indifferent_access }
         status { "approved" }
         approved_by { FactoryBot.create(:sysadmin).uid }

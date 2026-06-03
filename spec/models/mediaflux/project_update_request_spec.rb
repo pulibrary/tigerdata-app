@@ -4,7 +4,8 @@ require "rails_helper"
 RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type: :model do
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:session_token) { SystemUser.mediaflux_session }
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
@@ -29,7 +30,8 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
         created_on = Time.current.in_time_zone("America/New_York").advance(days: -1).iso8601.to_s
         project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
                                                 project_id: "abc/123", project_directory: "testasset"
-        create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
+        create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, project:, 
+namespace: Rails.configuration.mediaflux[:api_root_ns])
         expect(create_request.response_error).to be_blank
         expect(create_request.id).not_to be_blank
 
@@ -64,7 +66,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
   it "creates the asset update payload" do
     FactoryBot.create :user, uid: "dm1"
     FactoryBot.create :user, uid: "ds1"
-    project = FactoryBot.create :project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
+    project = FactoryBot.create :project, mediaflux_id: "1234", updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
                                           created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1"
     update_request = described_class.new(session_token: nil, project:)
     expected_xml = "<?xml version=\"1.0\"?>\n" \

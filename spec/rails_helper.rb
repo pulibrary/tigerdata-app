@@ -12,7 +12,8 @@ require "capybara/rspec"
 require "devise"
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true,
-                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "mflux-ci.lib.princeton.edu", "mflux-staging.lib.princeton.edu"])
+                             allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "mflux-ci.lib.princeton.edu", 
+"mflux-staging.lib.princeton.edu"])
 # WebMock.enable_net_connect!
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
 

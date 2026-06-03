@@ -35,7 +35,8 @@ Rails.application.routes.draw do
 
   resources :projects, except: [:new, :edit]
   post "projects/send_globus_access_request", to: "projects#send_globus_access_request", as: :send_globus_access_request
-  post "projects/send_storage_increase_request", to: "projects#send_storage_increase_request", as: :send_storage_increase_request
+  post "projects/send_storage_increase_request", to: "projects#send_storage_increase_request", 
+as: :send_storage_increase_request
   get "projects/:id/details", to: "projects#details", as: :project_details
   get "projects/:id/list-contents", to: "projects#list_contents", as: :project_list_contents
   get "projects/:id/revision_confirmation", to: "projects#revision_confirmation", as: :project_revision_confirmation
@@ -68,23 +69,34 @@ Rails.application.routes.draw do
   put "project_import", to: "project_import#run"
   get "project_import", to: "dashboard#index"
 
-  get "new-project/project-info/(:request_id)", to: "new_project_wizard/project_information#show", as: :new_project_project_info
-  put "new-project/project-info/:request_id/save", to: "new_project_wizard/project_information#save", as: :new_project_project_info_save
+  get "new-project/project-info/(:request_id)", to: "new_project_wizard/project_information#show", 
+as: :new_project_project_info
+  put "new-project/project-info/:request_id/save", to: "new_project_wizard/project_information#save", 
+as: :new_project_project_info_save
 
-  get "new-project/project-info-categories/:request_id", to: "new_project_wizard/project_information_categories#show", as: :new_project_project_info_categories
-  put "new-project/project-info-categories/:request_id/save", to: "new_project_wizard/project_information_categories#save", as: :new_project_project_info_categories_save
+  get "new-project/project-info-categories/:request_id", to: "new_project_wizard/project_information_categories#show", 
+as: :new_project_project_info_categories
+  put "new-project/project-info-categories/:request_id/save", 
+to: "new_project_wizard/project_information_categories#save", as: :new_project_project_info_categories_save
 
-  get "new-project/project-info-dates/:request_id", to: "new_project_wizard/project_information_dates#show", as: :new_project_project_info_dates
-  put "new-project/project-info-dates/:request_id/save", to: "new_project_wizard/project_information_dates#save", as: :new_project_project_info_dates_save
+  get "new-project/project-info-dates/:request_id", to: "new_project_wizard/project_information_dates#show", 
+as: :new_project_project_info_dates
+  put "new-project/project-info-dates/:request_id/save", to: "new_project_wizard/project_information_dates#save", 
+as: :new_project_project_info_dates_save
 
-  get "new-project/roles-people/:request_id", to: "new_project_wizard/roles_and_people#show", as: :new_project_roles_and_people
-  put "new-project/roles-people/:request_id/save", to: "new_project_wizard/roles_and_people#save", as: :new_project_roles_and_people_save
+  get "new-project/roles-people/:request_id", to: "new_project_wizard/roles_and_people#show", 
+as: :new_project_roles_and_people
+  put "new-project/roles-people/:request_id/save", to: "new_project_wizard/roles_and_people#save", 
+as: :new_project_roles_and_people_save
 
   get "new-project/project-type/:request_id", to: "new_project_wizard/project_type#show", as: :new_project_project_type
-  put "new-project/project-type/:request_id/save", to: "new_project_wizard/project_type#save", as: :new_project_project_type_save
+  put "new-project/project-type/:request_id/save", to: "new_project_wizard/project_type#save", 
+as: :new_project_project_type_save
 
-  get "new-project/storage-access/:request_id", to: "new_project_wizard/storage_and_access#show", as: :new_project_storage_and_access
-  put "new-project/storage-access/:request_id/save", to: "new_project_wizard/storage_and_access#save", as: :new_project_storage_and_access_save
+  get "new-project/storage-access/:request_id", to: "new_project_wizard/storage_and_access#show", 
+as: :new_project_storage_and_access
+  put "new-project/storage-access/:request_id/save", to: "new_project_wizard/storage_and_access#save", 
+as: :new_project_storage_and_access_save
 
   get "new-project/additional-info-grants-funding/:request_id", to: "new_project_wizard/additional_information_grants_and_funding#show",
                                                                 as: :new_project_additional_information_grants_and_funding
@@ -101,8 +113,10 @@ Rails.application.routes.draw do
   put "new-project/additional-info-related-resources/:request_id/save", to: "new_project_wizard/additional_information_related_resources#save",
                                                                         as: :new_project_additional_information_related_resources_save
 
-  get "new-project/review-submit/:request_id", to: "new_project_wizard/review_and_submit#show", as: :new_project_review_and_submit
-  put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", as: :new_project_review_and_submit_save
+  get "new-project/review-submit/:request_id", to: "new_project_wizard/review_and_submit#show", 
+as: :new_project_review_and_submit
+  put "new-project/review-submit/:request_id/save", to: "new_project_wizard/review_and_submit#save", 
+as: :new_project_review_and_submit_save
 
   get "new_project_request_submit", to: "new_project_request_submit#index"
 

@@ -39,7 +39,8 @@ namespace :projects do
     levels = rand(10)
     directory_per_level = rand(10)
     file_count_per_directory = rand(10)
-    asset_generator = TestAssetGenerator.new(user:, project_id: project.id, levels:, directory_per_level:, file_count_per_directory:)
+    asset_generator = TestAssetGenerator.new(user:, project_id: project.id, levels:, directory_per_level:, 
+file_count_per_directory:)
     asset_generator.generate
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
@@ -53,13 +54,15 @@ namespace :projects do
     name = "fileList.tcl"
     full_path = "#{namespace}/#{name}"
     content_url = "https://raw.githubusercontent.com/pulibrary/tigerdata-app/f557f15bb217c7b8646034ddc444a3114b0f02fb/lib/assets/fileList.tcl"
-    upload_request = Mediaflux::ScriptUploadRequest.new(session_token: user.mediaflux_session, namespace: namespace, name: name, url: content_url)
+    upload_request = Mediaflux::ScriptUploadRequest.new(session_token: user.mediaflux_session, namespace: namespace, 
+name: name, url: content_url)
     upload_request.resolve
     if upload_request.error?
       puts "Error creating script: #{upload_request.response_error[:message]}"
     else
       puts "Created asset: #{upload_request.result} at #{full_path}"
-      make_executable_request = Mediaflux::ScriptMakeExecutableRequest.new(session_token: user.mediaflux_session, path: full_path)
+      make_executable_request = Mediaflux::ScriptMakeExecutableRequest.new(session_token: user.mediaflux_session, 
+path: full_path)
       make_executable_request.resolve
     end
   end
@@ -77,7 +80,8 @@ namespace :projects do
 
     puts "Path: #{path}"
     loop do
-      iterate_request = Mediaflux::ScriptFileListIterateRequest.new(session_token: user.mediaflux_session, iterator: iterator)
+      iterate_request = Mediaflux::ScriptFileListIterateRequest.new(session_token: user.mediaflux_session, 
+iterator: iterator)
       iterate_request.resolve
       files = iterate_request.result
       puts files

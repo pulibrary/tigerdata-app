@@ -54,13 +54,15 @@ RSpec.describe ProjectImport do
   end
 
   describe "##run_with_report" do
-    let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
 
     before do
       # Make sure we start with a clean slate
       namespace_to_clear = "princeton/tigerdataNS/rspec-importNS"
-      Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, namespace: namespace_to_clear, ignore_missing: true).destroy
+      Mediaflux::NamespaceDestroyRequest.new(session_token: SystemUser.mediaflux_session, 
+namespace: namespace_to_clear, ignore_missing: true).destroy
     end
 
     it "creates projects for project in Mediaflux",

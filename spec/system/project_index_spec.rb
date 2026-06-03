@@ -27,7 +27,8 @@ RSpec.describe "Project Index Page", type: :system do
 
   context "system admin user" do
     let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:project_not_in_mediaflux) { FactoryBot.create(:project, data_sponsor: "pul123", data_manager: "pul123", title: "no mediaflux pop") }
+    let(:project_not_in_mediaflux) {
+ FactoryBot.create(:project, data_sponsor: "pul123", data_manager: "pul123", title: "no mediaflux pop") }
 
     let(:request1) { FactoryBot.create(:request_project, project_title: "soda pop") }
     let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
@@ -38,9 +39,12 @@ RSpec.describe "Project Index Page", type: :system do
     let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sysadmin_user) }
 
     after do
-      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
-      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
-      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, 
+collection: project1.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, 
+collection: project2.mediaflux_id, members: true).resolve
+      Mediaflux::AssetDestroyRequest.new(session_token: sysadmin_user.mediaflux_session, 
+collection: project3.mediaflux_id, members: true).resolve
     end
 
     before do

@@ -11,7 +11,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   end
 
   context "authenticated user" do
-    let(:current_user) { FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:current_user) {
+ FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     # VersionRequest is needed to force Ruby to load the Mediaflux::EXPECTED_VERSION constant
     let!(:version_req) { Mediaflux::VersionRequest.new(session_token: current_user.mediaflux_session) }
     let(:admin_user) { FactoryBot.create(:sysadmin, uid: "admin123") }
@@ -20,14 +21,19 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { Mediaflux::EXPECTED_VERSION }
 
-    let(:request_111) { FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111" }
+    let(:request_111) {
+ FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, 
+project_title: "project 111" }
     let(:project_111) { request_111.approve(current_user) }
 
-    let(:request_222) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222" }
+    let(:request_222) {
+ FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, 
+project_title: "project 222" }
     let(:project_222) { request_222.approve(current_user) }
 
     let(:request_333) do
-      FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
+      FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, 
+project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
     end
     let(:project_333) { request_333.approve(current_user) }
 
@@ -38,7 +44,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     end
 
     after do
-      created_projects.each { |project| Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve }
+      created_projects.each { |project|
+ Mediaflux::AssetDestroyRequest.new(session_token: current_user.mediaflux_session, collection: project.mediaflux_id, 
+members: true).resolve }
     end
 
     context "current user dashboard - non admin user" do
@@ -99,7 +107,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         created_projects.push(project_111, project_222, project_333)
 
         approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
-        FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
+        FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, 
+mediaflux_session: current_user.mediaflux_session).perform_now
         FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
                                     request_details: { project_title: approved_project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
         sign_in current_user
@@ -282,9 +291,15 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     context "with the sysadmin role" do
       let(:admin_user) { FactoryBot.create(:sysadmin, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }
 
-      let!(:request_draft) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft" }
-      let!(:request_submitted1) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted" }
-      let!(:request_submitted2) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted" }
+      let!(:request_draft) {
+ FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, 
+project_title: "draft request", state: "draft" }
+      let!(:request_submitted1) {
+ FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, 
+project_title: "submitted request 1", state: "submitted" }
+      let!(:request_submitted2) {
+ FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, 
+project_title: "submitted request 2", state: "submitted" }
 
       it "shows the system administrator dashboard" do
         sign_in admin_user

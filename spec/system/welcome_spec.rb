@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
@@ -58,7 +59,8 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "shows the new request multi button to sysadmin users" do
       FactoryBot.create(:request, project_title: "A new draft request", requested_by: sysadmin_user.uid)
       other_request = FactoryBot.create(:request, project_title: "Other draft request", requested_by: sysadmin_user.uid)
-      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: sysadmin_user.uid, state: NewProjectRequest::SUBMITTED)
+      FactoryBot.create(:request, project_title: "A new submitted request", requested_by: sysadmin_user.uid, 
+state: NewProjectRequest::SUBMITTED)
       sign_in sysadmin_user
       visit "/"
 

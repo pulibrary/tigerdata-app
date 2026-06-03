@@ -55,7 +55,8 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
 
-    @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
+    @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, 
+state: "completed").order(:completion_time).last
     @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
     @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
 
@@ -81,7 +82,8 @@ class ProjectsController < ApplicationController
 
     path_id = params["pathid"]&.to_i || project.mediaflux_id
     # TODO: We should not be adding the '+1' below to make the test pass.  Complete from mediaflux or another way to calculate it should really be correct
-    mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, size: Rails.configuration.project_file_display_limit)
+    mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, 
+size: Rails.configuration.project_file_display_limit)
     if mediaflux_data[:error]
       render json: {error: mediaflux_data[:error]}
     else

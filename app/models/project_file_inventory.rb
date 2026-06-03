@@ -44,7 +44,8 @@ class ProjectFileInventory
       # Create an interator for this path
       # Notice that we do NOT include the path in the results because it's too expensive to retrieve it from
       # Mediaflux (see https://github.com/pulibrary/tigerdata-app/issues/1274#issuecomment-2710860502 for details)
-      query_req = Mediaflux::QueryRequest.new(session_token: @session_id, collection: collection_id, deep_search: false, include_path: false)
+      query_req = Mediaflux::QueryRequest.new(session_token: @session_id, collection: collection_id, 
+deep_search: false, include_path: false)
       iterator_id = query_req.result
 
       # ...and query the iterator for the results

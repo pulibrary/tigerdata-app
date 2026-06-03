@@ -51,7 +51,8 @@ RSpec.describe "new-project/review-submit", type: :request do
           expect(request.state).to eq("draft")
           expect(request.data_sponsor).to eq("pul123")
           expect(request.data_manager).to eq("pul123")
-          expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, { "code" => "dept2", "name" => "two" }])
+          expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, 
+{ "code" => "dept2", "name" => "two" }])
           expect(request.description).to eq("descr")
           expect(request.project_purpose).to eq("research")
           expect(request.parent_folder).to eq("parent")
@@ -72,7 +73,8 @@ RSpec.describe "new-project/review-submit", type: :request do
 
         it "renders the current page for a next commit without a request that is valid to submit" do
           sign_in user
-          put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+          put new_project_review_and_submit_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Next")
           expect(response).to redirect_to(new_project_review_and_submit_url(request.id))
           request.reload
           expect(request.request_title).to eq("new title")
@@ -81,7 +83,8 @@ RSpec.describe "new-project/review-submit", type: :request do
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_review_and_submit_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
+          put new_project_review_and_submit_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Back")
           # TODO: when the wizard is fully functional the correct redirect is below
           # expect(response).to redirect_to(new_project_additional_information_related_resources_url(request))
           expect(response).to redirect_to(new_project_storage_and_access_url(request))

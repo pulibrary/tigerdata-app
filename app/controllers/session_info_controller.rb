@@ -16,7 +16,8 @@ class SessionInfoController < ApplicationController
   private
 
     def java_plugin_check
-      trivial_attempt = Mediaflux::StringReverse.new(string: "Hello, Mediaflux!", session_token: current_user.mediaflux_session)
+      trivial_attempt = Mediaflux::StringReverse.new(string: "Hello, Mediaflux!", 
+session_token: current_user.mediaflux_session)
       trivial_attempt.resolve
       trivial_attempt.response_body
     rescue => ex

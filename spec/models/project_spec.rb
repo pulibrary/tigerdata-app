@@ -4,20 +4,25 @@ require "rails_helper"
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user2) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
     before do
-      request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid
+      request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, 
+data_sponsor: test_user.uid
       request1.approve(sponsor_and_data_manager_user)
       request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
       request2.approve(sponsor_and_data_manager_user)
-      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => user2.uid, "read_only" => true }])
+      request3 = FactoryBot.create(:request_project, project_title: "project 333", 
+user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => user2.uid, "read_only" => true }])
       request3.approve(sponsor_and_data_manager_user)
-      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => user2.uid, "read_only" => false }])
+      request4 = FactoryBot.create(:request_project, project_title: "project 444", 
+user_roles: [{ "uid" => user2.uid, "read_only" => false }])
       request4.approve(sponsor_and_data_manager_user)
-      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user2.uid, "read_only" => true }])
+      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, 
+data_sponsor: user.uid, user_roles: [{ "uid" => user2.uid, "read_only" => true }])
       request5.approve(sponsor_and_data_manager_user)
     end
 
@@ -32,7 +37,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
 
       # ...plus a project that comes predefined in the Docker image
-      expect(all_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+      expect(all_projects.find { |project|
+ project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
     end
 
     it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
@@ -48,10 +54,14 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
 
       # ...and make sure the existing testing projects are present
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be nil
+      expect(user_projects.find { |project|
+ project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+      expect(user_projects.find { |project|
+ project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be nil
+      expect(user_projects.find { |project|
+ project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be nil
+      expect(user_projects.find { |project|
+ project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be nil
     end
 
     it "handles Mediaflux errors" do
@@ -84,11 +94,14 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
     before do
       # create a collection so it can be filtered
-      Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
+      Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", 
+pid: project.mediaflux_id).resolve
 
       # Create files for the project in mediaflux using test asset create request
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, 
+pattern: "Real_Among_Random.txt").resolve
+      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, 
+count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
     end
 
     it "fetches the file list",

@@ -158,7 +158,8 @@ class User < ApplicationRecord
   # Fetches the most recent download jobs for the user
   def latest_downloads(limit: 10)
     @latest_downloads ||= begin
-                            downloads = InventoryRequest.where(user_id: id).where(["completion_time > ?", 7.days.ago]).order(created_at: "DESC").limit(limit)
+                            downloads = InventoryRequest.where(user_id: id).where(["completion_time > ?", 
+7.days.ago]).order(created_at: "DESC").limit(limit)
                             downloads.map{|download| InventoryRequestPresenter.new(download)}
                           end
   end

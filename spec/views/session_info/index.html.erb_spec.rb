@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe "session_info/index", type: :view do
-  let(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   before(:each) do
     assign(:current_user, user)

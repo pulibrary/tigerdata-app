@@ -2,13 +2,15 @@
 require "rails_helper"
 
 RSpec.describe ProjectValidator, type: :model do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#sponsored_projects" do
     context "with valid roles" do
       it "finds no errors" do
         sponsor = FactoryBot.create(:project_sponsor)
-        project = FactoryBot.create(:project, data_sponsor: sponsor.uid, data_manager: sponsor.uid, project_id: "abc123")
+        project = FactoryBot.create(:project, data_sponsor: sponsor.uid, data_manager: sponsor.uid, 
+project_id: "abc123")
         expect(project).to be_valid
       end
     end
@@ -16,7 +18,8 @@ RSpec.describe ProjectValidator, type: :model do
     context "with missing schema version" do
       it "finds the error" do
         sponsor = FactoryBot.create(:project_sponsor)
-        project = FactoryBot.build(:project, data_sponsor: nil, data_manager: sponsor.uid, project_id: "abc123", schema_version: nil)
+        project = FactoryBot.build(:project, data_sponsor: nil, data_manager: sponsor.uid, project_id: "abc123", 
+schema_version: nil)
         expect(project).not_to be_valid
         expect(project.errors.map(&:full_message)).to eq(["Missing netid for role Data Sponsor",
                                                           "Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for data_sponsor"])
@@ -47,7 +50,8 @@ RSpec.describe ProjectValidator, type: :model do
       it "finds the errors" do
         project = FactoryBot.build(:project, data_sponsor: "xx123", data_manager: "yy456")
         expect(project).not_to be_valid
-        expect(project.errors.map(&:full_message)).to eq(["Invalid netid: yy456 for role Data Manager", "Invalid netid: xx123 for role Data Sponsor"])
+        expect(project.errors.map(&:full_message)).to eq(["Invalid netid: yy456 for role Data Manager", 
+"Invalid netid: xx123 for role Data Sponsor"])
       end
     end
 

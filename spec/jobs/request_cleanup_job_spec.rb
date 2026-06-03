@@ -5,7 +5,8 @@ RSpec.describe RequestCleanupJob, type: :job do
   describe "#perform" do
     let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     let(:empty_request) { NewProjectRequest.create }
-    let(:invalid_request) { NewProjectRequest.create(project_title: "Invalid Request", data_sponsor: user.uid, data_manager: user.uid) }
+    let(:invalid_request) {
+ NewProjectRequest.create(project_title: "Invalid Request", data_sponsor: user.uid, data_manager: user.uid) }
     let(:valid_request) do
       NewProjectRequest.create(project_title: "Valid Request", data_sponsor: user.uid, data_manager: user.uid, departments: ["RDSS"],
                                quota: "500 GB", description: "A valid request",

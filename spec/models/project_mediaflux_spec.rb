@@ -12,7 +12,8 @@ RSpec.describe ProjectMediaflux, type: :model do
     request.approve(sponsor_and_data_manager_user)
   end
 
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
@@ -74,7 +75,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
 
       it "should raise a error if any error occurs in mediaflux", integration: true do
-        expect { incomplete_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
+        expect {
+ incomplete_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       end
     end
   end
@@ -110,7 +112,9 @@ RSpec.describe ProjectMediaflux, type: :model do
 
     it "raises errors when project is not accessible", :integration do
       # The project is not in mediaflux and therefore this will raise an exception
-      expect { described_class.xml_payload(project: project_not_in_mediaflux, user: sponsor_and_data_manager_user) }.to raise_error(StandardError)
+      expect {
+ described_class.xml_payload(project: project_not_in_mediaflux, 
+user: sponsor_and_data_manager_user) }.to raise_error(StandardError)
     end
   end
 end

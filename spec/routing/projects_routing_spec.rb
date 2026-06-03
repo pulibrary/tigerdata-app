@@ -13,7 +13,8 @@ describe ProjectsController, type: :routing do
 
     it "routes to #project_show_mediaflux" do
       expect(get: "/projects/1/1-mf").to route_to(controller: "projects", action: "show_mediaflux", id: "1")
-      expect(get: "/projects/1/1-mf.xml").to route_to(controller: "projects", action: "show_mediaflux", id: "1", format: "xml")
+      expect(get: "/projects/1/1-mf.xml").to route_to(controller: "projects", action: "show_mediaflux", id: "1", 
+format: "xml")
     end
   end
 end

@@ -3,8 +3,10 @@ require "rails_helper"
 
 RSpec.describe RequestProjectMetadata do
   let(:researcher_user) { FactoryBot.create(:user, uid: "pul123") }
-  let(:manager_user) { FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:manager_user) {
+ FactoryBot.create(:data_manager, uid: "pul987", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) {
+ FactoryBot.create(:project_sponsor, uid: "pul456", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
     NewProjectRequest.create(
       request_type: nil,
@@ -113,7 +115,8 @@ RSpec.describe RequestProjectMetadata do
         expect(project_metadata[:project_directory]).to eq("#{Rails.configuration.mediaflux['api_root']}/pul/bluemountain")
         expect(project_metadata[:storage_capacity][:size]).to eq({ approved: "30.0", requested: "30.0" })
         expect(project_metadata[:storage_capacity][:unit]).to eq({ approved: "TB", requested: "TB" })
-        expect(project_metadata[:storage_performance_expectations]).to eq({ requested: "Standard", approved: "Standard" })
+        expect(project_metadata[:storage_performance_expectations]).to eq({ requested: "Standard", 
+approved: "Standard" })
         expect(project_metadata[:created_by]).to be_nil
         expect(project_metadata[:created_on]).to eq(request.created_at)
         expect(project_metadata[:project_id]).to eq(ProjectMetadata::DOI_NOT_MINTED)

@@ -2,14 +2,17 @@
 require "rails_helper"
 
 RSpec.describe NewProjectRequest, type: :model do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_user) { FactoryBot.create(:user) }
   let(:request) do
     described_class.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project", project_purpose: "research",
                            data_sponsor: "sponsor", data_manager: "manager", departments: [{ code: "dept", name: "department" }], description: "description", parent_folder: "folder",
                            project_folder: "project", project_id: "doi", quota: "500 GB", requested_by: valid_user.uid, user_roles: [{ uid: "abc123", name: "Abe Cat" },
-                                                                                                                                     { uid: "ddd", name: "Dandy Dog", read_only: true },
-                                                                                                                                     { uid: "efg", name: "Erica Ferg", read_only: false }])
+                                                                                                                                     { 
+uid: "ddd", name: "Dandy Dog", read_only: true },
+                                                                                                                                     { 
+uid: "efg", name: "Erica Ferg", read_only: false }])
   end
 
   describe "#request_type" do
@@ -74,7 +77,9 @@ RSpec.describe NewProjectRequest, type: :model do
 
   describe "#user_roles" do
     subject(:user_roles) { request.user_roles }
-    it { should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, { "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
+    it {
+ should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, 
+{ "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
   end
 
   describe "#project_path" do
@@ -151,7 +156,8 @@ RSpec.describe NewProjectRequest, type: :model do
     end
 
     it "logs errors when the request is not valid" do
-      expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
+      expect {
+ invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       expect(invalid_request.error_message["message"]).to include("Error saving project")
       # The project should not exist in the database
       expect(Project.find_by_id(invalid_request.project_id)).to be nil
@@ -160,7 +166,8 @@ RSpec.describe NewProjectRequest, type: :model do
     it "raises an error if we add the data manager/sponsor as a data user" do
       # See https://github.com/pulibrary/tigerdata-app/issues/2402 for details.
       # pending("Enable this test once we have integrated the new tigerdata.project.create from tigerdata-config v0.0.4")
-      request = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => sponsor_and_data_manager_user.uid, "read_only" => true }])
+      request = FactoryBot.create(:request_project, project_title: "project 333", 
+user_roles: [{ "uid" => sponsor_and_data_manager_user.uid, "read_only" => true }])
       expect { request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
     end
   end
@@ -431,7 +438,8 @@ RSpec.describe NewProjectRequest, type: :model do
     end
 
     it "returns the custom unit of the approved" do
-      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", 
+approved_storage_size: "10", approved_storage_unit: "GB")
       expect(request.approved_quota_unit).to eq("GB")
     end
   end
@@ -465,7 +473,8 @@ RSpec.describe NewProjectRequest, type: :model do
     end
 
     it "returns the custom unit of the approved" do
-      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", approved_storage_size: "10", approved_storage_unit: "GB")
+      request = NewProjectRequest.new(quota: "custom", storage_size: 2, storage_unit: "TB", approved_quota: "custom", 
+approved_storage_size: "10", approved_storage_unit: "GB")
       expect(request.approved_quota_unit).to eq("GB")
     end
   end

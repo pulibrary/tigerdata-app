@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, integration: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_in_mediaflux) do
     request = FactoryBot.create(:request_project)
@@ -12,7 +13,8 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, 
 
   describe "#perform_now" do
     it "deletes any files older than 7 days" do
-      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, 
+mediaflux_session: user.mediaflux_session)
       req.completion_time = eight_days_ago
       req.save
 
@@ -22,7 +24,8 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, 
     end
 
     it "marks the file inventory request stale" do
-      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, 
+mediaflux_session: user.mediaflux_session)
       req.completion_time = eight_days_ago
       req.save
 
@@ -33,7 +36,8 @@ RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, 
     end
 
     it "handles requests without an output file" do
-      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
+      req = FileInventoryJob.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, 
+mediaflux_session: user.mediaflux_session)
       req.completion_time = eight_days_ago
       req.request_details = { error: "Mediaflux session expired", project_title: "Some Laboratory" }
       req.state = InventoryRequest::FAILED

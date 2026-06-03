@@ -3,10 +3,12 @@
 require "rails_helper"
 
 RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) {
+ FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
-  let!(:data_manager) { FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:data_manager) {
+ FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user, uid: "cac9" }
   let(:read_write) { FactoryBot.create :user, uid: "pp9425" }
   let(:storage_capacity) do
@@ -66,7 +68,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   context "GET /projects/:id" do
     context "when authenticated with assets" do
-      let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+      let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }
       let!(:approved_project) do
         request = FactoryBot.create(:request_project)
@@ -77,8 +80,10 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       before do
         sign_in sponsor_and_data_manager_user
         # Create file(s) for the project in mediaflux using test asset create request
-        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
-        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
+        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, 
+parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
+        Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, 
+parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
 
         @current_state = test_strategy.enabled?(:new_file_details)
         test_strategy.switch!(:new_file_details, false)
@@ -211,7 +216,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_selector(".project-file-details header", text: "File Size")
           expect(page).to have_selector("[data-attribute-name='fileSize']", text: "10")
           expect(page).to have_selector(".project-file-details header", text: "Location")
-          expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
+          expect(page).to have_selector("[data-attribute-name='location']", 
+text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
           expect(page).to have_selector(".project-file-details header", text: "Modified Date")
           expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
           expect(page).to have_selector(".project-file-details header", text: "Created Date")

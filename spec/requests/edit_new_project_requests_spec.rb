@@ -75,7 +75,8 @@ RSpec.describe "/edit_new_project_request", type: :request do
 
       context "when the client is authenticated and is a sysadmin" do
         let(:user) { FactoryBot.create(:sysadmin) }
-        let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "500 GB") }
+        let(:request) {
+ NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "500 GB") }
 
         let(:valid_request_params) do
           { request_title: "new title", project_title: "changed_title",

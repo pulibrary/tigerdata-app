@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type: :model do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
@@ -10,7 +11,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
 
   describe "#metadata" do
     before do
-      asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id)
+      asset_req = Mediaflux::TestAssetCreateRequest.new(session_token: user.mediaflux_session, 
+parent_id: approved_project.mediaflux_id)
       asset_response = asset_req.response_body.split("<id>")[1]
       @asset_id = asset_response.split("<")[0].to_i
       asset_req.resolve

@@ -2,10 +2,12 @@
 require "rails_helper"
 
 RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "GET /projects" do
-    let(:manager_user) { FactoryBot.create(:data_manager, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:manager_user) {
+ FactoryBot.create(:data_manager, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session) }
     let(:request) { FactoryBot.create :request_project, data_manager: manager_user.uid }
     let(:project) { request.approve(sponsor_and_data_manager_user) }
 
@@ -24,7 +26,8 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
   end
 
   describe "GET /projects/:id/:id-mf" do
-    let(:manager_user) { FactoryBot.create(:data_manager, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
+    let(:manager_user) {
+ FactoryBot.create(:data_manager, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
     let(:project) { create_project_in_mediaflux(current_user: sponsor_and_data_manager_user) }
 
     context "when the user is authenticated" do

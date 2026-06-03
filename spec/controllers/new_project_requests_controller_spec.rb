@@ -29,7 +29,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
       it "approves the request" do
         valid_request # make sure the request exists before we start the count
-        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { NewProjectRequest.count }.by(-1)
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change {
+ NewProjectRequest.count }.by(-1)
       end
 
       context "the production environment" do
@@ -39,7 +40,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
         it "approves the request" do
           valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { NewProjectRequest.count }.by(-1)
+          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change {
+ NewProjectRequest.count }.by(-1)
         end
       end
     end
@@ -58,7 +60,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
       it "does not approve the request" do
         valid_request # make sure the request exists before we start the count
-        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { NewProjectRequest.count }.by(0)
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change {
+ NewProjectRequest.count }.by(0)
         expect(response).to redirect_to "http://test.host/dashboard"
       end
 
@@ -69,7 +72,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
         it "does not approve the request" do
           valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { NewProjectRequest.count }.by(0)
+          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change {
+ NewProjectRequest.count }.by(0)
           expect(response).to redirect_to "http://test.host/dashboard"
         end
       end
@@ -89,7 +93,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
       it "does not approve the request" do
         valid_request # make sure the request exists before we start the count
-        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { NewProjectRequest.count }.by(0)
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change {
+ NewProjectRequest.count }.by(0)
         expect(response).to redirect_to "http://test.host/dashboard"
       end
 
@@ -97,7 +102,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
         allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
         allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
         valid_request # make sure the request exists before we start the count
-        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { NewProjectRequest.count }.by(-1)
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change {
+ NewProjectRequest.count }.by(-1)
       end
 
       context "the production environment" do
@@ -107,7 +113,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
         it "does not approve the request" do
           valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { NewProjectRequest.count }.by(0)
+          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change {
+ NewProjectRequest.count }.by(0)
           expect(response).to redirect_to "http://test.host/dashboard"
         end
       end
@@ -129,7 +136,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
         allow_any_instance_of(ActionController::TestSession).to receive(:[]).and_call_original
         allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:emulation_role).and_return("System Administrator")
         valid_request # make sure the request exists before we start the count
-        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change { NewProjectRequest.count }.by(-1)
+        expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(1).and change {
+ NewProjectRequest.count }.by(-1)
       end
 
       context "the production environment" do
@@ -139,7 +147,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
 
         it "does not approve the request" do
           valid_request # make sure the request exists before we start the count
-          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change { NewProjectRequest.count }.by(0)
+          expect { get :approve, params: { id: valid_request.id } }.to change { Project.count }.by(0).and change {
+ NewProjectRequest.count }.by(0)
           expect(response).to redirect_to "http://test.host/dashboard"
         end
       end
@@ -167,7 +176,8 @@ RSpec.describe NewProjectRequestsController, type: :controller do
       Mediaflux::LogoutRequest.new(session_token: original_session).resolve
       valid_request
       allow(NewProjectRequest).to receive(:find).and_return(valid_request)
-      allow(valid_request).to receive(:approve).and_raise(ProjectCreate::ProjectCreateError, "Session expired for token")
+      allow(valid_request).to receive(:approve).and_raise(ProjectCreate::ProjectCreateError, 
+"Session expired for token")
 
       get :approve, params: { id: valid_request.id }
       expect(response).to redirect_to "http://test.host/mediaflux_passthru?path=%2Fnew_project_requests%2F#{valid_request.id}%2Fapprove"

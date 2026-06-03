@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe ProjectCreate, type: :operation, integration: true do
-  let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:approver) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_request) do
     NewProjectRequest.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                              data_sponsor: approver.uid, data_manager: approver.uid,
@@ -94,7 +95,8 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
         project_metadata_json = RequestProjectMetadata.convert(valid_request)
         # Link the request to the project
         project = Project.create!({ metadata_json: project_metadata_json })
-        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, 
+project: project)
         allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
         project_create_operation = described_class.new
 
@@ -121,7 +123,8 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
         project_metadata_json = RequestProjectMetadata.convert(valid_request)
         # Link the request to the project
         project = Project.create!({ metadata_json: project_metadata_json })
-        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, project: project)
+        mediaflux_request = Mediaflux::ProjectCreateServiceRequest.new(session_token: approver.mediaflux_session, 
+project: project)
         allow(Mediaflux::ProjectCreateServiceRequest).to receive(:new).and_return(mediaflux_request)
         project_create_operation = described_class.new
 

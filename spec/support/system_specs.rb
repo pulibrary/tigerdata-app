@@ -10,7 +10,8 @@ end
 Capybara.register_driver :chrome_headless do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
   client.read_timeout = 120
-  options = Selenium::WebDriver::Chrome::Options.new(args: %w[disable-gpu no-sandbox headless whitelisted-ips window-size=1400,1400])
+  options = Selenium::WebDriver::Chrome::Options.new(args: %w[disable-gpu no-sandbox headless whitelisted-ips 
+window-size=1400,1400])
   options.add_argument(
     "--enable-features=NetworkService,NetworkServiceInProcess"
   )

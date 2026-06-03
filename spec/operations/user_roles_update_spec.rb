@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe UserRolesUpdate, type: :operation, integration: true do
-  let!(:researcher) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:researcher) {
+ FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
   subject { described_class.new } # Or initialize with dependencies if any
 
   describe "#call" do

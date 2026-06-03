@@ -3,8 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) {
+ FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager_user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create :user, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session }
@@ -44,7 +46,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".progress-container", text: "used", count: 3)
 
         expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
-        expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+        expect(page).to have_css(".versions-footer", 
+text: "Historic versions of current project files, recoverable by request")
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
 
         click_on(class: "pul-popover-close")
@@ -71,7 +74,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".progress-container", text: "used", count: 3)
 
         expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
-        expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
+        expect(page).to have_css(".versions-footer", 
+text: "Historic versions of current project files, recoverable by request")
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
         expect(page).to have_content("Understanding Your Storage Usage and Capacity")
         expect(page).to have_content("Your total usage includes files you can access")
@@ -134,7 +138,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           fill_in "storage_amount", with: "1"
           select "TB", from: "storage_unit"
           fill_in "storage_justification", with: "Need more storage for new data being added to the project."
-          fill_in "storage_growth_expectation", with: "Expecting significant growth in the next year as we add new data."
+          fill_in "storage_growth_expectation", 
+with: "Expecting significant growth in the next year as we add new data."
           fill_in "storage_date_needed", with: (Date.today + 30).strftime("%m/%d/%Y")
           click_on "Submit"
           expect(page).to have_content("Storage Increase Request")
@@ -275,14 +280,19 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Storage and Access" do
-      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:request) {
+ FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", 
+smb: "no", globus: "no" }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs" ,"Enabled"
-        expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
-        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project" ,"Request"
+        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", 
+"For high performance computing needs" ,"Enabled"
+        expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", 
+"For SMB/CIFS access", "Disabled"
+        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", 
+"For a Globus endpoint for this project" ,"Request"
         expect(page).to have_link("Globus", href: "https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus")
       end
     end
@@ -325,18 +335,21 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:size) { 100 }
-      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
+      let(:file_list) {
+ project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
 
       before do
         # Create a project in mediaflux and generate assets for the collection
-        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
+        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, 
+file_count_per_directory: 4).generate
       end
 
       after do
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, 
+collection: project.mediaflux_id, members: true).resolve
       end
 
       it "renders the storage quota usage component" do
@@ -394,7 +407,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       context "when downloads exist" do
         before do
-          FileInventoryJob.new(user_id: sponsor_user.id, project_id: project.id, mediaflux_session: sponsor_user.mediaflux_session).perform_now
+          FileInventoryJob.new(user_id: sponsor_user.id, project_id: project.id, 
+mediaflux_session: sponsor_user.mediaflux_session).perform_now
         end
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
@@ -416,7 +430,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
 
       after do
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
+        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, 
+collection: project.mediaflux_id, members: true).resolve
       end
 
       it "displays the file list, drill into a folder, and back", :integration do
@@ -441,7 +456,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Globus Access Request" do
-      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:request) {
+ FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", 
+smb: "no", globus: "no" }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       it "sends a globus access request email when the user clicks the request button" do
         sign_in sponsor_user

@@ -11,7 +11,8 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   # tigerdatatester is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
   let(:sponsor_and_data_manager) { User.find_by(uid: "tigerdatatester") }
 
-  let(:other_user) { User.find_by(uid: "kl37") } # user is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
+  let(:other_user) {
+ User.find_by(uid: "kl37") } # user is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
 
   let!(:project1) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
   let!(:project2) do

@@ -33,9 +33,12 @@ RSpec.describe UserErrorParser do
 
   describe "#parse" do
     let(:data_sponsor_only) { "Error creating project for 1013662446: Invalid netid: uid1 for role Data Sponsor\n" }
-    let(:data_sponsor_only_output) { "uid1,,,,,TRUE,,,,,#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d')},ImportProcess,\"Capacity Early Adopter\"" }
-    let(:data_sponsor_and_manager) { "Error creating project for 1013662446: Invalid netid: uid1 for role Data Manager; Invalid netid: uid1 for role Data Sponsor\n" }
-    let(:data_sponsor_and_manager_output) { "uid1,,,,,TRUE,TRUE,,,,#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d')},ImportProcess,\"Capacity Early Adopter\"" }
+    let(:data_sponsor_only_output) {
+ "uid1,,,,,TRUE,,,,,#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d')},ImportProcess,\"Capacity Early Adopter\"" }
+    let(:data_sponsor_and_manager) {
+ "Error creating project for 1013662446: Invalid netid: uid1 for role Data Manager; Invalid netid: uid1 for role Data Sponsor\n" }
+    let(:data_sponsor_and_manager_output) {
+ "uid1,,,,,TRUE,TRUE,,,,#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d')},ImportProcess,\"Capacity Early Adopter\"" }
     let(:multiple_user) do
       "Error creating project for 1013662446: Invalid netid: uid1 for role Data Manager;Invalid netid: uid2 for role Data Sponsor;" \
       "Invalid netid: uid3 for role Data User Read Only;Invalid netid: uid4 for role Data User Read Only;Invalid netid: uid5 for role Data User Read Only;" \
@@ -80,7 +83,8 @@ RSpec.describe UserErrorParser do
   end
 
   describe "csv_users" do
-    let(:header_line) { "uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,developer,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" }
+    let(:header_line) {
+ "uid,email,given_name,family_name,display_name,eligible_sponsor,eligible_manager,developer,sysadmin,tester_trainer,DateAdded,AddedBy,Notes\n" }
 
     it "produces a csv with a header" do
       csv = UserErrorParser.csv_users(data)

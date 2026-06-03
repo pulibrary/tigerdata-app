@@ -11,7 +11,9 @@ RSpec.describe "new-project/storage-access", type: :request do
     end
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "custom", storage_size: 23, storage_unit: "GB") }
+      let(:request) {
+ NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "custom", storage_size: 23, 
+storage_unit: "GB") }
 
       it "renders a successful response" do
         sign_in user
@@ -37,7 +39,8 @@ RSpec.describe "new-project/storage-access", type: :request do
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", quota: "500 GB") }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Save")
+          put new_project_storage_and_access_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Save")
           expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
@@ -47,7 +50,8 @@ RSpec.describe "new-project/storage-access", type: :request do
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Next")
+          put new_project_storage_and_access_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Next")
           # TODO: when the wizard is fully functional the correct redirect is below
           # expect(response).to redirect_to(new_project_additional_information_grants_and_funding_url(request))
           expect(response).to redirect_to(new_project_review_and_submit_url(request))

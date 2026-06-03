@@ -101,7 +101,8 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
     let(:other_user) { FactoryBot.create :user, family_name: "Doe", given_name: "John", uid: "jd123" }
     let(:request) do
       FactoryBot.create :request, user_roles: [{ "uid" => researcher_user.uid.to_s, "name" => researcher_user.display_name_safe, "read_only" => true },
-                                               { "uid" => other_user.uid.to_s, "name" => other_user.display_name_safe, "read_only" => false }]
+                                               { "uid" => other_user.uid.to_s, "name" => other_user.display_name_safe, 
+"read_only" => false }]
     end
     it "returns a list of the full names of the data users and their uids" do
       expect(presenter.user_list).to eq("Sally Smith (ss123) read only, John Doe (jd123)")
@@ -119,7 +120,9 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
   describe "#departments_list" do
     let(:researcher_user) { FactoryBot.create :user }
     let(:request) do
-      FactoryBot.create :request, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }]
+      FactoryBot.create :request, 
+departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, 
+{ "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }]
     end
     it "returns a list of the full names of the data users and their uids" do
       expect(presenter.departments_list).to eq("RDSS-Research Data and Scholarship Services (77777), PRDS-Princeton Research Data Service (88888)")

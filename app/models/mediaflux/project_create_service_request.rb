@@ -106,10 +106,10 @@ module Mediaflux
     # rubocop:enable Metrics/MethodLength
 
     # Returns the names of the departments as a comma separated string
-    def departments_string(departments)
-      names = departments.map { |code| Affiliation.where(code:).first&.name || code }
-      names.compact.join(", ")
-    end
+      def departments_string(departments)
+        names = departments.map { |code| Affiliation.where(code:).first&.name || code }
+        names.compact.join(", ")
+      end
 
     # This is method is only needed while we are transitioning to the new Java based
     # `tigerdata.project.create` service. We can remove this method once the new
@@ -117,8 +117,8 @@ module Mediaflux
     #
     # See https://github.com/pulibrary/tigerdata-app/issues/2402 for details.
     #
-    def new_project_create?
-      response_xml.xpath("response/reply/result/id").count > 0
-    end
+      def new_project_create?
+        response_xml.xpath("response/reply/result/id").count > 0
+      end
   end
 end

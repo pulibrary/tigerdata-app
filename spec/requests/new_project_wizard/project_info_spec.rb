@@ -19,7 +19,9 @@ RSpec.describe "/new-project/project-info", type: :request do
       end
 
       context "the request exists" do
-        let(:request) { NewProjectRequest.create(project_title: "abc123", description: "magical world", project_purpose: "research", parent_folder: "parent-folder", project_folder: "project-folder") }
+        let(:request) {
+ NewProjectRequest.create(project_title: "abc123", description: "magical world", project_purpose: "research", 
+parent_folder: "parent-folder", project_folder: "project-folder") }
         it "renders a successful response" do
           sign_in user
           get new_project_project_info_url(request.id)

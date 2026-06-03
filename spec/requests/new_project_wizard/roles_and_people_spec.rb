@@ -12,7 +12,8 @@ RSpec.describe "new-project/roles-people", type: :request do
     context "when the client is authenticated" do
       let(:manager_user) { FactoryBot.create(:user, uid: "manager1") }
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
-      let(:request) { NewProjectRequest.create(data_sponsor: "pul123", data_manager: "manager1", project_title: "new project") }
+      let(:request) {
+ NewProjectRequest.create(data_sponsor: "pul123", data_manager: "manager1", project_title: "new project") }
 
       it "renders a successful response" do
         sign_in user
@@ -37,10 +38,13 @@ RSpec.describe "new-project/roles-people", type: :request do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
-        let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", data_sponsor: other_user.uid, data_manager: other_user.uid) }
+        let(:request) {
+ NewProjectRequest.create(request_title: "abc123", project_title: "project", data_sponsor: other_user.uid, 
+data_manager: other_user.uid) }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", data_manager: "manager1", project_title: "new project" }, commit: "Save")
+          put new_project_roles_and_people_save_url(request.id, 
+request: { data_sponsor: "pul123", data_manager: "manager1", project_title: "new project" }, commit: "Save")
           expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
           request.reload
           expect(request.data_sponsor).to eq("pul123")
@@ -50,7 +54,8 @@ RSpec.describe "new-project/roles-people", type: :request do
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Next")
+          put new_project_roles_and_people_save_url(request.id, 
+request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Next")
           # TODO: when the wizard is fully functional the correct redirect is below
           # expect(response).to redirect_to(new_project_project_type_url(request))
           expect(response).to redirect_to(new_project_storage_and_access_path(request))
@@ -62,7 +67,8 @@ RSpec.describe "new-project/roles-people", type: :request do
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Back")
+          put new_project_roles_and_people_save_url(request.id, 
+request: { data_sponsor: "pul123", project_title: "new project", data_manager: "manager1" }, commit: "Back")
           # TODO: when the wizard is fully functional the correct redirect is below
           # expect(response).to redirect_to(new_project_project_info_dates_url(request))
           expect(response).to redirect_to(new_project_project_info_url(request))

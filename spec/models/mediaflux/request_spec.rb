@@ -8,7 +8,9 @@ RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
 
   describe "#resolve" do
     it "raises an error" do
-      expect { request.resolve }.to raise_error(NotImplementedError, "Mediaflux::Request is an abstract class, please override Mediaflux::Request.service")
+      expect {
+ request.resolve }.to raise_error(NotImplementedError, 
+"Mediaflux::Request is an abstract class, please override Mediaflux::Request.service")
     end
 
     context "with a Class derived from Request" do
@@ -35,7 +37,8 @@ RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
           end
 
           it "transmits the POST request as a file upload request" do
-            expect(a_request(:post, mediaflux_url).with { |req| req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
+            expect(a_request(:post, mediaflux_url).with { |req|
+ req.headers["Content-Type"] == "multipart/form-data" }).to have_been_made
             expect(custom_request.response_body).to include(mediaflux_response)
           end
         end

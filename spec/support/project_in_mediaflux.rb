@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 def create_project_in_mediaflux(request: nil, current_user: nil)
   request ||= FactoryBot.create(:request_project)
-  tigerdatatester = User.where(uid: "tigerdatatester").first || FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session  )
+  tigerdatatester = User.where(uid: "tigerdatatester").first || FactoryBot.create(:user, uid: "tigerdatatester", 
+mediaflux_session: SystemUser.mediaflux_session  )
   current_user ||= tigerdatatester
   current_user.mediaflux_session ||= SystemUser.mediaflux_session
   project = request.approve(current_user)
@@ -11,7 +12,8 @@ end
 
 # path=princeton/tigerdata/RDSS/Query/CProject
 def test_project_from_path(path)
-  metadata = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, id: "path=#{path}").metadata
+  metadata = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, 
+id: "path=#{path}").metadata
   id = metadata[:id]
   raise StandardError, "Project not found in Mediaflux #{path}" if id.blank?
   data_sponsor = metadata[:data_sponsor] || "tigerdatatester"
@@ -23,5 +25,6 @@ def test_project_from_path(path)
   data_users&.each do |user_uid|
     FactoryBot.create(:user, uid: user_uid) unless User.where(uid: user_uid).exists?
   end
-  FactoryBot.create(:project, mediaflux_id: id, data_sponsor:, data_manager:, project_directory: path, title: metadata[:title])
+  FactoryBot.create(:project, mediaflux_id: id, data_sponsor:, data_manager:, project_directory: path, 
+title: metadata[:title])
 end

@@ -18,8 +18,10 @@ def xml_node_to_hash(node)
     h[:nsprefix] = node.namespace.prefix
   end
   h[:text] = node.text unless node.text.empty?
-  h[:attributes] = node.attribute_nodes.map { |attr_node| xml_node_to_hash(attr_node) } if node.element? && !node.attribute_nodes.empty?
-  h[:subelements] = node.children.map { |child_node| xml_node_to_hash(child_node) } if node.element? && !node.children.empty?
+  h[:attributes] = node.attribute_nodes.map { |attr_node|
+ xml_node_to_hash(attr_node) } if node.element? && !node.attribute_nodes.empty?
+  h[:subelements] = node.children.map { |child_node|
+ xml_node_to_hash(child_node) } if node.element? && !node.children.empty?
   h
 end
 

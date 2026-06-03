@@ -3,9 +3,12 @@ require "rails_helper"
 require "json"
 
 describe InventoryRequest, type: :model do
-  let(:inventory_request) { described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, state: state, request_details: request_details) }
+  let(:inventory_request) {
+ described_class.create(user_id: user.id, project_id: project.id, job_id: job.job_id, completion_time: completion_time, 
+state: state, request_details: request_details) }
 
-  let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create(:project) }
   let(:job) { FileInventoryJob.new }
   let(:completion_time) { Time.current.in_time_zone("America/New_York").iso8601 }

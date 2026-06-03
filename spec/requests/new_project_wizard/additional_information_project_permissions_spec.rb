@@ -36,7 +36,8 @@ RSpec.describe "new-project/additional-info-project-permissions", type: :request
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project") }
         it "renders a successful response for a save commit" do
           sign_in user
-          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")
+          put new_project_additional_information_project_permissions_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Save")
           expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
           request.reload
           expect(request.request_title).to eq("new title")
@@ -45,7 +46,8 @@ RSpec.describe "new-project/additional-info-project-permissions", type: :request
 
         it "renders a successful response for a next commit" do
           sign_in user
-          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Next")
+          put new_project_additional_information_project_permissions_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Next")
           expect(response).to redirect_to(new_project_additional_information_related_resources_url(request))
           request.reload
           expect(request.request_title).to eq("new title")
@@ -54,7 +56,8 @@ RSpec.describe "new-project/additional-info-project-permissions", type: :request
 
         it "renders a successful response for a back commit" do
           sign_in user
-          put new_project_additional_information_project_permissions_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Back")
+          put new_project_additional_information_project_permissions_save_url(request.id, 
+request: { request_title: "new title", project_title: "new project" }, commit: "Back")
           expect(response).to redirect_to(new_project_additional_information_grants_and_funding_url(request))
           request.reload
           expect(request.request_title).to eq("new title")

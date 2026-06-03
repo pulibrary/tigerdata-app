@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :model do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
@@ -11,13 +12,15 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     before do
       mediaflux_id = approved_project.mediaflux_id
 
-      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: false)
+      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, 
+deep_search: false)
       @iterator_id = query_req.result
     end
 
     it "returns asset information",
     :integration do
-      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
+      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, 
+action: "get-values")
       result = query_request.result
       expect(result[:files].count).to eq 10
       expect(result[:files][0].name).to eq "A0"
@@ -43,13 +46,15 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     before do
       mediaflux_id = approved_project.mediaflux_id
 
-      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: true)
+      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, 
+deep_search: true)
       @iterator_id = query_req.result
     end
 
     it "returns basic asset information",
     :integration do
-      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-name")
+      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, 
+action: "get-name")
       result = query_request.result
       expect(result[:count]).to eq 100
       expect(result[:complete]).to eq false
@@ -74,13 +79,15 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       @asset_id = asset_response.split("<")[0].to_i
       asset_req.resolve # intentionally making a second asset
 
-      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, deep_search: true)
+      query_req = Mediaflux::QueryRequest.new(session_token: user.mediaflux_session, collection: mediaflux_id, 
+deep_search: true)
       @iterator_id = query_req.result
     end
 
     it "returns asset information",
     :integration do
-      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
+      query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, 
+action: "get-meta")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
       expect(result[:files][0].path).to eq "/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}"

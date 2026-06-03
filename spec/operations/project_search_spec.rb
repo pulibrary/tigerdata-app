@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe ProjectSearch, type: :operation, integration: true do
-  let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:approver) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   let(:request1) { FactoryBot.create(:request_project, project_title: "soda Pop") }
   let(:request2) { FactoryBot.create(:request_project, project_title: "orange pop") }
@@ -16,9 +17,12 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
   let!(:project3) { create_project_in_mediaflux(request: request3, current_user: approver) }
 
   after do
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project1.mediaflux_id, members: true).resolve
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project2.mediaflux_id, members: true).resolve
-    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project3.mediaflux_id, members: true).resolve
+    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project1.mediaflux_id, 
+members: true).resolve
+    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project2.mediaflux_id, 
+members: true).resolve
+    Mediaflux::AssetDestroyRequest.new(session_token: approver.mediaflux_session, collection: project3.mediaflux_id, 
+members: true).resolve
   end
 
   describe "#call" do

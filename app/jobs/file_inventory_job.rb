@@ -11,7 +11,8 @@ class FileInventoryJob < ApplicationJob
   # We include both before_perform and before_enqueue so perform_now and perform_later will work as desired
   before_perform do |job|
     project = Project.find(job.arguments.first[:project_id])
-    inventory_request = FileInventoryRequest.find_by(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id)
+    inventory_request = FileInventoryRequest.find_by(user_id: job.arguments.first[:user_id], 
+project_id: job.arguments.first[:project_id], job_id: @job_id)
     if inventory_request.blank?
       FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: InventoryRequest::PENDING,
                                   request_details: { project_title: project.title })

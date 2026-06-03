@@ -2,7 +2,8 @@
 require "rails_helper"
 
 RSpec.describe "ProjectImports", type: :request do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+  let!(:sponsor_and_data_manager_user) {
+ FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   describe "POST /index" do
     it "redirects to sign in" do
@@ -37,7 +38,8 @@ RSpec.describe "ProjectImports", type: :request do
     end
 
     context "a sysadmin user" do
-      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true }
+      let(:user) {
+ FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true }
       before do
         sign_in(user)
       end
