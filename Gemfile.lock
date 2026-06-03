@@ -198,7 +198,6 @@ GEM
     erubi (1.13.1)
     eventmachine (1.2.7)
     execjs (2.10.0)
-    executable-hooks (1.7.1)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -652,7 +651,6 @@ DEPENDENCIES
   dogstatsd-ruby
   dry-operation
   ed25519
-  executable-hooks
   factory_bot_rails
   faraday (>= 2.14.1)
   ffaker
