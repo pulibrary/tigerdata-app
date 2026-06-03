@@ -87,7 +87,6 @@ gem "whenever", require: false
 
 group :development, :test do
   gem "bcrypt_pbkdf"
-  gem "bixby"
   gem "bundle-audit", require: false
   gem "byebug"
   gem "capistrano-yarn"
@@ -98,6 +97,9 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
   gem "rspec-rails"
+  gem "rubocop", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
 end
 
 group :development do
