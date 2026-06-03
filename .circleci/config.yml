@@ -21,7 +21,7 @@ orbs:
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.0-browsers
+      - image: cimg/ruby:3.3.2-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
@@ -107,7 +107,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:3.3.0
+      - image: cimg/ruby:3.3.2
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -131,7 +131,7 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - install_yarn_dependencies
       - install_dependencies
       - install_crypto_policies
@@ -173,7 +173,7 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - install_yarn_dependencies
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
@@ -241,7 +241,7 @@ jobs:
     steps:
       - checkout
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - node/install:
           install-yarn: true
           node-version: "22.12.0"

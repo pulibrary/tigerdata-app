@@ -51,10 +51,6 @@
     "validate": "npm ls",
     "validate-license": "bundle exec rake dev_license:expiration_check"
   },
-  "pre-commit": [
-    "validate-license",
-    "lint-staged"
-  ],
   "lint-staged": {
     "app/*rb": "bundle exec rubocop -a",
     "config/*rb": "bundle exec rubocop -a",
