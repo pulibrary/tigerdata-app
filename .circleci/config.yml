@@ -14,14 +14,14 @@ parameters:
     default: ""
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4
+  browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.5
-  node: circleci/node@7.1
+  ruby: circleci/ruby@2.7
+  node: circleci/node@7.2
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.0-browsers
+      - image: cimg/ruby:3.3.2-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
@@ -46,11 +46,16 @@ commands:
   install_yarn_dependencies:
     steps:
       - node/install:
-          install-yarn: true
-          node-version: "22.12.0"
+          install-yarn: false
+          node-version: "22.22.3"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
+      - run:
+          name: "Install Yarn using corepack"
+          command: |
+            corepack enable
+            corepack prepare yarn@4.16.0 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
@@ -107,7 +112,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:3.3.0
+      - image: cimg/ruby:3.3.2
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -128,10 +133,14 @@ jobs:
       SPEC_OPTS: "--tag ~type:system --format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
     steps:
       - checkout
+      - run:
+          name: Monitor Memory
+          background: true
+          command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - install_yarn_dependencies
       - install_dependencies
       - install_crypto_policies
@@ -173,10 +182,10 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - install_yarn_dependencies
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - install_dependencies
       - install_crypto_policies
       - run_postgres
@@ -203,7 +212,7 @@ jobs:
 
   yarn_lint_format:
     docker:
-      - image: cimg/node:22.12.0
+      - image: cimg/node:22.22.3
     steps:
       - checkout
       - install_yarn_dependencies
@@ -212,16 +221,16 @@ jobs:
           command: yarn run eslint 'app/javascript/**'
       - run:
           name: Run prettier
-          command: yarn run prettier --check .
+          command: yarn run prettier --check "**/*.{js,css,md,yml}"
 
   yarn_test:
     docker:
-      - image: cimg/node:22.12.0
+      - image: cimg/node:22.22.3
     steps:
       - checkout
       - install_yarn_dependencies
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - run:
           name: Run vitest
           command: yarn test
@@ -241,12 +250,17 @@ jobs:
     steps:
       - checkout
       - ruby/install:
-          version: "3.3.0"
+          version: "3.3.2"
       - node/install:
-          install-yarn: true
-          node-version: "22.12.0"
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+          install-yarn: false
+          node-version: "22.22.3"
+      - run:
+          name: "Install Yarn using corepack"
+          command: |
+            corepack enable
+            corepack prepare yarn@4.16.0 --activate
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - install_dependencies
       - install_yarn_dependencies
       - persist_to_workspace:
@@ -278,7 +292,7 @@ jobs:
 
   done:
     docker:
-      - image: cimg/node:22.12.0
+      - image: cimg/node:22.22.3
     steps:
       - coveralls/upload:
           carryforward: job1,job2
