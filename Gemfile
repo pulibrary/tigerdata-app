@@ -92,7 +92,6 @@ group :development, :test do
   gem "byebug"
   gem "capistrano-yarn"
   gem "ed25519"
-  gem "executable-hooks"
   gem "factory_bot_rails", require: false
   gem "ffaker"
   gem "mutex_m", "~> 0.2.0"
