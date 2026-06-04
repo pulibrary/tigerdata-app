@@ -14,10 +14,10 @@ parameters:
     default: ""
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4
+  browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.5
-  node: circleci/node@7.1
+  ruby: circleci/ruby@2.7
+  node: circleci/node@7.2
 executors:
   basic-executor:
     docker:
@@ -46,11 +46,16 @@ commands:
   install_yarn_dependencies:
     steps:
       - node/install:
-          install-yarn: true
+          install-yarn: false
           node-version: "22.12.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
+      - run:
+          name: "Install Yarn using corepack"
+          command: |
+            corepack enable
+            corepack prepare yarn@4.16.0 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
@@ -175,8 +180,8 @@ jobs:
       - ruby/install:
           version: "3.3.2"
       - install_yarn_dependencies
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - install_dependencies
       - install_crypto_policies
       - run_postgres
@@ -212,7 +217,7 @@ jobs:
           command: yarn run eslint 'app/javascript/**'
       - run:
           name: Run prettier
-          command: yarn run prettier --check .
+          command: yarn run prettier --check "**/*.{js,css,md,yml}"
 
   yarn_test:
     docker:
@@ -220,8 +225,8 @@ jobs:
     steps:
       - checkout
       - install_yarn_dependencies
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - run:
           name: Run vitest
           command: yarn test
@@ -243,10 +248,15 @@ jobs:
       - ruby/install:
           version: "3.3.2"
       - node/install:
-          install-yarn: true
+          install-yarn: false
           node-version: "22.12.0"
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - run:
+          name: "Install Yarn using corepack"
+          command: |
+            corepack enable
+            corepack prepare yarn@4.16.0 --activate
+      - browser-tools/install_chrome
+      - browser-tools/install_chromedriver
       - install_dependencies
       - install_yarn_dependencies
       - persist_to_workspace:

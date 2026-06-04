@@ -1,4 +1,5 @@
+.prettierrc
 .yarn/
+node_modules
 vendor/
 README.md
-.prettierrc
