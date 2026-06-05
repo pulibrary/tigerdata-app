@@ -11,7 +11,7 @@ This application provides a front end for users to create and manage projects th
 
 ## Documentation
 
-- Auto-built code documentation is available at [https://pulibrary.github.io/tigerdata-app/}](https://pulibrary.github.io/tigerdata-app/)
+- Auto-built code documentation is available at [https://pulibrary.github.io/tigerdata-app/](https://pulibrary.github.io/tigerdata-app/)
 - Design documents and meeting notes are in [Google Drive](https://drive.google.com/drive/u/1/folders/0AJ7rJ2akICY2Uk9PVA)
 - RDSS internal notes are in a [separate directory](https://drive.google.com/drive/u/1/folders/1kG6oJBnGqOUdM2cHKPxCOC9fBmAJ7iDo)
 - A set of requirements derived from early sketches is [here](https://docs.google.com/document/d/1U06FBX0qR9iMNiWes5YhP0schcPiLTmFwjHurduSb3A/edit).
