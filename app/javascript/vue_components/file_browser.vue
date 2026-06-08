@@ -304,7 +304,7 @@ async function onClickBreadcrumb(path) {
 }
 
 .preview-limit-frame {
-  display: flex;
+  display: inline;
   gap: 3.6875rem;
 
   .preview-limit-warning {
