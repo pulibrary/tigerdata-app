@@ -20,11 +20,7 @@
     <% if Flipflop.new_file_details? %>
       <%= render partial: "file_browser" %>
     <% else %>
-      <% if params["explorer"] == "true" %>
-        <%= render partial: "file_explorer" %>
-      <% else %>
-        <%= render partial: "contents", locals: { files: @files } %>
-      <% end %>
+      <%= render partial: "contents", locals: { files: @files } %>
     <% end %>
     <section class="project-alerts my-4">
       <div class="row">
