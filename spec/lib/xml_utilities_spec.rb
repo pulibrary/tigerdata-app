@@ -4,15 +4,15 @@ require "xml_utilities"
 
 describe "xml_utilities" do
   it "translates xml to hash" do
-    expect(xml_doc_to_hash(Nokogiri("<a></a>"))).to eq({ name: "a" })
+    expect(XmlUtilities.xml_doc_to_hash(Nokogiri("<a></a>"))).to eq({ name: "a" })
   end
 
   it "translates xml to hash" do
-    expect(xml_doc_to_html(Nokogiri("<a></a>"))).to eq("<pre>:name: a\n</pre>")
+    expect(XmlUtilities.xml_doc_to_html(Nokogiri("<a></a>"))).to eq("<pre>:name: a\n</pre>")
   end
 
   it "translates asset type definition to hash" do
-    expect(xml_doc_to_html(Nokogiri('<definition><element name="my_string" type="string" /></definition>'))).to eq(
+    expect(XmlUtilities.xml_doc_to_html(Nokogiri('<definition><element name="my_string" type="string" /></definition>'))).to eq(
 "<pre>:name: definition
 :subelements:
 - :name: element
