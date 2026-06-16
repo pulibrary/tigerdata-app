@@ -1,4 +1,4 @@
-# 9. Grouper: Roles and Permissions
+# 13. Grouper: Roles and Permissions
 
 Date: 2026-01-15
 
