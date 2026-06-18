@@ -79,19 +79,9 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         # Create file(s) for the project in mediaflux using test asset create request
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, pattern: "SampleFile.txt").resolve
         Mediaflux::TestAssetCreateRequest.new(session_token: sponsor_and_data_manager_user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 3, pattern: "RandomFile.txt").resolve
-
-        @current_state = test_strategy.enabled?(:new_file_details)
-        test_strategy.switch!(:new_file_details, false)
       end
 
-      after do
-        test_strategy.switch!(:new_file_details, @current_state)
-      end
-
-      context "The new_file_details feature is turned on" do
-        before do
-          test_strategy.switch!(:new_file_details, true)
-        end
+      context "the file browser is visible" do
         let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
         let(:empty_project_folder) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
         let(:large_project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
@@ -178,7 +168,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           end
         end
 
-        it "displays an the file warning indicator when appropriate" do
+        it "displays the file warning indicator when appropriate" do
           visit project_path(large_project)
           dir_listing = large_project.directory_listing(session_id: SystemUser.mediaflux_session)
           project_files = dir_listing[:files]
@@ -232,6 +222,11 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           # #should not show the warning because we are at the limit
           # expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
+
+        it "does not display the preview alert when the number of files does not exceed the project file display limit" do
+          visit project_path(approved_project)
+          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+        end
       end
 
       it "enqueues a Sidekiq job for asynchronously requesting project files",
@@ -251,18 +246,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
         expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
         expect(sponsor_and_data_manager_user.inventory_requests.first.type).to eq "FileInventoryRequest"
-      end
-
-      context "when the new_file_details feature is turned on" do
-        let(:last_modified) { Time.current.in_time_zone("America/New_York").iso8601 }
-        before do
-          test_strategy.switch!(:new_file_details, true)
-        end
-        it "does not display the preview alert when the number of files does not exceed the project file display limit" do
-          visit project_path(approved_project)
-
-          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
-        end
       end
 
       it "renders the storage capacity in the show view", :integration do

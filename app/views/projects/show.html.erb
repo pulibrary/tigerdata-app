@@ -17,11 +17,7 @@
       </div>
     </div>
 
-    <% if Flipflop.new_file_details? %>
-      <%= render partial: "file_browser" %>
-    <% else %>
-      <%= render partial: "contents", locals: { files: @files } %>
-    <% end %>
+    <%= render partial: "file_browser" %>
     <section class="project-alerts my-4">
       <div class="row">
         <div class="col">

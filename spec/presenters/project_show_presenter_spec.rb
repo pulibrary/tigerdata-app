@@ -39,16 +39,6 @@ RSpec.describe ProjectShowPresenter do
   end
 
   describe "#file_list_json" do
-    let(:test_strategy) { Flipflop::FeatureSet.current.test! }
-
-    before do
-      @current_state = test_strategy.enabled?(:new_file_details)
-      test_strategy.switch!(:new_file_details, true)
-    end
-
-    after do
-      test_strategy.switch!(:new_file_details, @current_state)
-    end
     let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
     it "returns a JSON string of the file list" do
