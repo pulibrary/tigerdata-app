@@ -326,6 +326,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:size) { 100 }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
+      let(:first_folder) { project.directory_listing(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path).first }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
       let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
       let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
@@ -354,8 +355,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
-        expect(page).to have_content("8 out of 16 shown")
-        # expect(find(:css, "#file_count").text).to eq "16"
+        expect(page).to have_content("Total Files: 16")
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Dashboard")
@@ -365,22 +365,17 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content(project.title)
       end
 
-      it "displays the file list",
+      it "displays the project contents at the top level",
       :integration do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
-
-        # Files are displayed
-        expect(page).to have_content(first_file.name)
-        expect(page).to have_content(second_file.name)
-        expect(page).not_to have_content(last_file.name)
-
-        # files are paginated
-        find("a.paginate_button", text: 2).click
-        expect(page).to have_content(last_file.name)
+        # Directory is displayed
+        expect(page).to have_content(first_folder.name)
+        # Files are not displayed
+        expect(page).not_to have_content(first_file.name)
       end
 
       context "when downloads do not exist" do
