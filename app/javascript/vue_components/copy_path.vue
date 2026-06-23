@@ -5,6 +5,7 @@
       @mouseleave="isHover = false"
       @click="copy(projectPath)"
       class="sizer"
+      aria-label="copy"
     >
       <!-- `copied` will be reset in 3s -->
       <copy-icon v-if="!copied" class="frames"></copy-icon>

@@ -321,10 +321,6 @@ class ProjectShowPresenter
 
 
     def mediaflux_listing
-      @mediaflux_listing ||= if Flipflop.new_file_details?
-                               project.directory_listing(session_id: @session_id, size: project_file_display_limit)
-                             else
-                               project.file_list(session_id: @session_id, size: project_file_display_limit)
-                             end
+      @mediaflux_listing ||= project.directory_listing(session_id: @session_id, size: project_file_display_limit)
     end
 end
