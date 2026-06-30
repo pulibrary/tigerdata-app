@@ -7,7 +7,7 @@
     "FONTCONFIG_PATH": "$PWD/.devbox/nix/profile/default/etc/fonts"
   },
   "packages": {
-    "ruby": "3.3.0",
+    "ruby": "4.0.5",
     "postgresql": {
       "version": "15.7",
       "outputs": ["lib", "out"]
@@ -35,7 +35,8 @@
     "gnupg": "latest",
     "msgpack": "latest",
     "tzdata": "latest",
-    "git": "latest"
+    "git": "latest",
+    "readline": "latest"
   },
   "shell": {
     "init_hook": ["mkdir -p $TMPDIR"],

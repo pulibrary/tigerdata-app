@@ -16,22 +16,26 @@ parameters:
 orbs:
   browser-tools: circleci/browser-tools@1.4
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.5
+  ruby: circleci/ruby@3.0.0
   node: circleci/node@7.1
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.0-browsers
+      - image: cimg/ruby:4.0.5-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
     working_directory: ~/tigerdata-app
 
 commands:
+  install_ruby_dependencies:
+    steps:
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata libreadline-dev libyaml-dev libtool libc6 glibc-tools gpg
   install_dependencies:
     steps:
-      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
       - run: gem install bundler -v '4.0.13'
+      - run: gem uninstall psych
+      - run: gem install psych
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
           key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}-2
@@ -107,7 +111,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:3.3.0
+      - image: cimg/ruby:4.0.5
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -130,8 +134,11 @@ jobs:
       - checkout
       - cleanup_docker
       - run_mediaflux
+      - install_ruby_dependencies
       - ruby/install:
-          version: "3.3.0"
+          version: "4.0.5"
+      - ruby/install-deps
+      - run: ruby --version
       - install_yarn_dependencies
       - install_dependencies
       - install_crypto_policies
@@ -172,11 +179,12 @@ jobs:
       - checkout
       - cleanup_docker
       - run_mediaflux
-      - ruby/install:
-          version: "3.3.0"
       - install_yarn_dependencies
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
+      - install_ruby_dependencies
+      - ruby/install:
+          version: "4.0.5"
       - install_dependencies
       - install_crypto_policies
       - run_postgres
@@ -241,7 +249,7 @@ jobs:
     steps:
       - checkout
       - ruby/install:
-          version: "3.3.0"
+          version: "4.0.5"
       - node/install:
           install-yarn: true
           node-version: "22.12.0"

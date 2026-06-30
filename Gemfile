@@ -2,7 +2,7 @@
 source "https://gem.coop"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "~> 3.3.0"
+ruby "~> 4.0.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1"
@@ -70,7 +70,7 @@ gem "datacite", "~> 0.4.0"
 gem "dogstatsd-ruby"
 gem "dry-operation"
 gem "flipflop"
-gem "google-protobuf", "~> 3.25"
+gem "google-protobuf"
 gem "health-monitor-rails", "12.4.0"
 gem "honeybadger"
 gem "kaminari"
@@ -97,6 +97,7 @@ group :development, :test do
   gem "mutex_m", "~> 0.2.0"
   gem "pry-byebug"
   gem "pry-rails"
+  gem "readline"
   gem "rspec-rails"
 end
 
