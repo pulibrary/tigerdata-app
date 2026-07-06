@@ -32,7 +32,7 @@
     "bootstrap": "^5.2.3",
     "brace-expansion": "^5.0.6",
     "browserslist": "^4.21.5",
-    "datatables": "^1.10.18",
+    "datatables.net": "^2.3.7",
     "datatables.net-dt": "^2.3.7",
     "datatables.net-vue3": "^3.0.4",
     "glob": "13.0.6",

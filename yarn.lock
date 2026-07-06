@@ -1851,12 +1851,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables@npm:^1.10.18":
-  version: 1.10.18
-  resolution: "datatables@npm:1.10.18"
+"datatables.net@npm:^2.3.7":
+  version: 2.3.8
+  resolution: "datatables.net@npm:2.3.8"
   dependencies:
     jquery: "npm:>=1.7"
-  checksum: 10c0/c7080486afe35016bc220ef5833c9134e1923975f621c3387892720d999e0c928751330eb8bdfb4e8cff70a6772b9b3631d07fb824aadc55a672700890739371
+  checksum: 10c0/3b82b4a47cbe053c8a8ad9eca41db4facb1e5c576e54b589102dacd0b7ab7b727c760534dcc5e4be7f34ec1b47424fed2cfd32a0bec82b728cca7732689eb748
   languageName: node
   linkType: hard
 
@@ -5419,7 +5419,7 @@ __metadata:
     bootstrap: "npm:^5.2.3"
     brace-expansion: "npm:^5.0.6"
     browserslist: "npm:^4.21.5"
-    datatables: "npm:^1.10.18"
+    datatables.net: "npm:^2.3.7"
     datatables.net-dt: "npm:^2.3.7"
     datatables.net-vue3: "npm:^3.0.4"
     esbuild: "npm:^0.27.0"
