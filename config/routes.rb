@@ -56,12 +56,6 @@ Rails.application.routes.draw do
   get "edit_new_project_request/:id", to: "edit_new_project_request#edit", as: :edit_new_project_request
   put "edit_new_project_request/:id", to: "edit_new_project_request#update"
 
-  namespace :api do
-    namespace :v0 do
-      resources :projects, only: [:index]
-    end
-  end
-
   mount ActionCable.server => "/cable"
   get "mediaflux_extra", to: "users/mediaflux_callbacks#cas", as: :mediaflux_extra
   get "mediaflux_passthru", to: "users/mediaflux_callbacks#passthru", as: :mediaflux_passthru
