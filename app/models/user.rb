@@ -14,6 +14,29 @@ class User < ApplicationRecord
 
   attr_accessor :mediaflux_session
 
+  # This method creates a new user from CAS data
+  # The access token looks like this:
+
+  # <?xml version="1.0" encoding="UTF-8"?>
+  # <hash>
+  #   <provider type="symbol">cas</provider>
+  #   <uid>fakeuid</uid>
+  #   <info>
+  #     <nickname>fakenickname</nickname>
+  #   </info>
+  #   <credentials>
+  #     <ticket>ST-21159-JOc1Sh6j0NZIELDhGjCQvE-oPJY-fed</ticket>
+  #   </credentials>
+  #   <extra>
+  #   [...]
+  #     <department>Library - Office of the Deputy University Librarian</department>
+  #     <grouperGroups>PU:test:DuoEnabled</grouperGroups>
+  #     <clientIpAddress>172.20.192.245</clientIpAddress>
+  #   [...]
+  #   </extra>
+  # </hash>
+
+  # @param OmniAuth::AuthHash access_token
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
