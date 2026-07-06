@@ -2971,15 +2971,15 @@ __metadata:
   linkType: hard
 
 "form-data@npm:^4.0.0":
-  version: 4.0.4
-  resolution: "form-data@npm:4.0.4"
+  version: 4.0.6
+  resolution: "form-data@npm:4.0.6"
   dependencies:
     asynckit: "npm:^0.4.0"
     combined-stream: "npm:^1.0.8"
     es-set-tostringtag: "npm:^2.1.0"
-    hasown: "npm:^2.0.2"
-    mime-types: "npm:^2.1.12"
-  checksum: 10c0/373525a9a034b9d57073e55eab79e501a714ffac02e7a9b01be1c820780652b16e4101819785e1e18f8d98f0aee866cc654d660a435c378e16a72f2e7cac9695
+    hasown: "npm:^2.0.4"
+    mime-types: "npm:^2.1.35"
+  checksum: 10c0/43947a77bf0ff45c6ceed789778982d47a3f3e720a74b71721174ebf3310a5f1a8be1d6b38a3ee3688e8a18a2c4273073ec0844cd37efda3eaf46d41c9c318ff
   languageName: node
   linkType: hard
 
@@ -3262,6 +3262,15 @@ __metadata:
   dependencies:
     function-bind: "npm:^1.1.2"
   checksum: 10c0/3769d434703b8ac66b209a4cca0737519925bbdb61dd887f93a16372b14694c63ff4e797686d87c90f08168e81082248b9b028bad60d4da9e0d1148766f56eb9
+  languageName: node
+  linkType: hard
+
+"hasown@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "hasown@npm:2.0.4"
+  dependencies:
+    function-bind: "npm:^1.1.2"
+  checksum: 10c0/2d8de939e270b70618f8cebb69746620db10617dbb495bc66ddad326955ea24d3ca4af133aff3eb7c1853e0218f867bc2b050ec26fe02e3aea58f880ffc5e506
   languageName: node
   linkType: hard
 
@@ -4156,7 +4165,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12":
+"mime-types@npm:^2.1.35":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -5613,15 +5622,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.5.2":
-  version: 7.5.11
-  resolution: "tar@npm:7.5.11"
+  version: 7.5.19
+  resolution: "tar@npm:7.5.19"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/b6bb420550ef50ef23356018155e956cd83282c97b6128d8d5cfe5740c57582d806a244b2ef0bf686a74ce526babe8b8b9061527623e935e850008d86d838929
+  checksum: 10c0/7022e8cb04a8ceccc0689f2c731743fa2aab2e3c3f559f7dbc37b65ef7d5913049b427284eded2ec0765c5db5ff72dd7939fe2ae15785ff422cef2116c95d798
   languageName: node
   linkType: hard
 
@@ -5664,7 +5673,7 @@ __metadata:
     precommit-hook: "npm:^3.0.0"
     prettier: "npm:3.4.2"
     rollup: "npm:^4.59.0"
-    vite: "npm:^7.3.2"
+    vite: "npm:^7.3.5"
     vite-plugin-rails: "npm:^0.5.0"
     vite-plugin-ruby: "npm:^5.1.0"
     vitest: "npm:^4.1.0"
@@ -6047,9 +6056,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^7.3.2":
-  version: 7.3.3
-  resolution: "vite@npm:7.3.3"
+"vite@npm:^7.3.5":
+  version: 7.3.5
+  resolution: "vite@npm:7.3.5"
   dependencies:
     esbuild: "npm:^0.27.0"
     fdir: "npm:^6.5.0"
@@ -6098,7 +6107,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/44fed2591d5d0a9d1f6313e0a4330659b7f1eec57e542558f12a924c53b450a84b9fad6d57ac28ec739eca1cf5ff0f62e41b965e3806c47eefdbbe13b74ec9ae
+  checksum: 10c0/4ad700649ed2ebd1e726d32f3f6e41eecbec4e29bcb5977805f3d43a5659280518aa431b0fc61adc1879df4fe1978d7cfc7dbbe54cdf014022385052967721e8
   languageName: node
   linkType: hard
 
