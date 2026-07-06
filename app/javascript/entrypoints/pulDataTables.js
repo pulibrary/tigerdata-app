@@ -1,4 +1,4 @@
-import 'datatables';
+import DataTable from 'datatables.net-dt';
 
 // Setup DataTables for the index tabs
 //   DataTables was included as a yarn package
