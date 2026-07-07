@@ -2,30 +2,30 @@
   "lockfile_version": "1",
   "packages": {
     "chromedriver@latest": {
-      "last_modified": "2026-05-13T11:46:26Z",
-      "resolved": "github:NixOS/nixpkgs/eef00dfd8a712b34af845f9350bac681b1228bd1#chromedriver",
+      "last_modified": "2026-06-27T07:37:20Z",
+      "resolved": "github:NixOS/nixpkgs/3d46470bb3030020f7e1361f33514854f5bfa86d#chromedriver",
       "source": "devbox-search",
-      "version": "148.0.7778.168",
+      "version": "149.0.7827.201",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/mi559ws4xh5by3xk1glx9gqbfcx0bbdv-chromedriver-148.0.7778.168",
+              "path": "/nix/store/n2cmpvw7vvc4s0ahnavhvniirmhazkl1-chromedriver-149.0.7827.201",
               "default": true
             }
           ],
-          "store_path": "/nix/store/mi559ws4xh5by3xk1glx9gqbfcx0bbdv-chromedriver-148.0.7778.168"
+          "store_path": "/nix/store/n2cmpvw7vvc4s0ahnavhvniirmhazkl1-chromedriver-149.0.7827.201"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/39q1f83qp2lhk2chyly1s9k14l4bi7x7-chromedriver-148.0.7778.168",
+              "path": "/nix/store/9zimmq39lixbmn8synpnz14l2hsmv9f0-chromedriver-149.0.7827.201",
               "default": true
             }
           ],
-          "store_path": "/nix/store/39q1f83qp2lhk2chyly1s9k14l4bi7x7-chromedriver-148.0.7778.168"
+          "store_path": "/nix/store/9zimmq39lixbmn8synpnz14l2hsmv9f0-chromedriver-149.0.7827.201"
         }
       }
     },
@@ -211,6 +211,14 @@
       "source": "devbox-search",
       "version": "19-ga",
       "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "path": "/nix/store/s662ydsj224ai8z89ixdq09cw9ybqgcd-zulu-ca-jdk-19.0.2",
+              "default": true
+            }
+          ]
+        },
         "aarch64-linux": {
           "outputs": [
             {
