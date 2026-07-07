@@ -28,7 +28,8 @@ class User < ApplicationRecord
     #   <extra>
     #   [...]
     #     <department>Library - Office of the Deputy University Librarian</department>
-    #     <grouperGroups>PU:test:DuoEnabled</grouperGroups>
+    #     <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
+    #     <grouperGroups>PU:test:DuoEnabled</grouperGroups> 
     #     <clientIpAddress>172.20.192.245</clientIpAddress>
     #   [...]
     #   </extra>
