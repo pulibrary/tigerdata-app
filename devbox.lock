@@ -411,7 +411,7 @@
     },
     "nodejs@22.12.0": {
       "last_modified": "2025-01-19T08:16:51Z",
-      "plugin_version": "0.0.4",
+      "plugin_version": "0.0.2",
       "resolved": "github:NixOS/nixpkgs/50165c4f7eb48ce82bd063e1fb8047a0f515f8ce#nodejs_22",
       "source": "devbox-search",
       "version": "22.12.0",
