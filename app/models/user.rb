@@ -41,7 +41,6 @@ class User < ApplicationRecord
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
-      byebug
       user.initialize_name_values(access_token.extra)
       user.save
     end
