@@ -14,27 +14,29 @@ class User < ApplicationRecord
 
   attr_accessor :mediaflux_session
 
-  # This method creates a new user from CAS data. The access token looks like this:
-    # <?xml version="1.0" encoding="UTF-8"?>
-    # <hash>
-    #   <provider type="symbol">cas</provider>
-    #   <uid>fakeuid</uid>
-    #   <info>
-    #     <nickname>fakenickname</nickname>
-    #   </info>
-    #   <credentials>
-    #     <ticket>ST-21159-JOc1Sh6j0NZIELDhGjCQvE-oPJY-fed</ticket>
-    #   </credentials>
-    #   <extra>
-    #   [...]
-    #     <department>Library - Office of the Deputy University Librarian</department>
-    #     <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
-    #     <grouperGroups>PU:test:DuoEnabled</grouperGroups>
-    #     <clientIpAddress>172.20.192.245</clientIpAddress>
-    #   [...]
-    #   </extra>
-    # </hash>
-    #
+=begin
+  This method creates a new user from CAS data. The access token looks like this:
+    <?xml version="1.0" encoding="UTF-8"?>
+    <hash>
+      <provider type="symbol">cas</provider>
+      <uid>fakeuid</uid>
+      <info>
+        <nickname>fakenickname</nickname>
+      </info>
+      <credentials>
+        <ticket>ST-21159-JOc1Sh6j0NZIELDhGjCQvE-oPJY-fed</ticket>
+      </credentials>
+      <extra>
+        [...]
+          <department>Library - Office of the Deputy University Librarian</department>
+          <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
+          <grouperGroups>PU:test:DuoEnabled</grouperGroups>
+          <clientIpAddress>172.20.192.245</clientIpAddress>
+        [...]
+      </extra>
+    </hash>
+=end
+
   # @param access_token [OmniAuth::AuthHash] the access token returned by OmniAuth
   # @return [User, nil] the found user or nil if they do not yet exist
   # @example updating an existing user fields or creating a new user if they do not exist when they log in
