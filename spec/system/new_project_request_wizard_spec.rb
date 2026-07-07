@@ -523,7 +523,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # Clicking on the TigerData logo saves the user changes
         find("#logo.header-image").click
         expect(page).to have_content "Welcome, #{researcher_user.given_name}!"
-        request = NewProjectRequest.last
+
+        # Sometimes the NewProjectRequest is not created yet and it makes the test fail, so let's retry until it is created
+        begin
+          request = NewProjectRequest.last
+          redo if request.nil?
+        end
         expect(request.project_title).to eq("Dashboard Redirect Test")
         expect(page).to have_content("Draft request saved automatically")
       end
@@ -540,7 +545,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           click_on "Roles and People"
           expect(page).not_to have_content "Draft request saved automatically"
           request = NewProjectRequest.last
-          expect(request.project_title).to eq("Dashboard Redirect Test")
+          request.reload
+          expect(request&.project_title).to eq("Dashboard Redirect Test")
         end.to change { NewProjectRequest.count }.by(1)
       end
 
