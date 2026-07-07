@@ -29,7 +29,7 @@ class User < ApplicationRecord
     #   [...]
     #     <department>Library - Office of the Deputy University Librarian</department>
     #     <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
-    #     <grouperGroups>PU:test:DuoEnabled</grouperGroups> 
+    #     <grouperGroups>PU:test:DuoEnabled</grouperGroups>
     #     <clientIpAddress>172.20.192.245</clientIpAddress>
     #   [...]
     #   </extra>
@@ -37,9 +37,11 @@ class User < ApplicationRecord
     #
   # @param access_token [OmniAuth::AuthHash] the access token returned by OmniAuth
   # @return [User, nil] the found user or nil if they do not yet exist
+  # @example updating an existing user fields or creating a new user if they do not exist when they log in
   def self.from_cas(access_token)
     user = User.find_by(provider: access_token.provider, uid: access_token.uid)
     if user.present? && user.given_name.nil? # fix any users that do not have the name information loaded
+      byebug
       user.initialize_name_values(access_token.extra)
       user.save
     end
