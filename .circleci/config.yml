@@ -14,10 +14,10 @@ parameters:
     default: ""
 
 orbs:
-  browser-tools: circleci/browser-tools@2.0
+  browser-tools: circleci/browser-tools@2.4.2
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.7
-  node: circleci/node@7.2
+  ruby: cimg/ruby@3.3
+  node: cimg/node@22.22
 executors:
   basic-executor:
     docker:
