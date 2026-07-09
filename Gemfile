@@ -14,7 +14,7 @@ gem "sprockets-rails"
 gem "pg"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 6.6" # Releases lower than 6.0 are not compatible with Rack 3.y releases
+gem "puma", "~> 7.2" # Releases lower than 6.0 are not compatible with Rack 3.y releases
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -131,7 +131,7 @@ group :test do
   gem "webmock"
 end
 
-gem "yard", "~> 0.9.42", group: :development
+gem "yard", "~> 0.9.44", group: :development
 
 # https://github.com/lostisland/faraday/security/advisories/GHSA-33mh-2634-fwr2
 gem "faraday", ">= 2.14.1"
