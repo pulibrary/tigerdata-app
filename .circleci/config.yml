@@ -16,7 +16,7 @@ parameters:
 orbs:
   browser-tools: circleci/browser-tools@2.4.2
   coveralls: coveralls/coveralls@2.2.5
-  ruby: cimg/ruby@3.3
+  ruby: cimg/ruby@3.3.11
   node: cimg/node@22.22
 executors:
   basic-executor:
