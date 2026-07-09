@@ -62,5 +62,10 @@
     "*css": "prettier --write",
     "*js": "prettier --write",
     "*.yml": "prettier --write"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }
