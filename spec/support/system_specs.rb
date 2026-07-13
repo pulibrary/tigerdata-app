@@ -1,40 +1,38 @@
 # frozen_string_literal: true
-Capybara.configure do |config|
-  config.default_driver = :chrome_headless
+require "capybara/rspec"
+require "selenium-webdriver"
 
-  # Makes sure fields are blanked out before being repopulated when using `fill_in`
-  # https://github.com/teamcapybara/capybara/issues/2419#issuecomment-738798878
-  config.default_set_options = { clear: :backspace }
+# there's a bug in capybara-screenshot that requires us to name
+#   the driver ":selenium" so we changed it from :headless_chrome"
+selenium_url = nil
+browser = :chrome
+# If we're not in CI then run Selenium from Lando. Makes it much easier to
+# upgrade versions of Chrome.
+if !ENV["CI"]
+  selenium_url = "http://127.0.0.1:4445/wd/hub"
+  Capybara.server_host = '0.0.0.0'
+  Capybara.always_include_port = true
+  Capybara.app_host = "http://host.docker.internal:#{Capybara.server_port}"
+  browser = :remote
 end
-
-Capybara.register_driver :chrome_headless do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 120
-  options = Selenium::WebDriver::Chrome::Options.new(args: %w[disable-gpu no-sandbox headless whitelisted-ips window-size=1400,1400])
-  options.add_argument(
-    "--enable-features=NetworkService,NetworkServiceInProcess"
+Capybara.register_driver(:selenium) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    { "goog:chromeOptions": %w[headless disable-gpu disable-setuid-sandbox window-size=7680,4320] }
   )
-  options.add_argument("--profile-directory=Default")
-  options.add_argument("--disable-dev-shm-usage")
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, http_client: client)
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new
+  browser_options.add_argument("--headless") unless ENV["RUN_IN_BROWSER"] == "true"
+  browser_options.add_argument("--disable-gpu")
+
+  http_client = Selenium::WebDriver::Remote::Http::Default.new
+  http_client.read_timeout = 120
+  http_client.open_timeout = 120
+  Capybara::Selenium::Driver.new(app,
+                                 browser: browser,
+                                 capabilities: [capabilities, browser_options],
+                                 http_client: http_client,
+                                 url: selenium_url)
 end
 
-Capybara.javascript_driver = :chrome_headless
-
-RSpec.configure do |config|
-  config.before(:each, type: :system) do
-    driven_by(:rack_test)
-  end
-
-  config.before(:each, type: :system, js: true) do
-    if ENV["RUN_IN_BROWSER"]
-      driven_by(:selenium)
-    else
-      driven_by(:chrome_headless)
-    end
-  end
-  config.before(:each, type: :system, js: true, in_browser: true) do
-    driven_by(:selenium)
-  end
-end
+Capybara.javascript_driver = :selenium
+Capybara.default_max_wait_time = 15

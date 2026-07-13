@@ -83,7 +83,7 @@ RSpec.configure do |config|
     if ENV["RUN_IN_BROWSER"]
       driven_by(:selenium)
     else
-      driven_by(:chrome_headless)
+      driven_by(:selenium_headless)
     end
   end
 end
