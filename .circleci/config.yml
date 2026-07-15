@@ -29,7 +29,6 @@ commands:
   install_dependencies:
     steps:
       - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
-      - run: sudo npm install -g corepack && sudo corepack enable && sudo corepack prepare yarn@4.17.1 --activate
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
@@ -44,14 +43,12 @@ commands:
 
   install_yarn_dependencies:
     steps:
+      - run: sudo npm install -g corepack
+      - run: sudo corepack enable
+      - run: sudo corepack prepare yarn@4.17.1 --activate
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
-      - run:
-          name: "Install Yarn using corepack"
-          command: |
-            corepack enable
-            corepack prepare yarn@4.17.1 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
