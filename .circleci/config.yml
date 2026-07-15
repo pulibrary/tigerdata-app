@@ -29,6 +29,7 @@ commands:
   install_dependencies:
     steps:
       - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
+      - run: sudo npm install -g corepack && sudo corepack enable && sudo corepack prepare yarn@4.17.1 --activate
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
