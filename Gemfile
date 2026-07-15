@@ -65,6 +65,7 @@ gem "vite_rails"
 gem "devise"
 gem "omniauth-cas", "~> 3.0"
 
+gem "benchmark"
 gem "csv"
 gem "datacite", "~> 0.4.0"
 gem "dogstatsd-ruby"
