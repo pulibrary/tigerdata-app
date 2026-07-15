@@ -19,7 +19,7 @@ orbs:
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:4.0.4-browsers
+      - image: cimg/ruby:4.0.4-node
         environment:
           RAILS_ENV: ci
     resource_class: medium
