@@ -9,11 +9,12 @@
   "packages": {
     "ruby": "4.0.4",
     "postgresql": {
-      "version": "17",
+      "version": "17.10",
       "outputs": ["lib", "out"]
     },
+    "libpq": "17.6", 
     "nodejs": {
-      "version": "24"
+      "version": "24.12.0"
     },
     "jdk": {
       "version": "19",

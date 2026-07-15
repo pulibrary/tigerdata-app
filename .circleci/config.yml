@@ -16,12 +16,12 @@ parameters:
 orbs:
   browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.7
+  ruby: cimg/ruby@2.7
   node: circleci/node@7.2
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.2-browsers
+      - image: cimg/ruby:4.0.4-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
@@ -47,7 +47,7 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "22.22.3"
+          node-version: "24"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
@@ -112,7 +112,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:3.3.2
+      - image: cimg/ruby:4.0.4-browsers
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -139,8 +139,6 @@ jobs:
           command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
-      - ruby/install:
-          version: "3.3.2"
       - install_yarn_dependencies
       - install_dependencies
       - install_crypto_policies
@@ -181,8 +179,6 @@ jobs:
       - checkout
       - cleanup_docker
       - run_mediaflux
-      - ruby/install:
-          version: "3.3.2"
       - install_yarn_dependencies
       - browser-tools/install_chrome
       - browser-tools/install_chromedriver
@@ -212,7 +208,7 @@ jobs:
 
   yarn_lint_format:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:24.18.0
     steps:
       - checkout
       - install_yarn_dependencies
@@ -225,7 +221,7 @@ jobs:
 
   yarn_test:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:24.18.0
     steps:
       - checkout
       - install_yarn_dependencies
@@ -249,11 +245,9 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
-      - ruby/install:
-          version: "3.3.2"
       - node/install:
           install-yarn: false
-          node-version: "22.22.3"
+          node-version: "24.18.0"
       - run:
           name: "Install Yarn using corepack"
           command: |
@@ -292,7 +286,7 @@ jobs:
 
   done:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:24.18.0
     steps:
       - coveralls/upload:
           carryforward: job1,job2

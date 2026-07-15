@@ -297,6 +297,78 @@
         }
       }
     },
+    "libpq@17.6": {
+      "last_modified": "2025-10-07T08:41:47Z",
+      "resolved": "github:NixOS/nixpkgs/bce5fe2bb998488d8e7e7856315f90496723793c#libpq",
+      "source": "devbox-search",
+      "version": "17.6",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jbxnxs5m5kphdk1aasd7rgmr8c2dljr4-libpq-17.6",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/0njiiz586kyp1ja8z14b12ac2csqyrk6-libpq-17.6-dev"
+            }
+          ],
+          "store_path": "/nix/store/jbxnxs5m5kphdk1aasd7rgmr8c2dljr4-libpq-17.6"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fz3mranz6d4a9587xgi81fvk18rki2br-libpq-17.6",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/jlccbdfy6g970cayadqamfimv09gpl2d-libpq-17.6-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/jzsly4qfvgxhiy8cwjgkzbw7i4xhpspa-libpq-17.6-dev"
+            }
+          ],
+          "store_path": "/nix/store/fz3mranz6d4a9587xgi81fvk18rki2br-libpq-17.6"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/2lgyk7hnz12qhrjjz4awlrmnibyfrlcr-libpq-17.6",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/npfckylaib8smmx7jqsm8k09j2gdaxll-libpq-17.6-dev"
+            }
+          ],
+          "store_path": "/nix/store/2lgyk7hnz12qhrjjz4awlrmnibyfrlcr-libpq-17.6"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/dvkxn6krfmp5cpr8r9sk0zggrh2j6s26-libpq-17.6",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/qn7vwsppp2ykl6xbsvb0357sbby92rjq-libpq-17.6-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/mrlm3j2p4i89zd87cqaay8rwwk5njm7x-libpq-17.6-dev"
+            }
+          ],
+          "store_path": "/nix/store/dvkxn6krfmp5cpr8r9sk0zggrh2j6s26-libpq-17.6"
+        }
+      }
+    },
     "libyaml@latest": {
       "last_modified": "2026-04-23T13:07:47Z",
       "resolved": "github:NixOS/nixpkgs/01fbdeef22b76df85ea168fbfe1bfd9e63681b30#libyaml",
