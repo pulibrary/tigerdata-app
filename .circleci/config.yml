@@ -43,7 +43,7 @@ commands:
 
   install_yarn_dependencies:
     steps:
-      - run: apt install node-corepack -y
+      - run: sudo apt install node-corepack -y
       - run: sudo corepack enable
       - run: sudo corepack prepare yarn@4.17.1 --activate
       - restore_cache:
