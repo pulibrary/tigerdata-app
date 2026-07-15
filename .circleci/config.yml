@@ -43,9 +43,6 @@ commands:
 
   install_yarn_dependencies:
     steps:
-      - node/install:
-          install-yarn: false
-          node-version: "24"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
@@ -53,7 +50,7 @@ commands:
           name: "Install Yarn using corepack"
           command: |
             corepack enable
-            corepack prepare yarn@4.16.0 --activate
+            corepack prepare yarn@4.17.1 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
@@ -243,14 +240,11 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
-      - node/install:
-          install-yarn: false
-          node-version: "24.18.0"
       - run:
           name: "Install Yarn using corepack"
           command: |
             corepack enable
-            corepack prepare yarn@4.16.0 --activate
+            corepack prepare yarn@4.17.1 --activate
       - browser-tools/install_chrome
       - browser-tools/install_chromedriver
       - install_dependencies
