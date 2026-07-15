@@ -43,9 +43,11 @@ commands:
 
   install_yarn_dependencies:
     steps:
-      - run: sudo apt install node-corepack -y
-      - run: sudo corepack enable
-      - run: sudo corepack prepare yarn@4.17.1 --activate
+      - run:
+          name: "Install Yarn using corepack"
+          command: |
+            corepack enable
+            corepack prepare yarn@4.17.1 --activate
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
