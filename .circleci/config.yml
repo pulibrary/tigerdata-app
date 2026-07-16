@@ -107,7 +107,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:4.0.4-browsers
+      - image: cimg/ruby:4.0.4-node
     working_directory: ~/tiger_data
     steps:
       - checkout
