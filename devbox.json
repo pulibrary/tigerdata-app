@@ -7,7 +7,7 @@
     "FONTCONFIG_PATH": "$PWD/.devbox/nix/profile/default/etc/fonts"
   },
   "packages": {
-    "ruby": "3.3.2",
+    "ruby": "4.0.4",
     "postgresql": {
       "version": "15.7",
       "outputs": ["lib", "out"]

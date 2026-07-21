@@ -2,7 +2,7 @@
 source "https://gem.coop"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "~> 3.3.0"
+ruby "~> 4.0.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.3"
@@ -52,10 +52,7 @@ gem "mini_racer"
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-# OpenSSL 3.6 broke Ruby's OpenSSL bindings, see: https://github.com/ruby/openssl/issues/949
-# By using the openssl gem, we can pick up the fixes without needing to upgrade Ruby.
-# This gem line can be removed once we upgrade to Ruby 3.4 >= 3.4.8, or Ruby 3.3 >= 3.3.10 or Ruby 3.2 >= 3.2.10
-# which will include the openssl fix by default, see: https://github.com/ruby/openssl/issues/949#issuecomment-3388132260
+# Pin openssl gem for security fixes independent of the Ruby stdlib package version.
 gem "openssl", ">= 3.3.1"
 
 gem "bootstrap", "~> 5.2.0"
@@ -70,7 +67,7 @@ gem "datacite", "~> 0.4.0"
 gem "dogstatsd-ruby"
 gem "dry-operation"
 gem "flipflop"
-gem "google-protobuf", "~> 3.25"
+gem "google-protobuf", "~> 4.35" # 3.25 platform gems require ruby < 3.4; 4.x supports Ruby 4.0
 gem "health-monitor-rails", "12.5.0"
 gem "honeybadger"
 gem "kaminari"
@@ -87,6 +84,8 @@ gem "whenever", require: false
 
 group :development, :test do
   gem "bcrypt_pbkdf"
+  # RuboCop (via bixby) requires benchmark; it is no longer a default gem as of Ruby 4.0.
+  gem "benchmark"
   gem "bixby"
   gem "bundle-audit", require: false
   gem "byebug"

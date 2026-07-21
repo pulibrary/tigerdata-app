@@ -21,25 +21,35 @@ orbs:
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:3.3.2-browsers
+      - image: cimg/ruby:4.0.4-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
     working_directory: ~/tigerdata-app
 
 commands:
+  # Native extensions are compiled against the executor's glibc. Docker (cimg) and
+  # machine (RVM) images do not share a glibc version, so gem caches must not be shared
+  # between them — restoring a cimg-built vendor/bundle on machine fails with errors
+  # like: libc.so.6: version `GLIBC_2.38' not found (required by date_core.so).
   install_dependencies:
+    parameters:
+      cache_prefix:
+        type: string
+        default: "cimg"
     steps:
-      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev tzdata
+      # libyaml-dev: psych YAML support (required for Bootsnap/Rails on Ruby 4)
+      # libpq-dev / libmsgpack-dev: native gem build deps
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
       - restore_cache:
-          key: &gem_key tiger_data-cimg-{{ checksum "Gemfile.lock.bak" }}-2
+          key: tiger_data-{{ parameters.cache_prefix }}-{{ checksum "Gemfile.lock.bak" }}-3
       - run: bundle config set path './vendor/bundle'
       - run: bundle config set --local without production
       - run: bundle install --jobs=4 --retry=3
       - save_cache:
-          key: *gem_key
+          key: tiger_data-{{ parameters.cache_prefix }}-{{ checksum "Gemfile.lock.bak" }}-3
           paths:
             - ./vendor/bundle
 
@@ -112,11 +122,12 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:3.3.2
+      - image: cimg/ruby:4.0.4
     working_directory: ~/tiger_data
     steps:
       - checkout
-      - install_dependencies
+      - install_dependencies:
+          cache_prefix: cimg
       - run:
           name: Run rubocop
           command: bundle exec rubocop
@@ -140,9 +151,10 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.2"
+          version: "4.0.4"
       - install_yarn_dependencies
-      - install_dependencies
+      - install_dependencies:
+          cache_prefix: machine
       - install_crypto_policies
       - run_postgres
       # wait for postgres and mediaflux
@@ -182,11 +194,12 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - ruby/install:
-          version: "3.3.2"
+          version: "4.0.4"
       - install_yarn_dependencies
       - browser-tools/install_chrome
       - browser-tools/install_chromedriver
-      - install_dependencies
+      - install_dependencies:
+          cache_prefix: machine
       - install_crypto_policies
       - run_postgres
       # wait for postgres and mediaflux
@@ -250,7 +263,7 @@ jobs:
     steps:
       - checkout
       - ruby/install:
-          version: "3.3.2"
+          version: "4.0.4"
       - node/install:
           install-yarn: false
           node-version: "22.22.3"
@@ -261,7 +274,8 @@ jobs:
             corepack prepare yarn@4.16.0 --activate
       - browser-tools/install_chrome
       - browser-tools/install_chromedriver
-      - install_dependencies
+      - install_dependencies:
+          cache_prefix: machine
       - install_yarn_dependencies
       - persist_to_workspace:
           root: &root "~/tiger_data"
