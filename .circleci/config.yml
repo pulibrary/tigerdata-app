@@ -297,7 +297,8 @@ jobs:
           path: /home/circleci/tiger_data/tmp/capybara
 
   deploy:
-    executor: basic-executor
+    docker:
+      - image: cimg/ruby:4.0.4
     steps:
       - run:
           # prettier-ignore
