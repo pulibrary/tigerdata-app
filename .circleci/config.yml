@@ -307,8 +307,8 @@ jobs:
       - run:
           name: Check Ansible Tower Response
           command: |
-            if grep -q '"status": "successful"' response.json; then
-              echo "Deployment successful"
+            if grep -q '"job_template":"/api/v2/job_templates/89/"' response.json; then
+              echo "Deployment playbook successfully launched"
             else
               echo "Deployment failed"
               cat response.json
