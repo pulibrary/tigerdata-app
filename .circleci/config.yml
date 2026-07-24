@@ -340,13 +340,13 @@ workflows:
           requires:
             - test
             - test_browser
-      - deploy
-          # requires: # Call the auto-deploy job after the main test job
-          #   - test
-          # filters: # This job is only run on the main branch
-          #   branches:
-          #     only:
-          #       - main
+      - deploy:
+          requires: # Call the auto-deploy job after the main test job
+            - test
+          filters: # This job is only run on the main branch
+            branches:
+              only:
+                - main
       - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
           requires:
             - test
