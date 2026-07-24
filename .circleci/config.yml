@@ -311,7 +311,7 @@ jobs:
             if grep -q 'Looks like something went wrong' response.json; then
               echo "Error: Response payload contains an error status."
               exit 1
-            fi:
+            fi
 
   done:
     docker:
@@ -339,12 +339,12 @@ workflows:
             - test
             - test_browser
       - deploy
-          # requires: # Call the auto-deploy job after the main test job
-          #   - test
-          # filters: # This job is only run on the main branch
-          #   branches:
-          #     only:
-          #       - main
+        # requires: # Call the auto-deploy job after the main test job
+        #   - test
+        # filters: # This job is only run on the main branch
+        #   branches:
+        #     only:
+        #       - main
       - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
           requires:
             - test
