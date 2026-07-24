@@ -303,7 +303,7 @@ jobs:
       - run:
           # prettier-ignore
           name: Trigger Ansible Tower Deployment
-          command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
+          command: "curl -v -s -o response.json -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
       # - run:
       #     name: Check Ansible Tower Response
       #     command: |
