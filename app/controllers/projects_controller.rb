@@ -188,10 +188,6 @@ class ProjectsController < ApplicationController
       end
     end
 
-    def eligible_editor?
-      return true if current_user.eligible_sponsor? or current_user.eligible_manager?
-    end
-
     def set_breadcrumbs
       add_breadcrumb("Dashboard",dashboard_path)
     end

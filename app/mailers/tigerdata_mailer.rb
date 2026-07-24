@@ -56,20 +56,4 @@ class TigerdataMailer < ApplicationMailer
     def project
       @project ||= Project.find_by(id: @project_id)
     end
-
-    def project_metadata
-      return if project.nil?
-
-      project.metadata
-    end
-
-    def project_metadata_id
-      return if project.nil?
-
-      project_metadata[:project_id]
-    end
-
-    def filebase
-      @filebase ||= project_metadata_id.tr("/", "_")
-    end
 end
