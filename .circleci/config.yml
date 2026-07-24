@@ -306,7 +306,6 @@ jobs:
             RESPONSE=$(curl -s -o response.json -X POST "https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/" --header "Content-Type: application/json" --header "Authorization: Bearer $TOWER_TOKEN" -d '{"credential_passwords":{},"extra_vars":{"repo_name":"tigerdata-app", "runtime_env":"ci"}}')
 
             echo "Response: $RESPONSE"
-            cat response.json
 
             if grep -q 'Looks like something went wrong' response.json; then
               echo "Error: Response payload contains an error status."
@@ -338,13 +337,13 @@ workflows:
           requires:
             - test
             - test_browser
-      - deploy:
-          requires: # Call the auto-deploy job after the main test job
-            - test
-          filters: # This job is only run on the main branch
-            branches:
-              only:
-                - main
+      - deploy
+          # requires: # Call the auto-deploy job after the main test job
+          #   - test
+          # filters: # This job is only run on the main branch
+          #   branches:
+          #     only:
+          #       - main
       - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
           requires:
             - test
