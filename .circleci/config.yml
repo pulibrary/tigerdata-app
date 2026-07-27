@@ -297,12 +297,23 @@ jobs:
           path: /home/circleci/tiger_data/tmp/capybara
 
   deploy:
-    executor: basic-executor
+    docker:
+      - image: cimg/ruby:4.0.4
     steps:
       - run:
           # prettier-ignore
-          name: Deploy to CI
-          command: "curl -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
+          name: Trigger Ansible Tower Deployment
+          command: "curl -v -s -o response.json -X POST \"https://ansible-tower.princeton.edu/api/v2/job_templates/89/launch/\" --header \"Content-Type: application/json\" --header \"Authorization: Bearer $TOWER_TOKEN\" -d '{\"credential_passwords\":{},\"extra_vars\":{\"branch_name\":\"'$CIRCLE_BRANCH'\", \"repo_name\":\"tigerdata-app\", \"runtime_env\":\"ci\"}}'"
+      - run:
+          name: Check Ansible Tower Response
+          command: |
+            if grep -q '"job_template":"/api/v2/job_templates/89/"' response.json; then
+              echo "Deployment playbook successfully launched"
+            else
+              echo "Deployment failed"
+              cat response.json
+              exit 1
+            fi
 
   done:
     docker:
