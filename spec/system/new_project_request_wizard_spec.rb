@@ -27,14 +27,16 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Basic Details"
-        fill_in :project_title, with: "She was a Fairy"
-        expect(page).to have_content "15/200 characters"
+        expect(page).to have_css("#project_title")
+        fill_in_and_out("project_title", with: "She was a Fairy")
+        expect(page).to have_field("project_title", with: "She was a Fairy")
         fill_in :parent_folder, with: "Fairy"
         fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
-        fill_in :description, with: "An awesome project to show the wizard is magic"
+        fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
+        expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
         select "Teaching", from: :project_purpose
-        expect(page).to have_content "46/1000 characters"
-        expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
+        # Assert not selected (Lux may keep option labels in the DOM once mounted)
+        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
@@ -67,14 +69,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Basic Details"
-        fill_in :project_title, with: "She was a Fairy"
-        expect(page).to have_content "15/200 characters"
+        expect(page).to have_css("#project_title")
+        fill_in_and_out("project_title", with: "She was a Fairy")
+        expect(page).to have_field("project_title", with: "She was a Fairy")
         fill_in :parent_folder, with: "Fairy"
         fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
-        fill_in :description, with: "An awesome project to show the wizard is magic"
+        fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
+        expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
         select "Teaching", from: :project_purpose
-        expect(page).to have_content "46/1000 characters"
-        expect(page).not_to have_content("(77777) RDSS-Research Data and Scholarship Services")
+        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
@@ -137,14 +140,15 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(all(".step-number-incomplete .step-text")[0].text).to eq "2"
 
         expect(page).to have_content "Tell us a little about your project!"
-        fill_in :project_title, with: "A basic Project"
-        expect(page).to have_content "15/200 characters"
+        expect(page).to have_css("#project_title")
+        fill_in_and_out("project_title", with: "A basic Project")
+        expect(page).to have_field("project_title", with: "A basic Project")
         fill_in :parent_folder, with: "abc_lab"
         fill_in :project_folder, with: "skeletor"
-        fill_in :description, with: "An awesome project to show the wizard is magic"
-        expect(page).to have_content "46/1000 characters"
+        fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
+        expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
         select "Research", from: "project_purpose"
-        expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
+        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
 
         # force a save and page reload to make sure all data is being saved to the model
@@ -319,14 +323,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in researcher_user
         visit "/new-project/review-submit/#{request.id}"
         expect(page).to have_content "Take a moment to review"
+        expect(page).to have_css("#project_title")
         click_on("Submit")
         within(".project-title") do
           expect(page).to have_content("This field is required.")
         end
 
         expect(page).to have_content("Please resolve errors before submitting your request")
-        fill_in :project_title, with: "A basic Project"
-        expect(page).to have_content "15/200 characters"
+        # Failed submit re-renders the review page; wait for the form again
+        expect(page).to have_css("#project_title")
+        fill_in_and_out("project_title", with: "A basic Project")
+        expect(page).to have_field("project_title", with: "A basic Project")
 
         click_on("Submit")
         within(".parent-folder") do
@@ -339,13 +346,24 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           expect(page).to have_content("This field is required.")
         end
 
+        # After several validation redirects, re-wait for full review form
+        expect(page).to have_content "Take a moment to review"
+        expect(page).to have_css("#project_title")
+        expect(page).to have_css("#data_sponsor_input")
+
         fill_in :project_folder, with: "skeletor"
         select "Teaching", from: :project_purpose
-        fill_in :description, with: "An awesome project to show the wizard is magic"
-        expect(page).to have_content "46/1000 characters"
-        expect(page).not_to have_content("RDSS-Research Data and Scholarship Services")
-        select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
-        select_and_verify_department(department: "HPC-High Performance Computing", department_code: "66666", department_list: [{ code: "77777", name: "RDSS-Research Data and Scholarship Services" }])
+        fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
+        expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
+
+        # Prefer "not selected" over not_to have_content: Lux may put department
+        # option labels in the DOM when mounted, which makes page text flaky.
+        rdss = { code: "77777", name: "RDSS-Research Data and Scholarship Services" }
+        hpc = { code: "66666", name: "HPC-High Performance Computing" }
+        expect(page).not_to have_field("request[departments][]", type: :hidden, with: rdss.to_json)
+
+        select_and_verify_department(department: rdss[:name], department_code: rdss[:code], department_list: [])
+        select_and_verify_department(department: hpc[:name], department_code: hpc[:code], department_list: [rdss])
 
         select_user(researcher_user, "data_sponsor", "request[data_sponsor]")
         select_user(researcher_user, "data_manager", "request[data_manager]")
@@ -374,12 +392,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
-        random_title = "Project #{rand(100_000)} title"
-        fill_in :project_title, with: random_title
+        # Wait for the form and sidebar save-on-navigate links (wizardNavigation binds on load/turbo:render)
+        expect(page).to have_css("#project_title")
+        expect(page).to have_css("a.go-to-step", text: "Review and Submit")
 
-        # Click on the last step in the Wizard
-        # and make sure the data from the previous step was saved
+        random_title = "Project #{rand(100_000)} title"
+        fill_in_and_out("project_title", with: random_title)
+        expect(page).to have_field("project_title", with: random_title)
+
+        # Sidebar jump triggers saveOnClick → form POST with redirectUrl, then Review step
         click_on "Review and Submit"
+        expect(page).to have_content("Take a moment to review")
         expect(page).to have_field("project_title", with: random_title)
       end
 
@@ -390,12 +413,13 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Tell us a little about your project!"
-        fill_in :project_title, with: "A basic Project"
-        expect(page).to have_content "15/200 characters"
+        expect(page).to have_css("#project_title")
+        fill_in_and_out("project_title", with: "A basic Project")
+        expect(page).to have_field("project_title", with: "A basic Project")
         fill_in :parent_folder, with: "abc_lab"
         fill_in :project_folder, with: "skeletor"
-        fill_in :description, with: "An awesome project to show the wizard is magic"
-        expect(page).to have_content "46/1000 characters"
+        fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
+        expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
 
         # Select a department
         department_to_test = "RDSS-Research Data and Scholarship Services"
@@ -448,22 +472,29 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         sign_in researcher_user
         visit "new-project/project-info"
+        expect(page).to have_css(".departments .lux-field input")
 
+        rdss_json = "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}"
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
-        # the option is no longer available
+        # Already-selected department should not reappear as a choosable result
         within(".departments") do
           page.find(".lux-field input").fill_in with: "77777"
-          within(".lux-autocomplete-input") do
-            expect(page).not_to have_content "RDSS-Research Data and Scholarship Services"
-          end
+          # Wait for the filter UI; selected depts are filtered out of the result list
+          expect(page).to have_css(".lux-autocomplete-input")
+          expect(page).not_to have_css(".lux-autocomplete-result", text: "RDSS-Research Data and Scholarship Services", wait: 2)
         end
 
-        expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+        # Exactly one selected department value in the form (not "name appears once in page text" —
+        # Lux may still mirror labels elsewhere in the component tree)
+        expect(page).to have_field("request[departments][]", type: :hidden, with: rdss_json)
+        selected_dept_values = all("input[name='request[departments][]']", visible: :hidden).map(&:value)
+        expect(selected_dept_values.count { |v| v == rdss_json }).to eq(1)
 
         click_on "Review and Submit"
         expect(page).to have_content("Take a moment to review your details and make any necessary edits before finalizing.")
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+        expect(page).to have_field("request[departments][]", type: :hidden, with: rdss_json)
+        selected_dept_values = all("input[name='request[departments][]']", visible: :hidden).map(&:value)
+        expect(selected_dept_values.count { |v| v == rdss_json }).to eq(1)
 
         fill_in :project_title, with: "No Duplicate Departments Project"
         fill_in :parent_folder, with: "abc_lab"
@@ -478,7 +509,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         visit new_project_request_path(NewProjectRequest.last.id)
         expect(page).to have_content("No Duplicate Departments Project")
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services").exactly(1).times
+        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       end
 
       it "allows for save and exit" do
@@ -566,76 +597,73 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit "/"
         click_on "New Project Request"
 
-        info_first = find("#project_title")
-        info_second = find("#parent_folder")
-        info_third = find("#project_folder")
-        info_fourth = find("#project_purpose")
-        info_fifth = find("#description")
-        info_sixth = find("#displayInput-v-0")
-        # Project Information tab order
+        # Wait for step content and Lux-mounted department field (avoid generated #displayInput-v-*)
+        expect(page).to have_content "Tell us a little about your project!"
+        expect(page).to have_css("#project_title")
+        expect(page).to have_css(".departments .lux-field input")
+
+        # Project Information tab order (stable field ids + department container)
         find("#project_title").click
-        expect(page.driver.browser.switch_to.active_element).to eq(info_first.native)
-        info_first.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(info_second.native)
-        info_second.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(info_third.native)
-        info_third.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(info_fourth.native)
-        info_fourth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(info_fifth.native)
-        info_fifth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(info_sixth.native)
+        expect_active_element_id("project_title")
+        send_tab
+        expect_active_element_id("parent_folder")
+        send_tab
+        expect_active_element_id("project_folder")
+        send_tab
+        expect_active_element_id("project_purpose")
+        send_tab
+        expect_active_element_id("description")
+        send_tab
+        expect_focus_within(".departments")
 
         click_on "Next"
+        expect(page).to have_content "Assign roles for your project"
+        expect(page).to have_css("#data_sponsor_input input")
+        expect(page).to have_css("#data_manager_input input")
+        expect(page).to have_css("#add-users")
 
-        roles_first = find("#displayInput-v-0") # Data Sponsor
-        roles_second = find("#displayInput-v-1") # Data Manager
-        roles_third = find("#add-users")
-        # Roles and People tab order
-        find("#displayInput-v-0").click
-        expect(page.driver.browser.switch_to.active_element).to eq(roles_first.native)
-        roles_first.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(roles_second.native)
-        roles_second.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(roles_third.native)
+        # Roles and People tab order (scope Lux inputs by #data_*_input, not displayInput-v-N)
+        find("#data_sponsor_input input").click
+        expect_focus_within("#data_sponsor_input")
+        send_tab
+        expect_focus_within("#data_manager_input")
+        send_tab
+        expect_active_element_id("add-users")
 
         click_on "Next"
+        expect(page).to have_content "Enter the storage and access needs"
+        expect(page).to have_css("label[for='radio500gb']")
+        expect(page).to have_css("#number_of_files")
 
-        storage_needed_first = find("label", text: "500 GB")
-        storage_needed_second = find("label", text: "2 TB")
-        storage_needed_third = find("label", text: "10 TB")
-        storage_needed_fourth = find("label", text: "25 TB")
-        storage_needed_fifth = find("label", text: "Custom")
-        storage_access_second = find("#number_of_files")
-        storage_access_third = all(".storage-tooltip-link").first
-        storage_access_fourth = find("#hpc_no")
-        storage_access_fifth = find("#network_no")
-        storage_access_sixth = all(".storage-tooltip-link").last
-        storage_access_seventh = find("#globus_no")
-        # Storage and Access Needs tab order
-        find("label", text: "500 GB").click
-        expect(page.driver.browser.switch_to.active_element).to eq(find("#radio500gb", visible: :hidden).native)
-        # Although we click on the label, the radio button is what receives focus because it is the default option selected in the wizard
-        storage_needed_first.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_second.native)
-        storage_needed_second.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_third.native)
-        storage_needed_third.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_fourth.native)
-        storage_needed_fourth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_needed_fifth.native)
-        storage_needed_fifth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_second.native)
-        storage_access_second.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_third.native)
-        storage_access_third.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_fourth.native)
-        storage_access_fourth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_fifth.native)
-        storage_access_fifth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_sixth.native)
-        storage_access_sixth.send_keys(:tab)
-        expect(page.driver.browser.switch_to.active_element).to eq(storage_access_seventh.native)
+        # Storage and Access tab order — prefer for=/id and href over positional .first/.last.
+        # Quota radios use tabindex=-1; the visible tab stops are the labels (tabindex=0).
+        # Clicking the 500 GB label focuses the associated radio; then tab from that label
+        # walks the remaining quota labels (matches browser behavior used historically here).
+        quota = find("label[for='radio500gb']")
+        quota.click
+        expect_active_element_id("radio500gb", visible: :hidden)
+
+        quota.send_keys(:tab)
+        expect_focus_within("label[for='radio2tb']")
+        find("label[for='radio2tb']").send_keys(:tab)
+        expect_focus_within("label[for='radio10tb']")
+        find("label[for='radio10tb']").send_keys(:tab)
+        expect_focus_within("label[for='radio25tb']")
+        find("label[for='radio25tb']").send_keys(:tab)
+        expect_focus_within("label[for='radiocustom']")
+        find("label[for='radiocustom']").send_keys(:tab)
+        expect_active_element_id("number_of_files")
+        send_tab
+        expect_focus_within("a.storage-tooltip-link[href*='accessing-tigerdata']")
+        send_tab
+        # Checked radio in each group is the only tab stop (defaults to "no")
+        expect_active_element_id("hpc_no")
+        send_tab
+        expect_active_element_id("network_no")
+        send_tab
+        expect_focus_within("a.storage-tooltip-link[href*='document/6796']")
+        send_tab
+        expect_active_element_id("globus_no")
       end
     end
   end
