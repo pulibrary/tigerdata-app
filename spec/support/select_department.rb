@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def select_and_verify_department(department:, department_code:, department_list:)
   select_department(department:, department_code:)
 
@@ -13,13 +14,13 @@ def select_and_verify_department(department:, department_code:, department_list:
     end
 
     # the javascript cleared the find to get ready for the next search
-    expect(page.find(".lux-field input").value).to eq("")
+    expect(page.find(".lux-field input", match: :first).value).to eq("")
   end
 end
 
 def select_department(department:, department_code:)
   within(".departments") do
-    page.find(".lux-field input").fill_in with: department_code
+    page.find(".lux-field input", match: :first).fill_in with: department_code
     expect(page).to have_content department
     find(".lux-autocomplete-result").click
   end
