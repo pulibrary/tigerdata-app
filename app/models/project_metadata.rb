@@ -180,6 +180,10 @@ class ProjectMetadata
     @data_user_read_write
   end
 
+  def doi_path
+    project_id.tr("/", "-")
+  end
+
     private
 
       def data_users_from_params(params, access)
