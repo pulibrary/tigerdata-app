@@ -136,7 +136,13 @@ class ProjectsController < ApplicationController
       redirect_to "/"
     else
       filename = file_inventory_request.output_file
-      send_data File.read(filename), type: "text/plain", filename: "filelist.csv", disposition: "attachment"
+      params[:id] = file_inventory_request.project_id
+      current_project = project
+      if current_project
+        current_time = Time.current.in_time_zone("America/New_York").strftime("%Y-%m-%d-%H-%M")
+        file_out = "filelist-#{project.metadata_model.doi_path}-#{current_time}.csv"
+        send_data File.read(filename), type: "text/plain", filename: file_out, disposition: "attachment"
+      end
     end
   end
 

@@ -373,4 +373,54 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         .or(have_content("Princeton Plasma Physics Laboratory"))
     end
   end
+
+  describe "#file_list_download" do
+    let(:researcher_user) { FactoryBot.create :user }
+    let(:inventory_request_request) do
+      FileInventoryRequest.create(
+        user_id: researcher_user.id,
+        project_id: project.id,
+        job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
+        state: InventoryRequest::COMPLETED,
+        request_details: {
+          project_title: project.title,
+          file_size: 1_000_000,
+          output_file: Rails.root.join("spec", "fixtures", "files", "project_report.csv").to_s
+        },
+        completion_time: Time.current.in_time_zone("America/New_York")
+      )
+    end
+
+    it "redirects to the sign in page" do
+      get :file_list_download, params: { job_id: inventory_request_request.job_id }
+      expect(response).to redirect_to "http://test.host/sign_in"
+    end
+
+    context "a signed in user" do
+      before do
+        sign_in researcher_user
+      end
+
+      it "redirects to the root when the user does not have access " do
+        get :file_list_download, params: { job_id: inventory_request_request.job_id }
+        expect(response).to redirect_to dashboard_path
+      end
+    end
+
+    context "a user with access" do
+      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      before do
+        sign_in researcher_user
+      end
+
+      it "returns the file listing as an attachment" do
+        Timecop.freeze(Time.current.in_time_zone("America/New_York")) do
+          get :file_list_download, params: { job_id: inventory_request_request.job_id }
+          expect(response.content_type).to eq("text/plain")
+          expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"filelist-10.34770-tbd-#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d-%H-%M')}.csv\"")
+          expect(response.body).to eq(File.read(inventory_request_request.output_file))
+        end
+      end
+    end
+  end
 end
