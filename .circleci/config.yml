@@ -28,28 +28,33 @@ executors:
     working_directory: ~/tigerdata-app
 
 commands:
-  # Native extensions are compiled against the executor's glibc. Docker (cimg) and
-  # machine (RVM) images do not share a glibc version, so gem caches must not be shared
-  # between them — restoring a cimg-built vendor/bundle on machine fails with errors
-  # like: libc.so.6: version `GLIBC_2.38' not found (required by date_core.so).
+  # NOTE: Native extensions are compiled against the executor's glibc.
+  # Docker (cimg) and machine (RVM) images do not share a glibc version, so gem caches must not be shared
+  #   between them restoring a vendor/bundle built on one of the cimg/ruby* images
+  #   on "machine" Executor will fails
+  #   Example: libc.so.6: version `GLIBC_2.38' not found (required by date_core.so).
   install_dependencies:
     parameters:
       cache_prefix:
         type: string
         default: "cimg"
     steps:
-      # libyaml-dev: psych YAML support (required for Bootsnap/Rails on Ruby 4)
-      # libpq-dev / libmsgpack-dev: native gem build deps
+      # NOTE: libyaml-dev: psych YAML support (required for Bootsnap/Rails on Ruby 4)
+      # NOTE: libpq-dev / libmsgpack-dev: native gem build deps
+      # NOTE: postgresql-client: pg_isready for service readiness checks
       - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
+      # NOTE: Cache keys: `{{ }}` is only for CircleCI cache template funcs (checksum, epoch, …).
+      # Command parameters must use `<< parameters.x >>` — `{{ parameters.x }}` errors with
+      #   function "parameters" not defined
       - restore_cache:
-          key: tiger_data-{{ parameters.cache_prefix }}-{{ checksum "Gemfile.lock.bak" }}-3
+          key: tiger_data-<< parameters.cache_prefix >>-{{ checksum "Gemfile.lock.bak" }}-3
       - run: bundle config set path './vendor/bundle'
       - run: bundle config set --local without production
       - run: bundle install --jobs=4 --retry=3
       - save_cache:
-          key: tiger_data-{{ parameters.cache_prefix }}-{{ checksum "Gemfile.lock.bak" }}-3
+          key: tiger_data-<< parameters.cache_prefix >>-{{ checksum "Gemfile.lock.bak" }}-3
           paths:
             - ./vendor/bundle
 
@@ -79,21 +84,97 @@ commands:
     steps:
       - run: sudo apt update && sudo apt install -y crypto-policies
 
+  # NOTE: You cannot pair a Docker primary container (cimg/ruby) with Podman on a
+  # *separate* machine job and share localhost as they are different VMs.
+  # Machine executors do not ship Ruby
+  # The ruby orb installs via RVM and caches the RVM tree so subsequent runs skip recompilation.
+  install_ruby_machine:
+    parameters:
+      version:
+        type: string
+        default: "4.0.4"
+    steps:
+      - restore_cache:
+          name: Restore RVM / Ruby cache
+          keys:
+            - tiger_data-rvm-ruby-<< parameters.version >>-v2
+      - ruby/install:
+          version: << parameters.version >>
+      - save_cache:
+          name: Save RVM / Ruby cache
+          key: tiger_data-rvm-ruby-<< parameters.version >>-v2
+          paths:
+            - ~/.rvm
+            - /usr/local/rvm
+            - /home/circleci/.rvm
+
+  # NOTE: Mediaflux is deployed using nested podman (quay.io/podman/stable and docker.io/pulibraryrdss/mediaflux_dev)
+  # This is necessary in order be able to explicitly set the MAC address (which is required for Mediaflux)
   run_mediaflux:
     steps:
       - run:
+          name: Remove existing Mediaflux images
+          command: |
+            podman rm -f mediaflux 2>/dev/null || true
+      - run:
           name: Run Mediaflux in podman
-          command: podman run -t --name mediaflux --rm --security-opt label=disable --security-opt unmask=ALL -p 8888:8888 --user podman --device /dev/net/tun --device /dev/fuse quay.io/podman/stable:latest bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.51.0"
+          command: |
+            set -e
+            podman run -t \
+              --name mediaflux \
+              --rm \
+              --security-opt label=disable \
+              --security-opt unmask=ALL \
+              -p 8888:8888 \
+              --user podman \
+              --device /dev/net/tun \
+              --device /dev/fuse \
+              quay.io/podman/stable:latest \
+              bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.51.0"
           background: true
 
+  # NOTE: Postgres is a single container and is fine detached (`-d`)
   run_postgres:
     steps:
       - run:
           name: Run Postgres in podman
-          command: podman run -t --name postgres --rm --publish 0.0.0.0:5432:5432 --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=test_db --env POSTGRES_USER=tiger_data_user docker.io/postgres:15.2-alpine
-          background: true
+          command: |
+            set -e
+            podman rm -f postgres 2>/dev/null || true
+            # POSTGRES_HOST_AUTH_METHOD=trust is intentional for ephemeral CI
+            podman run -d --name postgres \
+              --publish 0.0.0.0:5432:5432 \
+              --env POSTGRES_HOST_AUTH_METHOD=trust \
+              --env POSTGRES_DB=test_db \
+              --env POSTGRES_USER=tiger_data_user \
+              docker.io/postgres:15.2-alpine
+            echo "Postgres container started (detached)"
 
-  # Enable SHA1 for Mediaflux. Neccessary to run integration tests
+  # NOTE: Without -d, libpq defaults the database name to the username, so
+  # `pg_isready -U tiger_data_user` tries database "tiger_data_user" and logs:
+  #   FATAL: database "tiger_data_user" does not exist
+  #
+  # NOTE: The container creates POSTGRES_DB=test_db (see run_postgres).
+  wait_for_postgres:
+    steps:
+      - run:
+          name: Wait for Postgres
+          command: |
+            set -e
+            DB_NAME="${POSTGRES_DB:-test_db}"
+            DB_USER="${POSTGRES_USER:-tiger_data_user}"
+            for i in $(seq 1 60); do
+              if pg_isready -h 127.0.0.1 -p 5432 -U "$DB_USER" -d "$DB_NAME" >/dev/null 2>&1; then
+                echo "Postgres is ready (user=$DB_USER db=$DB_NAME, attempt $i)"
+                exit 0
+              fi
+              echo "Waiting for Postgres (user=$DB_USER db=$DB_NAME)... ($i)"
+              sleep 1
+            done
+            echo "Postgres did not become ready in time" >&2
+            exit 1
+
+  # NOTE: Enable SHA1 for Mediaflux. This is necessary to run integration tests
   enable_sha1_for_mediaflux:
     steps:
       - run:
@@ -102,10 +183,11 @@ commands:
           background: true
       - run:
           name: output license expiration information
-          command: 'podman exec --user podman -it mediaflux bin/bash -c ''podman exec mediafluxinternal  bin/bash -c "java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe |grep expiry"'''
+          # NOTE: Avoiding "-t" removes TTY noise if the Job is canceled
+          command: 'podman exec --user podman mediaflux bin/bash -c ''podman exec mediafluxinternal bin/bash -c "java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe |grep expiry"'''
           background: true
 
-  # Disable SHA1 for security purposes
+  # NOTE: Disable SHA1 for security purposes
   disable_sha1:
     steps:
       - run:
@@ -113,11 +195,12 @@ commands:
           command: sudo update-crypto-policies --set DEFAULT
           background: true
 
+  # NOTE: Invoking `podman system prune -a --volumes` on every job can require minutes for every CircleCI job on "machine" Executors.
   cleanup_docker:
     steps:
       - run: podman stop postgres || true
       - run: podman stop mediaflux || true
-      - run: podman system prune -a --volumes -f || true
+      - run: podman rm -f postgres mediaflux 2>/dev/null || true
 
 jobs:
   rubocop_lint:
@@ -131,17 +214,20 @@ jobs:
       - run:
           name: Run rubocop
           command: bundle exec rubocop
+
   test:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
+    parallelism: 4
     environment:
       ARCH: linux
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       RAILS_ENV: test
-      SPEC_OPTS: "--tag ~type:system --format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
+      # NOTE: Avoid using "--out" here (that requires that the $CIRCLE_NODE_INDEX environment variable is set)
+      SPEC_OPTS: "--tag ~type:system --format progress"
     steps:
       - checkout
       - run:
@@ -150,50 +236,70 @@ jobs:
           command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
-      - ruby/install:
+      - install_ruby_machine:
           version: "4.0.4"
       - install_yarn_dependencies
       - install_dependencies:
           cache_prefix: machine
       - install_crypto_policies
       - run_postgres
-      # wait for postgres and mediaflux
-      - run: sleep 10
+      - wait_for_postgres
+      # Wait for Mediaflux
+      - run: sleep 5
       - enable_sha1_for_mediaflux
-      - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
-          name: Run Rspec
-          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+          name: Prepare JUnit output directory
+          command: mkdir -p /tmp/rspec
+      - run:
+          name: Run Rspec (unit / non-system, local Mediaflux)
+          command: |
+            set -e
+            # Prefer non-system paths so split nodes are not stuck with system-only files
+            # that SPEC_OPTS would filter to zero examples.
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" \
+              | grep -vE '^spec/system/' \
+              | circleci tests split --split-by=timings)
+            echo "Node $CIRCLE_NODE_INDEX files:"
+            echo "$TESTFILES"
+            # shellcheck disable=SC2086
+            bundle exec rspec $TESTFILES \
+              --format progress \
+              --format RspecJunitFormatter \
+              --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
       - store_artifacts:
+          name: JUnit (unit-*.xml)
+          path: /tmp/rspec
+      - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
+      # Parallel Coveralls: do not set flag_name (job1/job2). Distinct flag names
+      # show up as separate Coveralls "jobs"; omit them so all parallel posts merge
+      # into one build, finished by the `done` job's parallel_finished step.
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
           parallel: true
-          flag_name: job1
           fail_on_error: false
 
   test_browser:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/ruby-deploy
+    parallelism: 2
     environment:
       ARCH: linux
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
       POSTGRES_HOST_AUTH_METHOD: trust
       RAILS_ENV: test
-      SPEC_OPTS: "--tag type:system --format progress --format RspecJunitFormatter --out /tmp/rspec/rspec.xml"
+      SPEC_OPTS: "--tag type:system --format progress"
     steps:
       - checkout
       - cleanup_docker
       - run_mediaflux
-      - ruby/install:
+      - install_ruby_machine:
           version: "4.0.4"
       - install_yarn_dependencies
       - browser-tools/install_chrome
@@ -202,25 +308,39 @@ jobs:
           cache_prefix: machine
       - install_crypto_policies
       - run_postgres
-      # wait for postgres and mediaflux
-      - run: sleep 10
+      - wait_for_postgres
+      # Wait for Mediaflux
+      - run: sleep 5
       - enable_sha1_for_mediaflux
-      - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
-          name: Run Rspec
-          command: bundle exec rspec
+          name: Prepare JUnit output directory
+          command: mkdir -p /tmp/rspec
+      - run:
+          name: Run Rspec (system / browser, local Mediaflux)
+          command: |
+            set -e
+            # System examples live mainly under spec/system; also include views marked type: system
+            TESTFILES=$(circleci tests glob "spec/system/**/*_spec.rb" "spec/views/**/*_spec.rb" \
+              | circleci tests split --split-by=timings)
+            echo "Node $CIRCLE_NODE_INDEX files:"
+            echo "$TESTFILES"
+            # shellcheck disable=SC2086
+            bundle exec rspec $TESTFILES \
+              --format progress \
+              --format RspecJunitFormatter \
+              --out "/tmp/rspec/browser-${CIRCLE_NODE_INDEX}.xml"
       - disable_sha1
       - store_test_results:
+          path: /tmp/rspec
+      - store_artifacts:
+          name: JUnit (browser-*.xml)
           path: /tmp/rspec
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
           parallel: true
-          flag_name: job2
           fail_on_error: false
 
   yarn_lint_format:
@@ -236,20 +356,22 @@ jobs:
           name: Run prettier
           command: yarn run prettier --check "**/*.{js,css,md,yml}"
 
+  # NOTE: Vitest uses jsdom
+  # No Chrome/Chromedriver needed (saves install time).
   yarn_test:
     docker:
       - image: cimg/node:22.22.3
     steps:
       - checkout
       - install_yarn_dependencies
-      - browser-tools/install_chrome
-      - browser-tools/install_chromedriver
       - run:
           name: Run vitest
           command: yarn test
       - store_artifacts:
           path: coverage
 
+  # NOTE: Triggered exclusively for the "main" branch (when Pull Requests are merged) or by Ansible Tower.
+  # RSpec test suites are run against a remote Mediaflux deployment.
   mflux_ci:
     working_directory: ~/tiger_data
     machine: true
@@ -260,9 +382,10 @@ jobs:
       POSTGRES_HOST_AUTH_METHOD: trust
       ARCH: linux
       RAILS_ENV: test
+      TIGERDATA_TEST_SURFACE: integration_mflux_shared
     steps:
       - checkout
-      - ruby/install:
+      - install_ruby_machine:
           version: "4.0.4"
       - node/install:
           install-yarn: false
@@ -277,19 +400,29 @@ jobs:
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
-      - persist_to_workspace:
-          root: &root "~/tiger_data"
-          paths: "*"
+      # NOTE: Vitest already runs in "yarn_test" for the "build_accept" Job
+      # NOTE: Run integration_tests only "mflux_ci"
       - run:
-          name: Run vitest
+          name: Run vitest (mflux_ci)
           command: yarn run vitest run
       - run_postgres
-      - run: sleep 10 # wait for postgres
+      - wait_for_postgres
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
-          name: Run Rspec
-          command: MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/rspec/rspec.xml
+          name: Prepare JUnit output directory
+          command: mkdir -p /tmp/rspec
+      - run:
+          name: Run Rspec (shared Mediaflux CI server)
+          command: |
+            MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD \
+              bundle exec rspec \
+              --format progress \
+              --format RspecJunitFormatter \
+              -o /tmp/rspec/mflux_ci.xml
       - store_test_results:
+          path: /tmp/rspec
+      - store_artifacts:
+          name: JUnit (mflux_ci.xml)
           path: /tmp/rspec
       - store_artifacts:
           path: coverage
@@ -319,14 +452,19 @@ jobs:
     docker:
       - image: cimg/node:22.22.3
     steps:
+      # Closes the parallel Coveralls build started by test / test_browser uploads.
       - coveralls/upload:
-          carryforward: job1,job2
           parallel_finished: true
           fail_on_error: false
 
 workflows:
   version: 2
-  build_accept_deploy:
+
+  # NOTE: Triage failures or "flaky" test warnings by job group using the XML RSpec reports:
+  #   test:                     unit-$i.xml
+  #   test_browser:             browser-$i.xml
+  #   integration_mflux_shared: mflux_ci.xml
+  build_accept:
     when:
       equal: ["<< pipeline.parameters.GHA_Meta >>", ""]
 
@@ -341,16 +479,18 @@ workflows:
             - test
             - test_browser
       - deploy:
-          requires: # Call the auto-deploy job after the main test job
+          name: integration_deploy_ci_env
+          requires: # Call the auto-deploy job after the test job
             - test
           filters: # This job is only run on the main branch
             branches:
               only:
                 - main
-      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the main test job and after the deploy job
+      - mflux_ci: # This job runs the test suite against the Mediaflux CI server after the test job and after the deploy job
+          name: integration_mflux_shared
           requires:
             - test
-            - deploy
+            - integration_deploy_ci_env
           filters: # This job is only run on the main branch
             branches:
               only:
@@ -360,4 +500,5 @@ workflows:
     when:
       equal: ["<< pipeline.parameters.GHA_Meta >>", "TigerData-Config"] # This workflow is triggered by deploys to the mediaflux CI server
     jobs:
-      - mflux_ci
+      - mflux_ci:
+          name: integration_mflux_shared
