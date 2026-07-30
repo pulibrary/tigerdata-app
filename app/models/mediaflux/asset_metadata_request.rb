@@ -50,6 +50,7 @@ module Mediaflux
       end
 
       def parse_file_count(asset, metadata)
+        metadata[:ctime] = asset.xpath("./ctime")
         statistics = asset.xpath("./collection/statistics")
         if statistics.count == 0
           metadata[:statistics] = false
