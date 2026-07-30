@@ -6,7 +6,7 @@ class PrincetonUsers
   # the default projects in the Mediaflux in our Docker image.
   RESEARCH_COMPUTING_USERS = %w[cbentler az3007 md1908 knight].freeze
   RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 rl3667 kl37 pp9425 jh6441 ].freeze
-  TESTING_USERS = %w[tigerdatatester libtigerdatadev].freeze
+  TESTING_USERS = %w[tigerdatatester libtigerdatadev mjc12].freeze
 
   class << self
 
