@@ -106,12 +106,3 @@ Here is an example of adding metadata at project creation time (note that the sc
 ![adding metadata at project creation](./images/chuck_metadata.png)
 
 Metadata can be updated at any time, but best to get as much as possible in during project creation, because metadata is versioned on assets and "it could get complicated" if we're doing lots and lots of updates.
-
-### 3. Adding an accumulator
-
-~ timestamp 17:06
-Some outstanding questions about how accumulators work. Possible to use top-level accumulators
-
-```
-asset.collection.accumulator.add :id path=/princeton/tigerdata/SIMONSOBS :accumulator < :name SIMONSOBS-count :type collection.asset.count >
-```
