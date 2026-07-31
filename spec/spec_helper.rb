@@ -4,6 +4,15 @@ Coveralls.wear!("rails")
 require "simplecov"
 require "test_prof/recipes/rspec/sample"
 
+# Unique command names so parallel CircleCI nodes / jobs do not clobber each other
+# when Coveralls merges resultsets into one build (no Coveralls flag_name / job1|job2).
+if ENV["CI"]
+  SimpleCov.command_name [
+    ENV.fetch("CIRCLE_JOB", "ci"),
+    ENV.fetch("CIRCLE_NODE_INDEX", "0")
+  ].join("-")
+end
+
 SimpleCov.start "rails" do
   add_filter "/app/channels/application_cable/"
   add_filter "/lib/tasks/projects.rake"
