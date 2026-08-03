@@ -62,7 +62,7 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "22.22.3"
+          node-version: "24.15.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
