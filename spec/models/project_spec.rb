@@ -6,6 +6,16 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   let(:user2) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
+  describe "the mediaflux id" do
+    # This solves https://github.com/pulibrary/tigerdata-app/issues/2830
+    # ActiveModel::RangeError:
+    # 2224309126 is out of range for ActiveModel::Type::Integer with limit 4 bytes
+    it "can handle at least a number larger than 4 bytes" do
+      project = FactoryBot.create(:project, mediaflux_id: 2224309126)
+      expect(project.id).not_to be_nil
+    end
+  end
+
   describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
     before do
