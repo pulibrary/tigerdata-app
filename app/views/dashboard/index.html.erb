@@ -82,11 +82,12 @@
    // Make the AJAX call for version information explicitly on this page
    // (and for now only on this page) so that we don't make extra calls
    // to Mediaflux for every page loaded.
-   dashStyle('<%= @dash_session %>');
-   dashTab();
-   displayMediafluxVersion('<%= session_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
+   // Prefer window.* so this is explicit about globals set by the Vite application entrypoint.
+   window.dashStyle('<%= @dash_session %>');
+   window.dashTab();
+   window.displayMediafluxVersion('<%= session_info_index_path(format: "json") %>', <%= !current_user.nil? %>);
 
    // Setup the DataTables
-   setupTable('#projects-listing');
-   setupTable('#projects-listing-approved');
+   window.setupTable('#projects-listing');
+   window.setupTable('#projects-listing-approved');
 </script>
