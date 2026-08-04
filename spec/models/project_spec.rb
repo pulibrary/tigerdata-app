@@ -11,7 +11,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     # ActiveModel::RangeError:
     # 2224309126 is out of range for ActiveModel::Type::Integer with limit 4 bytes
     it "can handle at least a number larger than 4 bytes" do
-      project = FactoryBot.create(:project, mediaflux_id: 2224309126)
+      project = FactoryBot.create(:project, mediaflux_id: 2_224_309_126)
       expect(project.id).not_to be_nil
     end
   end
