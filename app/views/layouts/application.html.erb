@@ -4,8 +4,10 @@
 <%= render partial: 'shared/layout_head' %>
 
   <body class="d-flex flex-column min-vh-100">
-    <% if Rails.env.production? %>
-      <%= render partial: "shared/analytics_noscript" %>
+    <% if Rails.env.development? || Rails.env.staging? %>
+      <%= render partial: 'shared/analytics_noscript_dev_staging' %>
+    <% elsif Rails.env.production? %>
+      <%= render partial: 'shared/analytics_noscript' %>
     <% end %>
     <%= render partial: 'shared/banner' %>
     <%= render partial: 'shared/emulator' %>
