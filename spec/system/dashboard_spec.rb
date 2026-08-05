@@ -151,7 +151,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
         sign_in current_user
         visit dashboard_path
-        expect(page).to have_content("8 out of 20 shown")
+        # DataTables info string is configured as "_START_ - _END_ out of _TOTAL_ shown"
+        expect(page).to have_css(".dataTables_info", text: /1\s*-\s*8 out of 20 shown/, wait: 10)
         find("a.paginate_button", text: 2).click
         expect(page).to have_content(projects.sort_by(&:updated_at).reverse[8].title)
         find("a.paginate_button", text: 3).click
