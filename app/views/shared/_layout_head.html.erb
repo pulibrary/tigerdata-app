@@ -5,7 +5,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <% if Rails.env.production? %>
+    <% if Rails.env.development? || Rails.env.staging? %>
+      <%= render partial: 'shared/analytics_dev_staging' %>
+    <% elsif Rails.env.production? %>
       <%= render partial: 'shared/analytics' %>
     <% end %>
 
