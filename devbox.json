@@ -13,7 +13,10 @@
       "outputs": ["lib", "out"]
     },
     "nodejs": {
-      "version": "22.22"
+      "version": "latest"
+    },
+    "yarn-berry": {
+      "version": "4.14.1"
     },
     "jdk": {
       "version": "19",
