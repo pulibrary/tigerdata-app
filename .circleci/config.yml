@@ -345,7 +345,7 @@ jobs:
 
   yarn_lint_format:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:current
     steps:
       - checkout
       - install_yarn_dependencies
@@ -360,7 +360,7 @@ jobs:
   # No Chrome/Chromedriver needed (saves install time).
   yarn_test:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:current
     steps:
       - checkout
       - install_yarn_dependencies
@@ -389,7 +389,7 @@ jobs:
           version: "4.0.4"
       - node/install:
           install-yarn: false
-          node-version: "22.22.3"
+          node-version: "latest"
       - run:
           name: "Install Yarn using corepack"
           command: |
