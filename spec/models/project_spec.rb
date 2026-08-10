@@ -123,7 +123,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(directory_files_list[:files].count).to eq 7
       expect(directory_files_list[:files][0].name).to eq "A0"
       expect(directory_files_list[:files][0].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/A0"
-      expect(directory_files_list[:files][0].size).to be 7
+      expect(directory_files_list[:files][0].size).to be 10
       expect(directory_files_list[:files][0].collection).to be false
       expect(directory_files_list[:files][0].last_modified).to_not be nil
     end

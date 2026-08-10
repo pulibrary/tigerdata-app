@@ -20,7 +20,6 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
       result = query_request.result
       expect(result[:files].count).to eq 7
-      # byebug
       expect(result[:files][0].name).to eq "A0"
       expect(result[:files][0].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/A0"
       expect(result[:files][0].size).to eq 10
