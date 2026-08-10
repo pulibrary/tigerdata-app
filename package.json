@@ -14,7 +14,7 @@
     "eslint-plugin-vue": "^10.8.0",
     "jsdom": "^21.1.0",
     "lint-staged": "^16.2.7",
-    "nanoid": ">=3.3.8",
+    "nanoid": ">=5.1.16",
     "precommit-hook": "^3.0.0",
     "prettier": "3.4.2",
     "rollup": "^4.59.0",
@@ -41,7 +41,7 @@
     "lodash": "^4.18",
     "lux-design-system": "^7.8.0",
     "minimatch": "10.2.6",
-    "nanoid": ">=3.3.8",
+    "nanoid": ">=5.1.16",
     "vite-plugin-rails": "^0.6.0",
     "vue": "^3.5.22"
   },
