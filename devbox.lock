@@ -409,52 +409,42 @@
         }
       }
     },
-    "nodejs@22.22": {
-      "last_modified": "2026-05-21T08:15:18Z",
+    "nodejs@latest": {
+      "last_modified": "2026-08-01T16:34:20Z",
       "plugin_version": "0.0.4",
-      "resolved": "github:NixOS/nixpkgs/4a29d733e8a7d5b824c3d8c958a946a9867b3eb2#nodejs_22",
+      "resolved": "github:NixOS/nixpkgs/a5cbcfe954791221bfffe2307f7d1a1bf61a871e#nodejs_26",
       "source": "devbox-search",
-      "version": "22.22.3",
+      "version": "26.5.1",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/k1yy2d1h7pvpac7m14vmaw23j529fpza-nodejs-22.22.3",
+              "path": "/nix/store/a76l7kn8y5667cr1b4ji05dw8s8cvavp-nodejs-26.5.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/k1yy2d1h7pvpac7m14vmaw23j529fpza-nodejs-22.22.3"
+          "store_path": "/nix/store/a76l7kn8y5667cr1b4ji05dw8s8cvavp-nodejs-26.5.1"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/d8zana2n6i904c088i533ivg1j817x8v-nodejs-22.22.3",
+              "path": "/nix/store/z455bzfiyfxxrk1wb7b2mw1v4zyjsl5l-nodejs-26.5.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/d8zana2n6i904c088i533ivg1j817x8v-nodejs-22.22.3"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/9yvmgryhhwnswgaji30cpw4m9swhv1ia-nodejs-22.22.3",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/9yvmgryhhwnswgaji30cpw4m9swhv1ia-nodejs-22.22.3"
+          "store_path": "/nix/store/z455bzfiyfxxrk1wb7b2mw1v4zyjsl5l-nodejs-26.5.1"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/ac9bklddx1klg92hj7r08xmpky1nwag2-nodejs-22.22.3",
+              "path": "/nix/store/5jygfy4i7ylxbb11z6f6awzcy6an6zy9-nodejs-26.5.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/ac9bklddx1klg92hj7r08xmpky1nwag2-nodejs-22.22.3"
+          "store_path": "/nix/store/5jygfy4i7ylxbb11z6f6awzcy6an6zy9-nodejs-26.5.1"
         }
       }
     },
@@ -989,6 +979,54 @@
             }
           ],
           "store_path": "/nix/store/g4bk1chlkfw18f6zkljygxp3r4yi8m48-tzdata-2023d"
+        }
+      }
+    },
+    "yarn-berry@4.14.1": {
+      "last_modified": "2026-08-01T16:34:20Z",
+      "resolved": "github:NixOS/nixpkgs/a5cbcfe954791221bfffe2307f7d1a1bf61a871e#yarn-berry",
+      "source": "devbox-search",
+      "version": "4.14.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/81kg6hylp6x6hp9cprmywwx92nzcd2a9-yarn-berry-4.14.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/81kg6hylp6x6hp9cprmywwx92nzcd2a9-yarn-berry-4.14.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9z603xh6xg5iqvg8ndp8hw50npj8fi12-yarn-berry-4.14.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9z603xh6xg5iqvg8ndp8hw50npj8fi12-yarn-berry-4.14.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/w9000r08px9ys3iw8a1fjbhn71j3nr2k-yarn-berry-4.14.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/w9000r08px9ys3iw8a1fjbhn71j3nr2k-yarn-berry-4.14.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hvfy0iichhk8hphdgdz64lv72bw32rii-yarn-berry-4.14.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hvfy0iichhk8hphdgdz64lv72bw32rii-yarn-berry-4.14.1"
         }
       }
     }
