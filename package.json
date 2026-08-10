@@ -39,7 +39,7 @@
     "glob": "13.0.6",
     "jquery": "^3.6.3",
     "lodash": "^4.18",
-    "lux-design-system": "^7.7.4",
+    "lux-design-system": "^7.8.0",
     "minimatch": "10.2.6",
     "nanoid": ">=3.3.8",
     "vite-plugin-rails": "^0.6.0",
