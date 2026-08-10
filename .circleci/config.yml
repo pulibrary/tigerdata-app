@@ -42,7 +42,7 @@ commands:
       # NOTE: libyaml-dev: psych YAML support (required for Bootsnap/Rails on Ruby 4)
       # NOTE: libpq-dev / libmsgpack-dev: native gem build deps
       # NOTE: postgresql-client: pg_isready for service readiness checks
-      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata yarn-berry
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
       # NOTE: Cache keys: `{{ }}` is only for CircleCI cache template funcs (checksum, epoch, …).
@@ -62,16 +62,16 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "latest"
+          node-version: "26.7.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
       - run:
-          name: "Install Yarn using corepack"
+          name: Install Yarn using corepack
           command: |
             npm install -g corepack
             corepack enable
-            corepack prepare yarn@4.16.0 --activate
+            corepack prepare yarn@4.18.0 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
@@ -420,7 +420,7 @@ jobs:
 
   done:
     docker:
-      - image: cimg/node:22.22.3
+      - image: cimg/node:current
     steps:
       # Closes the parallel Coveralls build started by test / test_browser uploads.
       - coveralls/upload:
