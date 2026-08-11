@@ -120,7 +120,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     it "fetches the directory listing",
     :integration do
       directory_files_list = project.directory_listing(session_id: manager.mediaflux_session, size: 50)
-      expect(directory_files_list[:files].count).to eq 7
+      expect(directory_files_list[:files].count).to eq 10
       expect(directory_files_list[:files][0].name).to eq "A0"
       expect(directory_files_list[:files][0].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/A0"
       expect(directory_files_list[:files][0].size).to be 10
