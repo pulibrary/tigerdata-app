@@ -66,7 +66,7 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.last["name"]).to eq("n_10000")
       expect(parsed.last["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/n_10000")
       expect(parsed.last["size"]).to eq("0 Bytes")
-      expect(parsed.last["asset_count"]).to eq(438)
+      expect(parsed.last["asset_count"]).to eq(10_000)
       expect(parsed.last["folder_size"]).to eq("98 KB")
       expect(parsed.last["type"]).to eq("collection")
       expect(parsed.last["created_by"].values).to eq ["manager", "", "system"]
