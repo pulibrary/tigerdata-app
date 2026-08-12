@@ -46,7 +46,7 @@ RSpec.describe ProjectShowPresenter do
       dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
       project_files = dir_listing[:files]
       last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
-      expect(parsed.count).to eq(7)
+      expect(parsed.count).to eq(10)
       expect(parsed.first["name"]).to eq("A0")
       expect(parsed.first["collection"]).to be_falsey
       expect(parsed.first["current_object"]).to be_truthy
@@ -63,11 +63,11 @@ RSpec.describe ProjectShowPresenter do
       expect(parsed.last["collection"]).to be_truthy
       expect(parsed.last["current_object"]).to be_falsey
       expect(parsed.last["last_modified"]).to eq(last_modified_date)
-      expect(parsed.last["name"]).to eq("n_01000")
-      expect(parsed.last["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/n_01000")
+      expect(parsed.last["name"]).to eq("n_10000")
+      expect(parsed.last["path"]).to eq("/princeton/tigerdata/RDSS/Query/CProject/n_10000")
       expect(parsed.last["size"]).to eq("0 Bytes")
-      expect(parsed.last["asset_count"]).to eq(438)
-      expect(parsed.last["folder_size"]).to eq("4.3 KB")
+      expect(parsed.last["asset_count"]).to eq(10_000)
+      expect(parsed.last["folder_size"]).to eq("98 KB")
       expect(parsed.last["type"]).to eq("collection")
       expect(parsed.last["created_by"].values).to eq ["manager", "", "system"]
       expect(parsed.last["created_on"]).to eq(last_modified_date)
