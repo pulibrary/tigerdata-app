@@ -302,8 +302,6 @@ jobs:
       - install_ruby_machine:
           version: "4.0.4"
       - install_yarn_dependencies
-      - browser-tools/install_chrome
-      - browser-tools/install_chromedriver
       - install_dependencies:
           cache_prefix: machine
       - install_crypto_policies
@@ -393,10 +391,9 @@ jobs:
       - run:
           name: "Install Yarn using corepack"
           command: |
+            npm install -g corepack
             corepack enable
             corepack prepare yarn@4.16.0 --activate
-      - browser-tools/install_chrome
-      - browser-tools/install_chromedriver
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
