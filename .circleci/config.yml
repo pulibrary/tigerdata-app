@@ -218,7 +218,7 @@ jobs:
   test:
     working_directory: ~/tiger_data
     machine: true
-    resource_class: pulibrary/ruby-deploy
+    resource_class: pulibrary/tigerdata-deploy
     # parallelism: 4
     environment:
       ARCH: linux
@@ -286,7 +286,7 @@ jobs:
   test_browser:
     working_directory: ~/tiger_data
     machine: true
-    resource_class: pulibrary/ruby-deploy
+    resource_class: pulibrary/tigerdata-deploy
     # parallelism: 2
     environment:
       ARCH: linux
@@ -375,7 +375,7 @@ jobs:
   mflux_ci:
     working_directory: ~/tiger_data
     machine: true
-    resource_class: pulibrary/ruby-deploy
+    resource_class: pulibrary/tigerdata-deploy
     environment:
       POSTGRES_USER: tiger_data_user
       POSTGRES_DB: test_db
