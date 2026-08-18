@@ -109,31 +109,31 @@ commands:
     steps:
       - run:
           name: Run Mediaflux
+          background: true
           command: |
             set -e
             docker rm -f mediaflux 2>/dev/null || true
             echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
-            docker run -d --name mediaflux \
+            docker run --name mediaflux \
               -v /sys:/sys \
               -p 8888:80 \
               --mac-address=02:42:ac:11:00:02 \
               docker.io/pulibraryrdss/mediaflux_dev:v0.56.0
-            echo "Mediaflux container started"
 
   run_postgres:
     steps:
       - run:
           name: Run Postgres
+          background: true
           command: |
             set -e
             docker rm -f postgres 2>/dev/null || true
-            docker run -d --name postgres \
+            docker run --name postgres \
               --publish 0.0.0.0:5432:5432 \
               --env POSTGRES_HOST_AUTH_METHOD=trust \
               --env POSTGRES_DB=test_db \
               --env POSTGRES_USER=tiger_data_user \
               docker.io/postgres:15.2-alpine
-            echo "Postgres container started (detached)"
 
   # NOTE: Without -d, libpq defaults the database name to the username, so
   # `pg_isready -U tiger_data_user` tries database "tiger_data_user" and logs:
