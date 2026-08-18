@@ -69,6 +69,7 @@ commands:
       - run:
           name: "Install Yarn using corepack"
           command: |
+            npm install -g corepack
             corepack enable
             corepack prepare yarn@4.16.0 --activate
       - run:
