@@ -112,6 +112,7 @@ commands:
           command: |
             set -e
             docker rm -f mediaflux 2>/dev/null || true
+            echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
             docker run -d --name mediaflux \
               -v /sys:/sys \
               -p 8888:80 \
