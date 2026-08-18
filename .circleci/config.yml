@@ -116,8 +116,6 @@ commands:
             docker run -d --name mediaflux \
               -v /sys:/sys \
               -p 8888:80 \
-              --device /dev/fuse \
-              --network bridge \
               --mac-address=02:42:ac:11:00:02 \
               docker.io/pulibraryrdss/mediaflux_dev:v0.56.0
             echo "Mediaflux container started"
