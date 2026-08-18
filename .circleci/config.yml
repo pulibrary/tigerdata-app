@@ -159,25 +159,6 @@ commands:
             echo "Postgres did not become ready in time" >&2
             exit 1
 
-  # NOTE: Enable SHA1 for Mediaflux. This is necessary to run integration tests
-  wait_for_mediaflux:
-    steps:
-      - run:
-          name: Wait for Mediaflux
-          command: |
-            set -e
-            for i in $(seq 1 60); do
-              if curl -fsS -o /dev/null http://127.0.0.1:8888/ 2>/dev/null; then
-                echo "Mediaflux is ready (attempt $i)"
-                exit 0
-              fi
-              echo "Waiting for Mediaflux... ($i)"
-              sleep 2
-            done
-            echo "Mediaflux did not become ready in time" >&2
-            docker logs mediaflux 2>&1 | tail -50
-            exit 1
-
   install_crypto_policies:
     steps:
       - run: sudo apt update && sudo apt install -y crypto-policies
@@ -250,7 +231,7 @@ jobs:
       - run_postgres
       - wait_for_postgres
       # Wait for Mediaflux
-      - wait_for_mediaflux
+      - sleep 5
       - enable_sha1_for_mediaflux
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
@@ -313,7 +294,7 @@ jobs:
       - run_postgres
       - wait_for_postgres
       # Wait for Mediaflux
-      - wait_for_mediaflux
+      - sleep 5
       - enable_sha1_for_mediaflux
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
