@@ -231,7 +231,7 @@ jobs:
       - run_postgres
       - wait_for_postgres
       # Wait for Mediaflux
-      - sleep 5
+      - run: sleep 5
       - enable_sha1_for_mediaflux
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
@@ -294,7 +294,7 @@ jobs:
       - run_postgres
       - wait_for_postgres
       # Wait for Mediaflux
-      - sleep 5
+      - run: sleep 5
       - enable_sha1_for_mediaflux
       - run: bundle exec rake db:migrate RAILS_ENV=test
       - run:
