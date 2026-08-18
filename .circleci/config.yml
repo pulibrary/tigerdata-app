@@ -395,7 +395,6 @@ jobs:
       - run:
           name: Prepare JUnit output directory
           command: mkdir -p /tmp/rspec
-      # NOTE: Run integration_tests only "mflux_ci"
       - run:
           name: Run Rspec (shared Mediaflux CI server)
           command: |
