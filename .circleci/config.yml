@@ -80,10 +80,6 @@ commands:
           paths:
             - ~/.cache/yarn
 
-  install_crypto_policies:
-    steps:
-      - run: sudo apt update && sudo apt install -y crypto-policies
-
   # NOTE: You cannot pair a Docker primary container (cimg/ruby) with Podman on a
   # *separate* machine job and share localhost as they are different VMs.
   # Machine executors do not ship Ruby
@@ -108,41 +104,31 @@ commands:
             - /usr/local/rvm
             - /home/circleci/.rvm
 
-  # NOTE: Mediaflux is deployed using nested podman (quay.io/podman/stable and docker.io/pulibraryrdss/mediaflux_dev)
-  # This is necessary in order be able to explicitly set the MAC address (which is required for Mediaflux)
+  # NOTE: Mediaflux requires a fixed MAC address for licensing.
   run_mediaflux:
     steps:
       - run:
-          name: Remove existing Mediaflux images
-          command: |
-            podman rm -f mediaflux 2>/dev/null || true
-      - run:
-          name: Run Mediaflux in podman
+          name: Run Mediaflux
           command: |
             set -e
-            podman run -t \
-              --name mediaflux \
-              --rm \
-              --security-opt label=disable \
-              --security-opt unmask=ALL \
-              -p 8888:8888 \
-              --user podman \
-              --device /dev/net/tun \
+            docker rm -f mediaflux 2>/dev/null || true
+            docker run -d --name mediaflux \
+              -v /sys:/sys \
+              -p 8888:80 \
               --device /dev/fuse \
-              quay.io/podman/stable:latest \
-              bin/bash -c "echo $DOCKERHUB_PASSWORD | podman login --username $DOCKERHUB_USERNAME --password-stdin docker.io && podman run --name=mediafluxinternal -t --rm -v /sys:/sys -p 8888:80 --device /dev/fuse --network bridge --mac-address=02:42:ac:11:00:02 docker.io/pulibraryrdss/mediaflux_dev:v0.56.0"
-          background: true
+              --network bridge \
+              --mac-address=02:42:ac:11:00:02 \
+              docker.io/pulibraryrdss/mediaflux_dev:v0.56.0
+            echo "Mediaflux container started"
 
-  # NOTE: Postgres is a single container and is fine detached (`-d`)
   run_postgres:
     steps:
       - run:
-          name: Run Postgres in podman
+          name: Run Postgres
           command: |
             set -e
-            podman rm -f postgres 2>/dev/null || true
-            # POSTGRES_HOST_AUTH_METHOD=trust is intentional for ephemeral CI
-            podman run -d --name postgres \
+            docker rm -f postgres 2>/dev/null || true
+            docker run -d --name postgres \
               --publish 0.0.0.0:5432:5432 \
               --env POSTGRES_HOST_AUTH_METHOD=trust \
               --env POSTGRES_DB=test_db \
@@ -175,32 +161,52 @@ commands:
             exit 1
 
   # NOTE: Enable SHA1 for Mediaflux. This is necessary to run integration tests
+  wait_for_mediaflux:
+    steps:
+      - run:
+          name: Wait for Mediaflux
+          command: |
+            set -e
+            for i in $(seq 1 60); do
+              if curl -fsS -o /dev/null http://127.0.0.1:8888/ 2>/dev/null; then
+                echo "Mediaflux is ready (attempt $i)"
+                exit 0
+              fi
+              echo "Waiting for Mediaflux... ($i)"
+              sleep 2
+            done
+            echo "Mediaflux did not become ready in time" >&2
+            docker logs mediaflux 2>&1 | tail -50
+            exit 1
+
+  install_crypto_policies:
+    steps:
+      - run: sudo apt update && sudo apt install -y crypto-policies
+
+  # NOTE: Enable SHA1 for Mediaflux. This is necessary to run integration tests.
   enable_sha1_for_mediaflux:
     steps:
       - run:
-          name: Update the Crypto Policies of the Top Level Pod-Container
+          name: Update the Crypto Policies
           command: sudo update-crypto-policies --set LEGACY
-          background: true
       - run:
-          name: output license expiration information
-          # NOTE: Avoiding "-t" removes TTY noise if the Job is canceled
-          command: 'podman exec --user podman mediaflux bin/bash -c ''podman exec mediafluxinternal bin/bash -c "java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe |grep expiry"'''
-          background: true
+          name: Output licence expiration information
+          command: |
+            docker exec mediaflux bash -c \
+              'java -Dmf.host=localhost -Dmf.transport=http -Dmf.domain=system \
+               -Dmf.user=manager -Dmf.password=change_me -Dmf.port=80 \
+               -jar /opt/mediaflux/bin/aterm.jar --app exec licence.describe | grep expiry'
 
   # NOTE: Disable SHA1 for security purposes
   disable_sha1:
     steps:
       - run:
-          name: Update the Crypto Policies of the Top Level Pod-Container
+          name: Update the Crypto Policies
           command: sudo update-crypto-policies --set DEFAULT
-          background: true
 
-  # NOTE: Invoking `podman system prune -a --volumes` on every job can require minutes for every CircleCI job on "machine" Executors.
   cleanup_docker:
     steps:
-      - run: podman stop postgres || true
-      - run: podman stop mediaflux || true
-      - run: podman rm -f postgres mediaflux 2>/dev/null || true
+      - run: docker rm -f postgres mediaflux 2>/dev/null || true
 
 jobs:
   rubocop_lint:
