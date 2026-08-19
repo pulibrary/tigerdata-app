@@ -42,7 +42,7 @@ commands:
       # NOTE: libyaml-dev: psych YAML support (required for Bootsnap/Rails on Ruby 4)
       # NOTE: libpq-dev / libmsgpack-dev: native gem build deps
       # NOTE: postgresql-client: pg_isready for service readiness checks
-      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata yarn-berry
+      - run: sudo apt update && sudo apt install -y postgresql-client libmsgpack-dev libpq-dev libyaml-dev tzdata
       - run: gem install bundler -v '4.0.13'
       - run: cp Gemfile.lock Gemfile.lock.bak
       # NOTE: Cache keys: `{{ }}` is only for CircleCI cache template funcs (checksum, epoch, …).
@@ -58,6 +58,9 @@ commands:
           paths:
             - ./vendor/bundle
 
+  # NOTE: Use corepack for Yarn Berry. apt yarn-berry does not exist; node orb
+  # install-yarn installs classic Yarn 1.x. This command runs before apt deps
+  # on machine jobs and is the only yarn setup for yarn_test / yarn_lint_format.
   install_yarn_dependencies:
     steps:
       - node/install:
@@ -65,7 +68,12 @@ commands:
           node-version: "26.7.0"
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-3
+      - run:
+          name: Install Yarn using corepack
+          command: |
+            corepack enable
+            corepack prepare yarn@4.18.0 --activate
       - run:
           name: Install Yarn using corepack
           command: |
@@ -94,12 +102,12 @@ commands:
       - restore_cache:
           name: Restore RVM / Ruby cache
           keys:
-            - tiger_data-rvm-ruby-<< parameters.version >>-v2
+            - tiger_data-rvm-ruby-<< parameters.version >>-v3
       - ruby/install:
           version: << parameters.version >>
       - save_cache:
           name: Save RVM / Ruby cache
-          key: tiger_data-rvm-ruby-<< parameters.version >>-v2
+          key: tiger_data-rvm-ruby-<< parameters.version >>-v3
           paths:
             - ~/.rvm
             - /usr/local/rvm
@@ -375,6 +383,11 @@ jobs:
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
+      # NOTE: Vitest already runs in "yarn_test" for the "build_accept" Job
+      # NOTE: Run integration_tests only "mflux_ci"
+      - run:
+          name: Run vitest (mflux_ci)
+          command: yarn run vitest run
       - run_postgres
       - wait_for_postgres
       - run: bundle exec rake db:migrate RAILS_ENV=test
