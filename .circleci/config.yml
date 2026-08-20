@@ -62,13 +62,14 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "22.22.3"
+          node-version: "latest"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
       - run:
           name: "Install Yarn using corepack"
           command: |
+            npm install -g corepack
             corepack enable
             corepack prepare yarn@4.16.0 --activate
       - run:
@@ -371,23 +372,9 @@ jobs:
       - checkout
       - install_ruby_machine:
           version: "4.0.4"
-      - node/install:
-          install-yarn: false
-          node-version: "latest"
-      - run:
-          name: "Install Yarn using corepack"
-          command: |
-            npm install -g corepack
-            corepack enable
-            corepack prepare yarn@4.16.0 --activate
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
-      # NOTE: Vitest already runs in "yarn_test" for the "build_accept" Job
-      # NOTE: Run integration_tests only "mflux_ci"
-      - run:
-          name: Run vitest (mflux_ci)
-          command: yarn run vitest run
       - run_postgres
       - wait_for_postgres
       - run: bundle exec rake db:migrate RAILS_ENV=test
