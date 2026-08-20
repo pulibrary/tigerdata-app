@@ -49,6 +49,20 @@ class User < ApplicationRecord
     user
   end
 
+  # @param access_token [OmniAuth::AuthHash] the access token returned by OmniAuth
+  # @return [User, nil] the found user or nil if they do not yet exist
+  # @example updating an existing user fields or creating a new user if they do not exist when they log in
+  def self.from_entra_id(access_token)
+    user_operation = UserFromEntraAttributes.new
+    result = user_operation.call(access_token:)
+    if result.success?
+      result.value! # user if the operation was a success
+    else
+      Rails.logger.error("Error finding for user (access_token: #{access_token.extra.raw_info}), error: #{result.failure}")
+      nil # nil if the operation was a failure
+    end
+  end
+
   # Users that can be project sponsors
   def self.sponsor_users
     if Rails.env.development? || Rails.env.staging?
