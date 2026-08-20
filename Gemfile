@@ -61,6 +61,7 @@ gem "vite_rails"
 # Single sign on
 gem "devise"
 gem "omniauth-cas", "~> 3.0"
+gem "omniauth-entra-id"
 
 gem "csv"
 gem "datacite", "~> 0.4.0"
