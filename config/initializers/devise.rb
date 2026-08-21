@@ -275,9 +275,9 @@ Devise.setup do |config|
   OmniAuth.config.allowed_request_methods = [:get, :post]
   OmniAuth.config.request_validation_phase = OmniAuth::AuthenticityTokenProtection.new(allow_if: ->(_env) { true })
 
-  config.omniauth :entra_id, client_id: ENV.fetch("ENTRA_CLIENT_ID","entra-id-client-id"),
-                             client_secret: ENV.fetch("ENTRA_CLIENT_SECRET","entra-id-client-secret"),
-                             tenant_id: ENV.fetch("ENTRA_TENANT_ID","entra-id-tenant-id")
+  config.omniauth :entra_id, client_id: ENV.fetch("ENTRA_CLIENT_ID", "entra-id-client-id"),
+                             client_secret: ENV.fetch("ENTRA_CLIENT_SECRET", "entra-id-client-secret"),
+                             tenant_id: ENV.fetch("ENTRA_TENANT_ID", "entra-id-tenant-id")
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
