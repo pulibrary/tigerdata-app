@@ -71,7 +71,7 @@ commands:
           command: |
             npm install -g corepack
             corepack enable
-            corepack prepare yarn@4.16.0 --activate
+            corepack prepare yarn@4.18.0 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
