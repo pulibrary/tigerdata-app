@@ -4140,9 +4140,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lux-design-system@npm:^7.8.0":
-  version: 7.8.0
-  resolution: "lux-design-system@npm:7.8.0"
+"lux-design-system@npm:^7.10.0":
+  version: 7.10.0
+  resolution: "lux-design-system@npm:7.10.0"
   dependencies:
     core-js: "npm:^3.8.3"
     register-service-worker: "npm:^1.7.2"
@@ -4150,7 +4150,7 @@ __metadata:
     v-calendar: "npm:^3.1.2"
     vue-draggable-plus: "npm:^0.3.5"
     vue3-cookies: "npm:^1.0.6"
-  checksum: 10c0/e341631fb4620f28bacf29d208803a3a46a635bc8211a29ce42cfb35a293a441e20c93c33f4000f9e66c474b4c5fdb5be61d03b79e8a13a582bd21b45a33d3cf
+  checksum: 10c0/3df8b27df0840f9b5c3939f5bf01ff84b2e90bfcc46068c86361af278b408ccbb9b76bfceb57d43e175fee16a1a587089261354e8ef57fe9935914b4590c70b5
   languageName: node
   linkType: hard
 
@@ -5748,7 +5748,7 @@ __metadata:
     jsdom: "npm:^21.1.0"
     lint-staged: "npm:^16.2.7"
     lodash: "npm:^4.18.1"
-    lux-design-system: "npm:^7.8.0"
+    lux-design-system: "npm:^7.10.0"
     minimatch: "npm:10.2.6"
     nanoid: "npm:>=5.1.16"
     precommit-hook: "npm:^3.0.0"
