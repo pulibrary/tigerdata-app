@@ -423,4 +423,64 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
     end
   end
+
+  describe "#send_storage_increase_request" do
+    include ActiveJob::TestHelper
+
+    let(:stale_capacity) do
+      { size: { requested: 500_000.0, approved: 500_000.0 }, unit: { requested: "GB", approved: "GB" } }.with_indifferent_access
+    end
+    let(:project) do
+      FactoryBot.create(
+        :project,
+        mediaflux_id: 42,
+        data_sponsor: sponsor_and_data_manager.uid,
+        data_manager: sponsor_and_data_manager.uid,
+        storage_capacity: stale_capacity
+      )
+    end
+    let(:quota_info) do
+      {
+        quota_allocation: 850_000_000_000_000,
+        quota_allocation_human: "850 TB",
+        quota_used: 1,
+        quota_used_human: "1 GB",
+        project_files: 1,
+        project_files_human: "1 GB",
+        recycle_bin: 0,
+        recycle_bin_human: "0 bytes",
+        old_versions: 0,
+        old_versions_human: "0 bytes"
+      }
+    end
+
+    before do
+      sign_in sponsor_and_data_manager
+      quota_request = instance_double(Mediaflux::ProjectQuotaRequest, quota: quota_info)
+      allow(Mediaflux::ProjectQuotaRequest).to receive(:new).and_return(quota_request)
+    end
+
+    it "refreshes portal JSON from Mediaflux so the email uses the live quota" do
+      perform_enqueued_jobs do
+        post :send_storage_increase_request, params: {
+          project_id: project.id,
+          requested_capacity: "900 TB",
+          justification: "Need more space",
+          growth_expectation: "Steady",
+          date_needed: "2026-09-01"
+        }
+      end
+
+      expect(response).to have_http_status(:no_content).or have_http_status(:ok)
+
+      project.reload
+      expect(project.metadata_json["storage_capacity"]["size"]["approved"]).to eq(850)
+      expect(project.metadata_json["storage_capacity"]["unit"]["approved"]).to eq("TB")
+
+      mail = ActionMailer::Base.deliveries.last
+      html_body = mail.html_part.body.to_s
+      expect(html_body).to include("Current Storage Capacity: 850 TB")
+      expect(html_body).not_to include("500000")
+    end
+  end
 end

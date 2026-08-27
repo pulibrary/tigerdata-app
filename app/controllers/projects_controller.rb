@@ -160,7 +160,7 @@ class ProjectsController < ApplicationController
     growth_expectation = params[:growth_expectation]
     date_needed = params[:date_needed]
     project = Project.find(project_id)
-    quota_breakdown = ProjectShowPresenter.new(project, current_user).quota_breakdown
+    quota_breakdown = project.refresh_storage_capacity_from_mediaflux!(session_id: current_user.mediaflux_session)
     TigerdataMailer.with(
       project_id: project_id,
       submitter: current_user,

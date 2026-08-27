@@ -282,7 +282,31 @@ class Project < ApplicationRecord
     quota_req.quota
   end
 
+  # Fetch the live Mediaflux quota, persist it on metadata_json, and return the quota hash.
+  def refresh_storage_capacity_from_mediaflux!(session_id:)
+    raise MediafluxError, "Project #{id} has no Mediaflux id; cannot refresh quota" if mediaflux_id.blank?
+
+    quota_info = quota(session_id:)
+    human = quota_info[:quota_allocation_human]
+    size, unit = parse_human_quota(human)
+    metadata_model.apply_approved_quota(size:, unit:)
+    save!
+    quota_info
+  end
+
   private
+
+    def parse_human_quota(human)
+      match = human.to_s.strip.match(/\A([\d.]+)\s+([A-Za-z]+)\z/)
+      if match.nil?
+        raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}"
+      end
+
+      number = BigDecimal(match[1])
+      size = number.frac.zero? ? number.to_i : number.to_f
+      [size, match[2]]
+    end
+
 
     def files_from_iterator(iterator_resp)
       lines = []
