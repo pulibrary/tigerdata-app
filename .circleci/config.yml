@@ -119,7 +119,7 @@ commands:
               -v /sys:/sys \
               -p 8888:80 \
               --mac-address=02:42:ac:11:00:02 \
-              docker.io/pulibraryrdss/mediaflux_dev:v0.56.0
+              docker.io/pulibraryrdss/mediaflux_dev:v0.57.0
 
   run_postgres:
     steps:
