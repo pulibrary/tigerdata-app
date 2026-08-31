@@ -72,13 +72,11 @@ gem "google-protobuf", "~> 4.35" # 3.25 platform gems require ruby < 3.4; 4.x su
 gem "health-monitor-rails", "12.5.0"
 gem "honeybadger"
 gem "kaminari"
-gem "mailcatcher"
 gem "net-http-persistent"
 gem "net-ldap"
 gem "psych"
 gem "rack", ">= 3.1.21"
 gem "sidekiq"
-gem "sinatra", ">= 4.1.0" # Mailcatcher dependency, please see https://github.com/advisories/GHSA-hxx2-7vcw-mqr3
 gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 
 gem "whenever", require: false

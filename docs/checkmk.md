@@ -1,8 +1,8 @@
 # CheckMK Configuration for tigerdata
 
 Notifications in checkmk are setup in two stages.  
- First you must allow checkmk to periodically notify.  
- Then you must send those notifications to slack throttling based on desired notification times.
+First you must allow checkmk to periodically notify.  
+Then you must send those notifications to slack throttling based on desired notification times.
 
 ## Periodic Notifications
 
