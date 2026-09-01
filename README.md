@@ -149,7 +149,14 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - `yarn install`
 - `bundle exec rake servers:start`
 - Fast: `bundle exec rspec spec`
-- Run in browser: `RUN_IN_BROWSER=true bundle exec rspec spec`
+
+### How to run system tests
+If you want to watch feature tests run for debugging purposes, you can go to
+http://localhost:7900, use the password `secret`, and run tests like this:
+
+`RUN_IN_BROWSER=true bundle exec rspec spec`
+
+### How to connect to CI while running the tests
 - Run connected to CI mediaflux instance: `MFLUX_CI=true MFLUX_CI_PASSWORD="[MFLUX_CI_PASSWORD]" bundle exec rspec spec`
 - `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
 
