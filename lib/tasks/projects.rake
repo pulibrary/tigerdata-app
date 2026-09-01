@@ -44,26 +44,6 @@ namespace :projects do
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
 
-  desc "Uploads the fileList TCL script to Mediaflux and makes it executable"
-  task :script_file_list_create, [:netid] => [:environment] do |_, args|
-    netid = args[:netid]
-    user = User.where(uid: netid).first
-    raise "User #{netid} not found" if user.nil?
-    namespace = "/system/scripts"
-    name = "fileList.tcl"
-    full_path = "#{namespace}/#{name}"
-    content_url = "https://raw.githubusercontent.com/pulibrary/tigerdata-app/f557f15bb217c7b8646034ddc444a3114b0f02fb/lib/assets/fileList.tcl"
-    upload_request = Mediaflux::ScriptUploadRequest.new(session_token: user.mediaflux_session, namespace: namespace, name: name, url: content_url)
-    upload_request.resolve
-    if upload_request.error?
-      puts "Error creating script: #{upload_request.response_error[:message]}"
-    else
-      puts "Created asset: #{upload_request.result} at #{full_path}"
-      make_executable_request = Mediaflux::ScriptMakeExecutableRequest.new(session_token: user.mediaflux_session, path: full_path)
-      make_executable_request.resolve
-    end
-  end
-
   desc "Runs the installed Mediaflux script to get the list of files under a given path"
   task :script_file_list, [:netid, :path] => [:environment] do |_, args|
     netid = args[:netid]
@@ -87,7 +67,7 @@ namespace :projects do
 
   desc "rebuild test project under a certain path. Imports all projects from Mediaflux"
   task :rebuild_test_projects, [:path] => [:environment] do |_, args|
-    path = args[:path] # default path is /princeton/tigerdata/RDSS/ 
+    path = args[:path] # default path is /princeton/tigerdata/RDSS/
     time_action("Creating projects") do
       cleaner = TestProjectCleaner.new(path)
       puts cleaner.reload
