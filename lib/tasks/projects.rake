@@ -44,27 +44,6 @@ namespace :projects do
     puts "Assets were generated in mediaflux under #{project.mediaflux_id}.  #{levels} levels with #{directory_per_level} directories per levels and #{file_count_per_directory} files in each directory"
   end
 
-  desc "Runs the installed Mediaflux script to get the list of files under a given path"
-  task :script_file_list, [:netid, :path] => [:environment] do |_, args|
-    netid = args[:netid]
-    path = args[:path]
-    user = User.where(uid: netid).first
-    raise "User #{netid} not found" if user.nil?
-
-    init_request = Mediaflux::ScriptFileListInitRequest.new(session_token: user.mediaflux_session, path: path)
-    init_request.resolve
-    iterator = init_request.result
-
-    puts "Path: #{path}"
-    loop do
-      iterate_request = Mediaflux::ScriptFileListIterateRequest.new(session_token: user.mediaflux_session, iterator: iterator)
-      iterate_request.resolve
-      files = iterate_request.result
-      puts files
-      break if iterate_request.complete?
-    end
-  end
-
   desc "rebuild test project under a certain path. Imports all projects from Mediaflux"
   task :rebuild_test_projects, [:path] => [:environment] do |_, args|
     path = args[:path] # default path is /princeton/tigerdata/RDSS/
