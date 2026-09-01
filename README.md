@@ -22,6 +22,7 @@ This application provides a front end for users to create and manage projects th
 The [conceptual diagrams](https://docs.google.com/presentation/d/14W896a_NZ4Q93OPnBVJjz8eQOytwkr6DFxcZ4Lx5YNI/edit?usp=sharing) showcase the user (i.e. a researcher or SysAdmin) and their typical interactions with the TigerData-rails application. The conceptual designs were created based on the TigerData design framework, and may be subject to change dependent upon any updates to the framework.
 
 ### Roles
+
 The system will eventually have many roles.  Please refer to the [docs for a description](https://github.com/pulibrary/tigerdata-app/blob/main/docs/roles.md) of the system roles
 
 ## Local development
@@ -52,11 +53,12 @@ The system will eventually have many roles.  Please refer to the [docs for a des
    3. close the terminal window and open a new terminal
    4. `chruby 4.0.4`
    5. `ruby --version`
-2. Install language-specific dependencies
+1. Install language-specific dependencies
     1. `bundle install`
     2. `yarn install`
 
 On a Mac with an M1 chip, `bundle install` may fail. [This suggestion](https://stackoverflow.com/questions/74196882/cannot-install-jekyll-eventmachine-on-m1-mac) helped:
+
 ```
 gem install eventmachine -v '1.2.7' -- --with-openssl-dir=$(brew --prefix libressl)
 brew install pkg-config
@@ -93,12 +95,10 @@ Similarly, ***in the non-production environments only***, you can remove develop
 
 `bundle exec rake user_roles:remove_developer\["abc123"]`
 
-
 #### MediaFlux Server
 
 You should no longer have to start mediaflux separately. `bundle exec rake servers:start` includes spinning up mediaflux in docker.
 Additional documentation for starting the mediaflux server can be found at [doc/local_development](https://github.com/pulibrary/tigerdata-app/blob/main/docs/local_development.md)
-
 
 ##### Authentication
 
@@ -112,11 +112,11 @@ Alternatively, one may please use `docker/bin/shell` to create a terminal sessio
 
 ##### aterm Client
 
-The MediaFlux `aterm` may be accessed using http://0.0.0.0:8888/aterm/
+The MediaFlux `aterm` may be accessed using <http://0.0.0.0:8888/aterm/>
 
 ##### Desktop Client
 
-The MediaFlux desktop client may be accessed using http://0.0.0.0:8888/desktop/
+The MediaFlux desktop client may be accessed using <http://0.0.0.0:8888/desktop/>
 
 ##### Thick Client
 
@@ -140,10 +140,10 @@ $ java -Xmx4g -Djava.net.preferIPv4Stack=true -jar ~/aterm.jar
 
 ##### Service Documentation
 
-The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/mflux/service-docs/
-
+The MediaFlux service documentation may be accessed using <http://0.0.0.0.:8888/mflux/service-docs/>
 
 ### How to run test suite
+
 - `asdf install`
 - `bundle install`
 - `yarn install`
@@ -151,16 +151,19 @@ The MediaFlux service documentation may be accessed using http://0.0.0.0.:8888/m
 - Fast: `bundle exec rspec spec`
 
 ### How to run system tests
+
 If you want to watch feature tests run for debugging purposes, you can go to
-http://localhost:7900, use the password `secret`, and run tests like this:
+<http://localhost:7900>, use the password `secret`, and run tests like this:
 
 `RUN_IN_BROWSER=true bundle exec rspec spec`
 
 ### How to connect to CI while running the tests
+
 - Run connected to CI mediaflux instance: `MFLUX_CI=true MFLUX_CI_PASSWORD="[MFLUX_CI_PASSWORD]" bundle exec rspec spec`
 - `MFLUX_CI_PASSWORD` can be found in the tigerdata-config vault
 
 ### How to run only integration tests
+
 - To run just the tests that are integration tests, we will need to pass a flag that will only run tests that are tagged as an integration test `bundle exec rspec --tag integration`
 
 ### Starting the development server
@@ -169,11 +172,11 @@ http://localhost:7900, use the password `secret`, and run tests like this:
 2. Access application at [http://localhost:3000/](http://localhost:3000/)
 
 ## Production and Staging Deployment
+
 Deploy with Capistrano (we are intending to have a deployment mechanism with Ansible Tower, but that is not yet implemented)
 ```bundle exec cap production deploy```
 or
 ```bundle exec cap staging deploy```
-
 
 ## Load Balancer
 
@@ -187,26 +190,30 @@ Notice that the name of the machine (`tigerdata-prod1` in the example above) mus
 
 You can use `application:serve_from_nginx` to re-add the machine to the load balancer.
 
-
 ## Mail
 
 ### Mail on Development
+
 Mailcatcher is a gem that can also be installed locally.  See the [mailcatcher documentation](https://mailcatcher.me/) for how to run it on your machine.
 
 ### Mail on Staging and QA
+
 To See mail that has been sent on the Staging and QA servers you can utilize capistrano to open up both mailcatcher consoles in your browser (see below).  Look in your default browser for the consoles
 
 #### staging command
+
 ```
 cap staging  mailcatcher:console
 ```
 
 #### qa command
+
 ```
 cap qa  mailcatcher:console
 ```
 
 ### Mail on Production
+
 Emails on production are sent via [Pony Express](https://github.com/pulibrary/pul-it-handbook/blob/f54dfdc7ada1ff993a721f6edb4aa1707bb3a3a5/services/smtp-mail-server.md).
 
 ## Sidekiq
@@ -214,22 +221,24 @@ Emails on production are sent via [Pony Express](https://github.com/pulibrary/pu
 [Sidekiq](https://sidekiq.org/) is used to run backgroud jobs on the server.  The jobs are created by ActiveJob and ActiveMailer.
 
 You can go to the following urls to see the sidekiq dashboard, but because these environments are load balanced, that view will switch back and forth between hosts.
- - https://tigerdata-staging.lib.princeton.edu/sidekiq
- - https://tigerdata-qa.princeton.edu/sidekiq
- - https://tigerdata-app.princeton.edu/sidekiq
+
+- <https://tigerdata-staging.lib.princeton.edu/sidekiq>
+- <https://tigerdata-qa.princeton.edu/sidekiq>
+- <https://tigerdata-app.princeton.edu/sidekiq>
 
 Instead, use the capistrano task, which will open an ssh tunnel to all nodes in a tigerdata environment (staging, qa or production), with a tab in your browser for each one.
- - `cap staging sidekiq:console`
- - `cap qa sidekiq:console`
- - `cap production sidekiq:console`
+
+- `cap staging sidekiq:console`
+- `cap qa sidekiq:console`
+- `cap production sidekiq:console`
 
 ### Workers
 
 Workers must be running on each server in order for mail to be sent and background jobs to be run.
  The sidekiq workers are run on the server via a service, `tiger-data-workers`.  To see the status on the workers on the server run `sudo service tiger-data-workers status`.  You can restart the workers by running `sudo service tiger-data-workers restart`.
 
-
 ## Manually attaching a File Inventory Job
+
 To attach the output of an existing File Inventory Job to a user we can run the rake task `file_inventory:attach_file`.
 
 1. Log into one of the production machines
@@ -248,17 +257,21 @@ Technically you don't need to copy the source file to a new file named after the
 ## Logging
 
 ### Mediaflux
+
 When running mediaflux `locally`, you can find server and start up logs by sshing into the running container with the following commands:
+
 ```
 docker exec -it mediaflux /bin/bash
 cd /opt/mediaflux/volatile/logs/
 ```
 
 Similarly, you can find mediaflux logs located on a `running server` with the following commands:
+
 ```
 ssh pulsys@mflux-ci1.lib.princeton.edu
 cd /opt/mediaflux/volatile/logs/
 ```
+
 note: you may need to be a root user to have the permissions necessary to enter the volatile directory and beyond
 
 ### CircleCI-Nomad
