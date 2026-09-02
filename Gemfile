@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-source "https://gem.coop"
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "~> 4.0.4"
@@ -63,6 +63,7 @@ gem "devise"
 gem "omniauth-cas", "~> 3.0"
 gem "omniauth-entra-id"
 
+gem "amazing_print"
 gem "csv"
 gem "datacite", "~> 0.4.0"
 gem "dogstatsd-ruby"
@@ -76,6 +77,7 @@ gem "net-http-persistent"
 gem "net-ldap"
 gem "psych"
 gem "rack", ">= 3.1.21"
+gem "rails_semantic_logger"
 gem "sidekiq"
 gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 
