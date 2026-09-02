@@ -39,5 +39,15 @@ module TigerDataApp
       user.terminate_mediaflux_session
     end
     config.action_cable.mount_path = "/cable/"
+
+    # Use semantic logger for Rails logging
+    # See https://logger.reidmorrison.com/rails.html for more
+    # We want a .log file, because that's fast, and a .json file,
+    # because that's structured and can be parsed by signoz.
+    environments_needing_signoz = %w[production staging]
+    config.rails_semantic_logger.appenders do |appenders|
+      appenders.add(file_name: "log/#{Rails.env}.log", formatter: :color)
+      appenders.add(file_name: "log/#{Rails.env}.json", formatter: :json) if environments_needing_signoz.include?(Rails.env)
+    end
   end
 end
