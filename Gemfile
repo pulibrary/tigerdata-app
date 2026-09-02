@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-source "https://gem.coop"
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "~> 4.0.4"
@@ -64,7 +64,7 @@ gem "omniauth-cas", "~> 3.0"
 gem "omniauth-entra-id"
 
 gem "csv"
-gem "datacite", "~> 0.4.0"
+gem "datacite"
 gem "dogstatsd-ruby"
 gem "dry-operation"
 gem "flipflop"
@@ -131,6 +131,3 @@ group :test do
 end
 
 gem "yard", "~> 0.9.44", group: :development
-
-# https://github.com/lostisland/faraday/security/advisories/GHSA-33mh-2634-fwr2
-gem "faraday", ">= 2.14.1"
