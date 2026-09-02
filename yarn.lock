@@ -2091,13 +2091,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net-vue3@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "datatables.net-vue3@npm:3.0.4"
+"datatables.net-vue3@npm:^3.0.8":
+  version: 3.0.8
+  resolution: "datatables.net-vue3@npm:3.0.8"
   peerDependencies:
-    datatables.net: ^2
+    datatables.net: ^2.0.0 || ^3.0.0-0
     vue: ^3.0.5
-  checksum: 10c0/63bbc8bfae1f20a45ab086e71684deb1e902b7ff270da6b927a9b2a84becf7a621555347554c18d7561e3e743be969e6ccbec84fd0d2a075f8892539d9642038
+  checksum: 10c0/a8c0ebab2a376501c22c5acd6212e22e56c5f59ef84919a7eafe548a30d601ca139a1eadd8e2d0155cbe3129e0a21bf9c27c6acc78566d91f20e18b2db17d7cc
   languageName: node
   linkType: hard
 
@@ -2110,10 +2110,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "datatables.net@npm:3.0.1"
-  checksum: 10c0/5f073e96ee7a2a4d84396f9902487b95825297921e6a129383d70a37b0ccdb42a8d6e172717cddcbca9fe664abb821687916b8a74f1783e7a8873a1b006f83b7
+"datatables.net@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "datatables.net@npm:3.0.3"
+  checksum: 10c0/77aa6299cdfad54d657459af05f983262856b140996e5e265a1aed2ce439336938480c5840fada9d90d91421f678becc42e1598648f1ddf3f57de067ce0f1072
   languageName: node
   linkType: hard
 
@@ -5632,9 +5632,9 @@ __metadata:
     bootstrap: "npm:^5.3.8"
     browserslist: "npm:^4.28.8"
     datatables: "npm:^1.10.18"
-    datatables.net: "npm:^3.0.1"
+    datatables.net: "npm:^3.0.3"
     datatables.net-dt: "npm:^2.3.7"
-    datatables.net-vue3: "npm:^3.0.4"
+    datatables.net-vue3: "npm:^3.0.8"
     esbuild: "npm:^0.28.2"
     eslint: "npm:^8.57.1"
     eslint-config-airbnb-base: "npm:^15.0.0"
