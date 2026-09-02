@@ -5652,9 +5652,9 @@ __metadata:
     precommit-hook: "npm:^3.0.0"
     prettier: "npm:3.9.6"
     rollup: "npm:^4.63.1"
-    vite: "npm:^8.2.2"
+    vite: "npm:^8.0.0"
     vite-plugin-rails: "npm:^0.6.0"
-    vite-plugin-ruby: "npm:^5.2.3"
+    vite-plugin-ruby: "npm:^5.2.0"
     vitest: "npm:^4.1.11"
     vue: "npm:^3.5.42"
     vue-eslint-parser: "npm:^10.4.1"
@@ -5980,7 +5980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-ruby@npm:^5.2.3":
+"vite-plugin-ruby@npm:^5.2.0":
   version: 5.2.3
   resolution: "vite-plugin-ruby@npm:5.2.3"
   dependencies:
@@ -6059,7 +6059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^8.2.2":
+"vite@npm:^8.0.0":
   version: 8.2.2
   resolution: "vite@npm:8.2.2"
   dependencies:
