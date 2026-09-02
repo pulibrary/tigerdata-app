@@ -4,83 +4,43 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "~> 4.0.4"
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
-
-# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
-
-# Use postgres as the database for Active Record
-gem "pg"
-
-# Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 7.2" # Releases lower than 6.0 are not compatible with Rack 3.y releases
-
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
-
-# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
-
-# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
-
-# Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
-
-# Use Redis adapter to run Action Cable in production
-gem "redis", "~> 4.0"
-
-# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
-# gem "kredis"
-
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[windows]
-
-# Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
-
-# Use Sass to process CSS
-gem "sassc-rails"
-
-# Minimal embedded v8 JS engine for Ruby
-gem "mini_racer"
-
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
-
-# Pin openssl gem for security fixes independent of the Ruby stdlib package version.
-gem "openssl", ">= 3.3.1"
-
-gem "bootstrap", "~> 5.2.0"
-gem "vite_rails"
-
-# Single sign on
-gem "devise"
-gem "omniauth-cas", "~> 3.0"
-gem "omniauth-entra-id"
-
 gem "amazing_print"
+gem "bootsnap", require: false
+gem "bootstrap", "~> 5.2.0"
+gem "cocina-models"
 gem "csv"
-gem "datacite", "~> 0.4.0"
+gem "datacite"
+gem "devise"
 gem "dogstatsd-ruby"
 gem "dry-operation"
 gem "flipflop"
-gem "google-protobuf", "~> 4.35" # 3.25 platform gems require ruby < 3.4; 4.x supports Ruby 4.0
+gem "google-protobuf"
 gem "health-monitor-rails", "12.5.0"
 gem "honeybadger"
+gem "importmap-rails"
+gem "jbuilder"
 gem "kaminari"
+gem "mini_racer"
 gem "net-http-persistent"
 gem "net-ldap"
+gem "omniauth-cas", "~> 3.0"
+gem "omniauth-entra-id"
+gem "openssl", ">= 3.3.1"
+gem "pg"
 gem "psych"
+gem "puma"
 gem "rack", ">= 3.1.21"
+gem "rails", "~> 8.1.3"
 gem "rails_semantic_logger"
+gem "redis", "~> 4.0"
+gem "sassc-rails"
 gem "sidekiq"
-gem "uri", ">= 1.0.4" # Please see https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
-
+gem "sprockets-rails"
+gem "stimulus-rails"
+gem "turbo-rails"
+gem "tzinfo-data", platforms: %i[windows]
+gem "uri"
+gem "vite_rails"
 gem "whenever", require: false
 
 group :development, :test do
@@ -100,23 +60,16 @@ group :development, :test do
   gem "rspec-rails"
 end
 
-group :development do
-  # Use console on exceptions pages [https://github.com/rails/web-console]
+group :development do  
   gem "web-console"
-
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   gem "rack-mini-profiler"
-
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
-
   gem "capistrano", "~> 3.17", require: false
   gem "capistrano-passenger"
   gem "capistrano-rails", "~> 1.6", require: false
+  gem "yard"
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "axe-core-rspec"
   gem "capybara"
   gem "coveralls_reborn", require: false
@@ -131,8 +84,3 @@ group :test do
   gem "timecop"
   gem "webmock"
 end
-
-gem "yard", "~> 0.9.44", group: :development
-
-# https://github.com/lostisland/faraday/security/advisories/GHSA-33mh-2634-fwr2
-gem "faraday", ">= 2.14.1"
