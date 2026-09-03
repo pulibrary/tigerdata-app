@@ -60,12 +60,12 @@ group :development, :test do
   gem "rspec-rails"
 end
 
-group :development do  
-  gem "web-console"
-  gem "rack-mini-profiler"
+group :development do
   gem "capistrano", "~> 3.17", require: false
   gem "capistrano-passenger"
   gem "capistrano-rails", "~> 1.6", require: false
+  gem "rack-mini-profiler"
+  gem "web-console"
   gem "yard"
 end
 
