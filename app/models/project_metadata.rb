@@ -184,6 +184,22 @@ class ProjectMetadata
     project_id.tr("/", "-")
   end
 
+  # Write-through from Mediaflux quota into the approved storage_capacity fields.
+  # Preserves requested size/unit (wizard / import history).
+  def apply_approved_quota(size:, unit:)
+    current = (@storage_capacity || {}).deep_dup.with_indifferent_access
+    @storage_capacity = {
+      "size" => {
+        "approved" => size,
+        "requested" => current.dig(:size, :requested)
+      },
+      "unit" => {
+        "approved" => unit,
+        "requested" => current.dig(:unit, :requested)
+      }
+    }
+  end
+
     private
 
       def data_users_from_params(params, access)

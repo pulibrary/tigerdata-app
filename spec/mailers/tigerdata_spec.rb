@@ -141,6 +141,19 @@ context "when storage increase request is created" do
     expect(html_body).to have_content(quota_breakdown[:recycle_bin_human])
     expect(html_body).to have_content(quota_breakdown[:quota_used_human])
     expect(html_body).to have_content(quota_breakdown[:requested_capacity])
+    expect(html_body).to have_content("Current Storage Capacity:")
+    expect(html_body).to have_content(project.metadata_json["storage_capacity"]["size"]["approved"].to_s)
+    expect(html_body).to have_content(project.metadata_json["storage_capacity"]["unit"]["approved"])
+  end
+
+  it "uses portal JSON that has been refreshed from Mediaflux" do
+    project.metadata_model.apply_approved_quota(size: 850, unit: "TB")
+    project.save!
+
+    described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver
+    html_body = ActionMailer::Base.deliveries.last.html_part.body.to_s
+    expect(html_body).to have_content("Current Storage Capacity: 850 TB")
+    expect(html_body).not_to have_content("500000")
   end
 end
 
