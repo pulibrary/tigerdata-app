@@ -36,5 +36,8 @@
                                                                           storage_unit: @new_project_request.storage_unit || "GB",  storage_unit_error: "" } %>
 </div>
 <div class="section-line"></div>
+<% if Flipflop.data_security? %>
+  <p> Data Security code goes here </p>
+<% end %>
 
 <input id="users_lookup_url" type="hidden" value="<%= users_lookup_url %>"/>

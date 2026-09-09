@@ -27,4 +27,5 @@ Flipflop.configure do
   feature :last_updated_dashboard, default: false, description: "Show last updated column on dashboard."
   feature :project_type_indicator, default: false, description: "Show project type indicator on dashboard."
   feature :entra_enabled, default: false, description: "Utilize Entra ID for login instead of CAS"
+  feature :data_security, default: false, description: "Enable data security features for projects."
 end
