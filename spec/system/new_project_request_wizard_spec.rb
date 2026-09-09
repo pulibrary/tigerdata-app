@@ -24,6 +24,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         expect(Project.count).to eq 0
         sign_in sysadmin_user
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:data_security, true)
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Basic Details"
@@ -40,11 +42,17 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+
+        expect(page).to have_content("Data Security code goes here")
+
         click_on "Roles and People"
         select_user(sponsor_user, "data_sponsor", "request[data_sponsor]")
         select_user(manager_user, "data_manager", "request[data_manager]")
         click_on "Review and Submit"
         expect(page).to have_content "Take a moment to review"
+
+        expect(page).to have_content("Data Security code goes here")
+
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
         visit new_project_request_path(NewProjectRequest.last.id)
@@ -52,6 +60,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
         expect(page.body).to include("<resource")
+        test_strategy.switch!(:data_security, false)
       end
     end
 

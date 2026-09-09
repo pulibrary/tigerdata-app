@@ -8,4 +8,7 @@
     <%= render partial: "/new_project_wizard/form_project_purpose_input", locals: {project_purpose: @new_project_request.project_purpose || "", project_purpose_error: "" } %>
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @new_project_request.description || "", description_error: "" } %>
     <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @new_project_request.departments || [], department_error: "" } %>
+    <% if Flipflop.data_security? %>
+        <p> Data Security code goes here </p>
+    <% end %>
 </div>

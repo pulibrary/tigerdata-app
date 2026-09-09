@@ -212,6 +212,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
       it "Shows the approved values" do
         sign_in sponsor_user
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:data_security, true)
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
         project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
         project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
@@ -223,6 +225,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_content("Research")
+
+
+        expect(page).to have_content("Data Security code goes here")
+        test_strategy.switch!(:data_security, false)
       end
       it "copies the project path to the clipboard" do
         sign_in sponsor_user

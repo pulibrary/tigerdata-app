@@ -77,6 +77,9 @@
         <li class="detail-subheading">Department(s)</li>
         <p class="detail-value"><%=@request_presenter.departments_list %></p>
     </div>
+    <% if Flipflop.data_security? %>
+      <p> Data Security code goes here </p>
+    <% end %>
     <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1" viewBox="0 0 1200 1" fill="none">
       <path d="M6.36558e-08 0.5L1200 0.500105" stroke="#EEEEEE"/>
     </svg>
