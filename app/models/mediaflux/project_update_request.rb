@@ -58,10 +58,7 @@ module Mediaflux
                 # xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
                 xml.DataSponsor project_metadata.data_sponsor
                 xml.DataManager project_metadata.data_manager
-                departments = project_metadata.departments || []
-                departments.each do |department|
-                  xml.Department department
-                end
+                xml.Department departments_string(project_metadata.departments || [])
                 # xml.CreatedBy project_metadata.created_by
                 ro_users = project_metadata.ro_users || []
                 rw_users = project_metadata.rw_users || []
@@ -101,5 +98,12 @@ module Mediaflux
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/BlockLength
+
+      # Returns the names of the departments as a comma separated string
+      def departments_string(departments)
+        names = departments.map { |code| Affiliation.where(code:).first&.name || code }
+        names.compact.join(", ")
+      end
+
   end
 end
