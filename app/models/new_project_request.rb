@@ -3,6 +3,7 @@
 class NewProjectRequest < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
+  DATA_SECURITY_LEVELS = [0, 1, 2, 3].freeze
 
   def valid_to_submit?(allow_empty_parent_folder: false)
     errors.clear
@@ -12,6 +13,7 @@ class NewProjectRequest < ApplicationRecord
     valid_data_manager?
     valid_user_roles?
     valid_departments?
+    valid_data_security?
     valid_quota?
     valid_project_purpose?
     valid_description?
@@ -57,6 +59,19 @@ class NewProjectRequest < ApplicationRecord
 
   def valid_project_purpose?
     check_errors? { project_purpose_present?(project_purpose, :project_purpose) }
+  end
+
+  def valid_data_security?
+    return true unless Flipflop.data_security?
+
+    check_errors? do
+      # Integer 0 is a valid level (Public); do not use blank? because 0.blank? is true.
+      if data_security_level.nil?
+        errors.add(:data_security_level, :invalid, message: "This field is required.")
+      elsif !DATA_SECURITY_LEVELS.include?(data_security_level)
+        errors.add(:data_security_level, :invalid, message: "must be one of #{DATA_SECURITY_LEVELS.join(', ')}")
+      end
+    end
   end
 
   def valid_description?

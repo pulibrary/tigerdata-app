@@ -24,8 +24,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         expect(Project.count).to eq 0
         sign_in sysadmin_user
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:data_security, true)
+        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         visit "/"
         click_on "New Project Request"
         expect(page).to have_content "Basic Details"
@@ -53,6 +52,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         expect(page).to have_content("Data Security code goes here")
 
+        # UI for selecting a level is not on this ticket; persist a valid value so submit/approve can succeed.
+        NewProjectRequest.last.update!(data_security_level: 0)
+
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
         visit new_project_request_path(NewProjectRequest.last.id)
@@ -60,7 +62,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(Project.last.metadata_json["project_id"]).to eq "10.34770/tbd"
         visit "/projects/#{Project.last.id}.xml"
         expect(page.body).to include("<resource")
-        test_strategy.switch!(:data_security, false)
       end
     end
 

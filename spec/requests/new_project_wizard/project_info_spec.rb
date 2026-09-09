@@ -53,6 +53,13 @@ RSpec.describe "/new-project/project-info", type: :request do
           expect(request.reload.request_title).to eq("new title")
         end
 
+        it "persists data_security_level when submitted" do
+          sign_in user
+          put new_project_project_info_save_url(request.id, request: { data_security_level: 0 }, commit: "Save")
+          expect(response).to redirect_to("#{new_project_requests_path}/#{request.id}")
+          expect(request.reload.data_security_level).to eq(0)
+        end
+
         it "renders a successful response for a next commit" do
           sign_in user
           put new_project_project_info_save_url(request.id, request: { request_title: "new title" }, commit: "Next")

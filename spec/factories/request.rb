@@ -8,6 +8,7 @@ FactoryBot.define do
     approved_storage_size { "10" }
     approved_storage_unit { "GB" }
     project_title { "Test request" }
+    data_security_level { 0 }
   end
 
   factory :request_project, class: "NewProjectRequest" do
@@ -25,5 +26,6 @@ FactoryBot.define do
     description { "a random description" }
     project_folder { random_project_directory }
     requested_by { "tigerdatatester" }
+    data_security_level { 0 }
   end
 end

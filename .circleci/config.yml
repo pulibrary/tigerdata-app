@@ -206,7 +206,6 @@ jobs:
     working_directory: ~/tiger_data
     machine: true
     resource_class: pulibrary/tigerdata-deploy
-    # parallelism: 4
     environment:
       ARCH: linux
       POSTGRES_USER: tiger_data_user
@@ -240,6 +239,7 @@ jobs:
           command: mkdir -p /tmp/rspec
       - run:
           name: Run Rspec (unit / non-system, local Mediaflux)
+          no_output_timeout: 20m
           command: |
             set -e
             # Prefer non-system paths so split nodes are not stuck with system-only files
@@ -262,6 +262,8 @@ jobs:
           path: /tmp/rspec
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
+      - store_artifacts:
+          path: /tmp/memory_usage.txt
       # Parallel Coveralls: do not set flag_name (job1/job2). Distinct flag names
       # show up as separate Coveralls "jobs"; omit them so all parallel posts merge
       # into one build, finished by the `done` job's parallel_finished step.
@@ -284,6 +286,10 @@ jobs:
       SPEC_OPTS: "--tag type:system --format progress"
     steps:
       - checkout
+      - run:
+          name: Monitor Memory
+          background: true
+          command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
       - install_ruby_machine:
@@ -323,6 +329,8 @@ jobs:
           path: /tmp/rspec
       - store_artifacts:
           path: /home/circleci/tiger_data/tmp/capybara
+      - store_artifacts:
+          path: /tmp/memory_usage.txt
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
           parallel: true
@@ -441,7 +449,12 @@ workflows:
     jobs:
       - rubocop_lint
       - test
-      - test_browser
+      # Run browser tests after unit tests so two Mediaflux+Chrome jobs do not
+      # land on the same self-hosted runner and OOM the machine agent
+      # (infrastructure_fail: "could not complete task: signal: killed").
+      - test_browser:
+          requires:
+            - test
       - yarn_lint_format
       - yarn_test
       - done:
