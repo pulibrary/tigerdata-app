@@ -266,6 +266,10 @@ class ProjectShowPresenter
     @show_preview_limit_warning ||= mediaflux_listing.fetch(:complete, false)
   end
 
+  def data_security_level
+    @data_security_level ||= @project_mf[:data_security_level]
+  end
+
   private
 
     def helpers

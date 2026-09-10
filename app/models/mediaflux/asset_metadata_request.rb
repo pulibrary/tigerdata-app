@@ -83,15 +83,16 @@ module Mediaflux
       def parse_project(project, asset)
         return {} if project.blank?
         metadata = {
-          description: project.xpath("./Description").text,
           data_sponsor: project.xpath("./DataSponsor").text,
           data_manager: project.xpath("./DataManager").text,
           departments: project.xpath("./Department").children.map(&:text),
+          description: project.xpath("./Description").text,
           project_directory: project.xpath("./ProjectDirectory").text,
           project_id: project.xpath("./ProjectID").text,
+          project_purpose: project.xpath("./ProjectPurpose").text,
+          data_security_level: calculate_security_level(project.xpath("./SecurityLevel").text),
           submission: parse_submission(project),
-          title: project.xpath("./Title").text,
-          project_purpose: project.xpath("./ProjectPurpose").text
+          title: project.xpath("./Title").text
         }
         metadata.merge!(parse_data_users(asset, project))
         metadata.merge!(parse_project_dates(project))
@@ -158,6 +159,11 @@ module Mediaflux
           end
         end
         users.compact_blank
+      end
+
+      def calculate_security_level(level_text)
+        return nil if level_text.blank?
+        level_text.to_i
       end
   end
 end

@@ -26,6 +26,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}")
       expect(metadata[:type]).to eq("")
       expect(metadata[:size]).to be nil
+      expect(metadata[:data_security_level]).to be nil
     end
 
     context "A collection" do
@@ -43,6 +44,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:quota_allocation]).to eq("500 GB")
         expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
         expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
+        expect(metadata[:data_security_level]).to be_nil
       end
     end
 
