@@ -5,6 +5,7 @@ RSpec.describe ProjectMetadata, type: :model do
   let(:researcher_user) { FactoryBot.create(:user, uid: "hc1234") }
   let(:project) { Project.new }
   let(:project_metadata) { described_class.new }
+  let(:data_security_level) { nil } # no default is set for security level
   let(:hash) do
     {
       data_sponsor: "abc",
@@ -13,7 +14,8 @@ RSpec.describe ProjectMetadata, type: :model do
       project_directory: " dir ",
       title: "title abc",
       description: "description 123",
-      status: "approved"
+      status: "approved",
+      data_security_level: data_security_level
     }.with_indifferent_access
   end
 
@@ -37,6 +39,7 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.title).to eq("title abc")
       expect(project_metadata.description).to eq("description 123")
       expect(project_metadata.status).to eq("approved")
+      expect(project_metadata.data_security_level).to be_nil
     end
 
     it "sets the default values when not given" do
@@ -50,6 +53,15 @@ RSpec.describe ProjectMetadata, type: :model do
       hash[:project_purpose] = "Not research"
       project_metadata.initialize_from_hash(hash)
       expect(project_metadata.project_purpose).to eq "Not research"
+    end
+
+    context "when security level is provided" do
+      let(:data_security_level) { 3 }
+
+      it "sets the data security level" do
+        project_metadata.initialize_from_hash(hash)
+        expect(project_metadata.data_security_level).to eq(3)
+      end
     end
   end
 
@@ -98,6 +110,19 @@ RSpec.describe ProjectMetadata, type: :model do
       hash[:data_user_counter] = "0"
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.rw_users).to eq([])
+    end
+
+    it "allows for a nil security level" do
+      project_metadata.initialize_from_params(hash)
+      expect(project_metadata.data_security_level).to be_nil
+    end
+    context "when security level is provided" do
+      let(:data_security_level) { 3 }
+
+      it "sets the data security level" do
+        project_metadata.initialize_from_params(hash)
+        expect(project_metadata.data_security_level).to eq(3)
+      end
     end
   end
 

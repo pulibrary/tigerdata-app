@@ -55,7 +55,7 @@ class ProjectMetadata
   attr_accessor(
     :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
-    :updated_by, :updated_on, :approval_note, :schema_version, :submission,
+    :updated_by, :updated_on, :approval_note, :schema_version, :submission, :data_security_level,
     # NOTE: The following attributes are required by the XML schema
     :hpc,
     :data_use_agreement,
@@ -125,6 +125,8 @@ class ProjectMetadata
 
     @provisional = metadata_hash[:provisional] || self.class.default_provisionality
 
+    @data_security_level = metadata_hash[:data_security_level] # no default is set for security level
+
     set_defaults
   end
   # rubocop:enable Metrics/PerceivedComplexity
@@ -152,6 +154,7 @@ class ProjectMetadata
     set_value(params, "departments")
     set_value(params, "project_id")
     set_value(params, "project_purpose")
+    set_value(params, "data_security_level")
     calculate_project_directory(params)
 
     if params["data_user_counter"].present?

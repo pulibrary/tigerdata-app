@@ -38,6 +38,12 @@ RSpec.describe ProjectShowPresenter do
     end
   end
 
+  describe "#data_security_level" do
+    it "returns the data security level of the project" do
+      expect(presenter.data_security_level).to be_nil
+    end
+  end
+
   describe "#file_list_json" do
     let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
