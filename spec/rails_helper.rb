@@ -82,6 +82,12 @@ RSpec.configure do |config|
     ActiveJob::Base.queue_adapter = :test
     driven_by(:chrome)
   end
+
+  # Flipflop's test strategy is process-wide. Reset so a spec that enables
+  # :data_security cannot leak into later examples (including rspec-retry).
+  config.after do
+    Flipflop::FeatureSet.current.test!.switch!(:data_security, false)
+  end
 end
 
 # Mimics Capybara `fill_in` but issues a "tab" keystroke at the end

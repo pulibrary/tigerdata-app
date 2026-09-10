@@ -31,6 +31,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         requested_by: sponsor_and_data_manager.uid,
         storage_unit: "GB",
         quota: "500 GB",
+        data_security_level: 0,
         user_roles: [{ "uid" => sponsor_and_data_manager.uid, "name" => sponsor_and_data_manager.display_name }]
       )
     end
@@ -60,6 +61,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         requested_by: sponsor_and_data_manager.uid,
         storage_unit: "TB",
         quota: "custom",
+        data_security_level: 0,
         user_roles: [{ "uid" => sponsor_and_data_manager.uid, "name" => sponsor_and_data_manager.display_name }]
       )
     end
@@ -83,6 +85,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         requested_by: sponsor_and_data_manager.uid,
         storage_unit: "GB",
         quota: "500 GB",
+        data_security_level: 0,
         user_roles: [{ "uid" => sponsor_and_data_manager.uid, "name" => sponsor_and_data_manager.display_name }]
       )
     end
