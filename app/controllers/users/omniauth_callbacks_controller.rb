@@ -19,6 +19,25 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
+  def entra_id
+    access_token = request.env["omniauth.auth"]
+    @user = User.from_entra_id(access_token)
+    session[:cas_login_url] = nil
+    session[:cas_validation_url] = nil
+
+    if @user.nil? && access_token&.provider == "cas"
+      Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: cas"
+      redirect_to help_path
+      flash.notice = "You can not be signed in at this time."
+    elsif @user.nil?
+      Rails.logger.warn "User from CAS with netid #{access_token&.uid} was not found. Provider: #{access_token&.provider}"
+      redirect_to root_path
+      flash.alert = "You are not a recognized CAS user."
+    else
+      sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
+    end
+  end
+
   private
 
     def set_cas_session
