@@ -42,7 +42,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
 
-        expect(page).to have_content("Data Security code goes here")
+        expect(page).to have_field("request[data_security_level]", with: "Select Data Security Level")
+        select "Level 1 - Internal", from: "request[data_security_level]"
 
         click_on "Roles and People"
         select_user(sponsor_user, "data_sponsor", "request[data_sponsor]")
@@ -50,10 +51,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Review and Submit"
         expect(page).to have_content "Take a moment to review"
 
-        expect(page).to have_content("Data Security code goes here")
-
-        # UI for selecting a level is not on this ticket; persist a valid value so submit/approve can succeed.
-        NewProjectRequest.last.update!(data_security_level: 0)
+        expect(page).to have_field("request[data_security_level]", with: "1")
 
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")
