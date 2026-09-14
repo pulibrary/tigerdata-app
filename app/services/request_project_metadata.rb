@@ -23,7 +23,8 @@ class RequestProjectMetadata
         number_of_files: request[:number_of_files],
         hpc: request[:hpc]&.downcase == "yes",
         smb: request[:smb]&.downcase == "yes",
-        globus: request[:globus]&.downcase == "yes"
+        globus: request[:globus]&.downcase == "yes",
+        data_security_level: request[:data_security_level]
       }
     end
      # rubocop:enable Metrics/AbcSize

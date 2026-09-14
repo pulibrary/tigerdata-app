@@ -17,6 +17,7 @@ RSpec.describe RequestProjectMetadata do
       departments:
         [{ "code" => "41000", "name" => "LIB-PU Library" }],
       description: "This collection contains important periodicals of the European avant-garde.",
+      data_security_level: 1,
       parent_folder: "pul",
       project_folder: "bluemountain",
       project_id: nil,
@@ -69,6 +70,7 @@ RSpec.describe RequestProjectMetadata do
       expect(project_metadata[:created_by]).to be_nil
       expect(project_metadata[:created_on]).to eq(request.created_at)
       expect(project_metadata[:project_id]).to eq(ProjectMetadata::DOI_NOT_MINTED)
+      expect(project_metadata[:data_security_level]).to eq(1)
     end
 
     it "handles correctly the directory for requests without a parent folder" do

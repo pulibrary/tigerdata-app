@@ -44,7 +44,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:quota_allocation]).to eq("500 GB")
         expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
         expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
-        expect(metadata[:data_security_level]).to be_nil
+        expect(metadata[:data_security_level]).to eq(0) # Assets created in mediaflux default to 0.
       end
     end
 
