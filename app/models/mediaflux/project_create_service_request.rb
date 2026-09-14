@@ -105,7 +105,7 @@ module Mediaflux
               if @data_security_level.present?
                 xml.text(@data_security_level)
               else
-                xml.text(1)
+                xml.text(1) # Default to 1 (Public) if not specified. This is a temporary measure until we have a better way to handle this.
               end
             end
           end
