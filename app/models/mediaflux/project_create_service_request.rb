@@ -24,6 +24,7 @@ module Mediaflux
       @smb = @project.metadata_model.smb_request
       @globus = @project.metadata_model.globus_request
       @project_purpose = @project.metadata_model.project_purpose
+      @data_security_level = @project.metadata_model.data_security_level
     end
 
     # Specifies the Mediaflux service to use when creating project
@@ -99,6 +100,9 @@ module Mediaflux
               xml.send("project-purpose") do
                 xml.text(@project_purpose)
               end
+            end
+            xml.send("data-security-level") do
+              xml.text(@data_security_level)
             end
           end
         end
