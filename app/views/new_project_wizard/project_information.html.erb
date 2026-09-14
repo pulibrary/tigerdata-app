@@ -9,6 +9,6 @@
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @new_project_request.description || "", description_error: "" } %>
     <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @new_project_request.departments || [], department_error: "" } %>
     <% if Flipflop.data_security? %>
-        <p> Data Security code goes here </p>
+        <%= render partial: "/new_project_wizard/form_project_data_security_level_input", locals: {data_security_level: @new_project_request.data_security_level || nil, data_security_level_error: "" } %>
     <% end %>
 </div>
