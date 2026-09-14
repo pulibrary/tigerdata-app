@@ -73,7 +73,12 @@
             </div>
          </div>
          <% if Flipflop.data_security? %>
-            <p> Data Security code goes here </p>
+            <li class="detail-subheading">Data Security</li>
+            <% if @presenter.data_security_level.blank? %>
+                <strong class="px-0">&mdash;</strong>
+            <% else %>
+                <%= @presenter.data_security_level %>
+            <% end %>
          <% end %>
          <hr>
       </ul>
