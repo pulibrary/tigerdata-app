@@ -40,7 +40,7 @@ RSpec.describe ProjectShowPresenter do
 
   describe "#data_security_level" do
     it "returns the data security level of the project" do
-      expect(presenter.data_security_level).to be_nil
+      expect(presenter.data_security_level).to eq(0) # Assets created in mediaflux default to 0.
     end
   end
 
