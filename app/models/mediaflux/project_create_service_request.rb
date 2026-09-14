@@ -102,7 +102,11 @@ module Mediaflux
               end
             end
             xml.send("security-level") do
-              xml.text(@data_security_level)
+              if @data_security_level.present?
+                xml.text(@data_security_level)
+              else
+                xml.text(1)
+              end
             end
           end
         end
