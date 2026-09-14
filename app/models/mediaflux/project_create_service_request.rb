@@ -101,7 +101,7 @@ module Mediaflux
                 xml.text(@project_purpose)
               end
             end
-            xml.send("data-security-level") do
+            xml.send("security-level") do
               xml.text(@data_security_level)
             end
           end
