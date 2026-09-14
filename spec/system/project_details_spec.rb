@@ -224,8 +224,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_content("Research")
-
-
         expect(page).to have_content("Data Security")
       end
       it "copies the project path to the clipboard" do
