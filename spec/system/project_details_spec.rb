@@ -226,7 +226,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_content("Research")
 
 
-        expect(page).to have_content("Data Security code goes here")
+        expect(page).to have_content("Data Security")
       end
       it "copies the project path to the clipboard" do
         sign_in sponsor_user
