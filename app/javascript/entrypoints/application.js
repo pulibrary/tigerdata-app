@@ -309,9 +309,9 @@ window.log_plausible_download = function () {
   plausible('Download');
 };
 
-window.log_plausible_project = function () {
-  console.log('log_plausible_project event logged');
-  plausible('Project');
+window.log_plausible_security_classification = function () {
+  console.log('log_plausible_security_classification event logged');
+  plausible('Security Classification');
 };
 
 /* eslint-enable no-console */
