@@ -43,13 +43,20 @@ RSpec.describe ProjectShowPresenter do
       expect(presenter.data_security_level).to eq("Level 0 - Public") # Request factory defaults value to 0.
     end
 
-    context "when data security level is present" do
+    context "when data security level is not present" do
+      let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+      it "returns a styled data security level" do
+        expect(presenter.data_security_level).to eq("——")
+      end
+    end
+
+    context "when the data security level is set to nil" do
       let(:request1) do
         FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
                                             user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
       end
-      it "returns a styled data security level" do
-        expect(presenter.data_security_level).to eq("——")
+      it "defaults the data security level to 1" do
+        expect(presenter.data_security_level).to eq("Level 1 - Internal") # project create service defaults value to 1.
       end
     end
   end
@@ -59,7 +66,6 @@ RSpec.describe ProjectShowPresenter do
 
     it "returns a JSON string of the file list" do
       parsed = JSON.parse(presenter.file_list_json)
-      expect(presenter.data_security_level).to eq("——")
       dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
       project_files = dir_listing[:files]
       last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
