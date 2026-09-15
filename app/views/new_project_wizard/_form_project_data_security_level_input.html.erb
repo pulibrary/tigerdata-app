@@ -2,27 +2,24 @@
   <%= render partial: "/new_project_wizard/form_field_label",
            locals: {field_label: "Data Security Level", field_sub_label: "Required"} %>
   <div class="input-frame">
-    <div class="text-input">
+    <div class="security-level-input">
       <div class="horizontal-frame">
         <div class="vertical-frame">
-          <select class="form-input counted-input"
-                name="request[data_security_level]" id="data_security_level">
-                  <option disabled <%= "selected" if data_security_level.nil? %> >Select Data Security Level</option>
-                <% DataSecurityLevelPresenter::LEVELS.each do |level,level_text| %>
-                  <% if level < 2 %>
-                    <option value="<%= level %>" <%= "selected" if data_security_level == level %>><%= level_text %></option>
-                  <% else %>
-                    <option value="<%= level %>" disabled><%= level_text %> (not yet available in TigerData)</option>
-                  <% end %>
-                <% end %>
-          </select>
+          <data-security-level 
+            :options="<%= DataSecurityLevelPresenter.select_options.to_json %>"
+            :default-value="<%= data_security_level %>">
+            <template v-slot:hidden-input="{ selectedItem }">
+              <input type="hidden" name="request[data_security_level]" :value="selectedItem" class="selected-item"></input>
+            </template>
+
+          </data-security-level>
           <div class="horizontal-frame error-and-count">
             <div class="input-error">
                 <%= data_security_level_error %>
             </div>
           </div>
           <p>
-          Select the appropriate classification for the data to be contained in your project. For more information, see the Princeton Security Classification Guide.
+          Select the appropriate classification for the data to be contained in your project. For more information, see the <a href="https://protectingourinfo.princeton.edu/classify" target="_blank">Princeton Security Classification Guide</a>.
           </p>
         </div>
       </div>

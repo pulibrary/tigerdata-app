@@ -42,8 +42,12 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
 
-        expect(page).to have_field("request[data_security_level]", with: "Select Data Security Level")
-        select "Level 1 - Internal", from: "request[data_security_level]"
+        expect(page).to have_field("request[data_security_level]", with: "", type: :hidden)
+        page.find("#v1-select-1-trigger").click
+        expect(page).to have_content("Level 0 - Public")
+        expect(page).to have_content("Level 1 - Internal")
+        page.find("div[data-value='1']").click
+        expect(page).to have_field("request[data_security_level]", with: "1", type: :hidden)
 
         click_on "Roles and People"
         select_user(sponsor_user, "data_sponsor", "request[data_sponsor]")
@@ -51,7 +55,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         click_on "Review and Submit"
         expect(page).to have_content "Take a moment to review"
 
-        expect(page).to have_field("request[data_security_level]", with: "1")
+        expect(page).to have_field("request[data_security_level]", with: "1", type: :hidden)
 
         click_on "Submit"
         expect(page).to have_content("Your new project request is submitted")

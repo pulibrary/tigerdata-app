@@ -30,4 +30,16 @@ RSpec.describe DataSecurityLevelPresenter do
       expect(described_class.new(1).level_name).to eq("Level 1 - Internal")
     end
   end
+
+  describe ".select_options" do
+    it "returns an array of options with disabled levels" do
+      expected_options = [
+        { value: 0, label: "Level 0 - Public" },
+        { value: 1, label: "Level 1 - Internal" },
+        { value: 2, label: "Level 2 - Confidential (not yet available in TigerData)", disabled: true },
+        { value: 3, label: "Level 3 - Restricted (not yet available in TigerData)", disabled: true }
+      ]
+      expect(described_class.select_options).to eq(expected_options)
+    end
+  end
 end
