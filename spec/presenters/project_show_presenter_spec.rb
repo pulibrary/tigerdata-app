@@ -46,8 +46,8 @@ RSpec.describe ProjectShowPresenter do
     context "when data security level is present" do
       let(:request1) do
         FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
-                                        user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
-        end
+                                            user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
+      end
       it "returns a styled data security level" do
         expect(presenter.data_security_level).to eq("——")
       end
