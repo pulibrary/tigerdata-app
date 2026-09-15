@@ -40,7 +40,24 @@ RSpec.describe ProjectShowPresenter do
 
   describe "#data_security_level" do
     it "returns the data security level of the project" do
-      expect(presenter.data_security_level).to eq(0) # Assets created in mediaflux default to 0.
+      expect(presenter.data_security_level).to eq("Level 0 - Public") # Request factory defaults value to 0.
+    end
+
+    context "when data security level is not present" do
+      let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+      it "returns a styled data security level" do
+        expect(presenter.data_security_level).to eq("——")
+      end
+    end
+
+    context "when the data security level is set to nil" do
+      let(:request1) do
+        FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
+                                            user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
+      end
+      it "defaults the data security level to 1" do
+        expect(presenter.data_security_level).to eq("Level 1 - Internal") # project create service defaults value to 1.
+      end
     end
   end
 
