@@ -5,7 +5,7 @@
     <div class="security-level-input">
       <div class="horizontal-frame">
         <div class="vertical-frame">
-          <data-security-level 
+          <data-security-level
             :options="<%= DataSecurityLevelPresenter.select_options.to_json %>"
             :default-value="<%= data_security_level %>">
             <template v-slot:hidden-input="{ selectedItem }">
@@ -19,7 +19,7 @@
             </div>
           </div>
           <p>
-          Select the appropriate classification for the data to be contained in your project. For more information, see the <a href="https://protectingourinfo.princeton.edu/classify" target="_blank">Princeton Security Classification Guide</a>.
+          Select the appropriate classification for the data to be contained in your project. For more information, see the <a href="https://protectingourinfo.princeton.edu/classify" target="_blank" onclick="log_plausible_security_classification()">Princeton Security Classification Guide</a>.
           </p>
         </div>
       </div>

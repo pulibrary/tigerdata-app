@@ -314,6 +314,11 @@ window.log_plausible_project = function () {
   plausible('Project');
 };
 
+window.log_plausible_security_classification = function () {
+  console.log('log_plausible_security_classification event logged');
+  plausible('Security Classification');
+};
+
 /* eslint-enable no-console */
 /* eslint-enable no-undef */
 /* eslint-enable func-names */
