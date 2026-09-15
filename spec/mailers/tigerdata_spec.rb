@@ -72,7 +72,7 @@ context "When a request is created" do
     expect { described_class.with(request_id:, submitter: sponsor_and_data_manager_user).request_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
-    expect(mail.subject).to eq "New Project Request Ready for Review"
+    expect(mail.subject).to eq "New Project Request Ready for Review from #{sponsor_and_data_manager_user.display_name_safe}"
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq nil
     expect(mail.from).to eq [sponsor_and_data_manager_user.email]
