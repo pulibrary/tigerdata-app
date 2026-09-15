@@ -25,6 +25,7 @@ import { Modal } from 'bootstrap';
 // Import Vue Components
 import FileBrowser from '../vue_components/file_browser.vue';
 import CopyPath from '../vue_components/copy_path.vue';
+import DataSecurityLevel from '../vue_components/data_security_level.vue';
 
 // ActionCable Channels
 import '../channels/index.js';
@@ -87,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-date-picker', LuxDatePicker)
       .component('file-browser', FileBrowser)
       .component('copy-path', CopyPath)
+      .component('data-security-level', DataSecurityLevel)
       .mount(elements[i]);
   }
 });

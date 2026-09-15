@@ -11,6 +11,17 @@ class DataSecurityLevelPresenter
     3 => "Level 3 - Restricted"
   }.freeze
 
+  def self.select_options
+    LEVELS.map do |level, name|
+      option = { value: level, label: name }
+      if level > 1
+        option[:disabled] = true
+        option[:label] += " (not yet available in TigerData)"
+      end
+      option
+    end
+  end
+
   # Initializes the presenter with a raw security level value.
   #
   # @param level [Integer, String, NilClass] the stored data security level
