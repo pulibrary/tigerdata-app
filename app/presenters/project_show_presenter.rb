@@ -267,7 +267,7 @@ class ProjectShowPresenter
   end
 
   def data_security_level
-    @data_security_level ||= @project_mf[:data_security_level]
+    @data_security_level ||= DataSecurityLevelPresenter.new(@project_mf[:data_security_level]).to_s
   end
 
   private

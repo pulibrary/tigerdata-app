@@ -76,11 +76,9 @@
          <div class="detail-pair">
             <li class="detail-subheading">Data Security</li>
             <div class="detail-value">
-              <% if @presenter.data_security_level.blank? %>
-                <strong class="px-0">&mdash;</strong>
-              <% else %>
                 <%= @presenter.data_security_level %>
-              <% end %>
+            </div>
+          </div>
          <% end %>
          <hr>
       </ul>

@@ -40,7 +40,17 @@ RSpec.describe ProjectShowPresenter do
 
   describe "#data_security_level" do
     it "returns the data security level of the project" do
-      expect(presenter.data_security_level).to eq(0) # Assets created in mediaflux default to 0.
+      expect(presenter.data_security_level).to eq("Level 0 - Public") # Request factory defaults value to 0.
+    end
+
+    context "when data security level is present" do
+      let(:request1) do
+        FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
+                                        user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
+        end
+      it "returns a styled data security level" do
+        expect(presenter.data_security_level).to eq("——")
+      end
     end
   end
 
@@ -49,6 +59,7 @@ RSpec.describe ProjectShowPresenter do
 
     it "returns a JSON string of the file list" do
       parsed = JSON.parse(presenter.file_list_json)
+      expect(presenter.data_security_level).to eq("——")
       dir_listing = project.directory_listing(session_id: SystemUser.mediaflux_session)
       project_files = dir_listing[:files]
       last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
