@@ -38,10 +38,11 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
         expect(response.content_type).to match "xml"
       end
 
-      it "redirect to the project page when there is an error", :integration do
+      it "redirect to the dashboard when there is an error", :integration do
         # Go to a non-existing project to force an error
         get project_show_mediaflux_url("non-existing"), params: { format: :xml }
-        expect(response.code).to eq "302"
+        expect(response.stream.body).to include("Error fetching Mediaflux XML for this project")
+        expect(response.code).to eq "200"
       end
     end
   end
