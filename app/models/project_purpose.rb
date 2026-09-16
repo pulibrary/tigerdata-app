@@ -14,6 +14,10 @@ class ProjectPurpose
     [research, admin, teaching]
   end
 
+  def self.to_json
+    all.map { |purpose| { value: purpose.id, label: purpose.label } }.to_json
+  end
+
   # Returns the label for a given purpose id
   def self.label_for(id)
     all.each do |purpose|

@@ -26,6 +26,7 @@ import { Modal } from 'bootstrap';
 import FileBrowser from '../vue_components/file_browser.vue';
 import CopyPath from '../vue_components/copy_path.vue';
 import DataSecurityLevel from '../vue_components/data_security_level.vue';
+import ProjectPurpose from '../vue_components/project_purpose.vue';
 
 // ActionCable Channels
 import '../channels/index.js';
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('file-browser', FileBrowser)
       .component('copy-path', CopyPath)
       .component('data-security-level', DataSecurityLevel)
+      .component('project-purpose', ProjectPurpose)
       .mount(elements[i]);
   }
 });
