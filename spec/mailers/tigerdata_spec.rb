@@ -68,7 +68,7 @@ context "When a project is created" do
 end
 
 context "When a request is created" do
-  it "Sends project creation requests" do
+  it "Sends request creation notifications" do
     expect { described_class.with(request_id:, submitter: sponsor_and_data_manager_user).request_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
@@ -119,7 +119,7 @@ context "when storage increase request is created" do
     expect { described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
     mail = ActionMailer::Base.deliveries.last
 
-    expect(mail.subject).to eq "Storage Increase Request Ready for Review"
+    expect(mail.subject).to eq "Storage Increase Request Ready for Review from #{sponsor_and_data_manager_user.display_name_safe}"
     expect(mail.to).to eq ["test@example.com"]
     expect(mail.cc).to eq nil
     expect(mail.from).to eq [sponsor_and_data_manager_user.email]
@@ -154,6 +154,38 @@ context "when storage increase request is created" do
     html_body = ActionMailer::Base.deliveries.last.html_part.body.to_s
     expect(html_body).to have_content("Current Storage Capacity: 850 TB")
     expect(html_body).not_to have_content("500000")
+  end
+end
+
+context "when a Globus access request is created" do
+  it "Sends Globus access request notifications" do
+    expect { described_class.with(project_id:, submitter: sponsor_and_data_manager_user).globus_access_request.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    mail = ActionMailer::Base.deliveries.last
+
+    expect(mail.subject).to eq "Globus Connection Request Ready for Review from #{sponsor_and_data_manager_user.display_name_safe}"
+    expect(mail.to).to eq ["test@example.com"]
+    expect(mail.cc).to eq nil
+    expect(mail.from).to eq [sponsor_and_data_manager_user.email]
+
+    html_body = mail.html_part.body.to_s
+    expect(html_body).not_to be_empty
+
+    expect(html_body).to have_content(project.title)
+    expect(html_body).to have_content(project.mediaflux_id)
+    expect(html_body).to have_content(project.metadata_json["project_id"])
+    expect(html_body).to have_content(project.project_directory)
+    expect(html_body).to have_content(project.metadata_json["data_sponsor"])
+    expect(html_body).to have_content(project.metadata_json["data_manager"])
+
+    expect(html_body).to include("A Globus connection request has been created and is ready for review")
+  end
+
+  context "when the project ID is invalid or nil" do
+    let(:project_id) { "invalid" }
+
+    it "does not enqueue an e-mail message and raises an error" do
+      expect { described_class.with(project_id:, submitter: sponsor_and_data_manager_user).globus_access_request.deliver }.to raise_error(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{project_id}")
+    end
   end
 end
 
