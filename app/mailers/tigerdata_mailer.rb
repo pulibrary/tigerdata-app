@@ -26,9 +26,10 @@ class TigerdataMailer < ApplicationMailer
     config = Rails.application.config.tigerdata_mail[:globus_access_request]
     @project_id = params[:project_id]
     submitter_mail = params[:submitter].email
+    submitter_name = params[:submitter].display_name_safe
     raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
 
-    subject = "Globus Connection Request Ready for Review"
+    subject = "Globus Connection Request Ready for Review from #{submitter_name}"
     mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
   end
 
@@ -38,13 +39,14 @@ class TigerdataMailer < ApplicationMailer
     raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
 
     submitter_mail = params[:submitter].email
+    submitter_name = params[:submitter].display_name_safe
     @requested_capacity = params[:requested_capacity]
     @justification = params[:justification]
     @growth_expectation = params[:growth_expectation]
     @date_needed = params[:date_needed]
     @quota_breakdown = params[:quota_breakdown]
 
-    subject = "Storage Increase Request Ready for Review"
+    subject = "Storage Increase Request Ready for Review from #{submitter_name}"
     mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
   end
 
