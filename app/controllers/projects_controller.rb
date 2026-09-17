@@ -46,7 +46,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  
+
 
   # GET "projects/:id"
   def show
@@ -108,8 +108,7 @@ class ProjectsController < ApplicationController
     end
   rescue => ex
     Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{ex.message}"
-    flash[:alert] = "Error fetching Mediaflux XML for this project"
-    redirect_to project_path(project_id)
+    render json: { error: "Error fetching Mediaflux XML for this project" }
   end
 
   def list_contents

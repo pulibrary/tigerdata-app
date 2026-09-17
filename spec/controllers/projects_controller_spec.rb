@@ -58,18 +58,29 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata[:project_id]
         end
 
-        it "renders the Mediaflux metadata as xml", :integration do
-          request = FactoryBot.create(:request_project)
-          project = request.approve(sponsor_and_data_manager)
-          get :show_mediaflux, params: { id: project.id, format: :xml }
-          expect(response.content_type).to eq("application/xml; charset=utf-8")
-          xml_doc = Nokogiri::XML(response.body)
-          expect(xml_doc.xpath("/meta//Title").text).to eq project.title
-          expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project.project_directory
-          expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata[:description]
-          expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata[:data_sponsor]
-          expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata[:data_manager]
-          expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata[:project_id]
+        context "when rendering the project metadata as html" do
+          # Views are stubbed by default for rspec-rails
+          # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
+          render_views
+          let!(:project) do
+            request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
+                                                          departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
+            request.approve(sponsor_and_data_manager)
+          end
+
+          before do
+            sign_in(sponsor_and_data_manager)
+          end
+
+          it "shows the affiliation name (instead the internal code) on the project show views" do
+            get :details, params: { id: project.id }
+            expect(response).to render_template("details")
+            expect(response.body).to have_content("Astrophysical Sciences")
+              .or(have_content("High Performance Computing"))
+              .or(have_content("Research Data and Scholarship Services"))
+              .or(have_content("Princeton Research Data Service"))
+              .or(have_content("Princeton Plasma Physics Laboratory"))
+          end
         end
       end
     end
@@ -170,6 +181,18 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         expect(response.body).to eq("{\"message\":\"File list for \\\"#{project.title}\\\" is being generated in the background. " \
                                     "A link to the downloadable file list will be available in the \\\"Recent Activity\\\" section " \
                                     "of your dashboard when it is available. You may safely navigate away from this page or close this tab.\"}")
+      end
+
+      context "when the job fails" do
+        before do
+          allow(ProjectJobService).to receive(:new).and_raise(StandardError, "something went wrong")
+        end
+
+        it "returns an error message" do
+          get :list_contents, params: { id: project.id, format: :json }
+          expect(response.content_type).to eq("application/json; charset=utf-8")
+          expect(response.body).to eq("{\"message\":\"Document list could not be generated.\"}")
+        end
       end
     end
   end
@@ -349,28 +372,56 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
   end
 
-  context "when the project show views are rendered for an existing project" do
-    # Views are stubbed by default for rspec-rails
-    # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
-    render_views
-    let!(:project) do
-      request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
-                                                    departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
-      request.approve(sponsor_and_data_manager)
+  describe "#show_mediaflux" do
+    it "renders an error when requesting json" do
+      get :show_mediaflux, params: { id: project.id, format: :json }
+      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.body).to eq("{\"error\":\"You need to sign in or sign up before continuing.\"}")
     end
 
-    before do
-      sign_in(sponsor_and_data_manager)
+    context "a signed in user" do
+      let(:researcher_user) { FactoryBot.create :user }
+      before do
+        sign_in researcher_user
+      end
+
+      it "redirects to the root when the user does not have access " do
+        get :list_contents, params: { id: project.id, format: :json }
+        expect(response).to redirect_to dashboard_path
+      end
     end
 
-    it "shows the affiliation name (instead the internal code) on the project show views" do
-      get :details, params: { id: project.id }
-      expect(response).to render_template("details")
-      expect(response.body).to have_content("Astrophysical Sciences")
-        .or(have_content("High Performance Computing"))
-        .or(have_content("Research Data and Scholarship Services"))
-        .or(have_content("Princeton Research Data Service"))
-        .or(have_content("Princeton Plasma Physics Laboratory"))
+    context "a user with access" do
+      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      before do
+        sign_in researcher_user
+      end
+
+      it "renders the Mediaflux metadata as xml", :integration do
+        request = FactoryBot.create(:request_project)
+        project = request.approve(sponsor_and_data_manager)
+        get :show_mediaflux, params: { id: project.id, format: :xml }
+        expect(response.content_type).to eq("application/xml; charset=utf-8")
+        xml_doc = Nokogiri::XML(response.body)
+        expect(xml_doc.xpath("/meta//Title").text).to eq project.title
+        expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project.project_directory
+        expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata[:description]
+        expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata[:data_sponsor]
+        expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata[:data_manager]
+        expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata[:project_id]
+      end
+
+      context "when rescuing a mediaflux error" do
+        let(:project) { FactoryBot.create(:project, mediaflux_id: -12_345) }
+
+        it "returns the error message as json" do
+          get :show_mediaflux, params: { id: project.id, format: :json }
+
+          expect(response.content_type).to eq("application/json; charset=utf-8")
+          response_json = JSON.parse(response.body)
+          expect(response_json["error"]).to include("Error fetching Mediaflux XML for this project")
+        end
+      end
     end
   end
 
@@ -419,6 +470,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(response.content_type).to eq("text/plain")
           expect(response.headers["Content-Disposition"]).to include("attachment; filename=\"filelist-10.34770-tbd-#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d-%H-%M')}.csv\"")
           expect(response.body).to eq(File.read(inventory_request_request.output_file))
+        end
+      end
+
+      context "when the job_id is invalid" do
+        it "redirects to the root" do
+          get :file_list_download, params: { job_id: "invalid-job-id" }
+          expect(response).to redirect_to "/"
         end
       end
     end
@@ -481,6 +539,71 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       html_body = mail.html_part.body.to_s
       expect(html_body).to include("Current Storage Capacity: 850 TB")
       expect(html_body).not_to include("500000")
+    end
+
+    context "when an error orrurs" do
+      before do
+        allow(Mediaflux::ProjectQuotaRequest).to receive(:new).and_raise(StandardError, "something went wrong")
+      end
+
+      it "returns an error message" do
+        post :send_storage_increase_request, params: {
+          project_id: project.id,
+          requested_capacity: "900 TB",
+          justification: "Need more space",
+          growth_expectation: "Steady",
+          date_needed: "2026-09-01"
+        }
+
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response.body).to eq("{\"error\":\"something went wrong\"}")
+      end
+    end
+  end
+
+  describe "#send_globus_access_request" do
+    include ActiveJob::TestHelper
+
+    let(:project) do
+      FactoryBot.create(
+        :project,
+        mediaflux_id: 42,
+        data_sponsor: sponsor_and_data_manager.uid,
+        data_manager: sponsor_and_data_manager.uid
+      )
+    end
+
+    before do
+      sign_in sponsor_and_data_manager
+    end
+
+    it "sends the email" do
+      perform_enqueued_jobs do
+        post :send_globus_access_request, params: {
+          project_id: project.id
+        }
+      end
+
+      expect(response).to have_http_status(:no_content).or have_http_status(:ok)
+
+      mail = ActionMailer::Base.deliveries.last
+      html_body = mail.html_part.body.to_s
+      expect(html_body).to include("A Globus connection request has been created and is ready for review")
+    end
+
+    context "when an error occurs" do
+      before do
+        allow(TigerdataMailer).to receive(:with).and_raise(StandardError, "something went wrong")
+      end
+
+      it "returns an error message" do
+        post :send_globus_access_request, params: {
+          project_id: project.id
+        }
+
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response.body).to eq("{\"error\":\"something went wrong\"}")
+      end
     end
   end
 end
