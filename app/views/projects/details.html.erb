@@ -283,50 +283,37 @@
 <script type="module">
    projectStyle('<%= @project_session %>');
    projectTab("<%= project_path %>", "<%= project_details_path %>");
+   function findTopSectionLink() {
+      // We are utilizing -1 as the top of the view window to alleviate pixel rounding issues when the section is at the very top
+      const basicDetailsDisplayed = document.getElementById("basic-details-section").getBoundingClientRect().top > -1;
+      const rolesAndPeopleDisplayed = document.getElementById("roles-and-people-section").getBoundingClientRect().top > -1;
+      const storageAndAccessDisplayed = document.getElementById("storage-and-access-section").getBoundingClientRect().top > -1;
+      const provenanceDisplayed = document.getElementById("provenance-section").getBoundingClientRect().top > -1;
+      var topSection = null;
+      if (basicDetailsDisplayed) {
+         topSection = "basic-details-link";
+      } else if (rolesAndPeopleDisplayed) {
+         topSection = "roles-and-people-link";
+      } else if (storageAndAccessDisplayed) {
+         topSection = "storage-and-access-link";
+      } else if (provenanceDisplayed) {
+         topSection = "provenance-link";
+      } 
+      return topSection;
+   }
+
+   function clearActiveHeader() {
+      document.getElementById("storage-and-access-link").classList.remove("active-header");
+      document.getElementById("basic-details-link").classList.remove("active-header");
+      document.getElementById("roles-and-people-link").classList.remove("active-header");
+      document.getElementById("provenance-link").classList.remove("active-header");
+   }
 
    $(window).scroll(function() {
-    var storage_hT = $('#basic-details-section').offset().top,
-      storage_hH = $('#basic-details-section').outerHeight(),
-      wH = $(window).height(),
-      wS = $(this).scrollTop();
-    if (wS > (storage_hT+storage_hH-wH)){
-      $("#storage-and-access-link").removeClass("active-header");
-      $("#basic-details-link").addClass("active-header");
-      $("#roles-and-people-link").removeClass("active-header");
-      $("#provenance-link").removeClass("active-header");
-     }
-
-     var storage_hT = $('#roles-and-people-section').offset().top,
-      storage_hH = $('#roles-and-people-section').outerHeight(),
-      wH = $(window).height(),
-      wS = $(this).scrollTop();
-    if (wS > (storage_hT+storage_hH-wH)){
-      $("#storage-and-access-link").removeClass("active-header");
-      $("#basic-details-link").removeClass("active-header");
-      $("#roles-and-people-link").addClass("active-header");
-      $("#provenance-link").removeClass("active-header");
-     }
-
-     var storage_hT = $('#storage-and-access-section').offset().top,
-      storage_hH = $('#storage-and-access-section').outerHeight(),
-      wH = $(window).height(),
-      wS = $(this).scrollTop();
-    if (wS > (storage_hT+storage_hH-wH)){
-      $("#storage-and-access-link").addClass("active-header");
-      $("#basic-details-link").removeClass("active-header");
-      $("#roles-and-people-link").removeClass("active-header");
-      $("#provenance-link").removeClass("active-header");
-     }
-
-     var storage_hT = $('#provenance-section').offset().top,
-      storage_hH = $('#provenance-section').outerHeight(),
-      wH = $(window).height(),
-      wS = $(this).scrollTop();
-    if (wS > (storage_hT+storage_hH-wH)){
-      $("#storage-and-access-link").removeClass("active-header");
-      $("#basic-details-link").removeClass("active-header");
-      $("#roles-and-people-link").removeClass("active-header");
-      $("#provenance-link").addClass("active-header");
-     }
+      var topSectionLink = findTopSectionLink();
+      if (topSectionLink) {
+         clearActiveHeader();
+         document.getElementById(topSectionLink).classList.add("active-header");
+      }
    });
 </script>
