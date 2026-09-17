@@ -139,7 +139,7 @@
 }
 
 .active-header {
-  color: $gray-60 !important;
+  color: $black !important;
 }
 
 .basic-details-navigation {
@@ -170,10 +170,10 @@
     line-height: 1.5rem; /* 150% */
     a {
       text-decoration: none;
-      color: $black;
+      color: $gray-60;
     }
     a:hover {
-      color: $gray-60;
+      color: $black;
     }
   }
 }
