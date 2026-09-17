@@ -1,0 +1,111 @@
+@import "variables";
+@import "typography";
+@import "bootstrap";
+
+#project-contents {
+  margin-bottom: 0.75rem;
+
+  .sorting:hover {
+    cursor: pointer;
+  }
+}
+
+.project-contents {
+  // table-layout: fixed;
+  border: 1px solid $gray-20;
+  border-radius: 3px;
+  padding: 0rem 0.75rem;
+  align-items: center;
+  gap: 16px;
+  color: $gray-100;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  width: 100%;
+
+  thead {
+    background-color: $gray-10;
+    overflow: hidden;
+    color: $gray-100;
+    text-overflow: ellipsis;
+
+    /* Body S Bold */
+    font-family: "Libre Franklin";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.5rem; /* 150% */
+  }
+
+  tr {
+    border: 1px solid $gray-20;
+    overflow: hidden;
+    color: $gray-100;
+    text-overflow: ellipsis;
+  }
+
+  td,
+  th {
+    padding: 0.5em 1em;
+  }
+}
+
+.contents-summary {
+  padding: 0.75rem 1.5rem;
+  background-color: $gray-10;
+  border-radius: 0.5rem;
+
+  // Note, this can not be a variable
+  --bs-border-color: #717171;
+}
+
+.project-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  align-self: stretch;
+  align-items: stretch;
+
+  .file-inventory {
+    color: $gray-100;
+    font-weight: 600;
+  }
+}
+
+.project-files {
+  border-radius: 0.5rem;
+  border: 1px solid $gray-20;
+}
+
+.content-info {
+  color: $gray-100;
+  background-color: $status-info;
+  padding: 0.5em 1em;
+
+  .bi-info-circle {
+    padding-right: 1em;
+  }
+}
+
+.content-warning {
+  color: $gray-100;
+  background-color: $status-warning;
+
+  header {
+    color: $black;
+    font-weight: 600;
+  }
+}
+
+.latest-download-link {
+  margin: 1em 0em 1em 0em;
+  display: block;
+}
+
+.project-alerts {
+  position: absolute;
+  top: 17%;
+  margin-right: 20px;
+}
