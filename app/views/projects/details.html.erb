@@ -53,7 +53,7 @@
             <li class="detail-subheading">Project Description</li>
             <p id="description-text-full" class="detail-value"><%= @presenter.description %></p>
          </div>
-         <div class="departments-detail-pair">
+         <div class="detail-pair">
             <li class="detail-subheading">Department(s)</li>
             <div class="detail-value">
                <% if @presenter.departments.empty? %>
@@ -73,7 +73,7 @@
             </div>
          </div>
          <% if Flipflop.data_security? %>
-         <div class="detail-pair">
+         <div class="security-level-detail-pair">
             <li class="detail-subheading">Data Security</li>
             <div class="detail-value">
               <p><%= @presenter.data_security_level %></p>
