@@ -1,7 +1,10 @@
 :root {
   --status-warning: #fff6df;
+  --gray-10: #eee;
   --gray-100: #121212;
   --black: #000000;
   --neutral-medium-gray: #d0d0d0;
   --neutral-dark-gray: #e5e7eb;
+  --neutral-darkest-gray: #717171;
+  --princeton-orange-20: #fae3cc;
 }

@@ -1,0 +1,30 @@
+@import 'variables.css';
+
+div[id^='select-option'][role='option'] {
+  --vs-option-hover-background-color: var(--neutral-medium-gray);
+  --vs-option-focused-background-color: var(--neutral-medium-gray);
+  --vs-option-selected-background-color: var(--princeton-orange-20);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--gray-100);
+}
+
+div[id*='listbox'][role='listbox'] {
+  display: flex;
+  padding: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+div[id^='select-option'][role='option'][aria-disabled='true'] {
+  background-color: var(--gray-10);
+  color: var(--neutral-darkest-gray);
+}
+
+.request-select {
+  --vs-border-radius: 0.5rem;
+  --vs-outline-color: var(--neutral-medium-gray);
+  --vs-text-color: var(--gray-100);
+  --vs-placeholder-color: var(--neutral-darkest-gray);
+}
