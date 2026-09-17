@@ -19,9 +19,9 @@ RSpec.describe DataSecurityLevelPresenter do
       expect(described_class.new(3).to_s).to eq("Level 3 - Restricted")
     end
 
-    it "returns —— for an unknown level" do
-      expect(described_class.new(4).to_s).to eq("——")
-      expect(described_class.new(nil).to_s).to eq("——")
+    it "returns Emdash for an unknown level" do
+      expect(described_class.new(4).to_s).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
+      expect(described_class.new(nil).to_s).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
     end
   end
 

@@ -46,7 +46,7 @@ RSpec.describe ProjectShowPresenter do
     context "when data security level is not present" do
       let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
       it "returns a styled data security level" do
-        expect(presenter.data_security_level).to eq("——")
+        expect(presenter.data_security_level).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
       end
     end
 
