@@ -31,7 +31,7 @@
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Project Directory</li>
-            <p class="detail-value"><%= @presenter.project_directory %>
+            <p class="detail-value"><%= @presenter.project_directory %></p>
           <button id="copy-project-path-button-basic" class="btn copy-paste-button-sizer copy-project-path-icon copy-paste-frames" data-url="<%= @presenter.project_directory %>" title="Copy project path to the clipboard">
           <div class="pul-copy-paste-tooltip" data-url="<%= @presenter.project_directory %>">
             <span id="copy-project-path-label-basic" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
@@ -76,9 +76,9 @@
          <div class="detail-pair">
             <li class="detail-subheading">Data Security</li>
             <div class="detail-value">
-                <%= @presenter.data_security_level %>
+              <p><%= @presenter.data_security_level %></p>
             </div>
-          </div>
+         </div>
          <% end %>
          <hr>
       </ul>
@@ -298,7 +298,7 @@
          topSection = "storage-and-access-link";
       } else if (provenanceDisplayed) {
          topSection = "provenance-link";
-      } 
+      }
       return topSection;
    }
 
