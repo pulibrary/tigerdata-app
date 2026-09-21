@@ -33,7 +33,7 @@ class DataSecurityLevelPresenter
   #
   # @return [String] the user-facing label, or "——" when the level is unknown
   def to_s
-    LEVELS.fetch(@level, "——")
+    LEVELS.fetch(@level, "<strong class=\"px-0\">&mdash;</strong>".html_safe)
   end
 
   # Alias for the display label.
