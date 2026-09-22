@@ -2,7 +2,7 @@
   <Select
     v-model="selected"
     :options="props.options"
-    placeholder="Select Data Security Level"
+    placeholder="Select data security level"
     class="request-select data-security-level-select"
   />
   <!--
