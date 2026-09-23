@@ -41,6 +41,10 @@ class NewProjectRequestPresenter
     ProjectPurpose.label_for(request.project_purpose)
   end
 
+  def data_security_level
+    DataSecurityLevelPresenter.new(request.data_security_level).to_s
+  end
+
   def departments_list
     return "" if request.departments.blank?
     dept_list = []
