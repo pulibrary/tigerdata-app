@@ -1,9 +1,12 @@
 <template>
-  <Select
-    v-model="selected"
-    :options="props.options"
-    placeholder="Select data security level"
-    class="request-select data-security-level-select"
+  <LuxInputSelect
+    hideLabel="true"
+    label="data security level"
+    :value="selected"
+    :options="displayedOptions"
+    @change="selected = $event"
+    class="data-security-level-select tigerdata-lux-select"
+    name="data-security-level"
   />
   <!--
   @slot hidden-input -- You can use this to pass the user's selected value back to the backend (e.g. Rails) on form submit
@@ -13,8 +16,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Select } from 'vue3-select-component';
-import 'vue3-select-component/styles';
+import { LuxInputSelect } from 'lux-design-system';
 
 const props = defineProps({
   /**
@@ -23,15 +25,35 @@ const props = defineProps({
   defaultValue: {
     type: String,
     required: false,
-    default: null,
+    default: '',
   },
   options: {
-    type: Array,
+    type: Array<{ value: string; label: string; disabled?: boolean }>,
     required: true,
   },
 });
 const selected = ref(props.defaultValue);
+const displayedOptions = ref(calculateDisplayedOptions(props.options, props.defaultValue));
+
+function calculateDisplayedOptions(
+  options: Array<{ value: string; label: string; disabled?: boolean }>,
+  defaultValue: string,
+) {
+  if (defaultValue == '') {
+    options.unshift({ value: '', label: 'Select Data Security Level', disabled: true });
+  }
+  return options;
+}
 </script>
 <style>
-@import 'select.css';
+.data-security-level .data-security-level-select {
+  .lux-select[value=''] {
+    color: var(--neutral-darkest-gray);
+    font-weight: lighter;
+  }
+  .lux-select {
+    width: 100%;
+    border-radius: 0.5rem;
+  }
+}
 </style>
