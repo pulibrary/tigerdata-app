@@ -393,6 +393,7 @@ jobs:
           name: Run Rspec (shared Mediaflux CI server)
           command: |
             MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD \
+            LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
               bundle exec rspec \
               --format progress \
               --format RspecJunitFormatter \
