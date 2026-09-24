@@ -250,7 +250,8 @@ jobs:
             echo "Node $CIRCLE_NODE_INDEX files:"
             echo "$TESTFILES"
             # shellcheck disable=SC2086
-            bundle exec rspec $TESTFILES \
+            LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
+              bundle exec rspec $TESTFILES \
               --format progress \
               --format RspecJunitFormatter \
               --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
