@@ -1,0 +1,13 @@
+production: &default
+  username: <%= ENV.fetch("LDAP_USERNAME",'princeton\someone') %>
+  password: <%= ENV.fetch("LDAP_PASSWORD",'change_me') %>
+qa:
+  <<: *default
+staging:
+  <<: *default
+ci:
+  <<: *default
+development:
+  <<: *default
+test:
+  <<: *default

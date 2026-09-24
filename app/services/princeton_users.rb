@@ -46,14 +46,20 @@ class PrincetonUsers
 
     # Creates users from LDAP data, starting with the given uid prefix.
     def create_users_from_ldap(current_uid_start: "", ldap_connection: default_ldap_connection)
-      CHARS_AND_NUMS.each do |char|
-        filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
-        people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
-        if ldap_connection.get_operation_result.message == "Success"
-          people.each{|person| user_from_ldap(person)}
-        else
-          create_users_from_ldap(current_uid_start: "#{current_uid_start}#{char}", ldap_connection:)
+      if ldap_connection.bind # check our connection to ldap with a bind
+        CHARS_AND_NUMS.each do |char|
+          filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
+          people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
+          if ldap_connection.get_operation_result.message == "Success"
+            people.each{|person| user_from_ldap(person)}
+          else
+            create_users_from_ldap(current_uid_start: "#{current_uid_start}#{char}", ldap_connection:)
+          end
         end
+      else
+        msg = "Can not load user from ldap.  We can not connect!"
+        Honeybadger.notify(msg)
+        Rails.logger.warn(msg)
       end
     end
 
@@ -100,11 +106,12 @@ class PrincetonUsers
     end
 
     def default_ldap_connection
-      @default_ldap_connection ||= Net::LDAP.new host: "ldap.princeton.edu", base: "o=Princeton University,c=US", port: 636,
+      @default_ldap_connection = Net::LDAP.new host: "pu.win.princeton.edu", base: "DC=pu,DC=win,DC=princeton,DC=edu", port: 636,
                                                   encryption: {
                                                     method: :simple_tls,
                                                     tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
-                                                  }
+                                                  },
+                                                  auth: {method: :simple, username: Rails.configuration.ldap.username, password: Rails.configuration.ldap.password }
     end
   end
 end

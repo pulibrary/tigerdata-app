@@ -19,7 +19,7 @@ RSpec.describe PrincetonUsers, type: :model do
     # The test above talks directly to LDAP so if things change we should see a failure when we run it locally.
     context "I stub out the connection" do
       let(:entry) { instance_double(Net::LDAP::Entry) }
-      let(:connection) { instance_double(Net::LDAP, get_operation_result: status) }
+      let(:connection) { instance_double(Net::LDAP, get_operation_result: status, bind: true) }
       let(:status) { OpenStruct.new(message: "Success") }
 
       it "returns creates the user" do
