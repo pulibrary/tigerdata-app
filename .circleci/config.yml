@@ -255,6 +255,21 @@ jobs:
               --format progress \
               --format RspecJunitFormatter \
               --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
+      - run:
+          name: Run Rspec (system / browser, local Mediaflux)
+          command: |
+            set -e
+            # System examples live mainly under spec/system; also include views marked type: system
+            SYSTEM_TESTFILES=$(circleci tests glob "spec/system/**/*_spec.rb" "spec/views/**/*_spec.rb" \
+              | circleci tests split --split-by=timings)
+            echo "Node $CIRCLE_NODE_INDEX files:"
+            echo "$SYSTEM_TESTFILES"
+            # shellcheck disable=SC2086
+            LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
+            bundle exec rspec $SYSTEM_TESTFILES \
+              --format progress \
+              --format RspecJunitFormatter \
+              --out "/tmp/rspec/browser-${CIRCLE_NODE_INDEX}.xml"
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
@@ -268,70 +283,6 @@ jobs:
       # Parallel Coveralls: do not set flag_name (job1/job2). Distinct flag names
       # show up as separate Coveralls "jobs"; omit them so all parallel posts merge
       # into one build, finished by the `done` job's parallel_finished step.
-      - coveralls/upload:
-          coverage_reporter_version: "v0.6.17"
-          parallel: true
-          fail_on_error: false
-
-  test_browser:
-    working_directory: ~/tiger_data
-    machine: true
-    resource_class: pulibrary/tigerdata-deploy
-    # parallelism: 2
-    environment:
-      ARCH: linux
-      POSTGRES_USER: tiger_data_user
-      POSTGRES_DB: test_db
-      POSTGRES_HOST_AUTH_METHOD: trust
-      RAILS_ENV: test
-      SPEC_OPTS: "--tag type:system --format progress"
-    steps:
-      - checkout
-      - run:
-          name: Monitor Memory
-          background: true
-          command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
-      - cleanup_docker
-      - run_mediaflux
-      - install_ruby_machine:
-          version: "4.0.4"
-      - install_yarn_dependencies
-      - install_dependencies:
-          cache_prefix: machine
-      - install_crypto_policies
-      - run_postgres
-      - wait_for_postgres
-      # Wait for Mediaflux
-      - run: sleep 5
-      - enable_sha1_for_mediaflux
-      - run: bundle exec rake db:migrate RAILS_ENV=test
-      - run:
-          name: Prepare JUnit output directory
-          command: mkdir -p /tmp/rspec
-      - run:
-          name: Run Rspec (system / browser, local Mediaflux)
-          command: |
-            set -e
-            # System examples live mainly under spec/system; also include views marked type: system
-            TESTFILES=$(circleci tests glob "spec/system/**/*_spec.rb" "spec/views/**/*_spec.rb" \
-              | circleci tests split --split-by=timings)
-            echo "Node $CIRCLE_NODE_INDEX files:"
-            echo "$TESTFILES"
-            # shellcheck disable=SC2086
-            bundle exec rspec $TESTFILES \
-              --format progress \
-              --format RspecJunitFormatter \
-              --out "/tmp/rspec/browser-${CIRCLE_NODE_INDEX}.xml"
-      - disable_sha1
-      - store_test_results:
-          path: /tmp/rspec
-      - store_artifacts:
-          name: JUnit (browser-*.xml)
-          path: /tmp/rspec
-      - store_artifacts:
-          path: /home/circleci/tiger_data/tmp/capybara
-      - store_artifacts:
-          path: /tmp/memory_usage.txt
       - coveralls/upload:
           coverage_reporter_version: "v0.6.17"
           parallel: true
@@ -442,7 +393,6 @@ workflows:
 
   # NOTE: Triage failures or "flaky" test warnings by job group using the XML RSpec reports:
   #   test:                     unit-$i.xml
-  #   test_browser:             browser-$i.xml
   #   integration_mflux_shared: mflux_ci.xml
   build_accept:
     when:
@@ -454,15 +404,11 @@ workflows:
       # Run browser tests after unit tests so two Mediaflux+Chrome jobs do not
       # land on the same self-hosted runner and OOM the machine agent
       # (infrastructure_fail: "could not complete task: signal: killed").
-      - test_browser:
-          requires:
-            - test
       - yarn_lint_format
       - yarn_test
       - done:
           requires:
             - test
-            - test_browser
       - deploy:
           name: integration_deploy_ci_env
           requires: # Call the auto-deploy job after the test job
