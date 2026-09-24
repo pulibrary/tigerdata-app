@@ -1252,3 +1252,10 @@
 .pul-tooltip:hover .pul-tooltiptext {
   visibility: visible;
 }
+
+// putting background image here for the moment to avoid having to figure out how to load a rails asset in Vue
+.form-field .tigerdata-lux-select .lux-select {
+  background: url("expanded-icon.svg") no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+}

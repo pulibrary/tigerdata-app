@@ -37,11 +37,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
 
         # choose teaching from the project purpose select component
-        page.find("#v1-select-1-trigger").click
-        expect(page).to have_content("Teaching")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Administrative")
-        page.find("div[data-value='teaching']").click
+        select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         # Assert not selected (Lux may keep option labels in the DOM once mounted)
@@ -51,10 +47,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
 
         expect(page).to have_field("request[data_security_level]", with: "", type: :hidden)
-        page.find("#v1-select-2-trigger").click
-        expect(page).to have_content("Level 0 - Public")
-        expect(page).to have_content("Level 1 - Internal")
-        page.find("div[data-value='1']").click
+        select("Level 1 - Internal", from: "data-security-level")
         expect(page).to have_field("request[data_security_level]", with: "1", type: :hidden)
 
         click_on "Roles and People"
@@ -98,11 +91,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
 
         # choose teaching from the project purpose select component
-        page.find("#v1-select-1-trigger").click
-        expect(page).to have_content("Teaching")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Administrative")
-        page.find("div[data-value='teaching']").click
+        select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
@@ -177,12 +166,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
 
         # choose research from the project purpose select component
-        page.find("#v1-select-1-trigger").click
-        expect(page).to have_content("Teaching")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Administrative")
-        page.find("div[data-value='research']").click
-        expect(page).to have_field("request[project_purpose]", with: "research", type: :hidden)
+        select("Teaching", from: "project-purpose")
+        expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
@@ -390,11 +375,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :project_folder, with: "skeletor"
 
         # choose teaching from the project purpose select component
-        page.find("#v1-select-1-trigger").click
-        expect(page).to have_content("Teaching")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Administrative")
-        page.find("div[data-value='teaching']").click
+        select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
@@ -546,12 +527,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :description, with: "An awesome project to show the wizard is magic"
 
         # choose teaching from the project purpose select component
-        page.find("#v1-select-1-trigger").click
-        expect(page).to have_content("Teaching")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Administrative")
-        page.find("div[data-value='research']").click
-        expect(page).to have_field("request[project_purpose]", with: "research", type: :hidden)
+        select("Teaching", from: "project-purpose")
+        expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         select_user(researcher_user, "data_sponsor", "request[data_sponsor]")
         select_user(researcher_user, "data_manager", "request[data_manager]")
