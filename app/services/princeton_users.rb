@@ -100,11 +100,12 @@ class PrincetonUsers
     end
 
     def default_ldap_connection
-      @default_ldap_connection ||= Net::LDAP.new host: "ldap.princeton.edu", base: "o=Princeton University,c=US", port: 636,
+      @default_ldap_connection = Net::LDAP.new host: "pu.win.princeton.edu", base: "DC=pu,DC=win,DC=princeton,DC=edu", port: 636,
                                                   encryption: {
                                                     method: :simple_tls,
                                                     tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
-                                                  }
+                                                  },
+                                                  auth: {method: :simple, username: Rails.configuration.ldap.username, password: Rails.configuration.ldap.password }
     end
   end
 end
