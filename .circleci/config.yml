@@ -239,6 +239,7 @@ jobs:
           command: mkdir -p /tmp/rspec
       - run:
           name: Run Rspec (unit / non-system, local Mediaflux)
+          background: true
           no_output_timeout: 20m
           command: |
             set -e
