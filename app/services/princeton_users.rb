@@ -93,6 +93,10 @@ class PrincetonUsers
         end
         user
       end
+    rescue ActiveRecord::RecordNotUnique => error
+      msg = "Trying to create a duplicate user for uid: #{uid}, email: #{ldap_person[:edupersonprincipalname].first}"
+      Honeybadger.notify(msg)
+      Rails.logger.warn(msg)
     end
 
     # If any required LDAP fields are missing, return true
