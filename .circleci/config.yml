@@ -213,7 +213,6 @@ jobs:
       POSTGRES_HOST_AUTH_METHOD: trust
       RAILS_ENV: test
       # NOTE: Avoid using "--out" here (that requires that the $CIRCLE_NODE_INDEX environment variable is set)
-      SPEC_OPTS: "--tag ~type:system --format progress"
     steps:
       - checkout
       - run:
@@ -252,6 +251,7 @@ jobs:
             # shellcheck disable=SC2086
             LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
               bundle exec rspec $TESTFILES \
+              --tag ~type:system \
               --format progress \
               --format RspecJunitFormatter \
               --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
@@ -267,9 +267,10 @@ jobs:
             # shellcheck disable=SC2086
             LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
             bundle exec rspec $SYSTEM_TESTFILES \
+              --tag type:system \
               --format progress \
               --format RspecJunitFormatter \
-              --out "/tmp/rspec/browser-${CIRCLE_NODE_INDEX}.xml"
+              --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
