@@ -269,7 +269,7 @@ jobs:
             bundle exec rspec $SYSTEM_TESTFILES \
               --format progress \
               --format RspecJunitFormatter \
-              --out "/tmp/rspec/browser-${CIRCLE_NODE_INDEX}.xml"
+              --out "/tmp/rspec/unit-${CIRCLE_NODE_INDEX}.xml"
       - disable_sha1
       - store_test_results:
           path: /tmp/rspec
