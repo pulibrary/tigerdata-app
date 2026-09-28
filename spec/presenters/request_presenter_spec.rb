@@ -116,6 +116,18 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
     end
   end
 
+  describe "#data_security_level" do
+    it "returns the label for a selected level" do
+      request.data_security_level = 1
+      expect(presenter.data_security_level).to eq("Level 1 - Internal")
+    end
+
+    it "returns an em dash when the level has not been selected" do
+      request.data_security_level = nil
+      expect(presenter.data_security_level).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
+    end
+  end
+
   describe "#departments_list" do
     let(:researcher_user) { FactoryBot.create :user }
     let(:request) do

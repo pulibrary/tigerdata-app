@@ -203,6 +203,21 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_content("88888")
         expect(page).to have_content("RDSS-Research Data and Scholarship Services")
       end
+      it "shows the selected data security level under Department(s) when the feature is enabled" do
+        sign_in sysadmin_user
+        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
+        visit new_project_request_path(full_request.id)
+        expect(page).to have_content("Data Security\nLevel 0 - Public")
+        expect(page).not_to have_content("Data Security code goes here")
+      end
+      it "shows an em dash when the data security level has not been selected" do
+        sign_in sysadmin_user
+        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
+        full_request.update!(data_security_level: nil)
+        visit new_project_request_path(full_request.id)
+        expect(page).to have_css("li.detail-subheading", text: "Data Security")
+        expect(page).to have_css("strong", text: "—")
+      end
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
