@@ -250,6 +250,7 @@ jobs:
             echo "$TESTFILES"
             # shellcheck disable=SC2086
             LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
+            OTEL_SDK_DISABLED=true \
               bundle exec rspec $TESTFILES \
               --tag ~type:system \
               --format progress \
@@ -266,6 +267,7 @@ jobs:
             echo "$SYSTEM_TESTFILES"
             # shellcheck disable=SC2086
             LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
+            OTEL_SDK_DISABLED=true \
             bundle exec rspec $SYSTEM_TESTFILES \
               --tag type:system \
               --format progress \
@@ -347,6 +349,7 @@ jobs:
           command: |
             MFLUX_CI=true MFLUX_CI_PASSWORD=$DAILY_CI_MFLUX_PASSWORD \
             LDAP_PASSWORD=$LDAP_PASSWORD LDAP_USERNAME=$LDAP_USERNAME \
+            OTEL_SDK_DISABLED=true \
               bundle exec rspec \
               --format progress \
               --format RspecJunitFormatter \
