@@ -15,7 +15,11 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(_resource)
-    mediaflux_passthru_path
+    if session[:cas_validation_url].present? && session[:cas_login_url].present?
+      mediaflux_passthru_path
+    else
+      user_cas_omniauth_authorize_path
+    end
     # "/users/#{@user.id}"
   end
 
