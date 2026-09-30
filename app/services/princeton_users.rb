@@ -8,6 +8,8 @@ class PrincetonUsers
   RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 rl3667 kl37 pp9425 jh6441 ].freeze
   TESTING_USERS = %w[tigerdatatester libtigerdatadev mjc12].freeze
 
+  KNOWN_DUPLICATES = %w[oldadministrator].freeze
+
   class << self
 
     # Returns a list of Users that match the given query
@@ -66,8 +68,8 @@ class PrincetonUsers
     def create_user_from_ldap_by_uid(uid, ldap_connection: default_ldap_connection)
       filter = Net::LDAP::Filter.eq('uid', uid)
       person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
+      raise TigerData::LdapError, "No user with uid #{uid} found" if person.blank? || person.empty?
       raise TigerData::LdapError, "More than one user matches supplied uid: #{uid}" if person.length > 1
-      raise TigerData::LdapError, "No user with uid #{uid} found" if person.empty?
       user_from_ldap(person.first)
     end
 
@@ -94,8 +96,12 @@ class PrincetonUsers
         user
       end
     rescue ActiveRecord::RecordNotUnique => error
+      
       msg = "Trying to create a duplicate user for uid: #{uid}, email: #{ldap_person[:edupersonprincipalname].first}"
-      Honeybadger.notify(msg)
+
+      # there are some duplicates in the system that we know about and should not continue to notify each day
+      Honeybadger.notify(msg) unless KNOWN_DUPLICATES.include?(uid)
+
       Rails.logger.warn(msg)
     end
 
