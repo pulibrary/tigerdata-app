@@ -167,6 +167,26 @@ RSpec.describe PrincetonUsers, type: :model do
         expect(Honeybadger).to have_received(:notify).with("Trying to create a duplicate user for uid: jsmith, email: email@princeton.edu")
       end
     end
+
+    context "the email exists with a different uid, but it is part of our known duplicate list" do
+      let(:ldap_person) do
+        {
+          uid: ["oldadministrator"],
+          sn: ["Smith"],
+          givenname: ["John"],
+          pudisplayname: ["Smith, John"],
+          edupersonprincipalname: ["email@princeton.edu"]
+        }
+      end
+      it "Notifies Honeybager and continues" do
+        FactoryBot.create(:user, email: "email@princeton.edu")
+        allow(Honeybadger).to receive(:notify)
+        allow(Rails.logger).to receive(:warn)
+        described_class.user_from_ldap(ldap_person)
+        expect(Honeybadger).not_to have_received(:notify).with("Trying to create a duplicate user for uid: oldadministrator, email: email@princeton.edu")
+        expect(Rails.logger).to have_received(:warn).with("Trying to create a duplicate user for uid: oldadministrator, email: email@princeton.edu")
+      end
+    end
   end
 
   describe "#check_for_malformed_ldap_entries" do
