@@ -15,6 +15,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       data_sponsor: sponsor_and_data_manager_user.uid,
       data_manager: sponsor_and_data_manager_user.uid,
       departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
+      data_security_level: 1,
       quota: "500 GB",
       description: "A valid request",
       project_folder: "valid_folder",
@@ -89,6 +90,7 @@ context "When a request is created" do
     expect(html_body).to have_content("(ddd) read only")
     expect(html_body).to have_content("(efg)\n")
     expect(html_body).to have_content("500.0 GB")
+    expect(html_body).to have_content("Level 1 - Internal")
     expect(html_body).to have_content("Estimated Number of Files: Less than 10,000")
     expect(html_body).to have_content("Needs HPC?: yes")
     expect(html_body).to have_content("Needs SMB?: no")
