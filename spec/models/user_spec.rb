@@ -196,6 +196,7 @@ RSpec.describe User, type: :model do
     before do
       allow(SystemUser).to receive(:mediaflux_session).and_return("192system")
     end
+
     it "loads the mediaflux session from the system user" do
       expect(user.mediaflux_from_session({})).to eq("192system")
       expect(user.mediaflux_session).to eq("192system")

@@ -22,6 +22,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
         before do
           sign_in sysadmin_user
         end
+
         it "shows the form" do
           get :show, params: { request_id: valid_request.id }
           expect(response).not_to have_http_status(:redirect)
@@ -351,6 +352,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
           before do
             sign_in sysadmin_user
           end
+
           it "updates the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload

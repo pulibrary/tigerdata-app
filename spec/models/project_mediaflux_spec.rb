@@ -83,6 +83,7 @@ RSpec.describe ProjectMediaflux, type: :model do
     before do
       described_class.create!(project: project, user: sponsor_and_data_manager_user)
     end
+
     # Project updates in MediaFlux are not supported yet
     xit "defaults updated_on/by when not provided",
     :integration do

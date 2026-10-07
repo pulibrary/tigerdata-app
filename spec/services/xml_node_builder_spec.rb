@@ -4,6 +4,7 @@ require "rails_helper"
 describe XmlNodeBuilder do
   describe "#build" do
     subject(:xml_builder) { described_class.new(document: document) }
+
     let(:document) { Nokogiri::XML::Document.new }
     let(:built) { xml_builder.build }
 

@@ -27,6 +27,7 @@ RSpec.describe VersionFooter do
         described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_current.log").to_s
         described_class.reset!
       end
+
       it "detects current information" do
         info = described_class.info
         expect(info[:stale]).to be false
@@ -148,6 +149,7 @@ RSpec.describe VersionFooter do
       described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_rollback.log").to_s
       described_class.reset!
     end
+
     it "detects current information" do
       info = described_class.info
       expect(info[:stale]).to be false
@@ -165,6 +167,7 @@ RSpec.describe VersionFooter do
       described_class.reset!
       allow(described_class).to receive(:log_line).and_raise("Error!!!")
     end
+
     it "detects current information" do
       info = described_class.info
       expect(info[:error]).to eq("Error retrieving version information: Error!!!")

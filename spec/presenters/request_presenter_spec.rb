@@ -3,6 +3,7 @@ require "rails_helper"
 
 describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(request) }
+
   let(:researcher_user) { FactoryBot.create(:user, uid: "tigerdatatester") }
   let(:request) { FactoryBot.create(:request, requested_by: "tigerdatatester") }
 

@@ -99,6 +99,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       before do
         sign_in researcher_user
       end
+
       it "redirects to root" do
         get :index
         expect(response).to redirect_to "http://test.host/dashboard"
@@ -257,6 +258,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(true)
             end
+
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
@@ -274,6 +276,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(false)
             end
+
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 

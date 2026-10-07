@@ -15,6 +15,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       @asset_id = asset_response.split("<")[0].to_i
       asset_req.resolve
     end
+
     it "parses a metadata response",
     :integration do
       metadata_request = described_class.new(session_token: user.mediaflux_session, id: @asset_id)

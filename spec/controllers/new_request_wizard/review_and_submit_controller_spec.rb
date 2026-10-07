@@ -242,6 +242,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
         before do
           sign_in sysadmin_user
         end
+
         it "updates the request" do
           put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
           valid_request.reload
@@ -357,6 +358,7 @@ RSpec.describe NewProjectWizard::ReviewAndSubmitController, type: :controller do
           before do
             sign_in sysadmin_user
           end
+
           it "updates the request" do
             put :save, params: { request_id: valid_request.id, request: { project_title: "Updated title" }, commit: "" }
             valid_request.reload

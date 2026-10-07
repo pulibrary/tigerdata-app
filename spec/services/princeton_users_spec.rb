@@ -228,6 +228,7 @@ RSpec.describe PrincetonUsers, type: :model do
       before do
         allow(described_class).to receive(:create_user_from_ldap_by_uid).and_raise(TigerData::LdapError, "Could not connect to LDAP")
       end
+
       it "catches and reraises a TigerData::LDAP error to tell the user they are not on VPN" do
         expect { described_class.load_default_users }.to raise_error(TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?")
       end

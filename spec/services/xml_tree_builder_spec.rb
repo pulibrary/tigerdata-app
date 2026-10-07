@@ -4,6 +4,7 @@ require "rails_helper"
 describe XmlTreeBuilder do
   describe "#build" do
     subject(:xml_builder) { described_class.new(children: children, presenter: presenter, name: name) }
+
     let(:children) { [] }
     let(:presenter) { double("Presenter") }
     let(:name) { "child1" }

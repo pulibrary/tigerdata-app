@@ -3,6 +3,7 @@ require "rails_helper"
 
 describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(inventory_request_request) }
+
   let(:researcher_user) { FactoryBot.create(:user, uid: "tigerdatatester") }
 
   let(:inventory_request_request) do

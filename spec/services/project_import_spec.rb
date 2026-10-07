@@ -23,6 +23,7 @@ RSpec.describe ProjectImport do
         FactoryBot.create(:user, uid: "uid4")
         FactoryBot.create(:user, uid: "uid5")
       end
+
       it "creates test data" do
         expect do
           output = subject.run

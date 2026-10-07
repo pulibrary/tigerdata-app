@@ -14,76 +14,91 @@ RSpec.describe NewProjectRequest, type: :model do
 
   describe "#request_type" do
     subject(:request_type) { request.request_type }
+
     it { should eq("new_project_request") }
   end
 
   describe "#request_title" do
     subject(:request_title) { request.request_title }
+
     it { should eq("Request for Example Project") }
   end
 
   describe "#project_title" do
     subject(:project_title) { request.project_title }
+
     it { should eq("Example Project") }
   end
 
   describe "#data_sponsor" do
     subject(:data_manager) { request.data_sponsor }
+
     it { should eq("sponsor") }
   end
 
   describe "#data_manager" do
     subject(:data_manager) { request.data_manager }
+
     it { should eq("manager") }
   end
 
   describe "#departments" do
     subject(:departments) { request.departments }
+
     it { should eq([{ "code" => "dept", "name" => "department" }]) }
   end
 
   describe "#description" do
     subject(:description) { request.description }
+
     it { should eq("description") }
   end
 
   describe "#parent_folder" do
     subject(:parent_folder) { request.parent_folder }
+
     it { should eq("folder") }
   end
 
   describe "#project_folder" do
     subject(:project_folder) { request.project_folder }
+
     it { should eq("project") }
   end
 
   describe "#project_id" do
     subject(:project_id) { request.project_id }
+
     it { should eq("doi") }
   end
 
   describe "#quota" do
     subject(:quota) { request.quota }
+
     it { should eq("500 GB") }
   end
 
   describe "#requested_by" do
     subject(:requested_by) { request.requested_by }
+
     it { should eq(valid_user.uid) }
   end
 
   describe "#user_roles" do
     subject(:user_roles) { request.user_roles }
+
     it { should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, { "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
   end
 
   describe "#project_path" do
     subject(:project_path) { request.project_path }
+
     it { should eq("folder/project") }
   end
 
   describe "#requestor" do
     subject(:requestor) { request.requestor }
+
     it { should eq(valid_user.display_name_safe) }
   end
 

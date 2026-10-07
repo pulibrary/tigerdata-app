@@ -215,6 +215,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       before do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
       end
+
       it "Shows the approved values" do
         sign_in sponsor_user
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
@@ -264,6 +265,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       before do
         allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return("")
       end
+
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
@@ -275,6 +277,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       before do
         allow_any_instance_of(ProjectShowPresenter).to receive(:project_purpose).and_return(nil)
       end
+
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
@@ -403,6 +406,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         before do
           FileInventoryJob.new(user_id: sponsor_user.id, project_id: project.id, mediaflux_session: sponsor_user.mediaflux_session).perform_now
         end
+
         it "includes a link to the latest download in the download modal" do
           sign_in sponsor_user
           visit "/projects/#{project.id}"

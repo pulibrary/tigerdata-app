@@ -21,6 +21,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       before do
         sponsor_user
       end
+
       it "allows the sysadmin to fill out the project" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         expect(Project.count).to eq 0
@@ -77,6 +78,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       before do
         sponsor_user
       end
+
       it "allows the developer to fill out the project" do
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         expect(Project.count).to eq 0

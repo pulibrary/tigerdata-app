@@ -93,6 +93,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
     before do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
     end
+
     it "delegates to project metadata_model" do
       expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
     end
