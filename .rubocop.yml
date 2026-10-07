@@ -21,3 +21,7 @@ plugins:
   - rubocop-rspec_rails
   - rubocop-capybara
   - rubocop-factory_bot
+
+Style/ClassVars:
+  Exclude:
+    - "app/models/version_footer.rb"

@@ -174,4 +174,3 @@ RSpec.describe VersionFooter do
     end
   end
 end
-# rubocop enable RSpec/ExampleLength
