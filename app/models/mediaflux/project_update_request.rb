@@ -34,8 +34,6 @@ module Mediaflux
       #     >
       #
       # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/BlockLength
       def build_http_request_body(name:)
         super do |xml|
           xml.args do
@@ -95,11 +93,9 @@ module Mediaflux
           end
         end
       end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/BlockLength
 
-      # Returns the names of the departments as a comma separated string
+        # rubocop:enable Metrics/MethodLength
+          # Returns the names of the departments as a comma separated string
       def departments_string(departments)
         names = departments.map { |code| Affiliation.where(code:).first&.name || code }
         names.compact.join(", ")

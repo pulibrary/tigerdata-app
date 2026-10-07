@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rails_helper"
 
-describe "#file_list", integration: true, clean_projects: true do
+context "A Project Has a File List", integration: true, clean_projects: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
   let(:user) { FactoryBot.create(:user) }

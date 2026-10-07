@@ -98,12 +98,6 @@ GEM
     benchmark (0.5.0)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bixby (5.0.2)
-      rubocop (= 1.28.2)
-      rubocop-ast
-      rubocop-performance
-      rubocop-rails
-      rubocop-rspec
     bootsnap (1.25.0)
       msgpack (~> 1.5)
     bootstrap (5.2.3)
@@ -336,11 +330,13 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    language_server-protocol (3.17.0.6)
     libv8-node (24.12.0.1)
     libv8-node (24.12.0.1-aarch64-linux)
     libv8-node (24.12.0.1-arm64-darwin)
     libv8-node (24.12.0.1-x86_64-darwin)
     libv8-node (24.12.0.1-x86_64-linux)
+    lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.25.2)
       crass (~> 1.0.2)
@@ -563,27 +559,62 @@ GEM
     rspec-support (3.13.7)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.28.2)
-      parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+    rubocop (1.91.0)
+      json (>= 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.17.0, < 2.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
+      unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.50.0)
       parser (>= 3.3.7.2)
       prism (~> 1.7)
-    rubocop-performance (1.19.1)
-      rubocop (>= 1.7.0, < 2.0)
-      rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.15.2)
+    rubocop-capybara (3.0.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.81)
+    rubocop-factory_bot (2.28.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+    rubocop-md (2.0.4)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
+    rubocop-minitest (0.41.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.89.0, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
+    rubocop-packaging (0.6.0)
+      lint_roller (~> 1.1.0)
+      rubocop (>= 1.72.1, < 2.0)
+    rubocop-performance (1.27.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.89.0, < 2.0)
+      rubocop-ast (>= 1.47.1, < 2.0)
+    rubocop-rails (2.38.0)
       activesupport (>= 4.2.0)
+      lint_roller (~> 1.1)
       rack (>= 1.1)
-      rubocop (>= 1.7.0, < 2.0)
-    rubocop-rspec (2.11.1)
-      rubocop (~> 1.19)
+      rubocop (>= 1.89.0, < 2.0)
+      rubocop-ast (>= 1.44.0, < 2.0)
+    rubocop-rails_config (1.17.7)
+      rubocop (>= 1.74.0)
+      rubocop-ast (>= 1.38.0)
+      rubocop-md
+      rubocop-minitest (~> 0.37)
+      rubocop-packaging (~> 0.6)
+      rubocop-performance (~> 1.24)
+      rubocop-rails (~> 2.30)
+    rubocop-rspec (3.10.2)
+      lint_roller (~> 1.1)
+      regexp_parser (>= 2.0)
+      rubocop (~> 1.86, >= 1.86.2)
+    rubocop-rspec_rails (2.33.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.89)
+      rubocop-rspec (~> 3.5)
     ruby-prof (2.0.5)
       base64
       ostruct
@@ -711,7 +742,6 @@ DEPENDENCIES
   axe-core-rspec
   bcrypt_pbkdf
   benchmark
-  bixby
   bootsnap
   bootstrap (~> 5.2.0)
   bundle-audit
@@ -759,6 +789,14 @@ DEPENDENCIES
   rspec-rails
   rspec-retry
   rspec_junit_formatter
+  rubocop
+  rubocop-capybara
+  rubocop-factory_bot
+  rubocop-performance
+  rubocop-rails
+  rubocop-rails_config
+  rubocop-rspec
+  rubocop-rspec_rails
   ruby-prof
   sassc-rails
   selenium-webdriver
@@ -807,7 +845,6 @@ CHECKSUMS
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   bindex (0.8.1) sha256=7b1ecc9dc539ed8bccfc8cb4d2732046227b09d6f37582ff12e50a5047ceb17e
-  bixby (5.0.2) sha256=599ed9a9ce724fcaf002a9499b8d74b08a1baf1cc4b01a321c1f3b9b1cffc05a
   bootsnap (1.25.0) sha256=41059e7d0f9cb4023a33465d095f64b913fc9d1b808d6524c307da945fbcffcf
   bootstrap (5.2.3) sha256=2037774d356123181a4650a05cf2056bf3d035d3c4240ebfb381eaa9a30f17f0
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
@@ -897,11 +934,13 @@ CHECKSUMS
   kaminari-actionview (1.2.2) sha256=1330f6fc8b59a4a4ef6a549ff8a224797289ebf7a3a503e8c1652535287cc909
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
+  language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   libv8-node (24.12.0.1) sha256=d93d23b861bfe5de3ba829e34a142402fb83b4c3592dd58d9ac4e027588d739a
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
   libv8-node (24.12.0.1-arm64-darwin) sha256=124904a46b4a15c01ac024b4cf537dcf199cfb49a309cc59f66315e156e48339
   libv8-node (24.12.0.1-x86_64-darwin) sha256=5eee594393e7a27dc230a7fca5f9f72fc11ed58bce655624a683f4d027bf2d16
   libv8-node (24.12.0.1-x86_64-linux) sha256=e1236be4765edc109bd6ecef2989cf781bdcbac6f6e2cb3236ec9568540a9cfa
+  lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
   mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
@@ -994,11 +1033,18 @@ CHECKSUMS
   rspec-retry (0.6.2) sha256=6101ba23a38809811ae3484acde4ab481c54d846ac66d5037ccb40131a60d858
   rspec-support (3.13.7) sha256=0640e5570872aafefd79867901deeeeb40b0c9875a36b983d85f54fb7381c47c
   rspec_junit_formatter (0.6.0) sha256=40dde674e6ae4e6cc0ff560da25497677e34fefd2338cc467a8972f602b62b15
-  rubocop (1.28.2) sha256=0d9bf4108fd86ede43c6cf30adcb3dd2e0c6750941c5ec2a00621478157cb377
+  rubocop (1.91.0) sha256=9c82b7bf391c5d7e3798c5b9996e22a1fe3bd7468e351dfdeb96140c058296d0
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db
-  rubocop-performance (1.19.1) sha256=52664172d944eb45d478ed6d04c8b02c36cf0ee15726fabb6c90a95ca5cdfadf
-  rubocop-rails (2.15.2) sha256=1891ab46a6eaf36b841ad27c9c8a22e77a2c3ae85bc334111d3f8075e417643c
-  rubocop-rspec (2.11.1) sha256=0398cf77ef892e3aeda104f1d67855d00f90a42a9ba788a31896a1f0df4c6c47
+  rubocop-capybara (3.0.0) sha256=7a64655238acda7f8f3c87e37ac825a64c615a79c17c253f1a28270dc3768c4b
+  rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
+  rubocop-md (2.0.4) sha256=0d076b6b5e99dea2ddc928c4bd702497decb9a8400da7808091e02ebcafcfb93
+  rubocop-minitest (0.41.0) sha256=c15bfe00134a30c8a00ce670b07ecc80440455ba277b8682cf0d515c98ee7426
+  rubocop-packaging (0.6.0) sha256=fb92bd0fb48e6f8cdb1648d2249b0cd51c2497dcc87340132d22f01edbf558a7
+  rubocop-performance (1.27.0) sha256=eeeb1374d062a368ee1c787b70eb0b0cc4b184cb1f8565f424760946146d61ce
+  rubocop-rails (2.38.0) sha256=6e2b7c532efa95e3050371bec20b8f5b025662acead8bc70ee31f0e3e6fa2f06
+  rubocop-rails_config (1.17.7) sha256=d465c77bdf32462504be2793c81e3e5a80ba5ae390b0dc09e1da3c4e355d1376
+  rubocop-rspec (3.10.2) sha256=0b3e2ecc592cd10ecbf0095bb58d1e357905276e069643523cc19eb7495f65e2
+  rubocop-rspec_rails (2.33.0) sha256=669e0a7a9a5fca6d6ccaf853ac65b5b8bdfde3519f604616f2c5278cbf565689
   ruby-prof (2.0.5) sha256=dbc3b5112089538ac33303145db0cbd77cbdcdbc05b09e44a967ff72a36d6c0e
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   rubyzip (3.6.0) sha256=268994d44d62282d1cfd99bf10eae48d7267199158ad7ea3e1fee2da9458b695

@@ -49,8 +49,7 @@ class UsersController < ApplicationController
       redirect_to dashboard_path
     end
 
-    # rubocop:disable Metrics/AbcSize
-    def update_user_with_params
+        def update_user_with_params
       @user = User.find(params[:id])
       @user.given_name = params["user"]["given_name"]
       @user.family_name = params["user"]["family_name"]
@@ -61,6 +60,5 @@ class UsersController < ApplicationController
       @user.sysadmin = params["user"]["sysadmin"] == "1"
       @user.trainer = params["user"]["trainer"] == "1"
       @user.save!
-    end
-  # rubocop:enable Metrics/AbcSize
+        end
 end

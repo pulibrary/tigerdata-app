@@ -2,7 +2,6 @@
 
 require "rails_helper"
 
-# rubocop:disable RSpec/ExampleLength
 RSpec.describe VersionFooter do
   describe "info" do
     context "with stale information" do

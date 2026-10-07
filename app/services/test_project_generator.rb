@@ -25,8 +25,7 @@ class TestProjectGenerator
       NewProjectRequest.create(metadata(capacity, user))
     end
 
-    # rubocop:disable Metrics/MethodLength
-    def metadata(capacity, user)
+        def metadata(capacity, user)
       {
         data_sponsor: user.uid, # Must be a valid netid/uid
         data_manager: "tigerdatatester", # Must be a valid netid/uid
@@ -45,15 +44,14 @@ class TestProjectGenerator
         project_purpose: Rails.configuration.project_defaults[:project_purpose]
         # storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations]
       }
-    end
-    # rubocop:enable Metrics/MethodLength
+        end
 
-    def departments
+        def departments
       ldepartments = []
       ldepartments << Affiliation.all[3] if (number % 7) == 0
       ldepartments << Affiliation.all[2] if (number % 3) == 0
       ldepartments << Affiliation.all[1] if (number % 5) == 0
       ldepartments << Affiliation.all[0] if ldepartments.count == 0
       ldepartments
-    end
+        end
 end

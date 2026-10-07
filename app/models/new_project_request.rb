@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/ClassLength
 class NewProjectRequest < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
@@ -261,4 +260,3 @@ class NewProjectRequest < ApplicationRecord
       end
     end
 end
-# rubocop:enable Metrics/ClassLength

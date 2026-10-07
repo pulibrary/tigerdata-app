@@ -54,11 +54,10 @@ class DashboardController < ApplicationController
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
-    def time_dashboard
+        def time_dashboard
       start_time = Time.current
       yield
-    ensure
+        ensure
       end_time = Time.current
       elapsed_time = end_time - start_time
       project_count = nil
@@ -76,6 +75,5 @@ class DashboardController < ApplicationController
           }
         )
       end
-    end
-  # rubocop:enable Metrics/MethodLength
+        end
 end

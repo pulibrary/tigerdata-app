@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class ProjectXmlPresenter
   attr_reader :project, :project_metadata
 
@@ -261,4 +260,3 @@ class ProjectXmlPresenter
 
     delegate :build, to: :builder
 end
-# rubocop:enable Metrics/ClassLength
