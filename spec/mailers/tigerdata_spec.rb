@@ -6,7 +6,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let!(:data_user_1) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_user_2) { FactoryBot.create(:user, uid: "ddd", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_user_3) { FactoryBot.create(:user, uid: "efg", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.create :project, project_id: "abc123/def" , mediaflux_id: 123}
+  let(:project) { FactoryBot.create(:project, project_id: "abc123/def" , mediaflux_id: 123)}
   let(:project_id) { project.id }
 
   let(:valid_request) do

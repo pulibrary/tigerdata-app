@@ -6,7 +6,7 @@ RSpec.describe "/projects", connect_to_mediaflux: true, type: :request do
 
   describe "GET /projects" do
     let(:manager_user) { FactoryBot.create(:data_manager, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:request) { FactoryBot.create :request_project, data_manager: manager_user.uid }
+    let(:request) { FactoryBot.create(:request_project, data_manager: manager_user.uid) }
     let(:project) { request.approve(sponsor_and_data_manager_user) }
 
     context "when the user is authenticated" do

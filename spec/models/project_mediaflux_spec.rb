@@ -106,7 +106,7 @@ RSpec.describe ProjectMediaflux, type: :model do
   end
 
   describe "#xml_payload" do
-    let(:project_not_in_mediaflux) { FactoryBot.create :project_with_doi }
+    let(:project_not_in_mediaflux) { FactoryBot.create(:project_with_doi) }
 
     it "raises errors when project is not accessible", :integration do
       # The project is not in mediaflux and therefore this will raise an exception

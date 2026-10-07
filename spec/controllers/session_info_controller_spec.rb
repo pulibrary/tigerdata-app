@@ -2,7 +2,7 @@
 require "rails_helper"
 
 RSpec.describe SessionInfoController, connect_to_mediaflux: true do
-  let(:user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+  let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:keys) { ["uuid", "name", "server_version", "tigerdata_config_version", "tigerdata_plugin_version"] }
 
   before do

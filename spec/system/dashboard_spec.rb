@@ -20,14 +20,14 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { Mediaflux::EXPECTED_VERSION }
 
-    let(:request_111) { FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111" }
+    let(:request_111) { FactoryBot.create(:request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111") }
     let(:project_111) { request_111.approve(current_user) }
 
-    let(:request_222) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222" }
+    let(:request_222) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222") }
     let(:project_222) { request_222.approve(current_user) }
 
     let(:request_333) do
-      FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
+      FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }])
     end
     let(:project_333) { request_333.approve(current_user) }
 
@@ -142,7 +142,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       it "paginates the projects; 8 per page" do
         created_projects.push(project_111, project_222, project_333)
         projects = (1..17).map do
-          request_nnn = FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid
+          request_nnn = FactoryBot.create(:request_project, data_sponsor: current_user.uid, data_manager: other_user.uid)
           project = request_nnn.approve(current_user)
           project.save!
           created_projects << project
@@ -283,9 +283,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     context "with the sysadmin role" do
       let(:admin_user) { FactoryBot.create(:sysadmin, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }
 
-      let!(:request_draft) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft" }
-      let!(:request_submitted1) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted" }
-      let!(:request_submitted2) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted" }
+      let!(:request_draft) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft") }
+      let!(:request_submitted1) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted") }
+      let!(:request_submitted2) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted") }
 
       it "shows the system administrator dashboard" do
         sign_in admin_user

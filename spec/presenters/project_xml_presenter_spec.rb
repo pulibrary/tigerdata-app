@@ -6,8 +6,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
 
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "abc123") }
   let(:manager_user) { FactoryBot.create(:data_manager, uid: "bcd234") }
-  let(:read_only) { FactoryBot.create :user }
-  let(:read_write) { FactoryBot.create :user }
+  let(:read_only) { FactoryBot.create(:user) }
+  let(:read_write) { FactoryBot.create(:user) }
   let(:department) { "77777" }
   let(:submitter) { FactoryBot.create(:user, uid: "cde345") }
   let(:submission) do

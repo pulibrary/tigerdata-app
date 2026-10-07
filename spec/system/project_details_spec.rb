@@ -7,14 +7,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager_user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:read_only) { FactoryBot.create :user, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session }
-  let(:read_write) { FactoryBot.create :user }
+  let(:read_only) { FactoryBot.create(:user, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:read_write) { FactoryBot.create(:user) }
 
   context "Details page" do
     let(:project_in_mediaflux) do
-      request = FactoryBot.create :request_project, data_manager: manager_user.uid, data_sponsor: sponsor_user.uid,
+      request = FactoryBot.create(:request_project, data_manager: manager_user.uid, data_sponsor: sponsor_user.uid,
         storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
-        user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }]
+        user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }])
       request.approve(sponsor_and_data_manager_user)
     end
 
@@ -277,7 +277,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Storage and Access" do
-      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no") }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
@@ -291,7 +291,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
 
     context "Provenance Events" do
-      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid }
+      let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid) }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       let(:approval_event) { FactoryBot.create(:approval_event, project: project) }
@@ -324,7 +324,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Project Contents", connect_to_mediaflux: true, integration: true do
-      let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+      let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:size) { 100 }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
@@ -403,7 +403,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "Globus Access Request" do
-      let(:request) { FactoryBot.create :request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no" }
+      let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no") }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       it "sends a globus access request email when the user clicks the request button" do
         sign_in sponsor_user
@@ -419,7 +419,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     end
 
     context "system administrator" do
-      let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+      let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
 
       it "shows the sysadmin buttons for an approved project" do

@@ -17,11 +17,11 @@ RSpec.describe ProjectImport do
 
     context "when all users exist" do
       before do
-        FactoryBot.create :user, uid: "uid1"
-        FactoryBot.create :user, uid: "uid2"
-        FactoryBot.create :user, uid: "uid3"
-        FactoryBot.create :user, uid: "uid4"
-        FactoryBot.create :user, uid: "uid5"
+        FactoryBot.create(:user, uid: "uid1")
+        FactoryBot.create(:user, uid: "uid2")
+        FactoryBot.create(:user, uid: "uid3")
+        FactoryBot.create(:user, uid: "uid4")
+        FactoryBot.create(:user, uid: "uid5")
       end
       it "creates test data" do
         expect do
@@ -55,7 +55,7 @@ RSpec.describe ProjectImport do
 
   describe "##run_with_report" do
     let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
+    let(:user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do
       # Make sure we start with a clean slate

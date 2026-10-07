@@ -19,7 +19,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
     before do
-      request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid
+      request1 = FactoryBot.create(:request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid)
       request1.approve(sponsor_and_data_manager_user)
       request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
       request2.approve(sponsor_and_data_manager_user)

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Mediaflux::Time do
-    let(:project) { FactoryBot.build :project_with_doi }
+    let(:project) { FactoryBot.build(:project_with_doi) }
     let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:docker_response) { "Etc/UTC" }
     let(:ansible_response) { "America/Chicago" }
@@ -27,7 +27,7 @@ RSpec.describe Mediaflux::Time do
       end
     end
     describe "date formatting" do
-      let(:project) { FactoryBot.build :project_with_doi }
+      let(:project) { FactoryBot.build(:project_with_doi) }
 
       context "for MediaFlux" do
         # Mediaflux date format is like " 9-FEB-2024 14:53:23"

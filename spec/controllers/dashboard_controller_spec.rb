@@ -8,7 +8,7 @@ RSpec.describe DashboardController do
   end
 
   context "when a trainer is logged in", connect_to_mediaflux: true do
-    let(:trainer_user) { FactoryBot.create :trainer, mediaflux_session: SystemUser.mediaflux_session }
+    let(:trainer_user) { FactoryBot.create(:trainer, mediaflux_session: SystemUser.mediaflux_session) }
     before do
       sign_in trainer_user
     end
@@ -95,7 +95,7 @@ RSpec.describe DashboardController do
   end
 
   context "when a user is logged in", connect_to_mediaflux: true do
-    let(:researcher_user) { FactoryBot.create :user, mediaflux_session: SystemUser.mediaflux_session }
+    let(:researcher_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
     before do
       sign_in researcher_user
     end
@@ -124,7 +124,7 @@ RSpec.describe DashboardController do
     end
 
     context "and the user is a sysadmin" do
-      let(:sysadmin_user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
+      let(:sysadmin_user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
       render_views
 
       before do
@@ -156,7 +156,7 @@ RSpec.describe DashboardController do
     end
 
     context "and the user is a developer" do
-      let(:developer_user) { FactoryBot.create :developer, mediaflux_session: SystemUser.mediaflux_session }
+      let(:developer_user) { FactoryBot.create(:developer, mediaflux_session: SystemUser.mediaflux_session) }
       render_views
 
       before do

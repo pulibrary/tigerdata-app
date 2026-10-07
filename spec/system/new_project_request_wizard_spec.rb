@@ -117,9 +117,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       let!(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
       let(:user_a) { FactoryBot.create(:user, uid: "cac9") }
       let(:user_b) { FactoryBot.create(:user, uid: "jrg5") }
-      let(:request1) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester" }
+      let(:request1) { FactoryBot.create(:request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester") }
       let(:project1) { request1.approve(trainer_user) }
-      let(:request2) { FactoryBot.create :request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }] }
+      let(:request2) { FactoryBot.create(:request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }]) }
       let(:project2) { request2.approve(trainer_user) }
       it "does not allow a user to see someone elses project" do
         sign_in user_a

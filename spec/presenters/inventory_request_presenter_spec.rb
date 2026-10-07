@@ -3,7 +3,7 @@ require "rails_helper"
 
 describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(inventory_request_request) }
-  let(:researcher_user) { FactoryBot.create :user, uid: "tigerdatatester" }
+  let(:researcher_user) { FactoryBot.create(:user, uid: "tigerdatatester") }
 
   let(:inventory_request_request) do
     FileInventoryRequest.create(
@@ -20,9 +20,9 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   let(:project) do
-    FactoryBot.create :project_with_apostrophe_in_title,
+    FactoryBot.create(:project_with_apostrophe_in_title,
     data_manager: researcher_user.uid,
-    data_sponsor: researcher_user.uid
+    data_sponsor: researcher_user.uid)
   end
 
   describe "#title" do

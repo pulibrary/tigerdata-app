@@ -22,13 +22,13 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
       # TODO: We don't support yet updates to Mediaflux from the UI after the project has been created in Mediaflux
       # See https://github.com/pulibrary/tigerdata-app/issues/1608
       xit "sends the metadata to the server", connect_to_mediaflux: true do
-        data_user_ro = FactoryBot.create :user
-        data_user_rw = FactoryBot.create :user
+        data_user_ro = FactoryBot.create(:user)
+        data_user_rw = FactoryBot.create(:user)
         session_id = session_token
         updated_on = Time.current.in_time_zone("America/New_York").iso8601.to_s
         created_on = Time.current.in_time_zone("America/New_York").advance(days: -1).iso8601.to_s
-        project = FactoryBot.create :project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
-                                                project_id: "abc/123", project_directory: "testasset"
+        project = FactoryBot.create(:project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
+                                                project_id: "abc/123", project_directory: "testasset")
         create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
         expect(create_request.response_error).to be_blank
         expect(create_request.id).not_to be_blank
@@ -62,10 +62,10 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
 
   describe "#xml_payload" do
   it "creates the asset update payload" do
-    FactoryBot.create :user, uid: "dm1"
-    FactoryBot.create :user, uid: "ds1"
-    project = FactoryBot.create :project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
-                                          created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1"
+    FactoryBot.create(:user, uid: "dm1")
+    FactoryBot.create(:user, uid: "ds1")
+    project = FactoryBot.create(:project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
+                                          created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1")
     update_request = described_class.new(session_token: nil, project:)
     expected_xml = "<?xml version=\"1.0\"?>\n" \
     "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n" \

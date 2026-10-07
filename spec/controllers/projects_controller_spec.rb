@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let(:project_request) { FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid) }
   let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
@@ -20,7 +20,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -63,8 +63,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
           render_views
           let!(:project) do
-            request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
-                                                          departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
+            request = FactoryBot.create(:request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
+                                                          departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
             request.approve(sponsor_and_data_manager)
           end
 
@@ -93,7 +93,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -157,7 +157,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -205,7 +205,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -302,7 +302,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -380,7 +380,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
       before do
         sign_in researcher_user
       end
@@ -426,7 +426,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   end
 
   describe "#file_list_download" do
-    let(:researcher_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create(:user) }
     let(:inventory_request_request) do
       FileInventoryRequest.create(
         user_id: researcher_user.id,

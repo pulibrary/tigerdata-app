@@ -6,7 +6,7 @@ require "rails_helper"
 #
 RSpec.describe "Mediaflux Sessions", type: :system do
   let!(:sponsor_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+  let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
   let!(:project) { request.approve(sponsor_user) }
 
   context "user is signed in" do
