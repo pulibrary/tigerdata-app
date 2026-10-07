@@ -75,11 +75,11 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           it "shows the affiliation name (instead the internal code) on the project show views" do
             get :details, params: { id: project.id }
             expect(response).to render_template("details")
-            expect(response.body).to have_content("Astrophysical Sciences")
-              .or(have_content("High Performance Computing"))
-              .or(have_content("Research Data and Scholarship Services"))
-              .or(have_content("Princeton Research Data Service"))
-              .or(have_content("Princeton Plasma Physics Laboratory"))
+            expect(response.body).to have_text("Astrophysical Sciences")
+              .or(have_text("High Performance Computing"))
+              .or(have_text("Research Data and Scholarship Services"))
+              .or(have_text("Princeton Research Data Service"))
+              .or(have_text("Princeton Plasma Physics Laboratory"))
           end
         end
       end

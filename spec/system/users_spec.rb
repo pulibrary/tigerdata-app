@@ -14,7 +14,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/users"
-      expect(page).to have_content "Log in"
+      expect(page).to have_text "Log in"
     end
   end
 
@@ -22,7 +22,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the error message" do
       sign_in researcher_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page (#{researcher_user.uid})"
+      expect(page).to have_text "You do not have access to this page (#{researcher_user.uid})"
     end
   end
 
@@ -30,7 +30,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the Current Users page" do
       sign_in sysadmin_user
       visit "/users"
-      expect(page).to have_content "Current Users"
+      expect(page).to have_text "Current Users"
     end
   end
 
@@ -38,7 +38,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the Current Users page" do
       sign_in developer_user
       visit "/users"
-      expect(page).to have_content "Current Users"
+      expect(page).to have_text "Current Users"
     end
   end
 
@@ -46,7 +46,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the the Current Users page" do
       sign_in trainer_user
       visit "/users"
-      expect(page).to have_content "Current Users"
+      expect(page).to have_text "Current Users"
     end
   end
 
@@ -54,13 +54,13 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the error message when visiting the users page" do
       sign_in sponsor_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page (#{sponsor_user.uid})"
+      expect(page).to have_text "You do not have access to this page (#{sponsor_user.uid})"
     end
 
     it "shows the error message when visiting the user show page" do
       sign_in sponsor_user
       visit "/users/#{manager_user.id}"
-      expect(page).to have_content "You do not have access to this page (#{sponsor_user.uid})"
+      expect(page).to have_text "You do not have access to this page (#{sponsor_user.uid})"
     end
   end
 
@@ -68,7 +68,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the error message" do
       sign_in manager_user
       visit "/users"
-      expect(page).to have_content "You do not have access to this page (#{manager_user.uid})"
+      expect(page).to have_text "You do not have access to this page (#{manager_user.uid})"
     end
   end
 
@@ -77,15 +77,15 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
     it "shows the user information" do
       sign_in sysadmin_user
       visit "/users/#{manager_user.id}"
-      expect(page).to have_content "NetID: #{manager_user.uid}"
-      expect(page).to have_content "Provider: cas"
+      expect(page).to have_text "NetID: #{manager_user.uid}"
+      expect(page).to have_text "Provider: cas"
       expect(page).to have_button "Edit"
     end
 
     it "warns if the authentication provider is not set" do
       sign_in sysadmin_user
       visit "/users/#{user_without_provider.id}"
-      expect(page).to have_content "Provider: not set"
+      expect(page).to have_text "Provider: not set"
     end
 
     it "allows user to edit information" do
@@ -93,7 +93,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
       visit "/users/#{manager_user.id}/edit"
       fill_in :user_given_name, with: new_given_name
       click_on "Save"
-      expect(page).to have_content("Give name: #{new_given_name}")
+      expect(page).to have_text("Give name: #{new_given_name}")
       expect(User.find(manager_user.id).given_name).to eq new_given_name
     end
   end

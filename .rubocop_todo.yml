@@ -15,11 +15,6 @@ Capybara/FindAllFirst:
     - 'spec/support/select_user.rb'
     - 'spec/system/new_project_request_wizard_spec.rb'
 
-# Offense count: 402
-# This cop supports safe autocorrection (--autocorrect).
-Capybara/RSpec/HaveContent:
-  Enabled: false
-
 # Offense count: 25
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: DefaultSelector.

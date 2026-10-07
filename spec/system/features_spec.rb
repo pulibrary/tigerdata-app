@@ -5,7 +5,7 @@ require "rails_helper"
 describe "features", type: :system, js: true do
   it "flip flop doesn't show for un logged in user" do
     visit "/features"
-    expect(page).to have_content("You need to sign in")
+    expect(page).to have_text("You need to sign in")
   end
 
   context "authenticated user" do
@@ -17,9 +17,9 @@ describe "features", type: :system, js: true do
 
     it "flip flop doesn't show for any user" do
       visit "/features"
-      expect(page).not_to have_content("Disable login to the web portal")
-      expect(page).not_to have_content("Last updated dashboard")
-      expect(page).not_to have_content("Project type indicator")
+      expect(page).not_to have_text("Disable login to the web portal")
+      expect(page).not_to have_text("Last updated dashboard")
+      expect(page).not_to have_text("Project type indicator")
     end
   end
 
@@ -32,9 +32,9 @@ describe "features", type: :system, js: true do
 
     it "flip flop doesn't show for any user" do
       visit "/features"
-      expect(page).not_to have_content("Disable login to the web portal")
-      expect(page).not_to have_content("Last updated dashboard")
-      expect(page).not_to have_content("Project type indicator")
+      expect(page).not_to have_text("Disable login to the web portal")
+      expect(page).not_to have_text("Last updated dashboard")
+      expect(page).not_to have_text("Project type indicator")
     end
   end
 
@@ -47,9 +47,9 @@ describe "features", type: :system, js: true do
 
     it "displays for developers" do
       visit "/features"
-      expect(page).to have_content("Disable login to the web portal")
-      expect(page).to have_content("Last updated dashboard")
-      expect(page).to have_content("Project type indicator")
+      expect(page).to have_text("Disable login to the web portal")
+      expect(page).to have_text("Last updated dashboard")
+      expect(page).to have_text("Project type indicator")
     end
   end
 
@@ -62,9 +62,9 @@ describe "features", type: :system, js: true do
 
     it "displays for sysadmin users" do
       visit "/features"
-      expect(page).to have_content("Disable login to the web portal")
-      expect(page).to have_content("Last updated dashboard")
-      expect(page).to have_content("Project type indicator")
+      expect(page).to have_text("Disable login to the web portal")
+      expect(page).to have_text("Last updated dashboard")
+      expect(page).to have_text("Project type indicator")
     end
   end
 end

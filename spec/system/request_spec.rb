@@ -145,8 +145,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "does not show the approve button on a single request view for users without a role" do
         sign_in sponsor_and_data_manager
         visit new_project_request_path(submitted_request.id)
-        expect(page).to have_content request.project_title
-        expect(page).not_to have_content("Approve request")
+        expect(page).to have_text request.project_title
+        expect(page).not_to have_text("Approve request")
       end
     end
 
@@ -154,10 +154,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "does not show the approve button on a single request view for data sponsors" do
         sign_in sponsor_user
         visit new_project_request_path(submitted_request.id)
-        expect(page).to have_content request.project_title
-        expect(page).not_to have_content("Approve request")
-        expect(page).not_to have_content("Continue Editing")
-        expect(page).not_to have_content("Edit submitted request")
+        expect(page).to have_text request.project_title
+        expect(page).not_to have_text("Approve request")
+        expect(page).not_to have_text("Continue Editing")
+        expect(page).not_to have_text("Edit submitted request")
       end
     end
 
@@ -165,10 +165,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "does not show the approve button on a single request view for data managers" do
         sign_in manager_user
         visit new_project_request_path(submitted_request.id)
-        expect(page).to have_content request.project_title
-        expect(page).not_to have_content("Approve request")
-        expect(page).not_to have_content("Continue Editing")
-        expect(page).not_to have_content("Edit submitted request")
+        expect(page).to have_text request.project_title
+        expect(page).not_to have_text("Approve request")
+        expect(page).not_to have_text("Continue Editing")
+        expect(page).not_to have_text("Edit submitted request")
       end
     end
 
@@ -177,38 +177,38 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         # it does not show a approve request unless the request is submitted
-        expect(page).not_to have_content("Approve request")
+        expect(page).not_to have_text("Approve request")
         expect(page).not_to have_link("Approve request")
-        expect(page).to have_content("This new project request has not been submitted.")
-        expect(page).to have_content("Continue Editing")
-        expect(page).not_to have_content("Edit submitted request")
+        expect(page).to have_text("This new project request has not been submitted.")
+        expect(page).to have_text("Continue Editing")
+        expect(page).not_to have_text("Edit submitted request")
       end
       it "shows the approve button on a single submitted request view for sysadmins" do
         sign_in sysadmin_user
         visit new_project_request_path(submitted_request.id)
         # it does not show a approve request unless the request is submitted
         expect(page).to have_link("Approve request")
-        expect(page).not_to have_content("Continue Editing")
-        expect(page).to have_content("Edit submitted request")
+        expect(page).not_to have_text("Continue Editing")
+        expect(page).to have_text("Edit submitted request")
       end
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
-        expect(page).to have_content("Data User(s)")
-        expect(page).to have_content("tigerdatatester")
+        expect(page).to have_text("Data User(s)")
+        expect(page).to have_text("tigerdatatester")
       end
       it "shows the departments on a single submitted request that includes departments" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
-        expect(page).to have_content("88888")
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
+        expect(page).to have_text("88888")
+        expect(page).to have_text("RDSS-Research Data and Scholarship Services")
       end
       it "shows the selected data security level under Department(s) when the feature is enabled" do
         sign_in sysadmin_user
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         visit new_project_request_path(full_request.id)
-        expect(page).to have_content("Data Security\nLevel 0 - Public")
-        expect(page).not_to have_content("Data Security code goes here")
+        expect(page).to have_text("Data Security\nLevel 0 - Public")
+        expect(page).not_to have_text("Data Security code goes here")
       end
       it "shows an em dash when the data security level has not been selected" do
         sign_in sysadmin_user
@@ -224,11 +224,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         full_request.state = NewProjectRequest::SUBMITTED
         full_request.save
         visit new_project_request_path(full_request.id)
-        expect(page).to have_content("Approve request")
-        expect(page).to have_content("500.0 GB")
+        expect(page).to have_text("Approve request")
+        expect(page).to have_text("500.0 GB")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        expect(page).to have_text("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
         project = Project.last
         expect(project.title).to eq("Test Project Title")
         expect(project.metadata_json["project_id"]).to eq("10.34770/tbd")
@@ -237,10 +237,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "creates a project with BlueMountain fixture data when the request is approved", integration: true do
         sign_in sysadmin_user
         visit new_project_request_path(bluemountain.id)
-        expect(page).to have_content("Approve request")
+        expect(page).to have_text("Approve request")
         click_on "Approve request"
         expect(page).to have_css("#project-details-heading")
-        expect(page).to have_content("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
+        expect(page).to have_text("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
         project = Project.last
         expect(project.title).to eq("Blue Mountain")
         expect(project).to be_valid
@@ -249,47 +249,47 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "forwards back to the request review page when the request is not ready to submit" do
         sign_in sysadmin_user
         visit approve_new_project_request_path(invalid_request.id)
-        expect(page).to have_content("Review")
+        expect(page).to have_text("Review")
         within(".project-title") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
         end
         within(".project-description") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
         end
         within(".project-purpose") do
-          expect(page).to have_content("Select a project purpose.")
+          expect(page).to have_text("Select a project purpose.")
         end
         within(".departments") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
         end
         within(".data-manager") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
         end
         within(".data-sponsor") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
           select_user(sponsor_and_data_manager, "data_sponsor", "request[data_sponsor]")
-          expect(page).not_to have_content("This field is required.")
+          expect(page).not_to have_text("This field is required.")
         end
         within(".parent-folder") do
-          expect(page).to have_content("This field is required.")
+          expect(page).to have_text("This field is required.")
         end
       end
 
       it "reports an error if the title is too long" do
         sign_in sysadmin_user
         visit approve_new_project_request_path(title_too_long.id)
-        expect(page).to have_content("Review")
+        expect(page).to have_text("Review")
         within(".project-title") do
-          expect(page).to have_content("233/200 characters")
+          expect(page).to have_text("233/200 characters")
         end
       end
 
       it "reports an error if the description is too long" do
         sign_in sysadmin_user
         visit approve_new_project_request_path(description_too_long.id)
-        expect(page).to have_content("Review")
+        expect(page).to have_text("Review")
         within(".project-description") do
-          expect(page).to have_content("1751/1000 characters")
+          expect(page).to have_text("1751/1000 characters")
         end
       end
 
@@ -299,8 +299,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         custom_quota_request.save
         visit "#{new_project_requests_path}/#{custom_quota_request.id}"
         expect(custom_quota_request.quota).to eq("custom")
-        expect(page).to have_content("Approve request")
-        expect(page).to have_content("1725.0 TB")
+        expect(page).to have_text("Approve request")
+        expect(page).to have_text("1725.0 TB")
       end
       it "shows the approved quota on the request review page" do
         sign_in sysadmin_user
@@ -308,8 +308,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         submitted_request.approved_quota = "300 TB"
         submitted_request.save
         visit new_project_request_path(submitted_request.id)
-        expect(page).to have_content("Approve request")
-        expect(page).to have_content("300.0 TB")
+        expect(page).to have_text("Approve request")
+        expect(page).to have_text("300.0 TB")
       end
 
       it "shows the edit buttons on the request fields section for a draft request" do
@@ -339,7 +339,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(response).to redirect_to(new_project_request_submit_path)
         sign_in sysadmin_user
         visit new_project_request_path(NewProjectRequest.last.id)
-        expect(page).to have_content("Approve request")
+        expect(page).to have_text("Approve request")
       end
     end
   end

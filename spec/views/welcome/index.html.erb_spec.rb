@@ -5,7 +5,7 @@ describe "home", type: :system do
   context "when on the hompage" do
     it "shows the welcome message" do
       visit "/"
-      expect(page).to have_content "Welcome to\nTigerData Web Portal"
+      expect(page).to have_text "Welcome to\nTigerData Web Portal"
     end
   end
 

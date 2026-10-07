@@ -46,13 +46,13 @@ context "When a project is created" do
 
     html_body = mail.html_part.body.to_s
     expect(html_body).not_to be_empty
-    expect(html_body).to have_content(project.id)
+    expect(html_body).to have_text(project.id)
 
-    expect(html_body).to have_content(project.mediaflux_id)
-    expect(html_body).to have_content(project.title)
-    expect(html_body).to have_content(project.project_directory)
-    expect(html_body).to have_content(project.metadata_json["data_sponsor"])
-    expect(html_body).to have_content(project.metadata_json["data_manager"])
+    expect(html_body).to have_text(project.mediaflux_id)
+    expect(html_body).to have_text(project.title)
+    expect(html_body).to have_text(project.project_directory)
+    expect(html_body).to have_text(project.metadata_json["data_sponsor"])
+    expect(html_body).to have_text(project.metadata_json["data_manager"])
 
     expect(html_body).to include("The following project has been approved and created:")
     expect(html_body).to include("For more details, see #{project_url(project)}")
@@ -79,23 +79,23 @@ context "When a request is created" do
     expect(mail.from).to eq [sponsor_and_data_manager_user.email]
 
     html_body = mail.html_part.body.to_s
-    expect(html_body).to have_content(valid_request.project_title)
-    expect(html_body).to have_content(valid_request.description)
-    expect(html_body).to have_content(valid_request.state)
-    expect(html_body).to have_content(valid_request.data_sponsor)
-    expect(html_body).to have_content(valid_request.data_manager)
-    expect(html_body).to have_content("RDSS")
-    expect(html_body).to have_content("Project Purpose: Research")
-    expect(html_body).to have_content("(abc123),")
-    expect(html_body).to have_content("(ddd) read only")
-    expect(html_body).to have_content("(efg)\n")
-    expect(html_body).to have_content("500.0 GB")
-    expect(html_body).to have_content("Level 1 - Internal")
-    expect(html_body).to have_content("Estimated Number of Files: Less than 10,000")
-    expect(html_body).to have_content("Needs HPC?: yes")
-    expect(html_body).to have_content("Needs SMB?: no")
-    expect(html_body).to have_content("Needs Globus?: maybe")
-    expect(html_body).to have_content("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{new_project_request_url(valid_request)}")
+    expect(html_body).to have_text(valid_request.project_title)
+    expect(html_body).to have_text(valid_request.description)
+    expect(html_body).to have_text(valid_request.state)
+    expect(html_body).to have_text(valid_request.data_sponsor)
+    expect(html_body).to have_text(valid_request.data_manager)
+    expect(html_body).to have_text("RDSS")
+    expect(html_body).to have_text("Project Purpose: Research")
+    expect(html_body).to have_text("(abc123),")
+    expect(html_body).to have_text("(ddd) read only")
+    expect(html_body).to have_text("(efg)\n")
+    expect(html_body).to have_text("500.0 GB")
+    expect(html_body).to have_text("Level 1 - Internal")
+    expect(html_body).to have_text("Estimated Number of Files: Less than 10,000")
+    expect(html_body).to have_text("Needs HPC?: yes")
+    expect(html_body).to have_text("Needs SMB?: no")
+    expect(html_body).to have_text("Needs Globus?: maybe")
+    expect(html_body).to have_text("A new project request has been created and is ready for review. The request can be viewed in the TigerData web portal: #{new_project_request_url(valid_request)}")
   end
 
   context "when the request ID is invalid or nil" do
@@ -127,25 +127,25 @@ context "when storage increase request is created" do
     expect(mail.from).to eq [sponsor_and_data_manager_user.email]
 
     html_body = mail.html_part.body.to_s
-    expect(html_body).to have_content(project.mediaflux_id)
-    expect(html_body).to have_content(project.title)
-    expect(html_body).to have_content(project.project_directory)
-    expect(html_body).to have_content(project.metadata_json["data_sponsor"])
-    expect(html_body).to have_content(project.metadata_json["data_manager"])
+    expect(html_body).to have_text(project.mediaflux_id)
+    expect(html_body).to have_text(project.title)
+    expect(html_body).to have_text(project.project_directory)
+    expect(html_body).to have_text(project.metadata_json["data_sponsor"])
+    expect(html_body).to have_text(project.metadata_json["data_manager"])
 
-    expect(html_body).to have_content(requested_capacity)
-    expect(html_body).to have_content(justification)
-    expect(html_body).to have_content(growth_expectation)
-    expect(html_body).to have_content(date_needed)
+    expect(html_body).to have_text(requested_capacity)
+    expect(html_body).to have_text(justification)
+    expect(html_body).to have_text(growth_expectation)
+    expect(html_body).to have_text(date_needed)
 
-    expect(html_body).to have_content(quota_breakdown[:project_files_human])
-    expect(html_body).to have_content(quota_breakdown[:old_versions_human])
-    expect(html_body).to have_content(quota_breakdown[:recycle_bin_human])
-    expect(html_body).to have_content(quota_breakdown[:quota_used_human])
-    expect(html_body).to have_content(quota_breakdown[:requested_capacity])
-    expect(html_body).to have_content("Current Storage Capacity:")
-    expect(html_body).to have_content(project.metadata_json["storage_capacity"]["size"]["approved"].to_s)
-    expect(html_body).to have_content(project.metadata_json["storage_capacity"]["unit"]["approved"])
+    expect(html_body).to have_text(quota_breakdown[:project_files_human])
+    expect(html_body).to have_text(quota_breakdown[:old_versions_human])
+    expect(html_body).to have_text(quota_breakdown[:recycle_bin_human])
+    expect(html_body).to have_text(quota_breakdown[:quota_used_human])
+    expect(html_body).to have_text(quota_breakdown[:requested_capacity])
+    expect(html_body).to have_text("Current Storage Capacity:")
+    expect(html_body).to have_text(project.metadata_json["storage_capacity"]["size"]["approved"].to_s)
+    expect(html_body).to have_text(project.metadata_json["storage_capacity"]["unit"]["approved"])
   end
 
   it "uses portal JSON that has been refreshed from Mediaflux" do
@@ -154,8 +154,8 @@ context "when storage increase request is created" do
 
     described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver
     html_body = ActionMailer::Base.deliveries.last.html_part.body.to_s
-    expect(html_body).to have_content("Current Storage Capacity: 850 TB")
-    expect(html_body).not_to have_content("500000")
+    expect(html_body).to have_text("Current Storage Capacity: 850 TB")
+    expect(html_body).not_to have_text("500000")
   end
 end
 
@@ -172,12 +172,12 @@ context "when a Globus access request is created" do
     html_body = mail.html_part.body.to_s
     expect(html_body).not_to be_empty
 
-    expect(html_body).to have_content(project.title)
-    expect(html_body).to have_content(project.mediaflux_id)
-    expect(html_body).to have_content(project.metadata_json["project_id"])
-    expect(html_body).to have_content(project.project_directory)
-    expect(html_body).to have_content(project.metadata_json["data_sponsor"])
-    expect(html_body).to have_content(project.metadata_json["data_manager"])
+    expect(html_body).to have_text(project.title)
+    expect(html_body).to have_text(project.mediaflux_id)
+    expect(html_body).to have_text(project.metadata_json["project_id"])
+    expect(html_body).to have_text(project.project_directory)
+    expect(html_body).to have_text(project.metadata_json["data_sponsor"])
+    expect(html_body).to have_text(project.metadata_json["data_manager"])
 
     expect(html_body).to include("A Globus connection request has been created and is ready for review")
   end

@@ -23,20 +23,20 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       visit "/projects/#{project_in_mediaflux.id}/details"
       within ".storage-quota" do
         click_on "Details"
-        expect(page).to have_content("Storage Usage Overview")
+        expect(page).to have_text("Storage Usage Overview")
 
         # This the original button if the feature is not enabled via the Feature Flipper.
         expect(page).to have_button("Request more storage")
 
-        expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
-        expect(page).to have_content("Understanding Your Storage Usage and Capacity")
-        expect(page).to have_content("Your total usage includes files you can access")
+        expect(page).to have_text("Detailed breakdown of your storage usage across different categories")
+        expect(page).to have_text("Understanding Your Storage Usage and Capacity")
+        expect(page).to have_text("Your total usage includes files you can access")
         expect(page).to have_button("Learn more")
-        expect(page).to have_content("Combined usage across all categories")
-        expect(page).to have_content("Project Files")
-        expect(page).to have_content("Old Versions")
-        expect(page).to have_content("Recycle Bin")
-        expect(page).to have_content("free")
+        expect(page).to have_text("Combined usage across all categories")
+        expect(page).to have_text("Project Files")
+        expect(page).to have_text("Old Versions")
+        expect(page).to have_text("Recycle Bin")
+        expect(page).to have_text("free")
         expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
@@ -48,7 +48,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
 
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_content("Storage Usage Overview")
+        expect(page).not_to have_text("Storage Usage Overview")
       end
     end
     it "Shows the storage detail button and complete modal to the data user but no request more button" do
@@ -56,14 +56,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       visit "/projects/#{project_in_mediaflux.id}/details"
       within ".storage-quota" do
         click_on "Details"
-        expect(page).to have_content("Storage Usage Overview")
+        expect(page).to have_text("Storage Usage Overview")
         expect(page).not_to have_button("Request more storage")
-        expect(page).to have_content("Detailed breakdown of your storage usage across different categories")
-        expect(page).to have_content("Combined usage across all categories")
-        expect(page).to have_content("Project Files")
-        expect(page).to have_content("Old Versions")
-        expect(page).to have_content("Recycle Bin")
-        expect(page).to have_content("free")
+        expect(page).to have_text("Detailed breakdown of your storage usage across different categories")
+        expect(page).to have_text("Combined usage across all categories")
+        expect(page).to have_text("Project Files")
+        expect(page).to have_text("Old Versions")
+        expect(page).to have_text("Recycle Bin")
+        expect(page).to have_text("free")
         expect(page).to have_css(".breakdown-title", text: "Project Files")
         expect(page).to have_css(".breakdown-title", text: "Old Versions")
         expect(page).to have_css(".breakdown-title", text: "Recycle Bin")
@@ -73,11 +73,11 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".folder-footer", text: "The active files in your project directory")
         expect(page).to have_css(".versions-footer", text: "Historic versions of current project files, recoverable by request")
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
-        expect(page).to have_content("Understanding Your Storage Usage and Capacity")
-        expect(page).to have_content("Your total usage includes files you can access")
+        expect(page).to have_text("Understanding Your Storage Usage and Capacity")
+        expect(page).to have_text("Your total usage includes files you can access")
         expect(page).to have_button("Learn more")
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_content("Storage Usage Overview")
+        expect(page).not_to have_text("Storage Usage Overview")
       end
     end
 
@@ -112,11 +112,11 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         within ".storage-quota" do
           click_on "Details"
           click_on "Request more storage"
-          expect(page).to have_content("Storage Increase Request")
-          expect(page).to have_content("Please indicate the new storage capacity you are requesting.")
-          expect(page).to have_content("Justification")
-          expect(page).to have_content("Growth Expectation")
-          expect(page).to have_content("Date Needed")
+          expect(page).to have_text("Storage Increase Request")
+          expect(page).to have_text("Please indicate the new storage capacity you are requesting.")
+          expect(page).to have_text("Justification")
+          expect(page).to have_text("Growth Expectation")
+          expect(page).to have_text("Date Needed")
           expect(page).to have_button("Submit")
           expect(page).to have_button("Cancel")
           # Check that the required field error messages are not visible before submission and are visible after submission when the fields are empty
@@ -137,10 +137,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           fill_in "storage_growth_expectation", with: "Expecting significant growth in the next year as we add new data."
           fill_in "storage_date_needed", with: (Date.today + 30).strftime("%m/%d/%Y")
           click_on "Submit"
-          expect(page).to have_content("Storage Increase Request")
-          expect(page).to have_content("Your storage increase request has been submitted")
+          expect(page).to have_text("Storage Increase Request")
+          expect(page).to have_text("Your storage increase request has been submitted")
           click_on("Back to Storage Overview")
-          expect(page).to have_content("Storage Usage Overview")
+          expect(page).to have_text("Storage Usage Overview")
         end
       end
     end
@@ -154,9 +154,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             project_in_mediaflux.save!
             visit "/projects/#{project_in_mediaflux.id}/details"
 
-            expect(page).to have_content(project_in_mediaflux.title)
-            expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).to have_content("Details")
+            expect(page).to have_text(project_in_mediaflux.title)
+            expect(page).to have_text(project_in_mediaflux.project_directory)
+            expect(page).to have_text("Details")
 
             # The description should be rendered twice (at the top and as part of the details)
             expect(page).to have_selector("#description-text")
@@ -164,18 +164,18 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             # Make sure project path is rendered
             expect(page).to have_css "#project-path-copy"
-            expect(page).to have_content(project_in_mediaflux.project_directory)
+            expect(page).to have_text(project_in_mediaflux.project_directory)
 
             # Make sure both data manager and sponsor are rendered
-            expect(page).to have_content("Data Manager\n#{manager_user.display_name}\n#{manager_user.uid}")
-            expect(page).to have_content("Data Sponsor\n#{sponsor_user.display_name}\n#{sponsor_user.uid}")
+            expect(page).to have_text("Data Manager\n#{manager_user.display_name}\n#{manager_user.uid}")
+            expect(page).to have_text("Data Sponsor\n#{sponsor_user.display_name}\n#{sponsor_user.uid}")
 
             # Per ticket #1114 sponsor users no longer have edit access
             expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
             expect(page).to have_selector(:link_or_button, "Content Preview")
             expect(page).to have_selector(:link_or_button, "Dashboard")
             click_on("Dashboard")
-            expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+            expect(page).to have_text("Welcome, #{sponsor_user.given_name}!")
             find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
           end
         end
@@ -184,9 +184,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           it "does not show the quota increase option" do
             sign_in read_only
             visit "/projects/#{project_in_mediaflux.id}/details"
-            expect(page).to have_content(project_in_mediaflux.title)
-            expect(page).to have_content(project_in_mediaflux.project_directory)
-            expect(page).not_to have_content("Request More")
+            expect(page).to have_text(project_in_mediaflux.title)
+            expect(page).to have_text(project_in_mediaflux.project_directory)
+            expect(page).not_to have_text("Request More")
           end
         end
 
@@ -219,12 +219,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page).to have_content(project_in_mediaflux.title)
-        expect(page).to have_content("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
+        expect(page).to have_text(project_in_mediaflux.title)
+        expect(page).to have_text("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
-        expect(page).to have_content("RDSS-Research Data and Scholarship Services")
-        expect(page).to have_content("Research")
-        expect(page).to have_content("Data Security\nLevel 0 - Public")
+        expect(page).to have_text("RDSS-Research Data and Scholarship Services")
+        expect(page).to have_text("Research")
+        expect(page).to have_text("Data Security\nLevel 0 - Public")
       end
       it "copies the project path to the clipboard" do
         sign_in sponsor_user
@@ -299,21 +299,21 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         submission_event
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page).to have_content("Requested by")
+        expect(page).to have_text("Requested by")
         expect(page).to have_css(".provenance-value", count: 4)
-        expect(page).to have_content "Requested Date–Time"
-        expect(page).to have_content "#{submission_event.created_at.to_datetime.strftime("%B %d, %Y")}"
-        expect(page).to have_content "#{submission_event.created_at.to_datetime.strftime("%I:%M %p")}"
+        expect(page).to have_text "Requested Date–Time"
+        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%B %d, %Y")}"
+        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%I:%M %p")}"
       end
       it "shows approval events" do
         approval_event
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page).to have_content("Approved by")
+        expect(page).to have_text("Approved by")
         expect(page).to have_css(".provenance-value", count: 4)
-        expect(page).to have_content "Approval Date–Time"
-        expect(page).to have_content "#{approval_event.created_at.to_datetime.strftime("%B %d, %Y")}"
-        expect(page).to have_content "#{approval_event.created_at.to_datetime.strftime("%I:%M %p")}"
+        expect(page).to have_text "Approval Date–Time"
+        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%B %d, %Y")}"
+        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%I:%M %p")}"
       end
       it "shows the project status under the provenance section" do
         submission_event
@@ -357,14 +357,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
-        expect(page).to have_content("Total Files: 16")
+        expect(page).to have_text("Total Files: 16")
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Dashboard")
         click_on("Dashboard")
-        expect(page).to have_content("Welcome, #{sponsor_user.given_name}!")
+        expect(page).to have_text("Welcome, #{sponsor_user.given_name}!")
         find(:xpath, "//a[text()='#{project.title}']").click
-        expect(page).to have_content(project.title)
+        expect(page).to have_text(project.title)
       end
 
       it "displays the project contents at the top level",
@@ -375,9 +375,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
         # Directory is displayed
-        expect(page).to have_content(first_folder.name)
+        expect(page).to have_text(first_folder.name)
         # Files are not displayed
-        expect(page).not_to have_content(first_file.name)
+        expect(page).not_to have_text(first_file.name)
       end
 
       context "when downloads do not exist" do
@@ -385,7 +385,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           sign_in sponsor_user
           visit "/projects/#{project.id}"
           click_on("Download Complete List")
-          expect(page).not_to have_content("Download latest")
+          expect(page).not_to have_text("Download latest")
         end
       end
 
@@ -397,7 +397,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           sign_in sponsor_user
           visit "/projects/#{project.id}"
           click_on("Download Complete List")
-          expect(page).to have_content("Download latest report - generated less than a minute ago")
+          expect(page).to have_text("Download latest report - generated less than a minute ago")
         end
       end
     end
@@ -409,12 +409,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
         click_on "Request"
-        expect(page).to have_content("Globus Transfer Access")
-        expect(page).to have_content("Do you need to enable Globus transfers?")
+        expect(page).to have_text("Globus Transfer Access")
+        expect(page).to have_text("Do you need to enable Globus transfers?")
         click_on "Yes"
-        expect(page).to have_content("Your request has been submitted. Please check your email for updates.")
+        expect(page).to have_text("Your request has been submitted. Please check your email for updates.")
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_content("Globus Transfer Access")
+        expect(page).not_to have_text("Globus Transfer Access")
       end
     end
 
@@ -426,18 +426,18 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         sign_in sysadmin_user
         visit "/projects/#{project.id}/details"
 
-        expect(page).to have_content project.project_directory
-        expect(page).to have_content project.title
-        expect(page).to have_content "Mediaflux ID"
-        expect(page).to have_content project.mediaflux_id
+        expect(page).to have_text project.project_directory
+        expect(page).to have_text project.title
+        expect(page).to have_text "Mediaflux ID"
+        expect(page).to have_text project.mediaflux_id
       end
 
       it "does not show the Mediaflux ID to the sponsor" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page).to have_content project.project_directory
-        expect(page).to have_content project.title
-        expect(page).not_to have_content "Mediaflux ID"
+        expect(page).to have_text project.project_directory
+        expect(page).to have_text project.title
+        expect(page).not_to have_text "Mediaflux ID"
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")
       end

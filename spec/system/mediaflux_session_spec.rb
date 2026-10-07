@@ -25,7 +25,7 @@ RSpec.describe "Mediaflux Sessions", type: :system do
       visit dashboard_path
 
       expect { visit project_path(project) }.not_to raise_error
-      expect(page).to have_content("Total Files: 0")
+      expect(page).to have_text("Total Files: 0")
 
       expect(sponsor_user.mediaflux_session).to eq(original_session)
     end
