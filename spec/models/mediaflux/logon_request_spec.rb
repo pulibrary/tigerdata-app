@@ -56,6 +56,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
       end
     end
   end
+
   describe "#resolve", connect_to_mediaflux: true do
     it "returns the net response" do
       response = request.resolve

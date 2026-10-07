@@ -18,6 +18,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
+
     before do
       request1 = FactoryBot.create(:request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid)
       request1.approve(sponsor_and_data_manager_user)
@@ -75,9 +76,11 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "#provenance_events" do
     let(:project) { FactoryBot.create(:project) }
     let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
+
     it "has many provenance events" do
       expect(project.provenance_events).to eq [submission_event]
     end
+
     it "only creates one provenance event" do
       project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata["created_by"],
                                        event_details: "Requested by #{project.metadata_json['data_sponsor']}")
@@ -131,6 +134,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#mediaflux_metadata" do
     let(:project) { FactoryBot.create(:project) }
+
     it "calls out to mediaflux once" do
       metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: {}
       allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)

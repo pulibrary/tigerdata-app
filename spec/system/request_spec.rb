@@ -183,6 +183,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_text("Continue Editing")
         expect(page).not_to have_text("Edit submitted request")
       end
+
       it "shows the approve button on a single submitted request view for sysadmins" do
         sign_in sysadmin_user
         visit new_project_request_path(submitted_request.id)
@@ -191,18 +192,21 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).not_to have_text("Continue Editing")
         expect(page).to have_text("Edit submitted request")
       end
+
       it "shows the names of the data users on a single submitted request that includes data user(s)" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         expect(page).to have_text("Data User(s)")
         expect(page).to have_text("tigerdatatester")
       end
+
       it "shows the departments on a single submitted request that includes departments" do
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         expect(page).to have_text("88888")
         expect(page).to have_text("RDSS-Research Data and Scholarship Services")
       end
+
       it "shows the selected data security level under Department(s) when the feature is enabled" do
         sign_in sysadmin_user
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
@@ -210,6 +214,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_text("Data Security\nLevel 0 - Public")
         expect(page).not_to have_text("Data Security code goes here")
       end
+
       it "shows an em dash when the data security level has not been selected" do
         sign_in sysadmin_user
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
@@ -218,6 +223,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_css("li.detail-subheading", text: "Data Security")
         expect(page).to have_css("strong", text: "—")
       end
+
       it "creates a project with a DOI when a request is approved", integration: true do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
@@ -234,6 +240,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(project.metadata_json["project_id"]).to eq("10.34770/tbd")
         expect(project).to be_valid
       end
+
       it "creates a project with BlueMountain fixture data when the request is approved", integration: true do
         sign_in sysadmin_user
         visit new_project_request_path(bluemountain.id)
@@ -302,6 +309,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_text("Approve request")
         expect(page).to have_text("1725.0 TB")
       end
+
       it "shows the approved quota on the request review page" do
         sign_in sysadmin_user
         submitted_request.state = NewProjectRequest::SUBMITTED

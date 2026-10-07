@@ -25,6 +25,7 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
 
   context "retrieves xml from mediaflux for a project" do
     let(:project) { create_project_in_mediaflux(current_user: data_sponsor) }
+
     before do
       sign_in data_sponsor
     end

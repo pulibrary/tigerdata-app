@@ -9,6 +9,7 @@ RSpec.describe "new-project/storage-access", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project", quota: "custom", storage_size: 23, storage_unit: "GB") }
@@ -30,11 +31,13 @@ RSpec.describe "new-project/storage-access", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", quota: "500 GB") }
+
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_storage_and_access_save_url(request.id, request: { request_title: "new title", project_title: "new project", quota: "2 TB" }, commit: "Save")

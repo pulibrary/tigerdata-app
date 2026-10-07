@@ -46,6 +46,7 @@ RSpec.describe ProjectImport do
 
       context "input is a file" do
         let(:csv_data) { File.new(file_fixture("project_report.csv")) }
+
         it "can also read a file IO" do
           expect { subject.run }.to change { Project.count }.by(2)
         end

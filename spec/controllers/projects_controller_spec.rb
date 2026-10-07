@@ -21,6 +21,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -94,6 +95,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -113,6 +115,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sponsor_and_data_manager) }
 
       let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+
       before do
         sign_in sponsor_and_data_manager
       end
@@ -158,6 +161,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -170,6 +174,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -206,6 +211,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -233,6 +239,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             project = request.approve(sponsor_and_data_manager)
             project
           end
+
           it "runs a query" do
             sign_in sponsor_and_data_manager
             allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
@@ -241,6 +248,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
             expect(Mediaflux::QueryRequest).to have_received(:new)
           end
+
           context "the session expires for an active web user" do
             let(:original_session) { SystemUser.mediaflux_session }
 
@@ -303,6 +311,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -315,6 +324,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -381,6 +391,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a signed in user" do
       let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
@@ -393,6 +404,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -460,6 +472,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end

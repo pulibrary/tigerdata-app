@@ -35,16 +35,19 @@ context "A Project Has a File List", integration: true, clean_projects: true do
     execute_script('document.getElementById("request-list-contents").click();')
     expect(page).to have_text "A link to the downloadable file list"
   end
+
   it "does not allow an unaffiliated user to see the file list" do
     sign_in user
     visit "/projects/#{project.id}"
     expect(page).to have_text("Access Denied")
   end
+
   it "does not allow any user to visit the request" do
     sign_in user
     visit new_project_request_path(request.id)
     expect(page).to have_text("You do not have access to this page.")
   end
+
   it "does not allow the requestor to approve the request" do
     request.requested_by = user.uid
     request.save

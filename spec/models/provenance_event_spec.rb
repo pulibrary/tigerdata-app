@@ -13,6 +13,7 @@ RSpec.describe ProvenanceEvent, type: :model do
       pe.save
       expect(pe.event_type).to eq(ProvenanceEvent::SUBMISSION_EVENT_TYPE)
     end
+
     it "makes a provenance event recording the status being set to pending" do
       pe = described_class.new
       pe.event_type = ProvenanceEvent::APPROVAL_EVENT_TYPE
@@ -29,6 +30,7 @@ RSpec.describe ProvenanceEvent, type: :model do
       expect(pe.event_note).not_to eq nil
     end
   end
+
   context "when a project is approved" do
     it "creates an approval event" do
       pe = described_class.new
@@ -39,6 +41,7 @@ RSpec.describe ProvenanceEvent, type: :model do
       expect(pe.event_type).to eq(ProvenanceEvent::APPROVAL_EVENT_TYPE)
     end
   end
+
   context "when a project is made active" do
     it "creates an active event type" do
       pe = described_class.new
@@ -49,6 +52,7 @@ RSpec.describe ProvenanceEvent, type: :model do
       expect(pe.event_type).to eq(ProvenanceEvent::ACTIVE_EVENT_TYPE)
     end
   end
+
   context "when a project status is updated" do
     it "creates a status update event" do
       pe = described_class.new

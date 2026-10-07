@@ -321,6 +321,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
     context "flash message" do
       let(:non_admin_user) { FactoryBot.create(:user) }
+
       it "shows the flash message" do
         sign_in non_admin_user
         visit "/projects"

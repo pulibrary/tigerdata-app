@@ -6,6 +6,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   context "with project sponsor user" do
     let(:project_sponsor) { FactoryBot.create(:project_sponsor) }
+
     it "redirects to home page with notice" do
       allow(User).to receive(:from_cas) { project_sponsor }
       get :cas

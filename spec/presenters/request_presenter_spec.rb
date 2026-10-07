@@ -19,6 +19,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
 
     context "when the user is a sysadmin" do
       let(:sysadmin_user) { FactoryBot.create(:sysadmin) }
+
       it "allows a sysadmin to edit a draft request" do
         request.state = NewProjectRequest::DRAFT
         expect(presenter.eligible_to_edit?(sysadmin_user)).to be true
@@ -32,6 +33,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
 
     context "when the user is a developer" do
       let(:developer_user) { FactoryBot.create(:developer) }
+
       it "allows a developer to edit a draft request" do
         request.state = NewProjectRequest::DRAFT
         expect(presenter.eligible_to_edit?(developer_user)).to be true
@@ -75,6 +77,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
   describe "#data_sponsor" do
     let(:sponsor_user) { FactoryBot.create(:project_sponsor) }
     let(:request) { FactoryBot.create(:request, data_sponsor: sponsor_user.uid) }
+
     it "returns the full name of the data sponsor" do
       expect(presenter.data_sponsor).to eq(sponsor_user.display_name_safe)
     end
@@ -83,6 +86,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
   describe "#data_manager" do
     let(:manager_user) { FactoryBot.create(:data_manager) }
     let(:request) { FactoryBot.create(:request, data_manager: manager_user.uid) }
+
     it "returns the full name of the data manager" do
       expect(presenter.data_manager).to eq(manager_user.display_name_safe)
     end
@@ -91,6 +95,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
   describe "#data_manager empty" do
     let(:manager_user) { FactoryBot.create(:data_manager) }
     let(:request) { FactoryBot.create(:request, data_manager: "") }
+
     it "handles empty users correctly" do
       expect(presenter.data_manager).to eq("")
     end
@@ -103,6 +108,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
       FactoryBot.create(:request, user_roles: [{ "uid" => researcher_user.uid.to_s, "name" => researcher_user.display_name_safe, "read_only" => true },
                                                { "uid" => other_user.uid.to_s, "name" => other_user.display_name_safe, "read_only" => false }])
     end
+
     it "returns a list of the full names of the data users and their uids" do
       expect(presenter.user_list).to eq("Sally Smith (ss123) read only, John Doe (jd123)")
     end
@@ -111,6 +117,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
   describe "#user_list empty" do
     let(:researcher_user) { FactoryBot.create(:user) }
     let(:request) { FactoryBot.create(:request, user_roles: []) }
+
     it "handles empty users correctly" do
       expect(presenter.user_list).to eq("")
     end
@@ -133,6 +140,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
     let(:request) do
       FactoryBot.create(:request, departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }, { "code" => "88888", "name" => "PRDS-Princeton Research Data Service" }])
     end
+
     it "returns a list of the full names of the data users and their uids" do
       expect(presenter.departments_list).to eq("RDSS-Research Data and Scholarship Services (77777), PRDS-Princeton Research Data Service (88888)")
     end
@@ -143,6 +151,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
     let(:request) do
       FactoryBot.create(:request, departments: [])
     end
+
     it "handles empty departments correctly" do
       expect(presenter.departments_list).to eq("")
     end
@@ -150,6 +159,7 @@ describe NewProjectRequestPresenter, type: :model, connect_to_mediaflux: false d
 
   describe "#full_name" do
     let(:researcher_user) { FactoryBot.create(:user) }
+
     it "returns the full name for a valid uid" do
       expect(presenter.full_name(researcher_user.uid)).to eq(researcher_user.display_name_safe)
     end

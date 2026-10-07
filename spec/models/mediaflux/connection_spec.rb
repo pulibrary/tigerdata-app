@@ -37,6 +37,7 @@ RSpec.describe Mediaflux::Connection, type: :model do
       expect(Mediaflux::Connection.root_collection_name).to eq(Rails.configuration.mediaflux["api_root_collection_name"])
     end
   end
+
   describe "##root_namespace" do
     it "returns the mediaflux root namespace" do
       expect(Mediaflux::Connection.root_namespace).to eq(Rails.configuration.mediaflux["api_root_ns"])

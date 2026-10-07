@@ -9,6 +9,7 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:manager_user) { FactoryBot.create(:user, uid: "manager1") }
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
@@ -31,6 +32,7 @@ RSpec.describe "new-project/roles-people", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:manager_user) { FactoryBot.create(:user, uid: "manager1") }
       let(:other_user) { FactoryBot.create(:user) }
@@ -38,6 +40,7 @@ RSpec.describe "new-project/roles-people", type: :request do
 
       context "the request exists" do
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project", data_sponsor: other_user.uid, data_manager: other_user.uid) }
+
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_roles_and_people_save_url(request.id, request: { data_sponsor: "pul123", data_manager: "manager1", project_title: "new project" }, commit: "Save")

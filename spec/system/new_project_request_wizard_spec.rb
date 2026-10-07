@@ -17,6 +17,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "sys123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
       let(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
+
       before do
         sponsor_user
       end
@@ -72,6 +73,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       let(:developer_user) { FactoryBot.create(:developer, uid: "developer1", mediaflux_session: SystemUser.mediaflux_session) }
       let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "kl37") } # must be a valid netid
       let(:manager_user) { FactoryBot.create(:data_manager, uid: "rl3667") } # must be a valid netid
+
       before do
         sponsor_user
       end
@@ -121,6 +123,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       let(:project1) { request1.approve(trainer_user) }
       let(:request2) { FactoryBot.create(:request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }]) }
       let(:project2) { request2.approve(trainer_user) }
+
       it "does not allow a user to see someone elses project" do
         sign_in user_a
         visit "/projects/#{project1.id}"
@@ -140,6 +143,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
     context "research user" do
       let(:researcher_user) { FactoryBot.create(:user, uid: "pul123", display_name: "Sally O'Smith") }
+
       it "Supports all the Shippable Increment fields on the basic information page" do
         # TODO: Add tests for all the shippable increment fields as they are added to the wizard
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))

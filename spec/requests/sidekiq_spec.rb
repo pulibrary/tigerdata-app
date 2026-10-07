@@ -23,6 +23,7 @@ RSpec.describe "/sidekiq", connect_to_mediaflux: false, type: :request do
         expect(response.code).to eq "404"
       end
     end
+
     context "logged in user who is a sysadmin" do
       let(:sysadmin) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 

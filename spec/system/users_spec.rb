@@ -74,6 +74,7 @@ describe "Current Users page", type: :system, connect_to_mediaflux: false, js: t
 
   context "edit user" do
     let(:new_given_name) { FFaker::Name.name }
+
     it "shows the user information" do
       sign_in sysadmin_user
       visit "/users/#{manager_user.id}"

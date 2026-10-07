@@ -329,6 +329,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       describe "<globusEnable>" do
         describe "<globusEnableSetting>" do
         end
+
         let(:node) { root.at_xpath("accessPoints/globusEnable") }
 
         it "builds a <globusEnable> element detailing the Globus mount status" do
@@ -445,6 +446,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
             expect(node["userIDType"]).to eq("NetID")
           end
         end
+
         describe "<requestDateTime>" do
           let(:node) { root.at_xpath("projectProvenance/submission/requestDateTime") }
 

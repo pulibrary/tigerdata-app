@@ -21,6 +21,7 @@ RSpec.describe "/edit_new_project_request", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated and is a regular user" do
       let(:user) { FactoryBot.create(:user) }
       let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }

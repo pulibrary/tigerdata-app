@@ -880,36 +880,6 @@ RSpec/EmptyExampleGroup:
   Exclude:
     - "spec/presenters/project_xml_presenter_spec.rb"
 
-# Offense count: 54
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowConsecutiveOneLiners.
-RSpec/EmptyLineAfterExample:
-  Enabled: false
-
-# Offense count: 19
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/EmptyLineAfterExampleGroup:
-  Exclude:
-    - "spec/controllers/dashboard_controller_spec.rb"
-    - "spec/models/file_inventory_request_spec.rb"
-    - "spec/models/mediaflux/connection_spec.rb"
-    - "spec/models/mediaflux/logon_request_spec.rb"
-    - "spec/models/mediaflux/time_spec.rb"
-    - "spec/models/project_show_presenter_spec.rb"
-    - "spec/models/provenance_event_spec.rb"
-    - "spec/models/user_spec.rb"
-    - "spec/operations/project_search_spec.rb"
-    - "spec/operations/user_roles_update_spec.rb"
-    - "spec/presenters/project_xml_presenter_spec.rb"
-    - "spec/requests/sidekiq_spec.rb"
-    - "spec/services/princeton_users_spec.rb"
-    - "spec/views/welcome/index.html.erb_spec.rb"
-
-# Offense count: 114
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/EmptyLineAfterFinalLet:
-  Enabled: false
-
 # Offense count: 24
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowConsecutiveOneLiners.

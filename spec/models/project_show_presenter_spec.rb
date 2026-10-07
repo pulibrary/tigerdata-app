@@ -8,6 +8,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
                                         departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
   end
   let(:project) { request.approve(sponsor_and_data_manager_user) }
+
   subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
 
   describe "#description" do
@@ -181,6 +182,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       end
     end
   end
+
   describe "#approved_on" do
     it "generates the string-serialized XML for the Project XML Document" do
       expect(presenter.approved_on).to be_a(Hash)

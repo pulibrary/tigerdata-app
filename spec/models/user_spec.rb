@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   let(:access_token4) { OmniAuth::AuthHash.new(provider: "cas", uid: "who4", extra: { mail: "who4@princeton.edu", givenname: "Guess", sn: "McWho", pudisplayname: "Guess McWho" }) }
   let(:access_token5) { OmniAuth::AuthHash.new(provider: "cas", uid: "who5", extra: { mail: "who5@princeton.edu", givenname: "Guess", sn: "Who-You", pudisplayname: "Guess Who-You" }) }
   let(:access_token6) { OmniAuth::AuthHash.new(provider: "cas", uid: "who6", extra: { mail: "who6@princeton.edu", givenname: "Guess", sn: "Y'Who", pudisplayname: "Guess Y'Who" }) }
+
   describe "#from_cas" do
     it "returns nil if the user does not exist" do
       expect(described_class.from_cas(access_token)).to be_nil
@@ -33,6 +34,7 @@ RSpec.describe User, type: :model do
       expect(user.display_name).to eq("Guess Who?")
     end
   end
+
   describe "#display name safe" do
     it "testing a full name" do
       FactoryBot.create(:user, uid: "who", given_name: nil)
@@ -43,6 +45,7 @@ RSpec.describe User, type: :model do
       expect(user.family_name).to eq("Who?")
       expect(user.display_name_safe).to eq("Guess Who? (who)")
     end
+
     it "testing a uid" do
       FactoryBot.create(:user, uid: "who2", given_name: nil)
       user = described_class.from_cas(access_token2)
@@ -50,6 +53,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who2")
       expect(user.display_name_safe).to eq("who2")
     end
+
     it "testing a empty given name" do
       FactoryBot.create(:user, uid: "who3", given_name: nil)
       user = described_class.from_cas(access_token3)
@@ -57,6 +61,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who3")
       expect(user.display_name_safe).to eq("who3")
     end
+
     it "testing a last name with distinct capitaliztion" do
       FactoryBot.create(:user, uid: "who4", given_name: nil)
       user = described_class.from_cas(access_token4)
@@ -64,6 +69,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who4")
       expect(user.display_name_safe).to eq("Guess McWho (who4)")
     end
+
     it "testing a last name with hyphen" do
       FactoryBot.create(:user, uid: "who5", given_name: nil)
       user = described_class.from_cas(access_token5)
@@ -71,6 +77,7 @@ RSpec.describe User, type: :model do
       expect(user.uid).to eq("who5")
       expect(user.display_name_safe).to eq("Guess Who-You (who5)")
     end
+
     it "testing a last name with quote" do
       FactoryBot.create(:user, uid: "who6", given_name: nil)
       user = described_class.from_cas(access_token6)
@@ -185,6 +192,7 @@ RSpec.describe User, type: :model do
 
   describe "#mediaflux_from_session" do
     let(:user) { described_class.new }
+
     before do
       allow(SystemUser).to receive(:mediaflux_session).and_return("192system")
     end

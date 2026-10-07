@@ -51,6 +51,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).not_to have_text("Storage Usage Overview")
       end
     end
+
     it "Shows the storage detail button and complete modal to the data user but no request more button" do
       sign_in read_only
       visit "/projects/#{project_in_mediaflux.id}/details"
@@ -90,6 +91,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_button("Request more storage")
         end
       end
+
       it "Shows the request more storage button if the feature is enabled" do
           sign_in manager_user
           visit "/projects/#{project_in_mediaflux.id}/details"
@@ -98,6 +100,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_button("Request more storage")
         end
       end
+
       it "does not display for a data user" do
           sign_in read_only
           visit "/projects/#{project_in_mediaflux.id}/details"
@@ -106,6 +109,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).not_to have_button("Request more storage")
         end
       end
+
       it "Shows the Storage request modal" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
@@ -125,6 +129,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_css(".storage-modal-error", count: 4)
         end
       end
+
       it "Shows the Storage request confirmation modal when submitting a storage request" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
@@ -226,6 +231,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_text("Research")
         expect(page).to have_text("Data Security\nLevel 0 - Public")
       end
+
       it "copies the project path to the clipboard" do
         sign_in sponsor_user
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
@@ -279,6 +285,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     context "Storage and Access" do
       let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no") }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
@@ -295,6 +302,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       let(:approval_event) { FactoryBot.create(:approval_event, project: project) }
+
       it "shows submission events" do
         submission_event
         sign_in sponsor_user
@@ -305,6 +313,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%B %d, %Y")}"
         expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%I:%M %p")}"
       end
+
       it "shows approval events" do
         approval_event
         sign_in sponsor_user
@@ -315,6 +324,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%B %d, %Y")}"
         expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%I:%M %p")}"
       end
+
       it "shows the project status under the provenance section" do
         submission_event
         sign_in sponsor_user
@@ -405,6 +415,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     context "Globus Access Request" do
       let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid, hpc: "yes", smb: "no", globus: "no") }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+
       it "sends a globus access request email when the user clicks the request button" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"

@@ -9,6 +9,7 @@ describe XmlTreeBuilder do
     let(:name) { "child1" }
 
     let(:built) { xml_builder.build }
+
     it "returns an empty XML string when no elements are added" do
       expect(built).to be_a(Nokogiri::XML::Element)
       expect(built.name).to eq(name)

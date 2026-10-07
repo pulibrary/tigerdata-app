@@ -4,6 +4,7 @@ require "rails_helper"
 RSpec.describe PULDatacite do
   let(:subject) { described_class.new }
   let(:fake_datacite) { stub_datacite_doi }
+
   before do
     @datacite_user = Rails.configuration.datacite.user
   end
@@ -14,6 +15,7 @@ RSpec.describe PULDatacite do
 
   describe "#draft_doi" do
     let(:datacite_response) { instance_double Datacite::Response, doi: "10.34770/abc123" }
+
     before do
       allow(fake_datacite).to receive(:autogenerate_doi).and_return(Success(datacite_response))
     end
@@ -36,6 +38,7 @@ RSpec.describe PULDatacite do
 
       context "there is an error" do
         let(:faraday_response) { instance_double Faraday::Response, reason_phrase: "Bad response", status: 500 }
+
         before do
           allow(fake_datacite).to receive(:autogenerate_doi).and_return(Failure(faraday_response))
         end

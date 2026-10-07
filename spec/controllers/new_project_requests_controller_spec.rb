@@ -23,6 +23,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
                                  parent_folder: "parent",
                                  project_folder: random_project_directory, project_purpose: "research")
       end
+
       before do
         sign_in sysadmin_user
       end
@@ -52,6 +53,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
                                  parent_folder: "parent",
                                  project_folder: random_project_directory, project_purpose: "research")
       end
+
       before do
         sign_in researcher_user
       end
@@ -83,6 +85,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
                                  parent_folder: "parent",
                                  project_folder: random_project_directory, project_purpose: "research")
       end
+
       before do
         sign_in trainer_user
       end
@@ -121,6 +124,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
                                  parent_folder: "parent",
                                  project_folder: random_project_directory, project_purpose: "research")
       end
+
       before do
         sign_in developer_user
       end

@@ -18,6 +18,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
     context "a signed in user" do
       context "a sysadmin" do
         let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+
         before do
           sign_in sysadmin_user
         end
@@ -40,6 +41,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
       context "a non elevated user" do
         let(:researcher_user) { FactoryBot.create(:user) }
+
         before do
           sign_in researcher_user
         end
@@ -75,6 +77,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
       context "a tester trainer" do
         let(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+
         before do
           sign_in trainer_user
         end
@@ -161,6 +164,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
         context "a non elevated user" do
           let(:researcher_user) { FactoryBot.create(:user) }
+
           before do
             sign_in researcher_user
           end
@@ -184,6 +188,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
         context "a tester trainer" do
           let(:trainer_user) { FactoryBot.create(:trainer, uid: "tigerdatatester") }
+
           before do
             sign_in trainer_user
           end
@@ -214,6 +219,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
         context "a developer" do
           let(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+
           before do
             sign_in developer_user
           end
@@ -247,6 +253,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
     context "a signed in user" do
       context "a sysadmin" do
         let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+
         before do
           sign_in sysadmin_user
         end
@@ -272,6 +279,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
       context "a tester trainer" do
         let(:trainer_user) { FactoryBot.create(:trainer) }
+
         before do
           sign_in trainer_user
         end
@@ -307,6 +315,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
       context "a developer" do
         let(:developer_user) { FactoryBot.create(:developer, uid: "tigerdatatester") }
+
         before do
           sign_in developer_user
         end
@@ -338,6 +347,7 @@ RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller
 
         context "a sysadmin" do
           let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "tigerdatatester") }
+
           before do
             sign_in sysadmin_user
           end

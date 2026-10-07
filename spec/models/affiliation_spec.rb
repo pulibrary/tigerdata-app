@@ -32,6 +32,7 @@ RSpec.describe Affiliation, type: :model do
     it "finds the exact match first" do
       expect(Affiliation.find_fuzzy_by_name("abc123").code).to eq("2")
     end
+
     it "orders the fuzzy match by code" do
       expect(Affiliation.find_fuzzy_by_name("abc12").code).to eq("1")
     end

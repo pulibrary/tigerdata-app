@@ -9,6 +9,7 @@ RSpec.describe DashboardController do
 
   context "when a trainer is logged in", connect_to_mediaflux: true do
     let(:trainer_user) { FactoryBot.create(:trainer, mediaflux_session: SystemUser.mediaflux_session) }
+
     before do
       sign_in trainer_user
     end
@@ -17,6 +18,7 @@ RSpec.describe DashboardController do
       get :index
       expect(response).to render_template("index")
     end
+
     context "disable_login is true" do
       before do
         test_strategy = Flipflop::FeatureSet.current.test!
@@ -63,6 +65,7 @@ RSpec.describe DashboardController do
         end
       end
     end
+
     context "when a trainer is emulating eligible_sponsor" do
       it "renders the index page" do
         get :index, session: { emulation_role: "Eligible Data Sponsor" }
@@ -72,6 +75,7 @@ RSpec.describe DashboardController do
         expect(assigns(:current_user).eligible_manager).to be_falsey
       end
     end
+
     context "when a trainer is emulating eligible_manager" do
       it "renders the index page" do
         get :index, session: { emulation_role: "Eligible Data Manager" }
@@ -82,6 +86,7 @@ RSpec.describe DashboardController do
         expect(assigns(:current_user).eligible_manager).to be_truthy
       end
     end
+
     context "when a trainer is emulating eligible_data_user" do
       it "renders the index page" do
         get :index, session: { emulation_role: "Eligible Data User" }
@@ -96,6 +101,7 @@ RSpec.describe DashboardController do
 
   context "when a user is logged in", connect_to_mediaflux: true do
     let(:researcher_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
+
     before do
       sign_in researcher_user
     end
@@ -125,6 +131,7 @@ RSpec.describe DashboardController do
 
     context "and the user is a sysadmin" do
       let(:sysadmin_user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
+
       render_views
 
       before do
@@ -157,6 +164,7 @@ RSpec.describe DashboardController do
 
     context "and the user is a developer" do
       let(:developer_user) { FactoryBot.create(:developer, mediaflux_session: SystemUser.mediaflux_session) }
+
       render_views
 
       before do

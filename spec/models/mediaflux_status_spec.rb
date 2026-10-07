@@ -25,6 +25,7 @@ RSpec.describe MediafluxStatus, connect_to_mediaflux: true, type: :model do
   context "when we cannot connecto Mediaflux" do
     let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
     let(:error_node) { "<response><reply><error>something went wrong</error></reply></response>" }
+
     before do
       stub_request(:post, mediaflux_url)
         .to_return(status: 400, body: "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n#{error_node}")

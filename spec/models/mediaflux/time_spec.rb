@@ -7,6 +7,7 @@ RSpec.describe Mediaflux::Time do
     let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:docker_response) { "Etc/UTC" }
     let(:ansible_response) { "America/Chicago" }
+
     subject(:instance) { described_class.new }
 
     describe "#convert", connect_to_mediaflux: true do
@@ -26,12 +27,14 @@ RSpec.describe Mediaflux::Time do
         expect(["-04:00", "-05:00"].any? { |tz| final_tz.include?(tz) }).to be_truthy #America/New_York changes based on daylights savings time
       end
     end
+
     describe "date formatting" do
       let(:project) { FactoryBot.build(:project_with_doi) }
 
       context "for MediaFlux" do
         # Mediaflux date format is like " 9-FEB-2024 14:53:23"
         let(:date_regexp) { /\d-[A-Z]{3}-\d{4} \d{2}:\d{2}:\d{2}/ }
+
         it "looks like 9-FEB-2024 14:53:23" do
           created_on =  project.metadata_model.created_on.strip
           formatted = described_class.format_date_for_mediaflux(created_on)

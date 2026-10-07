@@ -9,6 +9,7 @@ RSpec.describe "new-project/additional-info-related-resources", type: :request d
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "new project") }
@@ -29,11 +30,13 @@ RSpec.describe "new-project/additional-info-related-resources", type: :request d
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
         let(:request) { NewProjectRequest.create(request_title: "abc123", project_title: "project") }
+
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_additional_information_related_resources_save_url(request.id, request: { request_title: "new title", project_title: "new project" }, commit: "Save")

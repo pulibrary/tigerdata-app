@@ -7,6 +7,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
   let(:project) { request1.approve(sponsor_and_data_manager) }
   
   let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
+
   subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:) }
 
   describe "#type" do

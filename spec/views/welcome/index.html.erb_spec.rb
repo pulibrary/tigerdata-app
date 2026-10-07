@@ -41,6 +41,7 @@ describe "home", type: :system do
       test_strategy.switch!(:entra_enabled, original_value)
     end
   end
+
   context "when Entra login is not enabled" do
     it "includes the CAS login URL in the header" do
       test_strategy = Flipflop::FeatureSet.current.test!
