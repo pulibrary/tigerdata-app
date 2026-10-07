@@ -99,12 +99,12 @@ RSpec.describe VersionFooter do
           allow(Rails).to receive(:env).and_return(env)
         end
 
-        it "indicates that the application is not in a deployed environment" do
-          expect(described_class.git_sha).to eq "Unknown SHA"
-        end
-
         after do
           allow(Rails).to receive(:env).and_call_original
+        end
+
+        it "indicates that the application is not in a deployed environment" do
+          expect(described_class.git_sha).to eq "Unknown SHA"
         end
       end
     end
@@ -132,12 +132,12 @@ RSpec.describe VersionFooter do
           allow(Rails).to receive(:env).and_return(env)
         end
 
-        it "indicates that the application is not in a deployed environment" do
-          expect(described_class.branch).to eq("Unknown branch")
-        end
-
         after do
           allow(Rails).to receive(:env).and_call_original
+        end
+
+        it "indicates that the application is not in a deployed environment" do
+          expect(described_class.branch).to eq("Unknown branch")
         end
       end
     end

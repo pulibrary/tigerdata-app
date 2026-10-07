@@ -125,7 +125,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   end
 
   describe "#requested_by_display_name" do
-    it "returns the display name " do
+    it "returns the display name" do
       expect(presenter.requested_by_display_name).to be_a(String)
       expect(presenter.requested_by_display_name).to eq(sponsor_and_data_manager_user.display_name_only_safe)
     end

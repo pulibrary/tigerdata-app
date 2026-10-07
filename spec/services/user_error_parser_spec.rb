@@ -54,7 +54,7 @@ RSpec.describe UserErrorParser do
       ]
     end
 
-    it "creates 1 row with data sponsor " do
+    it "creates 1 row with data sponsor" do
       output = UserErrorParser.parse(data_sponsor_only)
       expect(output.count).to eq(1)
       expect(output.first).to eq(data_sponsor_only_output)

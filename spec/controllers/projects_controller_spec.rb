@@ -26,7 +26,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :details, params: { id: project.id, format: :json }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -167,7 +167,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :list_contents, params: { id: project.id, format: :json }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -217,7 +217,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :show, params: { id: project.id }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -319,7 +319,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :directory_listing, params: { id: project.id, format: :json }
         expect(response).to redirect_to dashboard_path
       end
@@ -399,7 +399,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :list_contents, params: { id: project.id, format: :json }
         expect(response).to redirect_to dashboard_path
       end
@@ -467,7 +467,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :file_list_download, params: { job_id: inventory_request_request.job_id }
         expect(response).to redirect_to dashboard_path
       end
