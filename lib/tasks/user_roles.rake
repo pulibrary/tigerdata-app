@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :user_roles do
   desc "Add developer role to a user based on their net ID (not available in production)"
   task :add_developer, [:uid] => [:environment] do |_, args|

@@ -13,8 +13,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
   context "Details page" do
     let(:project_in_mediaflux) do
       request = FactoryBot.create(:request_project, data_manager: manager_user.uid, data_sponsor: sponsor_user.uid,
-        storage_size: 500, storage_unit: "GB", departments: [{"code"=>"77777", "name"=>"RDSS-Research Data and Scholarship Services"}],
-        user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }])
+                                                    storage_size: 500, storage_unit: "GB", departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }],
+                                                    user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }])
       request.approve(sponsor_and_data_manager_user)
     end
 
@@ -84,27 +84,27 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     context "Request more storage button displays for a data sponsor or a data manager" do
       it "Shows the request more storage button if the feature is enabled" do
-          sign_in sponsor_user
-          visit "/projects/#{project_in_mediaflux.id}/details"
-          within ".storage-quota" do
+        sign_in sponsor_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
           click_on "Details"
           expect(page).to have_button("Request more storage")
         end
       end
 
       it "Shows the request more storage button if the feature is enabled" do
-          sign_in manager_user
-          visit "/projects/#{project_in_mediaflux.id}/details"
-          within ".storage-quota" do
+        sign_in manager_user
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
           click_on "Details"
           expect(page).to have_button("Request more storage")
         end
       end
 
       it "does not display for a data user" do
-          sign_in read_only
-          visit "/projects/#{project_in_mediaflux.id}/details"
-          within ".storage-quota" do
+        sign_in read_only
+        visit "/projects/#{project_in_mediaflux.id}/details"
+        within ".storage-quota" do
           click_on "Details"
           expect(page).not_to have_button("Request more storage")
         end
@@ -245,7 +245,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page.html.include?('<button id="copy-project-path-button"')).to be true
         expect(page.html.include?('<button id="copy-project-path-button-basic"')).to be true
 
-
         # A test as follows would be preferrable
         #
         # ```
@@ -292,13 +291,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs" ,"Enabled"
+        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs", "Enabled"
         expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
-        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project" ,"Request"
+        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project", "Request"
         expect(page).to have_link("Globus", href: "https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus")
       end
     end
-
 
     context "Provenance Events" do
       let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid) }
@@ -364,7 +362,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
 
       it "Contents page has collection summary data",
-      :integration do
+         :integration do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
@@ -381,7 +379,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
 
       it "displays the project contents at the top level",
-      :integration do
+         :integration do
         # sign in and be able to view the file count for the collection
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"

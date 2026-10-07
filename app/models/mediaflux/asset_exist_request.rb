@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class AssetExistRequest < Request
     # Constructor
@@ -24,12 +25,12 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id "path=#{@path}"
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id "path=#{@path}"
         end
       end
+    end
   end
 end

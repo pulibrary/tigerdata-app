@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Flipflop.configure do
   # Strategies will be used in the order listed here.
   strategy :active_record

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectCreate, type: :operation, integration: true do
@@ -70,7 +71,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
       it "returns a failure if the project can not be updated" do
         project = FactoryBot.create(:approved_project)
-        allow(Project).to receive(:"create!").and_return(project)
+        allow(Project).to receive(:create!).and_return(project)
         allow(project).to receive(:"mediaflux_id=").and_raise("Object issue")
         result = described_class.new.call(request: invalid_request, approver: approver)
         expect(result).not_to be_success
@@ -81,7 +82,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
       it "returns a failure if the project can not be activated" do
         project = FactoryBot.create(:approved_project)
-        allow(Project).to receive(:"create!").and_return(project)
+        allow(Project).to receive(:create!).and_return(project)
         allow(project).to receive(:activate).and_raise("Object issue")
         result = described_class.new.call(request: invalid_request, approver: approver)
         expect(result).not_to be_success

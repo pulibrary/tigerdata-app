@@ -9,10 +9,10 @@ class XmlTreeBuilder < XmlNodeBuilder
 
   def root_builder
     @root_builder ||= begin
-                        default_builder = XmlElementBuilder.new(**root_builder_options)
-                        null_builder if default_builder.blank?
-                        default_builder
-                      end
+      default_builder = XmlElementBuilder.new(**root_builder_options)
+      null_builder if default_builder.blank?
+      default_builder
+    end
   end
 
   delegate :node, :document, to: :root_builder

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class DashboardPresenter
   attr_reader :current_user, :display_modal
 
@@ -55,7 +56,7 @@ class DashboardPresenter
 
   private
 
-    def presented_requests(requests)
-      requests.map { |req| NewProjectRequestPresenter.new(req) }
-    end
+  def presented_requests(requests)
+    requests.map { |req| NewProjectRequestPresenter.new(req) }
+  end
 end

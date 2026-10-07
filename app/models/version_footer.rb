@@ -56,7 +56,7 @@ class VersionFooter
 
   def self.tagged_release?
     # e.g. v0.8.0
-    branch.match(/^v[\d+\.+]+/) != nil
+    branch.match(/^v[\d+\.]+/) != nil
   end
 
   def self.branch
@@ -110,4 +110,4 @@ class VersionFooter
     log_line
   end
 end
-# rubocop:enable RuboCop::Cop::Style::ClassVars
+Cop::Style::ClassVars

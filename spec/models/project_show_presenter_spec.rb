@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do

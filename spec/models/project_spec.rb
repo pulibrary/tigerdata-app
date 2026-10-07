@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
@@ -105,7 +106,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "fetches the file list",
-    :integration do
+       :integration do
       file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
@@ -121,7 +122,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     let!(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
     it "fetches the directory listing",
-    :integration do
+       :integration do
       directory_files_list = project.directory_listing(session_id: manager.mediaflux_session, size: 50)
       expect(directory_files_list[:files].count).to eq 10
       expect(directory_files_list[:files][0].name).to eq "A0"

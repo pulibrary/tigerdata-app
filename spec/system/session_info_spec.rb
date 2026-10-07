@@ -12,6 +12,6 @@ describe "session_info", type: :system, js: true, connect_to_mediaflux: true do
     expect(page).to have_text("Connected to MediaFlux")
     expect(page).to have_text("port #{mflux_port}")
     expect(page).to have_text("Mediaflux Roles:")
-    expect(page).to have_text("system-administrator")  # Role of our user while running the tests
+    expect(page).to have_text("system-administrator") # Role of our user while running the tests
   end
 end

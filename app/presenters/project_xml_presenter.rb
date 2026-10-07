@@ -235,28 +235,28 @@ class ProjectXmlPresenter
 
   private
 
-    def xml_builder_config
-      Rails.configuration.xml_builder
+  def xml_builder_config
+    Rails.configuration.xml_builder
+  end
+
+  def presenter_builder_config
+    xml_builder_config[:project] || {}
+  end
+
+  def find_builder_args(key)
+    raise "No builder config for #{key}" unless presenter_builder_config.key?(key)
+
+    values = presenter_builder_config[key]
+    values[:presenter] = self
+    values
+  end
+
+  def builder
+    @builder ||= begin
+      builder_args = find_builder_args(:resource)
+      XmlTreeBuilder.new(**builder_args)
     end
+  end
 
-    def presenter_builder_config
-      xml_builder_config[:project] || {}
-    end
-
-    def find_builder_args(key)
-      raise "No builder config for #{key}" unless presenter_builder_config.key?(key)
-
-      values = presenter_builder_config[key]
-      values[:presenter] = self
-      values
-    end
-
-    def builder
-      @builder ||= begin
-                     builder_args = find_builder_args(:resource)
-                     XmlTreeBuilder.new(**builder_args)
-                   end
-    end
-
-    delegate :build, to: :builder
+  delegate :build, to: :builder
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type: :model do
@@ -17,7 +18,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
     end
 
     it "parses a metadata response",
-    :integration do
+       :integration do
       metadata_request = described_class.new(session_token: user.mediaflux_session, id: @asset_id)
       metadata = metadata_request.metadata
       expect(metadata[:id]).to eq(@asset_id.to_s)
@@ -32,7 +33,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
 
     context "A collection" do
       it "parses a metadata response",
-      :integration do
+         :integration do
         metadata_request = described_class.new(session_token: user.mediaflux_session, id: approved_project.mediaflux_id)
         metadata = metadata_request.metadata
         expect(metadata[:creator]).to eq("manager")
@@ -55,7 +56,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       let(:session_token) { researcher_user.mediaflux_session }
 
       it "parses the response",
-      :integration do
+         :integration do
         metadata_request = described_class.new(session_token: session_token, id: valid_project.mediaflux_id)
         metadata = metadata_request.metadata
         expect(metadata[:id]).to eq(valid_project.mediaflux_id.to_s)

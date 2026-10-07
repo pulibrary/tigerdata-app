@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ProjectImportController < ApplicationController
   def run
     if current_user.eligible_sysadmin?

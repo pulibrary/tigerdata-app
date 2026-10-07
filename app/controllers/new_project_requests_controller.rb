@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NewProjectRequestsController < ApplicationController
   before_action :set_new_project_request, only: %i[show approve destroy]
   before_action :set_breadcrumbs
@@ -45,8 +46,8 @@ class NewProjectRequestsController < ApplicationController
     end
   end
 
-      # rubocop:enable Metrics/AbcSize
-      def destroy
+  # rubocop:enable Metrics/AbcSize
+  def destroy
     if eligible_to_destroy?
       @new_project_request.destroy
       redirect_to dashboard_path(modal: "confirm_delete_draft")
@@ -54,23 +55,23 @@ class NewProjectRequestsController < ApplicationController
       flash[:notice] = I18n.t(:no_permission_to_delete)
       redirect_to dashboard_path
     end
-      end
+  end
 
   private
 
-    def set_new_project_request
-      @new_project_request = NewProjectRequest.find(params[:id])
-    end
+  def set_new_project_request
+    @new_project_request = NewProjectRequest.find(params[:id])
+  end
 
-    def set_breadcrumbs
-      add_breadcrumb("Dashboard", dashboard_path)
-    end
+  def set_breadcrumbs
+    add_breadcrumb("Dashboard", dashboard_path)
+  end
 
-    def eligible_to_approve
-      current_user.sysadmin || (current_user.developer && !Rails.env.production?)
-    end
+  def eligible_to_approve
+    current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+  end
 
-    def eligible_to_destroy?
-      current_user.uid == @new_project_request.requested_by
-    end
+  def eligible_to_destroy?
+    current_user.uid == @new_project_request.requested_by
+  end
 end

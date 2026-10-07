@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::StoreListRequest, connect_to_mediaflux: true, type: :model, integration: true do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   # Destroy a MediaFlux namespace and everything in it
   # @example
@@ -36,13 +37,13 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.namespace @namespace
-            xml.atomic true
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.namespace @namespace
+          xml.atomic true
         end
       end
+    end
   end
 end

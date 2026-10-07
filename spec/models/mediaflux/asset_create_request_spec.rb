@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
@@ -28,16 +29,16 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
     it "creates the asset create payload", :integration do
       create_request = described_class.new(session_token: nil, name: random_directory, pid: project.mediaflux_id)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
-      "<request>\n" \
-      "  <service name=\"asset.create\">\n" \
-      "    <args>\n" \
-      "      <name>#{random_directory}</name>\n" \
-      "      <collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n" \
-      "      <type>application/arc-asset-collection</type>\n" \
-      "      <pid>#{project.mediaflux_id}</pid>\n" \
-      "    </args>\n" \
-      "  </service>\n" \
-      "</request>\n"
+                     "<request>\n  " \
+                     "<service name=\"asset.create\">\n    " \
+                     "<args>\n      " \
+                     "<name>#{random_directory}</name>\n      " \
+                     "<collection cascade-contained-asset-index=\"true\" contained-asset-index=\"true\" unique-name-index=\"true\">true</collection>\n      " \
+                     "<type>application/arc-asset-collection</type>\n      " \
+                     "<pid>#{project.mediaflux_id}</pid>\n    " \
+                     "</args>\n  " \
+                     "</service>\n" \
+                     "</request>\n"
       expect(create_request.xml_payload).to eq(expected_xml)
     end
   end

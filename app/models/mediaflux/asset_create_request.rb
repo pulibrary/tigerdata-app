@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class AssetCreateRequest < Request
     attr_reader :namespace, :asset_name, :collection
@@ -31,38 +32,38 @@ module Mediaflux
 
     private
 
-      # The generated XML mimics what we get when we issue an Aterm command as follows:
-      # > asset.set :id path=/sandbox_ns/rdss_collection
-      #     :meta <
-      #       :tigerdata:project <
-      #         :title "RDSS test project"
-      #         :description "The description of the project"
-      #         ...the rest of the fields go here..
-      #       >
-      #     >
-      #
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.name asset_name
-            xml.namespace namespace if namespace.present?
-            yield xml if block_given?
-            collection_xml(xml)
-            if @pid.present?
-              xml.pid @pid
-            end
+    # The generated XML mimics what we get when we issue an Aterm command as follows:
+    # > asset.set :id path=/sandbox_ns/rdss_collection
+    #     :meta <
+    #       :tigerdata:project <
+    #         :title "RDSS test project"
+    #         :description "The description of the project"
+    #         ...the rest of the fields go here..
+    #       >
+    #     >
+    #
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.name asset_name
+          xml.namespace namespace if namespace.present?
+          yield xml if block_given?
+          collection_xml(xml)
+          if @pid.present?
+            xml.pid @pid
           end
         end
       end
+    end
 
-      def collection_xml(xml)
-        xml.collection do
-          xml.parent.set_attribute("cascade-contained-asset-index", true)
-          xml.parent.set_attribute("contained-asset-index", true)
-          xml.parent.set_attribute("unique-name-index", true)
-          xml.text(true)
-        end
-        xml.type "application/arc-asset-collection"
+    def collection_xml(xml)
+      xml.collection do
+        xml.parent.set_attribute("cascade-contained-asset-index", true)
+        xml.parent.set_attribute("contained-asset-index", true)
+        xml.parent.set_attribute("unique-name-index", true)
+        xml.text(true)
       end
+      xml.type "application/arc-asset-collection"
+    end
   end
 end

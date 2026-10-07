@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 def create_project_in_mediaflux(request: nil, current_user: nil)
   request ||= FactoryBot.create(:request_project)
-  tigerdatatester = User.where(uid: "tigerdatatester").first || FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session  )
+  tigerdatatester = User.where(uid: "tigerdatatester").first || FactoryBot.create(:user, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session)
   current_user ||= tigerdatatester
   current_user.mediaflux_session ||= SystemUser.mediaflux_session
   project = request.approve(current_user)

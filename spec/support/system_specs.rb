@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Capybara.configure do |config|
   config.default_driver = :chrome
 

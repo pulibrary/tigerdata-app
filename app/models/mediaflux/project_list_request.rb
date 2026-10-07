@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectListRequest < Request
     attr_reader :aql_query, :action, :size
@@ -45,24 +46,24 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.where aql_query if aql_query.present?
-            xml.action action if action.present?
-            xml.size size if size.present?
-            # I tried sorting by path and that slowed down the query to unusable
-            # We will need to be considerate of performance when sorting the results
-            xml.sort do
-              xml.key "name"
-            end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.where aql_query if aql_query.present?
+          xml.action action if action.present?
+          xml.size size if size.present?
+          # I tried sorting by path and that slowed down the query to unusable
+          # We will need to be considerate of performance when sorting the results
+          xml.sort do
+            xml.key "name"
           end
         end
       end
+    end
 
-      def data_users_from_string(users)
-        return [] if users.blank?
-        users.split(",").compact_blank
-      end
+    def data_users_from_string(users)
+      return [] if users.blank?
+      users.split(",").compact_blank
+    end
   end
 end

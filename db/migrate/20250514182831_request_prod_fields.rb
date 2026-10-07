@@ -11,6 +11,7 @@ class RequestProdFields < ActiveRecord::Migration[7.0]
     add_column :requests, :quota, :float
     add_column :requests, :requested_by, :string
   end
+
   def down
     remove_column :requests, :state, :string
     remove_column :requests, :data_sponsor, :string

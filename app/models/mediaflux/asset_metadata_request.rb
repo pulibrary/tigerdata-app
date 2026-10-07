@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   # Get metadata about an asset in mediaflux
   # @example
@@ -34,134 +35,134 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id id
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id id
         end
       end
+    end
 
-      def parse_quota(quota, metadata)
-        metadata[:quota_allocation] = quota.xpath("./allocation/@h").text
-        metadata[:quota_allocation_raw] = quota.xpath("./allocation").text.to_i
-        metadata[:quota_used] = quota.xpath("./used/@h").text
-        metadata[:quota_used_raw] = quota.xpath("./used").text.to_i
+    def parse_quota(quota, metadata)
+      metadata[:quota_allocation] = quota.xpath("./allocation/@h").text
+      metadata[:quota_allocation_raw] = quota.xpath("./allocation").text.to_i
+      metadata[:quota_used] = quota.xpath("./used/@h").text
+      metadata[:quota_used_raw] = quota.xpath("./used").text.to_i
+    end
+
+    def parse_file_count(asset, metadata)
+      metadata[:ctime] = asset.xpath("./ctime")
+      statistics = asset.xpath("./collection/statistics")
+      if statistics.none?
+        metadata[:statistics] = false
+      else
+        # The statistics is the better way to get the total file count than the accumulator
+        # and if it is available we fetch them from there.
+        metadata[:statistics] = true
+        metadata[:total_file_count] = statistics.xpath("non-collections").text
+        metadata[:size] = statistics.xpath("total-size/@h").text
       end
+    end
 
-      def parse_file_count(asset, metadata)
-        metadata[:ctime] = asset.xpath("./ctime")
-        statistics = asset.xpath("./collection/statistics")
-        if statistics.none?
-          metadata[:statistics] = false
+    # Update this to match full 0.6.1 schema
+    def parse(asset)
+      {
+        id: asset.xpath("./@id").text,
+        mediaflux_id: asset.xpath("./@id").text,
+        name: asset.xpath("./name").text,
+        creator: asset.xpath("./creator/user").text,
+        description: asset.xpath("./description").text,
+        collection: asset.xpath("./@collection")&.text == "true",
+        path: asset.xpath("./path").text,
+        type: asset.xpath("./type").text,
+        namespace: asset.xpath("./namespace").text,
+        accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
+      }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first, asset))
+    end
+
+    def parse_project(project, asset)
+      return {} if project.blank?
+      metadata = {
+        data_sponsor: project.xpath("./DataSponsor").text,
+        data_manager: project.xpath("./DataManager").text,
+        departments: project.xpath("./Department").children.map(&:text),
+        description: project.xpath("./Description").text,
+        project_directory: project.xpath("./ProjectDirectory").text,
+        project_id: project.xpath("./ProjectID").text,
+        project_purpose: project.xpath("./ProjectPurpose").text,
+        data_security_level: calculate_security_level(project.xpath("./SecurityLevel").text),
+        submission: parse_submission(project),
+        title: project.xpath("./Title").text
+      }
+      metadata.merge!(parse_data_users(asset, project))
+      metadata.merge!(parse_project_dates(project))
+      metadata.merge!(parse_storage_options(project))
+    end
+
+    # NOTE: We are still using the "DataUser" attribute in the Project Metadata
+    # to drive the list of users who can read and/or write to the Mediaflux
+    # asset. In the future we could go by the ACL information in the asset
+    # alone (and bypass the DataUser attribute) and that will be more accurate.
+    def parse_data_users(asset, project)
+      data_users = data_users_from_string(project.xpath("./DataUser").text)
+      rw_users = parse_read_write_users(asset, data_users)
+      {
+        data_users: data_users,
+        rw_users: rw_users,
+        ro_users: data_users - rw_users
+      }
+    end
+
+    def parse_project_dates(project)
+      {
+        created_by: project.xpath("./CreatedBy").text,
+        created_on: project.xpath("./CreatedOn").text,
+        updated_by: project.xpath("./UpdatedBy").text,
+        updated_on: project.xpath("./UpdatedOn").text
+      }
+    end
+
+    def parse_storage_options(project)
+      {
+        number_of_files: project.xpath("./NumberofFiles").text,
+        hpc: project.xpath("./Hpc").text == "true",
+        smb: project.xpath("./Smb").text == "true",
+        globus: project.xpath("./Globus").text == "true"
+      }
+    end
+
+    def parse_submission(project)
+      submission = project.xpath("./Submission")
+      {
+        requested_by: submission.xpath("./RequestedBy").text,
+        requested_on: submission.xpath("./RequestDateTime").text,
+        approved_by: submission.xpath("./ApprovedBy").text,
+        approved_on: submission.xpath("./ApprovalDateTime").text
+      }
+    end
+
+    def data_users_from_string(users)
+      return [] if users.blank?
+      users.split(",").compact_blank
+    end
+
+    # Calculates which of the `data_users` listed in the metadata have
+    # write access in Mediaflux for the given asset.
+    def parse_read_write_users(asset, data_users)
+      users = asset.xpath("./acl").map do |acl|
+        uid = acl.xpath("./actor").text.gsub("princeton:", "")
+        if data_users.include?(uid) && acl.xpath("./metadata").map(&:text).include?("write")
+          uid
         else
-          # The statistics is the better way to get the total file count than the accumulator
-          # and if it is available we fetch them from there.
-          metadata[:statistics] = true
-          metadata[:total_file_count] = statistics.xpath("non-collections").text
-          metadata[:size] = statistics.xpath("total-size/@h").text
+          ""
         end
       end
+      users.compact_blank
+    end
 
-      # Update this to match full 0.6.1 schema
-      def parse(asset)
-        {
-          id: asset.xpath("./@id").text,
-          mediaflux_id: asset.xpath("./@id").text,
-          name: asset.xpath("./name").text,
-          creator: asset.xpath("./creator/user").text,
-          description: asset.xpath("./description").text,
-          collection: asset.xpath("./@collection")&.text == "true",
-          path: asset.xpath("./path").text,
-          type: asset.xpath("./type").text,
-          namespace: asset.xpath("./namespace").text,
-          accumulators: asset.xpath("./collection/accumulator/value") # list of accumulator values in xml format. Can parse further through xpath
-        }.merge(parse_project(asset.xpath("//tigerdata:project", "tigerdata" => "tigerdata").first, asset))
-      end
-
-            def parse_project(project, asset)
-        return {} if project.blank?
-        metadata = {
-          data_sponsor: project.xpath("./DataSponsor").text,
-          data_manager: project.xpath("./DataManager").text,
-          departments: project.xpath("./Department").children.map(&:text),
-          description: project.xpath("./Description").text,
-          project_directory: project.xpath("./ProjectDirectory").text,
-          project_id: project.xpath("./ProjectID").text,
-          project_purpose: project.xpath("./ProjectPurpose").text,
-          data_security_level: calculate_security_level(project.xpath("./SecurityLevel").text),
-          submission: parse_submission(project),
-          title: project.xpath("./Title").text
-        }
-        metadata.merge!(parse_data_users(asset, project))
-        metadata.merge!(parse_project_dates(project))
-        metadata.merge!(parse_storage_options(project))
-            end
-
-      # NOTE: We are still using the "DataUser" attribute in the Project Metadata
-      # to drive the list of users who can read and/or write to the Mediaflux
-      # asset. In the future we could go by the ACL information in the asset
-      # alone (and bypass the DataUser attribute) and that will be more accurate.
-      def parse_data_users(asset, project)
-        data_users = data_users_from_string(project.xpath("./DataUser").text)
-        rw_users = parse_read_write_users(asset, data_users)
-        {
-          data_users: data_users,
-          rw_users: rw_users,
-          ro_users: data_users - rw_users
-        }
-      end
-
-      def parse_project_dates(project)
-        {
-          created_by: project.xpath("./CreatedBy").text,
-          created_on: project.xpath("./CreatedOn").text,
-          updated_by: project.xpath("./UpdatedBy").text,
-          updated_on: project.xpath("./UpdatedOn").text
-        }
-      end
-
-      def parse_storage_options(project)
-        {
-          number_of_files: project.xpath("./NumberofFiles").text,
-          hpc: project.xpath("./Hpc").text == "true",
-          smb: project.xpath("./Smb").text == "true",
-          globus: project.xpath("./Globus").text == "true"
-        }
-      end
-
-      def parse_submission(project)
-        submission = project.xpath("./Submission")
-        {
-          requested_by: submission.xpath("./RequestedBy").text,
-          requested_on: submission.xpath("./RequestDateTime").text,
-          approved_by: submission.xpath("./ApprovedBy").text,
-          approved_on: submission.xpath("./ApprovalDateTime").text
-        }
-      end
-
-      def data_users_from_string(users)
-        return [] if users.blank?
-        users.split(",").compact_blank
-      end
-
-      # Calculates which of the `data_users` listed in the metadata have
-      # write access in Mediaflux for the given asset.
-      def parse_read_write_users(asset, data_users)
-        users = asset.xpath("./acl").map do |acl|
-          uid = acl.xpath("./actor").text.gsub("princeton:", "")
-          if data_users.include?(uid) && acl.xpath("./metadata").map(&:text).include?("write")
-            uid
-          else
-            ""
-          end
-        end
-        users.compact_blank
-      end
-
-      def calculate_security_level(level_text)
-        return nil if level_text.blank?
-        level_text.to_i
-      end
+    def calculate_security_level(level_text)
+      return nil if level_text.blank?
+      level_text.to_i
+    end
   end
 end

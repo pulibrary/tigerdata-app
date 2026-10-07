@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe FileInventoryCleanupJob, connect_to_mediaflux: true, type: :job, integration: true do

@@ -230,7 +230,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       end
 
       it "enqueues a Sidekiq job for asynchronously requesting project files",
-        :integration do
+         :integration do
         visit project_path(approved_project)
 
         expect(page).not_to have_text("show level by level browser here")
@@ -264,7 +264,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
 
         it "returns the XML with the correct attributes",
-        :integration do
+           :integration do
           xml = page.body
           expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
           expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")

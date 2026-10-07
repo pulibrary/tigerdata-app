@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NewProjectRequest < ApplicationRecord
   DRAFT = "draft" # default state set by database
   SUBMITTED = "submitted" # Ready to be approved
@@ -40,7 +41,7 @@ class NewProjectRequest < ApplicationRecord
 
   def valid_user_roles?
     check_errors? do
-      user_roles&.each_with_index do |user_role, index| 
+      user_roles&.each_with_index do |user_role, index|
         validate_uid(user_role["uid"], :user_roles)
         if user_role["uid"] == data_sponsor
           errors.add(:user_roles, :invalid, message: "Data sponsor should not be a data user")
@@ -192,71 +193,71 @@ class NewProjectRequest < ApplicationRecord
 
   private
 
-    def user_name(uid)
-      return "" if uid.blank?
-      user = User.find_by(uid: uid)
-      if user.present?
-        user.display_name_safe
-      else
-        uid
-      end
+  def user_name(uid)
+    return "" if uid.blank?
+    user = User.find_by(uid: uid)
+    if user.present?
+      user.display_name_safe
+    else
+      uid
     end
+  end
 
-    def check_errors?
-      original_error_count = errors.count
-      yield
-      original_error_count == errors.count
-    end
+  def check_errors?
+    original_error_count = errors.count
+    yield
+    original_error_count == errors.count
+  end
 
-    def field_present?(value, name)
-      if value.blank?
-        errors.add(name, :invalid, message: "This field is required.")
-      end
+  def field_present?(value, name)
+    if value.blank?
+      errors.add(name, :invalid, message: "This field is required.")
     end
+  end
 
-    def validate_uid(uid, field)
-      if uid.blank?
-        errors.add(field, :blank, message: "This field is required.")
-      elsif User.where(uid: uid).count == 0
-        errors.add(field, :invalid, message: "Must be a valid user.")
-      end
+  def validate_uid(uid, field)
+    if uid.blank?
+      errors.add(field, :blank, message: "This field is required.")
+    elsif User.where(uid: uid).count == 0
+      errors.add(field, :invalid, message: "Must be a valid user.")
     end
+  end
 
-    def project_purpose_present?(project_purpose, field)
-      if project_purpose.blank?
-        errors.add(field, :blank, message: "Select a project purpose.")
-      end
+  def project_purpose_present?(project_purpose, field)
+    if project_purpose.blank?
+      errors.add(field, :blank, message: "Select a project purpose.")
     end
+  end
 
-    def valid_length(value, length, field)
-      return if value.blank?
-      if value.length > length
-        errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
-      end
+  def valid_length(value, length, field)
+    return if value.blank?
+    if value.length > length
+      errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
     end
+  end
 
-    # Allows alphanumeric, dashes, underscores, and forward-slashes
-    def alphanumeric_dash_underscore_only(value, field)
-      return if value.blank?
-      if value.match(/\A[\w\-\/]+\z/).nil?
-        errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed.")
-      elsif value.include?("//")
-        errors.add(field, :invalid, message: "Empty subfolders are not allowed.")
-      elsif value.start_with?("/")
-        errors.add(field, :invalid, message: "Cannot start with a forward slash.")
-      elsif value.end_with?("/")
-        errors.add(field, :invalid, message: "Cannot end with a forward slash.")
-      end
+  # Allows alphanumeric, dashes, underscores, and forward-slashes
+  def alphanumeric_dash_underscore_only(value, field)
+    return if value.blank?
+    if value.match(/\A[\w\-\/]+\z/).nil?
+      errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed.")
+    elsif value.include?("//")
+      errors.add(field, :invalid, message: "Empty subfolders are not allowed.")
+    elsif value.start_with?("/")
+      errors.add(field, :invalid, message: "Cannot start with a forward slash.")
+    elsif value.end_with?("/")
+      errors.add(field, :invalid, message: "Cannot end with a forward slash.")
     end
+  end
 
-    # If a request fails to be a approved we make sure there were not orphan
-    # project records left in our Rails database that do not have a matching
-    # project in Mediaflux (i.e. collection asset).
-    def cleanup_incomplete_project
-      project = Project.find_by_id(project_id)
-      if project && project.mediaflux_id.nil?
-        Rails.logger.warn("Deleting project #{project.id} because the approval for request #{id} failed and it was not created in Mediaflux.")
-        project.destroy!
-      end
+  # If a request fails to be a approved we make sure there were not orphan
+  # project records left in our Rails database that do not have a matching
+  # project in Mediaflux (i.e. collection asset).
+  def cleanup_incomplete_project
+    project = Project.find_by_id(project_id)
+    if project && project.mediaflux_id.nil?
+      Rails.logger.warn("Deleting project #{project.id} because the approval for request #{id} failed and it was not created in Mediaflux.")
+      project.destroy!
     end
+  end
 end

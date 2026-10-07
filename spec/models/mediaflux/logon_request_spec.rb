@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model do
@@ -17,7 +18,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
       end).to have_been_made.at_least_once
 
       assert_not_requested(:post, mediaflux_url,
-                       body: /<token>/)
+                           body: /<token>/)
     end
 
     context "with a different domain" do
@@ -56,7 +57,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
       it "authenticates and stores the session token" do
         expect(request.session_token).to be_blank
         assert_requested(:post, mediaflux_url,
-                          body: /<token>tokentoken/)
+                         body: /<token>tokentoken/)
       end
     end
   end

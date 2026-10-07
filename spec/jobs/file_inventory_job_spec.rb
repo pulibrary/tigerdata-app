@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TestProjectCleaner
   def initialize(path = "/princeton/tigerdata/RDSS/")
     @path = path

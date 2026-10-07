@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectImport do
@@ -66,7 +67,7 @@ RSpec.describe ProjectImport do
     end
 
     it "creates projects for project in Mediaflux",
-    :integration do
+       :integration do
       # Create a project in Mediaflux...
       # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
       new_project = create_project_in_mediaflux(current_user: user)

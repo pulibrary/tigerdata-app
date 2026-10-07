@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
@@ -10,17 +11,17 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
 
   context "when a namespace exists" do
     it "deletes a namespace and everything inside of it",
-    :integration do
+       :integration do
       mediaflux_id = valid_project.mediaflux_id
       expect(mediaflux_id).not_to be_nil
       parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
-      namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces
+      namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace:).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).to include(namespace)
 
       # Destroy the namespace of the project and everything in it
       described_class.new(session_token: session_id, namespace: "#{parent_namespace}/#{namespace}").destroy
-      namespace_list = Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace: ).namespaces
+      namespace_list = Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace:).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).not_to include(namespace)
 

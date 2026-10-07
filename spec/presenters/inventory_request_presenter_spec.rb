@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
@@ -22,8 +23,8 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
 
   let(:project) do
     FactoryBot.create(:project_with_apostrophe_in_title,
-    data_manager: researcher_user.uid,
-    data_sponsor: researcher_user.uid)
+                      data_manager: researcher_user.uid,
+                      data_sponsor: researcher_user.uid)
   end
 
   describe "#title" do

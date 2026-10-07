@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 context "A Project Has a File List", integration: true, clean_projects: true do

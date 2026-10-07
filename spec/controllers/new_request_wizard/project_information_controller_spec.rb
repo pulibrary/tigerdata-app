@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 RSpec.describe NewProjectWizard::ProjectInformationController, type: :controller do
   let(:requestor) { FactoryBot.create(:user) }

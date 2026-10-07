@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class ProjectsController < ApplicationController
 
+class ProjectsController < ApplicationController
   before_action :set_breadcrumbs
   before_action :authenticate_user!
 
@@ -46,8 +46,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-
-
   # GET "projects/:id"
   def show
     return if project.blank?
@@ -69,8 +67,9 @@ class ProjectsController < ApplicationController
     @render_project_explorer = params["explorer"] == "true"
     respond_to do |format|
       format.html { render }
-      format.xml { render xml: ProjectShowPresenter.new(project, current_user).to_xml
-    }
+      format.xml {
+        render xml: ProjectShowPresenter.new(project, current_user).to_xml
+      }
     end
   end
 
@@ -83,12 +82,12 @@ class ProjectsController < ApplicationController
     # TODO: We should not be adding the '+1' below to make the test pass.  Complete from mediaflux or another way to calculate it should really be correct
     mediaflux_data = project.directory_listing(session_id: current_user.mediaflux_session, collection_id: path_id, size: Rails.configuration.project_file_display_limit)
     if mediaflux_data[:error]
-      render json: {error: mediaflux_data[:error]}
+      render json: { error: mediaflux_data[:error] }
     else
       data = {
         fileListUrl: project_file_explorer_url,
         currentPathId: path_id,
-        files: mediaflux_data[:files].map{|file| ProjectFileShowPresenter.new(file)},
+        files: mediaflux_data[:files].map { |file| ProjectFileShowPresenter.new(file) },
         complete: mediaflux_data[:complete]
       }
       render json: data
@@ -129,7 +128,7 @@ class ProjectsController < ApplicationController
 
   def file_list_download
     job_id = params[:job_id]
-    file_inventory_request = FileInventoryRequest.where(job_id:job_id).first
+    file_inventory_request = FileInventoryRequest.where(job_id: job_id).first
     if file_inventory_request.nil?
       # TODO: handle error
       redirect_to "/"
@@ -168,58 +167,58 @@ class ProjectsController < ApplicationController
       growth_expectation: growth_expectation,
       date_needed: date_needed,
       quota_breakdown: quota_breakdown
-      ).storage_increase_request.deliver_later
+    ).storage_increase_request.deliver_later
   rescue StandardError => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private
 
-    def project_job_service
-      @project_job_service ||= ProjectJobService.new(project:)
-    end
+  def project_job_service
+    @project_job_service ||= ProjectJobService.new(project:)
+  end
 
-    def project
-      @project ||= begin
-        project = Project.find(params[:id])
-        @presenter = ProjectShowPresenter.new(project, current_user)
-        if project&.mediaflux_id != nil && @presenter.user_has_access?(user: current_user)
-          project
-        else
-          flash[:alert] = I18n.t(:access_denied)
-          redirect_to dashboard_path
-          nil
-        end
-      end
-    end
-
-    def set_breadcrumbs
-      add_breadcrumb("Dashboard",dashboard_path)
-    end
-
-    def search_projects
-      @title_query = if params[:title_query].present?
-        params[:title_query]
+  def project
+    @project ||= begin
+      project = Project.find(params[:id])
+      @presenter = ProjectShowPresenter.new(project, current_user)
+      if project&.mediaflux_id != nil && @presenter.user_has_access?(user: current_user)
+        project
       else
-        "*" # default to all projects
-      end
-      result =  ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
-      if result.success?
-        flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
-        @project_presenters = result.value!
-      else
-        flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
-        @project_presenters = []
+        flash[:alert] = I18n.t(:access_denied)
+        redirect_to dashboard_path
+        nil
       end
     end
+  end
 
-    # This method retrieves the list of assets for the project, either using the new directory listing or the old file list depending on the configuration. It also sets a flag to indicate whether a warning about the preview limit should be shown.
-    # @return [Array] the list of files for the project
-    def find_mediaflux_assets
-      @project_file_display_limit = @presenter.project_file_display_limit
-      @show_preview_limit_warning = @presenter.show_preview_limit_warning
+  def set_breadcrumbs
+    add_breadcrumb("Dashboard", dashboard_path)
+  end
 
-      @files = @presenter.files
-      @files
+  def search_projects
+    @title_query = if params[:title_query].present?
+                     params[:title_query]
+    else
+      "*" # default to all projects
+                   end
+    result = ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
+    if result.success?
+      flash[:notice] = "Successful search in Mediaflux for #{@title_query}"
+      @project_presenters = result.value!
+    else
+      flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
+      @project_presenters = []
     end
+  end
+
+  # This method retrieves the list of assets for the project, either using the new directory listing or the old file list depending on the configuration. It also sets a flag to indicate whether a warning about the preview limit should be shown.
+  # @return [Array] the list of files for the project
+  def find_mediaflux_assets
+    @project_file_display_limit = @presenter.project_file_display_limit
+    @show_preview_limit_warning = @presenter.show_preview_limit_warning
+
+    @files = @presenter.files
+    @files
+  end
 end

@@ -19,10 +19,10 @@ class PULCache < HealthMonitor::Providers::Cache
     raise PULCacheException, e.message
   end
 
-    private
+  private
 
-      def key
-        random = rand(99_999)
-        @key ||= ["health", request.try(:remote_ip), random].join(":")
-      end
+  def key
+    random = rand(99_999)
+    @key ||= ["health", request.try(:remote_ip), random].join(":")
+  end
 end

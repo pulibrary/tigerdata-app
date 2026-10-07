@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
@@ -154,6 +155,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
   describe "#list_contents" do
     include ActiveJob::TestHelper
+
     it "renders an error when requesting json" do
       get :list_contents, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")

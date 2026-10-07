@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TestProjectGenerator
   attr_reader :user, :number, :sequence, :project_prefix
 
@@ -18,40 +19,40 @@ class TestProjectGenerator
 
   private
 
-    def create_request(user)
-      # create a duplicate copy of the configuration so we do not modify the rails defaults
-      capacity = Rails.configuration.project_defaults[:storage_capacity].deep_dup
+  def create_request(user)
+    # create a duplicate copy of the configuration so we do not modify the rails defaults
+    capacity = Rails.configuration.project_defaults[:storage_capacity].deep_dup
 
-      NewProjectRequest.create(metadata(capacity, user))
-    end
+    NewProjectRequest.create(metadata(capacity, user))
+  end
 
-        def metadata(capacity, user)
-      {
-        data_sponsor: user.uid, # Must be a valid netid/uid
-        data_manager: "tigerdatatester", # Must be a valid netid/uid
-        user_roles: [],
-        quota: "custom",
-        storage_size: capacity[:size][:requested],
-        storage_unit: capacity[:unit][:requested],
-        # For testing purposes we use the same size as the requested values
-        approved_quota: "custom",
-        approved_storage_size: capacity[:size][:requested],
-        approved_storage_unit: capacity[:unit][:requested],
-        project_title: "Project #{project_prefix} #{sequence}",
-        departments: departments,
-        description: "Description of project #{project_prefix} #{sequence}",
-        project_folder: "#{project_prefix}-#{sequence}",
-        project_purpose: Rails.configuration.project_defaults[:project_purpose]
-        # storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations]
-      }
-        end
+  def metadata(capacity, user)
+    {
+      data_sponsor: user.uid, # Must be a valid netid/uid
+      data_manager: "tigerdatatester", # Must be a valid netid/uid
+      user_roles: [],
+      quota: "custom",
+      storage_size: capacity[:size][:requested],
+      storage_unit: capacity[:unit][:requested],
+      # For testing purposes we use the same size as the requested values
+      approved_quota: "custom",
+      approved_storage_size: capacity[:size][:requested],
+      approved_storage_unit: capacity[:unit][:requested],
+      project_title: "Project #{project_prefix} #{sequence}",
+      departments: departments,
+      description: "Description of project #{project_prefix} #{sequence}",
+      project_folder: "#{project_prefix}-#{sequence}",
+      project_purpose: Rails.configuration.project_defaults[:project_purpose]
+      # storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations]
+    }
+  end
 
-        def departments
-      ldepartments = []
-      ldepartments << Affiliation.all[3] if (number % 7) == 0
-      ldepartments << Affiliation.all[2] if (number % 3) == 0
-      ldepartments << Affiliation.all[1] if (number % 5) == 0
-      ldepartments << Affiliation.all[0] if ldepartments.count == 0
-      ldepartments
-        end
+  def departments
+    ldepartments = []
+    ldepartments << Affiliation.all[3] if (number % 7) == 0
+    ldepartments << Affiliation.all[2] if (number % 3) == 0
+    ldepartments << Affiliation.all[1] if (number % 5) == 0
+    ldepartments << Affiliation.all[0] if ldepartments.count == 0
+    ldepartments
+  end
 end
