@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+<header role="banner">
+  <%= render partial: 'shared/layout_head' %>
 
-<%= render partial: 'shared/layout_head' %>
-
-  <body class="d-flex flex-column min-vh-100">
-    <% if Rails.env.development? || Rails.env.staging? %>
-      <%= render partial: 'shared/analytics_noscript_dev_staging' %>
-    <% elsif Rails.env.production? %>
-      <%= render partial: 'shared/analytics_noscript' %>
-    <% end %>
-    <%= render partial: 'shared/banner' %>
-    <%= render partial: 'shared/emulator' %>
-    <%= render partial: 'shared/header' %>
-
-
-
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12 center-column">
-      <% if flash[:notice] or flash[:alert] %>
-        <div class="row">
-          <div class="col-12">
-            <%= render partial: 'shared/alert' %>
-          </div>
-        </div>
+    <body class="d-flex flex-column min-vh-100">
+      <% if Rails.env.development? || Rails.env.staging? %>
+        <%= render partial: 'shared/analytics_noscript_dev_staging' %>
+      <% elsif Rails.env.production? %>
+        <%= render partial: 'shared/analytics_noscript' %>
       <% end %>
-      <div class="row">
-        <%= render partial: 'shared/breadcrumbs' %>
-          <%= yield %>
+      <%= render partial: 'shared/banner' %>
+      <%= render partial: 'shared/emulator' %>
+      <%= render partial: 'shared/header' %>
+</header>
+
+<alert role="alert">
+  <div class="container-fluid">
+    <div class="row main-content">
+      <div class="col-12 center-column">
+        <% if flash[:notice] or flash[:alert] %>
+          <div class="row">
+            <div class="col-12">
+              <%= render partial: 'shared/alert' %>
+            </div>
+          </div>
+        <% end %>
+        <div class="row">
+          <%= render partial: 'shared/breadcrumbs' %>
+            <%= yield %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</alert>
 
-<%= render partial: 'shared/footer' %>
-  </body>
-</html>
+<footer role="footer">
+  <%= render partial: 'shared/footer' %>
+    </body>
+  </html>
+</footer>
