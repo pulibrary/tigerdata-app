@@ -52,7 +52,7 @@ module Mediaflux
       def parse_file_count(asset, metadata)
         metadata[:ctime] = asset.xpath("./ctime")
         statistics = asset.xpath("./collection/statistics")
-        if statistics.count == 0
+        if statistics.none?
           metadata[:statistics] = false
         else
           # The statistics is the better way to get the total file count than the accumulator
