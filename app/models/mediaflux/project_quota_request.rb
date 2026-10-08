@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectQuotaRequest < Request
     attr_reader :token, :service_name, :document
@@ -36,12 +37,12 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id @asset_id
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id @asset_id
         end
       end
+    end
   end
 end

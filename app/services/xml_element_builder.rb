@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class XmlElementBuilder < XmlNodeBuilder
   attr_reader :presenter, :name, :attributes, :content
   alias entry content
@@ -7,10 +8,10 @@ class XmlElementBuilder < XmlNodeBuilder
   # @return [Nokogiri::XML::Element] the XML element node
   def element
     @element ||= begin
-                   created = @document.create_element(name)
-                   @document.root = created
-                   created
-                 end
+      created = @document.create_element(name)
+      @document.root = created
+      created
+    end
   end
 
   # @return [Nokogiri::XML::Element] the XML element node
@@ -47,10 +48,6 @@ class XmlElementBuilder < XmlNodeBuilder
     content
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
   #
   # @return [Nokogiri::XML::Element]
   def build
@@ -66,10 +63,6 @@ class XmlElementBuilder < XmlNodeBuilder
     Rails.logger.warn("Error building XML project metadata: #{arg_error.message}")
     nil
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/AbcSize
 
   # @return [Nokogiri::XML::Element] the XML element node
   def node

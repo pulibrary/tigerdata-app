@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class SchemaFetchRequest < Request
     def self.service
@@ -18,39 +19,35 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super(name: name) do |xml|
-          xml.args do
-            xml.namespace @namespace
-            xml.type @type
-          end
+    def build_http_request_body(name:)
+      super(name: name) do |xml|
+        xml.args do
+          xml.namespace @namespace
+          xml.type @type
         end
       end
+    end
 
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
-      def field_from_element(element)
-        field = {
-          name: element.attributes["name"].value,
-          type: element.attributes["type"].value,
-          index: element.attributes["index"]&.value == "true",
-          "min-occurs" => 1,
-          label: element.attributes["label"]&.value || element.attributes["name"].value,
-          description: element.xpath("description").text,
-          instructions: element.xpath("instructions").text
-        }
+    def field_from_element(element)
+      field = {
+        name: element.attributes["name"].value,
+        type: element.attributes["type"].value,
+        index: element.attributes["index"]&.value == "true",
+        "min-occurs" => 1,
+        label: element.attributes["label"]&.value || element.attributes["name"].value,
+        description: element.xpath("description").text,
+        instructions: element.xpath("instructions").text
+      }
 
-        if element.attributes["min-occurs"].present?
-          field["min-occurs"] = element.attributes["min-occurs"].value.to_i
-        end
-
-        if element.attributes["max-occurs"].present?
-          field["max-occurs"] = element.attributes["max-occurs"].value.to_i
-        end
-
-        field
+      if element.attributes["min-occurs"].present?
+        field["min-occurs"] = element.attributes["min-occurs"].value.to_i
       end
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
+
+      if element.attributes["max-occurs"].present?
+        field["max-occurs"] = element.attributes["max-occurs"].value.to_i
+      end
+
+      field
+    end
   end
 end

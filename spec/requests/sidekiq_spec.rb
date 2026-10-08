@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 # Test connections to the /sidekiq endpoint
@@ -18,11 +19,13 @@ RSpec.describe "/sidekiq", connect_to_mediaflux: false, type: :request do
       before do
         sign_in user
       end
+
       it "shows a 404 page" do
         get "/sidekiq"
         expect(response.code).to eq "404"
       end
     end
+
     context "logged in user who is a sysadmin" do
       let(:sysadmin) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 

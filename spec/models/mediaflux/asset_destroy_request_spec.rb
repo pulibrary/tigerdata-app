@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::AssetDestroyRequest, connect_to_mediaflux: true, type: :model do
@@ -8,7 +9,7 @@ RSpec.describe Mediaflux::AssetDestroyRequest, connect_to_mediaflux: true, type:
 
   describe "#result" do
     it "parses the result",
-    :integration do
+       :integration do
       metadata_request = described_class.new(session_token: user.mediaflux_session, collection: approved_project.mediaflux_id, members: true)
       expect(metadata_request.error?).to eq false
       expect(metadata_request.response_body).to eq mediaflux_response

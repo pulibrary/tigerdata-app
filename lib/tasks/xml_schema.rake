@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # :nocov:
 require "nokogiri"
 namespace :xml_schema do

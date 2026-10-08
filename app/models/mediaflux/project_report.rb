@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectReport < Request
     # Specifies the Mediaflux service to use when pulling a report of projects in mediaflux

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MediafluxStatus < HealthMonitor::Providers::Base
   def check!
     # Notice that we check Mediaflux status using our TigerData account

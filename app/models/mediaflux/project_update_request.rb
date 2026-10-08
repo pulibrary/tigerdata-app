@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectUpdateRequest < Request
     attr_reader :project, :project_metadata
@@ -23,87 +24,82 @@ module Mediaflux
 
     private
 
-      # The generated XML mimics what we get when we issue an Aterm command as follows:
-      # > asset.set :id 1234
-      #     :meta <
-      #       :tigerdata:project <
-      #         :title "RDSS test project"
-      #         :description "The description of the project"
-      #         ...the rest of the fields go here..
-      #       >
-      #     >
-      #
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/BlockLength
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id @id
-            xml.meta do
-              doc = xml.doc
-              root = doc.root
-              root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
+    # The generated XML mimics what we get when we issue an Aterm command as follows:
+    # > asset.set :id 1234
+    #     :meta <
+    #       :tigerdata:project <
+    #         :title "RDSS test project"
+    #         :description "The description of the project"
+    #         ...the rest of the fields go here..
+    #       >
+    #     >
+    #
+    # rubocop:disable Metrics/MethodLength
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id @id
+          xml.meta do
+            doc = xml.doc
+            root = doc.root
+            root.add_namespace_definition(@xml_namespace, @xml_namespace_uri)
 
-              element_name = "#{@xml_namespace}:project"
-              xml.send(element_name) do
-                xml.ProjectDirectory project.project_directory
-                xml.Title project_metadata.title
-                if project_metadata.description.blank?
-                  xml.Description "description not provided"
-                else
-                  xml.Description project_metadata.description
-                end
-                # xml.Status project_metadata.status
-                # xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
-                xml.DataSponsor project_metadata.data_sponsor
-                xml.DataManager project_metadata.data_manager
-                xml.Department departments_string(project_metadata.departments || [])
-                # xml.CreatedBy project_metadata.created_by
-                ro_users = project_metadata.ro_users || []
-                rw_users = project_metadata.rw_users || []
-                all_users = ro_users + rw_users
-                data_users = all_users.join(",")
-                if data_users.blank?
-                  xml.DataUser "n/a"
-                else
-                  xml.DataUser data_users
-                end
-                # created_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.created_on)
-                # xml.CreatedOn created_on
-                # xml.UpdatedBy project_metadata.updated_by
-                # updated_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.updated_on)
-                # xml.UpdatedOn updated_on
-                # xml.ProjectID project_metadata.project_id
-                # capacity = project_metadata.storage_capacity
-                # xml.StorageCapacity do
-                #   xml.Size capacity["size"]["requested"]
-                #   xml.Unit capacity["unit"]["requested"]
-                # end
-                # performance = project_metadata.storage_performance_expectations
-                # xml.Performance do
-                #   xml.parent.set_attribute("Requested", performance["requested"])
-                #   xml.text(performance["requested"])
-                # end
-                # xml.Submission do
-                #   xml.RequestedBy project_metadata.created_by
-                #   xml.RequestDateTime created_on
-                # end
-                # xml.ProjectPurpose project_metadata.project_purpose
+            element_name = "#{@xml_namespace}:project"
+            xml.send(element_name) do
+              xml.ProjectDirectory project.project_directory
+              xml.Title project_metadata.title
+              if project_metadata.description.blank?
+                xml.Description "description not provided"
+              else
+                xml.Description project_metadata.description
               end
+              # xml.Status project_metadata.status
+              # xml.SchemaVersion TigerdataSchema::SCHEMA_VERSION
+              xml.DataSponsor project_metadata.data_sponsor
+              xml.DataManager project_metadata.data_manager
+              xml.Department departments_string(project_metadata.departments || [])
+              # xml.CreatedBy project_metadata.created_by
+              ro_users = project_metadata.ro_users || []
+              rw_users = project_metadata.rw_users || []
+              all_users = ro_users + rw_users
+              data_users = all_users.join(",")
+              if data_users.blank?
+                xml.DataUser "n/a"
+              else
+                xml.DataUser data_users
+              end
+              # created_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.created_on)
+              # xml.CreatedOn created_on
+              # xml.UpdatedBy project_metadata.updated_by
+              # updated_on = Mediaflux::Time.format_date_for_mediaflux(project_metadata.updated_on)
+              # xml.UpdatedOn updated_on
+              # xml.ProjectID project_metadata.project_id
+              # capacity = project_metadata.storage_capacity
+              # xml.StorageCapacity do
+              #   xml.Size capacity["size"]["requested"]
+              #   xml.Unit capacity["unit"]["requested"]
+              # end
+              # performance = project_metadata.storage_performance_expectations
+              # xml.Performance do
+              #   xml.parent.set_attribute("Requested", performance["requested"])
+              #   xml.text(performance["requested"])
+              # end
+              # xml.Submission do
+              #   xml.RequestedBy project_metadata.created_by
+              #   xml.RequestDateTime created_on
+              # end
+              # xml.ProjectPurpose project_metadata.project_purpose
             end
           end
         end
       end
-    # rubocop:enable Metrics/AbcSize
+    end
+
     # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/BlockLength
-
-      # Returns the names of the departments as a comma separated string
-      def departments_string(departments)
-        names = departments.map { |code| Affiliation.where(code:).first&.name || code }
-        names.compact.join(", ")
-      end
-
+    # Returns the names of the departments as a comma separated string
+    def departments_string(departments)
+      names = departments.map { |code| Affiliation.where(code:).first&.name || code }
+      names.compact.join(", ")
+    end
   end
 end

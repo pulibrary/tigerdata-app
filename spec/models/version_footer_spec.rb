@@ -2,7 +2,6 @@
 
 require "rails_helper"
 
-# rubocop:disable RSpec/ExampleLength
 RSpec.describe VersionFooter do
   describe "info" do
     context "with stale information" do
@@ -28,6 +27,7 @@ RSpec.describe VersionFooter do
         described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_current.log").to_s
         described_class.reset!
       end
+
       it "detects current information" do
         info = described_class.info
         expect(info[:stale]).to be false
@@ -99,12 +99,12 @@ RSpec.describe VersionFooter do
           allow(Rails).to receive(:env).and_return(env)
         end
 
-        it "indicates that the application is not in a deployed environment" do
-          expect(described_class.git_sha).to eq "Unknown SHA"
-        end
-
         after do
           allow(Rails).to receive(:env).and_call_original
+        end
+
+        it "indicates that the application is not in a deployed environment" do
+          expect(described_class.git_sha).to eq "Unknown SHA"
         end
       end
     end
@@ -132,12 +132,12 @@ RSpec.describe VersionFooter do
           allow(Rails).to receive(:env).and_return(env)
         end
 
-        it "indicates that the application is not in a deployed environment" do
-          expect(described_class.branch).to eq("Unknown branch")
-        end
-
         after do
           allow(Rails).to receive(:env).and_call_original
+        end
+
+        it "indicates that the application is not in a deployed environment" do
+          expect(described_class.branch).to eq("Unknown branch")
         end
       end
     end
@@ -149,6 +149,7 @@ RSpec.describe VersionFooter do
       described_class.revisions_logfile = Pathname.new(fixture_paths.first).join("revisions_rollback.log").to_s
       described_class.reset!
     end
+
     it "detects current information" do
       info = described_class.info
       expect(info[:stale]).to be false
@@ -166,10 +167,10 @@ RSpec.describe VersionFooter do
       described_class.reset!
       allow(described_class).to receive(:log_line).and_raise("Error!!!")
     end
+
     it "detects current information" do
       info = described_class.info
       expect(info[:error]).to eq("Error retrieving version information: Error!!!")
     end
   end
 end
-# rubocop enable RSpec/ExampleLength

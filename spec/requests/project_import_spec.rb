@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "ProjectImports", type: :request do
@@ -18,7 +19,8 @@ RSpec.describe "ProjectImports", type: :request do
     end
 
     context "a signed in user" do
-      let(:user) { FactoryBot.create :user }
+      let(:user) { FactoryBot.create(:user) }
+
       before do
         sign_in(user)
       end
@@ -37,13 +39,14 @@ RSpec.describe "ProjectImports", type: :request do
     end
 
     context "a sysadmin user" do
-      let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true }
+      let(:user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session, eligible_sponsor: true) }
+
       before do
         sign_in(user)
       end
 
       it "renders a successful response",
-      :integration do
+         :integration do
         # Create the project in the Rails database and in Mediaflux
         # (and then delete it from the Rails database)
         new_project = create_project_in_mediaflux(current_user: user)
@@ -57,7 +60,7 @@ RSpec.describe "ProjectImports", type: :request do
       end
 
       it "renders a successful response with any errors",
-      :integration do
+         :integration do
         # Create the project in the Rails database and in Mediaflux
         new_project = create_project_in_mediaflux(current_user: user)
 

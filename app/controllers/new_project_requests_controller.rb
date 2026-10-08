@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NewProjectRequestsController < ApplicationController
   before_action :set_new_project_request, only: %i[show approve destroy]
   before_action :set_breadcrumbs
@@ -16,9 +17,6 @@ class NewProjectRequestsController < ApplicationController
   end
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
   def approve
     if eligible_to_approve
       if @new_project_request.valid_to_submit?(allow_empty_parent_folder: true)
@@ -47,11 +45,8 @@ class NewProjectRequestsController < ApplicationController
       redirect_to new_project_request_path(@new_project_request)
     end
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
+  # rubocop:enable Metrics/AbcSize
   def destroy
     if eligible_to_destroy?
       @new_project_request.destroy
@@ -64,19 +59,19 @@ class NewProjectRequestsController < ApplicationController
 
   private
 
-    def set_new_project_request
-      @new_project_request = NewProjectRequest.find(params[:id])
-    end
+  def set_new_project_request
+    @new_project_request = NewProjectRequest.find(params[:id])
+  end
 
-    def set_breadcrumbs
-      add_breadcrumb("Dashboard", dashboard_path)
-    end
+  def set_breadcrumbs
+    add_breadcrumb("Dashboard", dashboard_path)
+  end
 
-    def eligible_to_approve
-      current_user.sysadmin || (current_user.developer && !Rails.env.production?)
-    end
+  def eligible_to_approve
+    current_user.sysadmin || (current_user.developer && !Rails.env.production?)
+  end
 
-    def eligible_to_destroy?
-      current_user.uid == @new_project_request.requested_by
-    end
+  def eligible_to_destroy?
+    current_user.uid == @new_project_request.requested_by
+  end
 end

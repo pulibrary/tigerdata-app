@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "/new-project/project-info", type: :request do
@@ -9,6 +10,7 @@ RSpec.describe "/new-project/project-info", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
@@ -20,6 +22,7 @@ RSpec.describe "/new-project/project-info", type: :request do
 
       context "the request exists" do
         let(:request) { NewProjectRequest.create(project_title: "abc123", description: "magical world", project_purpose: "research", parent_folder: "parent-folder", project_folder: "project-folder") }
+
         it "renders a successful response" do
           sign_in user
           get new_project_project_info_url(request.id)
@@ -41,11 +44,13 @@ RSpec.describe "/new-project/project-info", type: :request do
       expect(response).to be_redirect
       expect(response).to redirect_to(new_user_session_path)
     end
+
     context "when the client is authenticated" do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
 
       context "the request exists" do
         let(:request) { NewProjectRequest.create(project_title: "abc123") }
+
         it "renders a successful response for a save commit" do
           sign_in user
           put new_project_project_info_save_url(request.id, request: { request_title: "new title" }, commit: "Save")

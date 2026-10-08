@@ -6,7 +6,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit dashboard_path
-      expect(page).to have_content "You need to sign in or sign up before continuing."
+      expect(page).to have_text "You need to sign in or sign up before continuing."
     end
   end
 
@@ -20,14 +20,14 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:no_projects_sponsor) { FactoryBot.create(:project_sponsor, uid: "gg717") }
     let(:docker_response) { Mediaflux::EXPECTED_VERSION }
 
-    let(:request_111) { FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111" }
+    let(:request_111) { FactoryBot.create(:request_project, data_sponsor: current_user.uid, data_manager: other_user.uid, project_title: "project 111") }
     let(:project_111) { request_111.approve(current_user) }
 
-    let(:request_222) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222" }
+    let(:request_222) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: current_user.uid, project_title: "project 222") }
     let(:project_222) { request_222.approve(current_user) }
 
     let(:request_333) do
-      FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }]
+      FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "project 333", user_roles: [{ "uid" => current_user.uid, "read_only" => true }])
     end
     let(:project_333) { request_333.approve(current_user) }
 
@@ -46,16 +46,16 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).to have_content("Welcome, #{current_user.given_name}!")
+        expect(page).to have_text("Welcome, #{current_user.given_name}!")
         click_link current_user.uid.to_s
-        expect(page).to have_content "Log out"
+        expect(page).to have_text "Log out"
       end
 
       it "shows the Mediflux version on the home page for a logged in user" do
         sign_in current_user
         visit dashboard_path
         sleep(1)
-        expect(page).to have_content(docker_response)
+        expect(page).to have_text(docker_response)
       end
 
       it "shows the projects based on the user's role" do
@@ -64,20 +64,20 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
         visit dashboard_path
 
-        expect(page).to have_content "Sponsor"
-        expect(page).to have_content "project 111"
-        expect(page).to have_content "Data Sponsor: #{current_user.display_name_only_safe} #{current_user.uid}"
-        expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
+        expect(page).to have_text "Sponsor"
+        expect(page).to have_text "project 111"
+        expect(page).to have_text "Data Sponsor: #{current_user.display_name_only_safe} #{current_user.uid}"
+        expect(page).to have_text "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
 
-        expect(page).to have_content "Data Manager"
-        expect(page).to have_content "project 222"
-        expect(page).to have_content "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
-        expect(page).to have_content "Data Manager: #{current_user.display_name_only_safe} #{current_user.uid}"
+        expect(page).to have_text "Data Manager"
+        expect(page).to have_text "project 222"
+        expect(page).to have_text "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
+        expect(page).to have_text "Data Manager: #{current_user.display_name_only_safe} #{current_user.uid}"
 
-        expect(page).to have_content "Data User"
-        expect(page).to have_content "project 333"
-        expect(page).to have_content "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
-        expect(page).to have_content "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
+        expect(page).to have_text "Data User"
+        expect(page).to have_text "project 333"
+        expect(page).to have_text "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
+        expect(page).to have_text "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
 
         expect(page).to have_css ".copy-project-path-icon"
 
@@ -105,18 +105,18 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).to have_content "Latest Downloads"
+        expect(page).to have_text "Latest Downloads"
         expect(page).to have_link approved_project.title
-        expect(page).to have_content "Expires in 7 days"
-        expect(page).to have_content "1.18 MB"
-        expect(page).to have_content "The download failed to complete"
+        expect(page).to have_text "Expires in 7 days"
+        expect(page).to have_text "1.18 MB"
+        expect(page).to have_text "The download failed to complete"
       end
 
       it "shows the contact us side panel" do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).to have_content "Don't see what you're looking for?"
+        expect(page).to have_text "Don't see what you're looking for?"
         expect(page).to have_css(".contact-content", text: "Contact us")
       end
 
@@ -124,9 +124,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in current_user
         visit dashboard_path
 
-        expect(page).to have_content "Welcome, #{current_user.given_name}!"
-        expect(page).not_to have_content "Administration"
-        expect(page).not_to have_content "Requests"
+        expect(page).to have_text "Welcome, #{current_user.given_name}!"
+        expect(page).not_to have_text "Administration"
+        expect(page).not_to have_text "Requests"
       end
 
       it "allows for navigation back to user dashboard when clicking logo" do
@@ -134,15 +134,15 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         created_projects << project_222
 
         visit project_path(project_222)
-        expect(page).to have_content "project 222"
+        expect(page).to have_text "project 222"
         page.find(:css, "#logo").click
-        expect(page).to have_content("Welcome, #{current_user.given_name}!")
+        expect(page).to have_text("Welcome, #{current_user.given_name}!")
       end
 
       it "paginates the projects; 8 per page" do
         created_projects.push(project_111, project_222, project_333)
         projects = (1..17).map do
-          request_nnn = FactoryBot.create :request_project, data_sponsor: current_user.uid, data_manager: other_user.uid
+          request_nnn = FactoryBot.create(:request_project, data_sponsor: current_user.uid, data_manager: other_user.uid)
           project = request_nnn.approve(current_user)
           project.save!
           created_projects << project
@@ -154,13 +154,13 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         # DataTables info string is configured as "_START_ - _END_ out of _TOTAL_ shown"
         expect(page).to have_css(".dataTables_info", text: /1\s*-\s*8 out of 20 shown/, wait: 10)
         find("a.paginate_button", text: 2).click
-        expect(page).to have_content(projects.sort_by(&:updated_at).reverse[8].title)
+        expect(page).to have_text(projects.sort_by(&:updated_at).reverse[8].title)
         find("a.paginate_button", text: 3).click
-        expect(page).to have_content(projects.sort_by(&:updated_at).reverse.last.title)
+        expect(page).to have_text(projects.sort_by(&:updated_at).reverse.last.title)
         find("a.paginate_button", text: "<").click
-        expect(page).to have_content(projects.sort_by(&:updated_at).reverse[14].title)
+        expect(page).to have_text(projects.sort_by(&:updated_at).reverse[14].title)
         find("a.paginate_button", text: "<").click
-        expect(page).to have_content(projects.sort_by(&:updated_at).reverse.first.title)
+        expect(page).to have_text(projects.sort_by(&:updated_at).reverse.first.title)
       end
     end
 
@@ -168,24 +168,24 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       it "shows the startup page" do
         sign_in no_projects_user
         visit dashboard_path
-        expect(page).to have_content("Welcome, #{no_projects_user.given_name}!")
+        expect(page).to have_text("Welcome, #{no_projects_user.given_name}!")
         expect(page).to have_css(".startup-page")
-        expect(page).to have_content("No Projects Yet")
+        expect(page).to have_text("No Projects Yet")
         click_link no_projects_user.uid.to_s
-        expect(page).to have_content "Log out"
+        expect(page).to have_text "Log out"
       end
 
       it "user can start a new project from the startup link" do
         sign_in no_projects_user
         visit dashboard_path
         click_link "Start a new project"
-        expect(page).to have_content "New Project Request"
+        expect(page).to have_text "New Project Request"
       end
 
       it "shows no downloads available" do
         sign_in no_projects_user
         visit dashboard_path
-        expect(page).to have_content("No downloads available")
+        expect(page).to have_text("No downloads available")
       end
     end
 
@@ -195,9 +195,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       it "shows the 'Project Requests' button" do
         sign_in developer_user
         visit dashboard_path
-        expect(page).to have_content("Welcome, #{developer_user.given_name}!")
-        expect(page).not_to have_content "Please log in"
-        expect(page).to have_content "Requests"
+        expect(page).to have_text("Welcome, #{developer_user.given_name}!")
+        expect(page).not_to have_text "Please log in"
+        expect(page).to have_text "Requests"
       end
 
       it "shows the system administrator dashboard", js: true do
@@ -205,20 +205,20 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         created_projects.push(project_111, project_222, project_333)
 
         visit dashboard_path
-        expect(page).to have_content "project 111"
-        expect(page).to have_content "project 222"
-        expect(page).to have_content "project 333"
+        expect(page).to have_text "project 111"
+        expect(page).to have_text "project 222"
+        expect(page).to have_text "project 333"
         click_on "Administration"
-        expect(page).to have_content "project 111"
-        expect(page).to have_content "project 222"
-        expect(page).to have_content "project 333"
-        expect(page).to have_content("Approved Projects")
+        expect(page).to have_text "project 111"
+        expect(page).to have_text "project 222"
+        expect(page).to have_text "project 333"
+        expect(page).to have_text("Approved Projects")
       end
 
       it "renders the 'Administration' tab" do
         sign_in developer_user
         visit dashboard_path
-        expect(page).to have_content "Administration"
+        expect(page).to have_text "Administration"
       end
     end
 
@@ -252,9 +252,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         select "Data Sponsor", from: "emulation_menu"
         within("#projects-listing") do
-          expect(page).to have_content("Sponsor")
-          expect(page).to have_content("Data Manager")
-          expect(page).to have_content("Data User")
+          expect(page).to have_text("Sponsor")
+          expect(page).to have_text("Data Manager")
+          expect(page).to have_text("Data User")
         end
       end
 
@@ -264,9 +264,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         select "Data Manager", from: "emulation_menu"
         within("#projects-listing") do
-          expect(page).to have_content("Sponsor")
-          expect(page).to have_content("Data Manager")
-          expect(page).to have_content("Data User")
+          expect(page).to have_text("Sponsor")
+          expect(page).to have_text("Data Manager")
+          expect(page).to have_text("Data User")
         end
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
@@ -276,16 +276,16 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "hides the 'Administration' tab" do
         visit dashboard_path
-        expect(page).not_to have_content "Administration"
+        expect(page).not_to have_text "Administration"
       end
     end
 
     context "with the sysadmin role" do
       let(:admin_user) { FactoryBot.create(:sysadmin, uid: "xxx999", mediaflux_session: SystemUser.mediaflux_session) }
 
-      let!(:request_draft) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft" }
-      let!(:request_submitted1) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted" }
-      let!(:request_submitted2) { FactoryBot.create :request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted" }
+      let!(:request_draft) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "draft request", state: "draft") }
+      let!(:request_submitted1) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 1", state: "submitted") }
+      let!(:request_submitted2) { FactoryBot.create(:request_project, data_sponsor: other_user.uid, data_manager: other_user.uid, project_title: "submitted request 2", state: "submitted") }
 
       it "shows the system administrator dashboard" do
         sign_in admin_user
@@ -295,16 +295,16 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         click_on "Administration"
         sleep(1)
         expect(page).to have_button("Import Mediaflux Projects")
-        expect(page).to have_content("Approved Projects")
-        expect(page).to have_content "project 111"
-        expect(page).to have_content "project 222"
+        expect(page).to have_text("Approved Projects")
+        expect(page).to have_text "project 111"
+        expect(page).to have_text "project 222"
       end
 
       it "renders the 'Administration' and 'Requests' tab" do
         sign_in admin_user
         visit dashboard_path
-        expect(page).to have_content "Administration"
-        expect(page).to have_content "Requests"
+        expect(page).to have_text "Administration"
+        expect(page).to have_text "Requests"
       end
 
       it "renders the Requests tab with the proper requests" do
@@ -312,19 +312,20 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
         click_on "Requests"
         # Requests ready to be approved are displayed
-        expect(page).to have_content "submitted request 1"
-        expect(page).to have_content "submitted request 2"
+        expect(page).to have_text "submitted request 1"
+        expect(page).to have_text "submitted request 2"
         # Draft requests are not shown
-        expect(page).not_to have_content "draft request"
+        expect(page).not_to have_text "draft request"
       end
     end
 
     context "flash message" do
       let(:non_admin_user) { FactoryBot.create(:user) }
+
       it "shows the flash message" do
         sign_in non_admin_user
         visit "/projects"
-        expect(page).to have_content("Access Denied")
+        expect(page).to have_text("Access Denied")
       end
     end
   end

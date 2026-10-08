@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class TestAssetCreateRequest < Request
     attr_reader :parent_id, :count, :pattern
@@ -23,14 +24,14 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.pid parent_id
-            xml.nb count
-            xml.send("base-name", pattern) if pattern.present?
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.pid parent_id
+          xml.nb count
+          xml.send("base-name", pattern) if pattern.present?
         end
       end
+    end
   end
 end

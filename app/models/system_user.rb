@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SystemUser
   class << self
     def mediaflux_session
@@ -22,12 +23,12 @@ class SystemUser
 
     private
 
-      def eof_error_handler
-        @retry_count ||= 0
-        @retry_count += 1
-        # TODO: How do we fix EOF errors?  Just retrying for now.
+    def eof_error_handler
+      @retry_count ||= 0
+      @retry_count += 1
+      # TODO: How do we fix EOF errors?  Just retrying for now.
 
-        @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
-      end
+      @retry_count < 3 # If the session is expired we should not have to retry more than once, but let's have a little wiggle room
+    end
   end
 end

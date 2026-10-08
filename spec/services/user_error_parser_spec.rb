@@ -1,16 +1,17 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe UserErrorParser do
   let(:data) do
     "Error creating project for 1013662446: Invalid netid: uid1 for role Data Manager;" \
-    "Invalid netid: uid2 for role Data Sponsor;Invalid netid: uid3 for role Data User Read Only;" \
-    "Invalid netid: uid4 for role Data User Read Only;Invalid netid: uid5 for role Data User Read Only;"\
-    "Invalid netid: uid6 for role Data User Read Only;Invalid netid: uid7 for role Data User Read Only;Invalid netid: uid8 for role Data User Read Only\n" \
-    "Error creating project for 11307511: Invalid netid: uid1 for role Data Sponsor\n" \
-    "Error creating project for 888956429: Invalid netid: uid9 for role Data Manager;Invalid netid: uid10 for role Data Sponsor;Invalid netid: uid12 for role Data User Read Only\n" \
-    "Error creating project for 891009485: Invalid netid: uid3 for role Data Manager;Invalid netid: uid13 for role Data Sponsor;" \
-    "Invalid netid: uid5 for role Data User Read Only;Invalid net id: uid11 for role Data User Read Only\n"
+      "Invalid netid: uid2 for role Data Sponsor;Invalid netid: uid3 for role Data User Read Only;" \
+      "Invalid netid: uid4 for role Data User Read Only;Invalid netid: uid5 for role Data User Read Only;"\
+      "Invalid netid: uid6 for role Data User Read Only;Invalid netid: uid7 for role Data User Read Only;Invalid netid: uid8 for role Data User Read Only\n" \
+      "Error creating project for 11307511: Invalid netid: uid1 for role Data Sponsor\n" \
+      "Error creating project for 888956429: Invalid netid: uid9 for role Data Manager;Invalid netid: uid10 for role Data Sponsor;Invalid netid: uid12 for role Data User Read Only\n" \
+      "Error creating project for 891009485: Invalid netid: uid3 for role Data Manager;Invalid netid: uid13 for role Data Sponsor;" \
+      "Invalid netid: uid5 for role Data User Read Only;Invalid net id: uid11 for role Data User Read Only\n"
   end
 
   let(:data_output) do
@@ -38,8 +39,8 @@ RSpec.describe UserErrorParser do
     let(:data_sponsor_and_manager_output) { "uid1,,,,,TRUE,TRUE,,,,#{Time.current.in_time_zone('America/New_York').strftime('%Y-%m-%d')},ImportProcess,\"Capacity Early Adopter\"" }
     let(:multiple_user) do
       "Error creating project for 1013662446: Invalid netid: uid1 for role Data Manager;Invalid netid: uid2 for role Data Sponsor;" \
-      "Invalid netid: uid3 for role Data User Read Only;Invalid netid: uid4 for role Data User Read Only;Invalid netid: uid5 for role Data User Read Only;" \
-      "Invalid netid: uid6 for role Data User Read Only;Invalid netid: uid7 for role Data User Read Only;Invalid netid: uid8 for role Data User Read Only\n"
+        "Invalid netid: uid3 for role Data User Read Only;Invalid netid: uid4 for role Data User Read Only;Invalid netid: uid5 for role Data User Read Only;" \
+        "Invalid netid: uid6 for role Data User Read Only;Invalid netid: uid7 for role Data User Read Only;Invalid netid: uid8 for role Data User Read Only\n"
     end
     let(:multiple_user_output) do
       [
@@ -54,7 +55,7 @@ RSpec.describe UserErrorParser do
       ]
     end
 
-    it "creates 1 row with data sponsor " do
+    it "creates 1 row with data sponsor" do
       output = UserErrorParser.parse(data_sponsor_only)
       expect(output.count).to eq(1)
       expect(output.first).to eq(data_sponsor_only_output)

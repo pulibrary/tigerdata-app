@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectSearch, type: :operation, integration: true do
@@ -73,6 +74,7 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
       end
     end
   end
+
   context "Failure cases" do
     it "returns a failure if the search is blank" do
       result = described_class.new.call(search_string: "", requestor: approver)

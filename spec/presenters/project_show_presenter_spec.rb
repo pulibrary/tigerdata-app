@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectShowPresenter do
@@ -8,10 +9,11 @@ RSpec.describe ProjectShowPresenter do
   let(:rw_user) { FactoryBot.create(:user, uid: "cac9") }
   let!(:other_user) { FactoryBot.create(:user, uid: "mjc12") }
   let(:request1) do
-    FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid,
-                                        user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
+    FactoryBot.create(:request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid,
+                                        user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
   end
   let(:project) { request1.approve(data_sponsor) }
+
   subject(:presenter) { ProjectShowPresenter.new(project, data_sponsor) }
 
   describe "#user_has_access?" do
@@ -45,6 +47,7 @@ RSpec.describe ProjectShowPresenter do
 
     context "when data security level is not present" do
       let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+
       it "returns a styled data security level" do
         expect(presenter.data_security_level).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
       end
@@ -52,9 +55,10 @@ RSpec.describe ProjectShowPresenter do
 
     context "when the data security level is set to nil" do
       let(:request1) do
-        FactoryBot.create :request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
-                                            user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }]
+        FactoryBot.create(:request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
+                                            user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
       end
+
       it "defaults the data security level to 1" do
         expect(presenter.data_security_level).to eq("Level 1 - Internal") # project create service defaults value to 1.
       end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class FileInventoryJob < ApplicationJob
   # Create the FileInventoryRequest as soon as the job is created, not when it is performed
   before_enqueue do |job|
@@ -43,40 +44,40 @@ class FileInventoryJob < ApplicationJob
 
   private
 
-    def mediaflux_session
-      logon_request = Mediaflux::LogonRequest.new
-      logon_request.session_token
-    end
+  def mediaflux_session
+    logon_request = Mediaflux::LogonRequest.new
+    logon_request.session_token
+  end
 
-    def filename_for_export
-      raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
-      pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
-      pathname.join("#{job_id}.csv").to_s
-    end
+  def filename_for_export
+    raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
+    pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
+    pathname.join("#{job_id}.csv").to_s
+  end
 
-    def fail_inventory_request(user_id:, project:, job_id: )
-      inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
-      request_details = { project_title: project.title, error: "Mediaflux session expired" }
-      inventory_request.update(state: InventoryRequest::FAILED, request_details: request_details,
-                                completion_time: Time.current.in_time_zone("America/New_York"))
-      inventory_request
-    rescue ActiveRecord::StatementInvalid
-      Rails.logger.info "Export - failing inventory request details for project #{project.id} job_id: #{job_id} failed, about to retry"
-      ActiveRecord::Base.connection_pool.release_connection
-      retry
-    end
+  def fail_inventory_request(user_id:, project:, job_id:)
+    inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
+    request_details = { project_title: project.title, error: "Mediaflux session expired" }
+    inventory_request.update(state: InventoryRequest::FAILED, request_details: request_details,
+                             completion_time: Time.current.in_time_zone("America/New_York"))
+    inventory_request
+  rescue ActiveRecord::StatementInvalid
+    Rails.logger.info "Export - failing inventory request details for project #{project.id} job_id: #{job_id} failed, about to retry"
+    ActiveRecord::Base.connection_pool.release_connection
+    retry
+  end
 
-    def update_inventory_request(user_id:, project:, job_id:, filename: )
-      Rails.logger.info "Export - updating inventory request details for project #{project.id}"
-      inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
-      request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
-      inventory_request.update(state: InventoryRequest::COMPLETED, request_details: request_details,
-                                completion_time: Time.current.in_time_zone("America/New_York"))
-      Rails.logger.info "Export - updated inventory request details for project #{project.id}"
-      inventory_request
-    rescue ActiveRecord::StatementInvalid
-      Rails.logger.info "Export - updating inventory request details for project #{project.id} failed, about to retry"
-      ActiveRecord::Base.connection_pool.release_connection
-      retry
-    end
+  def update_inventory_request(user_id:, project:, job_id:, filename:)
+    Rails.logger.info "Export - updating inventory request details for project #{project.id}"
+    inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
+    request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
+    inventory_request.update(state: InventoryRequest::COMPLETED, request_details: request_details,
+                             completion_time: Time.current.in_time_zone("America/New_York"))
+    Rails.logger.info "Export - updated inventory request details for project #{project.id}"
+    inventory_request
+  rescue ActiveRecord::StatementInvalid
+    Rails.logger.info "Export - updating inventory request details for project #{project.id} failed, about to retry"
+    ActiveRecord::Base.connection_pool.release_connection
+    retry
+  end
 end

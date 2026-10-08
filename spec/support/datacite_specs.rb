@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "dry/monads"
 include Dry::Monads[:result] # Needed to mock the datacite client Success and Failure
 

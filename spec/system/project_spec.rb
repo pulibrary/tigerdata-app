@@ -7,8 +7,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:data_manager, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:read_only) { FactoryBot.create :user, uid: "cac9" }
-  let(:read_write) { FactoryBot.create :user, uid: "pp9425" }
+  let(:read_only) { FactoryBot.create(:user, uid: "cac9") }
+  let(:read_write) { FactoryBot.create(:user, uid: "pp9425") }
   let(:storage_capacity) do
     {
       size: { requested: 500, approved: 500 },
@@ -60,7 +60,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
     it "shows access denied for Projects not in Mediaflux" do
       sign_in data_manager
       visit "/projects/#{project_not_in_mediaflux.id}/details"
-      expect(page).to have_content "Access Denied"
+      expect(page).to have_text "Access Denied"
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css ".check"
           end
 
-          expect(page).to have_content("A0")
+          expect(page).to have_text("A0")
 
           page.find(".browser-collection", text: "parent_1").click
           sleep(0.1)
@@ -115,7 +115,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
           page.find("li", text: "parent_1").click # click on parent_1 in the breadcrumb to go back up to that level
           within(".files-viewer") do
-            expect(page).to have_content("child_1")
+            expect(page).to have_text("child_1")
           end
         end
 
@@ -124,7 +124,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_css("li", text: "AProject")
           page.find(".browser-collection", text: "empty_directory").click
           sleep(0.1)
-          expect(page).to have_content("This folder is empty")
+          expect(page).to have_text("This folder is empty")
         end
 
         it "displays the file details component" do
@@ -164,7 +164,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).not_to have_css(".tooltiptext", text: "This number reflects all items")
             find(".info-container .tooltip-container").click
             expect(page).to have_css(".tooltiptext", text: "This number reflects all items")
-            expect(page).to have_content("This number reflects all items")
+            expect(page).to have_text("This number reflects all items")
           end
         end
 
@@ -189,11 +189,11 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
           expect(page).to have_css("li", text: "CProject")
           # should not show the warning because we are under the limit
-          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          expect(page).not_to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find(".browser-collection", text: "n_01000").click
           sleep(0.1)
           within(".files-viewer") do
-            expect(page).to have_content("A99")
+            expect(page).to have_text("A99")
           end
 
           expect(page).to have_selector(".project-file-details header", text: "File Name")
@@ -208,40 +208,40 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
 
           # should show the warning because we are above the limit
-          expect(page).to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          expect(page).to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find("li", text: "CProject").click
 
           # TODO: This shows the mediaflux issue in that they are indicating complete is false when the iterator show exactly the number of items as the size limit.
           #       We should not be showing the warning in this case because we are not actually over the limit.
           within(".files-viewer") do
-            expect(page).to have_content("n_00100")
+            expect(page).to have_text("n_00100")
           end
           page.find(".browser-collection", text: "n_00100").click
           sleep(0.1)
-          expect(page).to have_content("E19")
+          expect(page).to have_text("E19")
           # #should not show the warning because we are at the limit
           # expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
 
         it "does not display the preview alert when the number of files does not exceed the project file display limit" do
           visit project_path(approved_project)
-          expect(page).not_to have_content("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          expect(page).not_to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
       end
 
       it "enqueues a Sidekiq job for asynchronously requesting project files",
-        :integration do
+         :integration do
         visit project_path(approved_project)
 
-        expect(page).not_to have_content("show level by level browser here")
+        expect(page).not_to have_text("show level by level browser here")
 
-        expect(page).to have_content("Download Complete List")
+        expect(page).to have_text("Download Complete List")
         click_on "Download Complete List"
-        expect(page).to have_content("This will generate a list of 4 files and their attributes in a downloadable CSV. Do you wish to continue?")
-        expect(page).to have_content("Yes")
+        expect(page).to have_text("This will generate a list of 4 files and their attributes in a downloadable CSV. Do you wish to continue?")
+        expect(page).to have_text("Yes")
         sleep 1
         click_on "Yes"
-        expect(page).to have_content("File list for \"#{approved_project.title}\" is being generated in the background.")
+        expect(page).to have_text("File list for \"#{approved_project.title}\" is being generated in the background.")
         expect(sponsor_and_data_manager_user.inventory_requests.count).to eq(1)
         expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
         expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
@@ -251,8 +251,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
       it "renders the storage capacity in the show view", :integration do
         visit project_path(approved_project)
 
-        expect(page).to have_content "Storage (500 GB)"
-        expect(page).to have_content "400 bytes out of 500 GB used"
+        expect(page).to have_text "Storage (500 GB)"
+        expect(page).to have_text "400 bytes out of 500 GB used"
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
@@ -264,7 +264,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         end
 
         it "returns the XML with the correct attributes",
-        :integration do
+           :integration do
           xml = page.body
           expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
           expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")

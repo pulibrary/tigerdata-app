@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectImport do
@@ -17,12 +18,13 @@ RSpec.describe ProjectImport do
 
     context "when all users exist" do
       before do
-        FactoryBot.create :user, uid: "uid1"
-        FactoryBot.create :user, uid: "uid2"
-        FactoryBot.create :user, uid: "uid3"
-        FactoryBot.create :user, uid: "uid4"
-        FactoryBot.create :user, uid: "uid5"
+        FactoryBot.create(:user, uid: "uid1")
+        FactoryBot.create(:user, uid: "uid2")
+        FactoryBot.create(:user, uid: "uid3")
+        FactoryBot.create(:user, uid: "uid4")
+        FactoryBot.create(:user, uid: "uid5")
       end
+
       it "creates test data" do
         expect do
           output = subject.run
@@ -46,6 +48,7 @@ RSpec.describe ProjectImport do
 
       context "input is a file" do
         let(:csv_data) { File.new(file_fixture("project_report.csv")) }
+
         it "can also read a file IO" do
           expect { subject.run }.to change { Project.count }.by(2)
         end
@@ -55,7 +58,7 @@ RSpec.describe ProjectImport do
 
   describe "##run_with_report" do
     let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:user) { FactoryBot.create :sysadmin, mediaflux_session: SystemUser.mediaflux_session }
+    let(:user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do
       # Make sure we start with a clean slate
@@ -64,7 +67,7 @@ RSpec.describe ProjectImport do
     end
 
     it "creates projects for project in Mediaflux",
-    :integration do
+       :integration do
       # Create a project in Mediaflux...
       # (the rspec-import prefix is so that we don't ignore it just because it's a test project)
       new_project = create_project_in_mediaflux(current_user: user)

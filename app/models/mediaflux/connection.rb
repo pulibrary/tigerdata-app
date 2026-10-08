@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class Connection
     # The host nome for the Mediaflux server

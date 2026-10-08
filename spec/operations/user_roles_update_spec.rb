@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe UserRolesUpdate, type: :operation, integration: true do
@@ -30,6 +31,7 @@ RSpec.describe UserRolesUpdate, type: :operation, integration: true do
         expect(user.trainer).to be_falsey
       end
     end
+
     context "Failure cases" do
       it "returns a failure for user save errors" do
         researcher.created_at = "abc" # case an exception on save

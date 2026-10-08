@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def cas
     access_token = request.env["omniauth.auth"]
@@ -21,12 +22,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-    def set_cas_session
-      strategy = request.env["omniauth.strategy"]
-      if strategy.present?
-        service_url = strategy.append_params(mediaflux_extra_url, { url: request.referer })
-        session[:cas_login_url] = strategy.login_url(service_url)
-        session[:cas_validation_url] = strategy.service_validate_url(service_url, "")
-      end
+  def set_cas_session
+    strategy = request.env["omniauth.strategy"]
+    if strategy.present?
+      service_url = strategy.append_params(mediaflux_extra_url, { url: request.referer })
+      session[:cas_login_url] = strategy.login_url(service_url)
+      session[:cas_validation_url] = strategy.service_validate_url(service_url, "")
     end
+  end
 end

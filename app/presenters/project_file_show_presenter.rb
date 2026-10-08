@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class ProjectFileShowPresenter
   include ActiveSupport::NumberHelper
 
   delegate :id, :name, :path, :size, :collection, :last_modified, :asset_count,
-             :folder_size, :created_by, :created_on,
+           :folder_size, :created_by, :created_on,
            to: :file
   attr_reader :file
 

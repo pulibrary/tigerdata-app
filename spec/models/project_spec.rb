@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Project, type: :model, connect_to_mediaflux: true do
@@ -18,8 +19,9 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "project lists" do
     let(:test_user) { sponsor_and_data_manager_user }
+
     before do
-      request1 = FactoryBot.create :request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid
+      request1 = FactoryBot.create(:request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid)
       request1.approve(sponsor_and_data_manager_user)
       request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
       request2.approve(sponsor_and_data_manager_user)
@@ -75,9 +77,11 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
   describe "#provenance_events" do
     let(:project) { FactoryBot.create(:project) }
     let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
+
     it "has many provenance events" do
       expect(project.provenance_events).to eq [submission_event]
     end
+
     it "only creates one provenance event" do
       project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata["created_by"],
                                        event_details: "Requested by #{project.metadata_json['data_sponsor']}")
@@ -102,7 +106,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "fetches the file list",
-    :integration do
+       :integration do
       file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
@@ -118,7 +122,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     let!(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
 
     it "fetches the directory listing",
-    :integration do
+       :integration do
       directory_files_list = project.directory_listing(session_id: manager.mediaflux_session, size: 50)
       expect(directory_files_list[:files].count).to eq 10
       expect(directory_files_list[:files][0].name).to eq "A0"
@@ -131,6 +135,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#mediaflux_metadata" do
     let(:project) { FactoryBot.create(:project) }
+
     it "calls out to mediaflux once" do
       metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: {}
       allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)

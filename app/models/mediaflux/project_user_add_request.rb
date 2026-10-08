@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectUserAddRequest < Request
     attr_reader :project, :project_metadata
@@ -33,44 +34,38 @@ module Mediaflux
 
     private
 
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/BlockLength
-      #
-      # This is what the call would look like from aterm:
-      # tigerdata.project.user.add \
-      #   :id 1234 \
-      #   :data-user "md1908" \
-      #
-      # OR FOR MULTIPLE USERS:
-      # tigerdata.project.user.add \
-      #   :id 1234 \
-      #   :data-user "md1908" \
-      #   :data-user "md1909" \
-      #   :data-user "md1910" \
-      #
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id @id
-            # send each user in the list
-            @ro_users.each do |user|
-              xml.send("data-user") do
-                xml.parent.set_attribute("readonly", "true")
-                xml.text(user)
-              end
+    #
+    # This is what the call would look like from aterm:
+    # tigerdata.project.user.add \
+    #   :id 1234 \
+    #   :data-user "md1908" \
+    #
+    # OR FOR MULTIPLE USERS:
+    # tigerdata.project.user.add \
+    #   :id 1234 \
+    #   :data-user "md1908" \
+    #   :data-user "md1909" \
+    #   :data-user "md1910" \
+    #
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id @id
+          # send each user in the list
+          @ro_users.each do |user|
+            xml.send("data-user") do
+              xml.parent.set_attribute("readonly", "true")
+              xml.text(user)
             end
-            @rw_users.each do |user|
-              xml.send("data-user") do
-                xml.parent.set_attribute("readonly", "false")
-                xml.text(user)
-              end
+          end
+          @rw_users.each do |user|
+            xml.send("data-user") do
+              xml.parent.set_attribute("readonly", "false")
+              xml.text(user)
             end
           end
         end
       end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/BlockLength
+    end
   end
 end

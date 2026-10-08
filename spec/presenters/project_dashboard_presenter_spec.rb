@@ -1,12 +1,14 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: false do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:request1) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let(:request1) { FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid) }
   let(:project) { request1.approve(sponsor_and_data_manager) }
-  
+
   let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
+
   subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:) }
 
   describe "#type" do
@@ -17,7 +19,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
     end
 
     context "an approved project" do
-      let(:project) { FactoryBot.create :approved_project }
+      let(:project) { FactoryBot.create(:approved_project) }
 
       it "returns the approved type" do
         expect(presenter.type).not_to include("Requested")
