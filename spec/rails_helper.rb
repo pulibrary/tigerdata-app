@@ -15,7 +15,7 @@ require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true,
                              allow: ["chromedriver.storage.googleapis.com", "0.0.0.0", "mflux-ci.lib.princeton.edu", "mflux-staging.lib.princeton.edu"])
 # WebMock.enable_net_connect!
-Dir[Rails.root.join("spec", "support", "**", "*.rb")].sort.each { |file| require file }
+Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |file| require file }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -45,7 +45,7 @@ end
 Capybara.disable_animation = true
 
 RSpec.configure do |config|
-  config.fixture_paths = [Rails.root.join("spec", "fixtures")]
+  config.fixture_paths = [Rails.root.join("spec/fixtures")]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

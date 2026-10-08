@@ -18,7 +18,7 @@ RSpec.describe Users::OmniauthCallbacksController do
   context "unknown user" do
     it "redirects to the help page with alert" do
       controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "cas", uid: nil)
-      allow(User).to receive(:from_cas) { nil }
+      allow(User).to receive(:from_cas).and_return(nil)
       get :cas
       expect(response).to redirect_to(help_path)
       expect(flash.notice).to eq("You can not be signed in at this time.")
@@ -28,7 +28,7 @@ RSpec.describe Users::OmniauthCallbacksController do
   context "non-CAS user" do
     it "redirects to the home page with alert" do
       controller.request.env["omniauth.auth"] = double(OmniAuth::AuthHash, provider: "other", uid: nil)
-      allow(User).to receive(:from_cas) { nil }
+      allow(User).to receive(:from_cas).and_return(nil)
       get :cas
       expect(response).to redirect_to(root_path)
       expect(flash.alert).to eq("You are not a recognized CAS user.")

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "session_info", type: :system, js: true, connect_to_mediaflux: true do
+describe "session_info", :connect_to_mediaflux, :js, type: :system do
   let(:researcher_user) { FactoryBot.create(:user, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mflux_port) { Rails.configuration.mediaflux["api_port"] }
 

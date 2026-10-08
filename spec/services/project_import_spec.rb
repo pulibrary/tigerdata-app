@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe ProjectImport do
+  subject { described_class.new(csv_data) }
+
   let(:csv_data) { file_fixture("project_report.csv").read }
-  let(:subject) { described_class.new(csv_data) }
 
   describe "#run" do
     it "flags the missing users" do
@@ -13,7 +14,7 @@ RSpec.describe ProjectImport do
         expect(output[0]).to include("Error creating project for 4894926: Invalid netid: uid2 for role Data Manager")
         expect(output[1]).to include("Error creating project for 4894935: Invalid netid: uid1 for role Data Manager")
         expect(output[2]).to include("Error creating project for 4897938: Invalid netid: uid4 for role Data Manager")
-      end.to change { Project.count }.by(0)
+      end.not_to(change { Project.count })
     end
 
     context "when all users exist" do
@@ -43,7 +44,7 @@ RSpec.describe ProjectImport do
 
       it "only imports the projects once" do
         subject.run # import projects to test that a second run does nothing
-        expect { subject.run }.to change { Project.count }.by(0)
+        expect { subject.run }.not_to(change { Project.count })
       end
 
       context "input is a file" do

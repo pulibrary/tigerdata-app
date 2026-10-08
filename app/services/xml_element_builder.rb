@@ -60,8 +60,8 @@ class XmlElementBuilder < XmlNodeBuilder
     built.content = content
 
     built
-  rescue ArgumentError => arg_error
-    Rails.logger.warn("Error building XML project metadata: #{arg_error.message}")
+  rescue ArgumentError => e
+    Rails.logger.warn("Error building XML project metadata: #{e.message}")
     nil
   end
 

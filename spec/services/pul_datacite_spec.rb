@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe PULDatacite do
-  let(:subject) { described_class.new }
+  subject { described_class.new }
+
   let(:fake_datacite) { stub_datacite_doi }
 
   before do

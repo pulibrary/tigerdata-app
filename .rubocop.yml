@@ -22,6 +22,16 @@ plugins:
   - rubocop-capybara
   - rubocop-factory_bot
 
+Lint/UnusedMethodArgument:
+  Exclude:
+    - "app/models/project_mediaflux.rb"
+
 Style/ClassVars:
   Exclude:
     - "app/models/version_footer.rb"
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ChangeByZero:
+  Enabled: false

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe MediafluxStatus, connect_to_mediaflux: true, type: :model do
+RSpec.describe MediafluxStatus, :connect_to_mediaflux, type: :model do
   let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
 
   before do

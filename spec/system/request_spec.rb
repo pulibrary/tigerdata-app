@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "New Project Request page", type: :system, connect_to_mediaflux: false, js: true do
+describe "New Project Request page", :js, connect_to_mediaflux: false, type: :system do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   context "authenticated user" do
@@ -224,7 +224,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_css("strong", text: "—")
       end
 
-      it "creates a project with a DOI when a request is approved", integration: true do
+      it "creates a project with a DOI when a request is approved", :integration do
         sign_in sysadmin_user
         # a request must be submitted before it can be approved
         full_request.state = NewProjectRequest::SUBMITTED
@@ -241,7 +241,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(project).to be_valid
       end
 
-      it "creates a project with BlueMountain fixture data when the request is approved", integration: true do
+      it "creates a project with BlueMountain fixture data when the request is approved", :integration do
         sign_in sysadmin_user
         visit new_project_request_path(bluemountain.id)
         expect(page).to have_text("Approve request")
@@ -300,7 +300,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         end
       end
 
-      it "shows the custom quota on the request review page", integration: true do
+      it "shows the custom quota on the request review page", :integration do
         sign_in sysadmin_user
         custom_quota_request.state = NewProjectRequest::SUBMITTED
         custom_quota_request.save

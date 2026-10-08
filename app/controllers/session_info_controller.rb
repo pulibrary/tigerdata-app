@@ -20,9 +20,9 @@ class SessionInfoController < ApplicationController
     trivial_attempt = Mediaflux::StringReverse.new(string: "Hello, Mediaflux!", session_token: current_user.mediaflux_session)
     trivial_attempt.resolve
     trivial_attempt.response_body
-  rescue => ex
-    Rails.logger.error("Java plugin not working: #{ex.message}")
-    "Not working: #{ex.message}"
+  rescue => e
+    Rails.logger.error("Java plugin not working: #{e.message}")
+    "Not working: #{e.message}"
   end
 
   def mediaflux_info
@@ -33,8 +33,8 @@ class SessionInfoController < ApplicationController
     raise describe_request.response_error[:message] if describe_request.error?
 
     describe_request.server_values
-  rescue => ex
-    Rails.logger.error("Error fetching server information: #{ex.message}")
+  rescue => e
+    Rails.logger.error("Error fetching server information: #{e.message}")
     { uuid: "error" }
   end
 end

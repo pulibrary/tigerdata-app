@@ -35,9 +35,7 @@ class ProjectShowPresenter
   end
 
   # @return [String] the XML for the project Document
-  def to_xml
-    xml_document.to_xml
-  end
+  delegate :to_xml, to: :xml_document
 
   # @return [Nokogiri::XML::Document] the XML Document for the Project
   def xml_document
@@ -246,11 +244,13 @@ class ProjectShowPresenter
     @quota_breakdown ||= project.quota(session_id: @session_id)
   end
 
+  # Returns the free space available in the project's quota, formatted as a human-readable string
   def free_space
     return @quota_breakdown[:quota_allocation_human] if @quota_breakdown[:quota_used] == 0
 
-    free_space ||= @quota_breakdown[:quota_allocation] - @quota_breakdown[:quota_used]
-    free_space_human ||= helpers.number_to_human_size(free_space, :precision => 2)
+    # First, calculate the unformatted free space in bytes, then format it to a human-readable string
+    unformatted_free_space = @quota_breakdown[:quota_allocation] - @quota_breakdown[:quota_used]
+    @free_space ||= helpers.number_to_human_size(unformatted_free_space, :precision => 2)
   end
 
   def collection_info

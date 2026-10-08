@@ -2,7 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe ProjectCreate, type: :operation, integration: true do
+RSpec.describe ProjectCreate, :integration, type: :operation do
+  subject { described_class.new } # Or initialize with dependencies if any
+
   let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_request) do
     NewProjectRequest.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
@@ -30,7 +32,6 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
                              project_folder: "project", project_id: "doi", quota: "not-valid", # quota is not valid
                              requested_by: "uid", user_roles: [])
   end
-  subject { described_class.new } # Or initialize with dependencies if any
 
   describe "#call" do
     context "Success case" do
@@ -132,7 +133,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
 
         expect(mediaflux_request).to have_received(:resolve).exactly(3).times
 
-        expect(result).to_not be_success
+        expect(result).not_to be_success
       end
     end
   end

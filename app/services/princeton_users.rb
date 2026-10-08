@@ -98,7 +98,7 @@ class PrincetonUsers
         end
         user
       end
-    rescue ActiveRecord::RecordNotUnique => error
+    rescue ActiveRecord::RecordNotUnique
       msg = "Trying to create a duplicate user for uid: #{uid}, email: #{ldap_person[:edupersonprincipalname].first}"
 
       # there are some duplicates in the system that we know about and should not continue to notify each day

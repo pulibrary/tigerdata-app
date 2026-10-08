@@ -17,7 +17,7 @@ RSpec.describe "delete request/:id", type: :request do
       it "renders a redirect response" do
         sign_in researcher
         request # make sure the object exists before we try to destroy it
-        expect { delete new_project_request_path(request.id) }.to change { NewProjectRequest.count }.by(0)
+        expect { delete new_project_request_path(request.id) }.not_to(change { NewProjectRequest.count })
         expect(response).to be_redirect
         expect(response).to redirect_to(dashboard_path)
         expect(flash.notice).to eq("You do not have permission to delete the request of another user.")

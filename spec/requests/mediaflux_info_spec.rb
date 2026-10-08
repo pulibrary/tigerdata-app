@@ -14,7 +14,7 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/session-info", connect_to_mediaflux: true, type: :request do
+RSpec.describe "/session-info", :connect_to_mediaflux, type: :request do
   describe "GET /index" do
     it "renders a successful response" do
       get session_info_index_path

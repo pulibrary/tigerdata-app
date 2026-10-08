@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "application accessibility", type: :system, js: true, connect_to_mediaflux: true do
+describe "application accessibility", :connect_to_mediaflux, :js, type: :system do
   context "when browsing the homepage" do
     it "complies with WCAG 2.0 AA and Section 508" do
       visit "/"

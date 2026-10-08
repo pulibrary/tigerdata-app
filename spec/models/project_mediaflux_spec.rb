@@ -15,7 +15,7 @@ RSpec.describe ProjectMediaflux, type: :model do
 
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  describe "#create!", connect_to_mediaflux: true do
+  describe "#create!", :connect_to_mediaflux do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id",
          :integration do
@@ -34,7 +34,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect(namespace_metadata[:path]).to end_with(project_directory_postfix + "NS")
       end
 
-      describe "storage and access", connect_to_mediaflux: true do
+      describe "storage and access", :connect_to_mediaflux do
         it "adds a quota and other storage options when it creates a project in mediaflux",
            :integration do
           metadata = Mediaflux::AssetMetadataRequest.new(
@@ -52,7 +52,7 @@ RSpec.describe ProjectMediaflux, type: :model do
       end
     end
 
-    context "when the metadata of a project is incomplete", connect_to_mediaflux: true do
+    context "when the metadata of a project is incomplete", :connect_to_mediaflux do
       let(:incomplete_request) do
         request = FactoryBot.create(:request_project)
         request.project_title = nil
@@ -66,7 +66,7 @@ RSpec.describe ProjectMediaflux, type: :model do
         incomplete_project
       end
 
-      it "should raise an ActiveModel::Error if project is invalid", integration: true do
+      it "raises an ActiveModel::Error if project is invalid", :integration do
         project.create!(initial_metadata: incomplete_project.metadata_model, user: sponsor_and_data_manager_user)
 
         expect(project.valid?).to be false
@@ -74,13 +74,13 @@ RSpec.describe ProjectMediaflux, type: :model do
         expect(project.errors.first.type).to include("Invalid Project Metadata it does not match the schema 0.6.1\n Missing metadata value for project_id")
       end
 
-      it "should raise a error if any error occurs in mediaflux", integration: true do
+      it "raises a error if any error occurs in mediaflux", :integration do
         expect { incomplete_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       end
     end
   end
 
-  describe "#update", connect_to_mediaflux: true do
+  describe "#update", :connect_to_mediaflux do
     before do
       described_class.create!(project: project, user: sponsor_and_data_manager_user)
     end
@@ -91,8 +91,8 @@ RSpec.describe ProjectMediaflux, type: :model do
       project.metadata_model.updated_on = nil
       project.metadata_model.updated_by = nil
       described_class.update(project: project, user: sponsor_and_data_manager_user)
-      expect(project.metadata_model.updated_on).not_to be nil
-      expect(project.metadata_model.updated_by).not_to be nil
+      expect(project.metadata_model.updated_on).not_to be_nil
+      expect(project.metadata_model.updated_by).not_to be_nil
     end
 
     # Project updates in MediaFlux are not supported yet

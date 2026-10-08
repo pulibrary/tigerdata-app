@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.development? || Rails.env.test?
+if Rails.env.local?
   begin
     lando_services = JSON.parse(`lando info --format json`, symbolize_names: true)
     lando_services.each do |service|

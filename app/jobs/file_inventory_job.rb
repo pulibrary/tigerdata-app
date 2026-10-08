@@ -39,7 +39,7 @@ class FileInventoryJob < ApplicationJob
 
     # Update the job record as completed
     update_inventory_request(user_id: user.id, project: project, job_id: @job_id, filename: filename)
-  rescue Mediaflux::SessionExpired => e
+  rescue Mediaflux::SessionExpired
     # do not retry we can not continue if the session is expired
     fail_inventory_request(user_id: user.id, project: project, job_id: @job_id)
   end

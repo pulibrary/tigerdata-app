@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "Website banner", type: :system, connect_to_mediaflux: true, js: true do
+describe "Website banner", :connect_to_mediaflux, :js, type: :system do
   let(:trainer_user) { FactoryBot.create(:trainer, uid: "pul123") }
 
   it "has the banner on the homepage" do

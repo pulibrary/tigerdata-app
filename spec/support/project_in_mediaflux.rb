@@ -18,7 +18,7 @@ def test_project_from_path(path)
 
   data_sponsor = metadata[:data_sponsor] || "tigerdatatester"
   data_manager = metadata[:data_manager] || "tigerdatatester"
-  data_users = metadata[:data_users]
+  metadata[:data_users]
   FactoryBot.create(:user, uid: data_sponsor) unless User.where(uid: data_sponsor).exists?
   FactoryBot.create(:user, uid: data_manager) unless User.where(uid: data_manager).exists?
   data_users = metadata[:data_users]

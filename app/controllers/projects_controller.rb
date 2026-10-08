@@ -105,8 +105,8 @@ class ProjectsController < ApplicationController
         render xml: project.mediaflux_meta_xml(user: current_user)
       end
     end
-  rescue => ex
-    Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{ex.message}"
+  rescue => e
+    Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{e.message}"
     render json: { error: "Error fetching Mediaflux XML for this project" }
   end
 
@@ -119,8 +119,8 @@ class ProjectsController < ApplicationController
       message: "File list for \"#{project.title}\" is being generated in the background. A link to the downloadable file list will be available in the \"Recent Activity\" section of your dashboard when it is available. You may safely navigate away from this page or close this tab."
     }
     render json: json_response
-  rescue => ex
-    message = "Error producing document list (project id: #{project&.id}): #{ex.message}"
+  rescue => e
+    message = "Error producing document list (project id: #{project&.id}): #{e.message}"
     Rails.logger.error(message)
     Honeybadger.notify(message)
     render json: { message: "Document list could not be generated." }
@@ -148,7 +148,7 @@ class ProjectsController < ApplicationController
     project_id = params[:project_id].to_i
     TigerdataMailer.with(project_id: project_id, submitter: current_user).globus_access_request.deliver_later
   rescue StandardError => e
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { error: e.message }, status: :unprocessable_content
   end
 
   def send_storage_increase_request
@@ -169,7 +169,7 @@ class ProjectsController < ApplicationController
       quota_breakdown: quota_breakdown
     ).storage_increase_request.deliver_later
   rescue StandardError => e
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { error: e.message }, status: :unprocessable_content
   end
 
   private
@@ -197,11 +197,7 @@ class ProjectsController < ApplicationController
   end
 
   def search_projects
-    @title_query = if params[:title_query].present?
-                     params[:title_query]
-                   else
-                     "*" # default to all projects
-                   end
+    @title_query = params[:title_query].presence || "*"
     result = ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
     if result.success?
       flash[:notice] = "Successful search in Mediaflux for #{@title_query}"

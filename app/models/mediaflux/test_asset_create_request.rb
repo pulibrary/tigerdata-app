@@ -29,7 +29,7 @@ module Mediaflux
         xml.args do
           xml.pid parent_id
           xml.nb count
-          xml.send("base-name", pattern) if pattern.present?
+          xml.send(:'base-name', pattern) if pattern.present?
         end
       end
     end

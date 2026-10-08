@@ -2,15 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do
+RSpec.describe ProjectShowPresenter, connect_to_mediaflux: false, type: :model do
+  subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
+
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
     FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager_user.uid, data_sponsor: sponsor_and_data_manager_user.uid,
                                         departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
   end
   let(:project) { request.approve(sponsor_and_data_manager_user) }
-
-  subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
 
   describe "#description" do
     it "delegates to project metdata_model" do
@@ -92,7 +92,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
 
   describe "#department_codes" do
     before do
-      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
     end
 
     it "delegates to project metadata_model" do

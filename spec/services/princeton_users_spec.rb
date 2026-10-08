@@ -84,7 +84,7 @@ RSpec.describe PrincetonUsers, type: :model do
         allow(entry).to receive(:[]).with(:givenname).and_return([])
 
         expect { described_class.create_users_from_ldap(current_uid_start: "gsj", ldap_connection: connection) }
-          .to change { User.count }.by(0)
+          .not_to(change { User.count })
       end
     end
   end
@@ -217,7 +217,7 @@ RSpec.describe PrincetonUsers, type: :model do
         expect(described_class::RDSS_DEVELOPERS).to include("bs3097")
       end
 
-      it "creates all default users", integration: true do
+      it "creates all default users", :integration do
         expect(User.count).to eq 0
         described_class.load_default_users
         expect(User.count).to eq (described_class::RDSS_DEVELOPERS + described_class::RESEARCH_COMPUTING_USERS + described_class::TESTING_USERS).length

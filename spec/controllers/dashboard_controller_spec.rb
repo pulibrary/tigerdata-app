@@ -8,7 +8,7 @@ RSpec.describe DashboardController do
     expect(response).to redirect_to("/sign_in")
   end
 
-  context "when a trainer is logged in", connect_to_mediaflux: true do
+  context "when a trainer is logged in", :connect_to_mediaflux do
     let(:trainer_user) { FactoryBot.create(:trainer, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do
@@ -100,7 +100,7 @@ RSpec.describe DashboardController do
     end
   end
 
-  context "when a user is logged in", connect_to_mediaflux: true do
+  context "when a user is logged in", :connect_to_mediaflux do
     let(:researcher_user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do

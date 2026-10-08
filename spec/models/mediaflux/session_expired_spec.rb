@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::SessionExpired, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::SessionExpired, :connect_to_mediaflux, type: :model do
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project1) { FactoryBot.create(:approved_project) }
 

@@ -6,7 +6,7 @@ class PULDatacite
     # (this avoids requests to the DOI API endpoint for non-production deployments)
     # @return [Boolean]
     def publish_test_doi?
-      (Rails.env.development? || Rails.env.test?) && Rails.configuration.datacite.user.blank?
+      Rails.env.local? && Rails.configuration.datacite.user.blank?
     end
   end
 

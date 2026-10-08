@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::AssetCreateRequest, :connect_to_mediaflux, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
@@ -10,7 +10,7 @@ RSpec.describe Mediaflux::AssetCreateRequest, connect_to_mediaflux: true, type: 
   let(:project) { create_project_in_mediaflux(current_user: user) }
 
   let(:create_response) do
-    filename = Rails.root.join("spec", "fixtures", "files", "asset_create_response.xml")
+    filename = Rails.root.join("spec/fixtures/files/asset_create_response.xml")
     File.new(filename).read
   end
 

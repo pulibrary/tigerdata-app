@@ -112,7 +112,7 @@ module Mediaflux
 
     def xml_payload(name: self.class.service)
       body = build_http_request_body(name:)
-      xml_payload = body.to_xml
+      body.to_xml
     end
 
     # The output of this routine can be passed to xtoshell in aterm.  The output of which can be sent to service.execute
@@ -122,7 +122,7 @@ module Mediaflux
       xml_builder = build_http_request_body(name:)
       xml_builder.doc.xpath("//request/service/@session").remove
       xml = xml_builder.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
-      xml.strip.gsub("\"", "'").gsub("<args>", "").gsub("</args>", "")
+      xml.strip.tr("\"", "'").gsub("<args>", "").gsub("</args>", "")
     end
 
     # This method is used for transforming iso8601 dates to dates that MediaFlux likes

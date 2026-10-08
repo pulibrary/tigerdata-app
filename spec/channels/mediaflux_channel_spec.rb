@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe MediafluxChannel, type: :channel, connect_to_mediaflux: true do
+RSpec.describe MediafluxChannel, :connect_to_mediaflux, type: :channel do
   subject(:channel) { described_class.new(*args) }
 
   let(:connection) { double(ActionCable::Connection) }

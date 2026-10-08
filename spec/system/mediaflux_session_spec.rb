@@ -21,7 +21,7 @@ RSpec.describe "Mediaflux Sessions", type: :system do
       allow_any_instance_of(ActionDispatch::Request::Session).to receive(:[]).with(:active_web_user).and_return(true)
     end
 
-    it "connects to mediaflux once", connect_to_mediaflux: true do
+    it "connects to mediaflux once", :connect_to_mediaflux do
       visit dashboard_path
 
       expect { visit project_path(project) }.not_to raise_error

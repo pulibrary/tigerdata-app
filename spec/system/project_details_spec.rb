@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
+RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
@@ -213,7 +213,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     context "Approved projects" do
       before do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
       end
 
       it "Shows the approved values" do
@@ -334,7 +334,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       end
     end
 
-    context "Project Contents", connect_to_mediaflux: true, integration: true do
+    context "Project Contents", :connect_to_mediaflux, :integration do
       let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:size) { 100 }

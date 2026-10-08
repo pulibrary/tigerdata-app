@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::LogonRequest, :connect_to_mediaflux, type: :model do
   subject(:request) { described_class.new }
 
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
@@ -11,7 +11,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
 
   describe "#session_token" do
     it "authenticates and stores the session token" do
-      expect(request.session_token).to_not be_blank
+      expect(request.session_token).not_to be_blank
 
       expect(a_request(:post, mediaflux_url).with do |req|
         req.body.include?("<service name=\"system.logon\"")
@@ -62,7 +62,7 @@ RSpec.describe Mediaflux::LogonRequest, connect_to_mediaflux: true, type: :model
     end
   end
 
-  describe "#resolve", connect_to_mediaflux: true do
+  describe "#resolve", :connect_to_mediaflux do
     it "returns the net response" do
       response = request.resolve
       expect(response).to be_instance_of(Net::HTTPOK)

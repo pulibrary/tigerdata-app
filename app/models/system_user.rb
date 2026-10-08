@@ -11,14 +11,14 @@ class SystemUser
 
         logon_request.session_token
       end
-    rescue EOFError => ex
+    rescue EOFError => e
       # Retry EOFErrors a few times
       if eof_error_handler
-        Rails.logger.error "EOFError detected when attempting system logon. Details: #{ex.message}, retrying..."
-        Honeybadger.notify "EOFError detected when attempting system logon. Details: #{ex.message}, retrying..."
+        Rails.logger.error "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
+        Honeybadger.notify "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
         retry
       else
-        raise Mediaflux::SessionError, "System logon failed due to repeated EOFErrors: #{ex.message}"
+        raise Mediaflux::SessionError, "System logon failed due to repeated EOFErrors: #{e.message}"
       end
     end
 

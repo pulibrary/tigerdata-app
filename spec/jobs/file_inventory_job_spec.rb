@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true do
+RSpec.describe FileInventoryJob, :connect_to_mediaflux, :integration do
   include ActiveJob::TestHelper
 
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
@@ -80,7 +80,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
         end
       end
 
-      it "it handles the retry for ActiveRecord::StatementInvalid exception" do
+      it "handles the retry for ActiveRecord::StatementInvalid exception" do
         described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
         file_inventory_request = FileInventoryRequest.first
         expect(file_inventory_request.state).to eq "completed"
@@ -94,7 +94,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
         allow(project_in_mediaflux).to receive(:file_list_to_file).and_raise(Mediaflux::SessionExpired)
       end
 
-      it "it handles the Mediaflux::SessionExpired exception and fails the job" do
+      it "handles the Mediaflux::SessionExpired exception and fails the job" do
         described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
         file_inventory_request = FileInventoryRequest.first
         expect(file_inventory_request.state).to eq "failed"
@@ -117,7 +117,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
           end
         end
 
-        it "it handles the retry for ActiveRecord::StatementInvalid exception" do
+        it "handles the retry for ActiveRecord::StatementInvalid exception" do
           described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
           file_inventory_request = FileInventoryRequest.first
           expect(file_inventory_request.state).to eq "failed"

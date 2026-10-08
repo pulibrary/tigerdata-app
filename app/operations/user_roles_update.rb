@@ -34,8 +34,8 @@ class UserRolesUpdate < Dry::Operation
       user.save!
     end
     Success(user)
-  rescue StandardError => ex
-    Failure("Error updating user roles! error: #{ex}")
+  rescue StandardError => e
+    Failure("Error updating user roles! error: #{e}")
   end
 
   def update_tester_status(user:, mediaflux_roles:)

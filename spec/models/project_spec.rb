@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Project, type: :model, connect_to_mediaflux: true do
+RSpec.describe Project, :connect_to_mediaflux, type: :model do
   let(:user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
   let(:user2) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
@@ -37,33 +37,33 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       all_projects = described_class.all_projects(test_user)
 
       # Finds ALL the projects we added...
-      expect(all_projects.find { |project| project[:title] == "project 111" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 222" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 333" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 444" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
+      expect(all_projects.find { |project| project[:title] == "project 111" }).not_to be_nil
+      expect(all_projects.find { |project| project[:title] == "project 222" }).not_to be_nil
+      expect(all_projects.find { |project| project[:title] == "project 333" }).not_to be_nil
+      expect(all_projects.find { |project| project[:title] == "project 444" }).not_to be_nil
+      expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be_nil
 
       # ...plus a project that comes predefined in the Docker image
-      expect(all_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
+      expect(all_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be_nil
     end
 
     it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
       user_projects = described_class.users_projects(test_user)
 
       # Finds the projects where the user has a role (manager, sponsor, or data user)
-      expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 444" }).not_to be nil
+      expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be_nil
+      expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be_nil
+      expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be_nil
+      expect(user_projects.find { |project| project[:title] == "project 444" }).not_to be_nil
 
       # make sure we don't get the project where the user does not have a role
-      expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
+      expect(user_projects.find { |project| project[:title] == "project 555" }).to be_nil
 
       # ...and make sure the existing testing projects are present
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be_nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be_nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be_nil
+      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be_nil
     end
 
     it "handles Mediaflux errors" do
@@ -113,7 +113,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(file_list[:files][0].path).to eq "/princeton/#{project.project_directory}/Real_Among_Random.txt0"
       expect(file_list[:files][0].size).to be 100
       expect(file_list[:files][0].collection).to be false
-      expect(file_list[:files][0].last_modified).to_not be nil
+      expect(file_list[:files][0].last_modified).not_to be_nil
     end
   end
 
@@ -129,7 +129,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(directory_files_list[:files][0].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/A0"
       expect(directory_files_list[:files][0].size).to be 10
       expect(directory_files_list[:files][0].collection).to be false
-      expect(directory_files_list[:files][0].last_modified).to_not be nil
+      expect(directory_files_list[:files][0].last_modified).not_to be_nil
     end
   end
 
@@ -158,13 +158,13 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       it "does not mint a DOI when project is invalid" do
         initial_metadata = ProjectMetadata.new_from_hash({})
         project.create!(initial_metadata: initial_metadata, user: researcher_user)
-        expect(datacite_stub).to_not have_received(:draft_doi)
+        expect(datacite_stub).not_to have_received(:draft_doi)
       end
 
       it "does not mint a new DOI when the project has a project_id" do
         project.metadata_model.update_with_params({ "project_id" => "123" }, researcher_user)
         doi = project.create!(initial_metadata: project.metadata_model, user: researcher_user)
-        expect(datacite_stub).to_not have_received(:draft_doi)
+        expect(datacite_stub).not_to have_received(:draft_doi)
         expect(doi).to eq "123"
       end
 

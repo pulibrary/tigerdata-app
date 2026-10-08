@@ -8,7 +8,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
-    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+    Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
   end
 
   describe "#details" do
@@ -236,7 +236,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           expect(response.body).to eq("")
         end
 
-        context "the project is saved to mediaflux", connect_to_mediaflux: true, integration: true do
+        context "the project is saved to mediaflux", :connect_to_mediaflux, :integration do
           let(:project) do
             request = FactoryBot.create(:request_project)
             project = request.approve(sponsor_and_data_manager)
@@ -343,7 +343,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         expect(response_json["files"]).to eq([])
       end
 
-      context "a project with files in mediaflux", integration: true do
+      context "a project with files in mediaflux", :integration do
         let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
 
         it "returns the top level directory listing as json" do
@@ -453,7 +453,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         request_details: {
           project_title: project.title,
           file_size: 1_000_000,
-          output_file: Rails.root.join("spec", "fixtures", "files", "project_report.csv").to_s
+          output_file: Rails.root.join("spec/fixtures/files/project_report.csv").to_s
         },
         completion_time: Time.current.in_time_zone("America/New_York")
       )

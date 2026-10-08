@@ -93,43 +93,43 @@ RSpec.describe User, type: :model do
       user = FactoryBot.create(:user, uid: "pul1234", given_name: nil)
       expect(User.serialize_into_session(user)).to eq ["pul1234", ""]
       expect(User.serialize_from_session("pul1234", "").uid).to eq "pul1234"
-      expect(User.serialize_from_session("nope", "")).to be nil
+      expect(User.serialize_from_session("nope", "")).to be_nil
     end
   end
 
   describe "#eligible_sponsor?" do
-    it "should be true for a sponsor" do
+    it "is true for a sponsor" do
       user = FactoryBot.create(:project_sponsor)
       expect(user).to be_eligible_sponsor
     end
 
-    it "should be true for a developer" do
+    it "is true for a developer" do
       user = FactoryBot.create(:developer)
       expect(user).to be_eligible_sponsor
     end
   end
 
   describe "#eligible_manager?" do
-    it "should be true for a manager" do
+    it "is true for a manager" do
       user = FactoryBot.create(:data_manager)
       expect(user).to be_eligible_manager
     end
 
-    it "should be true for a developer" do
+    it "is true for a developer" do
       user = FactoryBot.create(:developer)
       expect(user).to be_eligible_manager
     end
   end
 
   describe "#developer?" do
-    it "should be true for a developer" do
+    it "is true for a developer" do
       user = FactoryBot.create(:developer)
       expect(user).to be_developer
     end
   end
 
   describe "#sponsor_users" do
-    it "should only show sponsers" do
+    it "onlies show sponsers" do
       FactoryBot.create(:developer)
       project_sponsor = FactoryBot.create(:project_sponsor)
       FactoryBot.create(:user)
@@ -137,7 +137,7 @@ RSpec.describe User, type: :model do
     end
 
     context "in development" do
-      it "should only show sponsers and developers" do
+      it "onlies show sponsers and developers" do
         developer = FactoryBot.create(:developer)
         project_sponsor = FactoryBot.create(:project_sponsor)
         FactoryBot.create(:user)
@@ -148,44 +148,44 @@ RSpec.describe User, type: :model do
   end
 
   describe "#eligible_sysadmin?" do
-    it "should be true for a sysadmin" do
+    it "is true for a sysadmin" do
       user = FactoryBot.create(:sysadmin)
       expect(user).to be_eligible_sysadmin
     end
 
-    it "should be true for a developer" do
+    it "is true for a developer" do
       user = FactoryBot.create(:developer)
       expect(user).to be_eligible_sysadmin
     end
   end
 
   describe "#eligible_to_create_new?" do
-    it "should be true for a sysadmin" do
+    it "is true for a sysadmin" do
       user = FactoryBot.create(:sysadmin)
       expect(user).to be_eligible_to_create_new
     end
 
-    it "should be true for a developer" do
+    it "is true for a developer" do
       user = FactoryBot.create(:developer)
       expect(user).to be_eligible_to_create_new
     end
 
-    it "should be true for a sponsor who is a trainer" do
+    it "is true for a sponsor who is a trainer" do
       user = FactoryBot.create(:project_sponsor, trainer: true)
       expect(user).to be_eligible_to_create_new
     end
 
-    it "should be false for a manager" do
+    it "is false for a manager" do
       user = FactoryBot.create(:data_manager)
       expect(user).not_to be_eligible_to_create_new
     end
 
-    it "should be false for a sponsor" do
+    it "is false for a sponsor" do
       user = FactoryBot.create(:project_sponsor)
       expect(user).not_to be_eligible_to_create_new
     end
 
-    it "should be false for a data user" do
+    it "is false for a data user" do
       user = FactoryBot.create(:user)
       expect(user).not_to be_eligible_to_create_new
     end

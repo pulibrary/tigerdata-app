@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
+describe ProjectXmlPresenter, connect_to_mediaflux: false, type: :model do
   subject(:presenter) { described_class.new(project) }
 
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "abc123") }
@@ -54,7 +54,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
   let(:submission_event) { FactoryBot.create(:submission_event, project: project, event_person: submitter.uid) }
 
-  let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
+  let(:schema_file_path) { Rails.root.join("lib/assets/tigerdata_metadata/v0.8/TigerData_StandardMetadataSchema_v0.8.xsd") }
   let(:schema_file) do
     File.read(schema_file_path).tap do |xsd|
       # Replace the reference to `xml.xsd` from the xsd with a reference to our
@@ -328,10 +328,10 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       end
 
       describe "<globusEnable>" do
+        let(:node) { root.at_xpath("accessPoints/globusEnable") }
+
         describe "<globusEnableSetting>" do
         end
-
-        let(:node) { root.at_xpath("accessPoints/globusEnable") }
 
         it "builds a <globusEnable> element detailing the Globus mount status" do
           expect(node).to be_a(Nokogiri::XML::Element)

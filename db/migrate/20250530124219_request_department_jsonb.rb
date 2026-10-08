@@ -3,10 +3,10 @@ class RequestDepartmentJsonb < ActiveRecord::Migration[7.0]
     if ActiveRecord::Base.connection.table_exists? 'requests' && Object.const_defined?('Request')
       Request.all.each do |request|
         dep_str = request.departments&.strip
-        if !dep_str.blank?
+        if dep_str.present?
           request.departments = dep_str.split(",").map do |dep|
             code, name = dep.split(" ")
-            code = code.strip.gsub("(", "").gsub(")", "")
+            code = code.strip.delete("(").delete(")")
             { code: code, name: name }
           end.to_json
           request.save

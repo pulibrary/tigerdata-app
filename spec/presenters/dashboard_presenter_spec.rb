@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
+describe DashboardPresenter, connect_to_mediaflux: false, type: :model do
   subject(:presenter) do
     current_user.mediaflux_session = SystemUser.mediaflux_session # ensure the presenter can make mediaflux calls as the current user
     described_class.new(current_user: current_user)

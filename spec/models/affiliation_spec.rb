@@ -6,7 +6,7 @@ RSpec.describe Affiliation, type: :model do
   describe "#load_from_file" do
     it "reads the departments from the file" do
       expect(Affiliation.count).to eq 0
-      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
       expect(Affiliation.count).to eq 5
       expect(Affiliation.where(code: "55555").first.name).to eq("AST-Astrophysical Sciences")
       expect(Affiliation.where(code: "66666").first.name).to eq("HPC-High Performance Computing")
@@ -17,9 +17,9 @@ RSpec.describe Affiliation, type: :model do
 
     it "only loads the departments once" do
       expect(Affiliation.count).to eq 0
-      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
       expect(Affiliation.count).to eq 5
-      Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+      Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
       expect(Affiliation.count).to eq 5
     end
   end

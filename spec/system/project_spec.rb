@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
+RSpec.describe "Project Page", :connect_to_mediaflux, type: :system do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
@@ -53,7 +53,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
   before do
     sign_in sponsor_user
-    Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+    Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
   end
 
   context "Show page" do
@@ -243,7 +243,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         click_on "Yes"
         expect(page).to have_text("File list for \"#{approved_project.title}\" is being generated in the background.")
         expect(sponsor_and_data_manager_user.inventory_requests.count).to eq(1)
-        expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
+        expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be_nil
         expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
         expect(sponsor_and_data_manager_user.inventory_requests.first.type).to eq "FileInventoryRequest"
       end

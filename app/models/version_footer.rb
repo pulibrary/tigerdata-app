@@ -21,8 +21,8 @@ class VersionFooter
   def self.info
     reset! if stale?
     { sha: git_sha, branch:, version:, stale: stale?, tagged_release: tagged_release? }
-  rescue StandardError => ex
-    { error: "Error retrieving version information: #{ex.message}" }
+  rescue StandardError => e
+    { error: "Error retrieving version information: #{e.message}" }
   end
 
   def self.reset!
@@ -47,7 +47,7 @@ class VersionFooter
   def self.git_sha
     @@git_sha ||= if File.exist?(revisions_logfile)
                     log_line(revisions_logfile).chomp.split(" ")[3].gsub(/\)$/, "")
-                  elsif Rails.env.development? || Rails.env.test?
+                  elsif Rails.env.local?
                     `git rev-parse HEAD`.chomp
                   else
                     "Unknown SHA"
@@ -62,7 +62,7 @@ class VersionFooter
   def self.branch
     @@branch ||= if File.exist?(revisions_logfile)
                    log_line(revisions_logfile).chomp.split(" ")[1]
-                 elsif Rails.env.development? || Rails.env.test?
+                 elsif Rails.env.local?
                    `git rev-parse --abbrev-ref HEAD`.chomp
                  else
                    "Unknown branch"
@@ -87,7 +87,7 @@ class VersionFooter
   # Capistrano keeps this file a couple of levels up _outside_ the application.
   # This file includes all the information that we need (git SHA, branch name, date)
   def self.revisions_logfile
-    @@revisions_logfile ||= Rails.root.join("..", "..", "revisions.log")
+    @@revisions_logfile ||= Rails.root.join("../../revisions.log")
   end
 
   # These assignment methods are needed to facilitate testing

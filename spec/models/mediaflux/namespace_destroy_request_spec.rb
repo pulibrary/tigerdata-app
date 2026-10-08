@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
+RSpec.describe Mediaflux::NamespaceDestroyRequest, :connect_to_mediaflux, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_project) { create_project_in_mediaflux(current_user: sponsor_user) }
   let(:namespace) { valid_project.project_directory.split("/").last + "NS" }

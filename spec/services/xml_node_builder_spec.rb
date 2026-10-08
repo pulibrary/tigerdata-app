@@ -10,7 +10,7 @@ describe XmlNodeBuilder do
     let(:built) { xml_builder.build }
 
     it "returns the document" do
-      expect(built).to be nil
+      expect(built).to be_nil
     end
 
     context "when the document has a root element" do

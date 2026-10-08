@@ -108,29 +108,6 @@ Lint/UnusedBlockArgument:
     - "app/models/new_project_request.rb"
 
 # Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods, NotImplementedExceptions.
-# NotImplementedExceptions: NotImplementedError
-Lint/UnusedMethodArgument:
-  Exclude:
-    - "app/models/project.rb"
-    - "app/models/project_mediaflux.rb"
-
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-Lint/UselessAssignment:
-  Exclude:
-    - "app/jobs/file_inventory_job.rb"
-    - "app/models/mediaflux/request.rb"
-    - "app/models/project.rb"
-    - "app/operations/project_search.rb"
-    - "app/presenters/project_show_presenter.rb"
-    - "app/services/princeton_users.rb"
-    - "spec/mailers/previews/tigerdata_preview.rb"
-    - "spec/models/mediaflux/time_spec.rb"
-    - "spec/support/project_in_mediaflux.rb"
-
-# Offense count: 2
 Lint/UselessRescue:
   Exclude:
     - "app/models/project.rb"
@@ -190,25 +167,6 @@ Naming/PredicateMethod:
     - "app/operations/project_create.rb"
     - "app/operations/user_roles_update.rb"
 
-# Offense count: 21
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - "app/controllers/new_project_requests_controller.rb"
-    - "app/controllers/projects_controller.rb"
-    - "app/controllers/session_info_controller.rb"
-    - "app/controllers/users_controller.rb"
-    - "app/models/system_user.rb"
-    - "app/models/user.rb"
-    - "app/models/version_footer.rb"
-    - "app/operations/project_create.rb"
-    - "app/operations/user_roles_update.rb"
-    - "app/services/princeton_users.rb"
-    - "app/services/project_import.rb"
-    - "app/services/xml_element_builder.rb"
-    - "spec/support/connect_to_mediaflux.rb"
-
 # Offense count: 13
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
 # SupportedStyles: snake_case, normalcase, non_integer
@@ -239,28 +197,6 @@ Performance/MapCompact:
   Exclude:
     - "app/presenters/project_show_presenter.rb"
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Performance/ReverseFirst:
-  Exclude:
-    - "spec/system/dashboard_spec.rb"
-
-# Offense count: 10
-# This cop supports safe autocorrection (--autocorrect).
-Performance/StringIdentifierArgument:
-  Exclude:
-    - "app/models/mediaflux/iterator_destroy_request.rb"
-    - "app/models/mediaflux/project_create_service_request.rb"
-    - "app/models/mediaflux/project_user_add_request.rb"
-    - "app/models/mediaflux/test_asset_create_request.rb"
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Performance/StringReplacement:
-  Exclude:
-    - "app/models/mediaflux/request.rb"
-    - "db/migrate/20250530124219_request_department_jsonb.rb"
-
 # Offense count: 52
 RSpec/AnyInstance:
   Exclude:
@@ -286,32 +222,6 @@ RSpec/BeEq:
     - "spec/models/mediaflux/version_request_spec.rb"
     - "spec/models/provenance_event_spec.rb"
     - "spec/requests/mediaflux_info_spec.rb"
-
-# Offense count: 27
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: be, be_nil
-RSpec/BeNil:
-  Exclude:
-    - "spec/models/mediaflux/asset_metadata_request_spec.rb"
-    - "spec/models/new_project_request_spec.rb"
-    - "spec/models/project_mediaflux_spec.rb"
-    - "spec/models/project_metadata_spec.rb"
-    - "spec/models/project_spec.rb"
-    - "spec/models/user_spec.rb"
-    - "spec/services/xml_node_builder_spec.rb"
-    - "spec/system/file_list_spec.rb"
-    - "spec/system/project_spec.rb"
-
-# Offense count: 14
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: NegatedMatcher.
-RSpec/ChangeByZero:
-  Exclude:
-    - "spec/controllers/new_project_requests_controller_spec.rb"
-    - "spec/requests/request_delete_spec.rb"
-    - "spec/services/princeton_users_spec.rb"
-    - "spec/services/project_import_spec.rb"
 
 # Offense count: 224
 # Configuration parameters: Prefixes, AllowedPatterns.
@@ -348,16 +258,6 @@ RSpec/EmptyExampleGroup:
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
   Max: 99
-
-# Offense count: 20
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: CustomTransform, IgnoredWords, DisallowedExamples.
-# DisallowedExamples: works
-RSpec/ExampleWording:
-  Exclude:
-    - "spec/jobs/file_inventory_job_spec.rb"
-    - "spec/models/project_mediaflux_spec.rb"
-    - "spec/models/user_spec.rb"
 
 # Offense count: 34
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -410,28 +310,10 @@ RSpec/InstanceVariable:
     - "spec/models/mediaflux/query_request_spec.rb"
     - "spec/services/pul_datacite_spec.rb"
 
-# Offense count: 7
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/LeadingSubject:
-  Exclude:
-    - "spec/models/mediaflux/service_execute_request_spec.rb"
-    - "spec/models/mediaflux/time_spec.rb"
-    - "spec/models/project_show_presenter_spec.rb"
-    - "spec/operations/project_create_spec.rb"
-    - "spec/operations/user_roles_update_spec.rb"
-    - "spec/presenters/project_dashboard_presenter_spec.rb"
-    - "spec/presenters/project_show_presenter_spec.rb"
-
 # Offense count: 1
 RSpec/LeakyConstantDeclaration:
   Exclude:
     - "spec/models/mediaflux/request_spec.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/LetBeforeExamples:
-  Exclude:
-    - "spec/presenters/project_xml_presenter_spec.rb"
 
 # Offense count: 16
 RSpec/LetSetup:
@@ -449,23 +331,6 @@ RSpec/LetSetup:
     - "spec/services/test_project_generator_spec.rb"
     - "spec/system/dashboard_spec.rb"
     - "spec/system/welcome_spec.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/MatchWithSimpleRegex:
-  Exclude:
-    - "spec/models/mediaflux/string_reverse_spec.rb"
-
-# Offense count: 95
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: hash, symbol
-RSpec/MetadataStyle:
-  Enabled: false
-
-# Offense count: 463
-RSpec/MultipleExpectations:
-  Max: 50
 
 # Offense count: 177
 # Configuration parameters: AllowSubject.
@@ -487,21 +352,6 @@ RSpec/NamedSubject:
 # Configuration parameters: AllowedGroups.
 RSpec/NestedGroups:
   Max: 6
-
-# Offense count: 16
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: not_to, to_not
-RSpec/NotToNot:
-  Exclude:
-    - "spec/models/mediaflux/asset_metadata_request_spec.rb"
-    - "spec/models/mediaflux/logon_request_spec.rb"
-    - "spec/models/project_metadata_spec.rb"
-    - "spec/models/project_spec.rb"
-    - "spec/operations/project_create_spec.rb"
-    - "spec/system/file_list_spec.rb"
-    - "spec/system/project_details_spec.rb"
-    - "spec/system/request_spec.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -553,26 +403,6 @@ RSpec/RepeatedExampleGroupDescription:
   Exclude:
     - "spec/presenters/project_xml_presenter_spec.rb"
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: and_return, block
-RSpec/ReturnFromStub:
-  Exclude:
-    - "spec/controllers/omniauth_callbacks_controller_spec.rb"
-    - "spec/system/dashboard_spec.rb"
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/ScatteredLet:
-  Exclude:
-    - "spec/models/mediaflux/service_execute_request_spec.rb"
-
-# Offense count: 30
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/SortMetadata:
-  Enabled: false
-
 # Offense count: 9
 # Configuration parameters: CustomTransform, IgnoreMethods, IgnoreMetadata, InflectorPath, EnforcedInflector.
 # SupportedInflectors: default, active_support
@@ -593,16 +423,6 @@ RSpec/SpecFilePathSuffix:
   Exclude:
     - "spec/models/role.rb"
     - "spec/requests/health_check.rb"
-
-# Offense count: 8
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/SubjectDeclaration:
-  Exclude:
-    - "spec/services/project_import_spec.rb"
-    - "spec/services/pul_cache_spec.rb"
-    - "spec/services/pul_datacite_spec.rb"
-    - "spec/services/test_asset_generator_spec.rb"
-    - "spec/services/test_project_generator_spec.rb"
 
 # Offense count: 6
 RSpec/SubjectStub:
@@ -646,20 +466,6 @@ RSpecRails/HaveHttpStatus:
     - "spec/requests/sidekiq_spec.rb"
     - "spec/requests/skeletor_metadata_spec.rb"
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: numeric, symbolic, be_status
-RSpecRails/HttpStatus:
-  Exclude:
-    - "spec/requests/edit_new_project_requests_spec.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpecRails/HttpStatusNameConsistency:
-  Exclude:
-    - "spec/requests/edit_new_project_requests_spec.rb"
-
 # Offense count: 98
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: Inferences.
@@ -688,14 +494,6 @@ Rails/Date:
     - "spec/system/project_details_spec.rb"
 
 # Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforceForPrefixed.
-Rails/Delegate:
-  Exclude:
-    - "app/models/project.rb"
-    - "app/presenters/project_show_presenter.rb"
-
-# Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: Whitelist, AllowedMethods, AllowedReceivers.
 # Whitelist: find_by_sql, find_by_token_for
@@ -705,35 +503,6 @@ Rails/DynamicFindBy:
   Exclude:
     - "app/models/new_project_request.rb"
     - "spec/models/new_project_request_spec.rb"
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Rails/EnvLocal:
-  Exclude:
-    - "app/models/version_footer.rb"
-    - "app/services/pul_datacite.rb"
-    - "config/lando_env.rb"
-
-# Offense count: 25
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: slashes, arguments
-Rails/FilePath:
-  Exclude:
-    - "app/models/version_footer.rb"
-    - "config/environments/development.rb"
-    - "config/initializers/load_xml_builder.rb"
-    - "config/initializers/tiger_data.rb"
-    - "spec/controllers/projects_controller_spec.rb"
-    - "spec/models/affiliation_spec.rb"
-    - "spec/models/mediaflux/asset_create_request_spec.rb"
-    - "spec/models/project_show_presenter_spec.rb"
-    - "spec/presenters/project_xml_presenter_spec.rb"
-    - "spec/rails_helper.rb"
-    - "spec/services/test_project_generator_spec.rb"
-    - "spec/system/new_project_request_wizard_spec.rb"
-    - "spec/system/project_details_spec.rb"
-    - "spec/system/project_spec.rb"
 
 # Offense count: 5
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -759,13 +528,6 @@ Rails/HelperInstanceVariable:
     - "app/helpers/banner_helper.rb"
     - "app/helpers/emulator_helper.rb"
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Rails/HttpStatusNameConsistency:
-  Exclude:
-    - "app/controllers/edit_new_project_request_controller.rb"
-    - "app/controllers/projects_controller.rb"
-
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Rails/NegateInclude:
@@ -777,19 +539,6 @@ Rails/NegateInclude:
 Rails/Pluck:
   Exclude:
     - "app/services/request_project_metadata.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Rails/Presence:
-  Exclude:
-    - "app/controllers/projects_controller.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
-Rails/Present:
-  Exclude:
-    - "db/migrate/20250530124219_request_department_jsonb.rb"
 
 # Offense count: 8
 # This cop supports unsafe autocorrection (--autocorrect-all).

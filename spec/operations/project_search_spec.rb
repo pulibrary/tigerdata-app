@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ProjectSearch, type: :operation, integration: true do
+RSpec.describe ProjectSearch, :integration, type: :operation do
   let!(:approver) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   let(:request1) { FactoryBot.create(:request_project, project_title: "soda Pop") }

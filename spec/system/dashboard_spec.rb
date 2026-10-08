@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
+RSpec.describe "Dashboard", :connect_to_mediaflux, :js do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit dashboard_path
@@ -34,7 +34,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
     let(:created_projects) { [] }
 
     before do
-      allow(File).to receive(:size) { 1_234_567 }
+      allow(File).to receive(:size).and_return(1_234_567)
     end
 
     after do
@@ -160,7 +160,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         find("a.paginate_button", text: "<").click
         expect(page).to have_text(projects.sort_by(&:updated_at).reverse[14].title)
         find("a.paginate_button", text: "<").click
-        expect(page).to have_text(projects.sort_by(&:updated_at).reverse.first.title)
+        expect(page).to have_text(projects.max_by(&:updated_at).title)
       end
     end
 
@@ -200,7 +200,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_text "Requests"
       end
 
-      it "shows the system administrator dashboard", js: true do
+      it "shows the system administrator dashboard", :js do
         sign_in developer_user
         created_projects.push(project_111, project_222, project_333)
 

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::VersionRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::VersionRequest, :connect_to_mediaflux, type: :model do
   subject(:request) { described_class.new(session_token: session_token) }
 
   let(:session_token) { user.mediaflux_session }

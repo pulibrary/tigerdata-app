@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "New Project Request page", type: :system, connect_to_mediaflux: false, clean_projects: true, js: true do
+describe "New Project Request page", :clean_projects, :js, connect_to_mediaflux: false, type: :system do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
@@ -23,7 +23,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "allows the sysadmin to fill out the project" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
         expect(Project.count).to eq 0
         sign_in sysadmin_user
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
@@ -80,7 +80,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "allows the developer to fill out the project" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
         expect(Project.count).to eq 0
         sign_in developer_user
         visit "/"
@@ -148,7 +148,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "Supports all the Shippable Increment fields on the basic information page" do
         # TODO: Add tests for all the shippable increment fields as they are added to the wizard
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
 
         other_user = FactoryBot.create(:user)
         another_user = FactoryBot.create(:user)
@@ -345,7 +345,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "can not submit if the request is not valid" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
         request = NewProjectRequest.create(requested_by: researcher_user.uid)
         sign_in researcher_user
         visit "/new-project/review-submit/#{request.id}"
@@ -404,7 +404,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "can not submit if the request has the data sponsor or manager in the data users" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
         request_project = FactoryBot.create(:request_project, requested_by: researcher_user.uid, data_sponsor: researcher_user.uid, data_manager: researcher_user.uid,
                                                               user_roles: [{ "uid" => researcher_user.uid, "read_only" => true }])
         sign_in researcher_user
@@ -417,7 +417,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "saves work in progress if user jumps to another step in the wizard" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
 
         sign_in researcher_user
         visit "/"
@@ -438,7 +438,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "deletes departments when clicking on the X next to them" do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
 
         sign_in researcher_user
         visit "/"
@@ -500,7 +500,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       end
 
       it "does not allow requests to be submitted with duplicate departments." do
-        Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
+        Affiliation.load_from_file(Rails.root.join("spec/fixtures/departments.csv"))
         sign_in researcher_user
         visit "new-project/project-info"
         expect(page).to have_css(".departments .lux-field input")

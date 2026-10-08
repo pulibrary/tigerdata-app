@@ -77,32 +77,32 @@ module Mediaflux
     def build_http_request_body(name:)
       super do |xml|
         xml.args do
-          xml.send("data-manager") do
+          xml.send(:'data-manager') do
             xml.text(@data_manager)
           end
-          xml.send("data-sponsor") do
+          xml.send(:'data-sponsor') do
             xml.text(@data_sponsor)
           end
           xml.department @department
           xml.description @description
           xml.directory @directory
-          xml.send("project-id") do
+          xml.send(:'project-id') do
             xml.text(@project_id)
           end
           xml.quota @quota
           xml.title @title
-          xml.send("number-of-files") do
+          xml.send(:'number-of-files') do
             xml.text(@number_of_files)
           end
           xml.hpc @hpc
           xml.smb @smb
           xml.globus @globus
           if @project_purpose.present?
-            xml.send("project-purpose") do
+            xml.send(:'project-purpose') do
               xml.text(@project_purpose)
             end
           end
-          xml.send("security-level") do
+          xml.send(:'security-level') do
             if @data_security_level.present?
               xml.text(@data_security_level)
             else

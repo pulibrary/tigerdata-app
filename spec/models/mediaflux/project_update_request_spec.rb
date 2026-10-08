@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::ProjectUpdateRequest, :connect_to_mediaflux, type: :model do
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:session_token) { SystemUser.mediaflux_session }
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
@@ -21,7 +21,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
     context "an asset with metadata" do
       # TODO: We don't support yet updates to Mediaflux from the UI after the project has been created in Mediaflux
       # See https://github.com/pulibrary/tigerdata-app/issues/1608
-      xit "sends the metadata to the server", connect_to_mediaflux: true do
+      xit "sends the metadata to the server", :connect_to_mediaflux do
         data_user_ro = FactoryBot.create(:user)
         data_user_rw = FactoryBot.create(:user)
         session_id = session_token

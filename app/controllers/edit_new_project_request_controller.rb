@@ -20,8 +20,8 @@ class EditNewProjectRequestController < ApplicationController
         format.html { redirect_to new_project_request_url(@new_project_request), notice: I18n.t(:successful_update) }
         format.json { render :show, status: :ok, location: @new_project_request }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @new_project_request.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @new_project_request.errors, status: :unprocessable_content }
       end
     end
   end

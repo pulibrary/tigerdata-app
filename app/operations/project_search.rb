@@ -28,7 +28,7 @@ class ProjectSearch < Dry::Operation
 
   def mediaflux_query(search_string:, requestor:, field_name:)
     aql_query = "xpath(tigerdata:project/#{field_name}) matches ignore-case '#{search_string}'"
-    request = Mediaflux::ProjectListRequest.new(session_token: requestor.mediaflux_session, aql_query:)
+    Mediaflux::ProjectListRequest.new(session_token: requestor.mediaflux_session, aql_query:)
   end
 
   def convert_results(mf_results, requestor)

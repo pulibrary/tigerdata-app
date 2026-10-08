@@ -206,8 +206,8 @@ class User < ApplicationRecord
     else
       Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{result.failure}")
     end
-  rescue => ex
-    Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{ex.message}")
+  rescue => e
+    Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{e.message}")
   end
 
   # Returns the roles in Mediaflux for the user in the session.

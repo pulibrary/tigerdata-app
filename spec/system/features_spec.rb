@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "features", type: :system, js: true do
+describe "features", :js, type: :system do
   it "flip flop doesn't show for un logged in user" do
     visit "/features"
     expect(page).to have_text("You need to sign in")

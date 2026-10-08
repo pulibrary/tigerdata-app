@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-context "A Project Has a File List", integration: true, clean_projects: true do
+context "A Project Has a File List", :clean_projects, :integration do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:manager) { sponsor_and_data_manager_user }
   let(:user) { FactoryBot.create(:user) }
@@ -25,7 +25,7 @@ context "A Project Has a File List", integration: true, clean_projects: true do
     expect(file_list[:files][0].path).to eq "/princeton/#{project.project_directory}/Real_Among_Random.txt0"
     expect(file_list[:files][0].size).to be 100
     expect(file_list[:files][0].collection).to be false
-    expect(file_list[:files][0].last_modified).to_not be nil
+    expect(file_list[:files][0].last_modified).not_to be_nil
   end
 
   it "allows a user to see the file list" do

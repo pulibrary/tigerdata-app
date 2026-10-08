@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe TestAssetGenerator do
+  subject { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
+
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
   let(:project) { FactoryBot.create(:project, mediaflux_id: 1234) }
 
   describe "#generate" do
@@ -28,7 +29,7 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "multiple files" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 3) }
+      subject { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 3) }
 
       it "creates test data" do
         allow(Mediaflux::TestAssetCreateRequest).to receive(:new).with(session_token: "mediaflux_sessionid", parent_id: "2222", count: 3, pattern: nil).and_return(test_asset_create)
@@ -43,7 +44,8 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "Multiple levels" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 2, directory_per_level: 1, file_count_per_directory: 1) }
+      subject { described_class.new(user:, project_id: project.id, levels: 2, directory_per_level: 1, file_count_per_directory: 1) }
+
       let(:test_collection_create_level2) { instance_double(Mediaflux::AssetCreateRequest, id: "91222") }
       let(:test_asset_create_level2) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
       let(:test_directory_create_level2) { instance_double(Mediaflux::AssetCreateRequest, id: "9222") }
@@ -64,7 +66,8 @@ RSpec.describe TestAssetGenerator do
     end
 
     context "Multiple directories" do
-      let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
+      subject { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 2, file_count_per_directory: 1) }
+
       let(:test_directory_create_2) { instance_double(Mediaflux::AssetCreateRequest, id: "9222") }
       let(:test_asset_create_2) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
 

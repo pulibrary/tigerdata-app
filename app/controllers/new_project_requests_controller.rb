@@ -33,14 +33,14 @@ class NewProjectRequestsController < ApplicationController
       flash[:notice] = error_message
       redirect_to dashboard_path
     end
-  rescue StandardError => ex
-    if ex.is_a?(Mediaflux::SessionExpired) || ex.cause.is_a?(Mediaflux::SessionExpired)
+  rescue StandardError => e
+    if e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired)
       raise
-    elsif ex.is_a?(ProjectCreate::ProjectCreateError) && ex.message.include?("Session expired for token")
+    elsif e.is_a?(ProjectCreate::ProjectCreateError) && e.message.include?("Session expired for token")
       raise Mediaflux::SessionExpired
     else
-      Rails.logger.error "Error approving request #{params[:id]}. Details: #{ex.message}"
-      Honeybadger.notify "Error approving request #{params[:id]}. Details: #{ex.message}"
+      Rails.logger.error "Error approving request #{params[:id]}. Details: #{e.message}"
+      Honeybadger.notify "Error approving request #{params[:id]}. Details: #{e.message}"
       flash[:notice] = "Error approving request #{params[:id]}"
       redirect_to new_project_request_path(@new_project_request)
     end

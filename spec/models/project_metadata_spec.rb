@@ -79,10 +79,10 @@ RSpec.describe ProjectMetadata, type: :model do
       hash[:updated_on] = Time.current.in_time_zone("America/New_York").iso8601
       hash[:updated_by] = "user2"
       project_metadata.initialize_from_params(hash)
-      expect(project_metadata.created_by).to_not be_blank
-      expect(project_metadata.created_on).to_not be_blank
-      expect(project_metadata.updated_on).to_not be_blank
-      expect(project_metadata.updated_by).to_not be_blank
+      expect(project_metadata.created_by).not_to be_blank
+      expect(project_metadata.created_on).not_to be_blank
+      expect(project_metadata.updated_on).not_to be_blank
+      expect(project_metadata.updated_by).not_to be_blank
     end
 
     it "parses the read only users" do
@@ -136,7 +136,7 @@ RSpec.describe ProjectMetadata, type: :model do
       # it blanks the title
       hash["title"] = nil
       project_metadata.update_with_params(hash, researcher_user)
-      expect(project_metadata.title).to be nil
+      expect(project_metadata.title).to be_nil
 
       # changes the title when one is given
       hash["title"] = "title abc again"

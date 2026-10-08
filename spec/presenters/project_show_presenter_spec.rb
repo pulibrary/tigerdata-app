@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe ProjectShowPresenter do
+  subject(:presenter) { ProjectShowPresenter.new(project, data_sponsor) }
+
   let!(:data_sponsor) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "kl37") }
   let(:ro_user) { FactoryBot.create(:user, uid: "jr5") }
@@ -13,8 +15,6 @@ RSpec.describe ProjectShowPresenter do
                                         user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
   end
   let(:project) { request1.approve(data_sponsor) }
-
-  subject(:presenter) { ProjectShowPresenter.new(project, data_sponsor) }
 
   describe "#user_has_access?" do
     it "gives access to the right users" do

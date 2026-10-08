@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe PULCache do
   describe "#check!" do
-    let(:subject) { described_class.new }
+    subject { described_class.new }
 
     before do
       memory_store = ActiveSupport::Cache.lookup_store(:memory_store)

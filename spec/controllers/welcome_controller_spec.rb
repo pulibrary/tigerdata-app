@@ -18,7 +18,7 @@ RSpec.describe WelcomeController do
     test_strategy.switch!(:disable_login, false)
   end
 
-  context "when a user is logged in", connect_to_mediaflux: true do
+  context "when a user is logged in", :connect_to_mediaflux do
     let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do
@@ -67,7 +67,7 @@ RSpec.describe WelcomeController do
     end
   end
 
-  context "when a sysadmin user is logged in", connect_to_mediaflux: true do
+  context "when a sysadmin user is logged in", :connect_to_mediaflux do
     let(:user) { FactoryBot.create(:sysadmin, mediaflux_session: SystemUser.mediaflux_session) }
 
     before do

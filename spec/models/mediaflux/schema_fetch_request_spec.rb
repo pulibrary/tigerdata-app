@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::SchemaFetchRequest, connect_to_mediaflux: true, type: :model, integration: true do
+RSpec.describe Mediaflux::SchemaFetchRequest, :connect_to_mediaflux, :integration, type: :model do
   let(:namespace) { "tigerdata" }
   let(:type) { "tigerdata:project" }
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }

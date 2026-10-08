@@ -157,7 +157,7 @@ RSpec.describe NewProjectRequest, type: :model do
                              requested_by: "uid", user_roles: [])
     end
 
-    it "creates a project from the request", integration: true do
+    it "creates a project from the request", :integration do
       project = valid_request.approve(sponsor_and_data_manager_user)
       expect(project.id > 0).to be true
       expect(project.mediaflux_id > 0).to be true
@@ -170,7 +170,7 @@ RSpec.describe NewProjectRequest, type: :model do
       expect { invalid_request.approve(sponsor_and_data_manager_user) }.to raise_error(ProjectCreate::ProjectCreateError)
       expect(invalid_request.error_message["message"]).to include("Error saving project")
       # The project should not exist in the database
-      expect(Project.find_by_id(invalid_request.project_id)).to be nil
+      expect(Project.find_by_id(invalid_request.project_id)).to be_nil
     end
 
     it "raises an error if we add the data manager/sponsor as a data user" do

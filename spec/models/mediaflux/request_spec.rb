@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::Request, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::Request, :connect_to_mediaflux, type: :model do
   subject(:request) { described_class.new }
 
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }

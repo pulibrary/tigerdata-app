@@ -24,8 +24,8 @@ class ProjectCreate < Dry::Operation
 
     # Return Success(attrs) or Failure(error)
     Success project
-  rescue => ex
-    Failure("Error creating the project: #{ex}")
+  rescue => e
+    Failure("Error creating the project: #{e}")
   end
 
   def persist_in_mediaflux(project, current_user)
@@ -49,18 +49,18 @@ class ProjectCreate < Dry::Operation
 
       Success(mediaflux_id)
     end
-  rescue EOFError => ex
+  rescue EOFError => e
     # Retry EOFErrors a few times
     if eof_error_handler
-      Rails.logger.error "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
-      Honeybadger.notify "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{ex.message}, retrying..."
+      Rails.logger.error "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{e.message}, retrying..."
+      Honeybadger.notify "EOFError detected when saving project #{project.id} to Mediaflux, Details: #{e.message}, retrying..."
       retry
     else
-      Failure("Error saving project #{project.id} to Mediaflux: #{ex}. EOFError retry failed.")
+      Failure("Error saving project #{project.id} to Mediaflux: #{e}. EOFError retry failed.")
     end
-  rescue => ex
+  rescue => e
     # All other errors will just be returned as failures
-    Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
+    Failure("Error saving project #{project.id} to Mediaflux: #{e}")
   end
 
   def update_project_with_mediaflux_info(mediaflux_id:, project:)
@@ -68,9 +68,9 @@ class ProjectCreate < Dry::Operation
     project.metadata_model.status = Project::APPROVED_STATUS
     project.save!
     Success(project)
-  rescue => ex
+  rescue => e
     # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
-    Failure("Setting the mediaflux id the project(#{project.id}) : #{ex}")
+    Failure("Setting the mediaflux id the project(#{project.id}) : #{e}")
   end
 
   def persist_users_in_mediaflux(project, current_user)
@@ -91,15 +91,15 @@ class ProjectCreate < Dry::Operation
     end
   # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
   #        I could not figure out a way in tests to hit this error...
-  rescue => ex
-    Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{ex}")
+  rescue => e
+    Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{e}")
   end
 
   def activate_project(project, approver)
     project.activate(current_user: approver)
     Success(project)
-  rescue => ex
-    Failure("Error activate project #{project.id}: #{ex}")
+  rescue => e
+    Failure("Error activate project #{project.id}: #{e}")
   end
 
   def eof_error_handler

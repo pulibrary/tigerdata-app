@@ -49,7 +49,7 @@ class Project < ApplicationRecord
     end
   end
 
-  def draft_doi(user: nil)
+  def draft_doi(*)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
   end
@@ -92,9 +92,7 @@ class Project < ApplicationRecord
     project_directory
   end
 
-  def status
-    metadata_model.status
-  end
+  delegate :status, to: :metadata_model
 
   def in_mediaflux?
     mediaflux_id.present?
@@ -270,7 +268,7 @@ class Project < ApplicationRecord
     end
 
     iterator_id = query_request.result
-    results = resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
+    resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
   end
 
   # Fetches the entire file list to a file

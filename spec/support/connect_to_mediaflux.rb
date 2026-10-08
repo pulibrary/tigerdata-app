@@ -8,8 +8,8 @@ RSpec.configure do |config|
   config.before do |_ex|
     # Clear the login cache
     Rails.cache.clear
-  rescue StandardError => namespace_error
-    message = "Bypassing pre-test cleanup error, #{namespace_error.message}"
+  rescue StandardError => e
+    message = "Bypassing pre-test cleanup error, #{e.message}"
     puts message # allow the message to show in CI output
     Rails.logger.error(message)
   end

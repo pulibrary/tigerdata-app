@@ -41,14 +41,14 @@ class ProjectImport
               output << "Error creating project for #{project_metadata["asset"]}: #{project.errors.to_a.join(";")}"
             end
           end
-        rescue => ex
-          output << "Error processing #{project_id}, #{ex.message}"
+        rescue => e
+          output << "Error processing #{project_id}, #{e.message}"
         end
       end
     end
     output
-  rescue CSV::MalformedCSVError => error
-    ["Error parsing response #{csv_data.to_s.slice(0, 200)} error: #{error}"]
+  rescue CSV::MalformedCSVError => e
+    ["Error parsing response #{csv_data.to_s.slice(0, 200)} error: #{e}"]
   end
 
   private

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::AssetMetadataRequest, :connect_to_mediaflux, type: :model do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
@@ -27,8 +27,8 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       expect(metadata[:collection]).to be_falsey
       expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}")
       expect(metadata[:type]).to eq("")
-      expect(metadata[:size]).to be nil
-      expect(metadata[:data_security_level]).to be nil
+      expect(metadata[:size]).to be_nil
+      expect(metadata[:data_security_level]).to be_nil
     end
 
     context "A collection" do
@@ -91,7 +91,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         metadata_request = described_class.new(session_token: user.mediaflux_session, id: approved_project.mediaflux_id)
         metadata_request.resolve
         expect(metadata_request.error?).to be false
-        expect(Rails.logger).to_not have_received(:error)
+        expect(Rails.logger).not_to have_received(:error)
       end
     end
   end

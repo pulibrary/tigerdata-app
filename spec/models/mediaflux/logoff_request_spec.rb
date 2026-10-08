@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mediaflux::LogoutRequest, connect_to_mediaflux: true, type: :model do
+RSpec.describe Mediaflux::LogoutRequest, :connect_to_mediaflux, type: :model do
   subject(:request) { described_class.new(session_token: session_token) }
 
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
