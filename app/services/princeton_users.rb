@@ -16,6 +16,7 @@ class PrincetonUsers
     def user_list_query(query)
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
       return [] if tokens.count == 0
+
       if (tokens.count == 1)
         # if I have a single token I might be trying a uid search, so put all the uid matches at the top
         uid_query(tokens[0]) | name_query(tokens)
@@ -70,6 +71,7 @@ class PrincetonUsers
       person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
       raise TigerData::LdapError, "No user with uid #{uid} found" if person.blank? || person.empty?
       raise TigerData::LdapError, "More than one user matches supplied uid: #{uid}" if person.length > 1
+
       user_from_ldap(person.first)
     end
 
@@ -78,6 +80,7 @@ class PrincetonUsers
     # @return [User, nil] the created or updated User, or nil if the LDAP entry is missing a edupersonprincipalname
     def user_from_ldap(ldap_person)
       return if check_for_malformed_ldap_entries(ldap_person)
+
       uid = ldap_person[:uid].first.downcase
       current_entries = User.where(uid:)
       if current_entries.empty?

@@ -202,6 +202,7 @@ class ProjectMetadata
 
   def data_users_from_params(params, access)
     return [] if params.nil?
+
     users = []
     counter = params[:data_user_counter].to_i
     (1..counter).each do |i|

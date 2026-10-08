@@ -17,9 +17,9 @@ describe "features", type: :system, js: true do
 
     it "flip flop doesn't show for any user" do
       visit "/features"
-      expect(page).not_to have_text("Disable login to the web portal")
-      expect(page).not_to have_text("Last updated dashboard")
-      expect(page).not_to have_text("Project type indicator")
+      expect(page).to have_no_text("Disable login to the web portal")
+      expect(page).to have_no_text("Last updated dashboard")
+      expect(page).to have_no_text("Project type indicator")
     end
   end
 
@@ -32,9 +32,9 @@ describe "features", type: :system, js: true do
 
     it "flip flop doesn't show for any user" do
       visit "/features"
-      expect(page).not_to have_text("Disable login to the web portal")
-      expect(page).not_to have_text("Last updated dashboard")
-      expect(page).not_to have_text("Project type indicator")
+      expect(page).to have_no_text("Disable login to the web portal")
+      expect(page).to have_no_text("Last updated dashboard")
+      expect(page).to have_no_text("Project type indicator")
     end
   end
 

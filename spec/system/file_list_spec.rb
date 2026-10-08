@@ -55,6 +55,6 @@ context "A Project Has a File List", integration: true, clean_projects: true do
     sign_in user
     visit new_project_request_path(request.id)
     expect(page).to have_text(request.project_title)
-    expect(page).not_to have_text("Approve")
+    expect(page).to have_no_text("Approve")
   end
 end

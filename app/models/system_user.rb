@@ -8,6 +8,7 @@ class SystemUser
         if logon_request.error?
           raise Mediaflux::SessionError, "System logon was invalid! #{logon_request.response_error}"
         end
+
         logon_request.session_token
       end
     rescue EOFError => ex

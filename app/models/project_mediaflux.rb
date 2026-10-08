@@ -13,6 +13,7 @@ class ProjectMediaflux
     if request.error?
       raise request.response_error[:message]
     end
+
     request.response_body
   end
 

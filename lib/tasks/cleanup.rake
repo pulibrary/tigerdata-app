@@ -4,6 +4,7 @@ namespace :mediaflux do
   desc "Delete everything from the current environment (use with caution)"
   task destructive_cleanup: :environment do
     raise "You can't run this in production!" if Rails.env.production?
+
     login = Mediaflux::LogonRequest.new
     login.resolve
     session_id = login.session_token

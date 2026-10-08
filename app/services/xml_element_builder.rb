@@ -45,6 +45,7 @@ class XmlElementBuilder < XmlNodeBuilder
     @content = presenter.send(message, *method_args)
 
     raise ArgumentError, "Content for #{name} cannot be nil" if content.nil? && !allow_empty_content
+
     content
   end
 

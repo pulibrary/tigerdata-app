@@ -8,6 +8,7 @@ namespace :xml_schema do
     # Files downloaded from https://github.com/pulibrary/tigerdata-app/issues/896
     schema_file = args[:schema_file]
     raise "Schema file must be specified" if schema_file.nil?
+
     document_file = args[:document_file]
     raise "Document file must be specified" if document_file.nil?
 

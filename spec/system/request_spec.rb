@@ -146,7 +146,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in sponsor_and_data_manager
         visit new_project_request_path(submitted_request.id)
         expect(page).to have_text request.project_title
-        expect(page).not_to have_text("Approve request")
+        expect(page).to have_no_text("Approve request")
       end
     end
 
@@ -155,9 +155,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in sponsor_user
         visit new_project_request_path(submitted_request.id)
         expect(page).to have_text request.project_title
-        expect(page).not_to have_text("Approve request")
-        expect(page).not_to have_text("Continue Editing")
-        expect(page).not_to have_text("Edit submitted request")
+        expect(page).to have_no_text("Approve request")
+        expect(page).to have_no_text("Continue Editing")
+        expect(page).to have_no_text("Edit submitted request")
       end
     end
 
@@ -166,9 +166,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in manager_user
         visit new_project_request_path(submitted_request.id)
         expect(page).to have_text request.project_title
-        expect(page).not_to have_text("Approve request")
-        expect(page).not_to have_text("Continue Editing")
-        expect(page).not_to have_text("Edit submitted request")
+        expect(page).to have_no_text("Approve request")
+        expect(page).to have_no_text("Continue Editing")
+        expect(page).to have_no_text("Edit submitted request")
       end
     end
 
@@ -177,11 +177,11 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         sign_in sysadmin_user
         visit new_project_request_path(full_request.id)
         # it does not show a approve request unless the request is submitted
-        expect(page).not_to have_text("Approve request")
-        expect(page).not_to have_link("Approve request")
+        expect(page).to have_no_text("Approve request")
+        expect(page).to have_no_link("Approve request")
         expect(page).to have_text("This new project request has not been submitted.")
         expect(page).to have_text("Continue Editing")
-        expect(page).not_to have_text("Edit submitted request")
+        expect(page).to have_no_text("Edit submitted request")
       end
 
       it "shows the approve button on a single submitted request view for sysadmins" do
@@ -189,7 +189,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         visit new_project_request_path(submitted_request.id)
         # it does not show a approve request unless the request is submitted
         expect(page).to have_link("Approve request")
-        expect(page).not_to have_text("Continue Editing")
+        expect(page).to have_no_text("Continue Editing")
         expect(page).to have_text("Edit submitted request")
       end
 
@@ -212,7 +212,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         visit new_project_request_path(full_request.id)
         expect(page).to have_text("Data Security\nLevel 0 - Public")
-        expect(page).not_to have_text("Data Security code goes here")
+        expect(page).to have_no_text("Data Security code goes here")
       end
 
       it "shows an em dash when the data security level has not been selected" do
@@ -275,7 +275,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         within(".data-sponsor") do
           expect(page).to have_text("This field is required.")
           select_user(sponsor_and_data_manager, "data_sponsor", "request[data_sponsor]")
-          expect(page).not_to have_text("This field is required.")
+          expect(page).to have_no_text("This field is required.")
         end
         within(".parent-folder") do
           expect(page).to have_text("This field is required.")
@@ -332,9 +332,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "shows the edit buttons on the request fields section for a submitted request" do
         sign_in sysadmin_user
         visit new_project_request_path(submitted_request.id)
-        expect(page).to_not have_css(".basic-info", text: "Edit")
-        expect(page).to_not have_css(".roles-people", text: "Edit")
-        expect(page).to_not have_css(".storage-access", text: "Edit")
+        expect(page).to have_no_css(".basic-info", text: "Edit")
+        expect(page).to have_no_css(".roles-people", text: "Edit")
+        expect(page).to have_no_css(".storage-access", text: "Edit")
         expect(page).to have_link("Edit", count: 1)
         expect(page).to have_link "Edit submitted request"
       end

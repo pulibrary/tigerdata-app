@@ -34,6 +34,7 @@ class VersionFooter
 
   def self.stale?
     return false if @@stale == false
+
     # Only read the file when version information is stale
     if File.exist?(revision_file)
       local_sha = File.read(revision_file).chomp.gsub(/\)$/, "")

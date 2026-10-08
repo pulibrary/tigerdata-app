@@ -5,6 +5,7 @@ namespace :projects do
   desc "Times the creation of projects and querying by TigerData metadata fields"
   task :create_many, [:count, :prefix] => [:environment] do |_, args|
     raise "Count must be specified" if count.blank?
+
     count = args[:count].to_i
     project_prefix = args[:prefix]
     raise "Project prefix must be specified" if project_prefix.nil?
@@ -28,11 +29,14 @@ namespace :projects do
   task :create_small_project, [:uid, :prefix] => [:environment] do |_, args|
     uid = args[:uid]
     raise "User id must be specified" if uid.blank?
+
     user = User.find_by(uid:)
     raise "User #{uid} not found" if user.nil?
+
     user.mediaflux_from_session({}) # make sure we have the system login
     project_prefix = args[:prefix]
     raise "Project prefix must be specified" if project_prefix.nil?
+
     number = rand(10_000)
     project_generator = TestProjectGenerator.new(user:, number: number, project_prefix:)
     project = project_generator.generate

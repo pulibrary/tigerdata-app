@@ -50,6 +50,7 @@ class ApplicationController < ActionController::Base
     yield
   rescue ActionView::Template::Error, Mediaflux::SessionExpired => e
     raise unless e.is_a?(Mediaflux::SessionExpired) || e.cause.is_a?(Mediaflux::SessionExpired)
+
     if session[:active_web_user]
       redirect_to mediaflux_passthru_path(path: request.path)
     elsif session_error_handler

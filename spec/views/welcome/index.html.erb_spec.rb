@@ -15,7 +15,7 @@ describe "home", type: :system do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:disable_login, true)
       visit "/"
-      expect(page).not_to have_css ".login-btn"
+      expect(page).to have_no_css ".login-btn"
       test_strategy.switch!(:disable_login, false)
     end
   end
@@ -25,7 +25,7 @@ describe "home", type: :system do
       test_strategy = Flipflop::FeatureSet.current.test!
       test_strategy.switch!(:planned_maintenance, true)
       visit "/"
-      expect(page).not_to have_css ".login-btn"
+      expect(page).to have_no_css ".login-btn"
       test_strategy.switch!(:planned_maintenance, false)
     end
   end

@@ -15,33 +15,6 @@ Capybara/FindAllFirst:
     - "spec/support/select_user.rb"
     - "spec/system/new_project_request_wizard_spec.rb"
 
-# Offense count: 25
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: DefaultSelector.
-Capybara/RSpec/HaveSelector:
-  Exclude:
-    - "spec/system/project_details_spec.rb"
-    - "spec/system/project_spec.rb"
-    - "spec/views/shared/footer.html.erb_spec.rb"
-
-# Offense count: 74
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: have_no, not_to
-Capybara/RSpec/NegationMatcher:
-  Exclude:
-    - "spec/mailers/tigerdata_spec.rb"
-    - "spec/system/dashboard_spec.rb"
-    - "spec/system/features_spec.rb"
-    - "spec/system/file_list_spec.rb"
-    - "spec/system/new_project_request_wizard_spec.rb"
-    - "spec/system/project_details_spec.rb"
-    - "spec/system/project_index_spec.rb"
-    - "spec/system/project_spec.rb"
-    - "spec/system/request_spec.rb"
-    - "spec/system/welcome_spec.rb"
-    - "spec/views/welcome/index.html.erb_spec.rb"
-
 # Offense count: 12
 Capybara/RSpec/NegationMatcherAfterVisit:
   Exclude:
@@ -53,38 +26,10 @@ Capybara/RSpec/NegationMatcherAfterVisit:
     - "spec/system/request_spec.rb"
     - "spec/views/welcome/index.html.erb_spec.rb"
 
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-Capybara/SpecificFinders:
-  Exclude:
-    - "spec/system/dashboard_spec.rb"
-    - "spec/system/new_project_request_wizard_spec.rb"
-    - "spec/system/project_details_spec.rb"
-    - "spec/system/welcome_spec.rb"
-
 # Offense count: 413
 # This cop supports unsafe autocorrection (--autocorrect-all).
 FactoryBot/SyntaxMethods:
   Enabled: false
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/ElseAlignment:
-  Exclude:
-    - "app/controllers/projects_controller.rb"
-
-# Offense count: 77
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/LineContinuationSpacing:
-  Exclude:
-    - "spec/services/user_error_parser_spec.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).

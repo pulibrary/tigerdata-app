@@ -125,8 +125,8 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         visit dashboard_path
 
         expect(page).to have_text "Welcome, #{current_user.given_name}!"
-        expect(page).not_to have_text "Administration"
-        expect(page).not_to have_text "Requests"
+        expect(page).to have_no_text "Administration"
+        expect(page).to have_no_text "Requests"
       end
 
       it "allows for navigation back to user dashboard when clicking logo" do
@@ -135,7 +135,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
         visit project_path(project_222)
         expect(page).to have_text "project 222"
-        page.find(:css, "#logo").click
+        page.find_by_id('logo').click
         expect(page).to have_text("Welcome, #{current_user.given_name}!")
       end
 
@@ -196,7 +196,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         sign_in developer_user
         visit dashboard_path
         expect(page).to have_text("Welcome, #{developer_user.given_name}!")
-        expect(page).not_to have_text "Please log in"
+        expect(page).to have_no_text "Please log in"
         expect(page).to have_text "Requests"
       end
 
@@ -237,13 +237,13 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
       it "does not show the emulation bar in Production" do
         allow(Rails.env).to receive(:production?).and_return(true)
         visit "/dashboard"
-        expect(page).not_to have_select("emulation_menu")
+        expect(page).to have_no_select("emulation_menu")
       end
 
       it "does not show the emulation bar in Staging" do
         allow(Rails.env).to receive(:staging?).and_return(true)
         visit "/dashboard"
-        expect(page).not_to have_select("emulation_menu")
+        expect(page).to have_no_select("emulation_menu")
       end
 
       it "displays sponsored projects when emulating a data sponsor" do
@@ -276,7 +276,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "hides the 'Administration' tab" do
         visit dashboard_path
-        expect(page).not_to have_text "Administration"
+        expect(page).to have_no_text "Administration"
       end
     end
 
@@ -315,7 +315,7 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_text "submitted request 1"
         expect(page).to have_text "submitted request 2"
         # Draft requests are not shown
-        expect(page).not_to have_text "draft request"
+        expect(page).to have_no_text "draft request"
       end
     end
 

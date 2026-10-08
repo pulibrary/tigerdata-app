@@ -17,7 +17,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       visit "/"
       expect(page).to have_button "Login"
       expect(page).to have_link "Learn More", href: "https://tigerdata.princeton.edu"
-      expect(find("#login-button").ancestor("form")[:action]).to include "users/auth/cas"
+      expect(find_by_id('login-button').ancestor("form")[:action]).to include "users/auth/cas"
     end
 
     it "forwards to login page" do
@@ -29,7 +29,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "hides the 'Administration' tab" do
       visit "/"
       expect(page).to have_text "TigerData Web Portal"
-      expect(page).not_to have_text "Administration"
+      expect(page).to have_no_text "Administration"
     end
 
     context "flash message" do
@@ -80,7 +80,7 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       end
       expect(page).to have_text("You're about to delete the draft request \"#{other_request.project_title}\".")
       click_on "Cancel"
-      expect(page).not_to have_text("You're about to delete the draft request \"#{other_request.project_title}\".")
+      expect(page).to have_no_text("You're about to delete the draft request \"#{other_request.project_title}\".")
       within("#draft-request-#{other_request.id}") do
         click_on "Delete"
       end

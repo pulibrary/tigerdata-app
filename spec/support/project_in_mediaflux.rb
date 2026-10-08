@@ -15,6 +15,7 @@ def test_project_from_path(path)
   metadata = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, id: "path=#{path}").metadata
   id = metadata[:id]
   raise StandardError, "Project not found in Mediaflux #{path}" if id.blank?
+
   data_sponsor = metadata[:data_sponsor] || "tigerdatatester"
   data_manager = metadata[:data_manager] || "tigerdatatester"
   data_users = metadata[:data_users]

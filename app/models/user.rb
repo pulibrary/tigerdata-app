@@ -81,6 +81,7 @@ class User < ApplicationRecord
     if logon_request.error?
       raise "Invalid Logon #{logon_request.response_error}"
     end
+
     @mediaflux_session = logon_request.session_token
     @active_web_user = true
     session[:mediaflux_session] = @mediaflux_session
@@ -92,6 +93,7 @@ class User < ApplicationRecord
 
   def terminate_mediaflux_session
     return if @mediaflux_session.nil? # nothing to terminate
+
     logger.debug "!!!! Terminating mediaflux session"
 
     Mediaflux::LogoutRequest.new(session_token: @mediaflux_session).response_body
@@ -110,6 +112,7 @@ class User < ApplicationRecord
   # @return [String]
   def display_name_safe
     return uid if given_name.blank? && family_name.blank?
+
     [given_name, family_name, "(#{uid})"].compact.join(" ")
   end
 
@@ -117,6 +120,7 @@ class User < ApplicationRecord
   # @return [String]
   def display_name_only_safe
     return uid if given_name.blank? && family_name.blank?
+
     [given_name, family_name].compact.join(" ")
   end
 
@@ -124,6 +128,7 @@ class User < ApplicationRecord
   # @return [Boolean]
   def eligible_sponsor?
     return true if developer
+
     super
   end
 
@@ -131,11 +136,13 @@ class User < ApplicationRecord
   # @return [Boolean]
   def eligible_manager?
     return true if developer
+
     super
   end
 
   def developer?
     return true if developer
+
     super
   end
 

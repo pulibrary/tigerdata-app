@@ -82,6 +82,7 @@ module Mediaflux
 
     def parse_project(project, asset)
       return {} if project.blank?
+
       metadata = {
         data_sponsor: project.xpath("./DataSponsor").text,
         data_manager: project.xpath("./DataManager").text,
@@ -143,6 +144,7 @@ module Mediaflux
 
     def data_users_from_string(users)
       return [] if users.blank?
+
       users.split(",").compact_blank
     end
 
@@ -162,6 +164,7 @@ module Mediaflux
 
     def calculate_security_level(level_text)
       return nil if level_text.blank?
+
       level_text.to_i
     end
   end

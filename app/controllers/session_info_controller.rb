@@ -31,6 +31,7 @@ class SessionInfoController < ApplicationController
     describe_request = Mediaflux::TigerdataDescribeRequest.new(session_token: current_user.mediaflux_session)
     describe_request.resolve
     raise describe_request.response_error[:message] if describe_request.error?
+
     describe_request.server_values
   rescue => ex
     Rails.logger.error("Error fetching server information: #{ex.message}")

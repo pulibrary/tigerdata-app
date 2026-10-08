@@ -156,7 +156,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver
       html_body = ActionMailer::Base.deliveries.last.html_part.body.to_s
       expect(html_body).to have_text("Current Storage Capacity: 850 TB")
-      expect(html_body).not_to have_text("500000")
+      expect(html_body).to have_no_text("500000")
     end
   end
 

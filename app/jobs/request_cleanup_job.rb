@@ -9,6 +9,7 @@ class RequestCleanupJob < ApplicationJob
       # check if the request has not been updated within 24 hours
       next unless request.updated_at < 24.hours.ago
       next if request.valid_title?
+
       request.valid_to_submit?
       # 6 errors is arbitrary, but it is the number of manditory fields (excluding pre-populated fields) in the request form
       if request.errors.count >= 6

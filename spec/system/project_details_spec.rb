@@ -48,7 +48,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_css(".recycle-footer", text: "Deleted files, recoverable by request")
 
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_text("Storage Usage Overview")
+        expect(page).to have_no_text("Storage Usage Overview")
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       within ".storage-quota" do
         click_on "Details"
         expect(page).to have_text("Storage Usage Overview")
-        expect(page).not_to have_button("Request more storage")
+        expect(page).to have_no_button("Request more storage")
         expect(page).to have_text("Detailed breakdown of your storage usage across different categories")
         expect(page).to have_text("Combined usage across all categories")
         expect(page).to have_text("Project Files")
@@ -78,7 +78,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_text("Your total usage includes files you can access")
         expect(page).to have_button("Learn more")
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_text("Storage Usage Overview")
+        expect(page).to have_no_text("Storage Usage Overview")
       end
     end
 
@@ -106,7 +106,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project_in_mediaflux.id}/details"
         within ".storage-quota" do
           click_on "Details"
-          expect(page).not_to have_button("Request more storage")
+          expect(page).to have_no_button("Request more storage")
         end
       end
 
@@ -124,7 +124,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           expect(page).to have_button("Submit")
           expect(page).to have_button("Cancel")
           # Check that the required field error messages are not visible before submission and are visible after submission when the fields are empty
-          expect(page).to_not have_css(".storage-modal-error")
+          expect(page).to have_no_css(".storage-modal-error")
           click_on "Submit"
           expect(page).to have_css(".storage-modal-error", count: 4)
         end
@@ -164,8 +164,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_text("Details")
 
             # The description should be rendered twice (at the top and as part of the details)
-            expect(page).to have_selector("#description-text")
-            expect(page).to have_selector("#description-text-full")
+            expect(page).to have_css("#description-text")
+            expect(page).to have_css("#description-text-full")
 
             # Make sure project path is rendered
             expect(page).to have_css "#project-path-copy"
@@ -176,7 +176,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_text("Data Sponsor\n#{sponsor_user.display_name}\n#{sponsor_user.uid}")
 
             # Per ticket #1114 sponsor users no longer have edit access
-            expect(page).not_to have_selector(:link_or_button, "Edit") # button next to role and description heading
+            expect(page).to have_no_selector(:link_or_button, "Edit") # button next to role and description heading
             expect(page).to have_selector(:link_or_button, "Content Preview")
             expect(page).to have_selector(:link_or_button, "Dashboard")
             click_on("Dashboard")
@@ -191,7 +191,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             visit "/projects/#{project_in_mediaflux.id}/details"
             expect(page).to have_text(project_in_mediaflux.title)
             expect(page).to have_text(project_in_mediaflux.project_directory)
-            expect(page).not_to have_text("Request More")
+            expect(page).to have_no_text("Request More")
           end
         end
 
@@ -203,9 +203,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             visit "/projects/#{project_in_mediaflux.id}/details"
 
             # expect(page).to have_selector(:link_or_button, "Edit") # button next to project settings
-            expect(page).not_to have_selector(:link_or_button, "Withdraw Project Request")
+            expect(page).to have_no_selector(:link_or_button, "Withdraw Project Request")
             # The project has already been approved
-            expect(page).not_to have_selector(:link_or_button, "Approve Project")
+            expect(page).to have_no_selector(:link_or_button, "Approve Project")
           end
         end
       end
@@ -268,7 +268,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page.find("#project-purpose-value").text).to eq "—"
+        expect(page.find_by_id('project-purpose-value').text).to eq "—"
       end
     end
 
@@ -280,7 +280,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page.find("#project-purpose-value").text).to eq "—"
+        expect(page.find_by_id('project-purpose-value').text).to eq "—"
       end
     end
 
@@ -291,9 +291,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page.find("#hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs", "Enabled"
-        expect(page.find("#smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
-        expect(page.find("#globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project", "Request"
+        expect(page.find_by_id('hpc-access').text).to include "Access your project from Research Computing clusters", "For high performance computing needs", "Enabled"
+        expect(page.find_by_id('smb-access').text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
+        expect(page.find_by_id('globus-access').text).to include "Support high-performance data transfers", "For a Globus endpoint for this project", "Request"
         expect(page).to have_link("Globus", href: "https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus")
       end
     end
@@ -388,7 +388,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         # Directory is displayed
         expect(page).to have_text(first_folder.name)
         # Files are not displayed
-        expect(page).not_to have_text(first_file.name)
+        expect(page).to have_no_text(first_file.name)
       end
 
       context "when downloads do not exist" do
@@ -396,7 +396,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           sign_in sponsor_user
           visit "/projects/#{project.id}"
           click_on("Download Complete List")
-          expect(page).not_to have_text("Download latest")
+          expect(page).to have_no_text("Download latest")
         end
       end
 
@@ -427,7 +427,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         click_on "Yes"
         expect(page).to have_text("Your request has been submitted. Please check your email for updates.")
         click_on(class: "pul-popover-close")
-        expect(page).not_to have_text("Globus Transfer Access")
+        expect(page).to have_no_text("Globus Transfer Access")
       end
     end
 
@@ -450,9 +450,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page).to have_text project.project_directory
         expect(page).to have_text project.title
-        expect(page).not_to have_text "Mediaflux ID"
-        expect(page).not_to have_selector(:link_or_button, "Approve Project")
-        expect(page).not_to have_selector(:link_or_button, "Deny Project")
+        expect(page).to have_no_text "Mediaflux ID"
+        expect(page).to have_no_selector(:link_or_button, "Approve Project")
+        expect(page).to have_no_selector(:link_or_button, "Deny Project")
       end
     end
   end

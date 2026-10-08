@@ -46,6 +46,7 @@ class UsersController < ApplicationController
 
   def check_user_access
     return if current_user.developer || current_user.sysadmin || current_user.trainer
+
     flash[:notice] = "You do not have access to this page (#{current_user.uid})"
     redirect_to dashboard_path
   end

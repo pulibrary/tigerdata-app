@@ -180,6 +180,7 @@ class NewProjectRequest < ApplicationRecord
 
   def requestor
     return "Missing requestor." if requested_by.blank?
+
     User.find_by(uid: requested_by).display_name_safe
   end
 
@@ -195,6 +196,7 @@ class NewProjectRequest < ApplicationRecord
 
   def user_name(uid)
     return "" if uid.blank?
+
     user = User.find_by(uid: uid)
     if user.present?
       user.display_name_safe
@@ -231,6 +233,7 @@ class NewProjectRequest < ApplicationRecord
 
   def valid_length(value, length, field)
     return if value.blank?
+
     if value.length > length
       errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
     end
@@ -239,6 +242,7 @@ class NewProjectRequest < ApplicationRecord
   # Allows alphanumeric, dashes, underscores, and forward-slashes
   def alphanumeric_dash_underscore_only(value, field)
     return if value.blank?
+
     if value.match(/\A[\w\-\/]+\z/).nil?
       errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed.")
     elsif value.include?("//")

@@ -33,6 +33,7 @@ namespace :application do
     if count > (roles(:app).length / 2)
       raise "You must run this command on no more than half the servers utilizing the --hosts= switch"
     end
+
     on roles(:app) do
       within release_path do
         execute :touch, "/opt/tigerdata/shared/remove-from-nginx"

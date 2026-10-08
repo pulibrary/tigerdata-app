@@ -43,7 +43,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
         # Assert not selected (Lux may keep option labels in the DOM once mounted)
-        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_no_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         expect(page).to have_text("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
@@ -98,7 +98,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
-        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_no_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
         expect(page).to have_text("RDSS-Research Data and Scholarship Services")
         expect(page).to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
@@ -175,7 +175,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
 
-        expect(page).not_to have_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
+        expect(page).to have_no_field("request[departments][]", type: :hidden, with: "{\"code\":\"77777\",\"name\":\"RDSS-Research Data and Scholarship Services\"}")
         select_and_verify_department(department: "RDSS-Research Data and Scholarship Services", department_code: "77777", department_list: [])
 
         # force a save and page reload to make sure all data is being saved to the model
@@ -217,14 +217,14 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         # we can remove the user in the modal
         page.find(".lux-button.remove-item").click
-        expect(page).not_to have_text(another_user.given_name)
+        expect(page).to have_no_text(another_user.given_name)
         expect(page).to have_field("all_selected", type: :hidden, with: "[]")
 
         # we can remove all the users from the table and have it stick between page loads
         select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
         click_on "Add Users"
         expect(page).to have_text("1 new user(s) were successfully added.")
-        expect(page).not_to have_text("0 duplicate user(s) were ignored.")
+        expect(page).to have_no_text("0 duplicate user(s) were ignored.")
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
         click_on "Next"
         expect(page).to have_text("Enter the storage and access needs for your project")
@@ -237,7 +237,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_text("Enter the storage and access needs for your project")
         click_on "Back"
         expect(page).to have_text("Assign roles for your project")
-        expect(page).not_to have_text(another_user.given_name)
+        expect(page).to have_no_text(another_user.given_name)
 
         click_on "Add User(s)"
         select_data_user(another_user, [{ label: another_user.display_name_safe, id: another_user.uid }])
@@ -256,7 +256,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("request[read_only_#{another_user.uid}]", type: :radio)
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\"}")
         expect(page).to have_text(another_user.display_name_safe)
-        expect(page).not_to have_text("#{another_user.display_name_safe} (#{another_user.uid})")
+        expect(page).to have_no_text("#{another_user.display_name_safe} (#{another_user.uid})")
 
         expect(page).to have_field("request[read_only_#{other_user.uid}]", type: :radio)
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\"}")
@@ -289,7 +289,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_field("request[data_manager]", type: :hidden, with: manager_user.uid)
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{another_user.uid}\",\"name\":\"#{another_user.display_name_safe}\",\"read_only\":false}")
         expect(page).to have_field("request[user_roles][]", type: :hidden, with: "{\"uid\":\"#{other_user.uid}\",\"name\":\"#{other_user.display_name_safe}\",\"read_only\":true}")
-        expect(page).not_to have_text("#{researcher_user.display_name_safe} (#{researcher_user.uid})")
+        expect(page).to have_no_text("#{researcher_user.display_name_safe} (#{researcher_user.uid})")
       end
 
       # Consolidate the tests for each shippable increment of the wizard below
@@ -391,7 +391,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         # option labels in the DOM when mounted, which makes page text flaky.
         rdss = { code: "77777", name: "RDSS-Research Data and Scholarship Services" }
         hpc = { code: "66666", name: "HPC-High Performance Computing" }
-        expect(page).not_to have_field("request[departments][]", type: :hidden, with: rdss.to_json)
+        expect(page).to have_no_field("request[departments][]", type: :hidden, with: rdss.to_json)
 
         select_and_verify_department(department: rdss[:name], department_code: rdss[:code], department_list: [])
         select_and_verify_department(department: hpc[:name], department_code: hpc[:code], department_list: [rdss])
@@ -460,7 +460,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         within(".departments") do
           page.execute_script("document.getElementsByClassName('remove-item')[0].click()")
         end
-        expect(page).not_to have_text(department_to_test)
+        expect(page).to have_no_text(department_to_test)
       end
 
       it "does not allow save and exit for a request with missing titles" do
@@ -512,7 +512,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
           page.find(".lux-field input").fill_in with: "77777"
           # Wait for the filter UI; selected depts are filtered out of the result list
           expect(page).to have_css(".lux-autocomplete-input")
-          expect(page).not_to have_css(".lux-autocomplete-result", text: "RDSS-Research Data and Scholarship Services", wait: 2)
+          expect(page).to have_no_css(".lux-autocomplete-result", text: "RDSS-Research Data and Scholarship Services", wait: 2)
         end
 
         # Exactly one selected department value in the form (not "name appears once in page text" —
@@ -593,7 +593,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :project_title, with: "Dashboard Redirect Test"
 
         # Clicking on the TigerData logo saves the user changes
-        find("#logo.header-image").click
+        find_by_id('logo', class: 'header-image').click
         expect(page).to have_text "Welcome, #{researcher_user.given_name}!"
 
         # Sometimes the NewProjectRequest is not created yet and it makes the test fail, so let's retry until it is created
@@ -615,7 +615,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
           # Clicking on the side panel step does not display the flash message
           click_on "Roles and People"
-          expect(page).not_to have_text "Draft request saved automatically"
+          expect(page).to have_no_text "Draft request saved automatically"
 
           # Sometimes the NewProjectRequest is not created yet and it makes the test fail, so let's retry until it is created
           begin
@@ -638,7 +638,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_css(".departments .lux-field input")
 
         # Project Information tab order (stable field ids + department container)
-        find("#project_title").click
+        find_by_id('project_title').click
         expect_active_element_id("project_title")
         send_tab
         expect_active_element_id("parent_folder")

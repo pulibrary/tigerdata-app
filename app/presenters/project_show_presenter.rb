@@ -190,8 +190,10 @@ class ProjectShowPresenter
   def quota_percentage(session_id:, dashboard: false)
     storage_capacity = project.storage_capacity_raw(session_id:)
     return 0 if storage_capacity.zero?
+
     storage_usage = project.storage_usage_raw(session_id:)
     return 0 if storage_usage == 0
+
     storage_value = (storage_usage.to_f / storage_capacity.to_f) * 100
     minimum_storage_used = true if storage_value > 0 && storage_value < 1
     storage_value = 1 if minimum_storage_used
@@ -203,6 +205,7 @@ class ProjectShowPresenter
     storage_capacity = quota_breakdown[:quota_allocation]
     return 0 if storage_capacity.zero?
     return 0 if storage_usage == 0
+
     storage_value = (storage_usage.to_f / storage_capacity.to_f) * 100
     minimum_storage_used = true if storage_value > 0 && storage_value < 1
     storage_value = 1 if minimum_storage_used
@@ -223,6 +226,7 @@ class ProjectShowPresenter
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
+
     data_sponsor&.uid == user.uid || data_manager&.uid == user.uid || data_users.map(&:uid).include?(user.uid)
   end
 
@@ -244,6 +248,7 @@ class ProjectShowPresenter
 
   def free_space
     return @quota_breakdown[:quota_allocation_human] if @quota_breakdown[:quota_used] == 0
+
     free_space ||= @quota_breakdown[:quota_allocation] - @quota_breakdown[:quota_used]
     free_space_human ||= helpers.number_to_human_size(free_space, :precision => 2)
   end

@@ -144,7 +144,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
-            expect(page).not_to have_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
+            expect(page).to have_no_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
             find(".info-container .tooltip-container").click
             expect(page).to have_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
           end
@@ -161,7 +161,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
             expect(page).to have_css(".sizer") # check that the copy path button is present
-            expect(page).not_to have_css(".tooltiptext", text: "This number reflects all items")
+            expect(page).to have_no_css(".tooltiptext", text: "This number reflects all items")
             find(".info-container .tooltip-container").click
             expect(page).to have_css(".tooltiptext", text: "This number reflects all items")
             expect(page).to have_text("This number reflects all items")
@@ -174,38 +174,38 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
           project_files = dir_listing[:files]
           last_modified_date = project_files.first.last_modified.strftime("%m/%d/%Y")
 
-          expect(page).to have_selector(".project-file-details header", text: "File Name")
-          expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
-          expect(page).to have_selector(".project-file-details header", text: "File Size")
-          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "10")
-          expect(page).to have_selector(".project-file-details header", text: "Location")
-          expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/A0")
-          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
-          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
-          expect(page).to have_selector(".project-file-details header", text: "Created Date")
-          expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
-          expect(page).to have_selector(".project-file-details header", text: "Created By")
-          expect(page).to have_selector("[data-attribute-name='createdBy']", text: "System Generated")
+          expect(page).to have_css(".project-file-details header", text: "File Name")
+          expect(page).to have_css("[data-attribute-name='fileName']", text: "A0")
+          expect(page).to have_css(".project-file-details header", text: "File Size")
+          expect(page).to have_css("[data-attribute-name='fileSize']", text: "10")
+          expect(page).to have_css(".project-file-details header", text: "Location")
+          expect(page).to have_css("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/A0")
+          expect(page).to have_css(".project-file-details header", text: "Modified Date")
+          expect(page).to have_css("[data-attribute-name='modifiedDate']", text: last_modified_date)
+          expect(page).to have_css(".project-file-details header", text: "Created Date")
+          expect(page).to have_css("[data-attribute-name='createdDate']", text: last_modified_date)
+          expect(page).to have_css(".project-file-details header", text: "Created By")
+          expect(page).to have_css("[data-attribute-name='createdBy']", text: "System Generated")
 
           expect(page).to have_css("li", text: "CProject")
           # should not show the warning because we are under the limit
-          expect(page).not_to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          expect(page).to have_no_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
           page.find(".browser-collection", text: "n_01000").click
           sleep(0.1)
           within(".files-viewer") do
             expect(page).to have_text("A99")
           end
 
-          expect(page).to have_selector(".project-file-details header", text: "File Name")
-          expect(page).to have_selector("[data-attribute-name='fileName']", text: "A0")
-          expect(page).to have_selector(".project-file-details header", text: "File Size")
-          expect(page).to have_selector("[data-attribute-name='fileSize']", text: "10")
-          expect(page).to have_selector(".project-file-details header", text: "Location")
-          expect(page).to have_selector("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
-          expect(page).to have_selector(".project-file-details header", text: "Modified Date")
-          expect(page).to have_selector("[data-attribute-name='modifiedDate']", text: last_modified_date)
-          expect(page).to have_selector(".project-file-details header", text: "Created Date")
-          expect(page).to have_selector("[data-attribute-name='createdDate']", text: last_modified_date)
+          expect(page).to have_css(".project-file-details header", text: "File Name")
+          expect(page).to have_css("[data-attribute-name='fileName']", text: "A0")
+          expect(page).to have_css(".project-file-details header", text: "File Size")
+          expect(page).to have_css("[data-attribute-name='fileSize']", text: "10")
+          expect(page).to have_css(".project-file-details header", text: "Location")
+          expect(page).to have_css("[data-attribute-name='location']", text: "/tigerdata/RDSS/Query/CProject/n_01000/A0")
+          expect(page).to have_css(".project-file-details header", text: "Modified Date")
+          expect(page).to have_css("[data-attribute-name='modifiedDate']", text: last_modified_date)
+          expect(page).to have_css(".project-file-details header", text: "Created Date")
+          expect(page).to have_css("[data-attribute-name='createdDate']", text: last_modified_date)
 
           # should show the warning because we are above the limit
           expect(page).to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
@@ -225,7 +225,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         it "does not display the preview alert when the number of files does not exceed the project file display limit" do
           visit project_path(approved_project)
-          expect(page).not_to have_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
+          expect(page).to have_no_text("The preview screen can display up to #{Rails.configuration.project_file_display_limit} items per folder")
         end
       end
 
@@ -233,7 +233,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
          :integration do
         visit project_path(approved_project)
 
-        expect(page).not_to have_text("show level by level browser here")
+        expect(page).to have_no_text("show level by level browser here")
 
         expect(page).to have_text("Download Complete List")
         click_on "Download Complete List"

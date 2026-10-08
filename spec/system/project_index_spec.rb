@@ -50,8 +50,8 @@ RSpec.describe "Project Index Page", type: :system do
 
     it "shows the existing projects" do
       visit "/projects"
-      expect(page).not_to have_text("Access Denied")
-      expect(page).not_to have_link(project_not_in_mediaflux.title)
+      expect(page).to have_no_text("Access Denied")
+      expect(page).to have_no_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
       expect(page).to have_text(project1.metadata_model.project_directory)
       expect(page).to have_text(project1.mediaflux_id)
@@ -64,18 +64,18 @@ RSpec.describe "Project Index Page", type: :system do
       fill_in "title_query", with: "*pop*"
       click_on "Search"
       expect(page).to have_text("Successful search in Mediaflux for *pop*")
-      expect(page).not_to have_link(project_not_in_mediaflux.title)
+      expect(page).to have_no_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
       expect(page).to have_link(project2.title)
-      expect(page).not_to have_link(project3.title)
+      expect(page).to have_no_link(project3.title)
       fill_in "title_query", with: "soda*"
       click_on "Search"
       sleep(0.2)
       expect(page).to have_text("Successful search in Mediaflux for soda*")
-      expect(page).not_to have_link(project_not_in_mediaflux.title)
+      expect(page).to have_no_link(project_not_in_mediaflux.title)
       expect(page).to have_link(project1.title)
-      expect(page).not_to have_link(project2.title)
-      expect(page).not_to have_link(project3.title)
+      expect(page).to have_no_link(project2.title)
+      expect(page).to have_no_link(project3.title)
     end
   end
 end

@@ -199,8 +199,8 @@ class ProjectsController < ApplicationController
   def search_projects
     @title_query = if params[:title_query].present?
                      params[:title_query]
-    else
-      "*" # default to all projects
+                   else
+                     "*" # default to all projects
                    end
     result = ProjectSearch.new.call(search_string: @title_query, requestor: current_user)
     if result.success?

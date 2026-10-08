@@ -24,6 +24,7 @@ class ProjectFileInventory
     loop do
       next_path = @paths_queue.pop()
       break if next_path.nil?
+
       process_path(collection_id: next_path[:collection_id], path_prefix: next_path[:path_prefix])
     end
   ensure

@@ -22,8 +22,10 @@ class FileInventoryJob < ApplicationJob
   def perform(user_id:, project_id:, mediaflux_session:)
     project = Project.find(project_id)
     raise "Invalid project id #{project_id} for job #{job_id}" if project.nil?
+
     user = User.find(user_id)
     raise "Invalid user id #{user_id} for job #{job_id}" if user.nil?
+
     Rails.logger.debug inspect
 
     # set the mediaflux session to the one the user created, do not just utilize the system one
@@ -51,6 +53,7 @@ class FileInventoryJob < ApplicationJob
 
   def filename_for_export
     raise "Shared location is not configured" if Rails.configuration.mediaflux["shared_files_location"].blank?
+
     pathname = Pathname.new(Rails.configuration.mediaflux["shared_files_location"])
     pathname.join("#{job_id}.csv").to_s
   end

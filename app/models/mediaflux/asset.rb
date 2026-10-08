@@ -37,6 +37,7 @@ module Mediaflux
     #   path_short  -> "/projectg/folder1/file-abc.txt"
     def path_short
       return nil if path.nil?
+
       if path.starts_with?(Mediaflux::Connection.root_collection_namespace)
         path[Mediaflux::Connection.root_collection_namespace.length..-1]
       else
@@ -47,6 +48,7 @@ module Mediaflux
     # Returns the last modified date parsed or the created on date if the last modified date is not available. The date is converted to the "America/New_York" timezone.
     def last_modified
       return created_on if @last_modified_mf.nil?
+
       # https://nandovieira.com/working-with-dates-on-ruby-on-rails
       # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
       Object::Time.zone.parse(@last_modified_mf).in_time_zone("America/New_York")
@@ -55,6 +57,7 @@ module Mediaflux
     # Returns the created_on date parsed. The date is converted to the "America/New_York" timezone.
     def created_on
       return nil if @created_on_mf.nil?
+
       # https://nandovieira.com/working-with-dates-on-ruby-on-rails
       # Mediaflux dates are in UTC and look like this "07-Feb-2024 21:48:01"
       Object::Time.zone.parse(@created_on_mf).in_time_zone("America/New_York")
@@ -62,6 +65,7 @@ module Mediaflux
 
     def created_by
       return nil if @creator.nil?
+
       @creator
     end
 
@@ -78,6 +82,7 @@ module Mediaflux
     #   path_only  -> "/projectg/folder1"
     def path_only
       return nil if path.nil?
+
       if collection
         path_short
       else
