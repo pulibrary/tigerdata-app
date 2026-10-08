@@ -30,9 +30,7 @@ class UserRolesUpdate < Dry::Operation
     changed = update_developer_status(user:, mediaflux_roles:)
     changed = update_sysadmin_status(user:, mediaflux_roles:) || changed
     changed = update_tester_status(user:, mediaflux_roles:) || changed
-    if changed
-      user.save!
-    end
+    user.save! if changed
     Success(user)
   rescue StandardError => e
     Failure("Error updating user roles! error: #{e}")
@@ -41,25 +39,25 @@ class UserRolesUpdate < Dry::Operation
   def update_tester_status(user:, mediaflux_roles:)
     trainer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:tester-trainers") ||
                   mediaflux_roles.include?("pu-oit-group:PU:tigerdata:tester-trainers")
-    if user.trainer != trainer_now
+    if user.trainer == trainer_now
+      false
+    else
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating trainer role for user #{user.id} to #{trainer_now}")
       user.trainer = trainer_now
       true
-    else
-      false
     end
   end
 
   def update_sysadmin_status(user:, mediaflux_roles:)
     sysadmin_now = mediaflux_roles.include?("system-administrator")
-    if user.sysadmin != sysadmin_now
+    if user.sysadmin == sysadmin_now
+      false
+    else
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating sysadmin role for user #{user.id} to #{sysadmin_now}")
       user.sysadmin = sysadmin_now
       true
-    else
-      false
     end
   end
 
@@ -73,13 +71,13 @@ class UserRolesUpdate < Dry::Operation
     developer_now = mediaflux_roles.include?("pu-smb-group:PU:tigerdata:librarydevelopers") ||
                     mediaflux_roles.include?("pu-oit-group:PU:tigerdata:librarydevelopers") ||
                     mediaflux_roles.include?("system-administrator")
-    if user.developer != developer_now
+    if user.developer == developer_now
+      false
+    else
       # Only update the record in the database if there is a change
       Rails.logger.info("Updating developer role for user #{user.id} to #{developer_now}")
       user.developer = developer_now
       true
-    else
-      false
     end
   end
 end

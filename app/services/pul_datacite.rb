@@ -24,11 +24,10 @@ class PULDatacite
       "10.34770/tbd"
     else
       result = datacite_connection.autogenerate_doi(prefix: Rails.configuration.datacite.prefix)
-      if result.success?
-        result.success.doi
-      else
-        raise("Error generating DOI. #{result.failure.status} / #{result.failure.reason_phrase}")
-      end
+      raise("Error generating DOI. #{result.failure.status} / #{result.failure.reason_phrase}") unless result.success?
+
+      result.success.doi
+
     end
   end
 end

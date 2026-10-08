@@ -135,7 +135,7 @@ RSpec.describe "Dashboard", :connect_to_mediaflux, :js do
 
         visit project_path(project_222)
         expect(page).to have_text "project 222"
-        page.find_by_id('logo').click
+        page.find_by_id("logo").click
         expect(page).to have_text("Welcome, #{current_user.given_name}!")
       end
 
@@ -270,7 +270,7 @@ RSpec.describe "Dashboard", :connect_to_mediaflux, :js do
         end
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-          .skipping(:'color-contrast') # false positives
+          .skipping(:"color-contrast") # false positives
           .excluding(".tt-hint") # Issue is in typeahead.js library
       end
 

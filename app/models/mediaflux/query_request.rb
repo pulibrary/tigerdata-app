@@ -43,9 +43,7 @@ module Mediaflux
           # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
           #      For the moment we will utilize the where clasue that does allow pagination
           # xml.collection collection if collection.present?
-          if collection.present?
-            xml.where mf_where(collection)
-          end
+          xml.where mf_where(collection) if collection.present?
           xml.where aql_query if aql_query.present?
           xml.action action if action.present?
           declare_get_values_fields(xml) if action == "get-values"
@@ -73,9 +71,7 @@ module Mediaflux
     # Adds the declarations to fetch specific fields
     def declare_get_values_fields(xml)
       declare_get_value_field(xml, "name", "name")
-      if @include_path == true
-        declare_get_value_field(xml, "path", "path")
-      end
+      declare_get_value_field(xml, "path", "path") if @include_path == true
       declare_get_value_field(xml, "content/@total-size", "total-size")
       declare_get_value_field(xml, "mtime", "mtime")
       declare_get_value_field(xml, "ctime", "ctime")

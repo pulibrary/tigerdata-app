@@ -618,23 +618,6 @@ Style/ArgumentsForwarding:
     - "app/services/xml_element_builder.rb"
 
 # Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/BlockComments:
-  Exclude:
-    - "app/models/user.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# AllowedMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Exclude:
-    - "app/controllers/projects_controller.rb"
-
-# Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: MinBranchesCount.
 Style/CaseLikeIf:
@@ -678,28 +661,6 @@ Style/CollectionQuerying:
     - "app/services/user_error_parser.rb"
     - "lib/tasks/xml_schema.rake"
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Keywords, RequireColon.
-# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW, NOTE
-Style/CommentAnnotation:
-  Exclude:
-    - "spec/models/mediaflux/project_update_request_spec.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - "app/services/project_import.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/DefWithParentheses:
-  Exclude:
-    - "app/models/project_file_inventory.rb"
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/DirectiveScope:
@@ -711,20 +672,6 @@ Style/DirectiveScope:
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Enabled: false
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowComments.
-# SupportedStyles: empty, nil, both
-Style/EmptyElse:
-  Exclude:
-    - "app/models/project.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/FileWrite:
-  Exclude:
-    - "lib/tasks/dev_license.rake"
 
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -751,34 +698,11 @@ Style/GlobalStdStream:
     - "config/environments/staging.rb"
     - "lib/tasks/file_inventory.rake"
 
-# Offense count: 32
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-Style/GuardClause:
-  Enabled: false
-
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/HashSlice:
   Exclude:
     - "app/models/project_validator.rb"
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-# SupportedShorthandSyntax: always, never, either, consistent, either_consistent
-Style/HashSyntax:
-  Exclude:
-    - "app/models/mediaflux/request.rb"
-    - "app/presenters/project_show_presenter.rb"
-    - "db/migrate/20230929131551_rolify_create_roles.rb"
-    - "db/migrate/20240119212243_add_provenance_event_association_to_project.rb"
-
-# Offense count: 49
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfUnlessModifier:
-  Enabled: false
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -788,61 +712,12 @@ Style/IfWithBooleanLiteralBranches:
   Exclude:
     - "app/presenters/project_show_presenter.rb"
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/KeywordParametersOrder:
-  Exclude:
-    - "app/models/mediaflux/asset_create_request.rb"
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/MapIntoArray:
   Exclude:
     - "app/models/project.rb"
     - "app/presenters/new_project_request_presenter.rb"
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - "app/models/project.rb"
-    - "app/models/project_file_inventory.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - "db/migrate/20250530124219_request_department_jsonb.rb"
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Style/NegatedIfElseCondition:
-  Exclude:
-    - "app/operations/user_roles_update.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, MinBodyLength, AllowConsecutiveConditionals.
-# SupportedStyles: skip_modifier_ifs, always
-Style/Next:
-  Exclude:
-    - "db/migrate/20250530124219_request_department_jsonb.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: IncludeSemanticChanges.
-Style/NonNilCheck:
-  Exclude:
-    - "app/controllers/projects_controller.rb"
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Strict, AllowedNumbers, AllowedPatterns.
-Style/NumericLiterals:
-  MinDigits: 11
 
 # Offense count: 27
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -852,33 +727,9 @@ Style/NumericPredicate:
   Enabled: false
 
 # Offense count: 2
-# Configuration parameters: AllowedClasses.
-Style/OneClassPerFile:
-  Exclude:
-    - "app/models/project_mediaflux.rb"
-    - "app/services/pul_cache.rb"
-
-# Offense count: 2
 Style/OpenStructUse:
   Exclude:
     - "spec/services/princeton_users_spec.rb"
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowSafeAssignment, AllowInMultilineConditions.
-Style/ParenthesesAroundCondition:
-  Exclude:
-    - "app/services/princeton_users.rb"
-    - "app/services/project_import.rb"
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: same_as_string_literals, single_quotes, double_quotes
-Style/QuotedSymbols:
-  Exclude:
-    - "app/controllers/users_controller.rb"
-    - "spec/operations/project_create_spec.rb"
 
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -897,30 +748,6 @@ Style/RedundantArgument:
     - "db/migrate/20250530124219_request_department_jsonb.rb"
     - "lib/tasks/dev_license.rake"
     - "spec/factories/user.rb"
-
-# Offense count: 7
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantAssignment:
-  Exclude:
-    - "app/models/mediaflux/request.rb"
-    - "app/models/mediaflux/time.rb"
-    - "app/models/project.rb"
-    - "app/models/project_validator.rb"
-    - "app/presenters/project_xml_presenter.rb"
-    - "app/services/princeton_users.rb"
-
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantConstantBase:
-  Exclude:
-    - "config/environments/ci.rb"
-    - "config/environments/production.rb"
-    - "config/environments/qa.rb"
-    - "config/environments/staging.rb"
-    - "spec/factories/project.rb"
-    - "spec/models/mediaflux/namespace_destroy_request_spec.rb"
-    - "spec/presenters/project_xml_presenter_spec.rb"
-    - "spec/system/project_spec.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -941,78 +768,6 @@ Style/RedundantInterpolation:
   Exclude:
     - "app/presenters/project_show_presenter.rb"
     - "spec/system/project_details_spec.rb"
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantParentheses:
-  Exclude:
-    - "app/models/mediaflux/project_create_service_request.rb"
-    - "app/models/new_project_request.rb"
-    - "app/models/user.rb"
-    - "app/services/project_import.rb"
-    - "spec/services/pul_cache_spec.rb"
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantRegexpEscape:
-  Exclude:
-    - "app/models/mediaflux/request.rb"
-    - "app/models/version_footer.rb"
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - "app/helpers/emulator_helper.rb"
-    - "app/models/project.rb"
-    - "app/models/user.rb"
-
-# Offense count: 17
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantSelf:
-  Exclude:
-    - "app/models/affiliation.rb"
-    - "app/models/project.rb"
-    - "app/services/project_import.rb"
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantStringEscape:
-  Exclude:
-    - "spec/models/new_project_request_spec.rb"
-
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - "app/models/mediaflux/request.rb"
-    - "app/models/new_project_request.rb"
-    - "app/models/project_metadata.rb"
-    - "spec/models/mediaflux/logon_request_spec.rb"
-    - "spec/models/mediaflux/service_execute_request_spec.rb"
-
-# Offense count: 12
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - "app/controllers/projects_controller.rb"
-    - "app/controllers/session_info_controller.rb"
-    - "app/controllers/users_controller.rb"
-    - "app/models/user.rb"
-    - "app/operations/project_create.rb"
-    - "app/services/project_import.rb"
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - "app/services/princeton_users.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -1035,45 +790,6 @@ Style/StringConcatenation:
     - "spec/models/project_show_presenter_spec.rb"
     - "spec/presenters/project_dashboard_presenter_spec.rb"
     - "spec/rails_helper.rb"
-
-# Offense count: 6898
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
-
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiteralsInInterpolation:
-  Exclude:
-    - "app/models/project_validator.rb"
-    - "app/services/project_import.rb"
-    - "db/migrate/20250530124219_request_department_jsonb.rb"
-    - "spec/system/project_details_spec.rb"
-
-# Offense count: 8
-# This cop supports safe autocorrection (--autocorrect).
-Style/SuperArguments:
-  Exclude:
-    - "app/models/mediaflux/actor_self_describe_request.rb"
-    - "app/models/mediaflux/asset.rb"
-    - "app/models/mediaflux/logout_request.rb"
-    - "app/models/mediaflux/schema_fetch_request.rb"
-    - "app/models/mediaflux/store_list_request.rb"
-    - "app/models/mediaflux/tigerdata_describe_request.rb"
-    - "app/models/mediaflux/version_request.rb"
-    - "app/presenters/project_file_show_presenter.rb"
-
-# Offense count: 24
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: .
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: percent
-  MinSize: 13
 
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).

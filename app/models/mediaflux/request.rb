@@ -62,9 +62,7 @@ module Mediaflux
       start_time = ::Time.zone.now
       @http_response = @http_client.request self.class.uri, http_request
       log_elapsed(start_time)
-      if response_error.present?
-        Rails.logger.error "Mediaflux error: #{response_error[:title]}, #{response_error[:message]}"
-      end
+      Rails.logger.error "Mediaflux error: #{response_error[:title]}, #{response_error[:message]}" if response_error.present?
       @http_response
     end
 
@@ -81,9 +79,7 @@ module Mediaflux
       Rails.logger.debug(response_body)
       @response_xml ||= Nokogiri::XML.parse(response_body)
       Rails.logger.debug(@response_xml)
-      if @response_xml.xpath("//message").text == "session is not valid"
-        raise Mediaflux::SessionExpired, "Session expired for token #{session_token}"
-      end
+      raise Mediaflux::SessionExpired, "Session expired for token #{session_token}" if @response_xml.xpath("//message").text == "session is not valid"
 
       @response_xml
     end
@@ -101,11 +97,10 @@ module Mediaflux
       xml = response_xml
       return nil if xml.xpath("/response/reply/error").count == 0
 
-      error = {
+      {
         title: xml.xpath("/response/reply/error").text,
         message: xml.xpath("/response/reply/message").text
       }
-      error
     end
 
     delegate :to_s, to: :response_xml
@@ -121,7 +116,7 @@ module Mediaflux
     def xtoshell_xml(name: self.class.service)
       xml_builder = build_http_request_body(name:)
       xml_builder.doc.xpath("//request/service/@session").remove
-      xml = xml_builder.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+      xml = xml_builder.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
       xml.strip.tr("\"", "'").gsub("<args>", "").gsub("</args>", "")
     end
 
@@ -178,7 +173,7 @@ module Mediaflux
     end
 
     def log_xml_request(xml_payload)
-      password_element = xml_payload.match(/\<password\>.*\<\/password\>/)
+      password_element = xml_payload.match(%r{<password>.*</password>})
       if password_element.nil?
         Rails.logger.debug(xml_payload)
       else
@@ -193,17 +188,17 @@ module Mediaflux
     def log_elapsed(start_time)
       elapsed_time = ::Time.zone.now - start_time
       timing_info = "#{format('%.2f', elapsed_time)} s"
-      if elapsed_time > 3.0
-        Rails.logger.warn "Slow Mediaflux request: #{self.class}, #{timing_info}"
-        Honeybadger.notify(
-          "Slow Mediaflux request",
-          context: {
-            request_class: self.class.to_s,
-            service: self.class.respond_to?(:service) ? self.class.service : nil,
-            timing_info: timing_info
-          }
-        )
-      end
+      return unless elapsed_time > 3.0
+
+      Rails.logger.warn "Slow Mediaflux request: #{self.class}, #{timing_info}"
+      Honeybadger.notify(
+        "Slow Mediaflux request",
+        context: {
+          request_class: self.class.to_s,
+          service: self.class.respond_to?(:service) ? self.class.service : nil,
+          timing_info: timing_info
+        }
+      )
     end
   end
 end

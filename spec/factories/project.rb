@@ -18,7 +18,7 @@ FactoryBot.define do
       storage_performance { { requested: "standard", approved: "standard" }.with_indifferent_access }
       project_purpose { "research" }
       project_directory { "#{Rails.configuration.mediaflux['api_root']}/#{random_project_directory}" }
-      schema_version { ::TigerdataSchema::SCHEMA_VERSION }
+      schema_version { TigerdataSchema::SCHEMA_VERSION }
       approved_by { nil }
       approved_on { nil }
       submission do

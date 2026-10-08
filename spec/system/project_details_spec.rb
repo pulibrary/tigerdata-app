@@ -268,7 +268,7 @@ RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page.find_by_id('project-purpose-value').text).to eq "—"
+        expect(page.find_by_id("project-purpose-value").text).to eq "—"
       end
     end
 
@@ -280,7 +280,7 @@ RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system
       it "displays a standard indicator for empty fields of an approved project" do
         sign_in sponsor_user
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page.find_by_id('project-purpose-value').text).to eq "—"
+        expect(page.find_by_id("project-purpose-value").text).to eq "—"
       end
     end
 
@@ -291,9 +291,9 @@ RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system
       it "shows the connection options table with options configured" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page.find_by_id('hpc-access').text).to include "Access your project from Research Computing clusters", "For high performance computing needs", "Enabled"
-        expect(page.find_by_id('smb-access').text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
-        expect(page.find_by_id('globus-access').text).to include "Support high-performance data transfers", "For a Globus endpoint for this project", "Request"
+        expect(page.find_by_id("hpc-access").text).to include "Access your project from Research Computing clusters", "For high performance computing needs", "Enabled"
+        expect(page.find_by_id("smb-access").text).to include "Enable network file sharing on personal computers", "For SMB/CIFS access", "Disabled"
+        expect(page.find_by_id("globus-access").text).to include "Support high-performance data transfers", "For a Globus endpoint for this project", "Request"
         expect(page).to have_link("Globus", href: "https://tigerdata.princeton.edu/get-started/accessing-tigerdata#Globus")
       end
     end
@@ -311,8 +311,8 @@ RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system
         expect(page).to have_text("Requested by")
         expect(page).to have_css(".provenance-value", count: 4)
         expect(page).to have_text "Requested Date–Time"
-        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%B %d, %Y")}"
-        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime("%I:%M %p")}"
+        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime('%B %d, %Y')}"
+        expect(page).to have_text "#{submission_event.created_at.to_datetime.strftime('%I:%M %p')}"
       end
 
       it "shows approval events" do
@@ -322,8 +322,8 @@ RSpec.describe "Project Details Page", :connect_to_mediaflux, :js, type: :system
         expect(page).to have_text("Approved by")
         expect(page).to have_css(".provenance-value", count: 4)
         expect(page).to have_text "Approval Date–Time"
-        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%B %d, %Y")}"
-        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime("%I:%M %p")}"
+        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime('%B %d, %Y')}"
+        expect(page).to have_text "#{approval_event.created_at.to_datetime.strftime('%I:%M %p')}"
       end
 
       it "shows the project status under the provenance section" do

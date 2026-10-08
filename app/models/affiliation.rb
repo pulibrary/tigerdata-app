@@ -6,9 +6,7 @@ class Affiliation < ApplicationRecord
     affiliations = CSV.read(file, headers: true, skip_lines: /^JT_CF.*/)
     affiliations.each do |data|
       code = data["Dept"]
-      if Affiliation.where(code:).count == 0
-        self.create(code: code, name: data["Department Descr"])
-      end
+      create(code: code, name: data["Department Descr"]) if Affiliation.where(code:).count == 0
     end
   end
 

@@ -12,7 +12,7 @@ class ProjectImport
     report = Mediaflux::ProjectReport.new(session_token: mediaflux_session)
     return [report.response_error[:message]] if report.error?
 
-    importer = self.new(report.csv_data.gsub("\r\n", ""))
+    importer = new(report.csv_data.gsub("\r\n", ""))
     importer.run
   end
 
@@ -30,18 +30,16 @@ class ProjectImport
           if test_run
             output << metadata.to_json
           else
-            if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
-              metadata.data_user_read_only = []
-            end
+            metadata.data_user_read_only = [] if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
             # Create the Rails record for the project
             project = Project.create(metadata:, mediaflux_id: project_metadata["asset"])
-            if (project.valid?)
-              output << "Created project for #{project_id}"
-            else
-              output << "Error creating project for #{project_metadata["asset"]}: #{project.errors.to_a.join(";")}"
-            end
+            output << if project.valid?
+                        "Created project for #{project_id}"
+                      else
+                        "Error creating project for #{project_metadata['asset']}: #{project.errors.to_a.join(';')}"
+                      end
           end
-        rescue => e
+        rescue StandardError => e
           output << "Error processing #{project_id}, #{e.message}"
         end
       end
@@ -58,7 +56,7 @@ class ProjectImport
     department_names = parse_multiple(project_metadata, "department")
     departments = department_names.map { |name| Affiliation.find_fuzzy_by_name(name)&.code || name }
 
-    storage_size_gb = project_metadata["quota"].downcase.to_f / 1000000000.0
+    storage_size_gb = project_metadata["quota"].downcase.to_f / 1_000_000_000.0
     ProjectMetadata.new_from_hash({
                                     project_id:,
                                     title: project_metadata["title"],

@@ -92,17 +92,17 @@ module Mediaflux
     end
 
     def as_json(options = {})
-      super(options).merge({
-                             id: id,
-                             name: name,
-                             path: path,
-                             collection: collection,
-                             size: size,
-                             last_modified: last_modified,
-                             last_modified_mf: @last_modified_mf,
-                             asset_count: asset_count,
-                             folder_size: folder_size
-                           })
+      super.merge({
+                    id: id,
+                    name: name,
+                    path: path,
+                    collection: collection,
+                    size: size,
+                    last_modified: last_modified,
+                    last_modified_mf: @last_modified_mf,
+                    asset_count: asset_count,
+                    folder_size: folder_size
+                  })
     end
 
     def asset_count

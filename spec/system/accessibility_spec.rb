@@ -8,7 +8,7 @@ describe "application accessibility", :connect_to_mediaflux, :js, type: :system 
       visit "/"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-        .skipping(:'color-contrast') # false positives
+        .skipping(:"color-contrast") # false positives
         .excluding(".tt-hint") # Issue is in typeahead.js library
     end
   end
@@ -21,7 +21,7 @@ describe "application accessibility", :connect_to_mediaflux, :js, type: :system 
       visit "/session-info"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-        .skipping(:'color-contrast')
+        .skipping(:"color-contrast")
     end
   end
 
@@ -30,7 +30,7 @@ describe "application accessibility", :connect_to_mediaflux, :js, type: :system 
       visit "/help"
       expect(page).to be_axe_clean
         .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
-        .skipping(:'color-contrast')
+        .skipping(:"color-contrast")
     end
   end
 end

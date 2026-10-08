@@ -19,8 +19,7 @@ module Mediaflux
         time += gmt.hours
       end
 
-      princeton_time = time.in_time_zone("America/New_York").iso8601
-      princeton_time
+      time.in_time_zone("America/New_York").iso8601
     end
 
     # Transform iso8601 dates to MediaFlux expected format

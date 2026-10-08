@@ -11,7 +11,7 @@ class ProjectFileInventory
   end
 
   # Generate the file with the file inventory
-  def generate()
+  def generate
     start_time = Time.zone.now
     log_elapsed(start_time, "STARTED")
     @io_file = File.open(@filename, "a")
@@ -22,7 +22,7 @@ class ProjectFileInventory
 
     # ... and start processing (more paths might be added during `process_path`)
     loop do
-      next_path = @paths_queue.pop()
+      next_path = @paths_queue.pop
       break if next_path.nil?
 
       process_path(collection_id: next_path[:collection_id], path_prefix: next_path[:path_prefix])
@@ -54,9 +54,7 @@ class ProjectFileInventory
       iterator_req = Mediaflux::IteratorRequest.new(session_token: @session_id, iterator: iterator_id, size: 1000)
       log_elapsed(start_time, "iterated over path #{path_prefix}")
 
-      if iterator_req.error?
-        raise "Error processing collection #{collection_id}: #{iterator_req.response_error[:message]}"
-      end
+      raise "Error processing collection #{collection_id}: #{iterator_req.response_error[:message]}" if iterator_req.error?
 
       # ...process the files in the iterator
       csv_lines = []
@@ -75,9 +73,7 @@ class ProjectFileInventory
       end
 
       # write the lines for this iteration the CSV file
-      if csv_lines.count > 0
-        @io_file.write(csv_lines.join("\r\n") + "\r\n")
-      end
+      @io_file.write(csv_lines.join("\r\n") + "\r\n") if csv_lines.count > 0
 
       break if iterator_response[:complete]
     end

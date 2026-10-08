@@ -272,7 +272,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   config.omniauth :cas, host: "fed.princeton.edu", url: "https://fed.princeton.edu/cas"
-  OmniAuth.config.allowed_request_methods = [:get, :post]
+  OmniAuth.config.allowed_request_methods = %i[get post]
   OmniAuth.config.request_validation_phase = OmniAuth::AuthenticityTokenProtection.new(allow_if: ->(_env) { true })
 
   config.omniauth :entra_id, client_id: ENV.fetch("ENTRA_CLIENT_ID", "entra-id-client-id"),

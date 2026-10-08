@@ -2,7 +2,7 @@
 
 namespace :file_inventory do
   desc "Attaches a file to a file inventory job"
-  task :attach_file, [:job_id, :filename] => [:environment] do |_, args|
+  task :attach_file, %i[job_id filename] => [:environment] do |_, args|
     job_id = args[:job_id]
     filename = args[:filename]
 
@@ -18,7 +18,7 @@ namespace :file_inventory do
   end
 
   desc "Runs a file inventory job (asks for the MediaFlux credentials to use)"
-  task :run, [:project_id, :netid] => [:environment] do |_, args|
+  task :run, %i[project_id netid] => [:environment] do |_, args|
     project_id = args[:project_id]
     netid = args[:netid]
     project = Project.find(project_id)
@@ -39,9 +39,7 @@ namespace :file_inventory do
     # Get a MediaFlux session for the credentials entered by the user
     logon_request = Mediaflux::LogonRequest.new(domain: mf_domain, user: mf_user, password: mf_password, identity_token: nil, token_type: nil)
     mediaflux_session = logon_request.session_token
-    if logon_request.error?
-      raise logon_request.response_error[:message]
-    end
+    raise logon_request.response_error[:message] if logon_request.error?
 
     # Schedule the file inventory job using the MediaFlux session we just adquired
     puts "Scheduling file inventory using credentials for: #{mf_domain}:#{mf_user}, session: #{mediaflux_session}"

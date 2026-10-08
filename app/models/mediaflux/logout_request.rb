@@ -7,9 +7,6 @@ module Mediaflux
     # @param file [File] any upload file required for the POST request
     # @param session_token [String] the API token for the authenticated session
     # @param http_client [Net::HTTP] HTTP client for transmitting requests to the Mediaflux server API
-    def initialize(session_token:)
-      super(session_token: session_token)
-    end
 
     # Specifies the Mediaflux service to use when logging off
     # @return [String]

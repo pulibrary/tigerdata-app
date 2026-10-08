@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   def update
     update_user_with_params
     redirect_to user_path(@user)
-  rescue => e
+  rescue StandardError => e
     short_message = "Error saving user #{params[:id]}"
     Rails.logger.error "#{short_message}: #{e.message}"
     Honeybadger.notify "#{short_message}: #{e.message}"

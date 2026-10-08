@@ -16,7 +16,7 @@ RSpec.describe PULCache do
     end
 
     it "raises an exception if the values are different" do
-      allow(Rails.cache).to receive(:read).and_return((1.hour.from_now).to_fs(:rfc2822))
+      allow(Rails.cache).to receive(:read).and_return(1.hour.from_now.to_fs(:rfc2822))
       expect { subject.check! }.to raise_error(PULCacheException, /different values/)
     end
   end

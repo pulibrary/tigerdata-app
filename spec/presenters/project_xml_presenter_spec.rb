@@ -17,7 +17,7 @@ describe ProjectXmlPresenter, connect_to_mediaflux: false, type: :model do
       request_date_time: Time.current.in_time_zone("America/New_York").iso8601
     }
   end
-  let(:status) { ::Project::APPROVED_STATUS }
+  let(:status) { Project::APPROVED_STATUS }
   let(:globus) do
     {}
   end
@@ -459,7 +459,7 @@ describe ProjectXmlPresenter, connect_to_mediaflux: false, type: :model do
         end
 
         context "when the project has been approved" do
-          let(:status) { ::Project::APPROVED_STATUS }
+          let(:status) { Project::APPROVED_STATUS }
           let(:approver) { FactoryBot.create(:user, uid: "efg456") }
 
           # let(:metadata_model) do

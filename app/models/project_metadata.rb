@@ -48,7 +48,7 @@ class ProjectMetadata
     return "" if directory.nil?
 
     # only alphanumeric characters, underscores, and /
-    directory.strip.gsub(/[^A-Za-z\d_\/]/, "-")
+    directory.strip.gsub(%r{[^A-Za-z\d_/]}, "-")
   end
 
   attr_accessor(
@@ -208,9 +208,7 @@ class ProjectMetadata
     (1..counter).each do |i|
       key = "data_user_#{i}"
       access_key = key + "_read_access"
-      if params[access_key] == access
-        users << params[key]
-      end
+      users << params[key] if params[access_key] == access
     end
     users.compact.uniq
   end
@@ -225,17 +223,11 @@ class ProjectMetadata
 
   # Initializes values that we have defaults for.
   def set_defaults
-    if @storage_capacity.nil?
-      @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
-    end
+    @storage_capacity = Rails.configuration.project_defaults[:storage_capacity] if @storage_capacity.nil?
 
-    if @storage_performance_expectations.nil?
-      @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
-    end
+    @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations] if @storage_performance_expectations.nil?
 
-    if @project_purpose.nil?
-      @project_purpose = Rails.configuration.project_defaults[:project_purpose]
-    end
+    @project_purpose = Rails.configuration.project_defaults[:project_purpose] if @project_purpose.nil?
 
     @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
     @schema_version = TigerdataSchema::SCHEMA_VERSION
@@ -243,24 +235,24 @@ class ProjectMetadata
 
   # Sets a value in the object if the value exists in the params
   def set_value(params, key)
-    if params.include?(key)
-      send("#{key}=", params[key])
-    end
+    return unless params.include?(key)
+
+    send("#{key}=", params[key])
   end
 
   def update_storage_capacity(params)
-    if params["storage_capacity"].present?
-      @storage_capacity = {
-        "size" => {
-          "approved" => params["storage_capacity"].to_i,
-          "requested" => storage_capacity[:size][:requested]
-        },
-        "unit" => {
-          "approved" => params["storage_unit"],
-          "requested" => storage_capacity[:unit][:requested]
-        }
+    return if params["storage_capacity"].blank?
+
+    @storage_capacity = {
+      "size" => {
+        "approved" => params["storage_capacity"].to_i,
+        "requested" => storage_capacity[:size][:requested]
+      },
+      "unit" => {
+        "approved" => params["storage_unit"],
+        "requested" => storage_capacity[:unit][:requested]
       }
-    end
+    }
   end
 
   def update_storage_performance_expectations
@@ -272,21 +264,21 @@ class ProjectMetadata
   end
 
   def update_approval_note(params, current_user)
-    if params[:event_note_message].present?
-      @approval_note = {
-        note_by: current_user.uid,
-        note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-        event_type: params[:event_note],
-        message: params[:event_note_message]
-      }
-    end
+    return if params[:event_note_message].blank?
+
+    @approval_note = {
+      note_by: current_user.uid,
+      note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+      event_type: params[:event_note],
+      message: params[:event_note_message]
+    }
   end
 
   def calculate_project_directory(params)
-    if params.key?("project_directory_prefix") || params.key?("project_directory")
-      path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
-      full_path = path_items.join("/")
-      @project_directory = ProjectMetadata.safe_directory(full_path)
-    end
+    return unless params.key?("project_directory_prefix") || params.key?("project_directory")
+
+    path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
+    full_path = path_items.join("/")
+    @project_directory = ProjectMetadata.safe_directory(full_path)
   end
 end

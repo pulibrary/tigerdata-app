@@ -8,9 +8,6 @@ module Mediaflux
     # @param collection [Boolean] create a collection asset if true
     # @param namespace [String] Optional Parent namespace for the asset to be created in
     # @param pid [Integer] Optional Parent id for the asset to be created in
-    def initialize(session_token:)
-      super(session_token: session_token)
-    end
 
     # Specifies the Mediaflux service to use when creating assets
     # @return [String]

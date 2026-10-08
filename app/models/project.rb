@@ -19,39 +19,35 @@ class Project < ApplicationRecord
 
   def create!(initial_metadata:, user:)
     self.metadata_model = initial_metadata
-    if self.valid?
-      if initial_metadata.project_id == ProjectMetadata::DOI_NOT_MINTED
-        self.draft_doi(user: user)
-        self.save!
-        ProvenanceEvent.generate_submission_events(project: self, user: user)
-      else
-        self.save!
-      end
-      # return doi
-      self.metadata_model.project_id
+    return unless valid?
+
+    if initial_metadata.project_id == ProjectMetadata::DOI_NOT_MINTED
+      draft_doi(user: user)
+      save!
+      ProvenanceEvent.generate_submission_events(project: self, user: user)
     else
-      nil
+      save!
     end
+    # return doi
+    metadata_model.project_id
   end
 
   def activate(current_user:)
-    raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
+    raise StandardError.new("Only approved projects can be activated") if status != Project::APPROVED_STATUS
 
-    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: mediaflux_id)
     metadata_request.resolve
     raise metadata_request.response_error if metadata_request.error?
 
-    if self.title == metadata_request.metadata[:title]
-      self.metadata_model.status = Project::ACTIVE_STATUS
-      self.save!
-    else
-      raise StandardError.new("Title mismatch: #{self.title} != #{metadata_request.metadata[:title]}")
-    end
+    raise StandardError.new("Title mismatch: #{title} != #{metadata_request.metadata[:title]}") unless title == metadata_request.metadata[:title]
+
+    metadata_model.status = Project::ACTIVE_STATUS
+    save!
   end
 
   def draft_doi(*)
     puldatacite = PULDatacite.new
-    self.metadata_model.project_id = puldatacite.draft_doi
+    metadata_model.project_id = puldatacite.draft_doi
   end
 
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
@@ -62,7 +58,7 @@ class Project < ApplicationRecord
   end
 
   def metadata_model
-    @metadata_model ||= ProjectMetadata.new_from_hash(self.metadata)
+    @metadata_model ||= ProjectMetadata.new_from_hash(metadata)
   end
 
   def metadata_model=(new_metadata_model)
@@ -75,9 +71,7 @@ class Project < ApplicationRecord
     self.metadata_json = metadata_hash
   end
 
-  def title
-    self.metadata_model.title
-  end
+  delegate :title, to: :metadata_model
 
   def departments
     unsorted = metadata_model.departments || []
@@ -158,20 +152,24 @@ class Project < ApplicationRecord
     "0 GB"
   end
 
+  # Returns the storage capacity value as a formatted string.
+  # If the quota does not exist, it returns the default storage capacity.
+  # @param session_id [String] the Mediaflux session ID to use for the query
+  # @return [String] the storage capacity value as a formatted string, or the default storage capacity if the quota does not exist
   def storage_capacity(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation, '') # if quota does not exist, set value to an empty string
-    if quota_value.blank?
-      return self.class.default_storage_capacity
-    else
-      return quota_value
-    end
+    quota_value = values.fetch(:quota_allocation, "") # if quota does not exist, set value to an empty string
+    return self.class.default_storage_capacity if quota_value.blank?
+
+    quota_value
   end
 
+  # Returns the raw storage capacity value in bytes. If the quota does not exist, it returns 0.
+  # @param session_id [String] the Mediaflux session ID to use for the query
+  # @return [Integer] the raw storage capacity value in bytes, or 0 if the quota does not exist
   def storage_capacity_raw(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
-    quota_value
+    values.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
   end
 
   # Build a query request for the project with the given arguments. This method is used to handle errors that may occur when building the query request and to log them properly.
@@ -237,9 +235,7 @@ class Project < ApplicationRecord
     end
 
     iterator_id = query_request.result
-    results = resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
-
-    results
+    resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
   end
 
   # Fetches the first n files in the project directory
@@ -274,11 +270,11 @@ class Project < ApplicationRecord
   # Fetches the entire file list to a file
   def file_list_to_file(session_id:, filename:)
     file_inventory = ProjectFileInventory.new(project: self, session_id:, filename:)
-    file_inventory.generate()
+    file_inventory.generate
   end
 
   def quota(session_id:)
-    quota_req = Mediaflux::ProjectQuotaRequest.new(session_token: session_id, asset_id: self.mediaflux_id)
+    quota_req = Mediaflux::ProjectQuotaRequest.new(session_token: session_id, asset_id: mediaflux_id)
     quota_req.quota
   end
 
@@ -298,9 +294,7 @@ class Project < ApplicationRecord
 
   def parse_human_quota(human)
     match = human.to_s.strip.match(/\A([\d.]+)\s+([A-Za-z]+)\z/)
-    if match.nil?
-      raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}"
-    end
+    raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}" if match.nil?
 
     number = BigDecimal(match[1])
     size = number.frac.zero? ? number.to_i : number.to_f

@@ -41,9 +41,9 @@ class ApplicationController < ActionController::Base
 
   def mediaflux_session
     logger.debug "Application Session #{session[:mediaflux_session]} cas: #{session[:active_web_user]}"
-    unless ["passthru", "cas"].include?(action_name)
-      current_user&.mediaflux_from_session(session)
-    end
+    return if ["passthru", "cas"].include?(action_name)
+
+    current_user&.mediaflux_from_session(session)
   end
 
   def mediaflux_session_errors
@@ -63,11 +63,9 @@ class ApplicationController < ActionController::Base
   def mediaflux_login_errors
     yield
   rescue Mediaflux::SessionError
-    if session_error_handler
-      retry
-    else
-      raise
-    end
+    raise unless session_error_handler
+
+    retry
   end
 
   def session_error_handler
@@ -83,18 +81,18 @@ class ApplicationController < ActionController::Base
     return if Rails.env.production?
     return if current_user.blank? || !current_user.trainer
 
-    if session[:emulation_role]
-      if session[:emulation_role] == "Eligible Data Sponsor"
-        emulate_sponsor
-      elsif session[:emulation_role] == "Eligible Data Manager"
-        emulate_manager
-      elsif session[:emulation_role] == "System Administrator"
-        emulate_sysadmin
-      elsif session[:emulation_role] == "Eligible Data User"
-        emulate_data_user
-      elsif session[:emulation_role] == "Return to Self"
-        return_to_self
-      end
+    return unless session[:emulation_role]
+
+    if session[:emulation_role] == "Eligible Data Sponsor"
+      emulate_sponsor
+    elsif session[:emulation_role] == "Eligible Data Manager"
+      emulate_manager
+    elsif session[:emulation_role] == "System Administrator"
+      emulate_sysadmin
+    elsif session[:emulation_role] == "Eligible Data User"
+      emulate_data_user
+    elsif session[:emulation_role] == "Return to Self"
+      return_to_self
     end
   end
 
@@ -130,13 +128,13 @@ class ApplicationController < ActionController::Base
   end
 
   def downtime_check(with_redirect: true)
-    if Flipflop.disable_login? || Flipflop.planned_maintenance?
-      if current_user&.eligible_sysadmin?
-        flash[:notice] = I18n.t(:only_sysadmin_users)
-      else
-        redirect_to root_path if with_redirect
-        flash[:notice] = I18n.t(:no_login_currently)
-      end
+    return unless Flipflop.disable_login? || Flipflop.planned_maintenance?
+
+    if current_user&.eligible_sysadmin?
+      flash[:notice] = I18n.t(:only_sysadmin_users)
+    else
+      redirect_to root_path if with_redirect
+      flash[:notice] = I18n.t(:no_login_currently)
     end
   end
 end

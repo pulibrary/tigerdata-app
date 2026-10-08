@@ -3,7 +3,7 @@
 # :nocov:
 namespace :projects do
   desc "Times the creation of projects and querying by TigerData metadata fields"
-  task :create_many, [:count, :prefix] => [:environment] do |_, args|
+  task :create_many, %i[count prefix] => [:environment] do |_, args|
     raise "Count must be specified" if count.blank?
 
     count = args[:count].to_i
@@ -26,7 +26,7 @@ namespace :projects do
   end
 
   desc "Create a test project and a small number of assets in that project"
-  task :create_small_project, [:uid, :prefix] => [:environment] do |_, args|
+  task :create_small_project, %i[uid prefix] => [:environment] do |_, args|
     uid = args[:uid]
     raise "User id must be specified" if uid.blank?
 

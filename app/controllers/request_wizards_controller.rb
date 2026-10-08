@@ -114,9 +114,7 @@ class RequestWizardsController < ApplicationController
                                                        :requested_by, :storage_size, :storage_unit, :number_of_files, :hpc, :smb, :globus,
                                                        :data_security_level, user_roles: [], departments: [])
     request_params[:storage_unit] ||= "TB"
-    if request_params[:departments].present?
-      request_params[:departments] = clean_departments(request_params[:departments])
-    end
+    request_params[:departments] = clean_departments(request_params[:departments]) if request_params[:departments].present?
     if request_params[:user_roles].present?
       request_params[:user_roles] = request_params[:user_roles].compact_blank.map do |role_str|
         json = JSON.parse(role_str)

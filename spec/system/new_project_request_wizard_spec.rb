@@ -593,7 +593,7 @@ describe "New Project Request page", :clean_projects, :js, connect_to_mediaflux:
         fill_in :project_title, with: "Dashboard Redirect Test"
 
         # Clicking on the TigerData logo saves the user changes
-        find_by_id('logo', class: 'header-image').click
+        find_by_id("logo", class: "header-image").click
         expect(page).to have_text "Welcome, #{researcher_user.given_name}!"
 
         # Sometimes the NewProjectRequest is not created yet and it makes the test fail, so let's retry until it is created
@@ -638,7 +638,7 @@ describe "New Project Request page", :clean_projects, :js, connect_to_mediaflux:
         expect(page).to have_css(".departments .lux-field input")
 
         # Project Information tab order (stable field ids + department container)
-        find_by_id('project_title').click
+        find_by_id("project_title").click
         expect_active_element_id("project_title")
         send_tab
         expect_active_element_id("parent_folder")

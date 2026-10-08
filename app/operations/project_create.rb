@@ -24,7 +24,7 @@ class ProjectCreate < Dry::Operation
 
     # Return Success(attrs) or Failure(error)
     Success project
-  rescue => e
+  rescue StandardError => e
     Failure("Error creating the project: #{e}")
   end
 
@@ -58,7 +58,7 @@ class ProjectCreate < Dry::Operation
     else
       Failure("Error saving project #{project.id} to Mediaflux: #{e}. EOFError retry failed.")
     end
-  rescue => e
+  rescue StandardError => e
     # All other errors will just be returned as failures
     Failure("Error saving project #{project.id} to Mediaflux: #{e}")
   end
@@ -68,7 +68,7 @@ class ProjectCreate < Dry::Operation
     project.metadata_model.status = Project::APPROVED_STATUS
     project.save!
     Success(project)
-  rescue => e
+  rescue StandardError => e
     # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
     Failure("Setting the mediaflux id the project(#{project.id}) : #{e}")
   end
@@ -91,14 +91,14 @@ class ProjectCreate < Dry::Operation
     end
   # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
   #        I could not figure out a way in tests to hit this error...
-  rescue => e
+  rescue StandardError => e
     Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{e}")
   end
 
   def activate_project(project, approver)
     project.activate(current_user: approver)
     Success(project)
-  rescue => e
+  rescue StandardError => e
     Failure("Error activate project #{project.id}: #{e}")
   end
 

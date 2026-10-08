@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   end
 
   get "/users-lookup", to: "users#lookup", as: :users_lookup
-  resources :users, except: [:new, :destroy, :create] do
+  resources :users, except: %i[new destroy create] do
     get "/users/:user", action: :index, on: :collection
   end
 
@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   post "dash_admin", to: "dashboard#dash_admin", as: :dash_admin
   post "dash_requests", to: "dashboard#dash_requests", as: :dash_requests
 
-  resources :projects, except: [:new, :edit]
+  resources :projects, except: %i[new edit]
   post "projects/send_globus_access_request", to: "projects#send_globus_access_request", as: :send_globus_access_request
   post "projects/send_storage_increase_request", to: "projects#send_storage_increase_request", as: :send_storage_increase_request
   get "projects/:id/details", to: "projects#details", as: :project_details
@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   get "projects/file_list_download/:job_id", to: "projects#file_list_download", as: :project_file_list_download
   get "projects/:id/:id-mf", to: "projects#show_mediaflux", as: :project_show_mediaflux
 
-  resources :new_project_requests, only: [:show, :index, :destroy] do
+  resources :new_project_requests, only: %i[show index destroy] do
     member do
       get :approve
     end

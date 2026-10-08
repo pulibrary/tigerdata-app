@@ -20,7 +20,7 @@ module Mediaflux
     private
 
     def build_http_request_body(name:)
-      super(name: name) do |xml|
+      super do |xml|
         xml.args do
           xml.namespace @namespace
           xml.type @type
@@ -39,13 +39,9 @@ module Mediaflux
         instructions: element.xpath("instructions").text
       }
 
-      if element.attributes["min-occurs"].present?
-        field["min-occurs"] = element.attributes["min-occurs"].value.to_i
-      end
+      field["min-occurs"] = element.attributes["min-occurs"].value.to_i if element.attributes["min-occurs"].present?
 
-      if element.attributes["max-occurs"].present?
-        field["max-occurs"] = element.attributes["max-occurs"].value.to_i
-      end
+      field["max-occurs"] = element.attributes["max-occurs"].value.to_i if element.attributes["max-occurs"].present?
 
       field
     end

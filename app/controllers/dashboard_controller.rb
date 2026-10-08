@@ -19,30 +19,30 @@ class DashboardController < ApplicationController
     absolute_user = User.find(current_user.id)
     return unless absolute_user.trainer?
 
-    if params.key?("emulation_menu")
-      session[:emulation_role] = params[:emulation_menu]
-    end
+    return unless params.key?("emulation_menu")
+
+    session[:emulation_role] = params[:emulation_menu]
   end
 
   # HTTP POST /dash_project via AJAX to toogle the current tab
   def dash_project
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
+    return unless params.key?("dashtab")
+
+    session[:dashtab] = params[:dashtab]
   end
 
   # HTTP POST /dash_admin via AJAX to toogle the current tab
   def dash_admin
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
+    return unless params.key?("dashtab")
+
+    session[:dashtab] = params[:dashtab]
   end
 
   # HTTP POST /dash_requests via AJAX to toogle the current tab
   def dash_requests
-    if params.key?("dashtab")
-      session[:dashtab] = params[:dashtab]
-    end
+    return unless params.key?("dashtab")
+
+    session[:dashtab] = params[:dashtab]
   end
 
   private
@@ -62,9 +62,7 @@ class DashboardController < ApplicationController
     end_time = Time.current
     elapsed_time = end_time - start_time
     project_count = nil
-    if @dash_session == "project"
-      project_count = @presenter&.dashboard_projects&.count
-    end
+    project_count = @presenter&.dashboard_projects&.count if @dash_session == "project"
 
     if elapsed_time >= 5.0 && project_count.to_i >= 2
       Honeybadger.notify(

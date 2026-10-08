@@ -14,28 +14,26 @@ class User < ApplicationRecord
 
   attr_accessor :mediaflux_session
 
-=begin
-  This method creates a new user from CAS data. The access token looks like this:
-    <?xml version="1.0" encoding="UTF-8"?>
-    <hash>
-      <provider type="symbol">cas</provider>
-      <uid>fakeuid</uid>
-      <info>
-        <nickname>fakenickname</nickname>
-      </info>
-      <credentials>
-        <ticket>ST-21159-JOc1Sh6j0NZIELDhGjCQvE-oPJY-fed</ticket>
-      </credentials>
-      <extra>
-        [...]
-          <department>Library - Office of the Deputy University Librarian</department>
-          <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
-          <grouperGroups>PU:test:DuoEnabled</grouperGroups>
-          <clientIpAddress>172.20.192.245</clientIpAddress>
-        [...]
-      </extra>
-    </hash>
-=end
+  #   This method creates a new user from CAS data. The access token looks like this:
+  #     <?xml version="1.0" encoding="UTF-8"?>
+  #     <hash>
+  #       <provider type="symbol">cas</provider>
+  #       <uid>fakeuid</uid>
+  #       <info>
+  #         <nickname>fakenickname</nickname>
+  #       </info>
+  #       <credentials>
+  #         <ticket>ST-21159-JOc1Sh6j0NZIELDhGjCQvE-oPJY-fed</ticket>
+  #       </credentials>
+  #       <extra>
+  #         [...]
+  #           <department>Library - Office of the Deputy University Librarian</department>
+  #           <!-- Note that this is not actually the place to get a complete list of Grouper groups from -->
+  #           <grouperGroups>PU:test:DuoEnabled</grouperGroups>
+  #           <clientIpAddress>172.20.192.245</clientIpAddress>
+  #         [...]
+  #       </extra>
+  #     </hash>
 
   # @param access_token [OmniAuth::AuthHash] the access token returned by OmniAuth
   # @return [User, nil] the found user or nil if they do not yet exist
@@ -78,9 +76,7 @@ class User < ApplicationRecord
   def mediaflux_login(token, session)
     logger.debug("mediaflux session created for #{uid}")
     logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
-    if logon_request.error?
-      raise "Invalid Logon #{logon_request.response_error}"
-    end
+    raise "Invalid Logon #{logon_request.response_error}" if logon_request.error?
 
     @mediaflux_session = logon_request.session_token
     @active_web_user = true
@@ -150,7 +146,8 @@ class User < ApplicationRecord
   # @return [Boolean]
   def eligible_data_user?
     return true if developer
-    return true if !eligible_sponsor? && !eligible_manager
+
+    true if !eligible_sponsor? && !eligible_manager
   end
 
   # Is this user eligible to be a sysadmin in this environment?
@@ -162,7 +159,7 @@ class User < ApplicationRecord
   def eligible_to_create_new?
     return true if eligible_sysadmin?
 
-    !Rails.env.production? && (eligible_sponsor? && trainer?)
+    !Rails.env.production? && eligible_sponsor? && trainer?
   end
 
   # Methods serialize_into_session() and serialize_from_session() are called by Warden/Devise
@@ -206,7 +203,7 @@ class User < ApplicationRecord
     else
       Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{result.failure}")
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error("Error updating roles for user (id: #{user.id}) status, error: #{e.message}")
   end
 

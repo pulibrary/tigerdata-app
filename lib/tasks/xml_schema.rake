@@ -4,7 +4,7 @@
 require "nokogiri"
 namespace :xml_schema do
   desc "Validates the example XML provided by Matt against the TigerData XSD"
-  task :validate_example, [:schema_file, :document_file] => [:environment] do |_, args|
+  task :validate_example, %i[schema_file document_file] => [:environment] do |_, args|
     # Files downloaded from https://github.com/pulibrary/tigerdata-app/issues/896
     schema_file = args[:schema_file]
     raise "Schema file must be specified" if schema_file.nil?

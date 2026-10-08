@@ -22,9 +22,9 @@ class ProjectValidator < ActiveModel::Validator
         required_metadata_field_errors << "Missing metadata value for #{attr}" if value.nil? && project.metadata_json.include?(attr)
       end
     end
-    if required_metadata_field_errors.count > 0
-      project.errors.add :base, "Invalid Project Metadata it does not match the schema #{TigerdataSchema::SCHEMA_VERSION}\n #{required_metadata_field_errors.join(", ")}"
-    end
+    return unless required_metadata_field_errors.count > 0
+
+    project.errors.add :base, "Invalid Project Metadata it does not match the schema #{TigerdataSchema::SCHEMA_VERSION}\n #{required_metadata_field_errors.join(', ')}"
   end
 
   private
@@ -42,8 +42,7 @@ class ProjectValidator < ActiveModel::Validator
   end
 
   def required_keys
-    tableized = required_field_labels.map { |v| v.underscore }
-    tableized
+    required_field_labels.map { |v| v.underscore }
   end
 
   def required_attributes(project:)

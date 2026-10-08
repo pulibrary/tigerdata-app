@@ -10,9 +10,7 @@ class ProjectMediaflux
   def self.xml_payload(project:, user:, xml_namespace: nil)
     request = Mediaflux::AssetMetadataRequest.new(session_token: user.mediaflux_session, id: project.mediaflux_id)
     request.resolve
-    if request.error?
-      raise request.response_error[:message]
-    end
+    raise request.response_error[:message] if request.error?
 
     request.response_body
   end

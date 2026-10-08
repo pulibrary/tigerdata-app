@@ -250,7 +250,7 @@ class ProjectShowPresenter
 
     # First, calculate the unformatted free space in bytes, then format it to a human-readable string
     unformatted_free_space = @quota_breakdown[:quota_allocation] - @quota_breakdown[:quota_used]
-    @free_space ||= helpers.number_to_human_size(unformatted_free_space, :precision => 2)
+    @free_space ||= helpers.number_to_human_size(unformatted_free_space, precision: 2)
   end
 
   def collection_info
@@ -322,10 +322,10 @@ class ProjectShowPresenter
   # Log if we run into a collection without statistics so that we can notify RC
   # See https://github.com/pulibrary/tigerdata-app/issues/2353
   def check_statistics
-    if @project_mf[:statistics] == false
-      Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
-      Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
-    end
+    return unless @project_mf[:statistics] == false
+
+    Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
+    Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
   end
 
   def mediaflux_listing

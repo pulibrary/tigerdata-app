@@ -12,9 +12,7 @@ class RequestCleanupJob < ApplicationJob
 
       request.valid_to_submit?
       # 6 errors is arbitrary, but it is the number of manditory fields (excluding pre-populated fields) in the request form
-      if request.errors.count >= 6
-        request.destroy
-      end
+      request.destroy if request.errors.count >= 6
     end
   end
 end

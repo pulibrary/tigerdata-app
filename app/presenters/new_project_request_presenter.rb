@@ -125,15 +125,11 @@ class NewProjectRequestPresenter
     if substep.nil?
       return "-current" if controller_name.start_with?("project_information")
 
-      if step1_valid?
-        css_suffix = "-completed"
-      end
+      css_suffix = "-completed" if step1_valid?
     elsif substep == "Basic Details"
       return "-current" if controller_name == "project_information"
 
-      if step1_valid?
-        css_suffix = "-completed"
-      end
+      css_suffix = "-completed" if step1_valid?
     end
     css_suffix
   end

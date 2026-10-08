@@ -31,7 +31,7 @@
 namespace :import do
   # command line syntax: bundle exec rake metadata:update_pppl_subcommunities\["netid"\]
   desc "import projects from mediaflux csv file"
-  task :mediaflux_projects, [:project_file, :test_run] => [:environment] do |_, args|
+  task :mediaflux_projects, %i[project_file test_run] => [:environment] do |_, args|
     project_file = args[:project_file]
     test_run = args[:test_run] || false
     importer = ProjectImport.new(File.new(project_file), test_run: test_run)

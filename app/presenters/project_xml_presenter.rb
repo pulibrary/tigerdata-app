@@ -195,8 +195,7 @@ class ProjectXmlPresenter
   # @param index [Integer] The index of the project directory
   # @return [String] The project directory path
   def project_directory_path(index)
-    entry = project_directory[index]
-    entry
+    project_directory[index]
   end
 
   # @param index [Integer] The index of the project directory
@@ -217,9 +216,7 @@ class ProjectXmlPresenter
   # @return [String] The department code for departments associated with the project
   def department(index)
     value = departments[index]
-    if value.length < 6
-      value = value.rjust(6, "0")
-    end
+    value = value.rjust(6, "0") if value.length < 6
     value
   end
 

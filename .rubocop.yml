@@ -30,6 +30,13 @@ Style/ClassVars:
   Exclude:
     - "app/models/version_footer.rb"
 
+Style/OneClassPerFile:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+
 RSpec/MultipleExpectations:
   Enabled: false
 

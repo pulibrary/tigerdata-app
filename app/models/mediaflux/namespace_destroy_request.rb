@@ -20,13 +20,9 @@ module Mediaflux
 
     def destroy
       resolve
-      if error?
-        if response_error.fetch(:message, "").include?("does not exist or is not accessible") && @ignore_missing
-          # nothing to do
-        else
-          raise(StandardError, "call to service 'asset.namespace.hard.destroy' failed: The namespace #{namespace} does not exist or is not accessible")
-        end
-      end
+      return unless error?
+      raise(StandardError, "call to service 'asset.namespace.hard.destroy' failed: The namespace #{namespace} does not exist or is not accessible") unless response_error.fetch(:message, "").include?("does not exist or is not accessible") && @ignore_missing
+      # nothing to do
     end
 
     # Specifies the Mediaflux service to use when destroying namespaces

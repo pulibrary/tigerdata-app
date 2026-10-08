@@ -52,9 +52,7 @@ class XmlElementBuilder < XmlNodeBuilder
   #
   # @return [Nokogiri::XML::Element]
   def build
-    if entry.is_a?(Hash) && entry.key?(:object_method)
-      build_content!
-    end
+    build_content! if entry.is_a?(Hash) && entry.key?(:object_method)
 
     built = build_attributes
     built.content = content

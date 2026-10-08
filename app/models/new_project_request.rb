@@ -43,12 +43,8 @@ class NewProjectRequest < ApplicationRecord
     check_errors? do
       user_roles&.each_with_index do |user_role, index|
         validate_uid(user_role["uid"], :user_roles)
-        if user_role["uid"] == data_sponsor
-          errors.add(:user_roles, :invalid, message: "Data sponsor should not be a data user")
-        end
-        if user_role["uid"] == data_manager
-          errors.add(:user_roles, :invalid, message: "Data manager should not be a data user")
-        end
+        errors.add(:user_roles, :invalid, message: "Data sponsor should not be a data user") if user_role["uid"] == data_sponsor
+        errors.add(:user_roles, :invalid, message: "Data manager should not be a data user") if user_role["uid"] == data_manager
       end
     end
   end
@@ -99,7 +95,7 @@ class NewProjectRequest < ApplicationRecord
 
   def valid_quota?
     if ((quota == "500 GB") || (quota == "2 TB") || (quota == "10 TB") || (quota == "25 TB")) ||
-       (custom_quota? && (storage_size.present? && (storage_size > 0)) && ((storage_unit == "GB") || (storage_unit == "TB")))
+       (custom_quota? && storage_size.present? && (storage_size > 0) && ((storage_unit == "GB") || (storage_unit == "TB")))
       true
     else
       errors.add(:quota, :invalid, message: "must be one of '500 GB', '2 TB', '10 TB', '25 TB', or 'custom'")
@@ -212,9 +208,9 @@ class NewProjectRequest < ApplicationRecord
   end
 
   def field_present?(value, name)
-    if value.blank?
-      errors.add(name, :invalid, message: "This field is required.")
-    end
+    return false if value.present?
+
+    errors.add(name, :invalid, message: "This field is required.")
   end
 
   def validate_uid(uid, field)
@@ -226,24 +222,24 @@ class NewProjectRequest < ApplicationRecord
   end
 
   def project_purpose_present?(project_purpose, field)
-    if project_purpose.blank?
-      errors.add(field, :blank, message: "Select a project purpose.")
-    end
+    return false if project_purpose.present?
+
+    errors.add(field, :blank, message: "Select a project purpose.")
   end
 
   def valid_length(value, length, field)
     return if value.blank?
 
-    if value.length > length
-      errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
-    end
+    return unless value.length > length
+
+    errors.add(field, :invalid, message: "Value is too long. The maximum allowed is #{length} characters, current value is #{value.length} characters long.")
   end
 
   # Allows alphanumeric, dashes, underscores, and forward-slashes
   def alphanumeric_dash_underscore_only(value, field)
     return if value.blank?
 
-    if value.match(/\A[\w\-\/]+\z/).nil?
+    if value.match(%r{\A[\w\-/]+\z}).nil?
       errors.add(field, :invalid, message: "Only letters, numbers, dashes, and underscores are allowed.")
     elsif value.include?("//")
       errors.add(field, :invalid, message: "Empty subfolders are not allowed.")
@@ -259,9 +255,9 @@ class NewProjectRequest < ApplicationRecord
   # project in Mediaflux (i.e. collection asset).
   def cleanup_incomplete_project
     project = Project.find_by_id(project_id)
-    if project && project.mediaflux_id.nil?
-      Rails.logger.warn("Deleting project #{project.id} because the approval for request #{id} failed and it was not created in Mediaflux.")
-      project.destroy!
-    end
+    return unless project && project.mediaflux_id.nil?
+
+    Rails.logger.warn("Deleting project #{project.id} because the approval for request #{id} failed and it was not created in Mediaflux.")
+    project.destroy!
   end
 end

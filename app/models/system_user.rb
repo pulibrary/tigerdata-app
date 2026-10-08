@@ -5,21 +5,17 @@ class SystemUser
     def mediaflux_session
       Rails.cache.fetch("mediaflux_session", expires_in: 10.minutes) do
         logon_request = Mediaflux::LogonRequest.new
-        if logon_request.error?
-          raise Mediaflux::SessionError, "System logon was invalid! #{logon_request.response_error}"
-        end
+        raise Mediaflux::SessionError, "System logon was invalid! #{logon_request.response_error}" if logon_request.error?
 
         logon_request.session_token
       end
     rescue EOFError => e
       # Retry EOFErrors a few times
-      if eof_error_handler
-        Rails.logger.error "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
-        Honeybadger.notify "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
-        retry
-      else
-        raise Mediaflux::SessionError, "System logon failed due to repeated EOFErrors: #{e.message}"
-      end
+      raise Mediaflux::SessionError, "System logon failed due to repeated EOFErrors: #{e.message}" unless eof_error_handler
+
+      Rails.logger.error "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
+      Honeybadger.notify "EOFError detected when attempting system logon. Details: #{e.message}, retrying..."
+      retry
     end
 
     private

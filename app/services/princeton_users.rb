@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PrincetonUsers
-  CHARS_AND_NUMS = ('a'..'z').to_a + (0..9).to_a + ['-']
+  CHARS_AND_NUMS = ("a".."z").to_a + (0..9).to_a + ["-"]
 
   # RESEARCH_COMPUTING_USERS are required because they come as users in the
   # the default projects in the Mediaflux in our Docker image.
@@ -17,7 +17,7 @@ class PrincetonUsers
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
       return [] if tokens.count == 0
 
-      if (tokens.count == 1)
+      if tokens.count == 1
         # if I have a single token I might be trying a uid search, so put all the uid matches at the top
         uid_query(tokens[0]) | name_query(tokens)
       else
@@ -27,13 +27,13 @@ class PrincetonUsers
 
     def uid_query(token)
       order_sql = User.sanitize_sql_for_order("LENGTH(uid)-LENGTH('#{token}')")
-      search_token = User.sanitize_sql_like(token) + '%'
+      search_token = User.sanitize_sql_like(token) + "%"
       User.where("(uid like ?)", search_token).order(Arel.sql(order_sql)).order(:uid)
     end
 
     def name_query(tokens)
       tokens.inject(User.all) do |partial_query, token|
-        search_token = '%' + User.sanitize_sql_like(token) + '%'
+        search_token = "%" + User.sanitize_sql_like(token) + "%"
         partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
       end.order(:given_name).order(:family_name)
     end
@@ -52,7 +52,7 @@ class PrincetonUsers
       if ldap_connection.bind # check our connection to ldap with a bind
         CHARS_AND_NUMS.each do |char|
           filter = (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
-          people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
+          people = ldap_connection.search(filter:, attributes: %i[pudisplayname givenname sn uid edupersonprincipalname])
           if ldap_connection.get_operation_result.message == "Success"
             people.each { |person| user_from_ldap(person) }
           else
@@ -67,8 +67,8 @@ class PrincetonUsers
     end
 
     def create_user_from_ldap_by_uid(uid, ldap_connection: default_ldap_connection)
-      filter = Net::LDAP::Filter.eq('uid', uid)
-      person = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
+      filter = Net::LDAP::Filter.eq("uid", uid)
+      person = ldap_connection.search(filter:, attributes: %i[pudisplayname givenname sn uid edupersonprincipalname])
       raise TigerData::LdapError, "No user with uid #{uid} found" if person.blank? || person.empty?
       raise TigerData::LdapError, "More than one user matches supplied uid: #{uid}" if person.length > 1
 
@@ -113,8 +113,7 @@ class PrincetonUsers
     def check_for_malformed_ldap_entries(ldap_person)
       uid_blank = ldap_person[:uid].blank?
       edupersonprincipalname_blank = ldap_person[:edupersonprincipalname].blank?
-      malformed = uid_blank || edupersonprincipalname_blank
-      malformed
+      uid_blank || edupersonprincipalname_blank
     end
 
     def default_ldap_connection

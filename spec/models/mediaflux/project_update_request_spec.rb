@@ -48,7 +48,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, :connect_to_mediaflux, type: :mo
         expect(mf_metadata[:description]).to eq(project.metadata_model.description)
         expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
         expect(mf_metadata[:departments]).to eq(project.metadata_model.departments)
-        # TODO Should really utilize Mediaflux::Time, but the time class upcases the date and does not zero pad the day
+        # TODO: Should really utilize Mediaflux::Time, but the time class upcases the date and does not zero pad the day
         # expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
         # expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
         # expect(mf_metadata[:updated_on]).to eq(Time.zone.parse(updated_on).strftime("%d-%b-%Y %H:%M:%S"))
@@ -63,7 +63,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, :connect_to_mediaflux, type: :mo
     it "creates the asset update payload" do
       FactoryBot.create(:user, uid: "dm1")
       FactoryBot.create(:user, uid: "ds1")
-      project = FactoryBot.create(:project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
+      project = FactoryBot.create(:project, mediaflux_id: "1234", updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
                                             created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1")
       update_request = described_class.new(session_token: nil, project:)
       expected_xml = "<?xml version=\"1.0\"?>\n" \

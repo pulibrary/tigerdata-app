@@ -297,7 +297,7 @@ RSpec.describe NewProjectRequest, type: :model do
       request.description = "abc\""
       expect(request.valid_description?).to be_truthy
 
-      request.description = "abc\'\"hello\"\'"
+      request.description = "abc'\"hello\"'"
       expect(request.valid_description?).to be_truthy
     end
 

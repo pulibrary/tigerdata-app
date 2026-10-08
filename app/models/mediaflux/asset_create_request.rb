@@ -10,7 +10,7 @@ module Mediaflux
     # @param namespace [String] Optional Parent namespace for the asset to be created in
     # @param pid [String] Optional Parent collection id (use this or a namespace not both)
     # @param xml_namespace [String]
-    def initialize(session_token:, namespace: nil, name:, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
+    def initialize(session_token:, name:, namespace: nil, xml_namespace: nil, xml_namespace_uri: nil, pid: nil)
       super(session_token: session_token)
       @namespace = namespace
       @asset_name = name
@@ -49,9 +49,7 @@ module Mediaflux
           xml.namespace namespace if namespace.present?
           yield xml if block_given?
           collection_xml(xml)
-          if @pid.present?
-            xml.pid @pid
-          end
+          xml.pid @pid if @pid.present?
         end
       end
     end

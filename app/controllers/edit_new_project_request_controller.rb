@@ -41,25 +41,15 @@ class EditNewProjectRequestController < ApplicationController
                                                        :requested_by, :storage_size, :storage_unit, :number_of_files, :hpc, :smb, :globus,
                                                        :data_security_level, user_roles: [], departments: [])
 
-    if request_params[:departments].present?
-      request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) }
-    end
-    if request_params[:user_roles].present?
-      request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) }
-    end
+    request_params[:departments] = request_params[:departments].compact_blank.map { |dep_str| JSON.parse(dep_str) } if request_params[:departments].present?
+    request_params[:user_roles] = request_params[:user_roles].compact_blank.map { |role_str| JSON.parse(role_str) } if request_params[:user_roles].present?
     move_approved_values(request_params)
   end
 
   def move_approved_values(request_params)
-    if request_params[:quota].present?
-      request_params[:approved_quota] = request_params.delete(:quota)
-    end
-    if request_params[:storage_size].present?
-      request_params[:approved_storage_size] = request_params.delete(:storage_size)
-    end
-    if request_params[:storage_unit].present?
-      request_params[:approved_storage_unit] = request_params.delete(:storage_unit)
-    end
+    request_params[:approved_quota] = request_params.delete(:quota) if request_params[:quota].present?
+    request_params[:approved_storage_size] = request_params.delete(:storage_size) if request_params[:storage_size].present?
+    request_params[:approved_storage_unit] = request_params.delete(:storage_unit) if request_params[:storage_unit].present?
     request_params
   end
 

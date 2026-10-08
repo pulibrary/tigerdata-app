@@ -27,7 +27,7 @@ RSpec.describe Mediaflux::LogonRequest, :connect_to_mediaflux, type: :model do
       it "authenticates and stores the session token" do
         expect(request.session_token).to be_blank # no universal user/pass for staging
         assert_requested(:post, mediaflux_url,
-                         body: /<domain>princeton<\/domain>/)
+                         body: %r{<domain>princeton</domain>})
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe Mediaflux::LogonRequest, :connect_to_mediaflux, type: :model do
       it "authenticates and stores the session token" do
         expect(request.session_token).to be_blank
         assert_requested(:post, mediaflux_url,
-                         body: /<user>atest<\/user>/)
+                         body: %r{<user>atest</user>})
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Mediaflux::LogonRequest, :connect_to_mediaflux, type: :model do
       it "authenticates and stores the session token" do
         expect(request.session_token).to be_blank
         assert_requested(:post, mediaflux_url,
-                         body: /<password>password<\/password>/)
+                         body: %r{<password>password</password>})
       end
     end
 

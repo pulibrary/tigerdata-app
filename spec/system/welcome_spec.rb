@@ -17,7 +17,7 @@ RSpec.describe "WelcomeController", :connect_to_mediaflux, :js do
       visit "/"
       expect(page).to have_button "Login"
       expect(page).to have_link "Learn More", href: "https://tigerdata.princeton.edu"
-      expect(find_by_id('login-button').ancestor("form")[:action]).to include "users/auth/cas"
+      expect(find_by_id("login-button").ancestor("form")[:action]).to include "users/auth/cas"
     end
 
     it "forwards to login page" do

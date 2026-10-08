@@ -8,11 +8,9 @@ class MediafluxStatus < HealthMonitor::Providers::Base
     Rails.cache.fetch("mediaflux_health_session", expires_in: 5.minutes) do
       logon_request = Mediaflux::LogonRequest.new
       session_token = logon_request.session_token
-      if logon_request.error?
-        raise logon_request.response_error[:message]
-      else
-        Mediaflux::LogoutRequest.new(session_token:)
-      end
+      raise logon_request.response_error[:message] if logon_request.error?
+
+      Mediaflux::LogoutRequest.new(session_token:)
 
       session_token
     rescue StandardError => e

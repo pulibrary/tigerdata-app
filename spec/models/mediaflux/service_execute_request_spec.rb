@@ -14,7 +14,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, :connect_to_mediaflux, :integra
     it "sends the service execute" do
       request.resolve
       assert_requested(:post, mediaflux_url,
-                       body: /service name="service.execute".*<service name="asset.namespace.list"\/>.*/m)
+                       body: %r{service name="service.execute".*<service name="asset.namespace.list"/>.*}m)
     end
 
     context "when a document is passed" do
@@ -23,7 +23,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, :connect_to_mediaflux, :integra
       it "sends the service execute" do
         request.resolve
         assert_requested(:post, mediaflux_url,
-                         body: /service name="service.execute".*<service name="asset.namespace.list">.*<id>1<\/id>.*<\/service>.*/m)
+                         body: %r{service name="service.execute".*<service name="asset.namespace.list">.*<id>1</id>.*</service>.*}m)
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe Mediaflux::ServiceExecuteRequest, :connect_to_mediaflux, :integra
       it "sends the service execute" do
         request.resolve
         assert_requested(:post, mediaflux_url,
-                         body: /service name="service.execute".*<token>tokentoken<\/token>.*<service name="asset.namespace.list"\/>.*/m)
+                         body: %r{service name="service.execute".*<token>tokentoken</token>.*<service name="asset.namespace.list"/>.*}m)
       end
     end
   end

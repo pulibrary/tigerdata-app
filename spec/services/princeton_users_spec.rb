@@ -23,8 +23,8 @@ RSpec.describe PrincetonUsers, type: :model do
       let(:status) { OpenStruct.new(message: "Success") }
 
       it "returns creates the user" do
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname], filter: anything).and_return([])
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname], filter: anything).and_return([])
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                    filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsjo*")).and_return([entry])
         allow(entry).to receive(:[]).with(:uid).and_return(["gsjobs"])
         allow(entry).to receive(:[]).with(:sn).and_return(["Graduate School Jobs"])
@@ -41,7 +41,7 @@ RSpec.describe PrincetonUsers, type: :model do
         expect(user.email).to eq("email@princeton.edu")
         expect(user.provider).to eq("cas")
         PrincetonUsers::CHARS_AND_NUMS.each do |char|
-          expect(connection).to have_received(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+          expect(connection).to have_received(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsj#{char}*"))
         end
       end
@@ -50,8 +50,8 @@ RSpec.describe PrincetonUsers, type: :model do
         error_status = OpenStruct.new(message: "Error")
 
         allow(connection).to receive(:get_operation_result).and_return(error_status, status)
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname], filter: anything).and_return([])
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname], filter: anything).and_return([])
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                    filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsjo*")).and_return([entry])
         allow(entry).to receive(:[]).with(:uid).and_return(["gsjobs"])
         allow(entry).to receive(:[]).with(:sn).and_return(["Graduate School Jobs"])
@@ -66,16 +66,16 @@ RSpec.describe PrincetonUsers, type: :model do
         expect(User.last.given_name).to be_blank
         expect(User.last.email).to eq("email@princeton.edu")
         PrincetonUsers::CHARS_AND_NUMS.each do |char|
-          expect(connection).to have_received(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+          expect(connection).to have_received(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsj#{char}*"))
-          expect(connection).to have_received(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+          expect(connection).to have_received(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                             filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsja#{char}*"))
         end
       end
 
       it "skips the user if the email is nil" do
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname], filter: anything).and_return([])
-        allow(connection).to receive(:search).with(attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname],
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname], filter: anything).and_return([])
+        allow(connection).to receive(:search).with(attributes: %i[pudisplayname givenname sn uid edupersonprincipalname],
                                                    filter: (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "gsjo*")).and_return([entry])
         allow(entry).to receive(:[]).with(:uid).and_return(["gsjobs"])
         allow(entry).to receive(:[]).with(:sn).and_return(["Graduate School Jobs"])

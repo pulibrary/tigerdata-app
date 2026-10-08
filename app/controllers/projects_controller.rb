@@ -67,9 +67,9 @@ class ProjectsController < ApplicationController
     @render_project_explorer = params["explorer"] == "true"
     respond_to do |format|
       format.html { render }
-      format.xml {
+      format.xml do
         render xml: ProjectShowPresenter.new(project, current_user).to_xml
-      }
+      end
     end
   end
 
@@ -105,7 +105,7 @@ class ProjectsController < ApplicationController
         render xml: project.mediaflux_meta_xml(user: current_user)
       end
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Error getting MediaFlux XML for project #{project_id}, user #{current_user.uid}: #{e.message}"
     render json: { error: "Error fetching Mediaflux XML for this project" }
   end
@@ -119,7 +119,7 @@ class ProjectsController < ApplicationController
       message: "File list for \"#{project.title}\" is being generated in the background. A link to the downloadable file list will be available in the \"Recent Activity\" section of your dashboard when it is available. You may safely navigate away from this page or close this tab."
     }
     render json: json_response
-  rescue => e
+  rescue StandardError => e
     message = "Error producing document list (project id: #{project&.id}): #{e.message}"
     Rails.logger.error(message)
     Honeybadger.notify(message)
@@ -182,7 +182,7 @@ class ProjectsController < ApplicationController
     @project ||= begin
       project = Project.find(params[:id])
       @presenter = ProjectShowPresenter.new(project, current_user)
-      if project&.mediaflux_id != nil && @presenter.user_has_access?(user: current_user)
+      if !project&.mediaflux_id.nil? && @presenter.user_has_access?(user: current_user)
         project
       else
         flash[:alert] = I18n.t(:access_denied)

@@ -53,13 +53,13 @@ module Mediaflux
           xml.id @id
           # send each user in the list
           @ro_users.each do |user|
-            xml.send(:'data-user') do
+            xml.send(:"data-user") do
               xml.parent.set_attribute("readonly", "true")
               xml.text(user)
             end
           end
           @rw_users.each do |user|
-            xml.send(:'data-user') do
+            xml.send(:"data-user") do
               xml.parent.set_attribute("readonly", "false")
               xml.text(user)
             end
