@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class ProjectFileShowPresenter
   include ActiveSupport::NumberHelper
 
   delegate :id, :name, :path, :size, :collection, :last_modified, :asset_count,
-             :folder_size, :created_by, :created_on,
+           :folder_size, :created_by, :created_on,
            to: :file
   attr_reader :file
 
@@ -45,7 +46,7 @@ class ProjectFileShowPresenter
     }
   end
 
-  def as_json(options = {})
-    super(options).merge(to_hash)
-  end
+  # Object#as_json already calls to_hash and stringifies the keys.
+  # Merging to_hash back in adds the same fields again under symbol keys,
+  # and JSON.generate rejects that as a duplicate key.
 end

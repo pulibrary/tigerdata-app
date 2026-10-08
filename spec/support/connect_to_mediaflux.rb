@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 require "rake"
 Rails.application.load_tasks
 
 # When connect_to_mediaflux is true reset the mediaflux server and make sure it is setup for the tests
 RSpec.configure do |config|
-  config.before(:each) do |_ex|
+  config.before do |_ex|
     # Clear the login cache
     Rails.cache.clear
   rescue StandardError => namespace_error

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class InventoryRequestPresenter
   attr_reader :inventory_request
 
@@ -46,11 +47,11 @@ class InventoryRequestPresenter
 
   private
 
-    def url_helpers
-      Rails.application.routes.url_helpers
-    end
+  def url_helpers
+    Rails.application.routes.url_helpers
+  end
 
-    def helpers
-      ActionController::Base.helpers
-    end
+  def helpers
+    ActionController::Base.helpers
+  end
 end

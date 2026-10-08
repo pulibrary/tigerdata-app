@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 # The input file can be created by running by running the following script in aterm:
 #

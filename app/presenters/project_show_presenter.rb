@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ProjectShowPresenter
   include ActiveSupport::NumberHelper
 
@@ -69,10 +70,10 @@ class ProjectShowPresenter
 
   def data_users
     @data_users ||= begin
-                      unsorted_data_users = data_read_only_users + data_read_write_users
-                      sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
-                      sorted_data_users.uniq { |u| u.uid }
-                    end
+      unsorted_data_users = data_read_only_users + data_read_write_users
+      sorted_data_users = unsorted_data_users.sort_by { |u| u.family_name || u.uid }
+      sorted_data_users.uniq { |u| u.uid }
+    end
   end
 
   def data_user_names
@@ -119,7 +120,7 @@ class ProjectShowPresenter
     requested_by_user.display_name_only_safe
   end
 
-   def requested_by_uid
+  def requested_by_uid
     requested_by_user.uid
   end
 
@@ -142,7 +143,7 @@ class ProjectShowPresenter
 
   def approved_on
     date_time = {}
-    approve_date =  safe_date(@project.metadata_json["submission"]["approved_on"])
+    approve_date = safe_date(@project.metadata_json["submission"]["approved_on"])
     date = approve_date.strftime("%B %d, %Y")
     time = approve_date.strftime("%I:%M %p")
     date_time["#{date}"] = time
@@ -169,7 +170,7 @@ class ProjectShowPresenter
     persisted = project.storage_capacity_raw(session_id: session_id)
     value = persisted.to_f
 
-    value*default_capacity_divisor
+    value * default_capacity_divisor
   end
 
   def formatted_storage_capacity(session_id:)
@@ -208,17 +209,17 @@ class ProjectShowPresenter
     storage_value
   end
 
-    def quota_percentage_files
-      quota_percentage_calculation(quota_breakdown[:project_files])
-    end
+  def quota_percentage_files
+    quota_percentage_calculation(quota_breakdown[:project_files])
+  end
 
-    def quota_percentage_recycle_bin
-      quota_percentage_calculation(quota_breakdown[:recycle_bin])
-    end
+  def quota_percentage_recycle_bin
+    quota_percentage_calculation(quota_breakdown[:recycle_bin])
+  end
 
-    def quota_percentage_old_versions
-      quota_percentage_calculation(quota_breakdown[:old_versions])
-    end
+  def quota_percentage_old_versions
+    quota_percentage_calculation(quota_breakdown[:old_versions])
+  end
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
@@ -248,11 +249,11 @@ class ProjectShowPresenter
   end
 
   def collection_info
-    {id: mediaflux_id, path: project_directory, name: project_directory.split("/").last}.to_json
+    { id: mediaflux_id, path: project_directory, name: project_directory.split("/").last }.to_json
   end
 
   def files
-    @files ||=  mediaflux_listing.fetch(:files, []).sort_by!(&:path)
+    @files ||= mediaflux_listing.fetch(:files, []).sort_by!(&:path)
   end
 
   def file_list_json
@@ -272,59 +273,57 @@ class ProjectShowPresenter
 
   private
 
-    def helpers
-      ActionController::Base.helpers
+  def helpers
+    ActionController::Base.helpers
+  end
+
+  def requested_by_user
+    @requested_by_user ||= safe_user(submission_provenance["requested_by"])
+  end
+
+  def approved_by_user
+    @approved_by_user ||= safe_user(submission_provenance["approved_by"])
+  end
+
+  def safe_user(uid)
+    if uid.blank?
+      NilUser.new
+    else
+      User.find_by(uid:) || NilUser.new
     end
+  end
 
-    def requested_by_user
-      @requested_by_user ||= safe_user(submission_provenance["requested_by"])
+  def safe_date(date)
+    if date.blank?
+      NilDate.new
+    else
+      date.to_datetime || NilDate
     end
+  end
 
-    def approved_by_user
-      @approved_by_user ||= safe_user(submission_provenance["approved_by"])
+  # Capacity is in bytes
+  def default_capacity_divisor
+    1.0 / (1000.0**3)
+  end
+
+  def xml_presenter_args
+    project
+  end
+
+  def xml_presenter
+    @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
+  end
+
+  # Log if we run into a collection without statistics so that we can notify RC
+  # See https://github.com/pulibrary/tigerdata-app/issues/2353
+  def check_statistics
+    if @project_mf[:statistics] == false
+      Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
+      Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
     end
+  end
 
-    def safe_user(uid)
-      if uid.blank?
-        NilUser.new
-      else
-        User.find_by(uid:) ||  NilUser.new
-      end
-    end
-
-    def safe_date(date)
-      if date.blank?
-        NilDate.new
-      else
-        date.to_datetime || NilDate
-      end
-    end
-
-    # Capacity is in bytes
-    def default_capacity_divisor
-      1.0/(1000.0**3)
-    end
-
-    def xml_presenter_args
-      project
-    end
-
-    def xml_presenter
-      @xml_presenter ||= self.class.xml_presenter_class.new(xml_presenter_args)
-    end
-
-    # Log if we run into a collection without statistics so that we can notify RC
-    # See https://github.com/pulibrary/tigerdata-app/issues/2353
-    def check_statistics
-      if @project_mf[:statistics] == false
-        Rails.logger.warn("Asset ID #{@project.mediaflux_id} does not have statistics")
-        Honeybadger.notify("Asset ID #{@project.mediaflux_id} does not have statistics")
-      end
-    end
-
-
-
-    def mediaflux_listing
-      @mediaflux_listing ||= project.directory_listing(session_id: @session_id, size: project_file_display_limit)
-    end
+  def mediaflux_listing
+    @mediaflux_listing ||= project.directory_listing(session_id: @session_id, size: project_file_display_limit)
+  end
 end

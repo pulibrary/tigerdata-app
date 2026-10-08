@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MediafluxChannel < ApplicationCable::Channel
   def subscribed
     update_state
@@ -16,15 +17,15 @@ class MediafluxChannel < ApplicationCable::Channel
 
   private
 
-    def session_token
-      SystemUser.mediaflux_session
-    end
+  def session_token
+    SystemUser.mediaflux_session
+  end
 
-    def version_request
-      Mediaflux::VersionRequest.new(session_token: session_token)
-    end
+  def version_request
+    Mediaflux::VersionRequest.new(session_token: session_token)
+  end
 
-    def mf_version
-      version_request.version
-    end
+  def mf_version
+    version_request.version
+  end
 end

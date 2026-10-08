@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Project < ApplicationRecord
   class MediafluxError < StandardError; end
 
@@ -159,7 +160,7 @@ class Project < ApplicationRecord
 
   def storage_capacity(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation, '') #if quota does not exist, set value to an empty string
+    quota_value = values.fetch(:quota_allocation, '') # if quota does not exist, set value to an empty string
     if quota_value.blank?
       return self.class.default_storage_capacity
     else
@@ -169,7 +170,7 @@ class Project < ApplicationRecord
 
   def storage_capacity_raw(session_id:)
     values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation_raw, 0) #if quota does not exist, set value to 0
+    quota_value = values.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
     quota_value
   end
 
@@ -197,7 +198,6 @@ class Project < ApplicationRecord
   #
   # @return [Hash] a hash with the files or an empty array if there are no files or the project is not in mediaflux
   def resolve_iterator_request(iterator_id:, session_id:, size: 10)
-
     iterator_req = Mediaflux::IteratorRequest.new(session_token: session_id, iterator: iterator_id, size: size)
     response = iterator_req.result
 
@@ -296,33 +296,32 @@ class Project < ApplicationRecord
 
   private
 
-    def parse_human_quota(human)
-      match = human.to_s.strip.match(/\A([\d.]+)\s+([A-Za-z]+)\z/)
-      if match.nil?
-        raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}"
-      end
-
-      number = BigDecimal(match[1])
-      size = number.frac.zero? ? number.to_i : number.to_f
-      [size, match[2]]
+  def parse_human_quota(human)
+    match = human.to_s.strip.match(/\A([\d.]+)\s+([A-Za-z]+)\z/)
+    if match.nil?
+      raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}"
     end
 
+    number = BigDecimal(match[1])
+    size = number.frac.zero? ? number.to_i : number.to_f
+    [size, match[2]]
+  end
 
-    def files_from_iterator(iterator_resp)
-      lines = []
-      iterator_resp[:files].each do |asset|
-        lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
-      end
-      lines
+  def files_from_iterator(iterator_resp)
+    lines = []
+    iterator_resp[:files].each do |asset|
+      lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
     end
+    lines
+  end
 
-    def project_directory_pathname
-      # allow the directory to be modified by changes in the metadata_json
-      @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata_model.project_directory
+  def project_directory_pathname
+    # allow the directory to be modified by changes in the metadata_json
+    @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata_model.project_directory
 
-      @project_directory_pathname ||= begin
-        @original_directory = metadata_model.project_directory
-        Pathname.new(@original_directory)
-      end
+    @project_directory_pathname ||= begin
+      @original_directory = metadata_model.project_directory
+      Pathname.new(@original_directory)
     end
+  end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "nokogiri"
 require "xml_utilities"
 
@@ -13,7 +14,7 @@ describe "xml_utilities" do
 
   it "translates asset type definition to hash" do
     expect(XmlUtilities.xml_doc_to_html(Nokogiri('<definition><element name="my_string" type="string" /></definition>'))).to eq(
-"<pre>:name: definition
+      "<pre>:name: definition
 :subelements:
 - :name: element
   :attributes:
@@ -22,7 +23,7 @@ describe "xml_utilities" do
   - :name: type
     :text: string
 </pre>"
-)
+    )
   end
 
   # If we want more tests or longer tests, they should be checked in as fixtures.

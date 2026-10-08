@@ -7,7 +7,7 @@ def select_user(user, field, hidden_field)
   user_str = user.display_name_safe
   within("##{field}_input") do
     page.find("input", match: :first).fill_in with: user.uid
-    expect(page).to have_content user_str
+    expect(page).to have_text user_str
     find(".lux-autocomplete-result").click
 
     expect(page.find("input", match: :first).value).to eq(user_str)
@@ -20,11 +20,11 @@ def select_data_user(user, user_list)
 
   within(".user-role") do
     page.find(".data-users input", match: :first).fill_in with: user.uid
-    expect(page).to have_content user_str
+    expect(page).to have_text user_str
     find(".lux-autocomplete-result").click
 
     # The user selected is visible on the page
-    expect(page).to have_content(user.given_name)
+    expect(page).to have_text(user.given_name)
     # the hidden input has all the users
     expect(page).to have_field("all_selected", type: :hidden, with: user_list.to_json)
 

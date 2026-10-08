@@ -5,7 +5,7 @@ def select_and_verify_department(department:, department_code:, department_list:
 
   within(".departments") do
     # The user selected is visible on the page
-    expect(page).to have_content(department)
+    expect(page).to have_text(department)
     # the hidden input has all the users
     expect(page).to have_field("request[departments][]", type: :hidden, with: { code: department_code, name: department }.to_json)
 
@@ -21,7 +21,7 @@ end
 def select_department(department:, department_code:)
   within(".departments") do
     page.find(".lux-field input", match: :first).fill_in with: department_code
-    expect(page).to have_content department
+    expect(page).to have_text department
     find(".lux-autocomplete-result").click
   end
 end

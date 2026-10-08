@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class WelcomeController < ApplicationController
   skip_before_action :authenticate_user!
   skip_before_action :downtime_check
@@ -16,12 +17,12 @@ class WelcomeController < ApplicationController
 
   private
 
-    def redirect_user
-      if Flipflop.disable_login? || Flipflop.planned_maintenance?
-        downtime_check(with_redirect: false)
-        redirect_to dashboard_path if current_user&.eligible_sysadmin?
-      else
-        redirect_to dashboard_path
-      end
+  def redirect_user
+    if Flipflop.disable_login? || Flipflop.planned_maintenance?
+      downtime_check(with_redirect: false)
+      redirect_to dashboard_path if current_user&.eligible_sysadmin?
+    else
+      redirect_to dashboard_path
     end
+  end
 end

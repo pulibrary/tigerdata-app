@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "session_info/index", type: :view do
   let(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
-  before(:each) do
+  before do
     assign(:current_user, user)
     assign(:mediaflux_info, { server_version: "1001" })
     assign(:mediaflux_roles, ["role1", "role2"])

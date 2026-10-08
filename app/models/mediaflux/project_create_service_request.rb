@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ProjectCreateServiceRequest < Request
     attr_reader :token, :service_name, :document
@@ -53,64 +54,64 @@ module Mediaflux
         # Extract the <id>nnnn</id> value from the output and then extract the
         # numeric value inside of it.
         decoded_string = CGI.unescapeHTML(debug_output)
-        xml_doc  = Nokogiri::XML(decoded_string)
+        xml_doc = Nokogiri::XML(decoded_string)
         (xml_doc.xpath("result/result/id/text()").to_s).to_i
       end
     end
 
     private
 
-      # rubocop:disable Metrics/MethodLength
-      #
-      # This is what the call would look like from aterm:
-      # tigerdata.project.create \
-      #   :data-manager md1908 \
-      #   :data-sponsor jh6441 \
-      #   :department "Physics" \
-      #   :description "Our fake project" \
-      #   :directory tigerdata/RC/td-testing/md1908/JaymeeProject2 \
-      #   :project-id "fake.id" \
-      #   :quota "10 TB" \
-      #   :title "Fake Study"
-      #
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.send("data-manager") do
-              xml.text(@data_manager)
+    # rubocop:disable Metrics/MethodLength
+    #
+    # This is what the call would look like from aterm:
+    # tigerdata.project.create \
+    #   :data-manager md1908 \
+    #   :data-sponsor jh6441 \
+    #   :department "Physics" \
+    #   :description "Our fake project" \
+    #   :directory tigerdata/RC/td-testing/md1908/JaymeeProject2 \
+    #   :project-id "fake.id" \
+    #   :quota "10 TB" \
+    #   :title "Fake Study"
+    #
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.send("data-manager") do
+            xml.text(@data_manager)
+          end
+          xml.send("data-sponsor") do
+            xml.text(@data_sponsor)
+          end
+          xml.department @department
+          xml.description @description
+          xml.directory @directory
+          xml.send("project-id") do
+            xml.text(@project_id)
+          end
+          xml.quota @quota
+          xml.title @title
+          xml.send("number-of-files") do
+            xml.text(@number_of_files)
+          end
+          xml.hpc @hpc
+          xml.smb @smb
+          xml.globus @globus
+          if @project_purpose.present?
+            xml.send("project-purpose") do
+              xml.text(@project_purpose)
             end
-            xml.send("data-sponsor") do
-              xml.text(@data_sponsor)
-            end
-            xml.department @department
-            xml.description @description
-            xml.directory @directory
-            xml.send("project-id") do
-              xml.text(@project_id)
-            end
-            xml.quota @quota
-            xml.title @title
-            xml.send("number-of-files") do
-              xml.text(@number_of_files)
-            end
-            xml.hpc @hpc
-            xml.smb @smb
-            xml.globus @globus
-            if @project_purpose.present?
-              xml.send("project-purpose") do
-                xml.text(@project_purpose)
-              end
-            end
-            xml.send("security-level") do
-              if @data_security_level.present?
-                xml.text(@data_security_level)
-              else
-                xml.text(1) # Default to 1 (Public) if not specified. This is a temporary measure until we have a better way to handle this.
-              end
+          end
+          xml.send("security-level") do
+            if @data_security_level.present?
+              xml.text(@data_security_level)
+            else
+              xml.text(1) # Default to 1 (Public) if not specified. This is a temporary measure until we have a better way to handle this.
             end
           end
         end
       end
+    end
     # rubocop:enable Metrics/MethodLength
 
     # Returns the names of the departments as a comma separated string

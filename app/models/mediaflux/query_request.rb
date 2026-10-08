@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class QueryRequest < Request
     attr_reader :aql_query, :collection, :action, :deep_search, :iterator
@@ -36,63 +37,63 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
-            #      For the moment we will utilize the where clasue that does allow pagination
-            # xml.collection collection if collection.present?
-            if collection.present?
-              xml.where mf_where(collection)
-            end
-            xml.where aql_query if aql_query.present?
-            xml.action action if action.present?
-            declare_get_values_fields(xml) if action == "get-values"
-            xml.as "iterator" if iterator
-            # # TODO I believe this is the sort needed for the file list
-            # # I am thinking we should create a separate class, but I do not want to loose the syntax
-            # xml.sort do
-            #   xml.key "@collection" do
-            #     xml.parent.set_attribute("order", "desc")
-            #   end
-            #   xml.key "name"
-            # end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          # TODO: there is a bug in mediaflux that does not allow the comented out line to paginate
+          #      For the moment we will utilize the where clasue that does allow pagination
+          # xml.collection collection if collection.present?
+          if collection.present?
+            xml.where mf_where(collection)
           end
+          xml.where aql_query if aql_query.present?
+          xml.action action if action.present?
+          declare_get_values_fields(xml) if action == "get-values"
+          xml.as "iterator" if iterator
+          # # TODO I believe this is the sort needed for the file list
+          # # I am thinking we should create a separate class, but I do not want to loose the syntax
+          # xml.sort do
+          #   xml.key "@collection" do
+          #     xml.parent.set_attribute("order", "desc")
+          #   end
+          #   xml.key "name"
+          # end
         end
       end
+    end
 
-      def mf_where(collection)
-        if deep_search
-          "asset in static collection or subcollection of #{collection}"
-        else
-          "asset in collection #{collection}"
-        end
+    def mf_where(collection)
+      if deep_search
+        "asset in static collection or subcollection of #{collection}"
+      else
+        "asset in collection #{collection}"
       end
+    end
 
-      # Adds the declarations to fetch specific fields
-      def declare_get_values_fields(xml)
-        declare_get_value_field(xml, "name", "name")
-        if @include_path == true
-          declare_get_value_field(xml, "path", "path")
-        end
-        declare_get_value_field(xml, "content/@total-size", "total-size")
-        declare_get_value_field(xml, "mtime", "mtime")
-        declare_get_value_field(xml, "ctime", "ctime")
-        declare_get_value_field(xml, "creator/user", "creator_uid")
-        declare_get_value_field(xml, "creator/domain", "creator_domain")
-        declare_get_value_field(xml, "creator/name", "creator_name")
-        declare_get_value_field(xml, "@collection", "collection")
-        declare_get_value_field(xml, "collection/statistics/non-collections", "file-count")
-        declare_get_value_field(xml, "collection/statistics/collections", "collection-count")
-        declare_get_value_field(xml, "collection/statistics/total-size", "folder-size")
+    # Adds the declarations to fetch specific fields
+    def declare_get_values_fields(xml)
+      declare_get_value_field(xml, "name", "name")
+      if @include_path == true
+        declare_get_value_field(xml, "path", "path")
       end
+      declare_get_value_field(xml, "content/@total-size", "total-size")
+      declare_get_value_field(xml, "mtime", "mtime")
+      declare_get_value_field(xml, "ctime", "ctime")
+      declare_get_value_field(xml, "creator/user", "creator_uid")
+      declare_get_value_field(xml, "creator/domain", "creator_domain")
+      declare_get_value_field(xml, "creator/name", "creator_name")
+      declare_get_value_field(xml, "@collection", "collection")
+      declare_get_value_field(xml, "collection/statistics/non-collections", "file-count")
+      declare_get_value_field(xml, "collection/statistics/collections", "collection-count")
+      declare_get_value_field(xml, "collection/statistics/total-size", "folder-size")
+    end
 
-      # Adds a single field declaration
-      def declare_get_value_field(xml, field_xpath, field_name)
-        xml.xpath do
-          xml.parent.set_attribute("ename", field_name)
-          xml.text(field_xpath)
-        end
+    # Adds a single field declaration
+    def declare_get_value_field(xml, field_xpath, field_name)
+      xml.xpath do
+        xml.parent.set_attribute("ename", field_name)
+        xml.text(field_xpath)
       end
+    end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Users::MediafluxCallbacksController < ApplicationController
   def passthru
     session[:original_path] = params["path"]

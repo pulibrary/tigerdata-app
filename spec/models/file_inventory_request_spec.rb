@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe FileInventoryRequest, type: :model do
@@ -18,6 +19,7 @@ RSpec.describe FileInventoryRequest, type: :model do
       expect(file_inventory_request.type).to eq("FileInventoryRequest")
     end
   end
+
   describe "#output_file" do
     it "accesses the output file" do
       expect(file_inventory_request.output_file).to eq("filename")

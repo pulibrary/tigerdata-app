@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TigerdataSchema
   SCHEMA_VERSION = "0.6.1"
 

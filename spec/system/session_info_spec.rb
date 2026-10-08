@@ -9,9 +9,9 @@ describe "session_info", type: :system, js: true, connect_to_mediaflux: true do
   it "shows the mediaflux version" do
     sign_in researcher_user
     visit "/session-info"
-    expect(page).to have_content("Connected to MediaFlux")
-    expect(page).to have_content("port #{mflux_port}")
-    expect(page).to have_content("Mediaflux Roles:")
-    expect(page).to have_content("system-administrator")  # Role of our user while running the tests
+    expect(page).to have_text("Connected to MediaFlux")
+    expect(page).to have_text("port #{mflux_port}")
+    expect(page).to have_text("Mediaflux Roles:")
+    expect(page).to have_text("system-administrator") # Role of our user while running the tests
   end
 end

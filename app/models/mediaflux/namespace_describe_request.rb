@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   # Describes a namespace
   # @example
@@ -28,16 +29,16 @@ module Mediaflux
 
     def metadata
       @metadata ||= begin
-                      xml = response_xml
-                      node = xml.xpath("/response/reply/result/namespace")
-                      {
-                        id: node.xpath("@id").text,
-                        path: node.xpath("./path").text,
-                        name: node.xpath("./name").text,
-                        description: node.xpath("./description").text,
-                        store: node.xpath("./store").text
-                      }
-                    end
+        xml = response_xml
+        node = xml.xpath("/response/reply/result/namespace")
+        {
+          id: node.xpath("@id").text,
+          path: node.xpath("./path").text,
+          name: node.xpath("./name").text,
+          description: node.xpath("./description").text,
+          store: node.xpath("./store").text
+        }
+      end
     end
 
     def exists?
@@ -46,13 +47,13 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.id id if id.present?
-            xml.namespace path if path.present?
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id id if id.present?
+          xml.namespace path if path.present?
         end
       end
+    end
   end
 end

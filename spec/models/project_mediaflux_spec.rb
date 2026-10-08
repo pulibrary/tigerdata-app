@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectMediaflux, type: :model do
@@ -17,17 +18,17 @@ RSpec.describe ProjectMediaflux, type: :model do
   describe "#create!", connect_to_mediaflux: true do
     context "Using test data" do
       it "creates a project namespace and collection and returns the mediaflux id",
-      :integration do
+         :integration do
         mediaflux_id = project.mediaflux_id
         mediaflux_metadata = Mediaflux::AssetMetadataRequest.new(
-                              session_token: sponsor_and_data_manager_user.mediaflux_session,
-                              id: mediaflux_id
-                            ).metadata
+          session_token: sponsor_and_data_manager_user.mediaflux_session,
+          id: mediaflux_id
+        ).metadata
         namespace_path = mediaflux_metadata[:namespace]
         namespace_metadata = Mediaflux::NamespaceDescribeRequest.new(
-                              session_token: sponsor_and_data_manager_user.mediaflux_session,
-                              path: namespace_path
-                            ).metadata
+          session_token: sponsor_and_data_manager_user.mediaflux_session,
+          path: namespace_path
+        ).metadata
 
         project_directory_postfix = project.metadata_model.project_directory.split("/").last
         expect(namespace_metadata[:path]).to end_with(project_directory_postfix + "NS")
@@ -35,7 +36,7 @@ RSpec.describe ProjectMediaflux, type: :model do
 
       describe "storage and access", connect_to_mediaflux: true do
         it "adds a quota and other storage options when it creates a project in mediaflux",
-        :integration do
+           :integration do
           metadata = Mediaflux::AssetMetadataRequest.new(
             session_token: sponsor_and_data_manager_user.mediaflux_session,
             id: project.mediaflux_id
@@ -83,9 +84,10 @@ RSpec.describe ProjectMediaflux, type: :model do
     before do
       described_class.create!(project: project, user: sponsor_and_data_manager_user)
     end
+
     # Project updates in MediaFlux are not supported yet
     xit "defaults updated_on/by when not provided",
-    :integration do
+        :integration do
       project.metadata_model.updated_on = nil
       project.metadata_model.updated_by = nil
       described_class.update(project: project, user: sponsor_and_data_manager_user)
@@ -95,7 +97,7 @@ RSpec.describe ProjectMediaflux, type: :model do
 
     # Project updates in MediaFlux are not supported yet
     xit "honors updated_on/by values when provided",
-    :integration do
+        :integration do
       updated_on = Time.current.in_time_zone("America/New_York").iso8601
       project.metadata_model.updated_on = updated_on
       project.metadata_model.updated_by = "user123"
@@ -106,7 +108,7 @@ RSpec.describe ProjectMediaflux, type: :model do
   end
 
   describe "#xml_payload" do
-    let(:project_not_in_mediaflux) { FactoryBot.create :project_with_doi }
+    let(:project_not_in_mediaflux) { FactoryBot.create(:project_with_doi) }
 
     it "raises errors when project is not accessible", :integration do
       # The project is not in mediaflux and therefore this will raise an exception

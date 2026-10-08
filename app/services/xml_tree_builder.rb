@@ -9,10 +9,10 @@ class XmlTreeBuilder < XmlNodeBuilder
 
   def root_builder
     @root_builder ||= begin
-                        default_builder = XmlElementBuilder.new(**root_builder_options)
-                        null_builder if default_builder.blank?
-                        default_builder
-                      end
+      default_builder = XmlElementBuilder.new(**root_builder_options)
+      null_builder if default_builder.blank?
+      default_builder
+    end
   end
 
   delegate :node, :document, to: :root_builder
@@ -27,8 +27,6 @@ class XmlTreeBuilder < XmlNodeBuilder
     node
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   #
   # @param [Array<Hash>] entries options for constructing each child node
   # @return [Array<Nokogiri::XML::Node>] an array of XML child nodes
@@ -62,8 +60,6 @@ class XmlTreeBuilder < XmlNodeBuilder
     end
     builders.flatten
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   # @param children [Array<XmlNodeBuilder>] XmlNodeBuilder objects for the child nodes in the XML tree
   # @param options [Hash] arguments for the root XmlElementBuilder

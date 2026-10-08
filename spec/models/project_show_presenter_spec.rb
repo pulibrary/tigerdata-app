@@ -1,13 +1,15 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) do
-    FactoryBot.create :request_project, data_manager: sponsor_and_data_manager_user.uid, data_sponsor: sponsor_and_data_manager_user.uid,
-                                        departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
+    FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager_user.uid, data_sponsor: sponsor_and_data_manager_user.uid,
+                                        departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
   end
   let(:project) { request.approve(sponsor_and_data_manager_user) }
+
   subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
 
   describe "#description" do
@@ -92,6 +94,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
     before do
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
     end
+
     it "delegates to project metadata_model" do
       expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
     end
@@ -123,7 +126,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   end
 
   describe "#requested_by_display_name" do
-    it "returns the display name " do
+    it "returns the display name" do
       expect(presenter.requested_by_display_name).to be_a(String)
       expect(presenter.requested_by_display_name).to eq(sponsor_and_data_manager_user.display_name_only_safe)
     end
@@ -181,6 +184,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       end
     end
   end
+
   describe "#approved_on" do
     it "generates the string-serialized XML for the Project XML Document" do
       expect(presenter.approved_on).to be_a(Hash)

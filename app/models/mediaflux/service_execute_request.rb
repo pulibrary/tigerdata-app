@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class ServiceExecuteRequest < Request
     attr_reader :token, :service_name, :document
@@ -25,15 +26,15 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.token token if token.present?
-            xml.service name: service_name do
-              xml << document
-            end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.token token if token.present?
+          xml.service name: service_name do
+            xml << document
           end
         end
       end
+    end
   end
 end

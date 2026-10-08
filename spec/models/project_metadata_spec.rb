@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectMetadata, type: :model do
@@ -116,6 +117,7 @@ RSpec.describe ProjectMetadata, type: :model do
       project_metadata.initialize_from_params(hash)
       expect(project_metadata.data_security_level).to be_nil
     end
+
     context "when security level is provided" do
       let(:data_security_level) { 3 }
 

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) { described_class.new(inventory_request_request) }
-  let(:researcher_user) { FactoryBot.create :user, uid: "tigerdatatester" }
+
+  let(:researcher_user) { FactoryBot.create(:user, uid: "tigerdatatester") }
 
   let(:inventory_request_request) do
     FileInventoryRequest.create(
@@ -20,9 +22,9 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
   end
 
   let(:project) do
-    FactoryBot.create :project_with_apostrophe_in_title,
-    data_manager: researcher_user.uid,
-    data_sponsor: researcher_user.uid
+    FactoryBot.create(:project_with_apostrophe_in_title,
+                      data_manager: researcher_user.uid,
+                      data_sponsor: researcher_user.uid)
   end
 
   describe "#title" do
@@ -68,6 +70,7 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
         FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
                                     request_details: { project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
       end
+
       it "returns 'failed_item'" do
         expect(presenter.partial_name).to eq("failed_item")
       end

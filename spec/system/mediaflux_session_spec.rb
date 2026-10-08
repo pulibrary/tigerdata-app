@@ -6,7 +6,7 @@ require "rails_helper"
 #
 RSpec.describe "Mediaflux Sessions", type: :system do
   let!(:sponsor_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:request) { FactoryBot.create :request_project, data_sponsor: sponsor_user.uid }
+  let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
   let!(:project) { request.approve(sponsor_user) }
 
   context "user is signed in" do
@@ -25,7 +25,7 @@ RSpec.describe "Mediaflux Sessions", type: :system do
       visit dashboard_path
 
       expect { visit project_path(project) }.not_to raise_error
-      expect(page).to have_content("Total Files: 0")
+      expect(page).to have_text("Total Files: 0")
 
       expect(sponsor_user.mediaflux_session).to eq(original_session)
     end

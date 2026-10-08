@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::SessionExpired, connect_to_mediaflux: true, type: :model do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 describe "application accessibility", type: :system, js: true, connect_to_mediaflux: true do
@@ -14,6 +15,7 @@ describe "application accessibility", type: :system, js: true, connect_to_mediaf
 
   context "when browsing media_flux" do
     let(:sponsor_user) { FactoryBot.create(:user, uid: "pul123") }
+
     it "complies with WCAG 2.0 AA and Section 508" do
       sign_in sponsor_user
       visit "/session-info"

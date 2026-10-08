@@ -1,17 +1,17 @@
 # frozen_string_literal: true
+
 class PrincetonUsers
-  CHARS_AND_NUMS =  ('a'..'z').to_a + (0..9).to_a + ['-']
+  CHARS_AND_NUMS = ('a'..'z').to_a + (0..9).to_a + ['-']
 
   # RESEARCH_COMPUTING_USERS are required because they come as users in the
   # the default projects in the Mediaflux in our Docker image.
   RESEARCH_COMPUTING_USERS = %w[cbentler az3007 md1908 knight].freeze
-  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 rl3667 kl37 pp9425 jh6441 ].freeze
+  RDSS_DEVELOPERS = %w[bs3097 jrg5 cac9 rl3667 kl37 pp9425 jh6441].freeze
   TESTING_USERS = %w[tigerdatatester libtigerdatadev mjc12].freeze
 
   KNOWN_DUPLICATES = %w[oldadministrator].freeze
 
   class << self
-
     # Returns a list of Users that match the given query
     def user_list_query(query)
       tokens = query.downcase.strip.split(/[^a-zA-Z\d]/).compact_blank
@@ -21,18 +21,18 @@ class PrincetonUsers
         uid_query(tokens[0]) | name_query(tokens)
       else
         name_query(tokens)
-      end.map{|user| { uid: user.uid, name: user.display_name, display_name: user.display_name_safe } }
+      end.map { |user| { uid: user.uid, name: user.display_name, display_name: user.display_name_safe } }
     end
 
     def uid_query(token)
       order_sql = User.sanitize_sql_for_order("LENGTH(uid)-LENGTH('#{token}')")
-      search_token = User.sanitize_sql_like(token)+'%'
-      User.where("(uid like ?)",search_token).order(Arel.sql(order_sql)).order(:uid)
+      search_token = User.sanitize_sql_like(token) + '%'
+      User.where("(uid like ?)", search_token).order(Arel.sql(order_sql)).order(:uid)
     end
 
     def name_query(tokens)
       tokens.inject(User.all) do |partial_query, token|
-        search_token = '%'+User.sanitize_sql_like(token)+'%'
+        search_token = '%' + User.sanitize_sql_like(token) + '%'
         partial_query.where("(LOWER(display_name) like ?) OR (LOWER(uid) like ?)", search_token, search_token)
       end.order(:given_name).order(:family_name)
     end
@@ -41,7 +41,7 @@ class PrincetonUsers
       default_users = RDSS_DEVELOPERS + RESEARCH_COMPUTING_USERS + TESTING_USERS
       default_users.each do |netid|
         create_user_from_ldap_by_uid(netid)
-        rescue TigerData::LdapError
+      rescue TigerData::LdapError
         raise TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?"
       end
     end
@@ -50,10 +50,10 @@ class PrincetonUsers
     def create_users_from_ldap(current_uid_start: "", ldap_connection: default_ldap_connection)
       if ldap_connection.bind # check our connection to ldap with a bind
         CHARS_AND_NUMS.each do |char|
-          filter =(~ Net::LDAP::Filter.eq( "pustatus", "guest" )) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
+          filter = (~ Net::LDAP::Filter.eq("pustatus", "guest")) & Net::LDAP::Filter.eq("uid", "#{current_uid_start}#{char}*")
           people = ldap_connection.search(filter:, attributes: [:pudisplayname, :givenname, :sn, :uid, :edupersonprincipalname]);
           if ldap_connection.get_operation_result.message == "Success"
-            people.each{|person| user_from_ldap(person)}
+            people.each { |person| user_from_ldap(person) }
           else
             create_users_from_ldap(current_uid_start: "#{current_uid_start}#{char}", ldap_connection:)
           end
@@ -73,15 +73,15 @@ class PrincetonUsers
       user_from_ldap(person.first)
     end
 
-  # Creates or updates a User from an LDAP entry.
-  # @param ldap_person [Net::LDAP::Entry] an LDAP entry representing a person
-  # @return [User, nil] the created or updated User, or nil if the LDAP entry is missing a edupersonprincipalname
+    # Creates or updates a User from an LDAP entry.
+    # @param ldap_person [Net::LDAP::Entry] an LDAP entry representing a person
+    # @return [User, nil] the created or updated User, or nil if the LDAP entry is missing a edupersonprincipalname
     def user_from_ldap(ldap_person)
       return if check_for_malformed_ldap_entries(ldap_person)
       uid = ldap_person[:uid].first.downcase
       current_entries = User.where(uid:)
       if current_entries.empty?
-        User.create(uid: , display_name: ldap_person[:pudisplayname].first,
+        User.create(uid:, display_name: ldap_person[:pudisplayname].first,
                     family_name: ldap_person[:sn].first, given_name: ldap_person[:givenname].first,
                     email: ldap_person[:edupersonprincipalname].first, provider: "cas")
       else
@@ -96,7 +96,6 @@ class PrincetonUsers
         user
       end
     rescue ActiveRecord::RecordNotUnique => error
-      
       msg = "Trying to create a duplicate user for uid: #{uid}, email: #{ldap_person[:edupersonprincipalname].first}"
 
       # there are some duplicates in the system that we know about and should not continue to notify each day
@@ -117,11 +116,11 @@ class PrincetonUsers
 
     def default_ldap_connection
       @default_ldap_connection = Net::LDAP.new host: "pu.win.princeton.edu", base: "DC=pu,DC=win,DC=princeton,DC=edu", port: 636,
-                                                  encryption: {
-                                                    method: :simple_tls,
-                                                    tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
-                                                  },
-                                                  auth: {method: :simple, username: Rails.configuration.ldap.username, password: Rails.configuration.ldap.password }
+                                               encryption: {
+                                                 method: :simple_tls,
+                                                 tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
+                                               },
+                                               auth: { method: :simple, username: Rails.configuration.ldap.username, password: Rails.configuration.ldap.password }
     end
   end
 end
