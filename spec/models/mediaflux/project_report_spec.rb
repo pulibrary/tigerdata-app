@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :model do
@@ -11,7 +12,7 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
     end
 
     it "returns csv data with one row for our test project",
-    :integration do
+       :integration do
       report = described_class.new(session_token: user.mediaflux_session)
       mediaflux_projects = CSV.new(report.csv_data, headers: true).to_a
 

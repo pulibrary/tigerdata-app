@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # :nocov:
 namespace :projects do
   desc "Times the creation of projects and querying by TigerData metadata fields"

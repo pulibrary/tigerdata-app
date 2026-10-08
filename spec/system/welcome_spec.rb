@@ -8,8 +8,8 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
   context "unauthenticated user" do
     it "shows the 'Log In' button" do
       visit "/"
-      expect(page).to have_content "TigerData Web Portal"
-      expect(page).to have_content "Log in"
+      expect(page).to have_text "TigerData Web Portal"
+      expect(page).to have_text "Log in"
       expect(page).to have_link "Accessibility", href: "https://accessibility.princeton.edu/help"
     end
 
@@ -23,21 +23,22 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
     it "forwards to login page" do
       project = FactoryBot.create(:project)
       visit project_path(project)
-      expect(page).to have_content "You need to sign in or sign up before continuing."
+      expect(page).to have_text "You need to sign in or sign up before continuing."
     end
 
     it "hides the 'Administration' tab" do
       visit "/"
-      expect(page).to have_content "TigerData Web Portal"
-      expect(page).not_to have_content "Administration"
+      expect(page).to have_text "TigerData Web Portal"
+      expect(page).not_to have_text "Administration"
     end
 
     context "flash message" do
       let(:non_admin_user) { FactoryBot.create(:user) }
+
       it "shows the flash message" do
         sign_in non_admin_user
         visit "/projects"
-        expect(page).to have_content("Access Denied")
+        expect(page).to have_text("Access Denied")
       end
     end
   end
@@ -50,9 +51,9 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       sign_in researcher_user
       visit "/"
 
-      expect(page).to have_content("Welcome, #{researcher_user.given_name}!")
+      expect(page).to have_text("Welcome, #{researcher_user.given_name}!")
       click_link researcher_user.uid.to_s
-      expect(page).to have_content "Log out"
+      expect(page).to have_text "Log out"
     end
 
     it "shows the new request multi button to sysadmin users" do
@@ -62,33 +63,33 @@ RSpec.describe "WelcomeController", connect_to_mediaflux: true, js: true do
       sign_in sysadmin_user
       visit "/"
 
-      expect(page).to have_content "New Project Request"
+      expect(page).to have_text "New Project Request"
       find(".request-options").click
 
-      expect(page).to have_content "Submitted Requests"
+      expect(page).to have_text "Submitted Requests"
       click_on "Submitted Requests"
-      expect(page).to have_content "A new submitted request"
+      expect(page).to have_text "A new submitted request"
       expect(page).to have_link("Open")
 
-      expect(page).to have_content "Saved Draft Requests"
+      expect(page).to have_text "Saved Draft Requests"
       click_on "Saved Draft Requests"
-      expect(page).to have_content "A new draft request"
-      expect(page).to have_content "Other draft request"
+      expect(page).to have_text "A new draft request"
+      expect(page).to have_text "Other draft request"
       within("#draft-request-#{other_request.id}") do
         click_on "Delete"
       end
-      expect(page).to have_content("You're about to delete the draft request \"#{other_request.project_title}\".")
+      expect(page).to have_text("You're about to delete the draft request \"#{other_request.project_title}\".")
       click_on "Cancel"
-      expect(page).not_to have_content("You're about to delete the draft request \"#{other_request.project_title}\".")
+      expect(page).not_to have_text("You're about to delete the draft request \"#{other_request.project_title}\".")
       within("#draft-request-#{other_request.id}") do
         click_on "Delete"
       end
       click_on "Permanently Delete"
-      expect(page).to have_content("Your file has been permanently deleted.")
+      expect(page).to have_text("Your file has been permanently deleted.")
       click_on "Back to draft requests"
       click_on "Open"
-      expect(page).to have_content("New Project Request")
-      expect(page).to have_content("Review")
+      expect(page).to have_text("New Project Request")
+      expect(page).to have_text("Review")
     end
   end
 end

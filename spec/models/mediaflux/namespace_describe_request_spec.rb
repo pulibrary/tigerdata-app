@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::NamespaceDescribeRequest, connect_to_mediaflux: true, type: :model do
@@ -10,6 +11,7 @@ RSpec.describe Mediaflux::NamespaceDescribeRequest, connect_to_mediaflux: true, 
       xml_doc = Nokogiri::XML(namespace_list_req.response_body)
       @tigerdata_ns = xml_doc.xpath("/response/reply/result/namespace/namespace[contains(text(), 'tigerdataNS')]").first
     end
+
     it "parses a metadata response", :integration do
       namespace_request = described_class.new(session_token: user.mediaflux_session, id: @tigerdata_ns.attributes["id"].value)
       metadata = namespace_request.metadata

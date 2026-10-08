@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NewProjectRequestSubmitController < ApplicationController
   before_action :set_breadcrumbs
 
@@ -7,8 +8,8 @@ class NewProjectRequestSubmitController < ApplicationController
 
   private
 
-    def set_breadcrumbs
-      add_breadcrumb("Dashboard", dashboard_path)
-      add_breadcrumb("New Project Request")
-    end
+  def set_breadcrumbs
+    add_breadcrumb("Dashboard", dashboard_path)
+    add_breadcrumb("New Project Request")
+  end
 end

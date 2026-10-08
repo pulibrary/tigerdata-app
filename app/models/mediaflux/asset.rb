@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class Asset
     attr_accessor :id, :path, :collection, :size, :collection_count, :file_count, :folder_size

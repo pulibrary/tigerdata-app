@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PULDatacite
   class << self
     # Determines whether or not a test DOI should be referenced

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TigerdataMailer < ApplicationMailer
   def project_creation
     config = Rails.application.config.tigerdata_mail[:project_creation]
@@ -52,11 +53,11 @@ class TigerdataMailer < ApplicationMailer
 
   private
 
-    def request
-      @request ||= NewProjectRequest.find_by(id: @request_id)
-    end
+  def request
+    @request ||= NewProjectRequest.find_by(id: @request_id)
+  end
 
-    def project
-      @project ||= Project.find_by(id: @project_id)
-    end
+  def project
+    @project ||= Project.find_by(id: @project_id)
+  end
 end

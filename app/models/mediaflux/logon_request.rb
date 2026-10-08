@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class LogonRequest < Request
     # Specifies the logon service within the Mediaflux API
@@ -43,42 +44,42 @@ module Mediaflux
 
     private
 
-      class << self
-        # The Rails configuration options specifying the Mediaflux server
-        # @return [Hash]
-        def mediaflux
-          Rails.configuration.mediaflux
-        end
+    class << self
+      # The Rails configuration options specifying the Mediaflux server
+      # @return [Hash]
+      def mediaflux
+        Rails.configuration.mediaflux
       end
+    end
 
-      def response_session_element
-        response_xml.xpath("response/reply/result/session")
-      end
+    def response_session_element
+      response_xml.xpath("response/reply/result/session")
+    end
 
-      def response_session_token
-        value = response_session_element.text
-        value.strip
-      end
+    def response_session_token
+      value = response_session_element.text
+      value.strip
+    end
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            if @identity_token.nil?
-              xml.domain @domain
-              xml.user @user
-              xml.password @password
-            else
-              xml.token do
-                xml.parent.set_attribute("type", @token_type) if @token_type
-                xml.text(@identity_token)
-              end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          if @identity_token.nil?
+            xml.domain @domain
+            xml.user @user
+            xml.password @password
+          else
+            xml.token do
+              xml.parent.set_attribute("type", @token_type) if @token_type
+              xml.text(@identity_token)
             end
-            # Include the "app" parameter in the login information.
-            # This information shows when analyzing sessions via `system.session.all.describe`
-            # but sadly it does NOT show when running `licence.holder.list`
-            xml.app "TDWEB"
           end
+          # Include the "app" parameter in the login information.
+          # This information shows when analyzing sessions via `system.session.all.describe`
+          # but sadly it does NOT show when running `licence.holder.list`
+          xml.app "TDWEB"
         end
       end
+    end
   end
 end

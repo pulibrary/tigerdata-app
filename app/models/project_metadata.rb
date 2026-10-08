@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class ProjectMetadata
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
@@ -88,7 +87,6 @@ class ProjectMetadata
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   def initialize_from_hash(metadata_hash)
     @title = metadata_hash[:title]
@@ -130,7 +128,6 @@ class ProjectMetadata
     set_defaults
   end
   # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
 
@@ -144,7 +141,6 @@ class ProjectMetadata
   # Updates the object with the values in the params (which is an ActionController::Parameters)
   # Notice how we only update values that come in the params and don't change the values that
   # don't come as part of the params
-  # rubocop:disable Metrics/MethodLength
   def update_with_params(params, current_user)
     set_value(params, "title")
     set_value(params, "description")
@@ -171,7 +167,6 @@ class ProjectMetadata
     @updated_by = current_user.uid
     @updated_on = Time.current.in_time_zone("America/New_York").iso8601
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Alias for `data_user_read_only`
   def ro_users
@@ -203,95 +198,94 @@ class ProjectMetadata
     }
   end
 
-    private
+  private
 
-      def data_users_from_params(params, access)
-        return [] if params.nil?
-        users = []
-        counter = params[:data_user_counter].to_i
-        (1..counter).each do |i|
-          key = "data_user_#{i}"
-          access_key = key + "_read_access"
-          if params[access_key] == access
-            users << params[key]
-          end
-        end
-        users.compact.uniq
+  def data_users_from_params(params, access)
+    return [] if params.nil?
+    users = []
+    counter = params[:data_user_counter].to_i
+    (1..counter).each do |i|
+      key = "data_user_#{i}"
+      access_key = key + "_read_access"
+      if params[access_key] == access
+        users << params[key]
       end
+    end
+    users.compact.uniq
+  end
 
-      def ro_users_from_params(params)
-        data_users_from_params(params, "read-only")
-      end
+  def ro_users_from_params(params)
+    data_users_from_params(params, "read-only")
+  end
 
-      def rw_users_from_params(params)
-        data_users_from_params(params, "read-write")
-      end
+  def rw_users_from_params(params)
+    data_users_from_params(params, "read-write")
+  end
 
-      # Initializes values that we have defaults for.
-      def set_defaults
-        if @storage_capacity.nil?
-          @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
-        end
+  # Initializes values that we have defaults for.
+  def set_defaults
+    if @storage_capacity.nil?
+      @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
+    end
 
-        if @storage_performance_expectations.nil?
-          @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
-        end
+    if @storage_performance_expectations.nil?
+      @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
+    end
 
-        if @project_purpose.nil?
-          @project_purpose = Rails.configuration.project_defaults[:project_purpose]
-        end
+    if @project_purpose.nil?
+      @project_purpose = Rails.configuration.project_defaults[:project_purpose]
+    end
 
-        @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
-        @schema_version = TigerdataSchema::SCHEMA_VERSION
-      end
+    @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
+    @schema_version = TigerdataSchema::SCHEMA_VERSION
+  end
 
-      # Sets a value in the object if the value exists in the params
-      def set_value(params, key)
-        if params.include?(key)
-          send("#{key}=", params[key])
-        end
-      end
+  # Sets a value in the object if the value exists in the params
+  def set_value(params, key)
+    if params.include?(key)
+      send("#{key}=", params[key])
+    end
+  end
 
-      def update_storage_capacity(params)
-        if params["storage_capacity"].present?
-          @storage_capacity = {
-            "size" => {
-              "approved" => params["storage_capacity"].to_i,
-              "requested" => storage_capacity[:size][:requested]
-            },
-            "unit" => {
-              "approved" => params["storage_unit"],
-              "requested" => storage_capacity[:unit][:requested]
-            }
-          }
-        end
-      end
-
-      def update_storage_performance_expectations
-        # we don't allow the user to specify an approve value so we use the requested
-        @storage_performance_expectations = {
-          "requested" => storage_performance_expectations[:requested],
-          "approved" => storage_performance_expectations[:requested]
+  def update_storage_capacity(params)
+    if params["storage_capacity"].present?
+      @storage_capacity = {
+        "size" => {
+          "approved" => params["storage_capacity"].to_i,
+          "requested" => storage_capacity[:size][:requested]
+        },
+        "unit" => {
+          "approved" => params["storage_unit"],
+          "requested" => storage_capacity[:unit][:requested]
         }
-      end
+      }
+    end
+  end
 
-      def update_approval_note(params, current_user)
-        if params[:event_note_message].present?
-          @approval_note = {
-            note_by: current_user.uid,
-            note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-            event_type: params[:event_note],
-            message: params[:event_note_message]
-          }
-        end
-      end
+  def update_storage_performance_expectations
+    # we don't allow the user to specify an approve value so we use the requested
+    @storage_performance_expectations = {
+      "requested" => storage_performance_expectations[:requested],
+      "approved" => storage_performance_expectations[:requested]
+    }
+  end
 
-      def calculate_project_directory(params)
-        if params.key?("project_directory_prefix") || params.key?("project_directory")
-          path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
-          full_path = path_items.join("/")
-          @project_directory = ProjectMetadata.safe_directory(full_path)
-        end
-      end
+  def update_approval_note(params, current_user)
+    if params[:event_note_message].present?
+      @approval_note = {
+        note_by: current_user.uid,
+        note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
+        event_type: params[:event_note],
+        message: params[:event_note_message]
+      }
+    end
+  end
+
+  def calculate_project_directory(params)
+    if params.key?("project_directory_prefix") || params.key?("project_directory")
+      path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
+      full_path = path_items.join("/")
+      @project_directory = ProjectMetadata.safe_directory(full_path)
+    end
+  end
 end
-# rubocop:enable Metrics/ClassLength

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 describe "home", type: :system do
   context "when on the hompage" do
     it "shows the welcome message" do
       visit "/"
-      expect(page).to have_content "Welcome to\nTigerData Web Portal"
+      expect(page).to have_text "Welcome to\nTigerData Web Portal"
     end
   end
 
@@ -41,6 +42,7 @@ describe "home", type: :system do
       test_strategy.switch!(:entra_enabled, original_value)
     end
   end
+
   context "when Entra login is not enabled" do
     it "includes the CAS login URL in the header" do
       test_strategy = Flipflop::FeatureSet.current.test!

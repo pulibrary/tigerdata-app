@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
@@ -6,8 +7,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
 
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "abc123") }
   let(:manager_user) { FactoryBot.create(:data_manager, uid: "bcd234") }
-  let(:read_only) { FactoryBot.create :user }
-  let(:read_write) { FactoryBot.create :user }
+  let(:read_only) { FactoryBot.create(:user) }
+  let(:read_write) { FactoryBot.create(:user) }
   let(:department) { "77777" }
   let(:submitter) { FactoryBot.create(:user, uid: "cde345") }
   let(:submission) do
@@ -329,6 +330,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       describe "<globusEnable>" do
         describe "<globusEnableSetting>" do
         end
+
         let(:node) { root.at_xpath("accessPoints/globusEnable") }
 
         it "builds a <globusEnable> element detailing the Globus mount status" do
@@ -445,6 +447,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
             expect(node["userIDType"]).to eq("NetID")
           end
         end
+
         describe "<requestDateTime>" do
           let(:node) { root.at_xpath("projectProvenance/submission/requestDateTime") }
 

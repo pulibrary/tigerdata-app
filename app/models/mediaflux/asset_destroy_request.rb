@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class AssetDestroyRequest < Request
     attr_reader :collection, :members
@@ -20,15 +21,15 @@ module Mediaflux
       "asset.destroy"
     end
 
-      private
+    private
 
-        def build_http_request_body(name:)
-          super do |xml|
-            xml.args do
-              xml.id collection
-              xml.members members
-            end
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.id collection
+          xml.members members
         end
+      end
+    end
   end
 end

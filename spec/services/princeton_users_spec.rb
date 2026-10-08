@@ -100,10 +100,12 @@ RSpec.describe PrincetonUsers, type: :model do
           edupersonprincipalname: []
         }
       end
+
       it "returns nil" do
         expect(described_class.user_from_ldap(ldap_person)).to be_nil
       end
     end
+
     context "the ldap entry is missing uid" do
       let(:ldap_person) do
         {
@@ -114,6 +116,7 @@ RSpec.describe PrincetonUsers, type: :model do
           edupersonprincipalname: ["foo"]
         }
       end
+
       it "returns nil" do
         expect(described_class.user_from_ldap(ldap_person)).to be_nil
       end
@@ -138,6 +141,7 @@ RSpec.describe PrincetonUsers, type: :model do
           edupersonprincipalname: ["email@princeton.edu"]
         }
       end
+
       it "updates the user with the ldap info" do
         user = described_class.user_from_ldap(empty_ldap_person)
         expect(user.given_name).to be_nil
@@ -160,6 +164,7 @@ RSpec.describe PrincetonUsers, type: :model do
           edupersonprincipalname: ["email@princeton.edu"]
         }
       end
+
       it "Notifies Honeybager and continues" do
         FactoryBot.create(:user, email: "email@princeton.edu")
         allow(Honeybadger).to receive(:notify)
@@ -178,6 +183,7 @@ RSpec.describe PrincetonUsers, type: :model do
           edupersonprincipalname: ["email@princeton.edu"]
         }
       end
+
       it "Notifies Honeybager and continues" do
         FactoryBot.create(:user, email: "email@princeton.edu")
         allow(Honeybadger).to receive(:notify)
@@ -199,6 +205,7 @@ RSpec.describe PrincetonUsers, type: :model do
         edupersonprincipalname: []
       }
     end
+
     it "sends an alert to honeybadger so we know how often it is happening" do
       expect(described_class.check_for_malformed_ldap_entries(ldap_person)).to be true
     end
@@ -221,6 +228,7 @@ RSpec.describe PrincetonUsers, type: :model do
       before do
         allow(described_class).to receive(:create_user_from_ldap_by_uid).and_raise(TigerData::LdapError, "Could not connect to LDAP")
       end
+
       it "catches and reraises a TigerData::LDAP error to tell the user they are not on VPN" do
         expect { described_class.load_default_users }.to raise_error(TigerData::LdapError, "Unable to create user from LDAP. Are you connected to VPN?")
       end

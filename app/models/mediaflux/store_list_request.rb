@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class StoreListRequest < Request
     # Constructor
@@ -19,16 +20,16 @@ module Mediaflux
 
     def stores
       @stores ||= begin
-                    xml = response_xml
-                    xml.xpath("/response/reply/result/store").map do |node|
-                      {
-                        id: node.xpath("@id").text,
-                        type: node.xpath("./type").text,
-                        name: node.xpath("./name").text,
-                        tag: node.xpath("./tag").text
-                      }
-                    end
-                  end
+        xml = response_xml
+        xml.xpath("/response/reply/result/store").map do |node|
+          {
+            id: node.xpath("@id").text,
+            type: node.xpath("./type").text,
+            name: node.xpath("./name").text,
+            tag: node.xpath("./tag").text
+          }
+        end
+      end
     end
   end
 end

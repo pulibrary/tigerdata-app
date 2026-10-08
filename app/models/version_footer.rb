@@ -10,8 +10,7 @@
 # stale and re-read it until it is up to date. Because re-reading this file is
 # an expensive operation we cache the information as soon as we are sure it's
 # current.
-#
-# rubocop:disable Style/ClassVars
+
 class VersionFooter
   @@stale = true
   @@git_sha = nil
@@ -56,7 +55,7 @@ class VersionFooter
 
   def self.tagged_release?
     # e.g. v0.8.0
-    branch.match(/^v[\d+\.+]+/) != nil
+    branch.match(/^v[\d+\.]+/) != nil
   end
 
   def self.branch
@@ -110,4 +109,3 @@ class VersionFooter
     log_line
   end
 end
-# rubocop:enable RuboCop::Cop::Style::ClassVars

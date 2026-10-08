@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Presents a human-readable label for a project data security level.
 class DataSecurityLevelPresenter
   # Maps integer security levels to their display labels.

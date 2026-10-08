@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   # List all of the namespaces that are inside of a given namespace
   # @example
@@ -23,24 +24,24 @@ module Mediaflux
 
     def namespaces
       @namespaces ||= begin
-                        xml = response_xml
-                        namespaces = []
-                        xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
-                          id = ns.xpath("@id").text
-                          namespaces << { id: id, name: ns.text }
-                        end
-                        namespaces
-                      end
+        xml = response_xml
+        namespaces = []
+        xml.xpath("/response/reply/result/namespace/namespace").each.each do |ns|
+          id = ns.xpath("@id").text
+          namespaces << { id: id, name: ns.text }
+        end
+        namespaces
+      end
     end
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.namespace parent_namespace
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.namespace parent_namespace
         end
       end
+    end
   end
 end

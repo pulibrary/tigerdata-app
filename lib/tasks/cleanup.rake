@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :mediaflux do
   desc "Delete everything from the current environment (use with caution)"
   task destructive_cleanup: :environment do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ProjectPurpose
   attr_accessor :id, :label
 
@@ -14,7 +15,7 @@ class ProjectPurpose
     [research, admin, teaching]
   end
 
-  def self.to_json
+  def self.to_json(*_args)
     all.map { |purpose| { value: purpose.id, label: purpose.label } }.to_json
   end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class StringReverse < Request
     # This is only here to prove that we can use a mediaflux service that is provided by
@@ -19,12 +20,12 @@ module Mediaflux
 
     private
 
-      def build_http_request_body(name:)
-        super do |xml|
-          xml.args do
-            xml.string @string
-          end
+    def build_http_request_body(name:)
+      super do |xml|
+        xml.args do
+          xml.string @string
         end
       end
+    end
   end
 end

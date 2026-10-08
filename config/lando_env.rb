@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 if Rails.env.development? || Rails.env.test?
   begin
     lando_services = JSON.parse(`lando info --format json`, symbolize_names: true)

@@ -1,17 +1,16 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe TestAssetGenerator do
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:subject) { described_class.new(user:, project_id: project.id, levels: 1, directory_per_level: 1, file_count_per_directory: 1) }
-  let(:project) { FactoryBot.create :project, mediaflux_id: 1234 }
+  let(:project) { FactoryBot.create(:project, mediaflux_id: 1234) }
 
   describe "#generate" do
-
     let(:test_asset_create) { instance_double(Mediaflux::TestAssetCreateRequest, resolve: true) }
     let(:test_collection_create) { instance_double(Mediaflux::AssetCreateRequest, id: "5678") }
     let(:test_directory_create) { instance_double(Mediaflux::AssetCreateRequest, id: "2222") }
-
 
     before do
       allow(user).to receive(:mediaflux_session).and_return("mediaflux_sessionid")

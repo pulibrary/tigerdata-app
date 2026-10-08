@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class Time
     # Converts the givin time snippet into local princeton time while accounting for potential time zone of the asset.

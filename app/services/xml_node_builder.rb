@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class XmlNodeBuilder
   XML_VERSION = "1.0"
 

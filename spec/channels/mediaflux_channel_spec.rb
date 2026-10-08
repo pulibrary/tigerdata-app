@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe MediafluxChannel, type: :channel, connect_to_mediaflux: true do
@@ -42,6 +43,7 @@ RSpec.describe MediafluxChannel, type: :channel, connect_to_mediaflux: true do
   describe "#update_state" do
     context "when the Mediaflux version cannot be retrieved" do
       let(:version_request) { instance_double(Mediaflux::VersionRequest) }
+
       before do
         allow(version_request).to receive(:version).and_return(nil)
         allow(Mediaflux::VersionRequest).to receive(:new).and_return(version_request)

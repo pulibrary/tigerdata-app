@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -45,9 +46,7 @@ gem "whenever", require: false
 
 group :development, :test do
   gem "bcrypt_pbkdf"
-  # RuboCop (via bixby) requires benchmark; it is no longer a default gem as of Ruby 4.0.
   gem "benchmark"
-  gem "bixby"
   gem "bundle-audit", require: false
   gem "byebug"
   gem "capistrano-yarn"
@@ -58,6 +57,14 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
   gem "rspec-rails"
+  gem "rubocop", require: false
+  gem "rubocop-capybara", require: false
+  gem "rubocop-factory_bot", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rails_config", require: false
+  gem "rubocop-rspec", require: false
+  gem "rubocop-rspec_rails", require: false
 end
 
 group :development do

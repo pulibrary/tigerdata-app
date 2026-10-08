@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :model do
@@ -16,7 +17,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     end
 
     it "returns asset information",
-    :integration do
+       :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-values")
       result = query_request.result
       expect(result[:files].count).to eq 10
@@ -48,7 +49,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     end
 
     it "returns basic asset information",
-    :integration do
+       :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-name")
       result = query_request.result
       expect(result[:count]).to eq 100
@@ -79,7 +80,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
     end
 
     it "returns asset information",
-    :integration do
+       :integration do
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe NewProjectRequest, type: :model do
@@ -14,84 +15,99 @@ RSpec.describe NewProjectRequest, type: :model do
 
   describe "#request_type" do
     subject(:request_type) { request.request_type }
-    it { should eq("new_project_request") }
+
+    it { is_expected.to eq("new_project_request") }
   end
 
   describe "#request_title" do
     subject(:request_title) { request.request_title }
-    it { should eq("Request for Example Project") }
+
+    it { is_expected.to eq("Request for Example Project") }
   end
 
   describe "#project_title" do
     subject(:project_title) { request.project_title }
-    it { should eq("Example Project") }
+
+    it { is_expected.to eq("Example Project") }
   end
 
   describe "#data_sponsor" do
     subject(:data_manager) { request.data_sponsor }
-    it { should eq("sponsor") }
+
+    it { is_expected.to eq("sponsor") }
   end
 
   describe "#data_manager" do
     subject(:data_manager) { request.data_manager }
-    it { should eq("manager") }
+
+    it { is_expected.to eq("manager") }
   end
 
   describe "#departments" do
     subject(:departments) { request.departments }
-    it { should eq([{ "code" => "dept", "name" => "department" }]) }
+
+    it { is_expected.to eq([{ "code" => "dept", "name" => "department" }]) }
   end
 
   describe "#description" do
     subject(:description) { request.description }
-    it { should eq("description") }
+
+    it { is_expected.to eq("description") }
   end
 
   describe "#parent_folder" do
     subject(:parent_folder) { request.parent_folder }
-    it { should eq("folder") }
+
+    it { is_expected.to eq("folder") }
   end
 
   describe "#project_folder" do
     subject(:project_folder) { request.project_folder }
-    it { should eq("project") }
+
+    it { is_expected.to eq("project") }
   end
 
   describe "#project_id" do
     subject(:project_id) { request.project_id }
-    it { should eq("doi") }
+
+    it { is_expected.to eq("doi") }
   end
 
   describe "#quota" do
     subject(:quota) { request.quota }
-    it { should eq("500 GB") }
+
+    it { is_expected.to eq("500 GB") }
   end
 
   describe "#requested_by" do
     subject(:requested_by) { request.requested_by }
-    it { should eq(valid_user.uid) }
+
+    it { is_expected.to eq(valid_user.uid) }
   end
 
   describe "#user_roles" do
     subject(:user_roles) { request.user_roles }
-    it { should eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, { "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
+
+    it { is_expected.to eq([{ "uid" => "abc123", "name" => "Abe Cat" }, { "uid" => "ddd", "name" => "Dandy Dog", "read_only" => true }, { "uid" => "efg", "name" => "Erica Ferg", "read_only" => false }]) }
   end
 
   describe "#project_path" do
     subject(:project_path) { request.project_path }
-    it { should eq("folder/project") }
+
+    it { is_expected.to eq("folder/project") }
   end
 
   describe "#requestor" do
     subject(:requestor) { request.requestor }
-    it { should eq(valid_user.display_name_safe) }
+
+    it { is_expected.to eq(valid_user.display_name_safe) }
   end
 
   describe "#valid_title?" do
     let(:long_title) do
       "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. " \
-      "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
-      "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel "
+        "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
+        "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel "
     end
 
     it "requires a title" do
@@ -255,21 +271,22 @@ RSpec.describe NewProjectRequest, type: :model do
   describe "#valid_description?" do
     let(:long_description) do
       "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. " \
-      "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
-      "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel " \
-      "class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet " \
-      "consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus " \
-      "duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. " \
-      "Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad " \
-      "litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque " \
-      "faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean " \
-      "sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia " \
-      "integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra " \
-      "inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque " \
-      "sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus " \
-      "fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit " \
-      "semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos."
+        "In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla " \
+        "lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel " \
+        "class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet " \
+        "consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus " \
+        "duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. " \
+        "Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad " \
+        "litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque " \
+        "faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean " \
+        "sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia " \
+        "integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra " \
+        "inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque " \
+        "sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus " \
+        "fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit " \
+        "semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos."
     end
+
     it "requires a description" do
       request = NewProjectRequest.new(description: "")
       expect(request.valid_description?).to be_falsey
@@ -472,6 +489,7 @@ RSpec.describe NewProjectRequest, type: :model do
       expect(request.valid_to_submit?).to be_falsey
       expect(request.errors[:user_roles].join(", ")).to eq("Data sponsor should not be a data user")
     end
+
     it "returns false if the data sponsor is included in the data users" do
       request = NewProjectRequest.new(project_title: "abc", data_sponsor: sponsor_and_data_manager_user.uid, data_manager: valid_user.uid, parent_folder: "abc", project_folder: "abc",
                                       departments: "abc", quota: "500 GB", requested_by: "abc", project_purpose: "abc", description: "abc",

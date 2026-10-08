@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
@@ -6,7 +7,7 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
   let!(:tigerdatatester) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
 
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "cac9", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:subject) { described_class.new(user:, number: 1, project_prefix: "tigerdata/#{random_project_directory}" ) }
+  let(:subject) { described_class.new(user:, number: 1, project_prefix: "tigerdata/#{random_project_directory}") }
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
@@ -14,7 +15,7 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
 
   describe "#generate" do
     it "creates a project in mediaflux",
-    :integration do
+       :integration do
       subject.generate
       project = Project.last
       expect(project).to be_persisted

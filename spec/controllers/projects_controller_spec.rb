@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project_request) { FactoryBot.create :request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid }
+  let(:project_request) { FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid) }
   let(:project) { project_request.approve(sponsor_and_data_manager) }
 
   before do
@@ -20,12 +21,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :details, params: { id: project.id, format: :json }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -63,8 +65,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           # https://rspec.info/features/6-0/rspec-rails/controller-specs/isolation-from-views/
           render_views
           let!(:project) do
-            request = FactoryBot.create :request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
-                                                          departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }]
+            request = FactoryBot.create(:request_project, project_title: "project 111", data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid,
+                                                          departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
             request.approve(sponsor_and_data_manager)
           end
 
@@ -75,11 +77,11 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           it "shows the affiliation name (instead the internal code) on the project show views" do
             get :details, params: { id: project.id }
             expect(response).to render_template("details")
-            expect(response.body).to have_content("Astrophysical Sciences")
-              .or(have_content("High Performance Computing"))
-              .or(have_content("Research Data and Scholarship Services"))
-              .or(have_content("Princeton Research Data Service"))
-              .or(have_content("Princeton Plasma Physics Laboratory"))
+            expect(response.body).to have_text("Astrophysical Sciences")
+              .or(have_text("High Performance Computing"))
+              .or(have_text("Research Data and Scholarship Services"))
+              .or(have_text("Princeton Research Data Service"))
+              .or(have_text("Princeton Plasma Physics Laboratory"))
           end
         end
       end
@@ -93,10 +95,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
+
       it "redirects to root" do
         get :index
         expect(response).to redirect_to "http://test.host/dashboard"
@@ -113,6 +117,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       let!(:project3) { create_project_in_mediaflux(request: request3, current_user: sponsor_and_data_manager) }
 
       let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, sysadmin: true, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
+
       before do
         sign_in sponsor_and_data_manager
       end
@@ -150,6 +155,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
   describe "#list_contents" do
     include ActiveJob::TestHelper
+
     it "renders an error when requesting json" do
       get :list_contents, params: { id: project.id, format: :json }
       expect(response.content_type).to eq("application/json; charset=utf-8")
@@ -157,12 +163,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :list_contents, params: { id: project.id, format: :json }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -170,6 +177,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -205,12 +213,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :show, params: { id: project.id }
         expect(response).to redirect_to "http://test.host/dashboard"
       end
@@ -233,6 +242,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             project = request.approve(sponsor_and_data_manager)
             project
           end
+
           it "runs a query" do
             sign_in sponsor_and_data_manager
             allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
@@ -241,6 +251,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
             expect(Mediaflux::QueryRequest).to have_received(:new)
           end
+
           context "the session expires for an active web user" do
             let(:original_session) { SystemUser.mediaflux_session }
 
@@ -249,6 +260,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(true)
             end
+
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
@@ -266,6 +278,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:mediaflux_session).and_return(original_session)
               allow_any_instance_of(ActionController::TestSession).to receive(:[]).with(:active_web_user).and_return(false)
             end
+
             it "gets a new session if the session expires" do
               Mediaflux::LogoutRequest.new(session_token: original_session).resolve
 
@@ -302,12 +315,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :directory_listing, params: { id: project.id, format: :json }
         expect(response).to redirect_to dashboard_path
       end
@@ -315,6 +329,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -380,12 +395,13 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a signed in user" do
-      let(:researcher_user) { FactoryBot.create :user }
+      let(:researcher_user) { FactoryBot.create(:user) }
+
       before do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :list_contents, params: { id: project.id, format: :json }
         expect(response).to redirect_to dashboard_path
       end
@@ -393,6 +409,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end
@@ -426,7 +443,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   end
 
   describe "#file_list_download" do
-    let(:researcher_user) { FactoryBot.create :user }
+    let(:researcher_user) { FactoryBot.create(:user) }
     let(:inventory_request_request) do
       FileInventoryRequest.create(
         user_id: researcher_user.id,
@@ -452,7 +469,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         sign_in researcher_user
       end
 
-      it "redirects to the root when the user does not have access " do
+      it "redirects to the root when the user does not have access" do
         get :file_list_download, params: { job_id: inventory_request_request.job_id }
         expect(response).to redirect_to dashboard_path
       end
@@ -460,6 +477,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     context "a user with access" do
       let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+
       before do
         sign_in researcher_user
       end

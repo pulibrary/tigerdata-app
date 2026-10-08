@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mediaflux
   class VersionRequest < Request
     # Constructor

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Mediaflux::TestAssetCreateRequest, connect_to_mediaflux: true, type: :model do
@@ -10,7 +11,7 @@ RSpec.describe Mediaflux::TestAssetCreateRequest, connect_to_mediaflux: true, ty
 
   describe "#resolve" do
     it "disconnects the session",
-    :integration do
+       :integration do
       namespace_request = described_class.new(session_token: user.mediaflux_session, parent_id: approved_project.mediaflux_id, count: 20, pattern: "abc")
       namespace_request.resolve
       expect(namespace_request.error?).to eq false
