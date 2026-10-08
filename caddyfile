@@ -1,0 +1,12 @@
+:8890 {
+	reverse_proxy host.docker.internal:8888 {
+		header_up Host {upstream_hostport}
+		header_up -X-Forwarded-For
+		header_up -X-Forwarded-Proto
+		header_up -X-Forwarded-Host
+		transport http {
+			versions 1.1
+			keepalive off
+		}
+	}
+}
