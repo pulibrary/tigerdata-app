@@ -46,7 +46,7 @@ class ProjectFileShowPresenter
     }
   end
 
-  def as_json(options = {})
-    super(options).merge(to_hash)
-  end
+  # Object#as_json already calls to_hash and stringifies the keys.
+  # Merging to_hash back in adds the same fields again under symbol keys,
+  # and JSON.generate rejects that as a duplicate key.
 end
