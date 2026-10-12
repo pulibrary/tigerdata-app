@@ -210,52 +210,35 @@ RSpec.describe NewProjectRequest, type: :model do
   end
 
   describe "#valid_data_security?" do
-    it "is valid when the data security feature is disabled" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:data_security, false)
+    it "requires a value" do
       request = NewProjectRequest.new
+      expect(request.valid_data_security?).to be_falsey
+      expect(request.errors[:data_security_level].join(", ")).to eq("This field is required.")
+    end
+
+    it "accepts level 0 as a valid value" do
+      request = NewProjectRequest.new(data_security_level: 0)
       expect(request.valid_data_security?).to be_truthy
       expect(request.errors[:data_security_level]).to be_blank
     end
 
-    context "when the data security feature is enabled" do
-      around do |example|
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:data_security, true)
-        example.run
-        test_strategy.switch!(:data_security, false)
-      end
+    it "type-casts string form values" do
+      request = NewProjectRequest.new(data_security_level: "0")
+      expect(request.data_security_level).to eq(0)
+      expect(request.valid_data_security?).to be_truthy
+    end
 
-      it "requires a value" do
-        request = NewProjectRequest.new
-        expect(request.valid_data_security?).to be_falsey
-        expect(request.errors[:data_security_level].join(", ")).to eq("This field is required.")
+    it "accepts allowed levels" do
+      NewProjectRequest::DATA_SECURITY_LEVELS.each do |level|
+        request = NewProjectRequest.new(data_security_level: level)
+        expect(request.valid_data_security?).to be_truthy, "expected level #{level} to be valid"
       end
+    end
 
-      it "accepts level 0 as a valid value" do
-        request = NewProjectRequest.new(data_security_level: 0)
-        expect(request.valid_data_security?).to be_truthy
-        expect(request.errors[:data_security_level]).to be_blank
-      end
-
-      it "type-casts string form values" do
-        request = NewProjectRequest.new(data_security_level: "0")
-        expect(request.data_security_level).to eq(0)
-        expect(request.valid_data_security?).to be_truthy
-      end
-
-      it "accepts allowed levels" do
-        NewProjectRequest::DATA_SECURITY_LEVELS.each do |level|
-          request = NewProjectRequest.new(data_security_level: level)
-          expect(request.valid_data_security?).to be_truthy, "expected level #{level} to be valid"
-        end
-      end
-
-      it "rejects a value that is not a defined level" do
-        request = NewProjectRequest.new(data_security_level: 4)
-        expect(request.valid_data_security?).to be_falsey
-        expect(request.errors[:data_security_level].join(", ")).to eq("must be one of 0, 1, 2, 3")
-      end
+    it "rejects a value that is not a defined level" do
+      request = NewProjectRequest.new(data_security_level: 4)
+      expect(request.valid_data_security?).to be_falsey
+      expect(request.errors[:data_security_level].join(", ")).to eq("must be one of 0, 1, 2, 3")
     end
   end
 
@@ -456,30 +439,18 @@ RSpec.describe NewProjectRequest, type: :model do
       request.project_purpose = "abc"
       expect(request.valid_to_submit?).to be_falsey
       request.description = "abc"
+      expect(request.valid_to_submit?).to be_falsey
+      request.data_security_level = 1
       expect(request.valid_to_submit?).to be_truthy
     end
 
-    it "does not require data_security_level when the feature is disabled" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:data_security, false)
+    it "requires data_security_level" do
       request = NewProjectRequest.new(project_title: "abc", data_sponsor: valid_user.uid, data_manager: valid_user.uid, parent_folder: "abc", project_folder: "abc",
                                       departments: "abc", quota: "500 GB", requested_by: "abc", project_purpose: "abc", description: "abc")
+      expect(request.valid_to_submit?).to be_falsey
+      expect(request.errors[:data_security_level].join(", ")).to eq("This field is required.")
+      request.data_security_level = 1
       expect(request.valid_to_submit?).to be_truthy
-    end
-
-    it "requires data_security_level when the feature is enabled" do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:data_security, true)
-      begin
-        request = NewProjectRequest.new(project_title: "abc", data_sponsor: valid_user.uid, data_manager: valid_user.uid, parent_folder: "abc", project_folder: "abc",
-                                        departments: "abc", quota: "500 GB", requested_by: "abc", project_purpose: "abc", description: "abc")
-        expect(request.valid_to_submit?).to be_falsey
-        expect(request.errors[:data_security_level].join(", ")).to eq("This field is required.")
-        request.data_security_level = 1
-        expect(request.valid_to_submit?).to be_truthy
-      ensure
-        test_strategy.switch!(:data_security, false)
-      end
     end
 
     it "returns false if the data sponsor is included in the data users" do

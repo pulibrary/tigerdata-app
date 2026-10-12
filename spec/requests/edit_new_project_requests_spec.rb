@@ -51,10 +51,6 @@ RSpec.describe "/edit_new_project_request", type: :request do
 
   describe "PATCH /update" do
     context "with valid parameters" do
-      let(:new_attributes) do
-        skip("Add a hash of attributes valid for your model")
-      end
-
       it "redirects the client to the sign in path" do
         put edit_new_project_request_path(1)
 
@@ -83,7 +79,7 @@ RSpec.describe "/edit_new_project_request", type: :request do
           { request_title: "new title", project_title: "changed_title",
             state: "draft", data_sponsor: user.uid, data_manager: user.uid,
             departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
-            description: "descr", project_purpose: "research", parent_folder: "parent",
+            description: "descr", project_purpose: "research", parent_folder: "parent", data_security_level: 1,
             project_folder: "folder", project_id: "doi", quota: "200 GB", requested_by: "uid" }
         end
 

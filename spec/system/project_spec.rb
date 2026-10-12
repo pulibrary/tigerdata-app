@@ -72,7 +72,6 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
         request = FactoryBot.create(:request_project)
         request.approve(sponsor_and_data_manager_user)
       end
-      let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
       before do
         sign_in sponsor_and_data_manager_user
