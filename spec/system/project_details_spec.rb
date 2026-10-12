@@ -253,8 +253,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
 
-        expect(page.html.include?('<button id="copy-project-path-button"')).to be true
-        expect(page.html.include?('<button id="copy-project-path-button-basic"')).to be true
+        expect(page).to have_button("copy-project-path-button")
+        expect(page).to have_button("copy-project-path-button-basic")
 
         # A test as follows would be preferrable
         #

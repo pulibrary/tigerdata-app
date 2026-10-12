@@ -25,6 +25,15 @@
 }
 
 .copy-project-path-icon {
+  svg.copy-paste-icon {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  svg.copy-paste-icon[hidden] {
+    display: none;
+  }
 }
 
 .pul-copy-paste-tooltip {

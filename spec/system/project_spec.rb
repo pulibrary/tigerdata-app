@@ -252,6 +252,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         expect(page).to have_text "Storage (500 GB)"
         expect(page).to have_text "400 bytes out of 500 GB used"
+        expect(page).to have_css("#copy-project-path-button svg title", text: "Copy project path to the clipboard", visible: :all)
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
