@@ -218,7 +218,6 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       it "Shows the approved values" do
         sign_in sponsor_user
-        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
         project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
         project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"

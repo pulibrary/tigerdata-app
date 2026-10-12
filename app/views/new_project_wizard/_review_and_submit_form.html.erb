@@ -10,9 +10,7 @@
     <%= render partial: "/new_project_wizard/form_project_purpose_input", locals: {project_purpose: @new_project_request.project_purpose || "", project_purpose_error: @new_project_request.errors[:project_purpose].join(", ") } %>
     <%= render partial: "/new_project_wizard/form_project_description_input", locals: {description: @new_project_request.description || "", description_error: @new_project_request.errors[:description].join(", ") } %>
     <%= render partial: "/new_project_wizard/form_department_input", locals: {departments: @new_project_request.departments || [], department_error: @new_project_request.errors[:departments].join(", ") } %>
-    <% if Flipflop.data_security? %>
-      <%= render partial: "/new_project_wizard/form_project_data_security_level_input", locals: {data_security_level: @new_project_request.data_security_level || nil, data_security_level_error: @new_project_request.errors[:data_security_level].join(", ") } %>
-    <% end %>
+    <%= render partial: "/new_project_wizard/form_project_data_security_level_input", locals: {data_security_level: @new_project_request.data_security_level || nil, data_security_level_error: @new_project_request.errors[:data_security_level].join(", ") } %>
 </div>
 <div class="section-line"></div>
 <div class="section lux full-width">

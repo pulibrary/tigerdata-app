@@ -26,7 +26,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
         expect(Project.count).to eq 0
         sign_in sysadmin_user
-        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         visit "/"
         click_on "New Project Request"
         expect(page).to have_text "Basic Details"
@@ -93,6 +92,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :project_folder, with: "Pixie_Dust_#{random_project_directory}"
         fill_in_and_out("description", with: "An awesome project to show the wizard is magic")
         expect(page).to have_field("description", with: "An awesome project to show the wizard is magic")
+
+        expect(page).to have_field("request[data_security_level]", with: "", type: :hidden)
+        select("Level 1 - Internal", from: "data-security-level")
+        expect(page).to have_field("request[data_security_level]", with: "1", type: :hidden)
 
         # choose teaching from the project purpose select component
         select("Teaching", from: "project-purpose")
@@ -380,6 +383,10 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
         fill_in :project_folder, with: "skeletor"
 
+        expect(page).to have_field("request[data_security_level]", with: "", type: :hidden)
+        select("Level 1 - Internal", from: "data-security-level")
+        expect(page).to have_field("request[data_security_level]", with: "1", type: :hidden)
+
         # choose teaching from the project purpose select component
         select("Teaching", from: "project-purpose")
         expect(page).to have_field("request[project_purpose]", with: "teaching", type: :hidden)
@@ -531,6 +538,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         fill_in :parent_folder, with: "abc_lab"
         fill_in :project_folder, with: "skeletor"
         fill_in :description, with: "An awesome project to show the wizard is magic"
+        select("Level 1 - Internal", from: "data-security-level")
 
         # choose teaching from the project purpose select component
         select("Teaching", from: "project-purpose")

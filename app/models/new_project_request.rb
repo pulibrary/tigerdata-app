@@ -62,8 +62,6 @@ class NewProjectRequest < ApplicationRecord
   end
 
   def valid_data_security?
-    return true unless Flipflop.data_security?
-
     check_errors? do
       # Integer 0 is a valid level (Public); do not use blank? because 0.blank? is true.
       if data_security_level.nil?

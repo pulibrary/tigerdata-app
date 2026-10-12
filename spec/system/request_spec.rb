@@ -209,7 +209,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "shows the selected data security level under Department(s) when the feature is enabled" do
         sign_in sysadmin_user
-        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         visit new_project_request_path(full_request.id)
         expect(page).to have_text("Data Security\nLevel 0 - Public")
         expect(page).not_to have_text("Data Security code goes here")
@@ -217,7 +216,6 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
 
       it "shows an em dash when the data security level has not been selected" do
         sign_in sysadmin_user
-        Flipflop::FeatureSet.current.test!.switch!(:data_security, true)
         full_request.update!(data_security_level: nil)
         visit new_project_request_path(full_request.id)
         expect(page).to have_css("li.detail-subheading", text: "Data Security")

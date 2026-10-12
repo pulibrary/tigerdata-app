@@ -6,7 +6,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
   let(:valid_request) do
     NewProjectRequest.create(project_title: "Valid Request", data_sponsor: "tigerdatatester", data_manager: "tigerdatatester", departments: [{ code: "dept", name: "department" }],
                              quota: "500 GB", description: "A valid request",
-                             parent_folder: "parent",
+                             parent_folder: "parent", data_security_level: 1,
                              project_folder: random_project_directory, project_purpose: "research")
   end
 
@@ -21,7 +21,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
       let(:valid_request) do
         NewProjectRequest.create(project_title: "Valid Request", data_sponsor: sysadmin_user.uid, data_manager: sysadmin_user.uid, departments: [{ code: "dept", name: "department" }],
                                  quota: "500 GB", description: "A valid request",
-                                 parent_folder: "parent",
+                                 parent_folder: "parent", data_security_level: 1,
                                  project_folder: random_project_directory, project_purpose: "research")
       end
 
@@ -83,7 +83,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
       let(:valid_request) do
         NewProjectRequest.create(project_title: "Valid Request", data_sponsor: trainer_user.uid, data_manager: trainer_user.uid, departments: [{ code: "dept", name: "department" }],
                                  quota: "500 GB", description: "A valid request",
-                                 parent_folder: "parent",
+                                 parent_folder: "parent", data_security_level: 1,
                                  project_folder: random_project_directory, project_purpose: "research")
       end
 
@@ -122,7 +122,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
       let(:valid_request) do
         NewProjectRequest.create(project_title: "Valid Request", data_sponsor: developer_user.uid, data_manager: developer_user.uid, departments: [{ code: "dept", name: "department" }],
                                  quota: "500 GB", description: "A valid request",
-                                 parent_folder: "parent",
+                                 parent_folder: "parent", data_security_level: 1,
                                  project_folder: random_project_directory, project_purpose: "research")
       end
 
@@ -157,7 +157,7 @@ RSpec.describe NewProjectRequestsController, type: :controller do
     let(:valid_request) do
       NewProjectRequest.create(project_title: "Valid Request", data_sponsor: sysadmin_user.uid, data_manager: sysadmin_user.uid, departments: [{ code: "dept", name: "department" }],
                                quota: "500 GB", description: "A valid request",
-                               parent_folder: "parent",
+                               parent_folder: "parent", data_security_level: 1,
                                project_folder: random_project_directory, project_purpose: "research")
     end
 

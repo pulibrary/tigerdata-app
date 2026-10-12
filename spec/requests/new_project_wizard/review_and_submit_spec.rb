@@ -36,7 +36,7 @@ RSpec.describe "new-project/review-submit", type: :request do
       let(:user) { FactoryBot.create(:sysadmin, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
       let(:valid_request_params) do
         { request_title: "new title", project_title: "new project",
-          state: "draft", data_sponsor: user.uid, data_manager: user.uid,
+          state: "draft", data_sponsor: user.uid, data_manager: user.uid, data_security_level: 1,
           departments: [{ "code" => "dept", "name" => "department" }.to_json, { "code" => "dept2", "name" => "two" }.to_json],
           description: "descr", project_purpose: "research", parent_folder: "parent", project_folder: "folder",
           project_id: "doi", quota: "500 GB", requested_by: "uid" }
@@ -55,6 +55,7 @@ RSpec.describe "new-project/review-submit", type: :request do
           expect(request.state).to eq("draft")
           expect(request.data_sponsor).to eq("pul123")
           expect(request.data_manager).to eq("pul123")
+          expect(request.data_security_level).to eq(1)
           expect(request.departments).to eq([{ "code" => "dept", "name" => "department" }, { "code" => "dept2", "name" => "two" }])
           expect(request.description).to eq("descr")
           expect(request.project_purpose).to eq("research")
