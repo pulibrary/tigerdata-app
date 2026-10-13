@@ -18,12 +18,8 @@
             </span>
         </div>
         <div class="summary">
-            <div class="path"> <%= request.project_directory %></div>
-            <button id="copy-project-path-button-<%= request.id %>" class="btn copy-paste-button-sizer copy-project-path-icon" data-url="<%= request.project_directory %>" title="Copy request path to the clipboard">
-            <div class="pul-copy-paste-tooltip" data-url="<%= request.project_directory %>">
-              <span id="copy-project-path-label" class="copy-project-path-label-text copy-project-path-label-normal pul-copy-paste-tooltiptext">Copy</span>
-            </div>
-            </button>
+              <div class="path"> <%= request.project_directory %></div>
+              <%= render "shared/copy_path_button", button_id: "copy-project-path-button-#{request.id}", url: request.project_directory, accessible_name: "Copy request path to the clipboard" %>
         </div>
       </div>
 
