@@ -5,7 +5,7 @@ export function sendGlobusRequest(projectId) {
     headers: {
       'Content-Type': 'application/json',
       // Include CSRF token for security (Rails requires this for POST requests)
-      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content,
     },
     body: JSON.stringify({ project_id: projectId }), // Send any necessary data, e.g., project ID
   }).catch((error) => {
@@ -27,7 +27,7 @@ export function sendStorageIncreaseRequest(
     headers: {
       'Content-Type': 'application/json',
       // Include CSRF token for security (Rails requires this for POST requests)
-      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content,
     },
     body: JSON.stringify({
       project_id: projectId,

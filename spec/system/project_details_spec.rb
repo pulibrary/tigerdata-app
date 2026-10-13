@@ -141,9 +141,21 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           fill_in "storage_justification", with: "Need more storage for new data being added to the project."
           fill_in "storage_growth_expectation", with: "Expecting significant growth in the next year as we add new data."
           fill_in "storage_date_needed", with: (Date.today + 30).strftime("%m/%d/%Y")
-          click_on "Submit"
-          expect(page).to have_text("Storage Increase Request")
-          expect(page).to have_text("Your storage increase request has been submitted")
+          expect do
+            click_on "Submit"
+            expect(page).to have_text("Storage Increase Request")
+            expect(page).to have_text("Your storage increase request has been submitted")
+          end.to have_enqueued_job(ActionMailer::MailDeliveryJob).with { |mailer_class, build_command, action, params|
+                   expect(mailer_class).to eq "TigerdataMailer"
+                   expect(build_command).to eq "storage_increase_request"
+                   expect(action).to eq "deliver_now"
+                   expect(params[:params][:project_id]).to eq(project_in_mediaflux.id)
+                   expect(params[:params][:submitter].id).to eq(sponsor_user.id)
+                   expect(params[:params][:requested_capacity]).to eq("1 TB")
+                   expect(params[:params][:justification]).to eq("Need more storage for new data being added to the project.")
+                   expect(params[:params][:growth_expectation]).to eq("Expecting significant growth in the next year as we add new data.")
+                   expect(params[:params][:date_needed]).to eq((Date.today + 30).strftime("%m/%d/%Y"))
+                 }.exactly(1).times
           click_on("Back to Storage Overview")
           expect(page).to have_text("Storage Usage Overview")
         end
@@ -423,8 +435,16 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         click_on "Request"
         expect(page).to have_text("Globus Transfer Access")
         expect(page).to have_text("Do you need to enable Globus transfers?")
-        click_on "Yes"
-        expect(page).to have_text("Your request has been submitted. Please check your email for updates.")
+        expect do
+          click_on "Yes"
+          expect(page).to have_text("Your request has been submitted. Please check your email for updates.")
+        end.to have_enqueued_job(ActionMailer::MailDeliveryJob).with { |mailer_class, build_command, action, params|
+                 expect(mailer_class).to eq "TigerdataMailer"
+                 expect(build_command).to eq "globus_access_request"
+                 expect(action).to eq "deliver_now"
+                 expect(params[:params][:project_id]).to eq(project.id)
+                 expect(params[:params][:submitter].id).to eq(sponsor_user.id)
+               }.exactly(1).times
         click_on(class: "pul-popover-close")
         expect(page).not_to have_text("Globus Transfer Access")
       end
