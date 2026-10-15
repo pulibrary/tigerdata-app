@@ -14,13 +14,13 @@ We need an agreed upon method for handling Entra ID application registrations an
 
 We will have one application registration and one client secret for each of the following environments:
 
-* tigerdata-mediaflux-staging
-* tigerdata-mediaflux-qa
-* tigerdata-mediaflux-production
-* tigerdata-mediaflux-ci
+- tigerdata-mediaflux-staging
+- tigerdata-mediaflux-qa
+- tigerdata-mediaflux-production
+- tigerdata-mediaflux-ci
 
 Local development will share a client secret in Docker, using ansible-vault so that secrets are not hard-coded into images.
 
 ## Consequences
 
-Secrets will need to be rotated on a regular basis manually.  Secrets are good for 6 months currently; we should develop a manual part of our process to rotate them out regularly using ansible-vault so that they do not break unexpectedly.
+Secrets will need to be rotated on a regular basis manually. Secrets are good for 6 months currently; we should develop a manual part of our process to rotate them out regularly using ansible-vault so that they do not break unexpectedly.
