@@ -8,6 +8,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
     NewProjectRequest.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                              data_sponsor: approver.uid, data_manager: approver.uid,
                              departments: [{ code: "dept", name: "department" }],
+                             data_security_level: 1,
                              description: "description", parent_folder: random_project_directory,
                              project_folder: "project", project_id: "doi", quota: "500 GB",
                              requested_by: "uid", user_roles: [])
@@ -17,6 +18,7 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
     NewProjectRequest.create(request_type: "new_project_request", request_title: "Request for Example Project", project_title: "Example Project",
                              data_sponsor: approver.uid, data_manager: approver.uid,
                              departments: [{ code: "dept", name: "department" }],
+                             data_security_level: 1,
                              description: "description", parent_folder: random_project_directory,
                              project_folder: "project", project_id: "doi", quota: "500 GB",
                              requested_by: "uid", user_roles: [{ uid: "cac9", read_only: true }])

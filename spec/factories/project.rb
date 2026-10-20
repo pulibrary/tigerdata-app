@@ -5,6 +5,7 @@ FactoryBot.define do
     transient do
       data_sponsor { "tigerdatatester" }  # Must be a valid netid/uid
       data_manager { "tigerdatatester" }  # Must be a valid netid/uid
+      data_security_level { 1 }
       data_user_read_only { [] }
       data_user_read_write { [] }
       title { FFaker::Movie.title }
@@ -34,6 +35,7 @@ FactoryBot.define do
         data_manager: data_manager,
         data_user_read_only: data_user_read_only,
         data_user_read_write: data_user_read_write,
+        data_security_level: data_security_level,
         departments: ["77777", "88888"],
         project_directory: project_directory,
         title: title,
