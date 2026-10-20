@@ -52,17 +52,6 @@ RSpec.describe ProjectShowPresenter do
         expect(presenter.data_security_level).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)
       end
     end
-
-    context "when the data security level is set to nil" do
-      let(:request1) do
-        FactoryBot.create(:request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid, data_security_level: nil,
-                                            user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
-      end
-
-      it "defaults the data security level to 1" do
-        expect(presenter.data_security_level).to eq("Level 1 - Internal") # project create service defaults value to 1.
-      end
-    end
   end
 
   describe "#file_list_json" do

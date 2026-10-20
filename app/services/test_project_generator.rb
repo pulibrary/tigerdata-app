@@ -30,6 +30,7 @@ class TestProjectGenerator
     {
       data_sponsor: user.uid, # Must be a valid netid/uid
       data_manager: "tigerdatatester", # Must be a valid netid/uid
+      data_security_level: 0,
       user_roles: [],
       quota: "custom",
       storage_size: capacity[:size][:requested],
