@@ -2,10 +2,11 @@
 
 module Mediaflux
   class Asset
-    attr_accessor :id, :path, :collection, :size, :collection_count, :file_count, :folder_size
+    attr_accessor :id, :path, :collection, :size, :collection_count, :file_count, :folder_size, :checksum
 
+    # rubocop:disable-next Metrics/ParameterLists
     def initialize(id:, name:, collection:, path: nil, last_modified_mf: nil, size: nil, collection_count: nil, file_count: nil, folder_size: nil,
-                   created_on_mf: nil, creator: nil)
+                   created_on_mf: nil, creator: nil, checksum: nil)
       @id = id
       @name = name
       @path = path
@@ -17,6 +18,7 @@ module Mediaflux
       @collection_count = collection_count
       @file_count = file_count
       @folder_size = folder_size
+      @checksum = checksum
     end
 
     def name

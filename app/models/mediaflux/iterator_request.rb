@@ -107,7 +107,8 @@ module Mediaflux
         creator: { uid: node.xpath("creator_uid").text, name: node.xpath("creator_name").text, domain: node.xpath("creator_domain").text },
         collection_count: node.xpath("./collection-count").text.to_i,
         file_count: node.xpath("./file-count").text.to_i,
-        folder_size: node.xpath("./folder-size").text.to_i
+        folder_size: node.xpath("./folder-size").text.to_i,
+        checksum: node.xpath("./csum").text
       }
     end
   end

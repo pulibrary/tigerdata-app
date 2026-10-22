@@ -77,6 +77,7 @@ module Mediaflux
         declare_get_value_field(xml, "path", "path")
       end
       declare_get_value_field(xml, "content/@total-size", "total-size")
+      declare_get_value_field(xml, "content/csum", "csum")
       declare_get_value_field(xml, "mtime", "mtime")
       declare_get_value_field(xml, "ctime", "ctime")
       declare_get_value_field(xml, "creator/user", "creator_uid")
