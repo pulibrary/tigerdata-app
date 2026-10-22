@@ -27,12 +27,15 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       expect(result[:files][0].last_modified.class).to eq ActiveSupport::TimeWithZone
       expect(result[:files][0].created_on.class).to eq ActiveSupport::TimeWithZone
       expect(result[:files][0].created_by.values).to eq ["manager", "", "system"]
+      expect(result[:files][0].checksum).to eq "332B3F68"
       expect(result[:files][9].name).to eq "n_10000"
       expect(result[:files][9].path).to eq "/princeton/tigerdata/RDSS/Query/CProject/n_10000"
       expect(result[:files][9].size).to eq 0
       expect(result[:files][9].last_modified.class).to eq ActiveSupport::TimeWithZone
       expect(result[:files][9].created_on.class).to eq ActiveSupport::TimeWithZone
       expect(result[:files][9].created_by.values).to eq ["manager", "", "system"]
+      expect(result[:files][9].checksum).to eq ""
+      expect(result[:files][9].collection).to eq true
       expect(result[:complete]).to eq true
       expect(a_request(:post, mediaflux_url).with do |req|
         req.body.include?("<service name=\"asset.query.iterate\"")
