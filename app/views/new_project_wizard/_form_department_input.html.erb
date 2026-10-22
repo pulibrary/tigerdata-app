@@ -10,6 +10,7 @@
                 label="Departments"
                 hide-label="true"
                 selected-items-label=""
+                aria-expanded="false"
                 none-selected-label="No departments selected"
                 placeholder="Search using department code or name"
                 :items='<%= @princeton_departments.map{|dep| {id: dep.code, label: "(#{dep.code}) #{dep.name}", value: dep.name }}.to_json %>'
@@ -25,7 +26,7 @@
                 </template>
 
                 <template v-slot:hidden-input="{ selectedItems }">
-                  <input v-for="item in selectedItems" type="hidden" name="request[departments][]" :value="JSON.stringify( {'code': item.id, 'name': item.value})" class="selected-item"></input>
+                  <input v-for="item in selectedItems" type="hidden" aria-expanded="true" aria-live="polite" name="request[departments][]" :value="JSON.stringify( {'code': item.id, 'name': item.value})" class="selected-item"></input>
                 </template>
             </lux-input-multiselect>
           </div>
