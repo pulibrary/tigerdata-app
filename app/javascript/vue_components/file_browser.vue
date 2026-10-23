@@ -7,7 +7,9 @@
           {{ path.name }}
         </li>
       </ol>
-      <copy-path class="col" :path="displayedPath"> </copy-path>
+      <div class="copy-wrapper">
+        <lux-copy-to-clipboard :clipboard-value="displayedPath"></lux-copy-to-clipboard>
+      </div>
     </div>
 
     <div v-if="displayWarning" class="preview-limit-frame">
@@ -74,7 +76,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import CopyPath from './copy_path.vue';
+import { LuxCopyToClipboard } from 'lux-design-system';
 import ExclamationTriangle from './icons/exclamation_triangle.vue';
 import HomeIcon from './icons/home_icon.vue';
 import ProjectItem from './project_item.vue';
@@ -347,6 +349,19 @@ async function onClickBreadcrumb(path) {
     flex-basis: 270px;
     flex-grow: 0;
     flex-shrink: 0;
+  }
+}
+
+.copy-wrapper {
+  display: flex;
+  align-items: center;
+  .copy-box {
+    display: flex;
+    align-items: center;
+
+    .sizer{
+      display: flex;
+    }
   }
 }
 </style>
