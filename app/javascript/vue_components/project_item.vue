@@ -53,7 +53,9 @@
         <div class="inline-container">
           <div class="location-container">
             <header class="fw-semibold" data-attribute-name="location">Location</header>
-            <copy-path class="col" :path="displayedPath"> {{ displayedPath }}</copy-path>
+            <div class="copy-wrapper">
+              <lux-copy-to-clipboard :clipboard-value="displayedPath"></lux-copy-to-clipboard>
+            </div>
           </div>
           <p
             class="project-file-attribute font-monospace"
@@ -111,7 +113,7 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue';
-import CopyPath from './copy_path.vue';
+import { LuxCopyToClipboard } from 'lux-design-system';
 import ToolTip from './tool_tip.vue';
 
 defineOptions({ name: 'ProjectItem' });

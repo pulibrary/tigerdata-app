@@ -5,6 +5,7 @@ import {
   LuxInputMultiselect,
   LuxInputAsyncSelect,
   LuxDatePicker,
+  LuxCopyToClipboard,
 } from 'lux-design-system';
 
 // import 'bootstrap/js/src/alert'
@@ -24,7 +25,6 @@ import { Modal } from 'bootstrap';
 
 // Import Vue Components
 import FileBrowser from '../vue_components/file_browser.vue';
-import CopyPath from '../vue_components/copy_path.vue';
 import DataSecurityLevel from '../vue_components/data_security_level.vue';
 import ProjectPurpose from '../vue_components/project_purpose.vue';
 
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .component('lux-input-multiselect', LuxInputMultiselect)
       .component('lux-input-async-select', LuxInputAsyncSelect)
       .component('lux-date-picker', LuxDatePicker)
+      .component('lux-copy-to-clipboard', LuxCopyToClipboard)
       .component('file-browser', FileBrowser)
-      .component('copy-path', CopyPath)
       .component('data-security-level', DataSecurityLevel)
       .component('project-purpose', ProjectPurpose)
       .mount(elements[i]);
