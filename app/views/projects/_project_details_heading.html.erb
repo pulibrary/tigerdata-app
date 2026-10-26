@@ -22,9 +22,11 @@
           <a id="show-more-less-link" class="show-more" href="#"><span>more</span></a>
         </div><!-- #project-description -->
 
-        <div class="date-and-data-info-single">
+        <div class="date-and-data-info">
           <span class="label" id="project-path-copy">Project Directory:</span> <%= @presenter.project_directory %>
-          <%= render "shared/copy_path_button", button_id: "copy-project-path-button", url: @presenter.project_directory, accessible_name: "Copy project path to the clipboard" %>
+          <div class="copy-wrapper">
+              <lux-copy-to-clipboard clipboard-value="<%= @presenter.project_directory %>"></lux-copy-to-clipboard>
+          </div>
         </div>
         <div class="date-and-data-info">
           <div class="left-item"> <span class="label">Date Created:</span> <%= @presenter.created %> </div>

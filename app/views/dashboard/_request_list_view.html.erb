@@ -18,8 +18,10 @@
             </span>
         </div>
         <div class="summary">
-              <div class="path"> <%= request.project_directory %></div>
-              <%= render "shared/copy_path_button", button_id: "copy-project-path-button-#{request.id}", url: request.project_directory, accessible_name: "Copy request path to the clipboard" %>
+          <div class="path"> <%= request.project_directory %></div>
+          <div class="copy-wrapper">
+              <lux-copy-to-clipboard clipboard-value="<%= request.project_directory %>"></lux-copy-to-clipboard>
+          </div>
         </div>
       </div>
 

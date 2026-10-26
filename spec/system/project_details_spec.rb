@@ -253,21 +253,17 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
 
-        expect(page).to have_button("copy-project-path-button")
-        expect(page).to have_button("copy-project-path-button-basic")
-
-        # A test as follows would be preferrable
-        #
-        # ```
-        #   expect(page).to have_content "COPY"
-        #   click_on "#copy-project-path-button-heading"
-        #   expect(page).to have_css ".copy-paste-check"
-        # ```
-        #
-        # but unfortunately this kind of test only works when we run RSpec like this:
-        #
-        #   RUN_IN_BROWSER=true bundle exec rspec spec/system/project_details_spec.rb
-        #
+        expect(page).not_to have_text "Your Browser Does Not Support Clipboard API"
+        within "#project-details-heading" do
+          expect(page).not_to have_css ".check"
+          page.find(".sizer").click
+          expect(page).to have_css ".check"
+        end
+        within ".project-directory" do
+          expect(page).not_to have_css ".check"
+          page.find(".sizer").click
+          expect(page).to have_css ".check"
+        end
       end
     end
 
