@@ -4,7 +4,7 @@
 
 namespace :servers do
   task install_mediaflux: :environment do
-    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.65.0")
+    system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.66.0")
     system("docker start mediaflux")
     system("docker create --name caddy -p 8890:8890 -v $PWD/Caddyfile:/etc/caddy/Caddyfile caddy")
     system("docker start caddy")
