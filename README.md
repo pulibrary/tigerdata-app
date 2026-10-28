@@ -33,38 +33,6 @@ The system will eventually have many roles.  Please refer to the [docs for a des
 1. `devbox shell`
 1. `devbox run setup`
 
-### Setup (Manual)
-
-1. Check out code and `cd`
-1. Install tool dependencies; If you've worked on other PUL projects they will already be installed.
-    1. [Lando](https://docs.lando.dev/getting-started/installation.html)
-    1. [asdf](https://asdf-vm.com/guide/getting-started.html#_2-download-asdf)
-    1. postgresql (`brew install postgresql`: PostgreSQL runs inside a Docker container, managed by Lando, but the `pg` gem still needs a local PostgreSQL library to install successfully.)
-1. Install asdf dependencies with asdf
-    1. `asdf plugin add ruby`
-    1. `asdf plugin add node`
-    1. `asdf plugin add yarn`
-    1. `asdf plugin add java`
-    1. `asdf install`
-    1. ... but because asdf is not a dependency manager, if there are errors, you may need to install other dependencies. For example: `brew install gpg`
-1. OR - Install dependencies with brew and chruby
-   1. `ruby-install 4.0.4 -- --with-openssl-dir=$(brew --prefix openssl@3)`
-   2. If you get "error: use of undeclared identifier 'RUBY_FUNCTION_NAME_STRING'" while updating, make sure your Xcode toolks are up to date.
-   3. close the terminal window and open a new terminal
-   4. `chruby 4.0.4`
-   5. `ruby --version`
-1. Install language-specific dependencies
-    1. `bundle install`
-    2. `yarn install`
-
-On a Mac with an M1 chip, `bundle install` may fail. [This suggestion](https://stackoverflow.com/questions/74196882/cannot-install-jekyll-eventmachine-on-m1-mac) helped:
-
-```
-gem install eventmachine -v '1.2.7' -- --with-openssl-dir=$(brew --prefix libressl)
-brew install pkg-config
-bundle install
-```
-
 ### Starting / stopping services
 
 We use lando to run services required for both test and development environments.

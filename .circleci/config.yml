@@ -16,12 +16,12 @@ parameters:
 orbs:
   browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.7
+  ruby: circleci/ruby@4.0.0
   node: circleci/node@7.2
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:4.0.4-browsers
+      - image: cimg/ruby:4.0.9-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
@@ -89,7 +89,7 @@ commands:
     parameters:
       version:
         type: string
-        default: "4.0.4"
+        default: "4.0.9"
     steps:
       - restore_cache:
           name: Restore RVM / Ruby cache
@@ -192,7 +192,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:4.0.4
+      - image: cimg/ruby:4.0.9
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -222,7 +222,7 @@ jobs:
       - cleanup_docker
       - run_mediaflux
       - install_ruby_machine:
-          version: "4.0.4"
+          version: "4.0.9"
       - install_yarn_dependencies
       - install_dependencies:
           cache_prefix: machine
@@ -334,7 +334,7 @@ jobs:
     steps:
       - checkout
       - install_ruby_machine:
-          version: "4.0.4"
+          version: "4.0.9"
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
@@ -366,7 +366,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/ruby:4.0.4
+      - image: cimg/ruby:4.0.9
     steps:
       - run:
           # prettier-ignore
