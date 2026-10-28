@@ -359,7 +359,7 @@ async function onClickBreadcrumb(path) {
     display: flex;
     align-items: center;
 
-    .sizer{
+    .sizer {
       display: flex;
     }
   }
