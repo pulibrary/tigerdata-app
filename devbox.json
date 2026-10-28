@@ -8,7 +8,7 @@
     "OTEL_SDK_DISABLED": "true"
   },
   "packages": {
-    "ruby": "4.0.4",
+    "ruby": "4.0.9",
     "postgresql": {
       "version": "15.7",
       "outputs": ["lib", "out"]
@@ -17,7 +17,7 @@
       "version": "latest"
     },
     "yarn-berry": {
-      "version": "4.14.1"
+      "version": "latest"
     },
     "jdk": {
       "version": "19",
