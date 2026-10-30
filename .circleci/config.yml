@@ -67,17 +67,17 @@ commands:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-3
       - run:
-          name: "Install Yarn using corepack"
+          name: "Uninstall yarn and pnpm"
           command: |
-            corepack install
+            npm uninstall -g yarn pnpm
       - run:
-          name: "Enable Yarn using corepack"
+          name: "npm install latest corepack"
           command: |
-            corepack enable
+            npm install -g corepack@latest
       - run:
-          name: "Prepare Yarn using corepack"
+          name: "Use Yarn 4.18.1 via Corepack"
           command: |
-            corepack prepare yarn@4.18.1 --activate
+            corepack use yarn@4.18.1
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
