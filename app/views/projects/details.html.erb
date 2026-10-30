@@ -1,10 +1,13 @@
+<div class="lux">
 <%= render partial: "project_details_heading" %>
+</div>
 <show id="show">
 <div id="project-nav">
    <button id="project-content" class="tab-nav"> Content Preview </button>
    <button id="project-details" class="tab-nav"> Details </button>
 </div>
-<div class="basic-details-container lux">
+<div class="lux">
+<div class="basic-details-container">
    <div class="basic-details-navigation">
       <ul>
          <li><a id="basic-details-link" href="#basic-details-section">Basic Details</a></li>
@@ -29,11 +32,14 @@
             <li class="detail-subheading">Project ID</li>
             <p class="detail-value"><%= @presenter.project_id %></p>
          </div>
-         <div class="detail-pair">
+         <div class="detail-pair project-directory">
             <li class="detail-subheading">Project Directory</li>
-            <p class="detail-value"><%= @presenter.project_directory %></p>
-          <%= render "shared/copy_path_button", button_id: "copy-project-path-button-basic", url: @presenter.project_directory, accessible_name: "Copy project path to the clipboard" %>
-            </p>
+            <div class="details-copy-div">
+               <p class="detail-value"><%= @presenter.project_directory %></p>
+               <div class="copy-wrapper">
+                  <lux-copy-to-clipboard clipboard-value="<%= @presenter.project_directory %>"></lux-copy-to-clipboard>
+               </div>
+            </div>
          </div>
          <div class="detail-pair">
             <li class="detail-subheading">Project Purpose</li>
@@ -256,7 +262,7 @@
       </ul>
    </div>
 </div>
-
+</div>
 <% if @show_quota_breakdown %>
    <h2>Quota breakdown</h2>
    <p>quota-allocation: <%= @presenter.quota_breakdown[:quota_allocation] %></p>
@@ -273,7 +279,7 @@
    <p>quota_percentage_recycle_bin_calc: <%= @presenter.quota_percentage_recycle_bin %></p>
    <p>quota_percentage_files_calc: <%= @presenter.quota_percentage_files %></p>
 <% end %>
-
+</div>
 <script type="module">
    projectStyle('<%= @project_session %>');
    projectTab("<%= project_path %>", "<%= project_details_path %>");

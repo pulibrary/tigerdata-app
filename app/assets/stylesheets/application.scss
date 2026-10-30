@@ -255,3 +255,8 @@ h6 {
 .progress-bar-old-versions {
   background-color: $progress-bar-bg-old-versions;
 }
+
+.details-copy-div {
+  display: flex;
+  align-items: flex-start;
+}

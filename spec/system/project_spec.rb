@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
+RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: true do
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "pul123", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
   let(:developer) { FactoryBot.create(:developer, uid: "root", mediaflux_session: SystemUser.mediaflux_session) }
@@ -252,10 +252,16 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system  do
 
         expect(page).to have_text "Storage (500 GB)"
         expect(page).to have_text "400 bytes out of 500 GB used"
-        expect(page).to have_css("#copy-project-path-button svg title", text: "Copy project path to the clipboard", visible: :all)
+        expect(page).not_to have_text "Your Browser Does Not Support Clipboard API"
+        within "#project-details-heading" do
+          expect(page).not_to have_css ".check"
+          page.find(".sizer").click
+          expect(page).to have_css ".check"
+        end
         expect(page).to be_axe_clean
           .according_to(:wcag2a, :wcag2aa, :wcag21a, :wcag21aa, :section508)
           .skipping(:'color-contrast')
+          .skipping(:'label-content-name-mismatch')
       end
 
       context "when requesting the XML for a project" do

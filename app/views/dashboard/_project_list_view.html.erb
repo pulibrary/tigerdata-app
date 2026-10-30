@@ -35,7 +35,9 @@
             </div>
             <div class="summary">
                 <div class="path"> <%= project.path %></div>
-                <%= render "shared/copy_path_button", button_id: "copy-project-path-button-#{project.id}", url: project.path, accessible_name: "Copy project path to the clipboard" %>
+                <div class="copy-wrapper">
+                    <lux-copy-to-clipboard clipboard-value="<%= project.path %>"></lux-copy-to-clipboard>
+                </div>
             </div>
             <div class="summary">
                <div class="status <%= project.status.downcase %> status-larger-device"><%= project.status %></div>

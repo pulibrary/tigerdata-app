@@ -1,5 +1,6 @@
+<div class="lux">
 <%= render partial: "project_details_heading" %>
-
+</div>
 <content id= "content">
   <div class="container-fluid">
   <div class="project-pane">
@@ -7,6 +8,7 @@
       <button id="project-content" class="tab-nav"> Content Preview </button>
       <button id="project-details" class="tab-nav"> Details </button>
     </div>
+    <div class="lux">
     <div class="row align-items-center contents-summary">
       <div class="col-sm-2 file-inventory">File Inventory:</div>
       <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
@@ -25,10 +27,10 @@
         </div>
       </div>
     </section>
+    </div>
   </div>
   </div>
 </content>
-
 <div popover="auto" id="list-contents-modal" class="pul-popover">
   <div class="modal-content">
     <div class="modal-title-frame">
