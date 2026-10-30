@@ -74,10 +74,13 @@
     "*js": "prettier --write",
     "*.yml": "prettier --write"
   },
-  "pre-commit": [
-    "lint",
-    "validate",
-    "test"
-  ],
+  "pre-commit": {
+    "silent": true,
+    "run": [
+      "lint",
+      "validate",
+      "test"
+    ]
+  },
   "allowScripts": {}
 }
