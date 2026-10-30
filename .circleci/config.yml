@@ -81,30 +81,6 @@ commands:
           paths:
             - ~/.cache/yarn
 
-  # NOTE: You cannot pair a Docker primary container (cimg/ruby) with Podman on a
-  # *separate* machine job and share localhost as they are different VMs.
-  # Machine executors do not ship Ruby
-  # The ruby orb installs via RVM and caches the RVM tree so subsequent runs skip recompilation.
-  install_ruby_machine:
-    parameters:
-      version:
-        type: string
-        default: "4.0.9"
-    steps:
-      - restore_cache:
-          name: Restore RVM / Ruby cache
-          keys:
-            - tiger_data-rvm-ruby-<< parameters.version >>-v2
-      - ruby/install:
-          version: << parameters.version >>
-      - save_cache:
-          name: Save RVM / Ruby cache
-          key: tiger_data-rvm-ruby-<< parameters.version >>-v2
-          paths:
-            - ~/.rvm
-            - /usr/local/rvm
-            - /home/circleci/.rvm
-
   # NOTE: Mediaflux requires a fixed MAC address for licensing.
   run_mediaflux:
     steps:
