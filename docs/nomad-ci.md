@@ -27,12 +27,7 @@ To add additional information like environment variables to the nomad runner:
    **Note** the dot `.` in from of the environment name
 1. Run the playbook
    ```
-   ansible-playbook playbooks/tigerdata_ci_deployer.yml
-   ```
-1. Deploy new runners
-   This replaces the ones that are currently running with new ones that have your information available in the environment
-   ```
-   cd nomad && BRANCH=main ./bin/deploy tigerdata production
+   BRANCH=main ansible-playbook playbooks/tigerdata_ci_deployer.yml
    ```
 
 ### Troubleshooting
@@ -52,3 +47,9 @@ You can see the environment variables on the variables tab
 
 To figure out which job is running your CI job look at the CPU and memory and try to see one that is active. If there are multiple Circle CI jobs running it is hard to tell which nomad runner is running your job.
 <img width="864" height="695" alt="Screenshot 2026-09-24 at 4 24 10 PM" src="https://github.com/user-attachments/assets/af947725-bf70-43fb-94dc-25854c7e5967" />
+
+## Circle CI Configuration
+
+You can view the Self hosted runners that are created by running the playbook in the [Circle CI Self Hosted Runners](https://app.circleci.com/runners/github/pulibrary/inventory)
+
+These runners can be utilized in the circle ci configuration by setting the `resource_class` to `pulibrary/tigerdata-deploy`. [See and example here](https://github.com/pulibrary/tigerdata-app/blob/main/.circleci/config.yml#L208)
