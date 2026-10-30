@@ -851,68 +851,54 @@
         }
       }
     },
-    "ruby@4.0.4": {
-      "last_modified": "2026-05-13T11:46:26Z",
+    "ruby@4.0.9": {
+      "last_modified": "2026-10-27T21:33:45Z",
       "plugin_version": "0.0.2",
-      "resolved": "github:NixOS/nixpkgs/eef00dfd8a712b34af845f9350bac681b1228bd1#ruby_4_0",
+      "resolved": "github:NixOS/nixpkgs/f05535a0efcb2134c478d1e88434fadf486d42b5#ruby_4_0",
       "source": "devbox-search",
-      "version": "4.0.4",
+      "version": "4.0.9",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/zbl1w23qmj45dc5g7waaxxysdixpqdh0-ruby-4.0.4",
+              "path": "/nix/store/0bp23r2m58bs7m0x4wznqixs2ijah6kb-ruby-4.0.9",
               "default": true
             },
             {
               "name": "devdoc",
-              "path": "/nix/store/n6780q57c5wrg3g9ld253msibrcpcf9l-ruby-4.0.4-devdoc"
+              "path": "/nix/store/s6kaf6m77sbb2dw70mzmd2pii4rjkwz4-ruby-4.0.9-devdoc"
             }
           ],
-          "store_path": "/nix/store/zbl1w23qmj45dc5g7waaxxysdixpqdh0-ruby-4.0.4"
+          "store_path": "/nix/store/0bp23r2m58bs7m0x4wznqixs2ijah6kb-ruby-4.0.9"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/8b8cm0y5xdinlp28vxrw7a58fxlkz9j9-ruby-4.0.4",
+              "path": "/nix/store/3xxnmh97wixng7rbvjl4nczmr6sdrd20-ruby-4.0.9",
               "default": true
             },
             {
               "name": "devdoc",
-              "path": "/nix/store/3i4s4grls233sqzw4f8sk3028ng9d3ry-ruby-4.0.4-devdoc"
+              "path": "/nix/store/cinnna8421aj2pni1bqnmjs0p631xcfz-ruby-4.0.9-devdoc"
             }
           ],
-          "store_path": "/nix/store/8b8cm0y5xdinlp28vxrw7a58fxlkz9j9-ruby-4.0.4"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/rqm1wxaa5y2j4zwasjh91vdgxj8zfwdj-ruby-4.0.4",
-              "default": true
-            },
-            {
-              "name": "devdoc",
-              "path": "/nix/store/x2j1hjnqc64zvqa1vfm3mxy5icaczzbv-ruby-4.0.4-devdoc"
-            }
-          ],
-          "store_path": "/nix/store/rqm1wxaa5y2j4zwasjh91vdgxj8zfwdj-ruby-4.0.4"
+          "store_path": "/nix/store/3xxnmh97wixng7rbvjl4nczmr6sdrd20-ruby-4.0.9"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/i76qc8rpjxz418q78gqifwybszb4p2pq-ruby-4.0.4",
+              "path": "/nix/store/spl83aywni82vk48lkxkanqnq5sj58g8-ruby-4.0.9",
               "default": true
             },
             {
               "name": "devdoc",
-              "path": "/nix/store/xfmrldqc1lhx71ma1rpcywlmlqc0p3kg-ruby-4.0.4-devdoc"
+              "path": "/nix/store/zb5n87wfyxn5h5c16rzrdvln0qhgwh4b-ruby-4.0.9-devdoc"
             }
           ],
-          "store_path": "/nix/store/i76qc8rpjxz418q78gqifwybszb4p2pq-ruby-4.0.4"
+          "store_path": "/nix/store/spl83aywni82vk48lkxkanqnq5sj58g8-ruby-4.0.9"
         }
       }
     },
@@ -1020,51 +1006,41 @@
         }
       }
     },
-    "yarn-berry@4.14.1": {
-      "last_modified": "2026-08-01T16:34:20Z",
-      "resolved": "github:NixOS/nixpkgs/a5cbcfe954791221bfffe2307f7d1a1bf61a871e#yarn-berry",
+    "yarn-berry@latest": {
+      "last_modified": "2026-10-27T21:33:45Z",
+      "resolved": "github:NixOS/nixpkgs/f05535a0efcb2134c478d1e88434fadf486d42b5#yarn-berry",
       "source": "devbox-search",
-      "version": "4.14.1",
+      "version": "4.18.1",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/81kg6hylp6x6hp9cprmywwx92nzcd2a9-yarn-berry-4.14.1",
+              "path": "/nix/store/d94frnfhvyg7fbaqcvdpbhans4d8412h-yarn-berry-4.18.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/81kg6hylp6x6hp9cprmywwx92nzcd2a9-yarn-berry-4.14.1"
+          "store_path": "/nix/store/d94frnfhvyg7fbaqcvdpbhans4d8412h-yarn-berry-4.18.1"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/9z603xh6xg5iqvg8ndp8hw50npj8fi12-yarn-berry-4.14.1",
+              "path": "/nix/store/4sxrjqrlb7cikpmdgg9vrvsmym7vw5i0-yarn-berry-4.18.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/9z603xh6xg5iqvg8ndp8hw50npj8fi12-yarn-berry-4.14.1"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/w9000r08px9ys3iw8a1fjbhn71j3nr2k-yarn-berry-4.14.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/w9000r08px9ys3iw8a1fjbhn71j3nr2k-yarn-berry-4.14.1"
+          "store_path": "/nix/store/4sxrjqrlb7cikpmdgg9vrvsmym7vw5i0-yarn-berry-4.18.1"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/hvfy0iichhk8hphdgdz64lv72bw32rii-yarn-berry-4.14.1",
+              "path": "/nix/store/qfnys35h946igq6g445qyfdwr892wjc8-yarn-berry-4.18.1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/hvfy0iichhk8hphdgdz64lv72bw32rii-yarn-berry-4.14.1"
+          "store_path": "/nix/store/qfnys35h946igq6g445qyfdwr892wjc8-yarn-berry-4.18.1"
         }
       }
     }

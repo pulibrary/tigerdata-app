@@ -79,7 +79,10 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         expect(page).to have_text "Data Sponsor: #{other_user.display_name_only_safe} #{other_user.uid}"
         expect(page).to have_text "Data Manager: #{other_user.display_name_only_safe} #{other_user.uid}"
 
-        expect(page).to have_css ".copy-project-path-icon"
+        expect(page).not_to have_text "Your Browser Does Not Support Clipboard API"
+        expect(page).not_to have_css ".check"
+        page.find_all(".sizer").first.click
+        expect(page).to have_css ".check"
 
         # A test as follows would be preferrable
         #

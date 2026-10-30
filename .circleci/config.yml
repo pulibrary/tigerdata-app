@@ -16,12 +16,12 @@ parameters:
 orbs:
   browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
-  ruby: circleci/ruby@2.7
+  ruby: circleci/ruby@4.0.0
   node: circleci/node@7.2
 executors:
   basic-executor:
     docker:
-      - image: cimg/ruby:4.0.4-browsers
+      - image: cimg/ruby:4.0.9-browsers
         environment:
           RAILS_ENV: ci
     resource_class: medium
@@ -62,7 +62,7 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "latest"
+          node-version: "26.13.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
@@ -71,7 +71,7 @@ commands:
           command: |
             npm install -g corepack
             corepack enable
-            corepack prepare yarn@4.16.0 --activate
+            corepack prepare yarn@4.18.1 --activate
       - run:
           name: Install NPM Dependencies via Yarn
           command: yarn install --immutable
@@ -80,30 +80,6 @@ commands:
           key: *yarn_key
           paths:
             - ~/.cache/yarn
-
-  # NOTE: You cannot pair a Docker primary container (cimg/ruby) with Podman on a
-  # *separate* machine job and share localhost as they are different VMs.
-  # Machine executors do not ship Ruby
-  # The ruby orb installs via RVM and caches the RVM tree so subsequent runs skip recompilation.
-  install_ruby_machine:
-    parameters:
-      version:
-        type: string
-        default: "4.0.4"
-    steps:
-      - restore_cache:
-          name: Restore RVM / Ruby cache
-          keys:
-            - tiger_data-rvm-ruby-<< parameters.version >>-v2
-      - ruby/install:
-          version: << parameters.version >>
-      - save_cache:
-          name: Save RVM / Ruby cache
-          key: tiger_data-rvm-ruby-<< parameters.version >>-v2
-          paths:
-            - ~/.rvm
-            - /usr/local/rvm
-            - /home/circleci/.rvm
 
   # NOTE: Mediaflux requires a fixed MAC address for licensing.
   run_mediaflux:
@@ -192,7 +168,7 @@ commands:
 jobs:
   rubocop_lint:
     docker:
-      - image: cimg/ruby:4.0.4
+      - image: cimg/ruby:4.0.9
     working_directory: ~/tiger_data
     steps:
       - checkout
@@ -221,8 +197,6 @@ jobs:
           command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
-      - install_ruby_machine:
-          version: "4.0.4"
       - install_yarn_dependencies
       - install_dependencies:
           cache_prefix: machine
@@ -333,8 +307,6 @@ jobs:
       TIGERDATA_TEST_SURFACE: integration_mflux_shared
     steps:
       - checkout
-      - install_ruby_machine:
-          version: "4.0.4"
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
@@ -366,7 +338,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/ruby:4.0.4
+      - image: cimg/ruby:4.0.9
     steps:
       - run:
           # prettier-ignore
