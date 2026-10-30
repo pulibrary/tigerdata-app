@@ -65,7 +65,7 @@ commands:
           node-version: "latest"
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-2
+          key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-3
       - run:
           name: "Install Yarn using corepack"
           command: |
@@ -221,8 +221,6 @@ jobs:
           command: while true; do free -h >> /tmp/memory_usage.txt; sleep 5; done
       - cleanup_docker
       - run_mediaflux
-      - install_ruby_machine:
-          version: "4.0.9"
       - install_yarn_dependencies
       - install_dependencies:
           cache_prefix: machine
@@ -333,8 +331,6 @@ jobs:
       TIGERDATA_TEST_SURFACE: integration_mflux_shared
     steps:
       - checkout
-      - install_ruby_machine:
-          version: "4.0.9"
       - install_dependencies:
           cache_prefix: machine
       - install_yarn_dependencies
