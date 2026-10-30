@@ -70,7 +70,13 @@ commands:
           name: "Install Yarn using corepack"
           command: |
             corepack install
+      - run:
+          name: "Enable Yarn using corepack"
+          command: |
             corepack enable
+      - run:
+          name: "Prepare Yarn using corepack"
+          command: |
             corepack prepare yarn@4.18.1 --activate
       - run:
           name: Install NPM Dependencies via Yarn
