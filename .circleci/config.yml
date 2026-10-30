@@ -17,7 +17,7 @@ orbs:
   browser-tools: circleci/browser-tools@2.0
   coveralls: coveralls/coveralls@2.2.5
   ruby: circleci/ruby@4.0.0
-  node: circleci/node@7.2
+  node: circleci/node@7.2.1
 executors:
   basic-executor:
     docker:
@@ -62,7 +62,7 @@ commands:
     steps:
       - node/install:
           install-yarn: false
-          node-version: "latest"
+          node-version: "26.13.0"
       - restore_cache:
           name: Restore Yarn Package Cache
           key: &yarn_key tiger_data-yarn-cimg-{{ checksum "yarn.lock" }}-3
