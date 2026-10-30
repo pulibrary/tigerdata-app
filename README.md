@@ -33,6 +33,19 @@ The system will eventually have many roles.  Please refer to the [docs for a des
 1. `devbox shell`
 1. `devbox run setup`
 
+### Environment Varibales
+1. Set up local Entra and LDAP credentials
+   1. Put a stanza like this in your UNIX setup environment (e.g., `.zshrc` or `.bashrc`). Get the AWS secrets from the staging server:
+   ```
+   # Entra settings for Tigerdata (your own local secret setup in [Entra dev tigerdata application](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/appId/56c0934e-1102-4bec-9fb5-6166b81eb4da/isMSAApp~/false)
+   export ENTRA_CLIENT_ID="<client id from entra>"
+   export ENTRA_CLIENT_SECRET="<your secret value>"
+   export ENTRA_TENANT_ID="<tenant id from entra>"
+   # LDAP settings for Tigerdata (copied these values from ENV staging)
+   export LDAP_USERNAME="<user name from staging>"
+   export LDAP_PASSWORD="<password from staging>"
+   ```
+
 ### Starting / stopping services
 
 We use lando to run services required for both test and development environments.
@@ -112,9 +125,8 @@ The MediaFlux service documentation may be accessed using <http://0.0.0.0.:8888/
 
 ### How to run test suite
 
-- `asdf install`
-- `bundle install`
-- `yarn install`
+- `devbox shell`
+- `devbox run setup`
 - `bundle exec rake servers:start`
 - Fast: `bundle exec rspec spec`
 
