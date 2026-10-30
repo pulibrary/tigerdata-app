@@ -69,7 +69,7 @@ commands:
       - run:
           name: "Uninstall yarn and pnpm"
           command: |
-            npm uninstall -g yarn pnpm
+            npm -version
       - run:
           name: "npm install latest corepack"
           command: |
