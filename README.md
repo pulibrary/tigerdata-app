@@ -245,3 +245,6 @@ note: you may need to be a root user to have the permissions necessary to enter 
 ### CircleCI-Nomad
 
 CircleCI tasks that run in Nomad infrastructure send logs to [Signoz](https://grafana-nomad.lib.princeton.edu/a/grafana-lokiexplore-app/explore/service/circleci-runner-deploy/logs?patterns=%5B%5D&from=now-3h&to=now&var-ds=ffh9d36igqgw0b&var-filters=service_name%7C%3D%7Ccircleci-runner-deploy&var-fields=&var-levels=&var-metadata=&var-patterns=&var-lineFilterV2=&var-lineFilters=&urlColumns=%5B%5D&visualizationType=%22logs%22&displayedFields=%5B%22message%22%5D&var-fieldBy=$__all&var-labelBy=&timezone=browser&var-all-fields=&sortOrder=%22Descending%22&wrapLogMessage=false). Logs related to infrastructure failers, or test failures due to mediaflux errors can be found here.
+
+## Nomad Circle CI
+See the [nomad documentation](https://github.com/pulibrary/tigerdata-app/blob/main/docs/nomad-ci.md)
