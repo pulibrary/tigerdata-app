@@ -16,7 +16,7 @@
     "jsdom": "^30.1.2",
     "lint-staged": "^17.6.0",
     "nanoid": "^6.0.2",
-    "precommit-hook": "^3.0.0",
+    "pre-commit": "2.0.0",
     "prettier": "3.9.9",
     "rollup": "^4.64.0",
     "vite": "^8.3.5",
@@ -74,10 +74,13 @@
     "*js": "prettier --write",
     "*.yml": "prettier --write"
   },
-  "pre-commit": [
-    "lint",
-    "validate",
-    "test"
-  ],
+  "pre-commit": {
+    "silent": true,
+    "run": [
+      "lint",
+      "validate",
+      "test"
+    ]
+  },
   "allowScripts": {}
 }
