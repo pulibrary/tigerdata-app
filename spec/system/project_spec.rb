@@ -91,6 +91,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
           within(".breadcrumb-container") do
             expect(page).to have_css("svg[class*='home-icon']")
             expect(page).to have_css("li", text: "BProject")
+            expect(page).not_to have_text "Your browser does not support Clipboard API"
             page.find(".sizer").click
             expect(page).to have_css ".check"
           end
@@ -142,6 +143,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
             have_css("p", text: "/tigerdata/RDSS/Query/CProject/A0")
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
+            expect(page).not_to have_text "Your browser does not support Clipboard API"
             expect(page).to have_css(".sizer") # check that the copy path button is present
             expect(page).not_to have_css(".tooltiptext", text: "TigerData uses base-10 units for bytes")
             find(".info-container .tooltip-container").click
@@ -159,6 +161,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
             have_css("p", text: "/tigerdata/RDSS/Query/CProject/parent_1")
             expect(page).to have_css("header", text: "Modified Date")
             have_css("p", text: last_modified_date)
+            expect(page).not_to have_text "Your browser does not support Clipboard API"
             expect(page).to have_css(".sizer") # check that the copy path button is present
             expect(page).not_to have_css(".tooltiptext", text: "This number reflects all items")
             find(".info-container .tooltip-container").click
@@ -252,7 +255,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
 
         expect(page).to have_text "Storage (500 GB)"
         expect(page).to have_text "400 bytes out of 500 GB used"
-        expect(page).not_to have_text "Your Browser Does Not Support Clipboard API"
+        expect(page).not_to have_text "Your browser does not support Clipboard API"
         within "#project-details-heading" do
           expect(page).not_to have_css ".check"
           page.find(".sizer").click
