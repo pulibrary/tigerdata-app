@@ -253,7 +253,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
 
-        expect(page).not_to have_text "Your Browser Does Not Support Clipboard API"
+        expect(page).not_to have_text "Your browser does not support Clipboard API"
         within "#project-details-heading" do
           expect(page).not_to have_css ".check"
           page.find(".sizer").click
