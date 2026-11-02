@@ -17,23 +17,6 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  def create!(initial_metadata:, user:)
-    self.metadata_model = initial_metadata
-    if self.valid?
-      if initial_metadata.project_id == ProjectMetadata::DOI_NOT_MINTED
-        self.draft_doi(user: user)
-        self.save!
-        ProvenanceEvent.generate_submission_events(project: self, user: user)
-      else
-        self.save!
-      end
-      # return doi
-      self.metadata_model.project_id
-    else
-      nil
-    end
-  end
-
   def activate(current_user:)
     raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
     metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
