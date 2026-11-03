@@ -79,12 +79,6 @@ class ProjectMetadata
     pm
   end
 
-  def self.new_from_params(metadata_params)
-    pm = ProjectMetadata.new
-    pm.initialize_from_params(metadata_params)
-    pm
-  end
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
@@ -131,43 +125,6 @@ class ProjectMetadata
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
 
-  # Initializes the object with the values in the params (which is an ActionController::Parameters)
-  def initialize_from_params(params)
-    @data_user_read_only = ro_users_from_params(params)
-    @data_user_read_write = rw_users_from_params(params)
-    initialize_from_hash(params)
-  end
-
-  # Updates the object with the values in the params (which is an ActionController::Parameters)
-  # Notice how we only update values that come in the params and don't change the values that
-  # don't come as part of the params
-  def update_with_params(params, current_user)
-    set_value(params, "title")
-    set_value(params, "description")
-    set_value(params, "status")
-    set_value(params, "data_sponsor")
-    set_value(params, "data_manager")
-    set_value(params, "departments")
-    set_value(params, "project_id")
-    set_value(params, "project_purpose")
-    set_value(params, "data_security_level")
-    calculate_project_directory(params)
-
-    if params["data_user_counter"].present?
-      @data_user_read_only = ro_users_from_params(params)
-      @data_user_read_write = rw_users_from_params(params)
-    end
-
-    update_storage_capacity(params)
-    update_storage_performance_expectations
-    update_approval_note(params, current_user)
-    @submission = params[:submission] if params[:submission]
-
-    # Fields that come from the edit form
-    @updated_by = current_user.uid
-    @updated_on = Time.current.in_time_zone("America/New_York").iso8601
-  end
-
   # Alias for `data_user_read_only`
   def ro_users
     @data_user_read_only
@@ -200,28 +157,6 @@ class ProjectMetadata
 
   private
 
-  def data_users_from_params(params, access)
-    return [] if params.nil?
-    users = []
-    counter = params[:data_user_counter].to_i
-    (1..counter).each do |i|
-      key = "data_user_#{i}"
-      access_key = key + "_read_access"
-      if params[access_key] == access
-        users << params[key]
-      end
-    end
-    users.compact.uniq
-  end
-
-  def ro_users_from_params(params)
-    data_users_from_params(params, "read-only")
-  end
-
-  def rw_users_from_params(params)
-    data_users_from_params(params, "read-write")
-  end
-
   # Initializes values that we have defaults for.
   def set_defaults
     if @storage_capacity.nil?
@@ -238,54 +173,5 @@ class ProjectMetadata
 
     @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
     @schema_version = TigerdataSchema::SCHEMA_VERSION
-  end
-
-  # Sets a value in the object if the value exists in the params
-  def set_value(params, key)
-    if params.include?(key)
-      send("#{key}=", params[key])
-    end
-  end
-
-  def update_storage_capacity(params)
-    if params["storage_capacity"].present?
-      @storage_capacity = {
-        "size" => {
-          "approved" => params["storage_capacity"].to_i,
-          "requested" => storage_capacity[:size][:requested]
-        },
-        "unit" => {
-          "approved" => params["storage_unit"],
-          "requested" => storage_capacity[:unit][:requested]
-        }
-      }
-    end
-  end
-
-  def update_storage_performance_expectations
-    # we don't allow the user to specify an approve value so we use the requested
-    @storage_performance_expectations = {
-      "requested" => storage_performance_expectations[:requested],
-      "approved" => storage_performance_expectations[:requested]
-    }
-  end
-
-  def update_approval_note(params, current_user)
-    if params[:event_note_message].present?
-      @approval_note = {
-        note_by: current_user.uid,
-        note_date_time: Time.current.in_time_zone("America/New_York").iso8601,
-        event_type: params[:event_note],
-        message: params[:event_note_message]
-      }
-    end
-  end
-
-  def calculate_project_directory(params)
-    if params.key?("project_directory_prefix") || params.key?("project_directory")
-      path_items = [params["project_directory_prefix"], params["project_directory"]].compact.map(&:strip)
-      full_path = path_items.join("/")
-      @project_directory = ProjectMetadata.safe_directory(full_path)
-    end
   end
 end

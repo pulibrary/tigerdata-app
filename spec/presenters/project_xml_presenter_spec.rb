@@ -457,63 +457,6 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
             expect(node.content).to eq(presenter.request_date_time)
           end
         end
-
-        context "when the project has been approved" do
-          let(:status) { ::Project::APPROVED_STATUS }
-          let(:approver) { FactoryBot.create(:user, uid: "efg456") }
-
-          # let(:metadata_model) do
-          #  hash = {
-          #    data_sponsor: data_sponsor.uid,
-          #    data_manager: data_manager.uid,
-          #    project_directory: "/tigerdata/abcd1/test-project-2",
-          #    title: "project 123",
-          #    departments: [department], # RDSS test code in fixture data
-          #    description: "hello world",
-          #    data_user_read_only: [read_only.uid],
-          #    data_user_read_write: [read_write.uid],
-          #    #status: status,
-          #    created_on: Time.current.in_time_zone("America/New_York").iso8601,
-          #    created_by: FactoryBot.create(:user).uid,
-          #    project_id: "10.34770/az09-0004",
-          #    #approval_on: Time.current.in_time_zone("America/New_York").iso8601,
-          #    #approved_by: approver.uid,
-          #  }
-          #  ProjectMetadata.new_from_hash(hash)
-          # end
-
-          let(:params) do
-            {
-              event_note: "Project Approved",
-              event_note_message: "This project has been approved."
-            }
-          end
-
-          before do
-            metadata_model.update_with_params(params, approver)
-          end
-
-          describe "<approvedBy>" do
-            let(:node) { root.at_xpath("projectProvenance/submission/approvedBy") }
-
-            it "builds a <approvedBy> element tracking the approved request for resources for the project" do
-              expect(node).to be_a(Nokogiri::XML::Element)
-              expect(node.name).to eq("approvedBy")
-              expect(node["userID"]).to eq(presenter.approved_by)
-              expect(node["userIDType"]).to eq("NetID")
-            end
-          end
-
-          describe "<approvalDateTime>" do
-            let(:node) { root.at_xpath("projectProvenance/submission/approvalDateTime") }
-
-            it "builds a <approvalDateTime> element tracking the approved request for resources for the project" do
-              expect(node).to be_a(Nokogiri::XML::Element)
-              expect(node.name).to eq("approvalDateTime")
-              expect(node.content).to eq(presenter.approval_date_time)
-            end
-          end
-        end
       end
     end
 
