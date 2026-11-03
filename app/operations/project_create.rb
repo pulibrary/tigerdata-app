@@ -96,8 +96,18 @@ class ProjectCreate < Dry::Operation
   end
 
   def activate_project(project, approver)
-    project.activate(current_user: approver)
-    Success(project)
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: approver.mediaflux_session, id: project.mediaflux_id)
+    metadata_request.resolve
+    if metadata_request.error?
+      Failure("Error activate project #{project.id}: Error retrieving metadata: #{metadata_request.response_error}")
+
+    elsif project.title == metadata_request.metadata[:title]
+      project.metadata_model.status = Project::ACTIVE_STATUS
+      project.save!
+      Success(project)
+    else
+      Failure("Error activate project #{project.id}: Title mismatch: #{project.title} != #{metadata_request.metadata[:title]}")
+    end
   rescue => ex
     Failure("Error activate project #{project.id}: #{ex}")
   end

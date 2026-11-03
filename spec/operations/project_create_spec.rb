@@ -82,15 +82,28 @@ RSpec.describe ProjectCreate, type: :operation, integration: true do
         expect(error_message).to include("Setting the mediaflux id the")
       end
 
-      it "returns a failure if the project can not be activated" do
-        project = FactoryBot.create(:approved_project)
-        allow(Project).to receive(:create!).and_return(project)
-        allow(project).to receive(:activate).and_raise("Object issue")
-        result = described_class.new.call(request: invalid_request, approver: approver)
+      it "returns a failure if the project can not be queried during activation" do
+        metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: {}, resolve: nil, error?: true, response_error: "Metadata Error"
+        allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
+
+        result = described_class.new.call(request: valid_request, approver: approver)
         expect(result).not_to be_success
 
         error_message = result.failure
         expect(error_message).to include("Error activate project")
+        expect(error_message).to include("Error retrieving metadata: Metadata Error")
+      end
+
+      it "returns a failure if the project title is different than during activation" do
+        metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: { title: "Different Title" }, resolve: nil, error?: false
+        allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
+
+        result = described_class.new.call(request: valid_request, approver: approver)
+        expect(result).not_to be_success
+
+        error_message = result.failure
+        expect(error_message).to include("Error activate project")
+        expect(error_message).to include("Title mismatch: Example Project != Different Title")
       end
 
       it "retries on EOFError when persisting to Mediaflux" do
