@@ -19,7 +19,8 @@ class ProjectCreate < Dry::Operation
     # Link the request to the project
     project = Project.create!({ metadata_json: project_metadata_json })
     request.project_id = project.id
-    project.draft_doi
+    puldatacite = PULDatacite.new
+    project.metadata_model.project_id = puldatacite.draft_doi
     project.save!
 
     # Return Success(attrs) or Failure(error)

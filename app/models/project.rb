@@ -17,11 +17,6 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  def draft_doi(user: nil)
-    puldatacite = PULDatacite.new
-    self.metadata_model.project_id = puldatacite.draft_doi
-  end
-
   # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
   # but we'll keep them both while we are refactoring the code so that we don't break
   # everything at once since `metadata` is used everywhere.
