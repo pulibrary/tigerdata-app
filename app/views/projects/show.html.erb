@@ -11,7 +11,7 @@
     <div class="lux">
     <div class="row align-items-center contents-summary">
       <div class="col-sm-2 file-inventory">File Inventory:</div>
-      <div class="col-sm-2 file-total-label">Total Files: <%= ActiveSupport::NumberHelper.number_to_delimited(@num_files) %></div>
+      <div class="col-sm-2 file-total-label">Total Files: <%= @presenter.num_files %></div>
       <div class="col-sm-8 text-end divider">
         <div name="project-contents-preview">
           <button class="btn pul-button-primary" popovertarget="list-contents-modal">Download Complete List</button>
@@ -39,9 +39,9 @@
     </div>
     <div class="draft-content">
       <div class="modal-body">
-        This will generate a list of <%= @num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
+        This will generate a list of <%= @presenter.num_files %> files and their attributes in a downloadable CSV. Do you wish to continue?
 
-        <span class="latest-download-link"><%= render partial: "latest_download_link", locals: { project: @project } if @latest_completed_download %></span>
+        <span class="latest-download-link"><%= render partial: "latest_download_link", locals: { project: @project } if @presenter.latest_completed_download %></span>
       </div>
       <div class="button-frame">
         <button type="button" id="request-list-contents" class="btn btn-success" data-list-contents-path="<%= project_list_contents_path %>"

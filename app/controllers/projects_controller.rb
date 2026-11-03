@@ -53,18 +53,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
 
-    @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
-    @storage_usage = project.storage_usage(session_id: current_user.mediaflux_session)
-    @storage_capacity = project.storage_capacity(session_id: current_user.mediaflux_session)
-
-    @num_files = project.asset_count(session_id: current_user.mediaflux_session)
-
-    @project_file_display_limit = Rails.configuration.project_file_display_limit
-    @show_preview_limit_warning = false
-    @files = find_mediaflux_assets
-
     @project_session = "content"
-    @render_project_explorer = params["explorer"] == "true"
     respond_to do |format|
       format.html { render }
       format.xml {
@@ -210,15 +199,5 @@ class ProjectsController < ApplicationController
       flash[:notice] = "Error searching projects for #{@title_query}.  Error: #{result.failure}"
       @project_presenters = []
     end
-  end
-
-  # This method retrieves the list of assets for the project, either using the new directory listing or the old file list depending on the configuration. It also sets a flag to indicate whether a warning about the preview limit should be shown.
-  # @return [Array] the list of files for the project
-  def find_mediaflux_assets
-    @project_file_display_limit = @presenter.project_file_display_limit
-    @show_preview_limit_warning = @presenter.show_preview_limit_warning
-
-    @files = @presenter.files
-    @files
   end
 end
