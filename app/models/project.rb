@@ -17,19 +17,6 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  def activate(current_user:)
-    raise StandardError.new("Only approved projects can be activated") if self.status != Project::APPROVED_STATUS
-    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: current_user.mediaflux_session, id: self.mediaflux_id)
-    metadata_request.resolve
-    raise metadata_request.response_error if metadata_request.error?
-    if self.title == metadata_request.metadata[:title]
-      self.metadata_model.status = Project::ACTIVE_STATUS
-      self.save!
-    else
-      raise StandardError.new("Title mismatch: #{self.title} != #{metadata_request.metadata[:title]}")
-    end
-  end
-
   def draft_doi(user: nil)
     puldatacite = PULDatacite.new
     self.metadata_model.project_id = puldatacite.draft_doi
