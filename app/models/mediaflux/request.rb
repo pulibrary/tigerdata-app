@@ -2,7 +2,7 @@
 
 module Mediaflux
   # This is the version of Mediaflux that we are testing against
-  EXPECTED_VERSION = "4.19.009"
+  EXPECTED_VERSION = "4.19.012"
 
   class Request
     # As this is an abstract class, this should be overridden to specify the Mediaflux API service
