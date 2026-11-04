@@ -1159,6 +1159,12 @@
             background: #bd5910;
             color: #fff;
           }
+
+          .btn:hover {
+          text-decoration-thickness: 2px;
+          text-underline-offset: 3px;
+          background: #333333;
+        }
         }
       }
     }
