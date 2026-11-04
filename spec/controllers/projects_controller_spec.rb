@@ -227,12 +227,24 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       context "a user who has project access" do
         let(:researcher_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
 
-        it "does contact mediaflux" do
+        context "with views rendered" do
+          render_views
+
+          it "loads the files from mediaflux" do
+            allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
+
+            get :show, params: { id: project.id }
+
+            expect(Mediaflux::QueryRequest).to have_received(:new)
+          end
+        end
+
+        it "lazy loads the files from mediaflux later" do
           allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
 
           get :show, params: { id: project.id }
 
-          expect(Mediaflux::QueryRequest).to have_received(:new)
+          expect(Mediaflux::QueryRequest).not_to have_received(:new)
           expect(response.body).to eq("")
         end
 
@@ -243,13 +255,16 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
             project
           end
 
-          it "runs a query" do
-            sign_in sponsor_and_data_manager
-            allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
+          context "with views rendered" do
+            render_views
+            it "runs a query" do
+              sign_in sponsor_and_data_manager
+              allow(Mediaflux::QueryRequest).to receive(:new).and_call_original
 
-            get :show, params: { id: project.id }
+              get :show, params: { id: project.id }
 
-            expect(Mediaflux::QueryRequest).to have_received(:new)
+              expect(Mediaflux::QueryRequest).to have_received(:new)
+            end
           end
 
           context "the session expires for an active web user" do

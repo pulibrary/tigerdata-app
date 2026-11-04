@@ -6,7 +6,7 @@ class ProjectShowPresenter
   delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
   delegate "project_id", "storage_performance_expectations", to: :project_metadata
 
-  attr_reader :project, :project_metadata, :project_file_display_limit
+  attr_reader :project, :project_metadata, :project_file_display_limit, :latest_completed_download
 
   # @return [Class] The presenter class for building XML Documents from Projects
   def self.xml_presenter_class
@@ -21,8 +21,11 @@ class ProjectShowPresenter
     @project = project
     @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     @session_id = current_user.mediaflux_session
-    @project_metadata = @project&.metadata_model
     @project_file_display_limit = Rails.configuration.project_file_display_limit
+    if @project.present?
+      @project_metadata = @project.metadata_model
+      @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
+    end
   end
 
   def title
@@ -184,6 +187,10 @@ class ProjectShowPresenter
 
   def quota_usage(session_id:)
     "#{project.storage_usage(session_id:)} out of #{project.storage_capacity(session_id:)} used"
+  end
+
+  def num_files
+    @num_files ||= ActiveSupport::NumberHelper.number_to_delimited(project.asset_count(session_id: @session_id) || 0)
   end
 
   def quota_percentage(session_id:, dashboard: false)
