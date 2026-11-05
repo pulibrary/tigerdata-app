@@ -25,6 +25,6 @@ New Project Requests that are denied as part of the overall requesting workflow 
 - Remove your sysadmin role when you are done:
   ```bash
   u = User.find_by(email:$USER_EMAIL)
-  u.sysadmin = true
+  u.sysadmin = false
   u.save!
   ```
