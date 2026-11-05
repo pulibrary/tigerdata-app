@@ -5,10 +5,6 @@ class Project < ApplicationRecord
 
   validates_with ProjectValidator
   has_many :provenance_events, dependent: :destroy
-  before_save do |project|
-    # Ensure that the metadata JSONB postgres field is persisted properly
-    project.metadata = project.metadata_model
-  end
 
   # Valid project status described in ADR 7
   # See `architecture-decisions/0007-valid-project-statuses.md`
@@ -17,25 +13,12 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  # Ideally this method should return a ProjectMetadata object (like `metadata_model` does)
-  # but we'll keep them both while we are refactoring the code so that we don't break
-  # everything at once since `metadata` is used everywhere.
-  def metadata
-    @metadata_hash = (metadata_json || {}).with_indifferent_access
+  def clear_metadata_model
+    @metadata_model = nil
   end
 
   def metadata_model
-    @metadata_model ||= ProjectMetadata.new_from_hash(self.metadata)
-  end
-
-  def metadata_model=(new_metadata_model)
-    @metadata_model = new_metadata_model
-  end
-
-  def metadata=(metadata_model)
-    # Convert our metadata to a hash so it can be saved on our JSONB field
-    metadata_hash = JSON.parse(metadata_model.to_json)
-    self.metadata_json = metadata_hash
+    @metadata_model ||= ProjectMetadata.new_from_hash((metadata_json || {}).with_indifferent_access)
   end
 
   def title
@@ -255,6 +238,7 @@ class Project < ApplicationRecord
     human = quota_info[:quota_allocation_human]
     size, unit = parse_human_quota(human)
     metadata_model.apply_approved_quota(size:, unit:)
+    self.metadata_json = JSON.parse(metadata_model.to_json)
     save!
     quota_info
   end

@@ -151,6 +151,8 @@ RSpec.describe TigerdataMailer, type: :mailer do
 
     it "uses portal JSON that has been refreshed from Mediaflux" do
       project.metadata_model.apply_approved_quota(size: 850, unit: "TB")
+      project.metadata_json = JSON.parse(project.metadata_model.to_json)
+
       project.save!
 
       described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver

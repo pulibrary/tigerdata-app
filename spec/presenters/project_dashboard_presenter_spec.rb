@@ -13,7 +13,8 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#type" do
     it "returns the requested type" do
-      project.metadata_model.storage_performance_expectations["approved"] = nil
+      project.metadata_json["storage_performance_expectations"]["approved"] = nil
+      project.clear_metadata_model
       presenter = ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:)
       expect(presenter.type).to include("Requested")
     end

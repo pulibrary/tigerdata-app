@@ -27,6 +27,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   let(:project_directory) do
     "/tigerdata/abcd1/test-project-2"
   end
+  let(:created_by) { FactoryBot.create(:user).uid }
+  let(:created_on) { Time.current.in_time_zone("America/New_York").iso8601 }
   let(:metadata_model) do
     hash = {
       data_sponsor: sponsor_user.uid,
@@ -38,11 +40,16 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       data_user_read_only: [read_only.uid],
       data_user_read_write: [read_write.uid],
       status: status,
-      created_on: Time.current.in_time_zone("America/New_York").iso8601,
-      created_by: FactoryBot.create(:user).uid,
+      created_on: created_on,
+      created_by: created_by,
       project_id: "10.34770/az09-0004",
       globus: globus,
-      smb: smb
+      smb: smb,
+      storage_capacity: Rails.configuration.project_defaults[:storage_capacity],
+      storage_performance_expectations: Rails.configuration.project_defaults[:storage_performance_expectations],
+      project_purpose: Rails.configuration.project_defaults[:project_purpose],
+      submission: { "requested_by" => created_by, "request_date_time" => created_on },
+      schema_version: TigerdataSchema::SCHEMA_VERSION
     }
     ProjectMetadata.new_from_hash(hash)
   end
