@@ -10,8 +10,8 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
-    project_metadata = @project.metadata
-    storage_capacity = project_metadata[:storage_capacity]
+    project_metadata = @project.metadata_model
+    storage_capacity = project_metadata.storage_capacity
     size = storage_capacity[:size]
     unit = storage_capacity[:unit]
 

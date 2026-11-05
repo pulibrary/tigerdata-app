@@ -107,8 +107,8 @@ class ProjectMetadata
     # NOTE: The following attributes are required by the 0.8 XML schema
     @number_of_files = metadata_hash[:number_of_files] || "Less than 10,000"
     @hpc = metadata_hash[:hpc] || self.class.default_hpc
-    @globus_request = metadata_hash[:globus] || self.class.default_globus_request
-    @smb_request = metadata_hash[:smb] || self.class.default_smb_request
+    @globus_request = metadata_hash[:globus] || metadata_hash[:globus_request] || self.class.default_globus_request
+    @smb_request = metadata_hash[:smb] || metadata_hash[:smb_request] || self.class.default_smb_request
 
     @data_use_agreement = metadata_hash[:data_use_agreement] || self.class.default_data_use_agreement
 
@@ -119,7 +119,8 @@ class ProjectMetadata
 
     @data_security_level = metadata_hash[:data_security_level] # no default is set for security level
 
-    set_defaults
+    @submission = metadata_hash[:submission]
+    @schema_version = metadata_hash[:schema_version] || TigerdataSchema::SCHEMA_VERSION
   end
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
@@ -153,25 +154,5 @@ class ProjectMetadata
         "requested" => current.dig(:unit, :requested)
       }
     }
-  end
-
-  private
-
-  # Initializes values that we have defaults for.
-  def set_defaults
-    if @storage_capacity.nil?
-      @storage_capacity = Rails.configuration.project_defaults[:storage_capacity]
-    end
-
-    if @storage_performance_expectations.nil?
-      @storage_performance_expectations = Rails.configuration.project_defaults[:storage_performance_expectations]
-    end
-
-    if @project_purpose.nil?
-      @project_purpose = Rails.configuration.project_defaults[:project_purpose]
-    end
-
-    @submission = { "requested_by" => @created_by, "request_date_time" => @created_on } if @submission.nil?
-    @schema_version = TigerdataSchema::SCHEMA_VERSION
   end
 end

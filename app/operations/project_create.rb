@@ -20,7 +20,8 @@ class ProjectCreate < Dry::Operation
     project = Project.create!({ metadata_json: project_metadata_json })
     request.project_id = project.id
     puldatacite = PULDatacite.new
-    project.metadata_model.project_id = puldatacite.draft_doi
+    project.metadata_json["project_id"] = puldatacite.draft_doi
+    project.clear_metadata_model
     project.save!
 
     # Return Success(attrs) or Failure(error)
@@ -43,9 +44,10 @@ class ProjectCreate < Dry::Operation
     else
       ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
       # Save the submission provenance
+
       # TODO:  Should we update the metadata_model or just the metadata hash directly?
-      project.metadata_model.submission["approved_by"] = current_user.uid
-      project.metadata_model.submission["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
+      project.metadata_json["submission"]["approved_by"] = current_user.uid
+      project.metadata_json["submission"]["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
       project.save!
 
       Success(mediaflux_id)

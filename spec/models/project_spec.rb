@@ -83,8 +83,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "only creates one provenance event" do
-      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata["created_by"],
-                                       event_details: "Requested by #{project.metadata_json['data_sponsor']}")
+      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata_model.created_by,
+                                       event_details: "Requested by #{project.metadata_model.data_sponsor}")
       expect(project.provenance_events.count).to eq 1
     end
   end

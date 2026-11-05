@@ -38,7 +38,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         it "renders the project metadata as json" do
           get :details, params: { id: project.id, format: :json }
           expect(response.content_type).to eq("application/json; charset=utf-8")
-          expect(JSON.parse(response.body)).to eq(project.metadata)
+          expect(JSON.parse(response.body)).to eq(project.metadata_json)
         end
 
         it "shows affiliation code as being saved to the project" do
@@ -54,10 +54,10 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
           xml_doc = Nokogiri::XML(response.body)
           expect(xml_doc.xpath("/resource/title").text).to eq project.title
           expect(xml_doc.xpath("/resource/projectDirectory/projectDirectoryPath").text).to eq project.project_directory
-          expect(xml_doc.xpath("/resource/description").text).to eq project.metadata[:description]
-          expect(xml_doc.xpath("/resource/dataSponsor/@userID").text).to eq project.metadata[:data_sponsor]
-          expect(xml_doc.xpath("/resource/dataManager/@userID").text).to eq project.metadata[:data_manager]
-          expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata[:project_id]
+          expect(xml_doc.xpath("/resource/description").text).to eq project.metadata_model.description
+          expect(xml_doc.xpath("/resource/dataSponsor/@userID").text).to eq project.metadata_model.data_sponsor
+          expect(xml_doc.xpath("/resource/dataManager/@userID").text).to eq project.metadata_model.data_manager
+          expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata_model.project_id
         end
 
         context "when rendering the project metadata as html" do
@@ -437,10 +437,10 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         xml_doc = Nokogiri::XML(response.body)
         expect(xml_doc.xpath("/meta//Title").text).to eq project.title
         expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project.project_directory
-        expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata[:description]
-        expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata[:data_sponsor]
-        expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata[:data_manager]
-        expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata[:project_id]
+        expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata_model.description
+        expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata_model.data_sponsor
+        expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata_model.data_manager
+        expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata_model.project_id
       end
 
       context "when rescuing a mediaflux error" do

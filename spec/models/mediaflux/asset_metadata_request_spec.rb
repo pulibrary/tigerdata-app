@@ -71,7 +71,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:project_id]).to eq("10.34770/tbd")
         expect(metadata[:project_directory]).to eq(valid_project.project_directory)
         # TODO: uncomment when the fields have been implemented in the tigerdata:project schema
-        # expect(metadata[:created_by]).to eq(valid_project.metadata[:created_by])
+        # expect(metadata[:created_by]).to eq(valid_project.metadata_model.created_by)
         # expect(metadata[:updated_by]).to be_blank # we have not updted the project so no updated by is available
       end
     end

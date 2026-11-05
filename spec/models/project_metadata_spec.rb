@@ -43,13 +43,6 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.data_security_level).to be_nil
     end
 
-    it "sets the default values when not given" do
-      project_metadata.initialize_from_hash(hash)
-      expect(project_metadata.storage_capacity[:size].with_indifferent_access).to eq default_storage_capacity
-      expect(project_metadata.storage_performance_expectations.with_indifferent_access).to eq default_storage_performance_expectations
-      expect(project_metadata.project_purpose).to eq default_project_purpose
-    end
-
     it "overwrites default values when given" do
       hash[:project_purpose] = "Not research"
       project_metadata.initialize_from_hash(hash)

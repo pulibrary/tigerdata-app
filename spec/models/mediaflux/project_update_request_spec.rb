@@ -74,10 +74,10 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
                      "<meta>\n        " \
                      "<tigerdata:project>\n          " \
                      "<ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n          " \
-                     "<Title>#{project.metadata[:title]}</Title>\n          " \
-                     "<Description>#{project.metadata[:description]}</Description>\n          " \
-                     "<DataSponsor>#{project.metadata[:data_sponsor]}</DataSponsor>\n          " \
-                     "<DataManager>#{project.metadata[:data_manager]}</DataManager>\n          " \
+                     "<Title>#{project.metadata_model.title}</Title>\n          " \
+                     "<Description>#{project.metadata_model.description}</Description>\n          " \
+                     "<DataSponsor>#{project.metadata_model.data_sponsor}</DataSponsor>\n          " \
+                     "<DataManager>#{project.metadata_model.data_manager}</DataManager>\n          " \
                      "<Department>77777, 88888</Department>\n          " \
                      "<DataUser>n/a</DataUser>\n        " \
                      "</tigerdata:project>\n      " \

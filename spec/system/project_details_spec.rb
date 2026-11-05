@@ -234,6 +234,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
         project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
         project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
+        project_in_mediaflux.metadata_json = JSON.parse(project_in_mediaflux.metadata_model.to_json)
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
         expect(page).to have_text(project_in_mediaflux.title)

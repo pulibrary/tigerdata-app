@@ -28,5 +28,6 @@ FactoryBot.define do
     project_folder { random_project_directory }
     requested_by { "tigerdatatester" }
     data_security_level { 0 }
+    project_purpose { "Research" }
   end
 end
