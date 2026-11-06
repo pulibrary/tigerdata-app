@@ -23,7 +23,7 @@ class ProjectShowPresenter
     @session_id = current_user.mediaflux_session
     @project_file_display_limit = Rails.configuration.project_file_display_limit
     if @project.present?
-      @project_metadata = @project.metadata_model
+      @project_metadata = ProjectMetadata.new(@project)
       @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     end
   end

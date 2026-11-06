@@ -6,6 +6,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request1) { FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid) }
   let(:project) { request1.approve(sponsor_and_data_manager) }
+  let(:metadata_model) { ProjectMetadata.new(project) }
 
   let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
 
@@ -36,7 +37,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
     context "when downloads exist" do
       before do
         FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: InventoryRequest::PENDING,
-                                     request_details: { project_title: project.title }, completion_time: 1.day.ago)
+                                     request_details: { project_title: metadata_model.title }, completion_time: 1.day.ago)
       end
 
       it "returns the time ago" do
@@ -47,7 +48,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
     context "when download in progress exist" do
       before do
         FileInventoryRequest.create!(user_id: FactoryBot.create(:user).id, project_id: project.id, job_id: 123, state: InventoryRequest::PENDING,
-                                     request_details: { project_title: project.title }, completion_time: nil)
+                                     request_details: { project_title: metadata_model.title }, completion_time: nil)
       end
 
       it "returns the time ago" do
@@ -69,7 +70,7 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#description" do
     it "delegates to project metdata_model" do
-      expect(presenter.description).to eq(project.metadata_model.description)
+      expect(presenter.description).to eq(metadata_model.description)
     end
   end
 
@@ -93,19 +94,19 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#project_directory" do
     it "uses the value in Mediaflux" do
-      expect(presenter.project_directory).to eq("/" + project.metadata_model.project_directory)
+      expect(presenter.project_directory).to eq("/" + metadata_model.project_directory)
     end
   end
 
   describe "#project_id" do
     it "delegates to project metdata_model" do
-      expect(presenter.project_id).to eq(project.metadata_model.project_id)
+      expect(presenter.project_id).to eq(metadata_model.project_id)
     end
   end
 
   describe "#project_purpose" do
     it "delegates to project metdata_model" do
-      expect(presenter.project_purpose).to eq(project.metadata_model.project_purpose)
+      expect(presenter.project_purpose).to eq(metadata_model.project_purpose)
     end
   end
 
@@ -117,19 +118,19 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   describe "#storage_capacity" do
     it "delegates to project metadata_model" do
-      expect(presenter.storage_capacity).to eq(project.metadata_model.storage_capacity)
+      expect(presenter.storage_capacity).to eq(metadata_model.storage_capacity)
     end
   end
 
   describe "#storage_performance_expectations" do
     it "delegates to project metadata_model" do
-      expect(presenter.storage_performance_expectations).to eq(project.metadata_model.storage_performance_expectations)
+      expect(presenter.storage_performance_expectations).to eq(metadata_model.storage_performance_expectations)
     end
   end
 
   describe "#title" do
     it "delegates to project" do
-      expect(presenter.title).to eq(project.title)
+      expect(presenter.title).to eq(metadata_model.title)
     end
   end
 end

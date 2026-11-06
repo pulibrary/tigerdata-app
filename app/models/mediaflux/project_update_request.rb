@@ -13,7 +13,7 @@ module Mediaflux
       @id = @project.mediaflux_id
       @xml_namespace = self.class.default_xml_namespace
       @xml_namespace_uri = self.class.default_xml_namespace_uri
-      @project_metadata = project.metadata_model
+      @project_metadata = ProjectMetadata.new(@project)
     end
 
     # Specifies the Mediaflux service to use when updating assets

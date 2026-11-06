@@ -7,6 +7,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
   let(:mediaflux_url) { Mediaflux::Request.uri.to_s }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+  let(:approved_metadata_model) { ProjectMetadata.new(approved_project) }
 
   describe "#result" do
     before do
@@ -87,7 +88,7 @@ RSpec.describe Mediaflux::IteratorRequest, connect_to_mediaflux: true, type: :mo
       query_request = described_class.new(session_token: user.mediaflux_session, iterator: @iterator_id, action: "get-meta")
       result = query_request.result
       expect(result[:files][0].name).to eq "__asset_id__#{@asset_id}"
-      expect(result[:files][0].path).to eq "/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}"
+      expect(result[:files][0].path).to eq "/princeton/#{approved_metadata_model.project_directory}/__asset_id__#{@asset_id}"
       expect(result[:files].count).to eq 2
       expect(result[:complete]).to eq true
       expect(a_request(:post, mediaflux_url).with do |req|

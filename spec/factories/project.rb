@@ -28,8 +28,8 @@ FactoryBot.define do
           request_date_time: Time.current.in_time_zone("America/New_York").iso8601
         }
       end
-      metadata_model do
-        hash = {
+      metadata_hash do
+        {
           data_sponsor: data_sponsor,
           data_manager: data_manager,
           data_user_read_only: data_user_read_only,
@@ -53,10 +53,9 @@ FactoryBot.define do
           approved_on: approved_on,
           submission: submission
         }
-        ProjectMetadata.new_from_hash(hash)
       end
     end
-    metadata_json { JSON.parse(metadata_model.to_json) }
+    metadata_json { JSON.parse(metadata_hash.to_json) }
     mediaflux_id { nil }
 
     factory :project_with_doi, class: "Project" do

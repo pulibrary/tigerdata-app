@@ -234,8 +234,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_css("#project-details-heading")
         expect(page).to have_text("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
         project = Project.last
-        expect(project.title).to eq("Test Project Title")
-        expect(project.metadata_json["project_id"]).to eq("10.34770/tbd")
+        metadata_model = ProjectMetadata.new(project)
+        expect(metadata_model.title).to eq("Test Project Title")
+        expect(metadata_model.project_id).to eq("10.34770/tbd")
         expect(project).to be_valid
       end
 
@@ -247,7 +248,8 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
         expect(page).to have_css("#project-details-heading")
         expect(page).to have_text("The request has been approved and this project was created in the TigerData web portal. The request has been processed and deleted.")
         project = Project.last
-        expect(project.title).to eq("Blue Mountain")
+        metadata_model = ProjectMetadata.new(project)
+        expect(metadata_model.title).to eq("Blue Mountain")
         expect(project).to be_valid
       end
 

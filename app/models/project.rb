@@ -18,11 +18,7 @@ class Project < ApplicationRecord
   end
 
   def metadata_model
-    @metadata_model ||= ProjectMetadata.new_from_hash((metadata_json || {}).with_indifferent_access)
-  end
-
-  def title
-    self.metadata_model.title
+    @metadata_model ||= ProjectMetadata.new(self)
   end
 
   def departments

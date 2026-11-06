@@ -2,7 +2,7 @@ The following project has been approved and created:
 
 Project ID: <%= @project.id %>
 Mediaflux ID: <%= @project.mediaflux_id %>
-Title: <%= @project.title %>
+Title: <%= @project.metadata_json["title"] %>
 Project Directory: <%= @project.project_directory %>
 Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
 Data Manager: <%= @project.metadata_json["data_manager"] %>

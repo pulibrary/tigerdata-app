@@ -67,9 +67,10 @@ class ProjectCreate < Dry::Operation
   end
 
   def update_project_with_mediaflux_info(mediaflux_id:, project:)
+    metadata_model = ProjectMetadata.new(project)
     project.mediaflux_id = mediaflux_id
-    project.metadata_model.status = Project::APPROVED_STATUS
-    project.save!
+    metadata_model.status = Project::APPROVED_STATUS
+    metadata_model.update_project
     Success(project)
   rescue => ex
     # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
@@ -77,8 +78,10 @@ class ProjectCreate < Dry::Operation
   end
 
   def persist_users_in_mediaflux(project, current_user)
+    metadata_model = ProjectMetadata.new(project)
+
     # Do nothing if there are no users to persist
-    return Success(project) if (project.metadata_model.ro_users + project.metadata_model.rw_users).empty?
+    return Success(project) if (metadata_model.ro_users + metadata_model.rw_users).empty?
 
     # Add the data users to the project in Mediaflux
     add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: project)
@@ -104,12 +107,15 @@ class ProjectCreate < Dry::Operation
     if metadata_request.error?
       Failure("Error activate project #{project.id}: Error retrieving metadata: #{metadata_request.response_error}")
 
-    elsif project.title == metadata_request.metadata[:title]
-      project.metadata_model.status = Project::ACTIVE_STATUS
-      project.save!
-      Success(project)
     else
-      Failure("Error activate project #{project.id}: Title mismatch: #{project.title} != #{metadata_request.metadata[:title]}")
+      metadata_model = ProjectMetadata.new(project)
+      if metadata_model.title == metadata_request.metadata[:title]
+        metadata_model.status = Project::ACTIVE_STATUS
+        metadata_model.update_project
+        Success(project)
+      else
+        Failure("Error activate project #{project.id}: Title mismatch: #{metadata_model.title} != #{metadata_request.metadata[:title]}")
+      end
     end
   rescue => ex
     Failure("Error activate project #{project.id}: #{ex}")

@@ -13,6 +13,7 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
   # let(:request3) { FactoryBot.create(:request_project, project_title: "grape soda < > ' \\\\\\\\\\\\\\\"") }
   let(:request3) { FactoryBot.create(:request_project, project_title: "z gRape soda < ' > \\ ") }
   let!(:project1) { create_project_in_mediaflux(request: request1, current_user: approver) }
+  let(:metadata_model1) { ProjectMetadata.new(project1) }
   let!(:project2) { create_project_in_mediaflux(request: request2, current_user: approver) }
   let!(:project3) { create_project_in_mediaflux(request: request3, current_user: approver) }
 
@@ -88,7 +89,7 @@ RSpec.describe ProjectSearch, type: :operation, integration: true do
       project1.destroy # make sure the project is not on the rails side
       result = described_class.new.call(search_string: "*pop", requestor: approver)
       expect(result).to be_success
-      message = "Mediaflux project with ID #{project1.mediaflux_id} is not in the Rails database (title: #{project1.title})"
+      message = "Mediaflux project with ID #{project1.mediaflux_id} is not in the Rails database (title: #{metadata_model1.title})"
       expect(Rails.logger).to have_received(:warn).with(message)
     end
 

@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :model do
   let!(:user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
+  let(:approved_metadata_model) { ProjectMetadata.new(approved_project) }
 
   describe "#result" do
     before do
@@ -20,7 +21,7 @@ RSpec.describe Mediaflux::ProjectReport, connect_to_mediaflux: true, type: :mode
       #  since we have development and test in our single mediaflux instance we have to filter
       test_project = mediaflux_projects.select { |project| project["asset"].to_i == approved_project.mediaflux_id }
       expect(test_project.count).to eq(1)
-      expect(test_project.first["projectID"]).to eq(approved_project.metadata_model.project_id)
+      expect(test_project.first["projectID"]).to eq(approved_metadata_model.project_id)
     end
   end
 end

@@ -12,20 +12,21 @@ module Mediaflux
       super(session_token: session_token)
       @token = token
       @project = project
-      @data_manager = @project.metadata_model.data_manager
-      @data_sponsor = @project.metadata_model.data_sponsor
-      @title = @project.metadata_model.title
-      @description = @project.metadata_model.description
-      @directory = @project.metadata_model.project_directory
-      @project_id = @project.metadata_model.project_id
-      @department = departments_string(@project.metadata_model.departments)
-      @quota = "#{@project.metadata_model.storage_capacity['size']['approved']} #{@project.metadata_model.storage_capacity['unit']['approved']}"
-      @number_of_files = @project.metadata_model.number_of_files
-      @hpc = @project.metadata_model.hpc
-      @smb = @project.metadata_model.smb_request
-      @globus = @project.metadata_model.globus_request
-      @project_purpose = @project.metadata_model.project_purpose
-      @data_security_level = @project.metadata_model.data_security_level
+      metadata_model = ProjectMetadata.new(@project)
+      @data_manager = metadata_model.data_manager
+      @data_sponsor = metadata_model.data_sponsor
+      @title = metadata_model.title
+      @description = metadata_model.description
+      @directory = metadata_model.project_directory
+      @project_id = metadata_model.project_id
+      @department = departments_string(metadata_model.departments)
+      @quota = "#{metadata_model.storage_capacity['size']['approved']} #{metadata_model.storage_capacity['unit']['approved']}"
+      @number_of_files = metadata_model.number_of_files
+      @hpc = metadata_model.hpc
+      @smb = metadata_model.smb_request
+      @globus = metadata_model.globus_request
+      @project_purpose = metadata_model.project_purpose
+      @data_security_level = metadata_model.data_security_level
     end
 
     # Specifies the Mediaflux service to use when creating project

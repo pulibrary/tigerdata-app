@@ -9,6 +9,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let!(:data_user_3) { FactoryBot.create(:user, uid: "efg", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { FactoryBot.create(:project, project_id: "abc123/def", mediaflux_id: 123) }
   let(:project_id) { project.id }
+  let(:metadata_model) { ProjectMetadata.new(project) }
 
   let(:valid_request) do
     NewProjectRequest.create(
@@ -39,7 +40,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect { described_class.with(project_id:, approver: sponsor_and_data_manager_user).project_creation.deliver }.to change { ActionMailer::Base.deliveries.count }.by(1)
       mail = ActionMailer::Base.deliveries.last
 
-      expect(mail.subject).to eq("Project: '#{project.title}' has been approved")
+      expect(mail.subject).to eq("Project: '#{metadata_model.title}' has been approved")
       expect(mail.to).to eq [sponsor_and_data_manager_user.email]
       expect(mail.cc).to eq nil
       expect(mail.from).to eq ["no-reply@princeton.edu"]
@@ -49,10 +50,10 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect(html_body).to have_text(project.id)
 
       expect(html_body).to have_text(project.mediaflux_id)
-      expect(html_body).to have_text(project.title)
+      expect(html_body).to have_text(metadata_model.title)
       expect(html_body).to have_text(project.project_directory)
-      expect(html_body).to have_text(project.metadata_json["data_sponsor"])
-      expect(html_body).to have_text(project.metadata_json["data_manager"])
+      expect(html_body).to have_text(metadata_model.data_sponsor)
+      expect(html_body).to have_text(metadata_model.data_manager)
 
       expect(html_body).to include("The following project has been approved and created:")
       expect(html_body).to include("For more details, see #{project_url(project)}")
@@ -129,10 +130,10 @@ RSpec.describe TigerdataMailer, type: :mailer do
 
       html_body = mail.html_part.body.to_s
       expect(html_body).to have_text(project.mediaflux_id)
-      expect(html_body).to have_text(project.title)
-      expect(html_body).to have_text(project.project_directory)
-      expect(html_body).to have_text(project.metadata_json["data_sponsor"])
-      expect(html_body).to have_text(project.metadata_json["data_manager"])
+      expect(html_body).to have_text(metadata_model.title)
+      expect(html_body).to have_text(metadata_model.project_directory)
+      expect(html_body).to have_text(metadata_model.data_sponsor)
+      expect(html_body).to have_text(metadata_model.data_manager)
 
       expect(html_body).to have_text(requested_capacity)
       expect(html_body).to have_text(justification)
@@ -145,15 +146,13 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect(html_body).to have_text(quota_breakdown[:quota_used_human])
       expect(html_body).to have_text(quota_breakdown[:requested_capacity])
       expect(html_body).to have_text("Current Storage Capacity:")
-      expect(html_body).to have_text(project.metadata_json["storage_capacity"]["size"]["approved"].to_s)
-      expect(html_body).to have_text(project.metadata_json["storage_capacity"]["unit"]["approved"])
+      expect(html_body).to have_text(metadata_model.storage_capacity[:size][:approved].to_s)
+      expect(html_body).to have_text(metadata_model.storage_capacity[:unit][:approved])
     end
 
     it "uses portal JSON that has been refreshed from Mediaflux" do
-      project.metadata_model.apply_approved_quota(size: 850, unit: "TB")
-      project.metadata_json = JSON.parse(project.metadata_model.to_json)
-
-      project.save!
+      metadata_model.apply_approved_quota(size: 850, unit: "TB")
+      metadata_model.update_project
 
       described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver
       html_body = ActionMailer::Base.deliveries.last.html_part.body.to_s
@@ -175,12 +174,12 @@ RSpec.describe TigerdataMailer, type: :mailer do
       html_body = mail.html_part.body.to_s
       expect(html_body).not_to be_empty
 
-      expect(html_body).to have_text(project.title)
+      expect(html_body).to have_text(metadata_model.title)
       expect(html_body).to have_text(project.mediaflux_id)
-      expect(html_body).to have_text(project.metadata_json["project_id"])
-      expect(html_body).to have_text(project.project_directory)
-      expect(html_body).to have_text(project.metadata_json["data_sponsor"])
-      expect(html_body).to have_text(project.metadata_json["data_manager"])
+      expect(html_body).to have_text(metadata_model.project_id)
+      expect(html_body).to have_text(metadata_model.project_directory)
+      expect(html_body).to have_text(metadata_model.data_sponsor)
+      expect(html_body).to have_text(metadata_model.data_manager)
 
       expect(html_body).to include("A Globus connection request has been created and is ready for review")
     end

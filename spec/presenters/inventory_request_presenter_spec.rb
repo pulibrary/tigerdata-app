@@ -14,7 +14,7 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
       job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
       state: InventoryRequest::COMPLETED,
       request_details: {
-        project_title: project.title,
+        project_title: metadata_model.title,
         file_size: 1_000_000
       },
       completion_time: Time.current.in_time_zone("America/New_York")
@@ -26,10 +26,11 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
                       data_manager: researcher_user.uid,
                       data_sponsor: researcher_user.uid)
   end
+  let(:metadata_model) { ProjectMetadata.new(project) }
 
   describe "#title" do
     it "returns the project title" do
-      expect(presenter.title).to eq(project.title)
+      expect(presenter.title).to eq(metadata_model.title)
     end
   end
 
@@ -43,7 +44,7 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
     it "returns the project download_link" do
       # Note that we have to html escape the title, because that's what rails will do, and when
       # we get sample data with special characters in the title, we want to make sure the test still passes.
-      html_escaped_title = CGI.escapeHTML(project.title)
+      html_escaped_title = CGI.escapeHTML(metadata_model.title)
       expect(presenter.download_link).to eq("<a href=\"/projects/file_list_download/ccbb63c0-a8cd-47b7-8445-5d85e9c80977\">#{html_escaped_title}</a>")
     end
   end
@@ -68,7 +69,7 @@ describe InventoryRequestPresenter, type: :model, connect_to_mediaflux: false do
     context "a failed user request" do
       let(:inventory_request_request) do
         FileInventoryRequest.create(user_id: researcher_user.id, project_id: project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
-                                    request_details: { project_title: project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
+                                    request_details: { project_title: metadata_model.title }, completion_time: Time.current.in_time_zone("America/New_York"))
       end
 
       it "returns 'failed_item'" do

@@ -22,11 +22,12 @@ class ProvenanceEvent < ApplicationRecord
   end
 
   def self.generate_approval_events(project:, user:, debug_output: nil)
+    metadata_model = ProjectMetadata.new(project)
     project.provenance_events.create(
       event_type: ProvenanceEvent::APPROVAL_EVENT_TYPE,
       event_person: user.uid,
       event_details: "Approved by #{user.display_name_safe}",
-      event_note: project.metadata_model.approval_note
+      event_note: metadata_model.approval_note
     )
     project.provenance_events.create(
       event_type: ProvenanceEvent::STATUS_UPDATE_EVENT_TYPE,
