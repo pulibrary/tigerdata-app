@@ -25,7 +25,7 @@ module Mediaflux
       @smb = @project.metadata_model.smb_request
       @globus = @project.metadata_model.globus_request
       @project_purpose = @project.metadata_model.project_purpose
-      @data_security_level = @project.metadata_model.data_security_level
+      @data_security_level = require_data_security_level(@project.metadata_model.data_security_level)
     end
 
     # Specifies the Mediaflux service to use when creating project
@@ -102,15 +102,24 @@ module Mediaflux
               xml.text(@project_purpose)
             end
           end
+          # Integer 0 is Public. Do not use present? — 0.present? is false and would omit the value.
           xml.send("security-level") do
-            if @data_security_level.present?
-              xml.text(@data_security_level)
-            end
+            xml.text(@data_security_level.to_s)
           end
         end
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    # tigerdata.project.create requires security-level. There is no system default.
+    # @param level [Integer, String, nil]
+    # @return [Integer]
+    def require_data_security_level(level)
+      normalized = Integer(level) unless level.nil?
+      return normalized if [0, 1, 2, 3].include?(normalized)
+
+      raise ArgumentError, "tigerdata.project.create requires security-level to be one of 0, 1, 2, 3"
+    end
 
     # Returns the names of the departments as a comma separated string
     def departments_string(departments)
