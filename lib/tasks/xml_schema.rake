@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# :nocov:
+# simplecov:disable
 require "nokogiri"
 namespace :xml_schema do
   desc "Validates the example XML provided by Matt against the TigerData XSD"
@@ -40,4 +40,4 @@ namespace :xml_schema do
     xsd.sub("https://www.w3.org/2001/xml.xsd", "file://#{local_xml_xsd}")
   end
 end
-# :nocov:
+# simplecov:enable
