@@ -48,7 +48,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_120000) do
     t.string "approved_storage_unit"
     t.datetime "created_at", null: false
     t.string "data_manager"
-    t.integer "data_security_level"
     t.string "data_sponsor"
     t.jsonb "departments"
     t.string "description"
@@ -71,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_120000) do
     t.string "storage_unit", default: "GB"
     t.datetime "updated_at", null: false
     t.jsonb "user_roles"
+    t.integer "data_security_level"
   end
 
   create_table "projects", force: :cascade do |t|

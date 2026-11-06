@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# :nocov:
-
+# simplecov:disable
 namespace :servers do
   task install_mediaflux: :environment do
     system("docker create --name mediaflux --mac-address 02:42:ac:11:00:02 --publish 8888:80 pulibraryrdss/mediaflux_dev:v0.69.0")
@@ -33,4 +32,4 @@ namespace :servers do
     system("docker ps")
   end
 end
-# :nocov:
+# simplecov:enable
