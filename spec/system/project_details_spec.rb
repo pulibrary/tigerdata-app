@@ -437,7 +437,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         end.to have_enqueued_job(ActionMailer::MailDeliveryJob).with { |mailer_class, build_command, action, params|
                  expect(mailer_class).to eq "TigerdataMailer"
                  expect(build_command).to eq "globus_access_request"
-                 expect(action).to eq "deliver_now"
+                 expect(action).to eq "deliver_later"
                  expect(params[:params][:project_id]).to eq(project.id)
                  expect(params[:params][:submitter].id).to eq(sponsor_user.id)
                }.exactly(1).times
