@@ -30,8 +30,8 @@ class ProjectImport
           if test_run
             output << metadata.to_json
           else
-            if metadata.data_user_read_only.first == "n/a" && metadata.data_user_read_only.count == 1
-              metadata.data_user_read_only = []
+            if metadata[:data_user_read_only].first == "n/a" && metadata[:data_user_read_only].count == 1
+              metadata[:data_user_read_only] = []
             end
             # Create the Rails record for the project
             project = Project.create(metadata_json: JSON.parse(metadata.to_json), mediaflux_id: project_metadata["asset"])
@@ -59,21 +59,21 @@ class ProjectImport
     departments = department_names.map { |name| Affiliation.find_fuzzy_by_name(name)&.code || name }
 
     storage_size_gb = project_metadata["quota"].downcase.to_f / 1000000000.0
-    ProjectMetadata.new_from_hash({
-                                    project_id:,
-                                    title: project_metadata["title"],
-                                    description: project_metadata["description"],
-                                    status: Project::ACTIVE_STATUS,
-                                    data_sponsor: project_metadata["dataSponsor"],
-                                    data_manager: project_metadata["dataManager"],
-                                    departments: departments,
-                                    data_user_read_only: data_user,
-                                    project_directory: project_metadata["path"],
-                                    storage_capacity: { size: { approved: storage_size_gb, requested: storage_size_gb }, unit: { approved: "GB", requested: "GB" } },
-                                    storage_performance_expectations: { requested: "Standard", approved: "Standard" },
-                                    created_by: project_metadata["creatorUser"],
-                                    created_on: project_metadata["createdOn"]
-                                  })
+    {
+      project_id:,
+      title: project_metadata["title"],
+      description: project_metadata["description"],
+      status: Project::ACTIVE_STATUS,
+      data_sponsor: project_metadata["dataSponsor"],
+      data_manager: project_metadata["dataManager"],
+      departments: departments,
+      data_user_read_only: data_user,
+      project_directory: project_metadata["path"],
+      storage_capacity: { size: { approved: storage_size_gb, requested: storage_size_gb }, unit: { approved: "GB", requested: "GB" } },
+      storage_performance_expectations: { requested: "Standard", approved: "Standard" },
+      created_by: project_metadata["creatorUser"],
+      created_on: project_metadata["createdOn"]
+    }
   end
 
   def parse_multiple(project_metadata, key)

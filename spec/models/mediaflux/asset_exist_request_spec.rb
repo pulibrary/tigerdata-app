@@ -7,18 +7,19 @@ RSpec.describe Mediaflux::AssetExistRequest, type: :model, connect_to_mediaflux:
   let(:session_token) { Mediaflux::LogonRequest.new.session_token }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:project) { create_project_in_mediaflux(current_user: user) }
+  let(:project_metadata) { ProjectMetadata.new(project) }
 
   describe "#exist" do
     it "validates that an asset exist or not", :integration do
-      valid_path = "princeton/#{project.metadata_model.project_directory}"
+      valid_path = "princeton/#{project_metadata.project_directory}"
       subject = described_class.new(session_token: session_token, path: valid_path)
       expect(subject.exist?).to be true
 
-      nonexisting_path = "princeton/#{project.metadata_model.project_directory}-nope"
+      nonexisting_path = "princeton/#{project_metadata.project_directory}-nope"
       subject = described_class.new(session_token: session_token, path: nonexisting_path)
       expect(subject.exist?).to be false
 
-      non_existing_namespace = "princeton-non-existing/#{project.metadata_model.project_directory}"
+      non_existing_namespace = "princeton-non-existing/#{project_metadata.project_directory}"
       subject = described_class.new(session_token: session_token, path: non_existing_namespace)
       expect(subject.exist?).to be false
     end

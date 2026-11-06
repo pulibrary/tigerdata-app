@@ -13,35 +13,6 @@ class Project < ApplicationRecord
 
   delegate :to_json, to: :metadata_json # field in the database
 
-  def clear_metadata_model
-    @metadata_model = nil
-  end
-
-  def metadata_model
-    @metadata_model ||= ProjectMetadata.new_from_hash((metadata_json || {}).with_indifferent_access)
-  end
-
-  def title
-    self.metadata_model.title
-  end
-
-  def departments
-    unsorted = metadata_model.departments || []
-    unsorted.sort
-  end
-
-  def project_directory
-    metadata_model.project_directory || ""
-  end
-
-  def project_directory_short
-    project_directory
-  end
-
-  def status
-    metadata_model.status
-  end
-
   def in_mediaflux?
     mediaflux_id.present?
   end
@@ -59,10 +30,6 @@ class Project < ApplicationRecord
   # Returns the projects that the current user has access in Mediaflux given their credentials
   def self.all_projects(user, aql_query = "xpath(tigerdata:project/ProjectID) has value")
     ProjectList.new(user, aql_query).all_projects
-  end
-
-  def created_by_user
-    User.find_by(uid: metadata_model.created_by)
   end
 
   # @return [String] XML representation of the <meta> element
@@ -237,9 +204,9 @@ class Project < ApplicationRecord
     quota_info = quota(session_id:)
     human = quota_info[:quota_allocation_human]
     size, unit = parse_human_quota(human)
-    metadata_model.apply_approved_quota(size:, unit:)
-    self.metadata_json = JSON.parse(metadata_model.to_json)
-    save!
+    project_metadata = ProjectMetadata.new(self)
+    project_metadata.apply_approved_quota(size:, unit:)
+    project_metadata.update_project
     quota_info
   end
 
@@ -262,15 +229,5 @@ class Project < ApplicationRecord
       lines << "#{asset.id}, #{asset.path_only}, #{asset.name}, #{asset.collection}, #{asset.last_modified}, #{asset.size}"
     end
     lines
-  end
-
-  def project_directory_pathname
-    # allow the directory to be modified by changes in the metadata_json
-    @project_directory_pathname = nil if @original_directory.present? && @original_directory != metadata_model.project_directory
-
-    @project_directory_pathname ||= begin
-      @original_directory = metadata_model.project_directory
-      Pathname.new(@original_directory)
-    end
   end
 end

@@ -29,13 +29,14 @@ RSpec.describe Mediaflux::Time do
 
   describe "date formatting" do
     let(:project) { FactoryBot.build(:project_with_doi) }
+    let(:project_metadata) { ProjectMetadata.new(project) }
 
     context "for MediaFlux" do
       # Mediaflux date format is like " 9-FEB-2024 14:53:23"
       let(:date_regexp) { /\d-[A-Z]{3}-\d{4} \d{2}:\d{2}:\d{2}/ }
 
       it "looks like 9-FEB-2024 14:53:23" do
-        created_on = project.metadata_model.created_on.strip
+        created_on = project_metadata.created_on.strip
         formatted = described_class.format_date_for_mediaflux(created_on)
         expect(formatted.match?(date_regexp)).to eq true
       end

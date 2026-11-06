@@ -4,7 +4,7 @@ class ProjectShowPresenter
   include ActiveSupport::NumberHelper
 
   delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
-  delegate "project_id", "storage_performance_expectations", to: :project_metadata
+  delegate "project_id", "storage_performance_expectations", "status", to: :project_metadata
 
   attr_reader :project, :project_metadata, :project_file_display_limit, :latest_completed_download
 
@@ -23,7 +23,7 @@ class ProjectShowPresenter
     @session_id = current_user.mediaflux_session
     @project_file_display_limit = Rails.configuration.project_file_display_limit
     if @project.present?
-      @project_metadata = @project.metadata_model
+      @project_metadata = ProjectMetadata.new(@project)
       @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
     end
   end

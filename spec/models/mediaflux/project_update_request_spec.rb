@@ -29,14 +29,16 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
         created_on = Time.current.in_time_zone("America/New_York").advance(days: -1).iso8601.to_s
         project = FactoryBot.create(:project, data_user_read_only: [data_user_ro.uid], data_user_read_write: [data_user_rw.uid], created_on: created_on,
                                               project_id: "abc/123", project_directory: "testasset")
+        project_metadata = ProjectMetadata.new(project)
         create_request = Mediaflux::ProjectCreateRequest.new(session_token: session_id, project:, namespace: Rails.configuration.mediaflux[:api_root_ns])
         expect(create_request.response_error).to be_blank
         expect(create_request.id).not_to be_blank
 
         project.mediaflux_id = create_request.id
-        project.metadata_model.title = "New Title"
-        project.metadata_model.updated_by = data_user_rw.uid
-        project.metadata_model.updated_on = updated_on
+        project_metadata.title = "New Title"
+        project_metadata.updated_by = data_user_rw.uid
+        project_metadata.updated_on = updated_on
+        project_metadata.update_project
         update_request = described_class.new(session_token: session_id, project: project)
         update_request.resolve
         expect(update_request.response_error).to be_blank
@@ -45,14 +47,14 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
 
         expect(mf_metadata[:name]).to eq("testasset")
         expect(mf_metadata[:title]).to eq("New Title")
-        expect(mf_metadata[:description]).to eq(project.metadata_model.description)
-        expect(mf_metadata[:data_sponsor]).to eq(project.metadata_model.data_sponsor)
-        expect(mf_metadata[:departments]).to eq(project.metadata_model.departments)
+        expect(mf_metadata[:description]).to eq(project_metadata.description)
+        expect(mf_metadata[:data_sponsor]).to eq(project_metadata.data_sponsor)
+        expect(mf_metadata[:departments]).to eq(project_metadata.departments)
         # TODO Should really utilize Mediaflux::Time, but the time class upcases the date and does not zero pad the day
         # expect(mf_metadata[:created_on]).to eq(Time.zone.parse(created_on).strftime("%d-%b-%Y %H:%M:%S"))
-        # expect(mf_metadata[:created_by]).to eq(project.metadata_model.created_by)
+        # expect(mf_metadata[:created_by]).to eq(project_metadata.created_by)
         # expect(mf_metadata[:updated_on]).to eq(Time.zone.parse(updated_on).strftime("%d-%b-%Y %H:%M:%S"))
-        # expect(mf_metadata[:updated_by]).to eq(project.metadata_model.updated_by)
+        # expect(mf_metadata[:updated_by]).to eq(project_metadata.updated_by)
         # Data Users
         expect(mf_metadata[:rw_users]).to eq([data_user_ro.uid + "," + data_user_rw.uid])
       end
@@ -65,6 +67,7 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
       FactoryBot.create(:user, uid: "ds1")
       project = FactoryBot.create(:project, mediaflux_id: '1234', updated_on: Time.parse("18-JUN-2024 20:32:37 UTC").to_s, created_on: Time.parse("17-JUN-2024 20:32:37 UTC").to_s,
                                             created_by: "uid1", updated_by: "uid2", title: "Danger Cat", data_manager: "dm1", data_sponsor: "ds1")
+      project_metadata = ProjectMetadata.new(project)
       update_request = described_class.new(session_token: nil, project:)
       expected_xml = "<?xml version=\"1.0\"?>\n" \
                      "<request xmlns:tigerdata=\"http://tigerdata.princeton.edu\">\n  " \
@@ -73,11 +76,11 @@ RSpec.describe Mediaflux::ProjectUpdateRequest, connect_to_mediaflux: true, type
                      "<id>1234</id>\n      " \
                      "<meta>\n        " \
                      "<tigerdata:project>\n          " \
-                     "<ProjectDirectory>#{project.project_directory}</ProjectDirectory>\n          " \
-                     "<Title>#{project.metadata_model.title}</Title>\n          " \
-                     "<Description>#{project.metadata_model.description}</Description>\n          " \
-                     "<DataSponsor>#{project.metadata_model.data_sponsor}</DataSponsor>\n          " \
-                     "<DataManager>#{project.metadata_model.data_manager}</DataManager>\n          " \
+                     "<ProjectDirectory>#{project_metadata.project_directory}</ProjectDirectory>\n          " \
+                     "<Title>#{project_metadata.title}</Title>\n          " \
+                     "<Description>#{project_metadata.description}</Description>\n          " \
+                     "<DataSponsor>#{project_metadata.data_sponsor}</DataSponsor>\n          " \
+                     "<DataManager>#{project_metadata.data_manager}</DataManager>\n          " \
                      "<Department>77777, 88888</Department>\n          " \
                      "<DataUser>n/a</DataUser>\n        " \
                      "</tigerdata:project>\n      " \

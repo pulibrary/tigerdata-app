@@ -1,11 +1,12 @@
+<% project_metadata = ProjectMetadata.new(project.project) %>
 <tr class="project" >
     <td class="project-row">
         <div class="project-details">
             <div class="title">
-                <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" onclick="log_plausible_project()" ><%= project.title %></a>
+                <a class="click-row" href="<%= project_path(project.id) %>" tabindex="0" onclick="log_plausible_project()" ><%= project_metadata.title %></a>
             </div>
             <div class="summary summary-smaller-device">
-                <div class="status <%= project.status.downcase %> "><%= project.status %></div>
+                <div class="status <%= project_metadata.status.downcase %> "><%= project_metadata.status %></div>
                 <% if Flipflop.last_updated_dashboard? %>
                     <div class="activity"><%= project.last_activity %></div>
                 <% end %>
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="summary">
-               <div class="status <%= project.status.downcase %> status-larger-device"><%= project.status %></div>
+               <div class="status <%= project_metadata.status.downcase %> status-larger-device"><%= project_metadata.status %></div>
 
                 <% if Flipflop.project_type_indicator? %>
                     <div class="type"><%= project.type %></div>
@@ -65,8 +66,8 @@
         </div>
     </td>
     <!-- table columns being kept, but not shown for DataTables sorting and search -->
-    <td style="display: none"><%= project.title %></td>
-    <td style="display: none"><%= project.status %></td>
+    <td style="display: none"><%= project_metadata.title %></td>
+    <td style="display: none"><%= project_metadata.status %></td>
     <td style="display: none"><%= project.type %></td>
     <td style="display: none"><%= project.role(current_user) %></td>
     <td style="display: none"><%= project.latest_file_list_time %></td>

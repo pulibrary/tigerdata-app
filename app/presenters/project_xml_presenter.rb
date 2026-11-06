@@ -8,7 +8,6 @@ class ProjectXmlPresenter
     "id",
     "in_mediaflux?",
     "mediaflux_id",
-    "title",
     to: :project
   )
 
@@ -29,13 +28,14 @@ class ProjectXmlPresenter
     "updated_by",
     "updated_on",
     "schema_version",
+    "title",
     to: :project_metadata
   )
 
   # @param project [Project] The project for the presenter
   def initialize(project)
     @project = project
-    @project_metadata = @project.metadata_model
+    @project_metadata = ProjectMetadata.new(project)
   end
 
   # @return [Nokogiri::XML::Document] The XML document
@@ -100,7 +100,7 @@ class ProjectXmlPresenter
   # @return [String] The project status (mapped to values specified by the TigerData XML schema)
   # NOTE: Valid values are one of: 'AdminReview', 'Approved', 'Active', 'Retired', 'Published'
   def status
-    project_status = project.status
+    project_status = project_metadata.status
     return if project_status.nil?
 
     project_status.capitalize
@@ -189,7 +189,7 @@ class ProjectXmlPresenter
 
   # @return [Array<String>] The project directory paths
   def project_directory
-    [project.project_directory]
+    [project_metadata.project_directory]
   end
 
   # @param index [Integer] The index of the project directory

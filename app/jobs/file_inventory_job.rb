@@ -4,8 +4,9 @@ class FileInventoryJob < ApplicationJob
   # Create the FileInventoryRequest as soon as the job is created, not when it is performed
   before_enqueue do |job|
     project = Project.find(job.arguments.first[:project_id])
+    project_metadata = ProjectMetadata.new(project)
     FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: InventoryRequest::PENDING,
-                                request_details: { project_title: project.title })
+                                request_details: { project_title: project_metadata.title })
   end
 
   # This is required because the before_enqueue does not get called when perform_now is run on a job
@@ -13,9 +14,10 @@ class FileInventoryJob < ApplicationJob
   before_perform do |job|
     project = Project.find(job.arguments.first[:project_id])
     inventory_request = FileInventoryRequest.find_by(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id)
+    project_metadata = ProjectMetadata.new(project)
     if inventory_request.blank?
       FileInventoryRequest.create(user_id: job.arguments.first[:user_id], project_id: job.arguments.first[:project_id], job_id: @job_id, state: InventoryRequest::PENDING,
-                                  request_details: { project_title: project.title })
+                                  request_details: { project_title: project_metadata.title })
     end
   end
 
@@ -57,7 +59,8 @@ class FileInventoryJob < ApplicationJob
 
   def fail_inventory_request(user_id:, project:, job_id:)
     inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
-    request_details = { project_title: project.title, error: "Mediaflux session expired" }
+    project_metadata = ProjectMetadata.new(project)
+    request_details = { project_title: project_metadata.title, error: "Mediaflux session expired" }
     inventory_request.update(state: InventoryRequest::FAILED, request_details: request_details,
                              completion_time: Time.current.in_time_zone("America/New_York"))
     inventory_request
@@ -70,7 +73,8 @@ class FileInventoryJob < ApplicationJob
   def update_inventory_request(user_id:, project:, job_id:, filename:)
     Rails.logger.info "Export - updating inventory request details for project #{project.id}"
     inventory_request = FileInventoryRequest.find_by(user_id: user_id, project_id: project.id, job_id: job_id)
-    request_details = { output_file: filename, project_title: project.title, file_size: File.size(filename) }
+    project_metadata = ProjectMetadata.new(project)
+    request_details = { output_file: filename, project_title: project_metadata.title, file_size: File.size(filename) }
     inventory_request.update(state: InventoryRequest::COMPLETED, request_details: request_details,
                              completion_time: Time.current.in_time_zone("America/New_York"))
     Rails.logger.info "Export - updated inventory request details for project #{project.id}"

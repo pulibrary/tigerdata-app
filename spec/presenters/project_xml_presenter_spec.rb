@@ -29,8 +29,8 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
   end
   let(:created_by) { FactoryBot.create(:user).uid }
   let(:created_on) { Time.current.in_time_zone("America/New_York").iso8601 }
-  let(:metadata_model) do
-    hash = {
+  let(:metadata_hash) do
+    {
       data_sponsor: sponsor_user.uid,
       data_manager: manager_user.uid,
       project_directory: project_directory,
@@ -51,14 +51,14 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       submission: { "requested_by" => created_by, "request_date_time" => created_on },
       schema_version: TigerdataSchema::SCHEMA_VERSION
     }
-    ProjectMetadata.new_from_hash(hash)
   end
   let(:project) do
     FactoryBot.create(:project_with_doi,
                       data_sponsor: sponsor_user.uid,
                       data_manager: manager_user.uid,
-                      metadata_model: metadata_model)
+                      metadata_json: JSON.parse(metadata_hash.to_json))
   end
+  let(:project_metadata) { ProjectMetadata.new(project) }
   let(:submission_event) { FactoryBot.create(:submission_event, project: project, event_person: submitter.uid) }
 
   let(:schema_file_path) { Rails.root.join("lib", "assets", "tigerdata_metadata", "v0.8", "TigerData_StandardMetadataSchema_v0.8.xsd") }
@@ -91,7 +91,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       expect(root).to be_a(Nokogiri::XML::Element)
       expect(root.name).to eq("resource")
       expect(root["resourceClass"]).to eq("Project")
-      expect(root["resourceID"]).to eq(project.metadata_model.project_id)
+      expect(root["resourceID"]).to eq(project_metadata.project_id)
       expect(root["resourceIDType"]).to eq("DOI")
     end
 
@@ -104,7 +104,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         expect(node["inherited"]).to eq("false")
         expect(node["discoverable"]).to eq("true")
         expect(node["trackingLevel"]).to eq("ResourceRecord")
-        expect(node.content).to eq(project.metadata_model.project_id)
+        expect(node.content).to eq(project_metadata.project_id)
       end
     end
 
@@ -114,7 +114,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       it "builds a <dataSponsor> element containing the data sponsor of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("dataSponsor")
-        expect(node["userID"]).to eq(project.metadata_model.data_sponsor)
+        expect(node["userID"]).to eq(project_metadata.data_sponsor)
         expect(node["discoverable"]).to eq("true")
         expect(node["inherited"]).to eq("true")
         expect(node["trackingLevel"]).to eq("ResourceRecord")
@@ -127,7 +127,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
       it "builds a <dataManager> element containing the data manager of the project" do
         expect(node).to be_a(Nokogiri::XML::Element)
         expect(node.name).to eq("dataManager")
-        expect(node["userID"]).to eq(project.metadata_model.data_manager)
+        expect(node["userID"]).to eq(project_metadata.data_manager)
         expect(node["discoverable"]).to eq("true")
         expect(node["inherited"]).to eq("true")
         expect(node["trackingLevel"]).to eq("ResourceRecord")
@@ -192,7 +192,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         expect(node["inherited"]).to eq("false")
         expect(node["discoverable"]).to eq("true")
         expect(node["trackingLevel"]).to eq("ResourceRecord")
-        expect(node.content).to eq(project.metadata_model.title)
+        expect(node.content).to eq(project_metadata.title)
       end
     end
 
@@ -205,7 +205,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         expect(node["inherited"]).to eq("false")
         expect(node["discoverable"]).to eq("true")
         expect(node["trackingLevel"]).to eq("ResourceRecord")
-        expect(node.content).to eq(project.metadata_model.description)
+        expect(node.content).to eq(project_metadata.description)
       end
     end
 
@@ -218,7 +218,7 @@ describe ProjectXmlPresenter, type: :model, connect_to_mediaflux: false do
         expect(node["inherited"]).to eq("true")
         expect(node["discoverable"]).to eq("true")
         expect(node["trackingLevel"]).to eq("InternalUseOnly")
-        expect(node.content).to eq(project.metadata_model.project_purpose)
+        expect(node.content).to eq(project_metadata.project_purpose)
       end
     end
 

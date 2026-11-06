@@ -17,6 +17,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
                                                     user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }])
       request.approve(sponsor_and_data_manager_user)
     end
+    let(:project_metadata_in_mediaflux) { ProjectMetadata.new(project_in_mediaflux) }
 
     it "Shows the storage detail button and complete modal to the sponsor" do
       sign_in sponsor_user
@@ -167,12 +168,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         context "Sponsor user" do
           it "Shows the correct nav buttons" do
             sign_in sponsor_user
-            project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+            project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
             visit "/projects/#{project_in_mediaflux.id}/details"
 
-            expect(page).to have_text(project_in_mediaflux.title)
-            expect(page).to have_text(project_in_mediaflux.project_directory)
+            expect(page).to have_text(project_metadata_in_mediaflux.title)
+            expect(page).to have_text(project_metadata_in_mediaflux.project_directory)
             expect(page).to have_text("Details")
 
             # The description should be rendered twice (at the top and as part of the details)
@@ -181,7 +182,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
             # Make sure project path is rendered
             expect(page).to have_css "#project-path-copy"
-            expect(page).to have_text(project_in_mediaflux.project_directory)
+            expect(page).to have_text(project_metadata_in_mediaflux.project_directory)
 
             # Make sure both data manager and sponsor are rendered
             expect(page).to have_text("Data Manager\n#{manager_user.display_name}\n#{manager_user.uid}")
@@ -193,7 +194,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
             expect(page).to have_selector(:link_or_button, "Dashboard")
             click_on("Dashboard")
             expect(page).to have_text("Welcome, #{sponsor_user.given_name}!")
-            find(:xpath, "//a[text()='#{project_in_mediaflux.title}']").click
+            find(:xpath, "//a[text()='#{project_metadata_in_mediaflux.title}']").click
           end
         end
 
@@ -201,8 +202,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
           it "does not show the quota increase option" do
             sign_in read_only
             visit "/projects/#{project_in_mediaflux.id}/details"
-            expect(page).to have_text(project_in_mediaflux.title)
-            expect(page).to have_text(project_in_mediaflux.project_directory)
+            expect(page).to have_text(project_metadata_in_mediaflux.title)
+            expect(page).to have_text(project_metadata_in_mediaflux.project_directory)
             expect(page).not_to have_text("Request More")
           end
         end
@@ -210,7 +211,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         context "SysAdmin" do
           it "Shows the correct nav buttons" do
             sign_in sysadmin_user
-            project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
+            project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
             visit "/projects/#{project_in_mediaflux.id}/details"
 
@@ -230,14 +231,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       it "Shows the approved values" do
         sign_in sponsor_user
-        project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
-        project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
-        project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
-        project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
-        project_in_mediaflux.metadata_json = JSON.parse(project_in_mediaflux.metadata_model.to_json)
+        project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
+        project_metadata_in_mediaflux.storage_capacity["size"]["approved"] = 1
+        project_metadata_in_mediaflux.storage_capacity["unit"]["approved"] = "TB"
+        project_metadata_in_mediaflux.storage_performance_expectations["approved"] = "slow"
+        project_in_mediaflux.metadata_json = JSON.parse(project_metadata_in_mediaflux.to_json)
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
-        expect(page).to have_text(project_in_mediaflux.title)
+        expect(page).to have_text(project_metadata_in_mediaflux.title)
         expect(page).to have_text("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
         expect(page).to have_text("RDSS-Research Data and Scholarship Services")
@@ -247,10 +248,10 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       it "copies the project path to the clipboard" do
         sign_in sponsor_user
-        project_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
-        project_in_mediaflux.metadata_model.storage_capacity["size"]["approved"] = 1
-        project_in_mediaflux.metadata_model.storage_capacity["unit"]["approved"] = "TB"
-        project_in_mediaflux.metadata_model.storage_performance_expectations["approved"] = "slow"
+        project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
+        project_metadata_in_mediaflux.storage_capacity["size"]["approved"] = 1
+        project_metadata_in_mediaflux.storage_capacity["unit"]["approved"] = "TB"
+        project_metadata_in_mediaflux.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
 
@@ -345,6 +346,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     context "Project Contents", connect_to_mediaflux: true, integration: true do
       let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
       let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
+      let(:project_metadata) { ProjectMetadata.new(project) }
       let(:size) { 100 }
       let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
       let(:first_folder) { project.directory_listing(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path).first }
@@ -382,8 +384,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_selector(:link_or_button, "Dashboard")
         click_on("Dashboard")
         expect(page).to have_text("Welcome, #{sponsor_user.given_name}!")
-        find(:xpath, "//a[text()='#{project.title}']").click
-        expect(page).to have_text(project.title)
+        find(:xpath, "//a[text()='#{project_metadata.title}']").click
+        expect(page).to have_text(project_metadata.title)
       end
 
       it "displays the project contents at the top level",
@@ -450,13 +452,14 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
     context "system administrator" do
       let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
       let!(:project) { request.approve(sponsor_and_data_manager_user) }
+      let(:project_metadata) { ProjectMetadata.new(project) }
 
       it "shows the sysadmin buttons for an approved project" do
         sign_in sysadmin_user
         visit "/projects/#{project.id}/details"
 
-        expect(page).to have_text project.project_directory
-        expect(page).to have_text project.title
+        expect(page).to have_text project_metadata.project_directory
+        expect(page).to have_text project_metadata.title
         expect(page).to have_text "Mediaflux ID"
         expect(page).to have_text project.mediaflux_id
       end
@@ -464,8 +467,8 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       it "does not show the Mediaflux ID to the sponsor" do
         sign_in sponsor_user
         visit "/projects/#{project.id}/details"
-        expect(page).to have_text project.project_directory
-        expect(page).to have_text project.title
+        expect(page).to have_text project_metadata.project_directory
+        expect(page).to have_text project_metadata.title
         expect(page).not_to have_text "Mediaflux ID"
         expect(page).not_to have_selector(:link_or_button, "Approve Project")
         expect(page).not_to have_selector(:link_or_button, "Deny Project")

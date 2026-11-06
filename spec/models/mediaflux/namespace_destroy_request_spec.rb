@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_mediaflux: true do
   let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:valid_project) { create_project_in_mediaflux(current_user: sponsor_user) }
-  let(:namespace) { valid_project.project_directory.split("/").last + "NS" }
+  let(:project_metadata) { ProjectMetadata.new(valid_project) }
+  let(:namespace) { project_metadata.project_directory.split("/").last + "NS" }
   let(:sponsor_user) { FactoryBot.create(:project_sponsor, mediaflux_session: SystemUser.mediaflux_session) }
   let(:session_id) { sponsor_user.mediaflux_session }
 
@@ -14,7 +15,7 @@ RSpec.describe Mediaflux::NamespaceDestroyRequest, type: :model, connect_to_medi
        :integration do
       mediaflux_id = valid_project.mediaflux_id
       expect(mediaflux_id).not_to be_nil
-      parent_namespace = "princeton/" + valid_project.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
+      parent_namespace = "princeton/" + project_metadata.project_directory.split("/")[0..-2].map { |token| token + "NS" }.join("/")
       namespace_list = ::Mediaflux::NamespaceListRequest.new(session_token: session_id, parent_namespace:).namespaces
       namespace_names = namespace_list.pluck(:name)
       expect(namespace_names).to include(namespace)

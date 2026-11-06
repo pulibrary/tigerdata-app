@@ -76,6 +76,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
 
   describe "#provenance_events" do
     let(:project) { FactoryBot.create(:project) }
+    let(:project_metadata) { ProjectMetadata.new(project) }
     let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
 
     it "has many provenance events" do
@@ -83,8 +84,8 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
 
     it "only creates one provenance event" do
-      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project.metadata_model.created_by,
-                                       event_details: "Requested by #{project.metadata_model.data_sponsor}")
+      project.provenance_events.create(event_type: ProvenanceEvent::SUBMISSION_EVENT_TYPE, event_person: project_metadata.created_by,
+                                       event_details: "Requested by #{project_metadata.data_sponsor}")
       expect(project.provenance_events.count).to eq 1
     end
   end
@@ -110,7 +111,7 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
       expect(file_list[:files].count).to eq 8
       expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
-      expect(file_list[:files][0].path).to eq "/princeton/#{project.project_directory}/Real_Among_Random.txt0"
+      expect(file_list[:files][0].path).to eq "/princeton/#{project.metadata_json['project_directory']}/Real_Among_Random.txt0"
       expect(file_list[:files][0].size).to be 100
       expect(file_list[:files][0].collection).to be false
       expect(file_list[:files][0].last_modified).to_not be nil

@@ -21,8 +21,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
       approved: "performant"
     }.with_indifferent_access
   end
-  let(:metadata_model) do
-    hash = {
+  let(:metadata_hash) do
+    {
       data_sponsor: sponsor_user.uid,
       data_manager: data_manager.uid,
       project_directory: "tigerdata/#{random_project_directory}",
@@ -39,15 +39,14 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
       storage_performance_expectations: storage_performance_expectations,
       project_purpose: "Research"
     }
-    ProjectMetadata.new_from_hash(hash)
   end
-  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_model: metadata_model) }
+  let(:project_not_in_mediaflux) { FactoryBot.create(:project, metadata_json: JSON.parse(metadata_hash.to_json)) }
   let(:mediaflux_id) { 1097 }
   let(:project_in_mediaflux) do
-    project_not_in_mediaflux
-    project_not_in_mediaflux.metadata_model.status = Project::APPROVED_STATUS
     project_not_in_mediaflux.mediaflux_id = mediaflux_id
-    project_not_in_mediaflux.save!
+    project_metadata = ProjectMetadata.new(project_not_in_mediaflux)
+    project_metadata.status = Project::APPROVED_STATUS
+    project_metadata.update_project
     project_not_in_mediaflux.reload
   end
 
@@ -72,6 +71,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
         request = FactoryBot.create(:request_project)
         request.approve(sponsor_and_data_manager_user)
       end
+      let(:approved_project_metadata) { ProjectMetadata.new(approved_project) }
 
       before do
         sign_in sponsor_and_data_manager_user
@@ -243,7 +243,7 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
         expect(page).to have_text("Yes")
         sleep 1
         click_on "Yes"
-        expect(page).to have_text("File list for \"#{approved_project.title}\" is being generated in the background.")
+        expect(page).to have_text("File list for \"#{approved_project_metadata.title}\" is being generated in the background.")
         expect(sponsor_and_data_manager_user.inventory_requests.count).to eq(1)
         expect(sponsor_and_data_manager_user.inventory_requests.first.job_id).not_to be nil
         expect(sponsor_and_data_manager_user.inventory_requests.first.state).to eq FileInventoryRequest::PENDING
@@ -275,8 +275,8 @@ RSpec.describe "Project Page", connect_to_mediaflux: true, type: :system, js: tr
         it "returns the XML with the correct attributes",
            :integration do
           xml = page.body
-          expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.project_directory}</projectDirectoryPath>")
-          expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project.title}</title>")
+          expect(xml).to include("<projectDirectoryPath protocol=\"NFS\">#{approved_project.metadata_json['project_directory']}</projectDirectoryPath>")
+          expect(xml).to include("<title inherited=\"false\" discoverable=\"true\" trackingLevel=\"ResourceRecord\">#{approved_project_metadata.title}</title>")
           # NOTE: 500 GB are available, hence the request was approved
 
           # TODO: Why are we not getting a storageCapacity anymore?

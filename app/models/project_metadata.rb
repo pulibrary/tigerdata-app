@@ -67,16 +67,14 @@ class ProjectMetadata
     :provisional
   )
 
-  def initialize
-    @departments = []
-    @data_user_read_only = []
-    @data_user_read_write = []
+  def initialize(project)
+    initialize_from_hash(project.metadata_json.with_indifferent_access)
+    @project = project
   end
 
-  def self.new_from_hash(metadata_hash)
-    pm = ProjectMetadata.new
-    pm.initialize_from_hash(metadata_hash)
-    pm
+  def update_project
+    @project.metadata_json = JSON.parse(to_json)
+    @project.save!
   end
 
   # rubocop:disable Metrics/AbcSize

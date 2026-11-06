@@ -50,24 +50,26 @@ RSpec.describe "ProjectImports", type: :request do
         # Create the project in the Rails database and in Mediaflux
         # (and then delete it from the Rails database)
         new_project = create_project_in_mediaflux(current_user: user)
+        project_metadata = ProjectMetadata.new(new_project)
         new_project.destroy
 
         # The new project will be imported because we deleted it from the Rail database
         put project_import_path
         expect(response).to render_template(:run)
         expect(flash[:notice].match?(/Created\s\d*\sproject/)).to be true
-        expect(response.body).to include("Created project for #{new_project.metadata_model.project_id}")
+        expect(response.body).to include("Created project for #{project_metadata.project_id}")
       end
 
       it "renders a successful response with any errors",
          :integration do
         # Create the project in the Rails database and in Mediaflux
         new_project = create_project_in_mediaflux(current_user: user)
+        project_metadata = ProjectMetadata.new(new_project)
 
         # The import will detect that the project is already in the database
         put project_import_path
         expect(response).to render_template(:run)
-        expect(response.body).to include("Skipping project #{new_project.metadata_model.project_id}.")
+        expect(response.body).to include("Skipping project #{project_metadata.project_id}.")
       end
     end
   end

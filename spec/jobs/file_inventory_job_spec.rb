@@ -11,6 +11,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
     request = FactoryBot.create(:request_project)
     request.approve(sponsor_and_data_manager_user)
   end
+  let(:project_metadata_in_mediaflux) { ProjectMetadata.new(project_in_mediaflux) }
 
   describe "#perform_later" do
     it "creates a file inventory request attached to the user and the project" do
@@ -49,7 +50,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
     it "puts the title into the file inventory request" do
       described_class.perform_now(user_id: user.id, project_id: project_in_mediaflux.id, mediaflux_session: user.mediaflux_session)
       file_inventory_request = FileInventoryRequest.first
-      expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
+      expect(file_inventory_request.request_details["project_title"]).to eq(project_metadata_in_mediaflux.title)
     end
 
     it "puts the completion time into the file inventory request" do
@@ -99,7 +100,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
         file_inventory_request = FileInventoryRequest.first
         expect(file_inventory_request.state).to eq "failed"
         expect(file_inventory_request.completion_time).to be_instance_of(ActiveSupport::TimeWithZone)
-        expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
+        expect(file_inventory_request.request_details["project_title"]).to eq(project_metadata_in_mediaflux.title)
         expect(file_inventory_request.request_details["error"]).to eq("Mediaflux session expired")
       end
 
@@ -122,7 +123,7 @@ RSpec.describe FileInventoryJob, connect_to_mediaflux: true, integration: true d
           file_inventory_request = FileInventoryRequest.first
           expect(file_inventory_request.state).to eq "failed"
           expect(file_inventory_request.completion_time).to be_instance_of(ActiveSupport::TimeWithZone)
-          expect(file_inventory_request.request_details["project_title"]).to eq(project_in_mediaflux.title)
+          expect(file_inventory_request.request_details["project_title"]).to eq(project_metadata_in_mediaflux.title)
           expect(file_inventory_request.request_details["error"]).to eq("Mediaflux session expired")
         end
       end

@@ -3,6 +3,7 @@
 class ProjectFileInventory
   def initialize(project:, session_id:, filename:)
     @project = project
+    @project_metadata = ProjectMetadata.new(project)
     @session_id = session_id
     @filename = filename
     @paths_queue = []
@@ -18,7 +19,7 @@ class ProjectFileInventory
       csv << ["ID", "PATH", "NAME", "COLLECTION?", "LAST_MODIFIED", "SIZE", "CHECKSUM"]
 
       # Add the root of the project to the queue...
-      add_path_to_queue(collection_id: @project.mediaflux_id, path_prefix: @project.project_directory)
+      add_path_to_queue(collection_id: @project.mediaflux_id, path_prefix: @project_metadata.project_directory)
 
       # ... and start processing (more paths might be added during `process_path`)
       loop do

@@ -9,12 +9,13 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
                                         departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }])
   end
   let(:project) { request.approve(sponsor_and_data_manager_user) }
+  let(:project_metadata) { ProjectMetadata.new(project) }
 
   subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
 
   describe "#description" do
     it "delegates to project metdata_model" do
-      expect(presenter.description).to eq(project.metadata_model.description)
+      expect(presenter.description).to eq(project_metadata.description)
     end
   end
 
@@ -38,43 +39,37 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
 
   describe "#project_directory" do
     it "hides the root project" do
-      expect(presenter.project_directory).to eq("/" + project.metadata_model.project_directory)
+      expect(presenter.project_directory).to eq("/" + project_metadata.project_directory)
     end
   end
 
   describe "#project_id" do
     it "delegates to project metdata_model" do
-      expect(presenter.project_id).to eq(project.metadata_model.project_id)
+      expect(presenter.project_id).to eq(project_metadata.project_id)
     end
   end
 
   describe "#project_purpose" do
     it "delegates to project metdata_model" do
-      expect(presenter.project_purpose).to eq(project.metadata_model.project_purpose)
+      expect(presenter.project_purpose).to eq(project_metadata.project_purpose)
     end
   end
 
   describe "#status" do
     it "delegates to project" do
-      expect(presenter.status).to eq(project.status)
+      expect(presenter.status).to eq(project_metadata.status)
     end
   end
 
   describe "#storage_capacity" do
-    it "delegates to project metadata_model" do
-      expect(presenter.storage_capacity).to eq(project.metadata_model.storage_capacity)
+    it "delegates to project project_metadata" do
+      expect(presenter.storage_capacity).to eq(project_metadata.storage_capacity)
     end
   end
 
   describe "#storage_performance_expectations" do
-    it "delegates to project metadata_model" do
-      expect(presenter.storage_performance_expectations).to eq(project.metadata_model.storage_performance_expectations)
-    end
-  end
-
-  describe "#title" do
-    it "delegates to project" do
-      expect(presenter.title).to eq(project.title)
+    it "delegates to project project_metadata" do
+      expect(presenter.storage_performance_expectations).to eq(project_metadata.storage_performance_expectations)
     end
   end
 
@@ -95,8 +90,8 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
       Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
     end
 
-    it "delegates to project metadata_model" do
-      expect(presenter.department_codes.keys).to eq(project.metadata_model.departments)
+    it "delegates to project project_metadata" do
+      expect(presenter.department_codes.keys).to eq(project_metadata.departments)
     end
   end
 

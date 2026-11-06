@@ -9,11 +9,11 @@ namespace :file_inventory do
     request = FileInventoryRequest.where(job_id: job_id).first
     raise "Job #{job_id} not found" if request.nil?
     raise "File #{filename} not found" unless File.exist?(filename)
-
+    project_metadata = ProjectMetadata.new(request.project)
     puts "Attaching file #{filename} to job #{job_id}"
     request.completion_time = Time.current.in_time_zone("America/New_York")
     request.state = "completed"
-    request.request_details = { file_size: File.size(filename), output_file: filename, project_title: request.project.title }
+    request.request_details = { file_size: File.size(filename), output_file: filename, project_title: project_metadata.title }
     request.save!
   end
 
@@ -42,11 +42,11 @@ namespace :file_inventory do
     if logon_request.error?
       raise logon_request.response_error[:message]
     end
-
+    project_metadata = ProjectMetadata.new(project)
     # Schedule the file inventory job using the MediaFlux session we just adquired
     puts "Scheduling file inventory using credentials for: #{mf_domain}:#{mf_user}, session: #{mediaflux_session}"
     job_request = FileInventoryJob.perform_later(user_id: user.id, project_id: project.id, mediaflux_session: mediaflux_session)
-    puts "Scheduled file inventory #{job_request.job_id} for project #{project.title} (#{project.id}) user: #{user.uid} (#{user.id}), session: #{mediaflux_session}"
+    puts "Scheduled file inventory #{job_request.job_id} for project #{project_metadata.title} (#{project.id}) user: #{user.uid} (#{user.id}), session: #{mediaflux_session}"
   end
 
   desc "Runs FileInventoryCleanupJob to clean up old jobs"
