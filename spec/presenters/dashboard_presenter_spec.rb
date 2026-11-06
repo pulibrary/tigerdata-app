@@ -15,6 +15,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   let(:other_user) { User.find_by(uid: "kl37") } # user is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
 
   let!(:project1) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
+  let(:metadata_model1) { ProjectMetadata.new(project1) }
   let!(:project2) do
     project = test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject")
     project.updated_at = ActiveSupport::TimeZone.new("America/New_York").yesterday
@@ -72,12 +73,12 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   describe "my_inventory_requests" do
     it "returns the requests" do
       inv_req = FileInventoryRequest.create!(user_id: sponsor_and_data_manager.id, project_id: project1.id, job_id: 123, state: InventoryRequest::COMPLETED,
-                                             request_details: { project_title: project1.title }, completion_time: 1.day.ago)
+                                             request_details: { project_title: metadata_model1.title }, completion_time: 1.day.ago)
       inv_req2 = FileInventoryRequest.create!(user_id: sponsor_and_data_manager.id, project_id: project1.id, job_id: 123, state: InventoryRequest::PENDING,
-                                              request_details: { project_title: project1.title }, completion_time: nil)
+                                              request_details: { project_title: metadata_model1.title }, completion_time: nil)
       # Leading underscore to show that the request is intentionally unused, and should be ignored by linting tools
       _inv_req3 = FileInventoryRequest.create!(user_id: other_user.id, project_id: project1.id, job_id: 123, state: InventoryRequest::PENDING,
-                                               request_details: { project_title: project1.title }, completion_time: nil)
+                                               request_details: { project_title: metadata_model1.title }, completion_time: nil)
       expect(presenter.my_inventory_requests.count).to eq(2)
       expect(presenter.my_inventory_requests.map(&:id)).to eq([inv_req.id, inv_req2.id])
     end

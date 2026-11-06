@@ -102,14 +102,15 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
         created_projects.push(project_111, project_222, project_333)
 
         approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
+        metadata_model = ProjectMetadata.new(approved_project)
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
-                                    request_details: { project_title: approved_project.title }, completion_time: Time.current.in_time_zone("America/New_York"))
+                                    request_details: { project_title: metadata_model.title }, completion_time: Time.current.in_time_zone("America/New_York"))
         sign_in current_user
         visit dashboard_path
 
         expect(page).to have_text "Latest Downloads"
-        expect(page).to have_link approved_project.title
+        expect(page).to have_link metadata_model.title
         expect(page).to have_text "Expires in 7 days"
         expect(page).to have_text "1.18 MB"
         expect(page).to have_text "The download failed to complete"
@@ -152,18 +153,24 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
           project
         end
 
+        project_list = projects.sort_by(&:updated_at).reverse
+        project8_title = ProjectMetadata.new(project_list[8]).title
+        project14_title = ProjectMetadata.new(project_list[14]).title
+        project_last_title = ProjectMetadata.new(project_list.last).title
+        project_first_title = ProjectMetadata.new(project_list.first).title
+
         sign_in current_user
         visit dashboard_path
         # DataTables info string is configured as "_START_ - _END_ out of _TOTAL_ shown"
         expect(page).to have_css(".dataTables_info", text: /1\s*-\s*8 out of 20 shown/, wait: 10)
         find("a.paginate_button", text: 2).click
-        expect(page).to have_text(projects.sort_by(&:updated_at).reverse[8].title)
+        expect(page).to have_text(project8_title)
         find("a.paginate_button", text: 3).click
-        expect(page).to have_text(projects.sort_by(&:updated_at).reverse.last.title)
+        expect(page).to have_text(project_last_title)
         find("a.paginate_button", text: "<").click
-        expect(page).to have_text(projects.sort_by(&:updated_at).reverse[14].title)
+        expect(page).to have_text(project14_title)
         find("a.paginate_button", text: "<").click
-        expect(page).to have_text(projects.sort_by(&:updated_at).reverse.first.title)
+        expect(page).to have_text(project_first_title)
       end
     end
 

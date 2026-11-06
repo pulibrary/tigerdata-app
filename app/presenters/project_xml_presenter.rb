@@ -8,7 +8,6 @@ class ProjectXmlPresenter
     "id",
     "in_mediaflux?",
     "mediaflux_id",
-    "title",
     to: :project
   )
 
@@ -29,13 +28,14 @@ class ProjectXmlPresenter
     "updated_by",
     "updated_on",
     "schema_version",
+    "title",
     to: :project_metadata
   )
 
   # @param project [Project] The project for the presenter
   def initialize(project)
     @project = project
-    @project_metadata = @project.metadata_model
+    @project_metadata = ProjectMetadata.new(project)
   end
 
   # @return [Nokogiri::XML::Document] The XML document

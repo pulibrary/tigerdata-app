@@ -7,6 +7,7 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
   let(:data_sponsor) { FactoryBot.create(:project_sponsor, uid: "rl3667", mediaflux_session: SystemUser.mediaflux_session) }
   let(:request) { FactoryBot.create(:request_project, data_manager: data_manager.uid, data_sponsor: data_sponsor.uid) }
   let(:project) { request.approve(data_manager) }
+  let(:metadata_model) { ProjectMetadata.new(project) }
 
   context "retrieves xml from rails for a project" do
     before do
@@ -19,7 +20,7 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
       expect(response.code).to eq "200"
       xml = response.parsed_body
       xml_doc = Nokogiri::XML(xml)
-      expect(xml_doc.xpath("//title/text()").to_s).to eq project.title
+      expect(xml_doc.xpath("//title/text()").to_s).to eq metadata_model.title
     end
   end
 
@@ -36,7 +37,7 @@ RSpec.describe "The Skeletor Metadata", connect_to_mediaflux: true, metadata: tr
       expect(response.code).to eq "200"
       xml = response.parsed_body
       xml_doc = Nokogiri::XML(xml)
-      expect(xml_doc.xpath("/meta//Title").text).to eq project.title
+      expect(xml_doc.xpath("/meta//Title").text).to eq metadata_model.title
     end
   end
 end

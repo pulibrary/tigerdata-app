@@ -4,7 +4,9 @@ require "rails_helper"
 
 RSpec.describe TestProjectCleaner, type: :service do
   let!(:project_a) { test_project_from_path("/princeton/tigerdata/RDSS/Query/AProject") }
+  let(:metadata_model_a) { ProjectMetadata.new(project_a) }
   let!(:project_b) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
+  let(:metadata_model_b) { ProjectMetadata.new(project_b) }
   let!(:other_project) { create_project_in_mediaflux }
   let(:cleaner) { TestProjectCleaner.new }
 
@@ -21,13 +23,15 @@ RSpec.describe TestProjectCleaner, type: :service do
     it "creates a new project with the attributes from mediaflux" do
       cleaner.reload
       new_project_a = Project.find_by(mediaflux_id: project_a.mediaflux_id)
+      new_metadata_model_a = ProjectMetadata.new(new_project_a)
       expect(new_project_a).not_to be_nil
       expect(new_project_a.id).not_to eq(project_a.id)
-      expect(new_project_a.title).to eq(project_a.title)
+      expect(new_metadata_model_a.title).to eq(metadata_model_a.title)
       new_project_b = Project.find_by(mediaflux_id: project_b.mediaflux_id)
+      new_metadata_model_b = ProjectMetadata.new(new_project_b)
       expect(new_project_b).not_to be_nil
       expect(new_project_b.id).not_to eq(project_b.id)
-      expect(new_project_b.title).to eq(project_b.title)
+      expect(new_metadata_model_b.title).to eq(metadata_model_b.title)
     end
   end
 end

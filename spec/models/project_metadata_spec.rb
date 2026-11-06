@@ -4,10 +4,10 @@ require "rails_helper"
 
 RSpec.describe ProjectMetadata, type: :model do
   let(:researcher_user) { FactoryBot.create(:user, uid: "hc1234") }
-  let(:project) { Project.new }
-  let(:project_metadata) { described_class.new }
+  let(:project) { Project.new(metadata_json: metadata_json) }
+  let(:project_metadata) { described_class.new(project) }
   let(:data_security_level) { nil } # no default is set for security level
-  let(:hash) do
+  let(:metadata_json) do
     {
       data_sponsor: "abc",
       data_manager: "def",
@@ -32,7 +32,6 @@ RSpec.describe ProjectMetadata, type: :model do
 
   describe "#initialize_from_hash" do
     it "parses basic metadata" do
-      project_metadata.initialize_from_hash(hash)
       expect(project_metadata.data_sponsor).to eq("abc")
       expect(project_metadata.data_manager).to eq("def")
       expect(project_metadata.departments).to eq("dep")
@@ -43,16 +42,8 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.data_security_level).to be_nil
     end
 
-    it "sets the default values when not given" do
-      project_metadata.initialize_from_hash(hash)
-      expect(project_metadata.storage_capacity[:size].with_indifferent_access).to eq default_storage_capacity
-      expect(project_metadata.storage_performance_expectations.with_indifferent_access).to eq default_storage_performance_expectations
-      expect(project_metadata.project_purpose).to eq default_project_purpose
-    end
-
     it "overwrites default values when given" do
-      hash[:project_purpose] = "Not research"
-      project_metadata.initialize_from_hash(hash)
+      metadata_json[:project_purpose] = "Not research"
       expect(project_metadata.project_purpose).to eq "Not research"
     end
 
@@ -60,7 +51,6 @@ RSpec.describe ProjectMetadata, type: :model do
       let(:data_security_level) { 3 }
 
       it "sets the data security level" do
-        project_metadata.initialize_from_hash(hash)
         expect(project_metadata.data_security_level).to eq(3)
       end
     end

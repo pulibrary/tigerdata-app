@@ -45,5 +45,5 @@ Time.current.in_time_zone("America/New_York").iso8601
 Transforming iso8601 into Mediaflux format:
 
 ```
-Mediaflux::Time.format_date_for_mediaflux(project.metadata[:updated_on])
+Mediaflux::Time.format_date_for_mediaflux(ProjectMetadata.new(project).updated_on)
 ```

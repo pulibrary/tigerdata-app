@@ -23,7 +23,9 @@ class RequestProjectMetadata
         hpc: request[:hpc]&.downcase == "yes",
         smb: request[:smb]&.downcase == "yes",
         globus: request[:globus]&.downcase == "yes",
-        data_security_level: request[:data_security_level]
+        data_security_level: request[:data_security_level],
+        submission: { "requested_by" => request[:requested_by], "request_date_time" => request[:created_at] },
+        schema_version: TigerdataSchema::SCHEMA_VERSION
       }
     end
 

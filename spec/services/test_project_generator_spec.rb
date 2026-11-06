@@ -18,13 +18,14 @@ RSpec.describe TestProjectGenerator, connect_to_mediaflux: true do
        :integration do
       subject.generate
       project = Project.last
+      metadata_model = ProjectMetadata.new(project)
       expect(project).to be_persisted
       metadata_query = Mediaflux::AssetMetadataRequest.new(
         session_token: user.mediaflux_session,
         id: project.mediaflux_id
       )
       metadata_query.resolve
-      expect(metadata_query.metadata[:path]).to eq "/princeton/#{project.metadata_model.project_directory}"
+      expect(metadata_query.metadata[:path]).to eq "/princeton/#{metadata_model.project_directory}"
       expect(metadata_query.metadata[:data_sponsor]).to eq(user.uid)
       Mediaflux::AssetDestroyRequest.new(session_token: user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
     end

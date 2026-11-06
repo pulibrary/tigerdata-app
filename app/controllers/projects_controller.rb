@@ -10,8 +10,7 @@ class ProjectsController < ApplicationController
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
-    project_metadata = @project.metadata
-    storage_capacity = project_metadata[:storage_capacity]
+    storage_capacity = project_metadata.storage_capacity
     size = storage_capacity[:size]
     unit = storage_capacity[:unit]
 
@@ -105,7 +104,7 @@ class ProjectsController < ApplicationController
     project_job_service.list_contents_job(user: current_user)
 
     json_response = {
-      message: "File list for \"#{project.title}\" is being generated in the background. A link to the downloadable file list will be available in the \"Recent Activity\" section of your dashboard when it is available. You may safely navigate away from this page or close this tab."
+      message: "File list for \"#{project_metadata.title}\" is being generated in the background. A link to the downloadable file list will be available in the \"Recent Activity\" section of your dashboard when it is available. You may safely navigate away from this page or close this tab."
     }
     render json: json_response
   rescue => ex
@@ -127,7 +126,7 @@ class ProjectsController < ApplicationController
       current_project = project
       if current_project
         current_time = Time.current.in_time_zone("America/New_York").strftime("%Y-%m-%d-%H-%M")
-        file_out = "filelist-#{project.metadata_model.doi_path}-#{current_time}.csv"
+        file_out = "filelist-#{project_metadata.doi_path}-#{current_time}.csv"
         send_data File.read(filename), type: "text/plain", filename: file_out, disposition: "attachment"
       end
     end
@@ -179,6 +178,10 @@ class ProjectsController < ApplicationController
         nil
       end
     end
+  end
+
+  def project_metadata
+    @project_metadata ||= ProjectMetadata.new(project)
   end
 
   def set_breadcrumbs
