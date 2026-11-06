@@ -17,7 +17,7 @@ class NewProjectWizard::ReviewAndSubmitController < RequestWizardsController
     if @new_project_request.valid_to_submit?
       @new_project_request.state = NewProjectRequest::SUBMITTED
       @new_project_request.save
-      TigerdataMailer.with(request_id: @new_project_request.id, submitter: current_user).request_creation.deliver_now
+      TigerdataMailer.with(request_id: @new_project_request.id, submitter: current_user).request_creation.deliver_later
       redirect_to new_project_request_submit_path
     else
       stubbed_message = "Please resolve errors before submitting your request"
