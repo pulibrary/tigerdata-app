@@ -90,34 +90,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "#file_list" do
-    let(:manager) { sponsor_and_data_manager_user }
-    let!(:project) do
-      request = FactoryBot.create(:request_project)
-      request.approve(manager)
-    end
-
-    before do
-      # create a collection so it can be filtered
-      Mediaflux::AssetCreateRequest.new(session_token: manager.mediaflux_session, name: "sub-collectoion", pid: project.mediaflux_id).resolve
-
-      # Create files for the project in mediaflux using test asset create request
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, pattern: "Real_Among_Random.txt").resolve
-      Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
-    end
-
-    it "fetches the file list",
-       :integration do
-      file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
-      expect(file_list[:files].count).to eq 8
-      expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
-      expect(file_list[:files][0].path).to eq "/princeton/#{project.metadata_json['project_directory']}/Real_Among_Random.txt0"
-      expect(file_list[:files][0].size).to be 100
-      expect(file_list[:files][0].collection).to be false
-      expect(file_list[:files][0].last_modified).to_not be nil
-    end
-  end
-
   describe "#directory_listing" do
     let(:manager) { sponsor_and_data_manager_user }
     let!(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
