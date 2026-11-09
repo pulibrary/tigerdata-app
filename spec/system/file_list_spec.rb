@@ -19,16 +19,6 @@ context "A Project Has a File List", integration: true, clean_projects: true do
     Mediaflux::TestAssetCreateRequest.new(session_token: manager.mediaflux_session, parent_id: project.mediaflux_id, count: 7, pattern: "#{FFaker::Book.title}.txt").resolve
   end
 
-  it "fetches the file list" do
-    file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
-    expect(file_list[:files].count).to eq 8
-    expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
-    expect(file_list[:files][0].path).to eq "/princeton/#{project_metadata.project_directory}/Real_Among_Random.txt0"
-    expect(file_list[:files][0].size).to be 100
-    expect(file_list[:files][0].collection).to be false
-    expect(file_list[:files][0].last_modified).to_not be nil
-  end
-
   it "allows a user to see the file list" do
     sign_in manager
     visit "/projects/#{project.id}"

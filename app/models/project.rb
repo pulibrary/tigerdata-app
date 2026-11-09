@@ -125,38 +125,6 @@ class Project < ApplicationRecord
     response
   end
 
-  # Fetches the first n files (excludes arc-asset-collection Mediaflux resources)
-  # @param session_id [String] mediaflux session id to use for the query
-  # @param size [Integer] number of files to fetch, defaults to 10
-  #
-  # @return [Hash] a hash with the files or an empty array if there are no files or the project is not in mediaflux
-  def file_list(session_id:, size: 10)
-    listing = { files: [] }
-    return listing if mediaflux_id.nil?
-
-    aql_query = "type!='application/arc-asset-collection'"
-    query_request_args = {
-      session_token: session_id,
-      collection: mediaflux_id,
-      deep_search: true,
-      aql_query: aql_query
-    }
-
-    begin
-      query_request = build_query_request(**query_request_args)
-    rescue MediafluxError => e
-      listing = { error: e.message }
-      return listing
-    rescue StandardError => e
-      raise e
-    end
-
-    iterator_id = query_request.result
-    results = resolve_iterator_request(iterator_id: iterator_id, session_id: session_id, size: size)
-
-    results
-  end
-
   # Fetches the first n files in the project directory
   # @param session_id [String] mediaflux session id to use for the query
   # @param size [Integer] number of files to fetch, defaults to 10

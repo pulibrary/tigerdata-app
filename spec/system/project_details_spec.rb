@@ -345,23 +345,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     context "Project Contents", connect_to_mediaflux: true, integration: true do
       let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
-      let(:project) { create_project_in_mediaflux(current_user: sponsor_user, request:) }
       let(:project_metadata) { ProjectMetadata.new(project) }
+      let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
       let(:size) { 100 }
-      let(:file_list) { project.file_list(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
-      let(:first_folder) { project.directory_listing(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path).first }
+      let(:file_list) { project.directory_listing(session_id: sponsor_user.mediaflux_session, size: size)[:files].sort_by!(&:path) }
+      let(:first_folder) { file_list.find { |asset| asset.collection == true } }
       let(:first_file) { file_list.find { |asset| asset.collection == false } }
-      let(:second_file) { file_list.select { |asset| asset.collection == false }.second }
-      let(:last_file) { file_list.reverse.find { |asset| asset.collection == false } }
-
-      before do
-        # Create a project in mediaflux and generate assets for the collection
-        TestAssetGenerator.new(user: sponsor_user, project_id: project.id, levels: 2, directory_per_level: 2, file_count_per_directory: 4).generate
-      end
-
-      after do
-        Mediaflux::AssetDestroyRequest.new(session_token: sponsor_user.mediaflux_session, collection: project.mediaflux_id, members: true).resolve
-      end
 
       it "renders the storage quota usage component" do
         sign_in sponsor_user
@@ -378,7 +367,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         visit "/projects/#{project.id}/details"
         expect(page).to have_selector(:link_or_button, "Content Preview")
         click_on("Content Preview")
-        expect(page).to have_text("Total Files: 16")
+        expect(page).to have_text("Total Files: 18")
 
         # Be able to return to the dashboard
         expect(page).to have_selector(:link_or_button, "Dashboard")
@@ -397,8 +386,9 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         click_on("Content Preview")
         # Directory is displayed
         expect(page).to have_text(first_folder.name)
-        # Files are not displayed
-        expect(page).not_to have_text(first_file.name)
+        # Files at the top level are displayed
+        expect(page).to have_text(first_file.name)
+        expect(page).not_to have_text("A14")
       end
 
       context "when downloads do not exist" do
