@@ -14,9 +14,10 @@ module Mediaflux
       @xml_namespace = self.class.default_xml_namespace
       @xml_namespace_uri = self.class.default_xml_namespace_uri
 
-      @all_data_users = @project.metadata_model.ro_users + @project.metadata_model.rw_users
-      @ro_users = @project.metadata_model.ro_users
-      @rw_users = @project.metadata_model.rw_users
+      project_metadata = ProjectMetadata.new(@project)
+      @all_data_users = project_metadata.ro_users + project_metadata.rw_users
+      @ro_users = project_metadata.ro_users
+      @rw_users = project_metadata.rw_users
     end
 
     # Specifies the Mediaflux service to use when updating assets

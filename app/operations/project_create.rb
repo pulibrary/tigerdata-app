@@ -20,8 +20,9 @@ class ProjectCreate < Dry::Operation
     project = Project.create!({ metadata_json: project_metadata_json })
     request.project_id = project.id
     puldatacite = PULDatacite.new
-    project.metadata_model.project_id = puldatacite.draft_doi
-    project.save!
+    project_metadata = ProjectMetadata.new(project)
+    project_metadata.project_id = puldatacite.draft_doi
+    project_metadata.update_project
 
     # Return Success(attrs) or Failure(error)
     Success project
@@ -43,9 +44,10 @@ class ProjectCreate < Dry::Operation
     else
       ProvenanceEvent.generate_approval_events(project: project, user: current_user, debug_output: mediaflux_request.debug_output.to_s)
       # Save the submission provenance
-      # TODO:  Should we update the metadata_model or just the metadata hash directly?
-      project.metadata_model.submission["approved_by"] = current_user.uid
-      project.metadata_model.submission["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
+
+      # TODO:  Should we update the project_metadata or just the metadata hash directly?
+      project.metadata_json["submission"]["approved_by"] = current_user.uid
+      project.metadata_json["submission"]["approved_on"] = project.provenance_events.where(event_type: "Approved").first.created_at
       project.save!
 
       Success(mediaflux_id)
@@ -65,9 +67,10 @@ class ProjectCreate < Dry::Operation
   end
 
   def update_project_with_mediaflux_info(mediaflux_id:, project:)
+    project_metadata = ProjectMetadata.new(project)
     project.mediaflux_id = mediaflux_id
-    project.metadata_model.status = Project::APPROVED_STATUS
-    project.save!
+    project_metadata.status = Project::APPROVED_STATUS
+    project_metadata.update_project
     Success(project)
   rescue => ex
     # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
@@ -75,8 +78,10 @@ class ProjectCreate < Dry::Operation
   end
 
   def persist_users_in_mediaflux(project, current_user)
+    project_metadata = ProjectMetadata.new(project)
+
     # Do nothing if there are no users to persist
-    return Success(project) if (project.metadata_model.ro_users + project.metadata_model.rw_users).empty?
+    return Success(project) if (project_metadata.ro_users + project_metadata.rw_users).empty?
 
     # Add the data users to the project in Mediaflux
     add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: project)
@@ -102,12 +107,15 @@ class ProjectCreate < Dry::Operation
     if metadata_request.error?
       Failure("Error activate project #{project.id}: Error retrieving metadata: #{metadata_request.response_error}")
 
-    elsif project.title == metadata_request.metadata[:title]
-      project.metadata_model.status = Project::ACTIVE_STATUS
-      project.save!
-      Success(project)
     else
-      Failure("Error activate project #{project.id}: Title mismatch: #{project.title} != #{metadata_request.metadata[:title]}")
+      project_metadata = ProjectMetadata.new(project)
+      if project_metadata.title == metadata_request.metadata[:title]
+        project_metadata.status = Project::ACTIVE_STATUS
+        project_metadata.update_project
+        Success(project)
+      else
+        Failure("Error activate project #{project.id}: Title mismatch: #{project_metadata.title} != #{metadata_request.metadata[:title]}")
+      end
     end
   rescue => ex
     Failure("Error activate project #{project.id}: #{ex}")

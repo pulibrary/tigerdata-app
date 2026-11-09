@@ -7,6 +7,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
   let(:mediaflux_url) { "http://0.0.0.0:8888/__mflux_svc__" }
   let(:user) { FactoryBot.create(:user, mediaflux_session: SystemUser.mediaflux_session) }
   let(:approved_project) { create_project_in_mediaflux(current_user: user) }
+  let(:approved_project_metadata) { ProjectMetadata.new(approved_project) }
   let(:mediaflux_response) { "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" }
 
   describe "#metadata" do
@@ -25,7 +26,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
       expect(metadata[:creator]).to eq("manager")
       expect(metadata[:description]).to eq("")
       expect(metadata[:collection]).to be_falsey
-      expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}/__asset_id__#{@asset_id}")
+      expect(metadata[:path]).to eq("/princeton/#{approved_project_metadata.project_directory}/__asset_id__#{@asset_id}")
       expect(metadata[:type]).to eq("")
       expect(metadata[:size]).to be nil
       expect(metadata[:data_security_level]).to be nil
@@ -39,13 +40,13 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("a random description")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path]).to eq("/princeton/#{approved_project.metadata_model.project_directory}")
+        expect(metadata[:path]).to eq("/princeton/#{approved_project_metadata.project_directory}")
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("200 bytes")
         expect(metadata[:total_file_count]).to eq("2")
         expect(metadata[:quota_allocation]).to eq("500 GB")
-        expect(metadata[:project_directory]).to eq(approved_project.metadata_model.project_directory)
-        expect(metadata[:project_id]).to eq(approved_project.metadata_model.project_id)
+        expect(metadata[:project_directory]).to eq(approved_project_metadata.project_directory)
+        expect(metadata[:project_id]).to eq(approved_project_metadata.project_id)
         expect(metadata[:data_security_level]).to eq(0) # Assets created in mediaflux default to 0.
       end
     end
@@ -53,6 +54,7 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
     context "actual mediaflux connection" do
       let(:researcher_user) { FactoryBot.create(:user, uid: "hc1234", mediaflux_session: SystemUser.mediaflux_session) }
       let(:valid_project) { create_project_in_mediaflux(current_user: researcher_user) }
+      let(:valid_project_metadata) { ProjectMetadata.new(valid_project) }
       let(:session_token) { researcher_user.mediaflux_session }
 
       it "parses the response",
@@ -63,15 +65,15 @@ RSpec.describe Mediaflux::AssetMetadataRequest, connect_to_mediaflux: true, type
         expect(metadata[:creator]).to eq("manager")
         expect(metadata[:description]).to eq("a random description")
         expect(metadata[:collection]).to be_truthy
-        expect(metadata[:path].include?(valid_project.metadata_json["project_directory"])).to be_truthy
+        expect(metadata[:path].include?(valid_project_metadata.project_directory)).to be_truthy
         expect(metadata[:type]).to eq("application/arc-asset-collection")
         expect(metadata[:size]).to eq("0 bytes")
         expect(metadata[:total_file_count]).to eq("0")
         expect(metadata[:quota_allocation]).to eq("500 GB")
         expect(metadata[:project_id]).to eq("10.34770/tbd")
-        expect(metadata[:project_directory]).to eq(valid_project.project_directory)
+        expect(metadata[:project_directory]).to eq(valid_project_metadata.project_directory)
         # TODO: uncomment when the fields have been implemented in the tigerdata:project schema
-        # expect(metadata[:created_by]).to eq(valid_project.metadata[:created_by])
+        # expect(metadata[:created_by]).to eq(valid_project_metadata.created_by)
         # expect(metadata[:updated_by]).to be_blank # we have not updted the project so no updated by is available
       end
     end

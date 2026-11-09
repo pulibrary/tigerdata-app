@@ -6,6 +6,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
   let!(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:project_request) { FactoryBot.create(:request_project, data_manager: sponsor_and_data_manager.uid, data_sponsor: sponsor_and_data_manager.uid) }
   let(:project) { project_request.approve(sponsor_and_data_manager) }
+  let(:project_metadata) { ProjectMetadata.new(project) }
 
   before do
     Affiliation.load_from_file(Rails.root.join("spec", "fixtures", "departments.csv"))
@@ -33,12 +34,12 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       context "a user who has project access" do
-        let(:researcher_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
+        let(:researcher_user) { User.find_by(uid: project_metadata.data_sponsor) }
 
         it "renders the project metadata as json" do
           get :details, params: { id: project.id, format: :json }
           expect(response.content_type).to eq("application/json; charset=utf-8")
-          expect(JSON.parse(response.body)).to eq(project.metadata)
+          expect(JSON.parse(response.body)).to eq(project.metadata_json)
         end
 
         it "shows affiliation code as being saved to the project" do
@@ -49,15 +50,16 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         it "renders the project metadata as xml", :integration do
           request = FactoryBot.create(:request_project)
           project = request.approve(sponsor_and_data_manager)
+          project_metadata = ProjectMetadata.new(project)
           get :details, params: { id: project.id, format: :xml }
           expect(response.content_type).to eq("application/xml; charset=utf-8")
           xml_doc = Nokogiri::XML(response.body)
-          expect(xml_doc.xpath("/resource/title").text).to eq project.title
-          expect(xml_doc.xpath("/resource/projectDirectory/projectDirectoryPath").text).to eq project.project_directory
-          expect(xml_doc.xpath("/resource/description").text).to eq project.metadata[:description]
-          expect(xml_doc.xpath("/resource/dataSponsor/@userID").text).to eq project.metadata[:data_sponsor]
-          expect(xml_doc.xpath("/resource/dataManager/@userID").text).to eq project.metadata[:data_manager]
-          expect(xml_doc.xpath("/resource/projectID").text).to eq project.metadata[:project_id]
+          expect(xml_doc.xpath("/resource/title").text).to eq project_metadata.title
+          expect(xml_doc.xpath("/resource/projectDirectory/projectDirectoryPath").text).to eq project_metadata.project_directory
+          expect(xml_doc.xpath("/resource/description").text).to eq project_metadata.description
+          expect(xml_doc.xpath("/resource/dataSponsor/@userID").text).to eq project_metadata.data_sponsor
+          expect(xml_doc.xpath("/resource/dataManager/@userID").text).to eq project_metadata.data_manager
+          expect(xml_doc.xpath("/resource/projectID").text).to eq project_metadata.project_id
         end
 
         context "when rendering the project metadata as html" do
@@ -176,7 +178,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a user with access" do
-      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      let(:researcher_user) { User.find_by(uid: project_metadata.data_manager) }
 
       before do
         sign_in researcher_user
@@ -186,7 +188,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         get :list_contents, params: { id: project.id, format: :json }
         expect(enqueued_jobs.size).to eq(1)
         expect(response.content_type).to eq("application/json; charset=utf-8")
-        expect(response.body).to eq("{\"message\":\"File list for \\\"#{project.title}\\\" is being generated in the background. " \
+        expect(response.body).to eq("{\"message\":\"File list for \\\"#{project_metadata.title}\\\" is being generated in the background. " \
                                     "A link to the downloadable file list will be available in the \\\"Recent Activity\\\" section " \
                                     "of your dashboard when it is available. You may safely navigate away from this page or close this tab.\"}")
       end
@@ -225,7 +227,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       end
 
       context "a user who has project access" do
-        let(:researcher_user) { User.find_by(uid: project.metadata_model.data_sponsor) }
+        let(:researcher_user) { User.find_by(uid: project_metadata.data_sponsor) }
 
         context "with views rendered" do
           render_views
@@ -343,7 +345,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a user with access" do
-      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      let(:researcher_user) { User.find_by(uid: project_metadata.data_manager) }
 
       before do
         sign_in researcher_user
@@ -423,7 +425,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a user with access" do
-      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      let(:researcher_user) { User.find_by(uid: project_metadata.data_manager) }
 
       before do
         sign_in researcher_user
@@ -432,15 +434,17 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       it "renders the Mediaflux metadata as xml", :integration do
         request = FactoryBot.create(:request_project)
         project = request.approve(sponsor_and_data_manager)
+        project_metadata = ProjectMetadata.new(project)
+
         get :show_mediaflux, params: { id: project.id, format: :xml }
         expect(response.content_type).to eq("application/xml; charset=utf-8")
         xml_doc = Nokogiri::XML(response.body)
-        expect(xml_doc.xpath("/meta//Title").text).to eq project.title
-        expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project.project_directory
-        expect(xml_doc.xpath("/meta//Description").text).to eq project.metadata[:description]
-        expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project.metadata[:data_sponsor]
-        expect(xml_doc.xpath("/meta//DataManager").text).to eq project.metadata[:data_manager]
-        expect(xml_doc.xpath("/meta//ProjectID").text).to eq project.metadata[:project_id]
+        expect(xml_doc.xpath("/meta//Title").text).to eq project_metadata.title
+        expect(xml_doc.xpath("/meta//ProjectDirectory").text).to eq project_metadata.project_directory
+        expect(xml_doc.xpath("/meta//Description").text).to eq project_metadata.description
+        expect(xml_doc.xpath("/meta//DataSponsor").text).to eq project_metadata.data_sponsor
+        expect(xml_doc.xpath("/meta//DataManager").text).to eq project_metadata.data_manager
+        expect(xml_doc.xpath("/meta//ProjectID").text).to eq project_metadata.project_id
       end
 
       context "when rescuing a mediaflux error" do
@@ -466,7 +470,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977",
         state: InventoryRequest::COMPLETED,
         request_details: {
-          project_title: project.title,
+          project_title: project_metadata.title,
           file_size: 1_000_000,
           output_file: Rails.root.join("spec", "fixtures", "files", "project_report.csv").to_s
         },
@@ -491,7 +495,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
     end
 
     context "a user with access" do
-      let(:researcher_user) { User.find_by(uid: project.metadata_model.data_manager) }
+      let(:researcher_user) { User.find_by(uid: project_metadata.data_manager) }
 
       before do
         sign_in researcher_user

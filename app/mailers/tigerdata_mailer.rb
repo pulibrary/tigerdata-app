@@ -7,7 +7,7 @@ class TigerdataMailer < ApplicationMailer
     raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
 
     admin_email = params[:approver].email || Rails.application.config.tigerdata_mail[:to_email]
-    title = project.title
+    title = project_metadata.title
     subject = "Project: '#{title}' has been approved"
     mail(to: admin_email, cc: config[:cc_email], subject:)
   end
@@ -59,5 +59,9 @@ class TigerdataMailer < ApplicationMailer
 
   def project
     @project ||= Project.find_by(id: @project_id)
+  end
+
+  def project_metadata
+    @project_metadata ||= ProjectMetadata.new(project)
   end
 end

@@ -10,7 +10,8 @@ class TestAssetGenerator
     @directory_per_level = directory_per_level
     @file_count_per_directory = file_count_per_directory
     # Only use the last part of the path as the base (so we don't get the root "tigerdata/")
-    @base_name = @project.project_directory_short.split("/").last
+    project_metadata = ProjectMetadata.new(@project)
+    @base_name = project_metadata.project_directory&.split("/")&.last || ""
     @mediaflux_session = @user.mediaflux_session
     @root_file_count = root_file_count
     @pattern = pattern

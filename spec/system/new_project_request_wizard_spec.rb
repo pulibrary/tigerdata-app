@@ -128,6 +128,7 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       let(:project1) { request1.approve(trainer_user) }
       let(:request2) { FactoryBot.create(:request_project, data_manager: "tigerdatatester", data_sponsor: "tigerdatatester", user_roles: [{ "uid" => user_b.uid, "read_only" => false }]) }
       let(:project2) { request2.approve(trainer_user) }
+      let(:project_metadata2) { ProjectMetadata.new(project2) }
 
       it "does not allow a user to see someone elses project" do
         sign_in user_a
@@ -140,9 +141,9 @@ describe "New Project Request page", type: :system, connect_to_mediaflux: false,
       it "allows a user to see a project they are affiliated with" do
         sign_in user_b
         visit "/projects/#{project2.id}"
-        expect(page).to have_text(project2.title)
+        expect(page).to have_text(project_metadata2.title)
         visit "/projects/#{project2.id}.xml"
-        expect(page.body).to include(project2.title)
+        expect(page.body).to include(project_metadata2.title)
       end
     end
 

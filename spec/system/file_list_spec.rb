@@ -8,6 +8,7 @@ context "A Project Has a File List", integration: true, clean_projects: true do
   let(:user) { FactoryBot.create(:user) }
   let(:request) { FactoryBot.create(:request_project) }
   let(:project) { request.approve(manager) }
+  let(:project_metadata) { ProjectMetadata.new(project) }
 
   before do
     # create a collection so it can be filtered
@@ -22,7 +23,7 @@ context "A Project Has a File List", integration: true, clean_projects: true do
     file_list = project.file_list(session_id: manager.mediaflux_session, size: 10)
     expect(file_list[:files].count).to eq 8
     expect(file_list[:files][0].name).to eq "Real_Among_Random.txt0"
-    expect(file_list[:files][0].path).to eq "/princeton/#{project.project_directory}/Real_Among_Random.txt0"
+    expect(file_list[:files][0].path).to eq "/princeton/#{project_metadata.project_directory}/Real_Among_Random.txt0"
     expect(file_list[:files][0].size).to be 100
     expect(file_list[:files][0].collection).to be false
     expect(file_list[:files][0].last_modified).to_not be nil
