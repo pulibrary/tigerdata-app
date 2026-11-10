@@ -4,7 +4,7 @@ class TigerdataMailer < ApplicationMailer
   def project_creation
     config = Rails.application.config.tigerdata_mail[:project_creation]
     @project_id = params[:project_id]
-    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
+    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project_metadata.nil?
 
     admin_email = params[:approver].email || Rails.application.config.tigerdata_mail[:to_email]
     title = project_metadata.title
@@ -28,7 +28,7 @@ class TigerdataMailer < ApplicationMailer
     @project_id = params[:project_id]
     submitter_mail = params[:submitter].email
     submitter_name = params[:submitter].display_name_safe
-    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
+    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project_metadata.nil?
 
     subject = "Globus Connection Request Ready for Review from #{submitter_name}"
     mail(to: config[:to_email], cc: config[:cc_email], from: submitter_mail, subject:)
@@ -37,7 +37,7 @@ class TigerdataMailer < ApplicationMailer
   def storage_increase_request
     config = Rails.application.config.tigerdata_mail[:storage_increase_request]
     @project_id = params[:project_id]
-    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project.nil?
+    raise(ArgumentError, "Invalid Project ID provided for the TigerdataMailer: #{@project_id}") if project_metadata.nil?
 
     submitter_mail = params[:submitter].email
     submitter_name = params[:submitter].display_name_safe
@@ -62,6 +62,7 @@ class TigerdataMailer < ApplicationMailer
   end
 
   def project_metadata
+    return nil if project.nil?
     @project_metadata ||= ProjectMetadata.new(project)
   end
 end

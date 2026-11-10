@@ -67,6 +67,10 @@ class ProjectMetadata
     :provisional
   )
 
+  attr_reader :project
+
+  delegate :id, :mediaflux_id, to: :project
+
   def initialize(project)
     initialize_from_hash(project.metadata_json.with_indifferent_access)
     @project = project

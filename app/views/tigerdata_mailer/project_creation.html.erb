@@ -7,13 +7,13 @@
   <body>
     <p>The following project has been approved and created:</p>
 
-    Project ID: <%= @project.id %>
-    Mediaflux ID: <%= @project.mediaflux_id %>
-    Title: <%= @project.metadata_json["title"] %>
-    Project Directory: <%= @project.metadata_json["project_directory"] %>
-    Project Purpose: <%= @project.metadata_json["project_purpose"] %>
-    Data Sponsor: <%= @project.metadata_json["data_sponsor"] %>
-    Data Manager: <%= @project.metadata_json["data_manager"] %>
+    Project ID: <%= @project_metadata.id %>
+    Mediaflux ID: <%= @project_metadata.mediaflux_id %>
+    Title: <%= @project_metadata.title %>
+    Project Directory: <%= @project_metadata.project_directory %>
+    Project Purpose: <%= @project_metadata.project_purpose %>
+    Data Sponsor: <%= @project_metadata.data_sponsor %>
+    Data Manager: <%= @project_metadata.data_manager %>
 
     <p>For more details, see <%= project_url(@project) %></p>
   </body>
