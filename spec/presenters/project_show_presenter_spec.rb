@@ -13,8 +13,9 @@ RSpec.describe ProjectShowPresenter do
                                         user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
   end
   let(:project) { request1.approve(data_sponsor) }
+  let(:project_metadata) { ProjectMetadata.new(project) }
 
-  subject(:presenter) { ProjectShowPresenter.new(project, data_sponsor) }
+  subject(:presenter) { ProjectShowPresenter.new(project_metadata, data_sponsor) }
 
   describe "#user_has_access?" do
     it "gives access to the right users" do

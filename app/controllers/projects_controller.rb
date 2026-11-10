@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   before_action :authenticate_user!
 
   def details
-    return if project.blank?
+    return if project_metadata.blank?
 
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
@@ -47,7 +47,7 @@ class ProjectsController < ApplicationController
 
   # GET "projects/:id"
   def show
-    return if project.blank?
+    return if project_metadata.blank?
 
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
@@ -56,7 +56,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.xml {
-        render xml: ProjectShowPresenter.new(project, current_user).to_xml
+        render xml: @presenter.to_xml
       }
     end
   end
@@ -64,7 +64,7 @@ class ProjectsController < ApplicationController
   # GET "projects/:id/directory-listing"
   # Used via an AJAX call to retrieve the list of files for a given path within a project
   def directory_listing
-    return if project.blank?
+    return if project_metadata.blank?
 
     path_id = params["pathid"]&.to_i || project.mediaflux_id
     # TODO: We should not be adding the '+1' below to make the test pass.  Complete from mediaflux or another way to calculate it should really be correct
@@ -99,7 +99,7 @@ class ProjectsController < ApplicationController
   end
 
   def list_contents
-    return if project.blank?
+    return if project_metadata.blank?
 
     project_job_service.list_contents_job(user: current_user)
 
@@ -123,8 +123,7 @@ class ProjectsController < ApplicationController
     else
       filename = file_inventory_request.output_file
       params[:id] = file_inventory_request.project_id
-      current_project = project
-      if current_project
+      if project_metadata
         current_time = Time.current.in_time_zone("America/New_York").strftime("%Y-%m-%d-%H-%M")
         file_out = "filelist-#{project_metadata.doi_path}-#{current_time}.csv"
         send_data File.read(filename), type: "text/plain", filename: file_out, disposition: "attachment"
@@ -169,19 +168,27 @@ class ProjectsController < ApplicationController
   def project
     @project ||= begin
       project = Project.find(params[:id])
-      @presenter = ProjectShowPresenter.new(project, current_user)
-      if project&.mediaflux_id != nil && @presenter.user_has_access?(user: current_user)
-        project
+      if project.nil?
+        flash[:alert] = I18n.t(:access_denied)
+        redirect_to dashboard_path
+      end
+      project
+    end
+  end
+
+  def project_metadata
+    return nil if project.blank?
+    @project_metadata ||= begin
+      project_metadata = ProjectMetadata.new(project)
+      @presenter = ProjectShowPresenter.new(project_metadata, current_user)
+      if @presenter.user_has_access?(user: current_user)
+        project_metadata
       else
         flash[:alert] = I18n.t(:access_denied)
         redirect_to dashboard_path
         nil
       end
     end
-  end
-
-  def project_metadata
-    @project_metadata ||= ProjectMetadata.new(project)
   end
 
   def set_breadcrumbs

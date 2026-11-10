@@ -15,7 +15,7 @@ class DashboardPresenter
 
     @all_projects ||= Project.all_projects(current_user)
                              .map { |project| ProjectDashboardPresenter.new(project, current_user) }
-                             .select(&:project_in_rails?)
+                             .reject { |presenter| presenter.project_metadata.nil? }
                              .sort_by(&:updated_at)
                              .reverse
     @all_projects
@@ -24,7 +24,7 @@ class DashboardPresenter
   def dashboard_projects
     @dashboard_projects ||= Project.users_projects(current_user)
                                    .map { |project| ProjectDashboardPresenter.new(project, current_user) }
-                                   .select(&:project_in_rails?)
+                                   .reject { |presenter| presenter.project_metadata.nil? }
                                    .sort_by(&:updated_at)
                                    .reverse
     @dashboard_projects

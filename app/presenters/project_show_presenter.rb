@@ -14,18 +14,16 @@ class ProjectShowPresenter
   end
 
   # Constructor
-  # @param project [Project] the project to be presented
+  # @param project_metadata [ProjectMetadata] the project metadata to be presented
   # @param current_user [User] the user currently logged in
   # @param project_mf [Hash] the current representation of the project in Mediaflux
-  def initialize(project, current_user, project_mf: nil)
-    @project = project
+  def initialize(project_metadata, current_user, project_mf: nil)
+    @project_metadata = project_metadata
+    @project = project_metadata.project
     @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     @session_id = current_user.mediaflux_session
     @project_file_display_limit = Rails.configuration.project_file_display_limit
-    if @project.present?
-      @project_metadata = ProjectMetadata.new(@project)
-      @latest_completed_download = current_user.inventory_requests.where(project_id: @project.id, state: "completed").order(:completion_time).last
-    end
+    @latest_completed_download = current_user.inventory_requests.where(project_id: project_metadata.id, state: "completed").order(:completion_time).last
   end
 
   def title
@@ -47,11 +45,11 @@ class ProjectShowPresenter
   end
 
   def created
-    @project.created_at.strftime("%b %e, %Y %l:%M %p")
+    @project_metadata.created_at.strftime("%b %e, %Y %l:%M %p")
   end
 
   def updated
-    @project.updated_at.strftime("%b %e, %Y %l:%M %p")
+    @project_metadata.updated_at.strftime("%b %e, %Y %l:%M %p")
   end
 
   def data_sponsor
@@ -115,7 +113,7 @@ class ProjectShowPresenter
   end
 
   def submission_provenance
-    @project.metadata_json["submission"]
+    @project_metadata.submission
   end
 
   def requested_by_display_name
@@ -128,7 +126,7 @@ class ProjectShowPresenter
 
   def requested_on
     date_time = {}
-    req_date =  safe_date(@project.metadata_json["submission"]["request_date_time"])
+    req_date =  safe_date(@project_metadata.submission["request_date_time"])
     date = req_date.strftime("%B %d, %Y")
     time = req_date.strftime("%I:%M %p")
     date_time["#{date}"] = time
@@ -145,7 +143,7 @@ class ProjectShowPresenter
 
   def approved_on
     date_time = {}
-    approve_date = safe_date(@project.metadata_json["submission"]["approved_on"])
+    approve_date = safe_date(@project_metadata.submission["approved_on"])
     date = approve_date.strftime("%B %d, %Y")
     time = approve_date.strftime("%I:%M %p")
     date_time["#{date}"] = time

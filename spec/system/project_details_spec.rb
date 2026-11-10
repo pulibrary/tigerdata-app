@@ -3,20 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true, js: true do
-  let!(:sponsor_and_data_manager_user) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "mjc12", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:sponsor_user) { FactoryBot.create(:project_sponsor, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
   let(:sysadmin_user) { FactoryBot.create(:sysadmin, uid: "puladmin", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:manager_user) { FactoryBot.create(:user, uid: "kl37", mediaflux_session: SystemUser.mediaflux_session) }
+  let(:manager_user) { FactoryBot.create(:user, uid: "libtigerdatadev", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_only) { FactoryBot.create(:user, uid: "jh6441", mediaflux_session: SystemUser.mediaflux_session) }
   let(:read_write) { FactoryBot.create(:user) }
 
   context "Details page" do
-    let(:project_in_mediaflux) do
-      request = FactoryBot.create(:request_project, data_manager: manager_user.uid, data_sponsor: sponsor_user.uid,
-                                                    storage_size: 500, storage_unit: "GB", departments: [{ "code" => "77777", "name" => "RDSS-Research Data and Scholarship Services" }],
-                                                    user_roles: [{ uid: read_only.uid, name: read_only.display_name_safe, read_only: true }])
-      request.approve(sponsor_and_data_manager_user)
-    end
+    let(:project_in_mediaflux) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
     let(:project_metadata_in_mediaflux) { ProjectMetadata.new(project_in_mediaflux) }
 
     it "Shows the storage detail button and complete modal to the sponsor" do
@@ -167,6 +161,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
       context "Approved projects" do
         context "Sponsor user" do
           it "Shows the correct nav buttons" do
+            manager_user # make sure the manager is not created twice
             sign_in sponsor_user
             project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
             project_in_mediaflux.save!
@@ -239,11 +234,12 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
         expect(page).to have_text(project_metadata_in_mediaflux.title)
-        expect(page).to have_text("Storage Capacity\nRequested\n500.0 GB\nApproved\n1 TB")
+        expect(page).to have_text("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
-        expect(page).to have_text("RDSS-Research Data and Scholarship Services")
+        expect(page).to have_text("Department(s)\n")
+        expect(page).to have_text("Description\nThis is a sample project")
         expect(page).to have_text("Research")
-        expect(page).to have_text("Data Security\nLevel 0 - Public")
+        expect(page).to have_text("Data Security\n—")
       end
 
       it "copies the project path to the clipboard" do
@@ -309,7 +305,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     context "Provenance Events" do
       let(:request) { FactoryBot.create(:request_project, project_title: "project 111", data_sponsor: sponsor_user.uid) }
-      let!(:project) { request.approve(sponsor_and_data_manager_user) }
+      let!(:project) { request.approve(sponsor_user) }
       let(:submission_event) { FactoryBot.create(:submission_event, project: project) }
       let(:approval_event) { FactoryBot.create(:approval_event, project: project) }
 
@@ -441,7 +437,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
     context "system administrator" do
       let(:request) { FactoryBot.create(:request_project, data_sponsor: sponsor_user.uid) }
-      let!(:project) { request.approve(sponsor_and_data_manager_user) }
+      let!(:project) { request.approve(sponsor_user) }
       let(:project_metadata) { ProjectMetadata.new(project) }
 
       it "shows the sysadmin buttons for an approved project" do

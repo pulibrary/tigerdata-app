@@ -69,11 +69,14 @@ class ProjectMetadata
 
   attr_reader :project
 
-  delegate :id, :mediaflux_id, to: :project
+  delegate :id, :mediaflux_id, :created_at, :updated_at, to: :project
 
-  def initialize(project)
-    initialize_from_hash(project.metadata_json.with_indifferent_access)
+  def initialize(project, metadata_hash = nil)
     @project = project
+    initialize_from_hash(project.metadata_json.with_indifferent_access)
+    if metadata_hash.present?
+      initialize_from_hash(metadata_hash)
+    end
   end
 
   def update_project
@@ -99,7 +102,7 @@ class ProjectMetadata
     @project_directory = ProjectMetadata.safe_directory(metadata_hash[:project_directory])
 
     @storage_capacity = metadata_hash[:storage_capacity]
-    @storage_performance_expectations = metadata_hash[:storage_performance_expectations]
+    @storage_performance_expectations = metadata_hash[:storage_performance_expectations] if metadata_hash[:storage_performance_expectations]
 
     @created_by = metadata_hash[:created_by] if metadata_hash[:created_by]
     @created_on = metadata_hash[:created_on] if metadata_hash[:created_on]
@@ -121,7 +124,7 @@ class ProjectMetadata
 
     @data_security_level = metadata_hash[:data_security_level] # no default is set for security level
 
-    @submission = metadata_hash[:submission]
+    @submission = metadata_hash[:submission] || {}
     @schema_version = metadata_hash[:schema_version] || TigerdataSchema::SCHEMA_VERSION
   end
   # rubocop:enable Metrics/PerceivedComplexity

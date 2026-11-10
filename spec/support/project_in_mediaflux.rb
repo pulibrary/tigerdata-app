@@ -24,5 +24,5 @@ def test_project_from_path(path)
   data_users&.each do |user_uid|
     FactoryBot.create(:user, uid: user_uid) unless User.where(uid: user_uid).exists?
   end
-  FactoryBot.create(:project, mediaflux_id: id, data_sponsor:, data_manager:, project_directory: path, title: metadata[:title])
+  FactoryBot.create(:project, mediaflux_id: id, data_sponsor:, data_manager:, project_directory: metadata[:project_directory], title: metadata[:title])
 end

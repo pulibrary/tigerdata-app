@@ -8,8 +8,14 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   # Constructor
   # @param project_data [Project or Hash] the project to be presented
   # @param current_user [User] the user currently logged in
-  def initialize(project_data, current_user, project: nil)
-    super(project || rails_project(project_data), current_user, project_mf: project_data)
+  def initialize(project_data, current_user, project_metadata: nil)
+    project_metadata ||= load_project_metadata(project_data)
+    if project_metadata.present?
+      super(project_metadata, current_user, project_mf: project_data)
+    else
+      @project = nil
+      @project_metadata = nil
+    end
   end
 
   def type
@@ -60,13 +66,15 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     time_ago.gsub("about ", "")
   end
 
-  def rails_project(project_mf)
+  def load_project_metadata(project_mf)
     database_record = Project.find_by(mediaflux_id: project_mf[:mediaflux_id])
     if database_record.nil?
       message = "Mediaflux project with ID #{project_mf[:mediaflux_id]} is not in the Rails database (title: #{project_mf[:title]})"
       Rails.logger.warn(message)
       Honeybadger.notify(message)
+      nil
+    else
+      ProjectMetadata.new(database_record, project_mf)
     end
-    database_record
   end
 end
