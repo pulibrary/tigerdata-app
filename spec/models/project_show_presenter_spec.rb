@@ -11,7 +11,7 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
   let(:project) { request.approve(sponsor_and_data_manager_user) }
   let(:project_metadata) { ProjectMetadata.new(project) }
 
-  subject(:presenter) { ProjectShowPresenter.new(project, sponsor_and_data_manager_user) }
+  subject(:presenter) { ProjectShowPresenter.new(project_metadata, sponsor_and_data_manager_user) }
 
   describe "#description" do
     it "delegates to project metdata_model" do

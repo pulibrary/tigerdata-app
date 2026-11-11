@@ -10,14 +10,14 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
 
   let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
 
-  subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project:) }
+  subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project_metadata:) }
 
   describe "#type" do
     it "returns the requested type" do
       project_metadata = ProjectMetadata.new(project)
       project_metadata.storage_performance_expectations["approved"] = nil
       project_metadata.update_project
-      presenter = ProjectDashboardPresenter.new(nil, sponsor_and_data_manager, project:)
+      presenter = ProjectDashboardPresenter.new(nil, sponsor_and_data_manager, project_metadata:)
       expect(presenter.type).to include("Requested")
     end
 
