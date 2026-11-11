@@ -35,6 +35,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to root_path
       flash.alert = "You are not a recognized CAS user."
     else
+      # current_user.mediaflux_login(token, session, token_type: "oauth")
+      byebug
       sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
     end
   end
