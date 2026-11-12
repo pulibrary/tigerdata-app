@@ -39,7 +39,8 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         it "renders the project metadata as json" do
           get :details, params: { id: project.id, format: :json }
           expect(response.content_type).to eq("application/json; charset=utf-8")
-          expect(JSON.parse(response.body)).to eq(project.metadata_json)
+          project.reload # reload is required for these to match as details will load the latest data out of mediaflux
+          expect(JSON.parse(response.body)).to eq(project.reload.metadata_json)
         end
 
         it "shows affiliation code as being saved to the project" do
