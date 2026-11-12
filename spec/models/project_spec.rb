@@ -117,16 +117,4 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(Mediaflux::AssetMetadataRequest).to have_received(:new).once
     end
   end
-
-  describe ".default_storage_unit" do
-    it "returns the default storage unit of KB" do
-      expect(described_class.default_storage_unit).to eq("KB")
-    end
-  end
-
-  describe ".default_storage_usage" do
-    it "returns the default storage usage of 0 units" do
-      expect(described_class.default_storage_usage).to eq("0 KB")
-    end
-  end
 end

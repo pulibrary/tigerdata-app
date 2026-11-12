@@ -167,7 +167,7 @@ class ProjectShowPresenter
   def quota_allocation(session_id: nil)
     return project_metadata.storage_capacity if session_id.nil?
 
-    persisted = project.quota_allocation_raw(session_id: session_id)
+    persisted = project_metadata.quota_allocation_raw
     value = persisted.to_f
 
     value * default_capacity_divisor
@@ -178,23 +178,23 @@ class ProjectShowPresenter
     format("%.0f", value)
   end
 
-  def formatted_quota_percentage(session_id:)
-    value = quota_percentage(session_id:)
+  def formatted_quota_percentage
+    value = quota_percentage
     format("%.3f", value)
   end
 
-  def quota_usage(session_id:)
-    "#{project.storage_usage(session_id:)} out of #{project.quota_allocation(session_id:)} used"
+  def quota_usage
+    "#{project_metadata.storage_usage} out of #{project_metadata.quota_allocation} used"
   end
 
   def num_files
-    @num_files ||= ActiveSupport::NumberHelper.number_to_delimited(project.asset_count(session_id: @session_id) || 0)
+    @num_files ||= ActiveSupport::NumberHelper.number_to_delimited(project_metadata.asset_count)
   end
 
-  def quota_percentage(session_id:, dashboard: false)
-    quota_allocation_raw = project.quota_allocation_raw(session_id:)
+  def quota_percentage(dashboard: false)
+    quota_allocation_raw = project_metadata.quota_allocation_raw
     return 0 if quota_allocation_raw.zero?
-    storage_usage = project.storage_usage_raw(session_id:)
+    storage_usage = project_metadata.storage_usage_raw
     return 0 if storage_usage == 0
     storage_value = (storage_usage.to_f / quota_allocation_raw.to_f) * 100
     minimum_storage_used = true if storage_value > 0 && storage_value < 1
