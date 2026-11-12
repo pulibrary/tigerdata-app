@@ -117,9 +117,9 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
     end
   end
 
-  describe "#storage_capacity" do
+  describe "#quota_allocation" do
     it "delegates to project project_metadata" do
-      expect(presenter.storage_capacity).to eq(project_metadata.storage_capacity)
+      expect(presenter.quota_allocation).to eq(project_metadata.storage_capacity)
     end
   end
 

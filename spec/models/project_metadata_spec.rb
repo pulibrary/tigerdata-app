@@ -20,7 +20,7 @@ RSpec.describe ProjectMetadata, type: :model do
     }.with_indifferent_access
   end
 
-  let(:default_storage_capacity) do
+  let(:default_quota_allocation) do
     { requested: 500, approved: nil }.with_indifferent_access
   end
 
