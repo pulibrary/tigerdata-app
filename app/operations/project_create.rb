@@ -4,11 +4,11 @@ class ProjectCreate < Dry::Operation
   class ProjectCreateError < StandardError; end
 
   def call(request:, approver:)
-    project = step create_project_from_request(request)
-    mediaflux_id = step persist_in_mediaflux(project, approver)
-    step update_project_with_mediaflux_info(mediaflux_id:, project:)
-    step persist_users_in_mediaflux(project, approver)
-    step activate_project(project, approver)
+    project_metadata = step create_project_from_request(request)
+    mediaflux_id = step persist_in_mediaflux(project_metadata.project, approver)
+    step update_project_with_mediaflux_info(mediaflux_id:, project_metadata:)
+    step persist_users_in_mediaflux(project_metadata, approver)
+    step activate_project(project_metadata, approver)
   end
 
   private
@@ -25,7 +25,7 @@ class ProjectCreate < Dry::Operation
     project_metadata.update_project
 
     # Return Success(attrs) or Failure(error)
-    Success project
+    Success project_metadata
   rescue => ex
     Failure("Error creating the project: #{ex}")
   end
@@ -66,22 +66,22 @@ class ProjectCreate < Dry::Operation
     Failure("Error saving project #{project.id} to Mediaflux: #{ex}")
   end
 
-  def update_project_with_mediaflux_info(mediaflux_id:, project:)
-    project_metadata = ProjectMetadata.new(project)
+  def update_project_with_mediaflux_info(mediaflux_id:, project_metadata:)
+    project = project_metadata.project
     project.mediaflux_id = mediaflux_id
     project_metadata.status = Project::APPROVED_STATUS
     project_metadata.update_project
-    Success(project)
+    Success(project_metadata)
   rescue => ex
     # TODO: It was saved in mediaflux, so maybe a retry here?  I don't want to destroy the project
     Failure("Setting the mediaflux id the project(#{project.id}) : #{ex}")
   end
 
-  def persist_users_in_mediaflux(project, current_user)
-    project_metadata = ProjectMetadata.new(project)
+  def persist_users_in_mediaflux(project_metadata, current_user)
+    project = project_metadata.project
 
     # Do nothing if there are no users to persist
-    return Success(project) if (project_metadata.ro_users + project_metadata.rw_users).empty?
+    return Success(project_metadata) if (project_metadata.ro_users + project_metadata.rw_users).empty?
 
     # Add the data users to the project in Mediaflux
     add_users_request = Mediaflux::ProjectUserAddRequest.new(session_token: current_user.mediaflux_session, project: project)
@@ -93,7 +93,7 @@ class ProjectCreate < Dry::Operation
     else
       user_debug = add_users_request.debug_output.to_s
       Rails.logger.debug { "Project #{project.id} users have been added to MediaFlux: #{user_debug}" }
-      Success project
+      Success project_metadata
     end
   # TODO:  What kind of error are we expecting here?  This will capture the session errors, but maybe we should not be doing this.
   #        I could not figure out a way in tests to hit this error...
@@ -101,21 +101,19 @@ class ProjectCreate < Dry::Operation
     Failure("Exception adding users to mediaflux project #{project.mediaflux_id}: #{ex}")
   end
 
-  def activate_project(project, approver)
+  def activate_project(project_metadata, approver)
+    project = project_metadata.project
     metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: approver.mediaflux_session, id: project.mediaflux_id)
     metadata_request.resolve
     if metadata_request.error?
       Failure("Error activate project #{project.id}: Error retrieving metadata: #{metadata_request.response_error}")
 
+    elsif project_metadata.title == metadata_request.metadata[:title]
+      project_metadata.status = Project::ACTIVE_STATUS
+      project_metadata.update_project
+      Success(project)
     else
-      project_metadata = ProjectMetadata.new(project)
-      if project_metadata.title == metadata_request.metadata[:title]
-        project_metadata.status = Project::ACTIVE_STATUS
-        project_metadata.update_project
-        Success(project)
-      else
-        Failure("Error activate project #{project.id}: Title mismatch: #{project_metadata.title} != #{metadata_request.metadata[:title]}")
-      end
+      Failure("Error activate project #{project.id}: Title mismatch: #{project_metadata.title} != #{metadata_request.metadata[:title]}")
     end
   rescue => ex
     Failure("Error activate project #{project.id}: #{ex}")

@@ -49,6 +49,8 @@ class ProjectsController < ApplicationController
   def show
     return if project_metadata.blank?
 
+    project_metadata.update_with_mediaflux_data(session_id: current_user.mediaflux_session)
+
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
 
@@ -180,7 +182,9 @@ class ProjectsController < ApplicationController
     return nil if project.blank?
     @project_metadata ||= begin
       project_metadata = ProjectMetadata.new(project)
-      @presenter = ProjectShowPresenter.new(project_metadata, current_user)
+      mediaflux_metadata = project_metadata.update_with_mediaflux_data(session_id: current_user.mediaflux_session)
+
+      @presenter = ProjectShowPresenter.new(project_metadata, current_user, project_mf: mediaflux_metadata)
       if @presenter.user_has_access?(user: current_user)
         project_metadata
       else

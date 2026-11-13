@@ -46,49 +46,6 @@ class Project < ApplicationRecord
     @mediaflux_metadata
   end
 
-  def asset_count(session_id:)
-    values = mediaflux_metadata(session_id:)
-    values.fetch(:total_file_count, 0)
-  end
-
-  def self.default_storage_unit
-    "KB"
-  end
-
-  def self.default_storage_usage
-    "0 #{default_storage_unit}"
-  end
-
-  def storage_usage(session_id:)
-    values = mediaflux_metadata(session_id:)
-    values.fetch(:quota_used, self.class.default_storage_usage) # if the storage is empty use the default
-  end
-
-  def storage_usage_raw(session_id:)
-    values = mediaflux_metadata(session_id:)
-    values.fetch(:quota_used_raw, 0) # if the storage raw is empty use zero
-  end
-
-  def self.default_quota_allocation
-    "0 GB"
-  end
-
-  def quota_allocation(session_id:)
-    values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation, '') # if quota does not exist, set value to an empty string
-    if quota_value.blank?
-      return self.class.default_quota_allocation
-    else
-      return quota_value
-    end
-  end
-
-  def quota_allocation_raw(session_id:)
-    values = mediaflux_metadata(session_id:)
-    quota_value = values.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
-    quota_value
-  end
-
   # Build a query request for the project with the given arguments. This method is used to handle errors that may occur when building the query request and to log them properly.
   # @param query_request_args [Hash] the arguments to build the query request, should include at least the session_token and collection (mediaflux_id) keys
   # @raise [MediafluxError] if there is an error with the query request, the error message will be included in the exception message
