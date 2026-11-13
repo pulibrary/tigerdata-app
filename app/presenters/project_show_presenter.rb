@@ -152,7 +152,7 @@ class ProjectShowPresenter
 
   def department_codes
     @dep_with_codes = {}
-    departments_list = departments.nil? ? [] : departments.first.split(", ")
+    departments_list = departments.nil? ? [] : departments.first.split("; ")
     departments_list.map do |dept|
       tmp_code = Affiliation.find_fuzzy_by_name(dept)
       @dep_with_codes[dept] = tmp_code.code unless tmp_code.nil?
