@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectMetadata
+  class MediafluxError < StandardError; end
+
   DOI_NOT_MINTED = "DOI-NOT-MINTED"
 
   # @return [String] The default directory protocol
@@ -54,7 +56,8 @@ class ProjectMetadata
   attr_accessor(
     :title, :description, :status, :data_sponsor, :data_manager, :departments, :data_user_read_only, :data_user_read_write,
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
-    :updated_by, :updated_on, :approval_note, :schema_version, :submission, :data_security_level,
+    :updated_by, :updated_on, :approval_note, :schema_version, :submission, :data_security_level, :asset_count, :storage_usage,
+    :storage_usage_raw, :quota_allocation, :quota_allocation_raw, :updated_from_mediaflux_on, :request_metadata,
     # NOTE: The following attributes are required by the XML schema
     :hpc,
     :data_use_agreement,
@@ -73,6 +76,7 @@ class ProjectMetadata
 
   def initialize(project, metadata_hash = nil)
     @project = project
+    @request_metadata = project.metadata_json["request_metadata"]
     initialize_from_hash(project.metadata_json.with_indifferent_access)
     if metadata_hash.present?
       initialize_from_hash(metadata_hash)
@@ -84,9 +88,22 @@ class ProjectMetadata
     @project.save!
   end
 
+  def update_with_mediaflux_data(session_id:)
+    # make sure the request metadata that was present when the project was created is kept
+    @request_metadata = project.metadata_json["request_metadata"] || project.metadata_json
+    metadata = mediaflux_metadata(session_id:)
+    if metadata.present?
+      initialize_from_hash(metadata)
+      @updated_from_mediaflux_on = DateTime.now
+      update_project
+    end
+    metadata
+  end
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/MethodLength
   def initialize_from_hash(metadata_hash)
     @title = metadata_hash[:title]
     @description = metadata_hash[:description]
@@ -101,13 +118,13 @@ class ProjectMetadata
     @project_purpose = metadata_hash[:project_purpose]
     @project_directory = ProjectMetadata.safe_directory(metadata_hash[:project_directory])
 
-    @storage_capacity = metadata_hash[:storage_capacity]
+    @storage_capacity = metadata_hash[:storage_capacity] if metadata_hash[:storage_capacity]
     @storage_performance_expectations = metadata_hash[:storage_performance_expectations] if metadata_hash[:storage_performance_expectations]
 
     @created_by = metadata_hash[:created_by] if metadata_hash[:created_by]
     @created_on = metadata_hash[:created_on] if metadata_hash[:created_on]
     @updated_by = metadata_hash[:updated_by] if metadata_hash[:updated_by]
-    @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on]
+    @updated_on = metadata_hash[:updated_on] if metadata_hash[:updated_on].present?
 
     # NOTE: The following attributes are required by the 0.8 XML schema
     @number_of_files = metadata_hash[:number_of_files] || "Less than 10,000"
@@ -125,8 +142,18 @@ class ProjectMetadata
     @data_security_level = metadata_hash[:data_security_level] # no default is set for security level
 
     @submission = metadata_hash[:submission] || {}
+    if @submission["requested_by"].blank? && request_metadata && request_metadata["submission"]
+      @submission = request_metadata["submission"]
+    end
     @schema_version = metadata_hash[:schema_version] || TigerdataSchema::SCHEMA_VERSION
+    @asset_count = metadata_hash[:total_file_count] || metadata_hash[:asset_count] || 0
+    @storage_usage = metadata_hash[:quota_used] || metadata_hash[:storage_usage] || self.class.default_storage_usage # if the storage is empty use the default
+    @storage_usage_raw = metadata_hash[:quota_used_raw] || metadata_hash[:storage_usage_raw] || 0 # if the storage raw is empty use zero
+    @quota_allocation = metadata_hash.fetch(:quota_allocation, self.class.default_quota_allocation)
+    @quota_allocation_raw = metadata_hash.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
+    @updated_from_mediaflux_on = metadata_hash[:updated_from_mediaflux_on] if metadata_hash[:updated_from_mediaflux_on]
   end
+  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
@@ -159,5 +186,56 @@ class ProjectMetadata
         "requested" => current.dig(:unit, :requested)
       }
     }
+  end
+
+  def self.default_storage_unit
+    "KB"
+  end
+
+  def self.default_storage_usage
+    "0 #{default_storage_unit}"
+  end
+
+  def self.default_storage_capacity
+    "0 GB"
+  end
+
+  def self.default_quota_allocation
+    "0 GB"
+  end
+
+  def as_json(*)
+    super.except("project", "mediaflux_metadata")
+  end
+
+  private
+
+  def parse_human_quota(human)
+    match = human.to_s.strip.match(/\A([\d.]+)\s+([A-Za-z]+)\z/)
+    if match.nil?
+      raise MediafluxError, "Unable to parse Mediaflux quota allocation #{human.inspect} for project #{id}"
+    end
+
+    number = BigDecimal(match[1])
+    size = number.frac.zero? ? number.to_i : number.to_f
+    [size, match[2]]
+  end
+
+  def mediaflux_metadata(session_id:)
+    @mediaflux_metadata ||= begin
+      metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
+      if metadata_request.error?
+        msg = "Error updating metadata for project #{project.id} mediaflux id #{mediaflux_id}"
+        Honeybadger.notify(msg)
+        Rails.logger.warn(msg)
+        nil
+      else
+        metadata_hash = metadata_request.metadata
+        departments = metadata_hash[:departments]
+        metadata_hash[:departments] = departments.first.split(";").map(&:strip) if departments.is_a?(Array) && departments.count == 1
+        metadata_hash
+      end
+    end
+    @mediaflux_metadata
   end
 end
