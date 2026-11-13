@@ -49,6 +49,20 @@ class User < ApplicationRecord
     user
   end
 
+  # @param access_token [OmniAuth::AuthHash] the access token returned by OmniAuth
+  # @return [User, nil] the found user or nil if they do not yet exist
+  # @example updating an existing user fields or creating a new user if they do not exist when they log in
+  def self.from_entra_id(access_token)
+    user_operation = UserFromEntraAttributes.new
+    result = user_operation.call(access_token:)
+    if result.success?
+      result.value! # user if the operation was a success
+    else
+      Rails.logger.error("Error finding for user (access_token: #{access_token.extra.raw_info}), error: #{result.failure}")
+      nil # nil if the operation was a failure
+    end
+  end
+
   # Users that can be project sponsors
   def self.sponsor_users
     if Rails.env.development? || Rails.env.staging?
@@ -75,9 +89,9 @@ class User < ApplicationRecord
     @mediaflux_session = session[:mediaflux_session]
   end
 
-  def mediaflux_login(token, session)
+  def mediaflux_login(token, session, token_type: "cas")
     logger.debug("mediaflux session created for #{uid}")
-    logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type: "cas")
+    logon_request = Mediaflux::LogonRequest.new(identity_token: token, token_type:)
     if logon_request.error?
       raise "Invalid Logon #{logon_request.response_error}"
     end
