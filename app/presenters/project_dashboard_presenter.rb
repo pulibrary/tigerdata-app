@@ -11,7 +11,7 @@ class ProjectDashboardPresenter < ProjectShowPresenter
   def initialize(project_data, current_user, project_metadata: nil)
     project_metadata ||= load_project_metadata(project_data)
     if project_metadata.present?
-      super(project_metadata, current_user, project_mf: project_data)
+      super(project_metadata, current_user)
     else
       @project = nil
       @project_metadata = nil
