@@ -75,7 +75,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.0)
+    addressable (2.9.1)
       public_suffix (>= 2.0.2, < 8.0)
     airbrussh (1.6.2)
       sshkit (>= 1.6.1, != 1.7.0)
@@ -835,7 +835,7 @@ CHECKSUMS
   activerecord (8.1.4.1) sha256=bd65599ca0b5d210937f835d42c7aff69d271741c75aab022730be6cbce67e87
   activestorage (8.1.4.1) sha256=0f4e2f114f3584723a80a2c089aacc6170e765a0b2c385c9782e26ed78f05c66
   activesupport (8.1.4.1) sha256=16ac4f341ca65c85a1fcdb8ac73f68891aae9e3c4a6f9c3a27daed8b00017ed7
-  addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
+  addressable (2.9.1) sha256=f1212365945455c84e8d031eea40fc6bedf0c663a78d95b3ab93591040bc5c35
   airbrussh (1.6.2) sha256=3278655b2d957d774589a17e01496149288cbd8f1158b377581d82db006401cc
   amazing_print (3.0.0) sha256=2ceb5886e9b3593a7af357eb819b198fe65c982a30cda37914ccef30ba346bbe
   anonymous_loader (0.1.5) sha256=c96a4a1b5f49f320037fae63e931ac15b3823686e4f0ee6f24f75a0ade4227cb
