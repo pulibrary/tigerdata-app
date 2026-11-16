@@ -13,7 +13,11 @@ RSpec.describe ProjectShowPresenter do
                                         user_roles: [{ "uid" => rw_user.uid, "read_only" => false }, { "uid" => ro_user.uid, "read_only" => true }])
   end
   let(:project) { request1.approve(data_sponsor) }
-  let(:project_metadata) { ProjectMetadata.new(project) }
+  let(:project_metadata) do
+    meta = ProjectMetadata.new(project)
+    meta.update_with_mediaflux_data(session_id: data_sponsor.mediaflux_session)
+    meta
+  end
 
   subject(:presenter) { ProjectShowPresenter.new(project_metadata, data_sponsor) }
 
@@ -26,10 +30,8 @@ RSpec.describe ProjectShowPresenter do
       expect(presenter.user_has_access?(user: other_user)).to be false
     end
 
-    context "handles errors fetching metadata" do
-      before do
-        allow(project).to receive(:mediaflux_metadata).and_return({})
-      end
+    context "when data security level has not been updated from mediaflux" do
+      let(:project_metadata) { ProjectMetadata.new(project) }
 
       it "always prevent access if we don't have access to the metadata" do
         expect(presenter.user_has_access?(user: data_sponsor)).to be false
@@ -46,8 +48,8 @@ RSpec.describe ProjectShowPresenter do
       expect(presenter.data_security_level).to eq("Level 0 - Public") # Request factory defaults value to 0.
     end
 
-    context "when data security level is not present" do
-      let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/CProject") }
+    context "when data security level has not been updated from mediaflux" do
+      let(:project_metadata) { ProjectMetadata.new(project) }
 
       it "returns a styled data security level" do
         expect(presenter.data_security_level).to eq("<strong class=\"px-0\">&mdash;</strong>".html_safe)

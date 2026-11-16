@@ -168,11 +168,13 @@ class ProjectsController < ApplicationController
   def project
     @project ||= begin
       project = Project.find(params[:id])
-      if project.nil?
+      if project.nil? || project.mediaflux_id.blank?
         flash[:alert] = I18n.t(:access_denied)
         redirect_to dashboard_path
+        nil
+      else
+        project
       end
-      project
     end
   end
 
@@ -180,9 +182,9 @@ class ProjectsController < ApplicationController
     return nil if project.blank?
     @project_metadata ||= begin
       project_metadata = ProjectMetadata.new(project)
-      mediaflux_metadata = project_metadata.update_with_mediaflux_data(session_id: current_user.mediaflux_session)
+      project_metadata.update_with_mediaflux_data(session_id: current_user.mediaflux_session)
 
-      @presenter = ProjectShowPresenter.new(project_metadata, current_user, project_mf: mediaflux_metadata)
+      @presenter = ProjectShowPresenter.new(project_metadata, current_user)
       if @presenter.user_has_access?(user: current_user)
         project_metadata
       else

@@ -58,6 +58,7 @@ class ProjectMetadata
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
     :updated_by, :updated_on, :approval_note, :schema_version, :submission, :data_security_level, :asset_count, :storage_usage,
     :storage_usage_raw, :quota_allocation, :quota_allocation_raw, :updated_from_mediaflux_on, :request_metadata,
+    :updated_with_mediaflux,
     # NOTE: The following attributes are required by the XML schema
     :hpc,
     :data_use_agreement,
@@ -78,7 +79,9 @@ class ProjectMetadata
     @project = project
     @request_metadata = project.metadata_json["request_metadata"]
     initialize_from_hash(project.metadata_json.with_indifferent_access)
+    @updated_with_mediaflux = false
     if metadata_hash.present?
+      @updated_with_mediaflux = true
       initialize_from_hash(metadata_hash)
     end
   end
@@ -93,6 +96,7 @@ class ProjectMetadata
     @request_metadata = project.metadata_json["request_metadata"] || project.metadata_json
     metadata = mediaflux_metadata(session_id:)
     if metadata.present?
+      @updated_with_mediaflux = true
       initialize_from_hash(metadata)
       @updated_from_mediaflux_on = DateTime.now
       update_project
@@ -111,8 +115,8 @@ class ProjectMetadata
     @data_sponsor = metadata_hash[:data_sponsor]
     @data_manager = metadata_hash[:data_manager]
     @departments = metadata_hash[:departments]
-    @data_user_read_only = metadata_hash[:data_user_read_only] if metadata_hash[:data_user_read_only]
-    @data_user_read_write = metadata_hash[:data_user_read_write] if metadata_hash[:data_user_read_write]
+    @data_user_read_only = metadata_hash[:ro_users] || metadata_hash[:data_user_read_only] if metadata_hash[:data_user_read_only] || metadata_hash[:ro_users]
+    @data_user_read_write = metadata_hash[:rw_users] || metadata_hash[:data_user_read_write] if metadata_hash[:data_user_read_write] || metadata_hash[:rw_users]
 
     @project_id = metadata_hash[:project_id] || ProjectMetadata::DOI_NOT_MINTED
     @project_purpose = metadata_hash[:project_purpose]
@@ -205,7 +209,7 @@ class ProjectMetadata
   end
 
   def as_json(*)
-    super.except("project", "mediaflux_metadata")
+    super.except("project", "mediaflux_metadata", "updated_with_mediaflux")
   end
 
   private

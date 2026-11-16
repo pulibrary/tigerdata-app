@@ -97,7 +97,8 @@ RSpec.describe ProjectMetadata, type: :model do
   describe "#update_with_mediaflux_data" do
     let(:sponsor_and_data_manager) { FactoryBot.create(:sponsor_and_data_manager, uid: "tigerdatatester", mediaflux_session: SystemUser.mediaflux_session) }
     let(:rw_user) { FactoryBot.create(:user, uid: "libtigerdatadev") }
-    let(:user_roles) { [{ uid: rw_user.uid, name: rw_user.display_name }, { uid: rw_user.uid, name: rw_user.display_name, read_only: false }] }
+    let(:ro_user) { FactoryBot.create(:user, uid: "kl37") }
+    let(:user_roles) { [{ uid: ro_user.uid, name: ro_user.display_name, read_only: true }, { uid: rw_user.uid, name: rw_user.display_name, read_only: false }] }
     let(:project) do
       request = FactoryBot.create(:request_project, number_of_files: "lots", user_roles:)
       request.approve(sponsor_and_data_manager)
@@ -112,7 +113,8 @@ RSpec.describe ProjectMetadata, type: :model do
       expect(project_metadata.title).to eq(project.metadata_json["title"])
       expect(project_metadata.quota_allocation).to eq("0 GB")
       expect(project_metadata.status).to eq("active")
-      expect(project_metadata.data_user_read_only).to eq(["libtigerdatadev"])
+      expect(project_metadata.data_user_read_only).to eq(["kl37"])
+      expect(project_metadata.data_user_read_write).to eq(["libtigerdatadev"])
       expect(project_metadata.number_of_files).to eq("lots")
       expect(project_metadata.storage_capacity).to eq({ "size" => { "approved" => "500.0", "requested" => "2.0" }, "unit" => { "approved" => "GB", "requested" => "TB" } })
       expect(project_metadata.updated_from_mediaflux_on).to be_nil
@@ -139,11 +141,9 @@ RSpec.describe ProjectMetadata, type: :model do
       # data from the request remains even after we load data from mediaflux that does not have that information
       expect(project_metadata.request_metadata["number_of_files"]).to eq("lots") # data from the request not stored in mediaflux
       expect(project_metadata.number_of_files).to eq("lots")
-      expect(project_metadata.request_metadata["data_user_read_only"]).to eq(["libtigerdatadev"]) # data from the request not stored in mediaflux
-      expect(project_metadata.data_user_read_only).to eq(["libtigerdatadev"])
-      expect(project_metadata.data_user_read_only).to eq(["libtigerdatadev"])
+      expect(project_metadata.request_metadata["data_user_read_only"]).to eq(["kl37"]) # data from the request not stored in mediaflux
+      expect(project_metadata.data_user_read_only).to eq(["kl37"])
       expect(project_metadata.request_metadata["data_user_read_write"]).to eq(["libtigerdatadev"]) # data from the request not stored in mediaflux
-      expect(project_metadata.data_user_read_write).to eq(["libtigerdatadev"])
       expect(project_metadata.data_user_read_write).to eq(["libtigerdatadev"])
       expect(project_metadata.request_metadata["status"]).to eq("active") # data from the request not stored in mediaflux
       expect(project_metadata.status).to eq("active")

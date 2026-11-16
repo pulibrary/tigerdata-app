@@ -16,22 +16,20 @@ class ProjectShowPresenter
   # Constructor
   # @param project_metadata [ProjectMetadata] the project metadata to be presented
   # @param current_user [User] the user currently logged in
-  # @param project_mf [Hash] the current representation of the project in Mediaflux
-  def initialize(project_metadata, current_user, project_mf: nil)
+  def initialize(project_metadata, current_user)
     @project_metadata = project_metadata
     @project = project_metadata.project
-    @project_mf = project_mf || project.mediaflux_metadata(session_id: current_user.mediaflux_session)
     @session_id = current_user.mediaflux_session
     @project_file_display_limit = Rails.configuration.project_file_display_limit
     @latest_completed_download = current_user.inventory_requests.where(project_id: project_metadata.id, state: "completed").order(:completion_time).last
   end
 
   def title
-    @project_mf[:title]
+    project_metadata.title
   end
 
   def description
-    @project_mf[:description]
+    project_metadata.description
   end
 
   # @return [String] the XML for the project Document
@@ -53,19 +51,19 @@ class ProjectShowPresenter
   end
 
   def data_sponsor
-    @data_sponsor ||= User.find_by(uid: @project_mf[:data_sponsor])
+    @data_sponsor ||= User.find_by(uid: project_metadata.data_sponsor)
   end
 
   def data_manager
-    @data_manager ||= User.find_by(uid: @project_mf[:data_manager])
+    @data_manager ||= User.find_by(uid: project_metadata.data_manager)
   end
 
   def data_read_only_users
-    (@project_mf[:ro_users] || []).map { |uid| UserPresenter.new(User.find_by(uid:)) }.compact
+    (@project_metadata.data_user_read_only || []).map { |uid| UserPresenter.new(User.find_by(uid:)) }.compact
   end
 
   def data_read_write_users
-    (@project_mf[:rw_users] || []).map { |uid| UserReadWritePresenter.new(User.find_by(uid:)) }.compact
+    (@project_metadata.data_user_read_write || []).map { |uid| UserReadWritePresenter.new(User.find_by(uid:)) }.compact
   end
 
   def data_users
@@ -82,34 +80,34 @@ class ProjectShowPresenter
   end
 
   def project_purpose
-    ProjectPurpose.label_for(@project_mf[:project_purpose])
+    ProjectPurpose.label_for(project_metadata.project_purpose)
   end
 
   # used to hide the project root that is not visible to the end user
   def project_directory
     # This value comes from Mediaflux without the extra hidden root
-    directory = @project_mf[:project_directory] || ""
+    directory = project_metadata.project_directory || ""
     directory.start_with?("/") ? directory : "/" + directory
   end
 
   def hpc
-    @project_mf[:hpc] == true ? "Yes" : "No"
+    project_metadata.hpc == true ? "Yes" : "No"
   end
 
   def globus
-    @project_mf[:globus] == true ? "Yes" : "No"
+    project_metadata.globus_request == true ? "Yes" : "No"
   end
 
   def smb
-    @project_mf[:smb] == true ? "Yes" : "No"
+    project_metadata.smb_request == true ? "Yes" : "No"
   end
 
   def number_of_files
-    @project_mf[:number_of_files]
+    project_metadata.number_of_files
   end
 
   def departments
-    @project_mf[:departments] || []
+    project_metadata.departments || []
   end
 
   def submission_provenance
@@ -161,7 +159,7 @@ class ProjectShowPresenter
   end
 
   def project_id
-    @project_mf[:project_id]
+    project_metadata.project_id
   end
 
   def quota_allocation(session_id: nil)
@@ -227,6 +225,10 @@ class ProjectShowPresenter
 
   def user_has_access?(user:)
     return true if user.eligible_sysadmin?
+
+    # only allow sys admin access if the users have not been loaded from mediaflux
+    return false unless project_metadata.updated_with_mediaflux
+
     data_sponsor&.uid == user.uid || data_manager&.uid == user.uid || data_users.map(&:uid).include?(user.uid)
   end
 
@@ -272,7 +274,11 @@ class ProjectShowPresenter
   end
 
   def data_security_level
-    @data_security_level ||= DataSecurityLevelPresenter.new(@project_mf[:data_security_level]).to_s
+    # only pull the security level from mediaflux
+    security_level = if project_metadata.updated_with_mediaflux
+                       project_metadata.data_security_level
+                     end
+    @data_security_level ||= DataSecurityLevelPresenter.new(security_level).to_s
   end
 
   private
