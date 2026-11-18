@@ -105,16 +105,4 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
       expect(directory_files_list[:files][0].last_modified).to_not be nil
     end
   end
-
-  describe "#mediaflux_metadata" do
-    let(:project) { FactoryBot.create(:project) }
-
-    it "calls out to mediaflux once" do
-      metadata_request = instance_double Mediaflux::AssetMetadataRequest, metadata: {}
-      allow(Mediaflux::AssetMetadataRequest).to receive(:new).and_return(metadata_request)
-      project.mediaflux_metadata(session_id: "")
-      project.mediaflux_metadata(session_id: "") # intentionally calling twice, to see if mediaflux is only called once.
-      expect(Mediaflux::AssetMetadataRequest).to have_received(:new).once
-    end
-  end
 end

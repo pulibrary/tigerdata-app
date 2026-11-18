@@ -18,14 +18,6 @@ class ProjectDashboardPresenter < ProjectShowPresenter
     end
   end
 
-  def type
-    if storage_performance_expectations["approved"].nil?
-      "Requested #{storage_performance_expectations['requested']}"
-    else
-      storage_performance_expectations["approved"]
-    end
-  end
-
   def latest_file_list_time
     requests = FileInventoryRequest.where(project_id: project.id).order(completion_time: :desc)
     if requests.empty?
