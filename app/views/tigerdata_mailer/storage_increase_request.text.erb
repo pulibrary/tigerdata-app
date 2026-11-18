@@ -2,10 +2,13 @@ A storage increase request has been created and is ready for review. Here are th
 Project Title: <%= @project_metadata.title %>
 Project Directory: <%= @project_metadata.project_directory %>
 Project ID: <%= @project_metadata.project_id %>
+Mediaflux ID: <%= @project_metadata.mediaflux_id %>
 Data Sponsor: <%= @project_metadata.data_sponsor %>
 Data Manager: <%= @project_metadata.data_manager %>
 Current Storage Capacity: <%= @project_metadata.storage_capacity["size"]["approved"] %> <%= @project_metadata.storage_capacity["unit"]["approved"] %>
 Current Usage: <%= @quota_breakdown[:quota_used_human] %>
+Mediaflux Read Date: <%= @project_metadata.updated_from_mediaflux_on || @project_metadata.created_on %>
+
 
 Project Files: <%= @quota_breakdown[:project_files_human] %>
 Old Versions: <%= @quota_breakdown[:old_versions_human] %>
