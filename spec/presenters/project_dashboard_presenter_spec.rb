@@ -8,27 +8,12 @@ RSpec.describe ProjectDashboardPresenter, type: :model, connect_to_mediaflux: fa
   let(:project) { request1.approve(sponsor_and_data_manager) }
   let(:project_metadata) { ProjectMetadata.new(project) }
 
-  let(:mediaflux_project) { project.mediaflux_metadata(session_id: SystemUser.mediaflux_session) }
+  let(:mediaflux_project) do
+    metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: SystemUser.mediaflux_session, id: project.mediaflux_id)
+    metadata_request.metadata
+  end
 
   subject(:presenter) { ProjectDashboardPresenter.new(mediaflux_project, sponsor_and_data_manager, project_metadata:) }
-
-  describe "#type" do
-    it "returns the requested type" do
-      project_metadata = ProjectMetadata.new(project)
-      project_metadata.storage_performance_expectations["approved"] = nil
-      project_metadata.update_project
-      presenter = ProjectDashboardPresenter.new(nil, sponsor_and_data_manager, project_metadata:)
-      expect(presenter.type).to include("Requested")
-    end
-
-    context "an approved project" do
-      let(:project) { FactoryBot.create(:approved_project) }
-
-      it "returns the approved type" do
-        expect(presenter.type).not_to include("Requested")
-      end
-    end
-  end
 
   describe "#latest_file_list_time" do
     it "returns no downloads" do

@@ -38,14 +38,6 @@ class Project < ApplicationRecord
     doc.xpath("/response/reply/result/asset/meta").to_s
   end
 
-  def mediaflux_metadata(session_id:)
-    @mediaflux_metadata ||= begin
-      metadata_request = Mediaflux::AssetMetadataRequest.new(session_token: session_id, id: mediaflux_id)
-      metadata_request.metadata
-    end
-    @mediaflux_metadata
-  end
-
   # Build a query request for the project with the given arguments. This method is used to handle errors that may occur when building the query request and to log them properly.
   # @param query_request_args [Hash] the arguments to build the query request, should include at least the session_token and collection (mediaflux_id) keys
   # @raise [MediafluxError] if there is an error with the query request, the error message will be included in the exception message
