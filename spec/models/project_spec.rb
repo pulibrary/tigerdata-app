@@ -17,63 +17,6 @@ RSpec.describe Project, type: :model, connect_to_mediaflux: true do
     end
   end
 
-  describe "project lists" do
-    let(:test_user) { sponsor_and_data_manager_user }
-
-    before do
-      request1 = FactoryBot.create(:request_project, project_title: "project 111", data_manager: test_user.uid, data_sponsor: test_user.uid)
-      request1.approve(sponsor_and_data_manager_user)
-      request2 = FactoryBot.create(:request_project, project_title: "project 222", data_sponsor: test_user.uid)
-      request2.approve(sponsor_and_data_manager_user)
-      request3 = FactoryBot.create(:request_project, project_title: "project 333", user_roles: [{ "uid" => user.uid, "read_only" => true }, { "uid" => user2.uid, "read_only" => true }])
-      request3.approve(sponsor_and_data_manager_user)
-      request4 = FactoryBot.create(:request_project, project_title: "project 444", user_roles: [{ "uid" => user2.uid, "read_only" => false }])
-      request4.approve(sponsor_and_data_manager_user)
-      request5 = FactoryBot.create(:request_project, project_title: "project 555", data_manager: user.uid, data_sponsor: user.uid, user_roles: [{ "uid" => user2.uid, "read_only" => true }])
-      request5.approve(sponsor_and_data_manager_user)
-    end
-
-    it "returns _all_ projects for the logged in user" do
-      all_projects = described_class.all_projects(test_user)
-
-      # Finds ALL the projects we added...
-      expect(all_projects.find { |project| project[:title] == "project 111" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 222" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 333" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 444" }).not_to be nil
-      expect(all_projects.find { |project| project[:title] == "project 555" }).not_to be nil
-
-      # ...plus a project that comes predefined in the Docker image
-      expect(all_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
-    end
-
-    it "returns _only_ projects where the logged in user has a role (manager, sponsor, data user)" do
-      user_projects = described_class.users_projects(test_user)
-
-      # Finds the projects where the user has a role (manager, sponsor, or data user)
-      expect(user_projects.find { |project| project[:title] == "project 111" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 222" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 333" }).not_to be nil
-      expect(user_projects.find { |project| project[:title] == "project 444" }).not_to be nil
-
-      # make sure we don't get the project where the user does not have a role
-      expect(user_projects.find { |project| project[:title] == "project 555" }).to be nil
-
-      # ...and make sure the existing testing projects are present
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/testing-project" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/AProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/BProject" }).not_to be nil
-      expect(user_projects.find { |project| project[:project_directory] == "tigerdata/RDSS/Query/CProject" }).not_to be nil
-    end
-
-    it "handles Mediaflux errors" do
-      allow(Rails.logger).to receive(:error)
-      all_projects = described_class.all_projects(test_user, "xpath(tigerdata:bad-namespace/ProjectID) has value")
-      expect(all_projects.count).to be 0
-      expect(Rails.logger).to have_received(:error).with(/Error fetching project list for user tigerdatatester/)
-    end
-  end
-
   describe "#provenance_events" do
     let(:project) { FactoryBot.create(:project) }
     let(:project_metadata) { ProjectMetadata.new(project) }

@@ -5,7 +5,10 @@ class DashboardController < ApplicationController
   around_action :time_dashboard, only: %i[index]
 
   def index
-    @presenter = DashboardPresenter.new(current_user: current_user, display_modal: modal_name)
+    # all collections with a ProjectID (DOI) stored in their metadata
+    all_unfiltered_projects = ProjectList.new(current_user).all_projects
+
+    @presenter = DashboardPresenter.new(current_user: current_user, display_modal: modal_name, all_unfiltered_projects:)
 
     session[:dashtab] ||= "project" # default the session tab to projects
     @dash_session = session[:dashtab]
