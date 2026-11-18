@@ -12,5 +12,8 @@
     Project ID: <%= @project_metadata.project_id %>
     Data Sponsor: <%= @project_metadata.data_sponsor %>
     Data Manager: <%= @project_metadata.data_manager %>
+    Mediaflux Read Date: <%= @project_metadata.updated_from_mediaflux_on || @project_metadata.created_on %>
+    Mediaflux ID: <%= @project_metadata.mediaflux_id %>
+
   </body>
 </html>

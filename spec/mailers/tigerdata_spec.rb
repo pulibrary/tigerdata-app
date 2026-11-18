@@ -7,7 +7,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
   let!(:data_user_1) { FactoryBot.create(:user, uid: "abc123", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_user_2) { FactoryBot.create(:user, uid: "ddd", mediaflux_session: SystemUser.mediaflux_session) }
   let!(:data_user_3) { FactoryBot.create(:user, uid: "efg", mediaflux_session: SystemUser.mediaflux_session) }
-  let(:project) { FactoryBot.create(:project, project_id: "abc123/def", mediaflux_id: 123) }
+  let(:project) { test_project_from_path("/princeton/tigerdata/RDSS/Query/BProject") }
   let(:project_id) { project.id }
   let(:project_metadata) { ProjectMetadata.new(project) }
 
@@ -84,6 +84,8 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect(html_body).to have_text(valid_request.state)
       expect(html_body).to have_text(valid_request.data_sponsor)
       expect(html_body).to have_text(valid_request.data_manager)
+      expect(html_body).to have_text(project_metadata.updated_from_mediaflux_on)
+
       expect(html_body).to have_text("RDSS")
       expect(html_body).to have_text("Project Purpose: Research")
       expect(html_body).to have_text("(abc123),")
@@ -118,6 +120,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
     # let(:storage_increase_request) { FactoryBot.create(:storage_increase_request, project:) }
 
     it "Sends storage increase request notifications" do
+      project_metadata.update_with_mediaflux_data(session_id: SystemUser.mediaflux_session)
       expect { described_class.with(project_id:, submitter: sponsor_and_data_manager_user, requested_capacity: requested_capacity, justification: justification, growth_expectation: growth_expectation, date_needed: date_needed, quota_breakdown: quota_breakdown).storage_increase_request.deliver }.to change {
         ActionMailer::Base.deliveries.count
       }.by(1)
@@ -134,6 +137,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect(html_body).to have_text(project_metadata.project_directory)
       expect(html_body).to have_text(project_metadata.data_sponsor)
       expect(html_body).to have_text(project_metadata.data_manager)
+      expect(html_body).to have_text(project_metadata.updated_from_mediaflux_on.to_date.to_s)
 
       expect(html_body).to have_text(requested_capacity)
       expect(html_body).to have_text(justification)
@@ -180,6 +184,7 @@ RSpec.describe TigerdataMailer, type: :mailer do
       expect(html_body).to have_text(project_metadata.project_directory)
       expect(html_body).to have_text(project_metadata.data_sponsor)
       expect(html_body).to have_text(project_metadata.data_manager)
+      expect(html_body).to have_text(project_metadata.created_on.to_date.to_s)
 
       expect(html_body).to include("A Globus connection request has been created and is ready for review")
     end
