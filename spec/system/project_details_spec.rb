@@ -239,7 +239,7 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
         expect(page).to have_text("Department(s)\n")
         expect(page).to have_text("Description\nThis is a sample project")
         expect(page).to have_text("Research")
-        expect(page).to have_text("Data Security\n—")
+        expect(page).to have_text("Data Security\n")
       end
 
       it "copies the project path to the clipboard" do
