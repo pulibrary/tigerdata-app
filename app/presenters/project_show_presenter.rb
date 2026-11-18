@@ -3,7 +3,7 @@
 class ProjectShowPresenter
   include ActiveSupport::NumberHelper
 
-  delegate "id", "in_mediaflux?", "mediaflux_id", "status", to: :project
+  delegate "id", "mediaflux_id", "status", to: :project
   delegate "project_id", "storage_performance_expectations", "status", to: :project_metadata
 
   attr_reader :project, :project_metadata, :project_file_display_limit, :latest_completed_download

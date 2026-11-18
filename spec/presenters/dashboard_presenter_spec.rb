@@ -4,13 +4,18 @@ require "rails_helper"
 
 describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
   subject(:presenter) do
-    current_user.mediaflux_session = SystemUser.mediaflux_session # ensure the presenter can make mediaflux calls as the current user
-    described_class.new(current_user: current_user)
+    described_class.new(current_user: current_user, all_unfiltered_projects:)
   end
+
+  let(:all_unfiltered_projects) { ProjectList.new(current_user).all_projects }
 
   let(:current_user) { sponsor_and_data_manager }
   # tigerdatatester is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
-  let(:sponsor_and_data_manager) { User.find_by(uid: "tigerdatatester") }
+  let(:sponsor_and_data_manager) do
+    user = User.find_by(uid: "tigerdatatester")
+    user.mediaflux_session = SystemUser.mediaflux_session
+    user
+  end
 
   let(:other_user) { User.find_by(uid: "kl37") } # user is created when we load the test projects from mediaflux, see spec/support/project_in_mediaflux.rb
 
@@ -99,7 +104,7 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
 
   describe "#requests_to_approve" do
     let(:sysadmin) { FactoryBot.create(:sysadmin, uid: "sysadmin", mediaflux_session: SystemUser.mediaflux_session) }
-    let(:presenter_for_sysadmin) { described_class.new(current_user: sysadmin) }
+    let(:presenter_for_sysadmin) { described_class.new(current_user: sysadmin, all_unfiltered_projects:) }
     let(:request1) { FactoryBot.create(:request, state: NewProjectRequest::SUBMITTED, created_at: Date.yesterday) }
     let(:request2) { FactoryBot.create(:request, state: NewProjectRequest::SUBMITTED) }
 

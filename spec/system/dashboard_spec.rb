@@ -100,8 +100,9 @@ RSpec.describe "Dashboard", connect_to_mediaflux: true, js: true do
 
       it "shows the latests downloads available" do
         created_projects.push(project_111, project_222, project_333)
+        all_unfiltered_projects = ProjectList.new(current_user).all_projects
 
-        approved_project = DashboardPresenter.new(current_user: current_user).dashboard_projects.first.project
+        approved_project = DashboardPresenter.new(current_user: current_user, all_unfiltered_projects:).dashboard_projects.first.project
         project_metadata = ProjectMetadata.new(approved_project)
         FileInventoryJob.new(user_id: current_user.id, project_id: approved_project.id, mediaflux_session: current_user.mediaflux_session).perform_now
         FileInventoryRequest.create(user_id: current_user.id, project_id: approved_project.id, job_id: "ccbb63c0-a8cd-47b7-8445-5d85e9c80977", state: InventoryRequest::FAILED,
