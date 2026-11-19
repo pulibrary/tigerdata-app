@@ -8,7 +8,7 @@
           </div>
         </li>
     <% elsif Flipflop.entra_enabled? %>
-      <li class="navbar-item" id="homepage-login"><%= button_to "Log in", "TODO: fill in with real path likely user_entra_id_omniauth_authorize_path", class: "btn btn-warning btn-sm login-btn" %></li>
+      <li class="navbar-item" id="homepage-login"><%= button_to "Log in", user_entra_id_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
     <% else %>
       <li class="navbar-item" id="homepage-login"><%= button_to "Log in", user_cas_omniauth_authorize_path, class: "btn btn-warning btn-sm login-btn" %></li>
     <% end %>
