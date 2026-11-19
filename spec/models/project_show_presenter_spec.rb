@@ -25,12 +25,6 @@ RSpec.describe ProjectShowPresenter, type: :model, connect_to_mediaflux: false d
     end
   end
 
-  describe "#in_mediaflux?" do
-    it "delegates to project" do
-      expect(presenter.in_mediaflux?).to eq(project.in_mediaflux?)
-    end
-  end
-
   describe "#mediaflux_id" do
     it "delegates to project" do
       expect(presenter.mediaflux_id).to eq(project.mediaflux_id)

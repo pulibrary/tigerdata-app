@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class DashboardPresenter
-  attr_reader :current_user, :display_modal
+  attr_reader :current_user, :display_modal, :all_unfiltered_projects
 
-  def initialize(current_user:, display_modal: "")
+  def initialize(current_user:, all_unfiltered_projects:, display_modal: "")
     @current_user = current_user
     @display_modal = display_modal
+    @all_unfiltered_projects = all_unfiltered_projects
   end
 
   def all_projects
@@ -13,20 +14,19 @@ class DashboardPresenter
     # which are the large majority of our users.
     return [] unless current_user&.eligible_sysadmin?
 
-    @all_projects ||= Project.all_projects(current_user)
-                             .map { |project| ProjectDashboardPresenter.new(project, current_user) }
-                             .reject { |presenter| presenter.project_metadata.nil? }
-                             .sort_by(&:updated_at)
-                             .reverse
+    @all_projects ||= all_unfiltered_projects
+                      .map { |project| ProjectDashboardPresenter.new(project, current_user) }
+                      .reject { |presenter| presenter.project_metadata.nil? }
+                      .sort_by(&:updated_at)
+                      .reverse
     @all_projects
   end
 
   def dashboard_projects
-    @dashboard_projects ||= Project.users_projects(current_user)
-                                   .map { |project| ProjectDashboardPresenter.new(project, current_user) }
-                                   .reject { |presenter| presenter.project_metadata.nil? }
-                                   .sort_by(&:updated_at)
-                                   .reverse
+    @dashboard_projects ||= user_projects.map { |project| ProjectDashboardPresenter.new(project, current_user) }
+                                         .reject { |presenter| presenter.project_metadata.nil? }
+                                         .sort_by(&:updated_at)
+                                         .reverse
     @dashboard_projects
   end
 
@@ -58,5 +58,15 @@ class DashboardPresenter
 
   def presented_requests(requests)
     requests.map { |req| NewProjectRequestPresenter.new(req) }
+  end
+
+  # This method narrows the list down returned by `all_projects` to only those projects where the user has
+  # been given a role (e.g. sponsor, manager, or data user.) For most users `all_projects` and `user_projects`
+  # are identical, but for administrators the lists can be very different since they are not part of most
+  # projects even though they have access to them in Mediaflux.
+  def user_projects
+    @user_projects ||= all_unfiltered_projects.select do |project|
+      project[:data_manager] == current_user.uid || project[:data_sponsor] == current_user.uid || project[:data_users].include?(current_user.uid)
+    end
   end
 end
