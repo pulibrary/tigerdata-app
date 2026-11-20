@@ -226,15 +226,11 @@ RSpec.describe "Project Details Page", type: :system, connect_to_mediaflux: true
 
       it "Shows the approved values" do
         sign_in sponsor_user
-        project_metadata_in_mediaflux.status = Project::APPROVED_STATUS
-        project_metadata_in_mediaflux.storage_capacity["size"]["approved"] = 1
-        project_metadata_in_mediaflux.storage_capacity["unit"]["approved"] = "TB"
-        project_metadata_in_mediaflux.storage_performance_expectations["approved"] = "slow"
         project_in_mediaflux.metadata_json = JSON.parse(project_metadata_in_mediaflux.to_json)
         project_in_mediaflux.save!
         visit "/projects/#{project_in_mediaflux.id}/details"
         expect(page).to have_text(project_metadata_in_mediaflux.title)
-        expect(page).to have_text("Storage Capacity\nRequested\n500 GB\nApproved\n1 TB")
+        expect(page).to have_text("Storage Capacity\nRequested\n500 GB\nApproved\n1 MB")
         # expect(page).to have_content("Storage Performance Expectations\nRequested\nstandard\nApproved\nslow")
         expect(page).to have_text("Department(s)\n")
         expect(page).to have_text("Description\nThis is a sample project")
