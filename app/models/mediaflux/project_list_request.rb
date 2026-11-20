@@ -31,6 +31,7 @@ module Mediaflux
       assets = xml.xpath("/response/reply/result/asset")
       assets.map do |asset|
         metadata = asset.xpath("./meta//tigerdata:project", "tigerdata" => "tigerdata")
+        quota = asset.xpath("./collection/quota")
         {
           mediaflux_id: asset.xpath("@id").first.value,
           title: metadata.xpath("./Title").text,
@@ -39,7 +40,11 @@ module Mediaflux
           data_sponsor: metadata.xpath("./DataSponsor").text,
           data_manager: metadata.xpath("./DataManager").text,
           data_users: data_users_from_string(metadata.xpath("./DataUser").text),
-          project_directory: metadata.xpath("./ProjectDirectory").text
+          project_directory: metadata.xpath("./ProjectDirectory").text,
+          quota_allocation: quota.xpath("./allocation/@h").text,
+          quota_allocation_raw: quota.xpath("./allocation").text.to_i,
+          quota_used: quota.xpath("./used/@h").text,
+          quota_used_raw: quota.xpath("./used").text.to_i
         }
       end
     end
