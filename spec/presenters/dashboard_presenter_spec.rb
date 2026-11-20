@@ -51,6 +51,12 @@ describe DashboardPresenter, type: :model, connect_to_mediaflux: false do
         expect(presenter.all_projects.count).to eq(4)
         expect(presenter.all_projects.map(&:id)).to include(project3.id, project4.id, project1.id, project2.id)
       end
+
+      it "has the quota information" do
+        expect(presenter.all_projects.map(&:quota_allocation).uniq).to eq([{ "size" => { "approved" => 500, "requested" => 500 },
+                                                                             "unit" => { "approved" => "GB", "requested" => "GB" } }])
+        expect(presenter.all_projects.map(&:quota_percentage)).to eq([18.105, 1, 1, 1])
+      end
     end
   end
 
