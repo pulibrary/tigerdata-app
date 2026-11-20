@@ -90,7 +90,8 @@ RSpec.describe ProjectMetadata, type: :model do
                                                "hpc" => "No", "number_of_files" => "Less than 10,000", "project_directory" => "dir", "project_id" => "DOI-NOT-MINTED",
                                                "project_purpose" => nil, "project_visibility" => "Restricted", "provisional" => false, "quota_allocation" => "0 GB",
                                                "quota_allocation_raw" => 0, "resource_type" => "TigerData Project", "schema_version" => "0.6.1", "smb_request" => "No",
-                                               "status" => "approved", "storage_usage" => "0 KB", "storage_usage_raw" => 0, "submission" => {}, "title" => "title abc" })
+                                               "status" => "approved", "storage_usage" => "0 KB", "storage_usage_raw" => 0, "submission" => {}, "title" => "title abc",
+                                               "quota_breakdown" => {} })
     end
   end
 

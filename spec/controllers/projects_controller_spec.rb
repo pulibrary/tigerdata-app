@@ -552,7 +552,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
 
     before do
       sign_in sponsor_and_data_manager
-      quota_request = instance_double(Mediaflux::ProjectQuotaRequest, quota: quota_info)
+      quota_request = instance_double(Mediaflux::ProjectQuotaRequest, quota: quota_info, error?: false)
       allow(Mediaflux::ProjectQuotaRequest).to receive(:new).and_return(quota_request)
     end
 
@@ -579,7 +579,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
       expect(html_body).not_to include("500000")
     end
 
-    context "when an error orrurs" do
+    context "when an error occurs" do
       before do
         allow(Mediaflux::ProjectQuotaRequest).to receive(:new).and_raise(StandardError, "something went wrong")
       end
@@ -594,7 +594,7 @@ RSpec.describe ProjectsController, type: ["controller", "feature"] do
         }
 
         expect(response.content_type).to eq("application/json; charset=utf-8")
-        expect(response.body).to eq("{\"error\":\"something went wrong\"}")
+        expect(response.body).to include("something went wrong")
       end
     end
   end

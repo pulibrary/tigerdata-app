@@ -245,7 +245,7 @@ class ProjectShowPresenter
   end
 
   def quota_breakdown
-    @quota_breakdown ||= project.quota(session_id: @session_id)
+    @quota_breakdown ||= project_metadata.quota_breakdown
   end
 
   def free_space

@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
 
   def details
     return if project_metadata.blank?
-
+    refresh_storage_details
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Details")
 
@@ -48,6 +48,7 @@ class ProjectsController < ApplicationController
   # GET "projects/:id"
   def show
     return if project_metadata.blank?
+    refresh_storage_details
 
     add_breadcrumb(@presenter.title, project_path)
     add_breadcrumb("Contents")
@@ -144,8 +145,17 @@ class ProjectsController < ApplicationController
     justification = params[:justification]
     growth_expectation = params[:growth_expectation]
     date_needed = params[:date_needed]
-    project = Project.find(project_id)
-    quota_breakdown = project.refresh_storage_capacity_from_mediaflux!(session_id: current_user.mediaflux_session)
+    @project = Project.find(project_id)
+
+    # use the one that was stored on the show page load unless there isn't one
+    quota_breakdown = @project.metadata_json[:quota_breakdown]
+    if quota_breakdown.blank?
+      @project_metadata = ProjectMetadata.new(@project)
+      quota_breakdown = refresh_storage_details
+      raise "Error! no quota information can be gathered from medialfux. #{flash[:notice]}" if quota_breakdown.blank?
+
+    end
+
     TigerdataMailer.with(
       project_id: project_id,
       submitter: current_user,
@@ -160,6 +170,18 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def refresh_storage_details
+    result = ProjectQuotaRefresh.new.call(current_user:, project_metadata:)
+    if result.failure?
+      old_breakdown = project_metadata.quota_breakdown
+      last_updated = old_breakdown.fetch("updated_from_mediaflux_on", project_metadata.created_on)
+      flash[:notice] = "Error refreshing storage data.  Showing data from #{last_updated}. Error: #{result.failure}"
+      old_breakdown
+    else
+      result.value!
+    end
+  end
 
   def project_job_service
     @project_job_service ||= ProjectJobService.new(project:)

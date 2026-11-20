@@ -58,7 +58,7 @@ class ProjectMetadata
     :created_on, :created_by, :project_id, :project_directory, :project_purpose, :storage_capacity, :storage_performance_expectations,
     :updated_by, :updated_on, :approval_note, :schema_version, :submission, :data_security_level, :asset_count, :storage_usage,
     :storage_usage_raw, :quota_allocation, :quota_allocation_raw, :updated_from_mediaflux_on, :request_metadata,
-    :updated_with_mediaflux,
+    :updated_with_mediaflux, :quota_breakdown,
     # NOTE: The following attributes are required by the XML schema
     :hpc,
     :data_use_agreement,
@@ -82,7 +82,7 @@ class ProjectMetadata
     @updated_with_mediaflux = false
     if metadata_hash.present?
       @updated_with_mediaflux = true
-      initialize_from_hash(metadata_hash)
+      initialize_from_hash(metadata_hash.with_indifferent_access)
     end
   end
 
@@ -102,6 +102,15 @@ class ProjectMetadata
       update_project
     end
     metadata
+  end
+
+  def update_quota_breakdown(quota_breakdown)
+    quota_breakdown[:updated_from_mediaflux_on] = DateTime.now
+    @quota_breakdown = quota_breakdown
+    human = quota_breakdown[:quota_allocation_human]
+    size, unit = parse_human_quota(human)
+    apply_approved_quota(size:, unit:)
+    update_project
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -156,6 +165,8 @@ class ProjectMetadata
     @quota_allocation = metadata_hash.fetch(:quota_allocation, self.class.default_quota_allocation)
     @quota_allocation_raw = metadata_hash.fetch(:quota_allocation_raw, 0) # if quota does not exist, set value to 0
     @updated_from_mediaflux_on = metadata_hash[:updated_from_mediaflux_on] if metadata_hash[:updated_from_mediaflux_on]
+
+    @quota_breakdown = metadata_hash[:quota_breakdown] || {} if metadata_hash[:quota_breakdown] || @quota_breakdown.blank?
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
@@ -189,7 +200,7 @@ class ProjectMetadata
         "approved" => unit,
         "requested" => current.dig(:unit, :requested)
       }
-    }
+    }.with_indifferent_access
   end
 
   def self.default_storage_unit
